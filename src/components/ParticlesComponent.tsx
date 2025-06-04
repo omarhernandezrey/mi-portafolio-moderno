@@ -9,29 +9,6 @@ export default function ParticlesComponent() {
   const [init, setInit] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [logosReady, setLogosReady] = useState(false);
-  const [currentPalette, setCurrentPalette] = useState('palette1');
-
-  // Detectar cambios de paleta
-  useEffect(() => {
-    const detectPalette = () => {
-      const rootClass = document.documentElement.className;
-      const paletteMatch = rootClass.match(/palette\d+/);
-      if (paletteMatch) {
-        setCurrentPalette(paletteMatch[0]);
-      }
-    };
-
-    detectPalette();
-    
-    // Observer para detectar cambios de paleta
-    const observer = new MutationObserver(detectPalette);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -48,7 +25,6 @@ export default function ParticlesComponent() {
     if (typeof window !== 'undefined' && (window as any).tsParticles) {
       initParticlesEngine((window as any).tsParticles);
     } else {
-      // Fallback para cargar tsParticles si no está disponible
       import('tsparticles').then(async (mod: any) => {
         const engine: Engine = mod.tsParticles || mod.default || mod;
         await initParticlesEngine(engine);
@@ -109,7 +85,7 @@ export default function ParticlesComponent() {
     });
 
     return logoList;
-  }, []);
+  }, [isClient]);
 
   // Obtener colores CSS dinámicamente
   const getThemeColors = useCallback(() => {
