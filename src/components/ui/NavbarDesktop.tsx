@@ -17,7 +17,7 @@ import { usePalette } from "../../hooks/usePalette";
 const NavbarDesktop = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("#hero");
-  const { paletteIndex, togglePalette } = usePalette();
+  const { togglePalette } = usePalette();
 
   // Effect para manejar el scroll
   useEffect(() => {

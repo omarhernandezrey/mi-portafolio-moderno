@@ -45,12 +45,13 @@ export default function ParticlesComponent() {
       }
     };
 
-    if (typeof window !== 'undefined' && window.tsParticles) {
-      initParticlesEngine(window.tsParticles);
+    if (typeof window !== 'undefined' && (window as any).tsParticles) {
+      initParticlesEngine((window as any).tsParticles);
     } else {
       // Fallback para cargar tsParticles si no está disponible
-      import('tsparticles').then(async (tsParticles) => {
-        await initParticlesEngine(tsParticles.tsParticles);
+      import('tsparticles').then(async (mod: any) => {
+        const engine: Engine = mod.tsParticles || mod.default || mod;
+        await initParticlesEngine(engine);
       }).catch(console.error);
     }
   }, []);
@@ -108,7 +109,7 @@ export default function ParticlesComponent() {
     });
 
     return logoList;
-  }, [isClient]);
+  }, []);
 
   // Obtener colores CSS dinámicamente
   const getThemeColors = useCallback(() => {
@@ -293,7 +294,7 @@ export default function ParticlesComponent() {
         }
       ]
     };
-  }, [logos, manualParticles, logosReady, getThemeColors, currentPalette]);
+  }, [logos, manualParticles, logosReady, getThemeColors]);
 
   // Render condicional mejorado
   if (!init || !logosReady || !isClient) {

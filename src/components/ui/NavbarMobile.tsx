@@ -26,7 +26,7 @@ interface NavbarMobileProps {
 const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState<string>("#hero");
-  const { paletteIndex, togglePalette } = usePalette();
+  const { togglePalette } = usePalette();
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {

@@ -6,18 +6,6 @@ const PALETTE_KEY = "paletteIndex";
 export function usePalette() {
   const [paletteIndex, setPaletteIndex] = useState(0);
 
-  // Cargar paleta guardada en localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem(PALETTE_KEY);
-    if (stored) {
-      const idx = parseInt(stored, 10);
-      setPaletteIndex(idx);
-      applyPalette(idx);
-    } else {
-      applyPalette(0);
-    }
-  }, []);
-
   // Aplicar la paleta al cambiar
   const applyPalette = useCallback((index: number) => {
     const root = document.documentElement;
@@ -29,6 +17,17 @@ export function usePalette() {
       root.classList.add(`palette${paletteIndex+1}`);
     }
   }, [paletteIndex]);
+
+  // Cargar paleta guardada en localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem(PALETTE_KEY);
+    if (stored) {
+      setPaletteIndex(parseInt(stored, 10));
+      applyPalette(parseInt(stored, 10));
+    } else {
+      applyPalette(0);
+    }
+  }, [applyPalette]);
 
   // Cambiar paleta
   const togglePalette = useCallback(() => {
