@@ -1,26 +1,371 @@
-@import "tailwindcss";
+/* app/globals.css */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globales adicionales */
+
+html, body {
+  font-family: var(--main-font-family);
+  overflow-x: hidden !important;
+  scroll-behavior: smooth;
+}
+
+/* Configuración para el cambio dinámico de colores */
+
+/* Paleta por defecto (palette1) */
+
+/* palette1 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-color: #0d131a; /* Azul oscuro profundo para el fondo principal */
+  --secondary-background-color: #1c2731; /* Azul grisáceo para fondo secundario */
+  --white-color: #fff; /* Blanco puro para textos */
+  --text-color: #d1d5db; /* Gris claro para texto general */
+  --muted-color: #a1aab8; /* Gris apagado para textos secundarios */
+  --primary-color: #00cba9; /* Verde brillante para elementos principales */
+  --accent-color: #00a086; /* Verde más oscuro como color de acento */
+  --card-bg-color: #1c2731; /* Fondo de tarjetas similar al secundario */
+  --inner-circle-bg-color: #00cba9; /* Verde brillante para fondo de elementos destacados */
+  --inner-circle-text-color: #0d131a; /* Contraste oscuro para texto del círculo */
+  --item-title-color-palette2: #00cba9; /* Verde para títulos */
+  --loading-text-color-palette2: #00cba9; /* Verde para textos de carga */
+  --loadmore-bg-color: #1c2731; /* Fondo del botón de carga */
+  --loadmore-border-color: #00cba9; /* Borde del botón de carga */
+  --loadmore-hover-bg-color: #142029; /* Fondo más oscuro para hover */
+
+  /* Tipografía moderna, neutra */
+  --main-font-family: 'Inter', 'Segoe UI', arial, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* palette2 */
+:root.palette2 {
+  --background-color: #1c1c2e;
+  --secondary-background-color: #28283c;
+  --white-color: #fff; /* Color blanco */
+  --text-color: #f4f4f9;
+  --muted-color: #d1d1e0;
+  --primary-color: #ff6f61;
+  --accent-color: #f39c12;
+  --card-bg-color: #28283c;
+  --inner-circle-bg-color: #f39c12;
+  --inner-circle-text-color: #28283c;
+  --item-title-color-palette2: #f39c12;
+  --loading-text-color-palette2: #f39c12;
+  --loadmore-bg-color: #28283c;
+  --loadmore-border-color: #f39c12;
+  --loadmore-hover-bg-color: #1f2833;
+
+  /* Tipografía elegante para morado */
+  --main-font-family: 'Poppins', 'Segoe UI', arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* palette3 */
+:root.palette3 {
+  /* Fondos */
+  --background-color: #171615;           /* Fondo principal, oscuro con matiz café */
+  --secondary-background-color: #262421; /* Fondo secundario ligeramente más claro */
+
+  /* Texto */
+  --white-color: #fff;    
+  --text-color: #fff9e9;     
+  --muted-color: #d3ba8a;    
+
+  /* Dorados principales */
+  --primary-color: #ffd65a;  
+  --accent-color: #c5961f;   
+
+  /* Tarjetas y elementos interiores */
+  --card-bg-color: #262421;         
+  --inner-circle-bg-color: #ffd65a; 
+  --inner-circle-text-color: #171615;
+
+  /* Títulos y textos en dorado */
+  --item-title-color-palette2: #ffd65a;
+  --loading-text-color-palette2: #ffd65a;
+
+  /* Botón "Load More" */
+  --loadmore-bg-color: #262421;
+  --loadmore-border-color: #ffd65a;
+  --loadmore-hover-bg-color: #3b3731;
+
+  /* Gradiente dorado suave */
+  --gold-gradient: linear-gradient(135deg, #c5961f 0%, #ffd65a 100%);
+
+  /* Tipografía con serif para dorado/café */
+  --main-font-family: 'Merriweather', georgia, serif;
+}
+
+/* palette4 (versión clara inspirada en palette1) */
+:root.palette4 {
+  /* Fondos */
+  --background-color: #f9fcfb;         /* Fondo principal muy claro con un ligero matiz */
+  --secondary-background-color: #fff; /* Sección secundaria en blanco puro */
+
+  /* Texto */
+  --white-color: #fff;              /* Sigue siendo blanco puro para textos o fondos puntuales */
+  --text-color: #2d2d2d;               /* Texto oscuro para alto contraste */
+  --muted-color: #7a7a7a;              /* Texto secundario/descriptivo */
+
+  /* Colores principales (manteniendo verde/teal de la paleta original) */
+  --primary-color: #00cba9;            /* Verde brillante para elementos principales */
+  --accent-color: #00a086;            /* Verde más oscuro como acento */
+
+  /* Tarjetas y elementos interiores */
+  --card-bg-color: #fff;           /* Fondo de tarjetas */
+  --inner-circle-bg-color: #00cba9;   /* Mismo verde brillante */
+  --inner-circle-text-color: #fff; /* Contraste en círculos o íconos sobre verde */
+
+  /* Títulos y textos específicos (mantenidos en verde para coherencia) */
+  --item-title-color-palette2: #00cba9;
+  --loading-text-color-palette2: #00cba9;
+
+  /* Botón "Load More" */
+  --loadmore-bg-color: #fff;       /* Botón sobre fondo claro */
+  --loadmore-border-color: #00cba9;   /* Borde verde para resaltar */
+  --loadmore-hover-bg-color: #ecfef9; /* Hover clarito en la misma gama verde/teal */
+
+  /* Tipografía moderna, neutra (igual que palette1) */
+  --main-font-family: 'Inter', 'Segoe UI', arial, sans-serif;
+}
+
+/* palette5 */
+:root.palette5 {
+  /* Tema oscuro con rojo dominante */
+  --background-color: #141414;         /* Fondo principal muy oscuro */
+  --secondary-background-color: #1f1f1f; /* Fondo secundario ligeramente más claro */
+
+  /* Texto */
+  --white-color: #fff;             /* Blanco puro para elementos puntuales */
+  --text-color: #e0e0e0;              /* Gris claro para texto principal */
+  --muted-color: #888;             /* Gris medio para texto secundario */
+
+  /* Colores principales (rojo intenso) */
+  --primary-color: #ed3434;           /* Rojo brillante para elementos destacados */
+  --accent-color: #fa5c5c;            /* Rojo más claro como acento */
+
+  /* Tarjetas y elementos interiores */
+  --card-bg-color: #1f1f1f;           /* Tarjetas con el mismo tono del fondo secundario */
+  --inner-circle-bg-color: #ed3434;   /* Círculo interior en rojo brillante */
+  --inner-circle-text-color: #141414; /* Contraste oscuro para el texto del círculo */
+
+  /* Títulos y textos específicos */
+  --item-title-color-palette2: #ed3434;  
+  --loading-text-color-palette2: #ed3434; 
+
+  /* Botón "Load More" */
+  --loadmore-bg-color: #1f1f1f;
+  --loadmore-border-color: #ed3434;
+  --loadmore-hover-bg-color: #2b2b2b; /* Hover un poco más oscuro */
+
+  /* Gradiente intenso */
+  --bold-gradient: linear-gradient(135deg, #ed3434 0%, #fa5c5c 100%);
+
+  /* Tipografía robusta para rojo oscuro */
+  --main-font-family: 'Montserrat', 'Segoe UI', arial, sans-serif;
+}
+
+/* palette6 - Tema Cyberpunk Neon */
+:root.palette6 {
+  --background-color: #0a0a1a;         /* Fondo azul oscuro intenso */
+  --secondary-background-color: #151530; /* Fondo secundario ligeramente más claro */
+
+  /* Texto */
+  --white-color: #fff;
+  --text-color: #e0e0ff;              /* Azul claro para texto */
+  --muted-color: #a0a0ff;             /* Azul neón apagado */
+
+  /* Colores principales */
+  --primary-color: #f0f;            /* Magenta neón */
+  --accent-color: #0ff;             /* Cian neón */
+
+  /* Elementos UI */
+  --card-bg-color: #151530;
+  --inner-circle-bg-color: #f0f;
+  --inner-circle-text-color: #0a0a1a;
+
+  /* Textos específicos */
+  --item-title-color-palette2: #0ff;
+  --loading-text-color-palette2: #f0f;
+
+  /* Botones */
+  --loadmore-bg-color: #151530;
+  --loadmore-border-color: #0ff;
+  --loadmore-hover-bg-color: #202045;
+
+  /* Efectos especiales */
+  --neon-glow: 0 0 10px #f0f, 0 0 20px #f0f, 0 0 30px #f0f;
+  --neon-text-glow: 0 0 5px #0ff, 0 0 10px #0ff;
+
+  /* Tipografía futurista para cyberpunk */
+  --main-font-family: 'Orbitron', 'Share Tech Mono', monospace;
+}
+
+/* palette7 - Tema Forest Night */
+:root.palette7 {
+  --background-color: #0a1a0f;         /* Verde oscuro profundo */
+  --secondary-background-color: #132a1a; /* Verde un poco más claro */
+
+  /* Texto */
+  --white-color: #fff;
+  --text-color: #d1e7dd;              /* Verde claro suave */
+  --muted-color: #8ab39c;             /* Verde apagado */
+
+  /* Colores principales */
+  --primary-color: #4caf50;           /* Verde vibrante */
+  --accent-color: #8bc34a;            /* Verde lima */
+
+  /* Elementos UI */
+  --card-bg-color: #132a1a;
+  --inner-circle-bg-color: #4caf50;
+  --inner-circle-text-color: #0a1a0f;
+
+  /* Textos específicos */
+  --item-title-color-palette2: #8bc34a;
+  --loading-text-color-palette2: #4caf50;
+
+  /* Botones */
+  --loadmore-bg-color: #132a1a;
+  --loadmore-border-color: #4caf50;
+  --loadmore-hover-bg-color: #1e3a24;
+
+  /* Efectos naturales */
+  --leaf-shadow: 0 4px 6px rgb(76 175 80 / 20%);
+
+  /* Tipografía amigable para forest */
+  --main-font-family: 'Nunito', 'Segoe UI', arial, sans-serif;
+}
+
+/* palette8 - Tema Sunset Vibes */
+:root.palette8 {
+  --background-color: #1a0a14;         /* Morado oscuro profundo */
+  --secondary-background-color: #2a1320; /* Morado un poco más claro */
+
+  /* Texto */
+  --white-color: #fff;
+  --text-color: #ffd6e7;              /* Rosa claro */
+  --muted-color: #ffa8c8;             /* Rosa medio */
+
+  /* Colores principales */
+  --primary-color: #ff6b6b;           /* Coral */
+  --accent-color: #ffb347;            /* Naranja dorado */
+
+  /* Elementos UI */
+  --card-bg-color: #2a1320;
+  --inner-circle-bg-color: #ff6b6b;
+  --inner-circle-text-color: #1a0a14;
+
+  /* Textos específicos */
+  --item-title-color-palette2: #ffb347;
+  --loading-text-color-palette2: #ff6b6b;
+
+  /* Botones */
+  --loadmore-bg-color: #2a1320;
+  --loadmore-border-color: #ff6b6b;
+  --loadmore-hover-bg-color: #3a1a28;
+
+  /* Gradiente atardecer */
+  --sunset-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffb347 100%);
+
+  /* Tipografía redondeada para sunset */
+  --main-font-family: 'Quicksand', 'Segoe UI', arial, sans-serif;
+}
+
+/* palette9 - Tema Deep Ocean */
+:root.palette9 {
+  --background-color: #0a0a1f;         /* Azul marino muy oscuro */
+  --secondary-background-color: #15152b; /* Azul un poco más claro */
+
+  /* Texto */
+  --white-color: #fff;
+  --text-color: #d1e0ff;              /* Azul claro */
+  --muted-color: #8a9bb8;             /* Azul grisáceo */
+
+  /* Colores principales */
+  --primary-color: #00b4d8;           /* Azul turquesa */
+  --accent-color: #0077b6;            /* Azul más profundo */
+
+  /* Elementos UI */
+  --card-bg-color: #15152b;
+  --inner-circle-bg-color: #00b4d8;
+  --inner-circle-text-color: #0a0a1f;
+
+  /* Textos específicos */
+  --item-title-color-palette2: #0077b6;
+  --loading-text-color-palette2: #00b4d8;
+
+  /* Botones */
+  --loadmore-bg-color: #15152b;
+  --loadmore-border-color: #00b4d8;
+  --loadmore-hover-bg-color: #202040;
+
+  /* Efectos oceánicos */
+  --wave-shadow: 0 4px 8px rgb(0 180 216 / 30%);
+
+  /* Tipografía geométrica para ocean */
+  --main-font-family: 'Rubik', 'Segoe UI', arial, sans-serif;
+}
+
+/* palette10 - Tema Royal Purple */
+:root.palette10 {
+  --background-color: #0f0a1a;         /* Púrpura oscuro intenso */
+  --secondary-background-color: #1a132a; /* Púrpura un poco más claro */
+
+  /* Texto */
+  --white-color: #fff;
+  --text-color: #e6d6ff;              /* Lila claro */
+  --muted-color: #b39ddb;             /* Lila medio */
+
+  /* Colores principales */
+  --primary-color: #9c27b0;           /* Púrpura vibrante */
+  --accent-color: #673ab7;            /* Púrpura azulado */
+
+  /* Elementos UI */
+  --card-bg-color: #1a132a;
+  --inner-circle-bg-color: #9c27b0;
+  --inner-circle-text-color: #0f0a1a;
+
+  /* Textos específicos */
+  --item-title-color-palette2: #673ab7;
+  --loading-text-color-palette2: #9c27b0;
+
+  /* Botones */
+  --loadmore-bg-color: #1a132a;
+  --loadmore-border-color: #9c27b0;
+  --loadmore-hover-bg-color: #251a3a;
+
+  /* Efectos reales */
+  --royal-glow: 0 0 10px rgb(156 39 176 / 50%);
+
+  /* Tipografía elegante para purple */
+  --main-font-family: 'Poppins', 'Segoe UI', arial, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+a, button {
+  background-color: var(--button-bg-color);
+  color: var(--primary-color);
+}
+
+a:hover, button:hover {
+  background-color: var(--button-hover-color);
+  color: var(--text-color);
+}
+
+.card {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+}
+
+/* Estilo del contenedor de partículas */
+#tsparticles {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: -1; /* Mantén las partículas detrás del contenido */
 }
