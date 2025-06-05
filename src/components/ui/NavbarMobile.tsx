@@ -97,18 +97,18 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
           {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
         </button>
         <button
-  onClick={() => handleLinkClick("#hero")}
-  className="absolute right-6 top-1/2 transform -translate-y-1/2 focus:outline-none border-2 rounded-full border-[var(--primary-color)] p-1"
-  aria-label="Go to Home"
->
-  <Image
-    src="/images/logo7.png"
-    alt="Logo"
-    width={35}
-    height={35}
-    className="object-contain rounded-full"
-  />
-</button>
+          onClick={() => handleLinkClick("#hero")}
+          className="absolute right-6 top-1/2 transform -translate-y-1/2 focus:outline-none border-2 rounded-full border-[var(--primary-color)] p-1"
+          aria-label="Go to Home"
+        >
+          <Image
+            src="/images/logo7.png"
+            alt="Logo"
+            width={35}
+            height={35}
+            className="object-contain rounded-full"
+          />
+        </button>
       </nav>
 
       {/* Menú desplegable */}
@@ -123,12 +123,32 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
           <ul className="flex flex-col items-start pl-8 mt-32 space-y-6">
             {[
               { id: "#hero", label: "Home", icon: <AiOutlineHome size={24} /> },
-              { id: "#about", label: "About Me", icon: <AiOutlineUser size={24} /> },
-              { id: "#education", label: "Education", icon: <AiOutlineBook size={24} /> },
+              {
+                id: "#about",
+                label: "About Me",
+                icon: <AiOutlineUser size={24} />,
+              },
+              {
+                id: "#education",
+                label: "Education",
+                icon: <AiOutlineBook size={24} />,
+              },
               { id: "#skills", label: "Skills", icon: <BiBrain size={24} /> },
-              { id: "#services", label: "Services", icon: <FaTools size={24} /> },
-              { id: "#projects", label: "Projects", icon: <AiOutlineProject size={24} /> },
-              { id: "#contact", label: "Contact", icon: <AiOutlineMail size={24} /> },
+              {
+                id: "#services",
+                label: "Services",
+                icon: <FaTools size={24} />,
+              },
+              {
+                id: "#projects",
+                label: "Projects",
+                icon: <AiOutlineProject size={24} />,
+              },
+              {
+                id: "#contact",
+                label: "Contact",
+                icon: <AiOutlineMail size={24} />,
+              },
             ].map((link) => (
               <li key={link.id} className="w-full">
                 <button

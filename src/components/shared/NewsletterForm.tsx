@@ -4,9 +4,9 @@ import React, { useState } from "react";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
-    "idle"
-  );
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,9 +26,14 @@ export default function NewsletterForm() {
   };
 
   return (
-<div className="mt-8"> 
-      <h3 className="text-xl font-semibold mb-4 text-[var(--accent-color)]">Suscríbete a mi Newsletter</h3>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center">
+    <div className="mt-8">
+      <h3 className="text-xl font-semibold mb-4 text-[var(--accent-color)]">
+        Suscríbete a mi Newsletter
+      </h3>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col sm:flex-row items-center"
+      >
         <input
           type="email"
           placeholder="Tu Correo Electrónico"
@@ -53,12 +58,15 @@ export default function NewsletterForm() {
         </button>
       </form>
       {status === "success" && (
-        <p className="text-[var(--primary-color)] mt-2">¡Suscripción exitosa!</p>
+        <p className="text-[var(--primary-color)] mt-2">
+          ¡Suscripción exitosa!
+        </p>
       )}
       {status === "error" && (
-        <p className="text-[var(--error-color)] mt-2">Error al suscribirse. Inténtalo de nuevo.</p>
+        <p className="text-[var(--error-color)] mt-2">
+          Error al suscribirse. Inténtalo de nuevo.
+        </p>
       )}
     </div>
-
   );
 }

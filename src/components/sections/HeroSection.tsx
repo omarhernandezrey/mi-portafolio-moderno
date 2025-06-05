@@ -14,9 +14,9 @@ export default function HeroSection() {
     if (!projectsRef.current) {
       projectsRef.current = document.querySelector("#projects");
     }
-    projectsRef.current?.scrollIntoView({ 
+    projectsRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "start"
+      block: "start",
     });
   };
 
@@ -34,7 +34,7 @@ export default function HeroSection() {
         flex items-center justify-center
         overflow-hidden
       "
-      style={{ backgroundColor: 'var(--background-color)' }}
+      style={{ backgroundColor: "var(--background-color)" }}
     >
       {/* Fondo de imagen optimizado con next/image */}
       <div className="absolute inset-0">
@@ -73,7 +73,7 @@ export default function HeroSection() {
           justify-center text-center px-4
           w-full max-w-6xl mx-auto
         "
-        style={{ color: 'var(--white-color)' }}
+        style={{ color: "var(--white-color)" }}
       >
         {/* Título animado mejorado */}
         <h1
@@ -108,27 +108,29 @@ export default function HeroSection() {
             [text-shadow:_0_2px_4px_rgba(0,0,0,0.5)]
             animate-fadeIn
           "
-          style={{ color: 'rgba(255, 255, 255, 0.9)' }}
+          style={{ color: "rgba(255, 255, 255, 0.9)" }}
         >
           Combino{" "}
-          <span 
-            className="font-semibold" 
-            style={{ color: 'var(--accent-color)' }}
+          <span
+            className="font-semibold"
+            style={{ color: "var(--accent-color)" }}
           >
             creatividad
           </span>
           ,{" "}
-          <span 
-            className="font-semibold" 
-            style={{ color: 'var(--primary-color)' }}
+          <span
+            className="font-semibold"
+            style={{ color: "var(--primary-color)" }}
           >
             innovación
           </span>{" "}
-          y{" "}
-          <span className="font-semibold">tecnología</span> para crear experiencias web{" "}
-          <span 
-            className="underline" 
-            style={{ textDecorationColor: `color-mix(in srgb, var(--accent-color) 50%, transparent)` }}
+          y <span className="font-semibold">tecnología</span> para crear
+          experiencias web{" "}
+          <span
+            className="underline"
+            style={{
+              textDecorationColor: `color-mix(in srgb, var(--accent-color) 50%, transparent)`,
+            }}
           >
             inolvidables
           </span>

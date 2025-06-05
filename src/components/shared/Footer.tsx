@@ -1,7 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaWhatsapp } from "react-icons/fa";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaTwitter,
+  FaEnvelope,
+  FaWhatsapp,
+} from "react-icons/fa";
 import { FiArrowUp } from "react-icons/fi";
 import { motion } from "framer-motion";
 import TestimonialCard from "./TestimonialCard";
@@ -38,38 +44,38 @@ export default function Footer() {
     {
       href: "https://github.com/omarhernandezrey",
       icon: FaGithub,
-      label: "GitHub"
+      label: "GitHub",
     },
     {
       href: "https://linkedin.com/in/omarhernandezrey",
       icon: FaLinkedin,
-      label: "LinkedIn"
+      label: "LinkedIn",
     },
     {
       href: "https://twitter.com/omarhernandezrey",
       icon: FaTwitter,
-      label: "Twitter"
+      label: "Twitter",
     },
     {
       href: "mailto:omarhernandezrey@gmail.com",
       icon: FaEnvelope,
-      label: "Email"
-    }
+      label: "Email",
+    },
   ];
 
   const navigationLinks = [
     { href: "#about", label: "Sobre Mí" },
     { href: "#projects", label: "Proyectos" },
     { href: "#skills", label: "Habilidades" },
-    { href: "#contact", label: "Contacto" }
+    { href: "#contact", label: "Contacto" },
   ];
 
   return (
-    <footer 
+    <footer
       className="relative py-20 overflow-hidden"
       style={{
         background: `linear-gradient(to bottom, var(--background-color), var(--secondary-background-color))`,
-        color: 'var(--text-color)'
+        color: "var(--text-color)",
       }}
     >
       {/* Wave superior */}
@@ -86,49 +92,47 @@ export default function Footer() {
 
       {/* Contenido principal */}
       <div className="relative z-10 container mx-auto px-6 lg:px-20">
-        
         {/* Información principal */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-12 lg:space-y-0 mb-16">
-          
           {/* Información personal */}
-          <motion.div 
+          <motion.div
             className="flex flex-col items-center lg:items-start"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 
+            <h2
               className="text-3xl font-bold mb-4"
               style={{
                 background: `linear-gradient(to right, var(--primary-color), var(--accent-color))`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               Omar Hernández Rey
             </h2>
-            <p 
+            <p
               className="text-center lg:text-left max-w-xs leading-relaxed"
-              style={{ color: 'var(--muted-color)' }}
+              style={{ color: "var(--muted-color)" }}
             >
-              Desarrollador Web Full Stack apasionado por crear experiencias digitales
-              innovadoras y funcionales.
+              Desarrollador Web Full Stack apasionado por crear experiencias
+              digitales innovadoras y funcionales.
             </p>
           </motion.div>
 
           {/* Navegación */}
-          <motion.div 
+          <motion.div
             className="flex flex-col items-center lg:items-start"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <h3 
+            <h3
               className="text-xl font-semibold mb-4"
-              style={{ color: 'var(--accent-color)' }}
+              style={{ color: "var(--accent-color)" }}
             >
               Navegación
             </h3>
@@ -138,12 +142,12 @@ export default function Footer() {
                   <a
                     href={link.href}
                     className="transition-all duration-300 hover:translate-x-2"
-                    style={{ color: 'var(--text-color)' }}
+                    style={{ color: "var(--text-color)" }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = 'var(--accent-color)';
+                      e.currentTarget.style.color = "var(--accent-color)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = 'var(--text-color)';
+                      e.currentTarget.style.color = "var(--text-color)";
                     }}
                   >
                     {link.label}
@@ -154,16 +158,16 @@ export default function Footer() {
           </motion.div>
 
           {/* Redes sociales */}
-          <motion.div 
+          <motion.div
             className="flex flex-col items-center lg:items-start"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3 
+            <h3
               className="text-xl font-semibold mb-4"
-              style={{ color: 'var(--accent-color)' }}
+              style={{ color: "var(--accent-color)" }}
             >
               Sígueme
             </h3>
@@ -175,17 +179,17 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="transition-all duration-300"
-                  style={{ color: 'var(--muted-color)' }}
+                  style={{ color: "var(--muted-color)" }}
                   aria-label={social.label}
                   whileHover={{ scale: 1.2, y: -3 }}
                   whileTap={{ scale: 0.9 }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = 'var(--accent-color)';
+                    e.currentTarget.style.color = "var(--accent-color)";
                     e.currentTarget.style.filter = `drop-shadow(0 0 8px var(--accent-color))`;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'var(--muted-color)';
-                    e.currentTarget.style.filter = 'none';
+                    e.currentTarget.style.color = "var(--muted-color)";
+                    e.currentTarget.style.filter = "none";
                   }}
                 >
                   <social.icon size={24} />
@@ -207,7 +211,7 @@ export default function Footer() {
         </motion.div>
 
         {/* Testimonios */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -226,24 +230,24 @@ export default function Footer() {
         </motion.div>
 
         {/* Mapa */}
-        <motion.div 
+        <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
           viewport={{ once: true }}
         >
-          <h3 
+          <h3
             className="text-xl font-semibold mb-6"
-            style={{ color: 'var(--accent-color)' }}
+            style={{ color: "var(--accent-color)" }}
           >
             Encuéntrame en Bogotá
           </h3>
-          <div 
+          <div
             className="w-full h-64 rounded-xl overflow-hidden shadow-lg border transition-all duration-300 hover:shadow-2xl"
             style={{
               borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
-              boxShadow: `0 10px 30px color-mix(in srgb, var(--accent-color) 20%, transparent)`
+              boxShadow: `0 10px 30px color-mix(in srgb, var(--accent-color) 20%, transparent)`,
             }}
           >
             <iframe
@@ -257,33 +261,40 @@ export default function Footer() {
         </motion.div>
 
         {/* Separador */}
-        <div 
+        <div
           className="h-px mb-8"
-          style={{ backgroundColor: `color-mix(in srgb, var(--muted-color) 30%, transparent)` }}
+          style={{
+            backgroundColor: `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
+          }}
         />
 
         {/* Copyright y botón scroll */}
-        <motion.div 
+        <motion.div
           className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <p 
+          <p
             className="text-center md:text-left"
-            style={{ color: 'var(--muted-color)' }}
+            style={{ color: "var(--muted-color)" }}
           >
-            © {new Date().getFullYear()} Omar Hernández Rey. Todos los derechos reservados.
+            © {new Date().getFullYear()} Omar Hernández Rey. Todos los derechos
+            reservados.
           </p>
-          
+
           <motion.button
             onClick={scrollToTop}
             className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300"
             style={{
-              color: isScrollButtonHovered ? 'var(--white-color)' : 'var(--muted-color)',
-              backgroundColor: isScrollButtonHovered ? 'var(--accent-color)' : 'transparent',
-              border: `1px solid ${isScrollButtonHovered ? 'var(--accent-color)' : 'var(--muted-color)'}`,
+              color: isScrollButtonHovered
+                ? "var(--white-color)"
+                : "var(--muted-color)",
+              backgroundColor: isScrollButtonHovered
+                ? "var(--accent-color)"
+                : "transparent",
+              border: `1px solid ${isScrollButtonHovered ? "var(--accent-color)" : "var(--muted-color)"}`,
             }}
             aria-label="Volver al inicio"
             onMouseEnter={() => setIsScrollButtonHovered(true)}
@@ -293,7 +304,10 @@ export default function Footer() {
           >
             <motion.div
               animate={{ y: isScrollButtonHovered ? [-2, 2, -2] : 0 }}
-              transition={{ duration: 1, repeat: isScrollButtonHovered ? Infinity : 0 }}
+              transition={{
+                duration: 1,
+                repeat: isScrollButtonHovered ? Infinity : 0,
+              }}
             >
               <FiArrowUp size={20} />
             </motion.div>
@@ -308,16 +322,16 @@ export default function Footer() {
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-20 right-6 p-4 rounded-full shadow-lg transition-all duration-300 z-50"
-        style={{ backgroundColor: '#25D366' }}
+        style={{ backgroundColor: "#25D366" }}
         aria-label="Contactar por WhatsApp"
         initial={{ opacity: 0, scale: 0.5, y: 100 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1 }}
-        whileHover={{ 
-          scale: 1.1, 
+        whileHover={{
+          scale: 1.1,
           y: -5,
-          backgroundColor: '#20B357',
-          boxShadow: '0 10px 30px rgba(37, 211, 102, 0.4)'
+          backgroundColor: "#20B357",
+          boxShadow: "0 10px 30px rgba(37, 211, 102, 0.4)",
         }}
         whileTap={{ scale: 0.9 }}
       >
@@ -341,8 +355,16 @@ export default function Footer() {
         >
           <defs>
             <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="var(--background-color)" stopOpacity="1" />
-              <stop offset="100%" stopColor="var(--secondary-background-color)" stopOpacity="0.8" />
+              <stop
+                offset="0%"
+                stopColor="var(--background-color)"
+                stopOpacity="1"
+              />
+              <stop
+                offset="100%"
+                stopColor="var(--secondary-background-color)"
+                stopOpacity="0.8"
+              />
             </linearGradient>
           </defs>
           <path

@@ -40,11 +40,11 @@
   left: 6%; /* Distancia desde la izquierda */
   width: 90%; /* Ancho del área de pantalla */
   height: 70%; /* Alto del área de pantalla */
-  
+
   /* Escala el contenido para que se vea bien */
   transform: scale(1);
   transform-origin: top left;
-  
+
   /* Opcional: esquinas redondeadas para simular la pantalla */
   border-radius: 4px;
 }
@@ -76,7 +76,7 @@
   .deviceFrameContainer {
     gap: 1.5rem;
   }
-  
+
   .device {
     max-width: 90%;
   }
@@ -86,11 +86,11 @@
   .deviceFrameContainer {
     gap: 1rem;
   }
-  
+
   .device {
     max-width: 95%;
   }
-  
+
   /* Ajustes más finos para móviles pequeños */
   .desktopIframe {
     top: 10%;
@@ -98,14 +98,14 @@
     width: 84%;
     height: 65%;
   }
-  
+
   .tabletIframe {
     top: 8%;
     left: 10%;
     width: 80%;
     height: 74%;
   }
-  
+
   .mobileIframe {
     top: 14%;
     left: 14%;

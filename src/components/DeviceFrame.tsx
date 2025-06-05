@@ -10,15 +10,14 @@ interface DeviceFrameProps {
   title: string;
 }
 
-const DeviceFrame: React.FC<DeviceFrameProps> = ({ 
-  demo, 
-  demoTablet, 
-  demoMobile, 
-  title 
+const DeviceFrame: React.FC<DeviceFrameProps> = ({
+  demo,
+  demoTablet,
+  demoMobile,
+  title,
 }) => {
   return (
     <div className={styles.deviceFrameContainer}>
-      
       {/* Desktop/Laptop */}
       <div className={styles.device}>
         <Image
@@ -73,7 +72,6 @@ const DeviceFrame: React.FC<DeviceFrameProps> = ({
           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
         ></iframe>
       </div>
-
     </div>
   );
 };

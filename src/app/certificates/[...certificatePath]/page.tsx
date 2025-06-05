@@ -25,7 +25,9 @@ const CertificatePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4">
-      <h1 className="text-3xl font-bold text-white mb-6">Certificado Completo</h1>
+      <h1 className="text-3xl font-bold text-white mb-6">
+        Certificado Completo
+      </h1>
       <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
         <Image
           src={certificateUrl}

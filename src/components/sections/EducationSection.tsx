@@ -1,20 +1,15 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import ReactDOM from 'react-dom';
-import { educationData } from '../../lib/educationData';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import Image from 'next/image';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import ReactDOM from "react-dom";
+import { educationData } from "../../lib/educationData";
+import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 
 // Icono de graduación personalizado
 const GraduationCapIcon = ({ size = 24 }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="currentColor"
-  >
-    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z" />
   </svg>
 );
 
@@ -40,14 +35,23 @@ interface EducationModalProps {
   logo: string;
   certificate?: string | null;
 }
-const EducationModal = ({ isOpen, onClose, title, institution, duration, description, logo, certificate }: EducationModalProps) => {
+const EducationModal = ({
+  isOpen,
+  onClose,
+  title,
+  institution,
+  duration,
+  description,
+  logo,
+  certificate,
+}: EducationModalProps) => {
   // Bloquear scroll externo cuando el modal está abierto (html y body)
   useEffect(() => {
     if (isOpen) {
       const originalBodyOverflow = document.body.style.overflow;
       const originalHtmlOverflow = document.documentElement.style.overflow;
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = originalBodyOverflow;
         document.documentElement.style.overflow = originalHtmlOverflow;
@@ -58,35 +62,35 @@ const EducationModal = ({ isOpen, onClose, title, institution, duration, descrip
   if (!isOpen) return null;
 
   const modalContent = (
-    <div 
+    <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Overlay oscuro
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
+        backgroundColor: "rgba(0, 0, 0, 0.8)", // Overlay oscuro
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
         zIndex: 3000,
-        padding: '40px 20px 20px 20px', // paddingTop extra para evitar el navbar
-        overflow: 'auto',
+        padding: "40px 20px 20px 20px", // paddingTop extra para evitar el navbar
+        overflow: "auto",
       }}
       onClick={onClose}
     >
-      <div 
+      <div
         style={{
-          backgroundColor: 'var(--card-bg-color)',
-          borderRadius: '15px',
-          padding: '30px',
-          maxWidth: '600px',
-          width: '100%',
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          position: 'relative',
-          border: '2px solid var(--accent-color)',
+          backgroundColor: "var(--card-bg-color)",
+          borderRadius: "15px",
+          padding: "30px",
+          maxWidth: "600px",
+          width: "100%",
+          maxHeight: "90vh",
+          overflowY: "auto",
+          overflowX: "hidden",
+          position: "relative",
+          border: "2px solid var(--accent-color)",
           zIndex: 3001,
         }}
         onClick={(e) => e.stopPropagation()}
@@ -101,7 +105,7 @@ const EducationModal = ({ isOpen, onClose, title, institution, duration, descrip
           <motion.span
             className="inline-block px-4 py-2 mb-4 text-xs font-semibold tracking-wider uppercase rounded-full border"
             style={{
-              color: 'var(--accent-color)',
+              color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
               borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
             }}
@@ -113,74 +117,98 @@ const EducationModal = ({ isOpen, onClose, title, institution, duration, descrip
             className="text-3xl md:text-4xl font-bold mb-4"
             style={{
               background:
-                'linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
             {title}
           </h2>
-          <p className="text-base" style={{ color: 'var(--muted-color)' }}>{institution}</p>
-          <p className="text-sm mb-2" style={{ color: 'var(--muted-color)' }}>{duration}</p>
+          <p className="text-base" style={{ color: "var(--muted-color)" }}>
+            {institution}
+          </p>
+          <p className="text-sm mb-2" style={{ color: "var(--muted-color)" }}>
+            {duration}
+          </p>
         </motion.div>
-        
+
         {logo && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
-            <Image 
-              src={logo} 
-              alt={institution} 
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "20px",
+            }}
+          >
+            <Image
+              src={logo}
+              alt={institution}
               width={90}
               height={90}
-              style={{ 
-                objectFit: 'contain', 
-                borderRadius: '50%', 
-                boxShadow: '0 4px 16px var(--accent-color, rgba(243,156,18,0.15))',
-                background: 'var(--white-color)',
-                border: '2px solid var(--accent-color)',
-                padding: '8px',
-                display: 'block',
-              }} 
+              style={{
+                objectFit: "contain",
+                borderRadius: "50%",
+                boxShadow:
+                  "0 4px 16px var(--accent-color, rgba(243,156,18,0.15))",
+                background: "var(--white-color)",
+                border: "2px solid var(--accent-color)",
+                padding: "8px",
+                display: "block",
+              }}
             />
           </div>
         )}
-        
+
         {description && (
-          <p style={{ color: 'var(--text-color)', marginBottom: '20px', lineHeight: '1.6' }}>
+          <p
+            style={{
+              color: "var(--text-color)",
+              marginBottom: "20px",
+              lineHeight: "1.6",
+            }}
+          >
             {description}
           </p>
         )}
-        
+
         {certificate && (
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
-            <a 
-              href={certificate} 
-              target="_blank" 
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <a
+              href={certificate}
+              target="_blank"
               rel="noopener noreferrer"
               style={{
-                backgroundColor: 'var(--accent-color)',
-                color: 'var(--background-color)',
-                padding: '10px 20px',
-                borderRadius: '25px',
-                textDecoration: 'none',
-                display: 'inline-block',
-                fontWeight: 'bold',
-                marginBottom: '16px'
+                backgroundColor: "var(--accent-color)",
+                color: "var(--background-color)",
+                padding: "10px 20px",
+                borderRadius: "25px",
+                textDecoration: "none",
+                display: "inline-block",
+                fontWeight: "bold",
+                marginBottom: "16px",
               }}
             >
               Ver Certificado
             </a>
-            <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'center' }}>
+            <div
+              style={{
+                marginTop: "12px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Image
                 src={certificate}
                 alt="Certificado"
                 width={320}
                 height={240}
                 style={{
-                  borderRadius: '10px',
-                  boxShadow: '0 2px 12px var(--accent-color, rgba(0,0,0,0.15))',
-                  objectFit: 'contain',
-                  background: 'var(--white-color)',
+                  borderRadius: "10px",
+                  boxShadow: "0 2px 12px var(--accent-color, rgba(0,0,0,0.15))",
+                  objectFit: "contain",
+                  background: "var(--white-color)",
                 }}
               />
             </div>
@@ -188,20 +216,27 @@ const EducationModal = ({ isOpen, onClose, title, institution, duration, descrip
         )}
 
         {/* Botón de cerrar en la parte inferior */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "32px",
+          }}
+        >
           <button
             onClick={onClose}
             style={{
-              backgroundColor: 'var(--primary-color)',
-              color: 'var(--white-color)',
-              padding: '12px 32px',
-              borderRadius: '25px',
-              border: 'none',
-              fontWeight: 'bold',
-              fontSize: '1rem',
-              boxShadow: '0 2px 8px var(--primary-color, rgba(243,111,97,0.15))',
-              cursor: 'pointer',
-              transition: 'background 0.2s',
+              backgroundColor: "var(--primary-color)",
+              color: "var(--white-color)",
+              padding: "12px 32px",
+              borderRadius: "25px",
+              border: "none",
+              fontWeight: "bold",
+              fontSize: "1rem",
+              boxShadow:
+                "0 2px 8px var(--primary-color, rgba(243,111,97,0.15))",
+              cursor: "pointer",
+              transition: "background 0.2s",
             }}
           >
             Cerrar
@@ -211,16 +246,25 @@ const EducationModal = ({ isOpen, onClose, title, institution, duration, descrip
     </div>
   );
 
-  return ReactDOM.createPortal(modalContent, typeof window !== 'undefined' ? document.body : ({} as HTMLElement));
+  return ReactDOM.createPortal(
+    modalContent,
+    typeof window !== "undefined" ? document.body : ({} as HTMLElement),
+  );
 };
 
 // Componente para mostrar el logo en la línea de tiempo con fallback seguro
-function TimelineLogo({ logo, institution }: { logo: string; institution: string }) {
+function TimelineLogo({
+  logo,
+  institution,
+}: {
+  logo: string;
+  institution: string;
+}) {
   const [imgError, setImgError] = useState(false);
 
   if (!logo || imgError) {
     return (
-      <div className="timeline-inner-circle" style={{ display: 'flex' }}>
+      <div className="timeline-inner-circle" style={{ display: "flex" }}>
         <GraduationCapIcon size={16} />
       </div>
     );
@@ -234,16 +278,16 @@ function TimelineLogo({ logo, institution }: { logo: string; institution: string
       height={80}
       className="timeline-logo"
       style={{
-        objectFit: 'contain',
-        borderRadius: '50%',
-        boxShadow: '0 4px 16px rgba(243,156,18,0.15)',
-        background: '#fff',
-        border: '2px solid #f39c12',
-        padding: '4px',
-        display: 'block',
-        margin: '0 auto',
-        transform: 'scale(1.08)',
-        transition: 'transform 0.2s',
+        objectFit: "contain",
+        borderRadius: "50%",
+        boxShadow: "0 4px 16px rgba(243,156,18,0.15)",
+        background: "#fff",
+        border: "2px solid #f39c12",
+        padding: "4px",
+        display: "block",
+        margin: "0 auto",
+        transform: "scale(1.08)",
+        transition: "transform 0.2s",
       }}
       onError={() => setImgError(true)}
     />
@@ -256,7 +300,7 @@ const flattenEducationData = (data: typeof educationData): EducationItem[] => {
     category.items.map((item) => ({
       category: category.category,
       ...item,
-    }))
+    })),
   );
 };
 
@@ -283,22 +327,32 @@ const createFloatingElements = (count = 12) =>
   }));
 
 const EducationSection = () => {
-  const allItems = useMemo<EducationItem[]>(() => flattenEducationData(educationData), []);
-  
+  const allItems = useMemo<EducationItem[]>(
+    () => flattenEducationData(educationData),
+    [],
+  );
+
   const [visibleCount, setVisibleCount] = useState<number>(0);
   const [visibleItems, setVisibleItems] = useState<EducationItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedItem, setSelectedItem] = useState<EducationItem | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
+    [],
+  );
   const sectionRef = React.useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
-  useEffect(() => { setFloatingElements(createFloatingElements()); }, []);
+  useEffect(() => {
+    setFloatingElements(createFloatingElements());
+  }, []);
 
   const loadMoreItems = useCallback(() => {
     if (visibleCount >= allItems.length) {
@@ -742,15 +796,30 @@ const EducationSection = () => {
         {/* Fondo parallax moderno (igual que AboutSection) */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
           {/* Círculo grande blur */}
-          <motion.div style={{ y: y1 }} className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full bg-[var(--primary-color)] opacity-30 blur-3xl" />
+          <motion.div
+            style={{ y: y1 }}
+            className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full bg-[var(--primary-color)] opacity-30 blur-3xl"
+          />
           {/* Blob acento */}
-          <motion.div style={{ y: y2 }} className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] rounded-[60%_40%_30%_70%/_60%_30%_70%_40%] bg-[var(--accent-color)] opacity-40 blur-2xl rotate-12" />
+          <motion.div
+            style={{ y: y2 }}
+            className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] rounded-[60%_40%_30%_70%/_60%_30%_70%_40%] bg-[var(--accent-color)] opacity-40 blur-2xl rotate-12"
+          />
           {/* Círculo degradado */}
-          <motion.div style={{ y: y3 }} className="absolute bottom-[-100px] left-[20%] w-[220px] h-[220px] rounded-full bg-gradient-to-tr from-[var(--primary-color)] via-[var(--accent-color)] to-transparent opacity-30 blur-2xl" />
+          <motion.div
+            style={{ y: y3 }}
+            className="absolute bottom-[-100px] left-[20%] w-[220px] h-[220px] rounded-full bg-gradient-to-tr from-[var(--primary-color)] via-[var(--accent-color)] to-transparent opacity-30 blur-2xl"
+          />
           {/* Línea diagonal luminosa */}
-          <motion.div style={{ y: y4 }} className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] bg-gradient-to-r from-[var(--accent-color)]/60 via-white/10 to-transparent opacity-40 rotate-[-20deg] blur-md" />
+          <motion.div
+            style={{ y: y4 }}
+            className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] bg-gradient-to-r from-[var(--accent-color)]/60 via-white/10 to-transparent opacity-40 rotate-[-20deg] blur-md"
+          />
           {/* Círculo blanco suave */}
-          <motion.div style={{ y: y2 }} className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl" />
+          <motion.div
+            style={{ y: y2 }}
+            className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl"
+          />
         </div>
         {/* Partículas animadas tipo AboutSection */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -763,7 +832,7 @@ const EducationSection = () => {
                 height: el.size,
                 left: `${el.x}%`,
                 top: `${el.y}%`,
-                backgroundColor: 'var(--accent-color)',
+                backgroundColor: "var(--accent-color)",
                 opacity: el.opacity,
               }}
               animate={{
@@ -776,7 +845,7 @@ const EducationSection = () => {
                 duration: el.duration,
                 repeat: Infinity,
                 delay: el.delay,
-                ease: 'easeInOut',
+                ease: "easeInOut",
               }}
             />
           ))}
@@ -802,7 +871,7 @@ const EducationSection = () => {
           <motion.span
             className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
             style={{
-              color: 'var(--accent-color)',
+              color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
               borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
             }}
@@ -814,10 +883,10 @@ const EducationSection = () => {
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
             style={{
               background:
-                'linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
             Mi Trayectoria Académica
@@ -826,7 +895,9 @@ const EducationSection = () => {
 
         <div className="container">
           <div className="title-wrapper">
-            <h2 id="education-title" className="title">Education</h2>
+            <h2 id="education-title" className="title">
+              Education
+            </h2>
             <div className="title-underline" />
           </div>
 
@@ -837,24 +908,30 @@ const EducationSection = () => {
             </div>
 
             {visibleItems.map((item, index) => {
-              const alignment = index % 2 === 0 ? 'right' : 'left';
-              
+              const alignment = index % 2 === 0 ? "right" : "left";
+
               return (
                 <div
                   key={index}
                   className={`timeline-item ${alignment}`}
                   onClick={() => openModal(item)}
-                  onKeyPress={(e) => e.key === 'Enter' && openModal(item)}
+                  onKeyPress={(e) => e.key === "Enter" && openModal(item)}
                   tabIndex={0}
                   role="button"
                   aria-pressed="false"
                   aria-labelledby={`education-item-title-${index}`}
                 >
                   <div className="timeline-icon">
-                    <TimelineLogo logo={item.logo} institution={item.institution} />
+                    <TimelineLogo
+                      logo={item.logo}
+                      institution={item.institution}
+                    />
                   </div>
                   <div className="timeline-content">
-                    <h3 id={`education-item-title-${index}`} className="item-title">
+                    <h3
+                      id={`education-item-title-${index}`}
+                      className="item-title"
+                    >
                       {item.title}
                     </h3>
                     <p className="item-institution">{item.institution}</p>
@@ -868,7 +945,7 @@ const EducationSection = () => {
               <div
                 className="timeline-item load-more left"
                 onClick={loadMoreItems}
-                onKeyPress={(e) => e.key === 'Enter' && loadMoreItems()}
+                onKeyPress={(e) => e.key === "Enter" && loadMoreItems()}
                 tabIndex={0}
                 role="button"
                 aria-pressed="false"
@@ -883,7 +960,10 @@ const EducationSection = () => {
               </div>
             )}
 
-            <div id="infinite-scroll-sentinel" className="timeline-end-point"></div>
+            <div
+              id="infinite-scroll-sentinel"
+              className="timeline-end-point"
+            ></div>
           </div>
 
           {selectedItem && (
@@ -898,7 +978,7 @@ const EducationSection = () => {
               certificate={selectedItem.certificate}
             />
           )}
-          
+
           {isLoading && <p className="loading-text">Cargando más...</p>}
         </div>
       </section>

@@ -12,7 +12,7 @@ export default function ParticlesComponent() {
 
   useEffect(() => {
     setIsClient(true);
-    
+
     const initParticlesEngine = async (engine: Engine) => {
       try {
         await loadFull(engine);
@@ -22,19 +22,24 @@ export default function ParticlesComponent() {
       }
     };
 
-    if (typeof window !== 'undefined' && (window as any).tsParticles) {
-      initParticlesEngine((window as any).tsParticles);
+    if (typeof window !== "undefined" && window.tsParticles) {
+      initParticlesEngine(window.tsParticles);
     } else {
-      import('tsparticles').then(async (mod: any) => {
-        const engine: Engine = mod.tsParticles || mod.default || mod;
-        await initParticlesEngine(engine);
-      }).catch(console.error);
+      import("tsparticles")
+        .then(async (mod: unknown) => {
+          const engine: Engine =
+            (mod as { tsParticles?: Engine; default?: Engine })?.tsParticles ||
+            (mod as { default?: Engine })?.default ||
+            (mod as Engine);
+          await initParticlesEngine(engine);
+        })
+        .catch(console.error);
     }
   }, []);
 
   const logos = useMemo(() => {
     if (!isClient) return [];
-    
+
     const logoList = [
       "/images/logos/angular.svg",
       "/images/logos/css.svg",
@@ -89,27 +94,30 @@ export default function ParticlesComponent() {
 
   // Obtener colores CSS dinámicamente
   const getThemeColors = useCallback(() => {
-    if (typeof window === 'undefined') return {
-      primary: '#00cba9',
-      accent: '#00a086',
-      text: '#d1d5db'
-    };
+    if (typeof window === "undefined")
+      return {
+        primary: "#00cba9",
+        accent: "#00a086",
+        text: "#d1d5db",
+      };
 
     const computedStyle = getComputedStyle(document.documentElement);
     return {
-      primary: computedStyle.getPropertyValue('--primary-color').trim() || '#00cba9',
-      accent: computedStyle.getPropertyValue('--accent-color').trim() || '#00a086',
-      text: computedStyle.getPropertyValue('--text-color').trim() || '#d1d5db'
+      primary:
+        computedStyle.getPropertyValue("--primary-color").trim() || "#00cba9",
+      accent:
+        computedStyle.getPropertyValue("--accent-color").trim() || "#00a086",
+      text: computedStyle.getPropertyValue("--text-color").trim() || "#d1d5db",
     };
   }, []);
 
   const manualParticles = useMemo(() => {
     if (!logosReady || logos.length === 0) return [];
-    
+
     return logos.slice(0, 12).map((logo, index) => ({
       position: {
-        x: (15 + (index % 4) * 20) + Math.random() * 10,
-        y: (15 + Math.floor(index / 4) * 25) + Math.random() * 10,
+        x: 15 + (index % 4) * 20 + Math.random() * 10,
+        y: 15 + Math.floor(index / 4) * 25 + Math.random() * 10,
       },
       options: {
         shape: {
@@ -131,22 +139,22 @@ export default function ParticlesComponent() {
 
   const options: ISourceOptions = useMemo(() => {
     if (!logosReady) return {};
-    
+
     const colors = getThemeColors();
-    
+
     return {
       detectRetina: true,
       fpsLimit: 60, // Reducido para mejor rendimiento
       particles: {
         number: { value: 0 },
-        size: { 
+        size: {
           value: { min: 4, max: 8 },
           animation: {
             enable: true,
             speed: 2,
             minimumValue: 4,
-            sync: false
-          }
+            sync: false,
+          },
         },
         move: {
           enable: true,
@@ -154,15 +162,15 @@ export default function ParticlesComponent() {
           direction: "none",
           random: true,
           straight: false,
-          outModes: { 
+          outModes: {
             default: "bounce",
             top: "none",
-            bottom: "destroy"
+            bottom: "destroy",
           },
         },
         collisions: {
           enable: true,
-          mode: "bounce"
+          mode: "bounce",
         },
         links: {
           enable: true,
@@ -173,8 +181,8 @@ export default function ParticlesComponent() {
           triangles: {
             enable: true,
             color: colors.primary,
-            opacity: 0.1
-          }
+            opacity: 0.1,
+          },
         },
         shape: {
           type: "image",
@@ -192,9 +200,9 @@ export default function ParticlesComponent() {
             enable: true,
             speed: 1,
             minimumValue: 0.4,
-            sync: false
-          }
-        }
+            sync: false,
+          },
+        },
       },
       interactivity: {
         detectsOn: "window",
@@ -209,22 +217,22 @@ export default function ParticlesComponent() {
           },
           resize: {
             enable: true,
-            delay: 0.5
-          }
+            delay: 0.5,
+          },
         },
         modes: {
           repulse: {
             distance: 100,
             duration: 0.4,
             factor: 3,
-            speed: 2
+            speed: 2,
           },
           bubble: {
             distance: 150,
             size: 45,
             duration: 2,
             opacity: 1,
-            color: colors.primary
+            color: colors.primary,
           },
           push: {
             quantity: 1,
@@ -253,40 +261,40 @@ export default function ParticlesComponent() {
             particles: {
               links: {
                 distance: 80,
-                opacity: 0.3
+                opacity: 0.3,
               },
               size: {
-                value: { min: 3, max: 6 }
-              }
+                value: { min: 3, max: 6 },
+              },
             },
             interactivity: {
               modes: {
                 repulse: {
-                  distance: 80
-                }
-              }
-            }
-          }
-        }
-      ]
+                  distance: 80,
+                },
+              },
+            },
+          },
+        },
+      ],
     };
   }, [logos, manualParticles, logosReady, getThemeColors]);
 
   // Render condicional mejorado
   if (!init || !logosReady || !isClient) {
     return (
-      <div 
+      <div
         className="absolute inset-0 opacity-20"
         style={{
-          background: `radial-gradient(circle at 50% 50%, var(--primary-color) 0%, transparent 70%)`
+          background: `radial-gradient(circle at 50% 50%, var(--primary-color) 0%, transparent 70%)`,
         }}
       />
     );
   }
 
   return (
-    <Particles 
-      id="tsparticles" 
+    <Particles
+      id="tsparticles"
       options={options}
       className="absolute inset-0 w-full h-full"
     />

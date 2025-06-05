@@ -9,14 +9,29 @@ export function usePalette() {
   // Aplicar la paleta al cambiar
   const applyPalette = useCallback((index: number) => {
     const root = document.documentElement;
-    const palettes = Array.from({ length: PALETTE_COUNT }, (_, i) => i === 0 ? "" : `palette${i+1}`);
+    const palettes = [
+      "",
+      "palette2",
+      "palette3",
+      "palette4",
+      "palette5",
+      "palette6",
+      "palette7",
+      "palette8",
+      "palette9",
+      "palette10",
+    ];
+
+    // Eliminar todas las clases de paleta previamente aplicadas
     palettes.forEach((palette) => {
       if (palette) root.classList.remove(palette);
     });
-    if (paletteIndex > 0) {
-      root.classList.add(`palette${paletteIndex+1}`);
+
+    // Aplicar la nueva paleta si no es la predeterminada
+    if (palettes[index]) {
+      root.classList.add(palettes[index]);
     }
-  }, [paletteIndex]);
+  }, []);
 
   // Cargar paleta guardada en localStorage
   useEffect(() => {
@@ -38,4 +53,4 @@ export function usePalette() {
   }, [paletteIndex, applyPalette]);
 
   return { paletteIndex, setPaletteIndex, togglePalette };
-} 
+}

@@ -2,27 +2,17 @@
 const nextConfig = {
   // Configuración para imágenes
   images: {
-    domains: ['localhost'],
+    domains: ["localhost"],
     unoptimized: false,
   },
-  
-  // Configuración experimental para turbopack
-  experimental: {
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
-  },
+
+  // Puedes agregar aquí configuración para turbopack si lo necesitas en el futuro
 
   // Configuración de webpack para SVGs
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
-      use: ['@svgr/webpack'],
+      use: ["@svgr/webpack"],
     });
     return config;
   },

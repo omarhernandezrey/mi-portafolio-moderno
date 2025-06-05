@@ -19,16 +19,16 @@ export default function PaletteToggle() {
   const applyPalette = (index: number) => {
     const root = document.documentElement;
     const palettes = [
-      "", 
-      "palette2", 
-      "palette3", 
-      "palette4", 
-      "palette5", 
-      "palette6", 
-      "palette7", 
-      "palette8", 
-      "palette9", 
-      "palette10"
+      "",
+      "palette2",
+      "palette3",
+      "palette4",
+      "palette5",
+      "palette6",
+      "palette7",
+      "palette8",
+      "palette9",
+      "palette10",
     ];
 
     // Eliminar todas las clases de paleta previamente aplicadas
@@ -54,19 +54,21 @@ export default function PaletteToggle() {
       onClick={togglePalette}
       className="fixed top-6 right-6 w-14 h-14 flex items-center justify-center rounded-full shadow-xl transition-all duration-300 z-50 group hover:scale-110 lg:block hidden"
       style={{
-        background: "linear-gradient(135deg, var(--primary-color), var(--accent-color))",
+        background:
+          "linear-gradient(135deg, var(--primary-color), var(--accent-color))",
         border: "2px solid var(--accent-color)/30",
       }}
       aria-label="Cambiar Paleta de Colores"
     >
-      <MdColorLens 
-        size={24} 
-        className="text-white group-hover:rotate-180 transition-transform duration-500" 
+      <MdColorLens
+        size={24}
+        className="text-white group-hover:rotate-180 transition-transform duration-500"
       />
-      <div 
+      <div
         className="absolute inset-0 rounded-full blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-300"
         style={{
-          background: "linear-gradient(135deg, var(--primary-color), var(--accent-color))",
+          background:
+            "linear-gradient(135deg, var(--primary-color), var(--accent-color))",
         }}
       />
     </button>

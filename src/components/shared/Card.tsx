@@ -1,6 +1,6 @@
-import React from 'react';
-import Image from 'next/image';
-import technologyIcons from '../../config/technologyIcons';
+import React from "react";
+import Image from "next/image";
+import technologyIcons from "../../config/technologyIcons";
 
 interface CardProps {
   title: string;
@@ -10,115 +10,146 @@ interface CardProps {
   demo: string;
 }
 
-const Card: React.FC<CardProps> = ({ title, description, technologies, repository, demo }) => {
+const Card: React.FC<CardProps> = ({
+  title,
+  description,
+  technologies,
+  repository,
+  demo,
+}) => {
   return (
-    <div className="relative p-4 sm:p-6 lg:p-8 xl:p-10 w-full max-w-[300px] sm:max-w-[350px] lg:max-w-[600px] xl:max-w-[700px] flex flex-col justify-between bg-transparent text-[var(--text-color)] rounded-lg z-10 mx-auto overflow-visible" 
-         style={{ minHeight: 'clamp(450px, 50vh, 750px)' }}>
+    <div
+      className="relative p-4 sm:p-6 lg:p-8 xl:p-10 w-full max-w-[300px] sm:max-w-[350px] lg:max-w-[600px] xl:max-w-[700px] flex flex-col justify-between bg-transparent text-[var(--text-color)] rounded-lg z-10 mx-auto overflow-visible"
+      style={{ minHeight: "clamp(450px, 50vh, 750px)" }}
+    >
       <div className="flex flex-col items-center justify-center scale-75 sm:scale-90 lg:scale-150 xl:scale-175 origin-center lg:pb-8 xl:pb-10">
         {/* Desktop/Laptop - TAMAÑOS FIJOS pero escalables */}
-        <div className="relative flex-shrink-0" style={{ width: '250px', height: '200px' }}>
-          <Image 
-            src="/images/laptop.png" 
-            alt="Laptop" 
-            width={250} 
-            height={200} 
-            className="w-full h-full object-cover" 
-            style={{ width: '250px', height: '200px' }}
+        <div
+          className="relative flex-shrink-0"
+          style={{ width: "250px", height: "200px" }}
+        >
+          <Image
+            src="/images/laptop.png"
+            alt="Laptop"
+            width={250}
+            height={200}
+            className="w-full h-full object-cover"
+            style={{ width: "250px", height: "200px" }}
           />
-          <div className="absolute overflow-hidden" style={{ 
-            top: '20px', 
-            left: '8px', 
-            right: '4px', 
-            bottom: '4px' 
-          }}>
+          <div
+            className="absolute overflow-hidden"
+            style={{
+              top: "20px",
+              left: "8px",
+              right: "4px",
+              bottom: "4px",
+            }}
+          >
             <iframe
               src={demo}
               className="border-none"
               title={`${title} Desktop`}
               style={{
-                width: '1570px',
-                height: '1050px',
-                transform: 'scale(0.15)',
-                transformOrigin: 'top left',
-                pointerEvents: 'auto',
+                width: "1570px",
+                height: "1050px",
+                transform: "scale(0.15)",
+                transformOrigin: "top left",
+                pointerEvents: "auto",
               }}
             ></iframe>
           </div>
         </div>
-        
+
         {/* Tablet y Mobile - MÁS EXTENDIDOS fuera del contenedor */}
-        <div className="flex justify-center items-center gap-36" style={{ 
-          width: '420px', 
-          marginTop: '-72px',
-          position: 'relative',
-          left: '0px'
-        }}>
+        <div
+          className="flex justify-center items-center gap-36"
+          style={{
+            width: "420px",
+            marginTop: "-72px",
+            position: "relative",
+            left: "0px",
+          }}
+        >
           {/* Tablet - MUCHO MÁS GRANDE */}
-          <div className="relative flex-shrink-0" style={{ width: '160px', height: '116px' }}>
-            <Image 
-              src="/images/tablet.png" 
-              alt="Tablet" 
-              width={160} 
-              height={116} 
-              className="w-full h-full object-cover" 
-              style={{ width: '160px', height: '116px' }}
+          <div
+            className="relative flex-shrink-0"
+            style={{ width: "160px", height: "116px" }}
+          >
+            <Image
+              src="/images/tablet.png"
+              alt="Tablet"
+              width={160}
+              height={116}
+              className="w-full h-full object-cover"
+              style={{ width: "160px", height: "116px" }}
             />
-            <div className="absolute overflow-hidden" style={{ 
-              top: '6px', 
-              left: '3px', 
-              right: '3px', 
-              bottom: '10px' 
-            }}>
+            <div
+              className="absolute overflow-hidden"
+              style={{
+                top: "6px",
+                left: "3px",
+                right: "3px",
+                bottom: "10px",
+              }}
+            >
               <iframe
                 src={demo}
                 className="border-none bg-transparent"
-			          title={`${title} Tablet`}
+                title={`${title} Tablet`}
                 style={{
-                  width: '1170px',
-                  height: '761px',
-                  transform: 'scale(0.13)',
-                  transformOrigin: 'top left',
-                  pointerEvents: 'auto',
+                  width: "1170px",
+                  height: "761px",
+                  transform: "scale(0.13)",
+                  transformOrigin: "top left",
+                  pointerEvents: "auto",
                 }}
               ></iframe>
             </div>
           </div>
-          
+
           {/* Mobile */}
-          <div className="relative flex-shrink-0" style={{ width: '36px', height: '76px' }}>
-            <Image 
-              src="/images/mobile.png" 
-              alt="Mobile" 
-              width={36} 
-              height={76} 
-              className="w-full h-full object-cover" 
-              style={{ width: '36px', height: '76px' }}
+          <div
+            className="relative flex-shrink-0"
+            style={{ width: "36px", height: "76px" }}
+          >
+            <Image
+              src="/images/mobile.png"
+              alt="Mobile"
+              width={36}
+              height={76}
+              className="w-full h-full object-cover"
+              style={{ width: "36px", height: "76px" }}
             />
-            <div className="absolute overflow-hidden" style={{ 
-              top: '4px', 
-              left: '2px', 
-              right: '2px', 
-              bottom: '4px' 
-            }}>
+            <div
+              className="absolute overflow-hidden"
+              style={{
+                top: "4px",
+                left: "2px",
+                right: "2px",
+                bottom: "4px",
+              }}
+            >
               <iframe
                 src={demo}
                 className="border-none"
                 title={`${title} Mobile`}
                 style={{
-                  width: '334px',
-                  height: '640px',
-                  transform: 'scale(0.1)',
-                  transformOrigin: 'top left',
-                  pointerEvents: 'auto',
+                  width: "334px",
+                  height: "640px",
+                  transform: "scale(0.1)",
+                  transformOrigin: "top left",
+                  pointerEvents: "auto",
                 }}
               ></iframe>
             </div>
           </div>
         </div>
       </div>
-      
+
       <div className="mt-6 text-center">
-        <h3 className="text-xl font-bold text-[var(--accent-color)]">{title}</h3>
+        <h3 className="text-xl font-bold text-[var(--accent-color)]">
+          {title}
+        </h3>
         <p className="text-[var(--muted-color)] text-sm mt-2">{description}</p>
         {technologies && technologies.length > 0 && (
           <div className="flex justify-center gap-2 mt-4">
@@ -132,7 +163,9 @@ const Card: React.FC<CardProps> = ({ title, description, technologies, repositor
                     {technologyIcons[tech]}
                   </div>
                 ) : (
-                  <span className="text-[var(--accent-color)] text-sm font-medium">{tech}</span>
+                  <span className="text-[var(--accent-color)] text-sm font-medium">
+                    {tech}
+                  </span>
                 )}
                 <span className="absolute bottom-[-30px] opacity-0 group-hover:opacity-100 group-hover:translate-y-[-5px] bg-[var(--secondary-background-color)] text-[var(--text-color)] text-xs px-2 py-1 rounded transition-all">
                   {tech}

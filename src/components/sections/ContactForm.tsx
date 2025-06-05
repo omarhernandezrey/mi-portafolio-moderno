@@ -24,12 +24,14 @@ export default function ContactForm() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isSending, setIsSending] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
+    [],
+  );
 
   /* -------------------- parallax scroll effect -------------------- */
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
@@ -50,7 +52,7 @@ export default function ContactForm() {
         "service_i3ofsgh", // Tu Service ID
         "template_3z8v0rn", // Tu Template ID
         form.current!,
-        "x2atfK6sd3q0ZLUMV" // Tu Public Key
+        "x2atfK6sd3q0ZLUMV", // Tu Public Key
       )
       .then(
         () => {
@@ -62,7 +64,7 @@ export default function ContactForm() {
           console.error("Error al enviar:", error);
           alert("Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.");
           setIsSending(false);
-        }
+        },
       );
   };
 
@@ -73,7 +75,7 @@ export default function ContactForm() {
       className="relative min-h-screen py-32 px-4 overflow-hidden"
       style={{
         background:
-          'linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)',
+          "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
       }}
     >
       {/* Wave superior */}
@@ -92,24 +94,24 @@ export default function ContactForm() {
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         {/* Círculo grande blur */}
         <motion.div
-          style={{ 
+          style={{
             y: y1,
-            backgroundColor: 'var(--primary-color)',
+            backgroundColor: "var(--primary-color)",
           }}
           className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
         />
         {/* Blob naranja */}
         <motion.div
-          style={{ 
+          style={{
             y: y2,
-            backgroundColor: 'var(--accent-color)',
-            borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+            backgroundColor: "var(--accent-color)",
+            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
           }}
           className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
         />
         {/* Círculo degradado */}
         <motion.div
-          style={{ 
+          style={{
             y: y3,
             background: `linear-gradient(to top right, var(--primary-color), var(--accent-color), transparent)`,
           }}
@@ -117,7 +119,7 @@ export default function ContactForm() {
         />
         {/* Línea diagonal luminosa */}
         <motion.div
-          style={{ 
+          style={{
             y: y4,
             background: `linear-gradient(to right, var(--accent-color), rgba(255,255,255,0.1), transparent)`,
           }}
@@ -141,7 +143,7 @@ export default function ContactForm() {
               height: el.size,
               left: `${el.x}%`,
               top: `${el.y}%`,
-              backgroundColor: 'var(--accent-color)',
+              backgroundColor: "var(--accent-color)",
               opacity: el.opacity,
             }}
             animate={{
@@ -154,7 +156,7 @@ export default function ContactForm() {
               duration: el.duration,
               repeat: Infinity,
               delay: el.delay,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
         ))}
@@ -173,7 +175,7 @@ export default function ContactForm() {
           <motion.span
             className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
             style={{
-              color: 'var(--accent-color)',
+              color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
               borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
             }}
@@ -186,9 +188,9 @@ export default function ContactForm() {
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
             style={{
               background: `linear-gradient(135deg, var(--white-color) 0%, var(--text-color) 50%, var(--muted-color) 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
             Contáctame
@@ -196,9 +198,10 @@ export default function ContactForm() {
 
           <p
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
-            style={{ color: 'var(--muted-color)' }}
+            style={{ color: "var(--muted-color)" }}
           >
-            ¿Listo para dar vida a tus ideas? Conversemos sobre tu próximo proyecto desde Bogotá, Colombia
+            ¿Listo para dar vida a tus ideas? Conversemos sobre tu próximo
+            proyecto desde Bogotá, Colombia
           </p>
         </motion.div>
 
@@ -215,14 +218,15 @@ export default function ContactForm() {
             style={{
               backgroundColor: `color-mix(in srgb, var(--secondary-background-color) 60%, transparent)`,
               borderColor: `color-mix(in srgb, var(--muted-color) 20%, transparent)`,
-              boxShadow: '0 25px 50px rgba(0,0,0,0.3)',
+              boxShadow: "0 25px 50px rgba(0,0,0,0.3)",
             }}
           >
             {/* Brillo sutil en la tarjeta */}
             <div
               className="absolute inset-0 rounded-3xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%)',
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%)",
               }}
             />
 
@@ -241,24 +245,27 @@ export default function ContactForm() {
                   type="text"
                   name="user_name"
                   placeholder="Tu Nombre"
-                  onFocus={() => setFocusedField('name')}
+                  onFocus={() => setFocusedField("name")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full p-4 rounded-xl border transition-all duration-300 bg-transparent"
                   style={{
-                    borderColor: focusedField === 'name' 
-                      ? 'var(--accent-color)' 
-                      : `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
-                    backgroundColor: focusedField === 'name' 
-                      ? `color-mix(in srgb, var(--accent-color) 5%, transparent)` 
-                      : `color-mix(in srgb, var(--background-color) 50%, transparent)`,
-                    color: 'var(--text-color)',
-                    boxShadow: focusedField === 'name' 
-                      ? `0 0 20px color-mix(in srgb, var(--accent-color) 20%, transparent)` 
-                      : 'none',
+                    borderColor:
+                      focusedField === "name"
+                        ? "var(--accent-color)"
+                        : `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
+                    backgroundColor:
+                      focusedField === "name"
+                        ? `color-mix(in srgb, var(--accent-color) 5%, transparent)`
+                        : `color-mix(in srgb, var(--background-color) 50%, transparent)`,
+                    color: "var(--text-color)",
+                    boxShadow:
+                      focusedField === "name"
+                        ? `0 0 20px color-mix(in srgb, var(--accent-color) 20%, transparent)`
+                        : "none",
                   }}
                   required
                 />
-                {focusedField === 'name' && (
+                {focusedField === "name" && (
                   <motion.div
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
@@ -280,24 +287,27 @@ export default function ContactForm() {
                   type="email"
                   name="user_email"
                   placeholder="Tu Correo Electrónico"
-                  onFocus={() => setFocusedField('email')}
+                  onFocus={() => setFocusedField("email")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full p-4 rounded-xl border transition-all duration-300 bg-transparent"
                   style={{
-                    borderColor: focusedField === 'email' 
-                      ? 'var(--accent-color)' 
-                      : `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
-                    backgroundColor: focusedField === 'email' 
-                      ? `color-mix(in srgb, var(--accent-color) 5%, transparent)` 
-                      : `color-mix(in srgb, var(--background-color) 50%, transparent)`,
-                    color: 'var(--text-color)',
-                    boxShadow: focusedField === 'email' 
-                      ? `0 0 20px color-mix(in srgb, var(--accent-color) 20%, transparent)` 
-                      : 'none',
+                    borderColor:
+                      focusedField === "email"
+                        ? "var(--accent-color)"
+                        : `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
+                    backgroundColor:
+                      focusedField === "email"
+                        ? `color-mix(in srgb, var(--accent-color) 5%, transparent)`
+                        : `color-mix(in srgb, var(--background-color) 50%, transparent)`,
+                    color: "var(--text-color)",
+                    boxShadow:
+                      focusedField === "email"
+                        ? `0 0 20px color-mix(in srgb, var(--accent-color) 20%, transparent)`
+                        : "none",
                   }}
                   required
                 />
-                {focusedField === 'email' && (
+                {focusedField === "email" && (
                   <motion.div
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
@@ -319,24 +329,27 @@ export default function ContactForm() {
                   name="message"
                   placeholder="Cuéntame sobre tu proyecto..."
                   rows={6}
-                  onFocus={() => setFocusedField('message')}
+                  onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full p-4 rounded-xl border transition-all duration-300 bg-transparent resize-none"
                   style={{
-                    borderColor: focusedField === 'message' 
-                      ? 'var(--accent-color)' 
-                      : `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
-                    backgroundColor: focusedField === 'message' 
-                      ? `color-mix(in srgb, var(--accent-color) 5%, transparent)` 
-                      : `color-mix(in srgb, var(--background-color) 50%, transparent)`,
-                    color: 'var(--text-color)',
-                    boxShadow: focusedField === 'message' 
-                      ? `0 0 20px color-mix(in srgb, var(--accent-color) 20%, transparent)` 
-                      : 'none',
+                    borderColor:
+                      focusedField === "message"
+                        ? "var(--accent-color)"
+                        : `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
+                    backgroundColor:
+                      focusedField === "message"
+                        ? `color-mix(in srgb, var(--accent-color) 5%, transparent)`
+                        : `color-mix(in srgb, var(--background-color) 50%, transparent)`,
+                    color: "var(--text-color)",
+                    boxShadow:
+                      focusedField === "message"
+                        ? `0 0 20px color-mix(in srgb, var(--accent-color) 20%, transparent)`
+                        : "none",
                   }}
                   required
                 />
-                {focusedField === 'message' && (
+                {focusedField === "message" && (
                   <motion.div
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
@@ -357,12 +370,12 @@ export default function ContactForm() {
                   whileTap={{ scale: isSending ? 1 : 0.95 }}
                   className="relative px-12 py-4 rounded-2xl font-bold text-lg overflow-hidden transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: isSending 
-                      ? `color-mix(in srgb, var(--accent-color) 50%, transparent)` 
+                    background: isSending
+                      ? `color-mix(in srgb, var(--accent-color) 50%, transparent)`
                       : `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-                    color: 'var(--white-color)',
-                    boxShadow: isSending 
-                      ? 'none' 
+                    color: "var(--white-color)",
+                    boxShadow: isSending
+                      ? "none"
                       : `0 15px 35px color-mix(in srgb, var(--accent-color) 40%, transparent)`,
                   }}
                 >
@@ -370,19 +383,23 @@ export default function ContactForm() {
                   {!isSending && (
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                      initial={{ x: '-100%' }}
-                      whileHover={{ x: '100%' }}
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
                       transition={{ duration: 0.6 }}
                     />
                   )}
-                  
+
                   <span className="relative z-10 flex items-center gap-3">
                     {isSending ? (
                       <>
                         <motion.div
                           className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
                         />
                         Enviando...
                       </>
@@ -413,21 +430,21 @@ export default function ContactForm() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16"
         >
           {[
-            { 
-              icon: "📧", 
-              title: "Email", 
+            {
+              icon: "📧",
+              title: "Email",
               value: "hernandezreyomar@gmail.com",
               href: "mailto:hernandezreyomar@gmail.com",
             },
-            { 
-              icon: "📱", 
-              title: "Phone", 
+            {
+              icon: "📱",
+              title: "Phone",
               value: "+57 321 905 2878",
               href: "tel:+573219052878",
             },
-            { 
-              icon: "📍", 
-              title: "Location", 
+            {
+              icon: "📍",
+              title: "Location",
               value: "Bogotá, Colombia",
               href: "https://maps.google.com/?q=Bogotá,Colombia",
             },
@@ -437,10 +454,10 @@ export default function ContactForm() {
               href={contact.href}
               target={contact.title === "Location" ? "_blank" : "_self"}
               rel={contact.title === "Location" ? "noopener noreferrer" : ""}
-              whileHover={{ 
-                scale: 1.05, 
+              whileHover={{
+                scale: 1.05,
                 y: -8,
-                boxShadow: `0 15px 30px color-mix(in srgb, var(--accent-color) 25%, transparent)`
+                boxShadow: `0 15px 30px color-mix(in srgb, var(--accent-color) 25%, transparent)`,
               }}
               whileTap={{ scale: 0.98 }}
               className="block text-center p-6 backdrop-blur-lg rounded-2xl border transition-all duration-300 cursor-pointer group relative"
@@ -449,41 +466,41 @@ export default function ContactForm() {
                 borderColor: `color-mix(in srgb, var(--muted-color) 20%, transparent)`,
               }}
             >
-              <motion.div 
+              <motion.div
                 className="text-3xl mb-3 transition-transform duration-300"
                 whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
                 transition={{ duration: 0.4 }}
               >
                 {contact.icon}
               </motion.div>
-              <h4 
-                className="font-bold mb-2 transition-colors duration-300" 
-                style={{ color: 'var(--white-color)' }}
+              <h4
+                className="font-bold mb-2 transition-colors duration-300"
+                style={{ color: "var(--white-color)" }}
               >
                 {contact.title}
               </h4>
-              <motion.p 
-                style={{ color: 'var(--muted-color)' }}
-                whileHover={{ color: 'var(--accent-color)' }}
+              <motion.p
+                style={{ color: "var(--muted-color)" }}
+                whileHover={{ color: "var(--accent-color)" }}
                 className="transition-colors duration-300 group-hover:font-medium"
               >
                 {contact.value}
               </motion.p>
-              
+
               {/* Indicador visual de acción */}
               <motion.div
                 className="w-full h-0.5 mt-3 rounded-full"
-                style={{ backgroundColor: 'var(--accent-color)' }}
+                style={{ backgroundColor: "var(--accent-color)" }}
                 initial={{ scaleX: 0 }}
                 whileHover={{ scaleX: 1 }}
                 transition={{ duration: 0.3 }}
               />
-              
+
               {/* Partícula decorativa */}
               <motion.div
                 className="absolute top-2 right-2 w-2 h-2 rounded-full opacity-0"
-                style={{ backgroundColor: 'var(--accent-color)' }}
-                whileHover={{ 
+                style={{ backgroundColor: "var(--accent-color)" }}
+                whileHover={{
                   opacity: [0, 1, 0],
                   scale: [1, 1.5, 1],
                 }}

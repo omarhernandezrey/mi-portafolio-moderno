@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { 
-  FaHome, 
-  FaUserAlt, 
-  FaGraduationCap, 
-  FaCode, 
-  FaEnvelope, 
-  FaProjectDiagram, 
-  FaToolbox 
+import {
+  FaHome,
+  FaUserAlt,
+  FaGraduationCap,
+  FaCode,
+  FaEnvelope,
+  FaProjectDiagram,
+  FaToolbox,
 } from "react-icons/fa";
 import { MdColorLens } from "react-icons/md";
 import { usePalette } from "../../hooks/usePalette";
@@ -33,7 +33,7 @@ const NavbarDesktop = () => {
   useEffect(() => {
     const sections = [
       "#hero",
-      "#about", 
+      "#about",
       "#education",
       "#skills",
       "#services",
@@ -43,10 +43,13 @@ const NavbarDesktop = () => {
 
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 100;
-      
+
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.querySelector(sections[i]);
-        if (section && section.getBoundingClientRect().top + window.scrollY <= scrollPosition) {
+        if (
+          section &&
+          section.getBoundingClientRect().top + window.scrollY <= scrollPosition
+        ) {
           setActiveSection(sections[i]);
           break;
         }
@@ -77,17 +80,17 @@ const NavbarDesktop = () => {
   ];
 
   return (
-    <nav 
+    <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out ${
-        scrolled 
-          ? "bg-[var(--background-color)]/95 backdrop-blur-xl shadow-2xl border-b border-[var(--accent-color)]/20" 
+        scrolled
+          ? "bg-[var(--background-color)]/95 backdrop-blur-xl shadow-2xl border-b border-[var(--accent-color)]/20"
           : "bg-[var(--background-color)]/80 backdrop-blur-md"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 xl:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo Section */}
-          <div 
+          <div
             className="flex items-center cursor-pointer group"
             onClick={() => handleLinkClick("#hero")}
           >
@@ -124,7 +127,9 @@ const NavbarDesktop = () => {
                 }`}
               >
                 <span className="text-base">{link.icon}</span>
-                <span className="hidden xl:inline uppercase tracking-wider">{link.label}</span>
+                <span className="hidden xl:inline uppercase tracking-wider">
+                  {link.label}
+                </span>
                 {activeSection === link.id && (
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full"></div>
                 )}

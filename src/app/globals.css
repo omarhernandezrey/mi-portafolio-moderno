@@ -6,7 +6,8 @@
 
 /* Estilos globales adicionales */
 
-html, body {
+html,
+body {
   font-family: var(--main-font-family);
   overflow-x: hidden !important;
   scroll-behavior: smooth;
@@ -35,7 +36,7 @@ html, body {
   --loadmore-hover-bg-color: #142029; /* Fondo más oscuro para hover */
 
   /* Tipografía moderna, neutra */
-  --main-font-family: 'Inter', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Inter", "Segoe UI", arial, sans-serif;
 }
 
 /* palette2 */
@@ -57,27 +58,27 @@ html, body {
   --loadmore-hover-bg-color: #1f2833;
 
   /* Tipografía elegante para morado */
-  --main-font-family: 'Poppins', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Poppins", "Segoe UI", arial, sans-serif;
 }
 
 /* palette3 */
 :root.palette3 {
   /* Fondos */
-  --background-color: #171615;           /* Fondo principal, oscuro con matiz café */
+  --background-color: #171615; /* Fondo principal, oscuro con matiz café */
   --secondary-background-color: #262421; /* Fondo secundario ligeramente más claro */
 
   /* Texto */
-  --white-color: #fff;    
-  --text-color: #fff9e9;     
-  --muted-color: #d3ba8a;    
+  --white-color: #fff;
+  --text-color: #fff9e9;
+  --muted-color: #d3ba8a;
 
   /* Dorados principales */
-  --primary-color: #ffd65a;  
-  --accent-color: #c5961f;   
+  --primary-color: #ffd65a;
+  --accent-color: #c5961f;
 
   /* Tarjetas y elementos interiores */
-  --card-bg-color: #262421;         
-  --inner-circle-bg-color: #ffd65a; 
+  --card-bg-color: #262421;
+  --inner-circle-bg-color: #ffd65a;
   --inner-circle-text-color: #171615;
 
   /* Títulos y textos en dorado */
@@ -93,27 +94,27 @@ html, body {
   --gold-gradient: linear-gradient(135deg, #c5961f 0%, #ffd65a 100%);
 
   /* Tipografía con serif para dorado/café */
-  --main-font-family: 'Merriweather', georgia, serif;
+  --main-font-family: "Merriweather", georgia, serif;
 }
 
 /* palette4 (versión clara inspirada en palette1) */
 :root.palette4 {
   /* Fondos */
-  --background-color: #f9fcfb;         /* Fondo principal muy claro con un ligero matiz */
+  --background-color: #f9fcfb; /* Fondo principal muy claro con un ligero matiz */
   --secondary-background-color: #fff; /* Sección secundaria en blanco puro */
 
   /* Texto */
-  --white-color: #fff;              /* Sigue siendo blanco puro para textos o fondos puntuales */
-  --text-color: #2d2d2d;               /* Texto oscuro para alto contraste */
-  --muted-color: #7a7a7a;              /* Texto secundario/descriptivo */
+  --white-color: #fff; /* Sigue siendo blanco puro para textos o fondos puntuales */
+  --text-color: #2d2d2d; /* Texto oscuro para alto contraste */
+  --muted-color: #7a7a7a; /* Texto secundario/descriptivo */
 
   /* Colores principales (manteniendo verde/teal de la paleta original) */
-  --primary-color: #00cba9;            /* Verde brillante para elementos principales */
-  --accent-color: #00a086;            /* Verde más oscuro como acento */
+  --primary-color: #00cba9; /* Verde brillante para elementos principales */
+  --accent-color: #00a086; /* Verde más oscuro como acento */
 
   /* Tarjetas y elementos interiores */
-  --card-bg-color: #fff;           /* Fondo de tarjetas */
-  --inner-circle-bg-color: #00cba9;   /* Mismo verde brillante */
+  --card-bg-color: #fff; /* Fondo de tarjetas */
+  --inner-circle-bg-color: #00cba9; /* Mismo verde brillante */
   --inner-circle-text-color: #fff; /* Contraste en círculos o íconos sobre verde */
 
   /* Títulos y textos específicos (mantenidos en verde para coherencia) */
@@ -121,37 +122,37 @@ html, body {
   --loading-text-color-palette2: #00cba9;
 
   /* Botón "Load More" */
-  --loadmore-bg-color: #fff;       /* Botón sobre fondo claro */
-  --loadmore-border-color: #00cba9;   /* Borde verde para resaltar */
+  --loadmore-bg-color: #fff; /* Botón sobre fondo claro */
+  --loadmore-border-color: #00cba9; /* Borde verde para resaltar */
   --loadmore-hover-bg-color: #ecfef9; /* Hover clarito en la misma gama verde/teal */
 
   /* Tipografía moderna, neutra (igual que palette1) */
-  --main-font-family: 'Inter', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Inter", "Segoe UI", arial, sans-serif;
 }
 
 /* palette5 */
 :root.palette5 {
   /* Tema oscuro con rojo dominante */
-  --background-color: #141414;         /* Fondo principal muy oscuro */
+  --background-color: #141414; /* Fondo principal muy oscuro */
   --secondary-background-color: #1f1f1f; /* Fondo secundario ligeramente más claro */
 
   /* Texto */
-  --white-color: #fff;             /* Blanco puro para elementos puntuales */
-  --text-color: #e0e0e0;              /* Gris claro para texto principal */
-  --muted-color: #888;             /* Gris medio para texto secundario */
+  --white-color: #fff; /* Blanco puro para elementos puntuales */
+  --text-color: #e0e0e0; /* Gris claro para texto principal */
+  --muted-color: #888; /* Gris medio para texto secundario */
 
   /* Colores principales (rojo intenso) */
-  --primary-color: #ed3434;           /* Rojo brillante para elementos destacados */
-  --accent-color: #fa5c5c;            /* Rojo más claro como acento */
+  --primary-color: #ed3434; /* Rojo brillante para elementos destacados */
+  --accent-color: #fa5c5c; /* Rojo más claro como acento */
 
   /* Tarjetas y elementos interiores */
-  --card-bg-color: #1f1f1f;           /* Tarjetas con el mismo tono del fondo secundario */
-  --inner-circle-bg-color: #ed3434;   /* Círculo interior en rojo brillante */
+  --card-bg-color: #1f1f1f; /* Tarjetas con el mismo tono del fondo secundario */
+  --inner-circle-bg-color: #ed3434; /* Círculo interior en rojo brillante */
   --inner-circle-text-color: #141414; /* Contraste oscuro para el texto del círculo */
 
   /* Títulos y textos específicos */
-  --item-title-color-palette2: #ed3434;  
-  --loading-text-color-palette2: #ed3434; 
+  --item-title-color-palette2: #ed3434;
+  --loading-text-color-palette2: #ed3434;
 
   /* Botón "Load More" */
   --loadmore-bg-color: #1f1f1f;
@@ -162,22 +163,22 @@ html, body {
   --bold-gradient: linear-gradient(135deg, #ed3434 0%, #fa5c5c 100%);
 
   /* Tipografía robusta para rojo oscuro */
-  --main-font-family: 'Montserrat', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Montserrat", "Segoe UI", arial, sans-serif;
 }
 
 /* palette6 - Tema Cyberpunk Neon */
 :root.palette6 {
-  --background-color: #0a0a1a;         /* Fondo azul oscuro intenso */
+  --background-color: #0a0a1a; /* Fondo azul oscuro intenso */
   --secondary-background-color: #151530; /* Fondo secundario ligeramente más claro */
 
   /* Texto */
   --white-color: #fff;
-  --text-color: #e0e0ff;              /* Azul claro para texto */
-  --muted-color: #a0a0ff;             /* Azul neón apagado */
+  --text-color: #e0e0ff; /* Azul claro para texto */
+  --muted-color: #a0a0ff; /* Azul neón apagado */
 
   /* Colores principales */
-  --primary-color: #f0f;            /* Magenta neón */
-  --accent-color: #0ff;             /* Cian neón */
+  --primary-color: #f0f; /* Magenta neón */
+  --accent-color: #0ff; /* Cian neón */
 
   /* Elementos UI */
   --card-bg-color: #151530;
@@ -198,22 +199,22 @@ html, body {
   --neon-text-glow: 0 0 5px #0ff, 0 0 10px #0ff;
 
   /* Tipografía futurista para cyberpunk */
-  --main-font-family: 'Orbitron', 'Share Tech Mono', monospace;
+  --main-font-family: "Orbitron", "Share Tech Mono", monospace;
 }
 
 /* palette7 - Tema Forest Night */
 :root.palette7 {
-  --background-color: #0a1a0f;         /* Verde oscuro profundo */
+  --background-color: #0a1a0f; /* Verde oscuro profundo */
   --secondary-background-color: #132a1a; /* Verde un poco más claro */
 
   /* Texto */
   --white-color: #fff;
-  --text-color: #d1e7dd;              /* Verde claro suave */
-  --muted-color: #8ab39c;             /* Verde apagado */
+  --text-color: #d1e7dd; /* Verde claro suave */
+  --muted-color: #8ab39c; /* Verde apagado */
 
   /* Colores principales */
-  --primary-color: #4caf50;           /* Verde vibrante */
-  --accent-color: #8bc34a;            /* Verde lima */
+  --primary-color: #4caf50; /* Verde vibrante */
+  --accent-color: #8bc34a; /* Verde lima */
 
   /* Elementos UI */
   --card-bg-color: #132a1a;
@@ -233,22 +234,22 @@ html, body {
   --leaf-shadow: 0 4px 6px rgb(76 175 80 / 20%);
 
   /* Tipografía amigable para forest */
-  --main-font-family: 'Nunito', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Nunito", "Segoe UI", arial, sans-serif;
 }
 
 /* palette8 - Tema Sunset Vibes */
 :root.palette8 {
-  --background-color: #1a0a14;         /* Morado oscuro profundo */
+  --background-color: #1a0a14; /* Morado oscuro profundo */
   --secondary-background-color: #2a1320; /* Morado un poco más claro */
 
   /* Texto */
   --white-color: #fff;
-  --text-color: #ffd6e7;              /* Rosa claro */
-  --muted-color: #ffa8c8;             /* Rosa medio */
+  --text-color: #ffd6e7; /* Rosa claro */
+  --muted-color: #ffa8c8; /* Rosa medio */
 
   /* Colores principales */
-  --primary-color: #ff6b6b;           /* Coral */
-  --accent-color: #ffb347;            /* Naranja dorado */
+  --primary-color: #ff6b6b; /* Coral */
+  --accent-color: #ffb347; /* Naranja dorado */
 
   /* Elementos UI */
   --card-bg-color: #2a1320;
@@ -268,22 +269,22 @@ html, body {
   --sunset-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffb347 100%);
 
   /* Tipografía redondeada para sunset */
-  --main-font-family: 'Quicksand', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Quicksand", "Segoe UI", arial, sans-serif;
 }
 
 /* palette9 - Tema Deep Ocean */
 :root.palette9 {
-  --background-color: #0a0a1f;         /* Azul marino muy oscuro */
+  --background-color: #0a0a1f; /* Azul marino muy oscuro */
   --secondary-background-color: #15152b; /* Azul un poco más claro */
 
   /* Texto */
   --white-color: #fff;
-  --text-color: #d1e0ff;              /* Azul claro */
-  --muted-color: #8a9bb8;             /* Azul grisáceo */
+  --text-color: #d1e0ff; /* Azul claro */
+  --muted-color: #8a9bb8; /* Azul grisáceo */
 
   /* Colores principales */
-  --primary-color: #00b4d8;           /* Azul turquesa */
-  --accent-color: #0077b6;            /* Azul más profundo */
+  --primary-color: #00b4d8; /* Azul turquesa */
+  --accent-color: #0077b6; /* Azul más profundo */
 
   /* Elementos UI */
   --card-bg-color: #15152b;
@@ -303,22 +304,22 @@ html, body {
   --wave-shadow: 0 4px 8px rgb(0 180 216 / 30%);
 
   /* Tipografía geométrica para ocean */
-  --main-font-family: 'Rubik', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Rubik", "Segoe UI", arial, sans-serif;
 }
 
 /* palette10 - Tema Royal Purple */
 :root.palette10 {
-  --background-color: #0f0a1a;         /* Púrpura oscuro intenso */
+  --background-color: #0f0a1a; /* Púrpura oscuro intenso */
   --secondary-background-color: #1a132a; /* Púrpura un poco más claro */
 
   /* Texto */
   --white-color: #fff;
-  --text-color: #e6d6ff;              /* Lila claro */
-  --muted-color: #b39ddb;             /* Lila medio */
+  --text-color: #e6d6ff; /* Lila claro */
+  --muted-color: #b39ddb; /* Lila medio */
 
   /* Colores principales */
-  --primary-color: #9c27b0;           /* Púrpura vibrante */
-  --accent-color: #673ab7;            /* Púrpura azulado */
+  --primary-color: #9c27b0; /* Púrpura vibrante */
+  --accent-color: #673ab7; /* Púrpura azulado */
 
   /* Elementos UI */
   --card-bg-color: #1a132a;
@@ -338,21 +339,25 @@ html, body {
   --royal-glow: 0 0 10px rgb(156 39 176 / 50%);
 
   /* Tipografía elegante para purple */
-  --main-font-family: 'Poppins', 'Segoe UI', arial, sans-serif;
+  --main-font-family: "Poppins", "Segoe UI", arial, sans-serif;
 }
 
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
-a, button {
+a,
+button {
   background-color: var(--button-bg-color);
   color: var(--primary-color);
 }
 
-a:hover, button:hover {
+a:hover,
+button:hover {
   background-color: var(--button-hover-color);
   color: var(--text-color);
 }

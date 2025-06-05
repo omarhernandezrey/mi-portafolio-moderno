@@ -5,10 +5,15 @@
    - Variables CSS hardcodeadas reemplazadas por sistema dinámico de paletas
 --------------------------------------------------------------------------------------------------*/
 
-'use client';
+"use client";
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import Image from "next/image";
 
 /* -------------------------------------------------------------------------------------------------
@@ -25,68 +30,70 @@ type Skill = {
 
 const SKILLS: Skill[] = [
   {
-    name: 'HTML5',
-    percentage: '95%',
-    colorHex: '#FF6D00',
-    icon: '/images/logos/html.svg',
-    description: 'Estructuras semánticas y optimizadas para SEO y accesibilidad.',
-    category: 'Frontend',
+    name: "HTML5",
+    percentage: "95%",
+    colorHex: "#FF6D00",
+    icon: "/images/logos/html.svg",
+    description:
+      "Estructuras semánticas y optimizadas para SEO y accesibilidad.",
+    category: "Frontend",
   },
   {
-    name: 'CSS3/Sass',
-    percentage: '92%',
-    colorHex: '#2965F1',
-    icon: '/images/logos/css.svg',
-    description: 'Diseños responsive, animaciones CSS y arquitectura escalable.',
-    category: 'Frontend',
+    name: "CSS3/Sass",
+    percentage: "92%",
+    colorHex: "#2965F1",
+    icon: "/images/logos/css.svg",
+    description:
+      "Diseños responsive, animaciones CSS y arquitectura escalable.",
+    category: "Frontend",
   },
   {
-    name: 'JavaScript',
-    percentage: '98%',
-    colorHex: '#F0DB4F',
-    icon: '/images/logos/javascript.svg',
-    description: 'ES6+, patrones avanzados y optimización de performance.',
-    category: 'Frontend',
+    name: "JavaScript",
+    percentage: "98%",
+    colorHex: "#F0DB4F",
+    icon: "/images/logos/javascript.svg",
+    description: "ES6+, patrones avanzados y optimización de performance.",
+    category: "Frontend",
   },
   {
-    name: 'TypeScript',
-    percentage: '90%',
-    colorHex: '#007ACC',
-    icon: '/images/logos/typescript.svg',
-    description: 'Tipado estático para aplicaciones empresariales escalables.',
-    category: 'Frontend',
+    name: "TypeScript",
+    percentage: "90%",
+    colorHex: "#007ACC",
+    icon: "/images/logos/typescript.svg",
+    description: "Tipado estático para aplicaciones empresariales escalables.",
+    category: "Frontend",
   },
   {
-    name: 'React/Next.js',
-    percentage: '96%',
-    colorHex: '#61DAFB',
-    icon: '/images/logos/react.svg',
-    description: 'Aplicaciones SSR, ISR y estáticas optimizadas.',
-    category: 'Frontend',
+    name: "React/Next.js",
+    percentage: "96%",
+    colorHex: "#61DAFB",
+    icon: "/images/logos/react.svg",
+    description: "Aplicaciones SSR, ISR y estáticas optimizadas.",
+    category: "Frontend",
   },
   {
-    name: 'Node.js',
-    percentage: '88%',
-    colorHex: '#68A063',
-    icon: '/images/logos/nodejs.svg',
-    description: 'APIs REST/GraphQL, microservicios y autenticación JWT.',
-    category: 'Backend',
+    name: "Node.js",
+    percentage: "88%",
+    colorHex: "#68A063",
+    icon: "/images/logos/nodejs.svg",
+    description: "APIs REST/GraphQL, microservicios y autenticación JWT.",
+    category: "Backend",
   },
   {
-    name: 'UI/UX Design',
-    percentage: '85%',
-    colorHex: '#FF4081',
-    icon: '/images/logos/figma.svg',
-    description: 'Diseño de interfaces centrado en la experiencia de usuario.',
-    category: 'Design',
+    name: "UI/UX Design",
+    percentage: "85%",
+    colorHex: "#FF4081",
+    icon: "/images/logos/figma.svg",
+    description: "Diseño de interfaces centrado en la experiencia de usuario.",
+    category: "Design",
   },
   {
-    name: 'Cloud Architecture',
-    percentage: '82%',
-    colorHex: '#4285F4',
-    icon: '/images/logos/aws.svg',
-    description: 'Infraestructura escalable en AWS, GCP y Azure.',
-    category: 'DevOps',
+    name: "Cloud Architecture",
+    percentage: "82%",
+    colorHex: "#4285F4",
+    icon: "/images/logos/aws.svg",
+    description: "Infraestructura escalable en AWS, GCP y Azure.",
+    category: "DevOps",
   },
 ];
 
@@ -117,20 +124,22 @@ type FloatingElement = ReturnType<typeof createFloatingElements>[number];
    Helpers
 --------------------------------------------------------------------------------------------------*/
 const parsePercentage = (str: string): number =>
-  Math.min(100, Math.max(0, parseInt(str.replace('%', ''), 10) || 0));
+  Math.min(100, Math.max(0, parseInt(str.replace("%", ""), 10) || 0));
 
 /* -------------------------------------------------------------------------------------------------
    Componente principal
 --------------------------------------------------------------------------------------------------*/
 export default function PremiumSkillsSection() {
   /* --------------------------- estados --------------------------- */
-  const [animatedValues, setAnimatedValues] = useState<number[]>(
-    () => SKILLS.map(() => 0),
+  const [animatedValues, setAnimatedValues] = useState<number[]>(() =>
+    SKILLS.map(() => 0),
   );
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
+    [],
+  );
 
   /* -------------------------- refs ---------------------------- */
   const sectionRef = React.useRef<HTMLElement>(null);
@@ -139,7 +148,7 @@ export default function PremiumSkillsSection() {
   /* -------------------- parallax scroll effect -------------------- */
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
@@ -149,7 +158,7 @@ export default function PremiumSkillsSection() {
 
   /* -------------------- filtrado por categoría -------------------- */
   const filteredSkills =
-    selectedCategory === 'All'
+    selectedCategory === "All"
       ? SKILLS
       : SKILLS.filter((skill) => skill.category === selectedCategory);
 
@@ -253,7 +262,7 @@ export default function PremiumSkillsSection() {
       className="relative min-h-screen py-32 px-4 overflow-hidden"
       style={{
         background:
-          'linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)',
+          "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
       }}
     >
       {/* Wave superior */}
@@ -267,29 +276,29 @@ export default function PremiumSkillsSection() {
           priority
         />
       </div>
-      
+
       {/* Fondo parallax moderno */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         {/* Círculo grande blur */}
         <motion.div
-          style={{ 
+          style={{
             y: y1,
-            backgroundColor: 'var(--primary-color)',
+            backgroundColor: "var(--primary-color)",
           }}
           className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
         />
         {/* Blob naranja */}
         <motion.div
-          style={{ 
+          style={{
             y: y2,
-            backgroundColor: 'var(--accent-color)',
-            borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+            backgroundColor: "var(--accent-color)",
+            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
           }}
           className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
         />
         {/* Círculo degradado */}
         <motion.div
-          style={{ 
+          style={{
             y: y3,
             background: `linear-gradient(to top right, var(--primary-color), var(--accent-color), transparent)`,
           }}
@@ -297,7 +306,7 @@ export default function PremiumSkillsSection() {
         />
         {/* Línea diagonal luminosa */}
         <motion.div
-          style={{ 
+          style={{
             y: y4,
             background: `linear-gradient(to right, var(--accent-color), rgba(255,255,255,0.1), transparent)`,
           }}
@@ -309,7 +318,7 @@ export default function PremiumSkillsSection() {
           className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl"
         />
       </div>
-      
+
       {/* Partículas animadas */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         {floatingElements.map((el) => (
@@ -321,7 +330,7 @@ export default function PremiumSkillsSection() {
               height: el.size,
               left: `${el.x}%`,
               top: `${el.y}%`,
-              backgroundColor: 'var(--accent-color)',
+              backgroundColor: "var(--accent-color)",
               opacity: el.opacity,
             }}
             animate={{
@@ -334,7 +343,7 @@ export default function PremiumSkillsSection() {
               duration: el.duration,
               repeat: Infinity,
               delay: el.delay,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
         ))}
@@ -352,7 +361,7 @@ export default function PremiumSkillsSection() {
           <motion.span
             className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
             style={{
-              color: 'var(--accent-color)',
+              color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
               borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
             }}
@@ -365,10 +374,10 @@ export default function PremiumSkillsSection() {
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
             style={{
               background:
-                'linear-gradient(135deg, var(--white-color) 0%, var(--text-color) 50%, var(--muted-color) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+                "linear-gradient(135deg, var(--white-color) 0%, var(--text-color) 50%, var(--muted-color) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
             Core Skills
@@ -376,9 +385,10 @@ export default function PremiumSkillsSection() {
 
           <p
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
-            style={{ color: 'var(--muted-color)' }}
+            style={{ color: "var(--muted-color)" }}
           >
-            Mastering the modern development ecosystem to create exceptional digital experiences
+            Mastering the modern development ecosystem to create exceptional
+            digital experiences
           </p>
         </motion.div>
 
@@ -398,9 +408,9 @@ export default function PremiumSkillsSection() {
             }}
           >
             <CategoryButton
-              isActive={selectedCategory === 'All'}
+              isActive={selectedCategory === "All"}
               label="All Skills"
-              onClick={() => setSelectedCategory('All')}
+              onClick={() => setSelectedCategory("All")}
             />
 
             {Array.from(new Set(SKILLS.map((s) => s.category))).map((cat) => (
@@ -419,7 +429,8 @@ export default function PremiumSkillsSection() {
           <AnimatePresence mode="wait">
             {filteredSkills.map((skill, idx) => {
               const currentValue = animatedValues[idx] || 0;
-              const offset = CIRCUMFERENCE - (CIRCUMFERENCE * currentValue) / 100;
+              const offset =
+                CIRCUMFERENCE - (CIRCUMFERENCE * currentValue) / 100;
               const hovered = hoveredIndex === idx;
 
               return (
@@ -432,7 +443,7 @@ export default function PremiumSkillsSection() {
                   transition={{
                     duration: 0.5,
                     delay: idx * 0.1,
-                    type: 'spring',
+                    type: "spring",
                     stiffness: 100,
                   }}
                   className="relative group cursor-pointer"
@@ -444,15 +455,15 @@ export default function PremiumSkillsSection() {
                     className="relative h-full p-8 backdrop-blur-xl border rounded-3xl transition-all duration-500 transform-gpu"
                     style={{
                       backgroundColor: hovered
-                        ? 'var(--card-bg-color)'
+                        ? "var(--card-bg-color)"
                         : `color-mix(in srgb, var(--secondary-background-color) 40%, transparent)`,
-                      borderColor: hovered 
-                        ? 'var(--accent-color)' 
+                      borderColor: hovered
+                        ? "var(--accent-color)"
                         : `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
-                      boxShadow: hovered 
-                        ? `0 25px 50px color-mix(in srgb, var(--accent-color) 15%, transparent)` 
-                        : 'none',
-                      transform: hovered ? 'scale(1.05)' : 'scale(1)',
+                      boxShadow: hovered
+                        ? `0 25px 50px color-mix(in srgb, var(--accent-color) 15%, transparent)`
+                        : "none",
+                      transform: hovered ? "scale(1.05)" : "scale(1)",
                     }}
                   >
                     {/* brillo */}
@@ -460,7 +471,7 @@ export default function PremiumSkillsSection() {
                       className="absolute inset-0 rounded-3xl transition-opacity duration-500"
                       style={{
                         background:
-                          'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)',
+                          "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)",
                         opacity: hovered ? 1 : 0,
                       }}
                     />
@@ -468,7 +479,10 @@ export default function PremiumSkillsSection() {
                     {/* contenido */}
                     <div className="relative z-10 flex flex-col items-center text-center h-full">
                       <div className="relative w-32 h-32 mb-6">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
+                        <svg
+                          className="w-full h-full transform -rotate-90"
+                          viewBox="0 0 80 80"
+                        >
                           <circle
                             cx="40"
                             cy="40"
@@ -491,10 +505,10 @@ export default function PremiumSkillsSection() {
                             style={{
                               filter: hovered
                                 ? `drop-shadow(0 0 8px ${skill.colorHex}50)`
-                                : 'none',
+                                : "none",
                             }}
                             animate={{ strokeDashoffset: offset }}
-                            transition={{ duration: 0.8, ease: 'easeOut' }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
                           />
                         </svg>
 
@@ -505,13 +519,15 @@ export default function PremiumSkillsSection() {
                             className="w-10 h-10 mb-1 opacity-90"
                             animate={{
                               scale: hovered ? 1.2 : 1,
-                              filter: hovered ? 'brightness(1.2)' : 'brightness(1)',
+                              filter: hovered
+                                ? "brightness(1.2)"
+                                : "brightness(1)",
                             }}
-                            transition={{ type: 'spring', stiffness: 300 }}
+                            transition={{ type: "spring", stiffness: 300 }}
                           />
                           <motion.span
                             className="text-2xl font-bold"
-                            style={{ color: 'var(--white-color)' }}
+                            style={{ color: "var(--white-color)" }}
                             animate={{ scale: hovered ? 1.1 : 1 }}
                           >
                             {currentValue}%
@@ -521,14 +537,14 @@ export default function PremiumSkillsSection() {
 
                       <h3
                         className="text-xl font-bold mb-3"
-                        style={{ color: 'var(--white-color)' }}
+                        style={{ color: "var(--white-color)" }}
                       >
                         {skill.name}
                       </h3>
 
                       <motion.p
                         className="text-sm leading-relaxed flex-grow"
-                        style={{ color: 'var(--muted-color)' }}
+                        style={{ color: "var(--muted-color)" }}
                         animate={{ opacity: hovered ? 1 : 0.7 }}
                         transition={{ duration: 0.3 }}
                       >
@@ -540,7 +556,10 @@ export default function PremiumSkillsSection() {
                         style={{
                           background: `linear-gradient(to right, transparent 0%, ${skill.colorHex} 50%, transparent 100%)`,
                         }}
-                        animate={{ scaleX: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
+                        animate={{
+                          scaleX: hovered ? 1 : 0,
+                          opacity: hovered ? 1 : 0,
+                        }}
                         transition={{ duration: 0.4 }}
                       />
                     </div>
@@ -549,11 +568,11 @@ export default function PremiumSkillsSection() {
                   <motion.div
                     className="absolute -top-3 -right-3 px-3 py-1 rounded-full text-xs font-bold shadow-lg"
                     style={{
-                      backgroundColor: 'var(--accent-color)',
-                      color: 'var(--background-color)',
+                      backgroundColor: "var(--accent-color)",
+                      color: "var(--background-color)",
                     }}
                     whileHover={{ scale: 1.1 }}
-                    transition={{ type: 'spring', stiffness: 400 }}
+                    transition={{ type: "spring", stiffness: 400 }}
                   >
                     {skill.category}
                   </motion.div>
@@ -591,7 +610,7 @@ function CategoryButton({ label, isActive, onClick }: CategoryButtonProps) {
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) {
       const el = e.currentTarget;
-      el.style.color = 'var(--white-color)';
+      el.style.color = "var(--white-color)";
       el.style.backgroundColor = `color-mix(in srgb, var(--secondary-background-color) 50%, transparent)`;
     }
   };
@@ -599,8 +618,8 @@ function CategoryButton({ label, isActive, onClick }: CategoryButtonProps) {
   const handleLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) {
       const el = e.currentTarget;
-      el.style.color = 'var(--muted-color)';
-      el.style.backgroundColor = 'transparent';
+      el.style.color = "var(--muted-color)";
+      el.style.backgroundColor = "transparent";
     }
   };
 
@@ -611,9 +630,11 @@ function CategoryButton({ label, isActive, onClick }: CategoryButtonProps) {
       onMouseLeave={handleLeave}
       className="px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300"
       style={{
-        backgroundColor: isActive ? 'var(--primary-color)' : 'transparent',
-        color: isActive ? 'var(--white-color)' : 'var(--muted-color)',
-        boxShadow: isActive ? `0 10px 25px color-mix(in srgb, var(--primary-color) 30%, transparent)` : 'none',
+        backgroundColor: isActive ? "var(--primary-color)" : "transparent",
+        color: isActive ? "var(--white-color)" : "var(--muted-color)",
+        boxShadow: isActive
+          ? `0 10px 25px color-mix(in srgb, var(--primary-color) 30%, transparent)`
+          : "none",
       }}
     >
       {label}

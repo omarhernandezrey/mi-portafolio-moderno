@@ -1,10 +1,15 @@
-'use client';
+"use client";
 
-import React, { useRef, useState, useEffect } from 'react';
-import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import technologyIcons from '../../config/technologyIcons';
-import { FaUser, FaCalendarAlt, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
+import React, { useRef, useState, useEffect } from "react";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
+import technologyIcons from "../../config/technologyIcons";
+import {
+  FaUser,
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+} from "react-icons/fa";
 
 /* ──────────────────────────────────────────────────────────
    Función para crear partículas aleatorias (solo en cliente) */
@@ -32,7 +37,7 @@ const AboutSection: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'end start'],
+    offset: ["start end", "end start"],
   });
 
   /* Mapear progreso de scroll a transformaciones */
@@ -47,26 +52,34 @@ const AboutSection: React.FC = () => {
 
   /* Datos de intereses y enlaces */
   const interests = [
-    'Platzi Learning',
-    'Open Source',
-    'AI & ML',
-    'Coding',
-    'Tech Conferences',
+    "Platzi Learning",
+    "Open Source",
+    "AI & ML",
+    "Coding",
+    "Tech Conferences",
   ];
   const interestLinks: Record<string, string> = {
-    'Platzi Learning': 'https://platzi.com/',
-    'Open Source': 'https://opensource.org/',
-    'AI & ML': 'https://ai.google/',
-    'Coding': 'https://www.codecademy.com/',
-    'Tech Conferences': 'https://www.techconferences.co/',
+    "Platzi Learning": "https://platzi.com/",
+    "Open Source": "https://opensource.org/",
+    "AI & ML": "https://ai.google/",
+    Coding: "https://www.codecademy.com/",
+    "Tech Conferences": "https://www.techconferences.co/",
   };
 
   /* Datos personales */
   const personalData = [
-    { icon: FaUser, label: 'Nombre', value: 'Omar Hernández Rey' },
-    { icon: FaCalendarAlt, label: 'Fecha de Nacimiento', value: '14 de febrero de 1990' },
-    { icon: FaMapMarkerAlt, label: 'Dirección', value: 'Carrera 2N #39D-16 Sur, Bogotá' },
-    { icon: FaPhoneAlt, label: 'Teléfono', value: '(+57) 3219058278' },
+    { icon: FaUser, label: "Nombre", value: "Omar Hernández Rey" },
+    {
+      icon: FaCalendarAlt,
+      label: "Fecha de Nacimiento",
+      value: "14 de febrero de 1990",
+    },
+    {
+      icon: FaMapMarkerAlt,
+      label: "Dirección",
+      value: "Carrera 2N #39D-16 Sur, Bogotá",
+    },
+    { icon: FaPhoneAlt, label: "Teléfono", value: "(+57) 3219058278" },
   ];
 
   /* Efecto: genera partículas tras montar (evita discrepancia SSR/CSR) */
@@ -81,7 +94,7 @@ const AboutSection: React.FC = () => {
       className="relative min-h-screen py-32 px-4 overflow-hidden"
       style={{
         background:
-          'linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)',
+          "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
       }}
     >
       {/* Fondo parallax moderno */}
@@ -90,7 +103,7 @@ const AboutSection: React.FC = () => {
         <motion.div
           className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
           style={{
-            backgroundColor: 'var(--primary-color)',
+            backgroundColor: "var(--primary-color)",
             y: y1,
           }}
         />
@@ -98,8 +111,8 @@ const AboutSection: React.FC = () => {
         <motion.div
           className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
           style={{
-            backgroundColor: 'var(--accent-color)',
-            borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+            backgroundColor: "var(--accent-color)",
+            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
             y: y2,
           }}
         />
@@ -120,9 +133,7 @@ const AboutSection: React.FC = () => {
           }}
         />
         {/* Círculo blanco inferior */}
-        <div
-          className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl"
-        />
+        <div className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl" />
       </div>
 
       {/* ───────── Partículas animadas de fondo ───────── */}
@@ -136,7 +147,7 @@ const AboutSection: React.FC = () => {
               height: el.size,
               left: `${el.x}%`,
               top: `${el.y}%`,
-              backgroundColor: 'var(--accent-color)',
+              backgroundColor: "var(--accent-color)",
               opacity: el.opacity,
             }}
             animate={{
@@ -149,7 +160,7 @@ const AboutSection: React.FC = () => {
               duration: el.duration,
               repeat: Infinity,
               delay: el.delay,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
         ))}
@@ -159,15 +170,15 @@ const AboutSection: React.FC = () => {
       <motion.div className="absolute inset-0 opacity-10" style={{ y }}>
         <div
           className="absolute top-32 left-20 w-40 h-40 rounded-full"
-          style={{ backgroundColor: 'var(--primary-color)' }}
+          style={{ backgroundColor: "var(--primary-color)" }}
         />
         <div
           className="absolute top-60 right-32 w-28 h-28 rounded-full"
-          style={{ backgroundColor: 'var(--accent-color)' }}
+          style={{ backgroundColor: "var(--accent-color)" }}
         />
         <div
           className="absolute bottom-40 left-1/3 w-48 h-48 rounded-full"
-          style={{ backgroundColor: 'var(--primary-color)' }}
+          style={{ backgroundColor: "var(--primary-color)" }}
         />
       </motion.div>
 
@@ -189,7 +200,10 @@ const AboutSection: React.FC = () => {
       </motion.div>
 
       {/* ───────── Contenido principal ───────── */}
-      <motion.div className="relative z-10 mx-auto max-w-6xl" style={{ opacity }}>
+      <motion.div
+        className="relative z-10 mx-auto max-w-6xl"
+        style={{ opacity }}
+      >
         {/* Grid principal (foto + texto) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Foto + botón CV */}
@@ -197,20 +211,20 @@ const AboutSection: React.FC = () => {
             className="flex flex-col items-center"
             initial={{ opacity: 0, x: -100 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, type: 'spring', stiffness: 100 }}
+            transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
             viewport={{ once: true }}
           >
             {/* Marco animado */}
             <div className="group relative w-[240px] h-[300px] mb-6">
-              <div 
+              <div
                 className="absolute inset-0 border-2 rounded-lg transform translate-x-4 -translate-y-4 transition-all duration-500 group-hover:translate-x-6 group-hover:-translate-y-6"
-                style={{ borderColor: 'var(--accent-color)' }}
+                style={{ borderColor: "var(--accent-color)" }}
               />
-              <div 
+              <div
                 className="relative w-full h-full overflow-hidden rounded-lg shadow-2xl border-2 transition-all duration-500 group-hover:scale-105 flex items-center justify-center"
-                style={{ 
-                  borderColor: 'var(--accent-color)',
-                  backgroundColor: 'var(--primary-color)'
+                style={{
+                  borderColor: "var(--accent-color)",
+                  backgroundColor: "var(--primary-color)",
                 }}
               >
                 <Image
@@ -233,8 +247,8 @@ const AboutSection: React.FC = () => {
               className="relative inline-flex items-center justify-center gap-3 px-8 py-4 mt-6 font-semibold text-lg rounded-full shadow-xl backdrop-blur-lg border-2"
               style={{
                 background: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-                color: 'var(--white-color)',
-                borderColor: 'var(--accent-color)',
+                color: "var(--white-color)",
+                borderColor: "var(--accent-color)",
                 boxShadow: `0 10px 30px color-mix(in srgb, var(--accent-color) 30%, transparent)`,
               }}
               whileHover={{
@@ -272,7 +286,7 @@ const AboutSection: React.FC = () => {
             className="flex flex-col space-y-8"
             initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, type: 'spring', stiffness: 100 }}
+            transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
             viewport={{ once: true }}
           >
             {/* Encabezado */}
@@ -280,7 +294,7 @@ const AboutSection: React.FC = () => {
               <motion.span
                 className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
                 style={{
-                  color: 'var(--accent-color)',
+                  color: "var(--accent-color)",
                   backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
                   borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
                 }}
@@ -297,9 +311,9 @@ const AboutSection: React.FC = () => {
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
                 style={{
                   background: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
               >
                 Sobre mí
@@ -310,39 +324,66 @@ const AboutSection: React.FC = () => {
             <motion.p
               className="text-lg leading-relaxed text-justify"
               style={{
-                color: 'var(--muted-color)',
-                textAlign: 'justify',
-                textJustify: 'inter-word',
-                hyphens: 'auto',
+                color: "var(--muted-color)",
+                textAlign: "justify",
+                textJustify: "inter-word",
+                hyphens: "auto",
               }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              ¡Hola! Soy{' '}
-              <strong className="font-normal" style={{ color: 'var(--text-color)' }}>
+              ¡Hola! Soy{" "}
+              <strong
+                className="font-normal"
+                style={{ color: "var(--text-color)" }}
+              >
                 Omar Hernández Rey
               </strong>
-              , un{' '}
-              <strong className="font-normal" style={{ color: 'var(--primary-color)' }}>
+              , un{" "}
+              <strong
+                className="font-normal"
+                style={{ color: "var(--primary-color)" }}
+              >
                 Desarrollador Web Full Stack
-              </strong>{' '}
-              con experiencia tanto en{' '}
-              <strong className="font-normal" style={{ color: 'var(--accent-color)' }}>Front-End</strong> como
-              en{' '}
-              <strong className="font-normal" style={{ color: 'var(--accent-color)' }}>Back-End</strong>. Estoy
-              a punto de graduarme en{' '}
-              <strong className="font-normal" style={{ color: 'var(--primary-color)' }}>
+              </strong>{" "}
+              con experiencia tanto en{" "}
+              <strong
+                className="font-normal"
+                style={{ color: "var(--accent-color)" }}
+              >
+                Front-End
+              </strong>{" "}
+              como en{" "}
+              <strong
+                className="font-normal"
+                style={{ color: "var(--accent-color)" }}
+              >
+                Back-End
+              </strong>
+              . Estoy a punto de graduarme en{" "}
+              <strong
+                className="font-normal"
+                style={{ color: "var(--primary-color)" }}
+              >
                 Ingeniería de Software
-              </strong>{' '}
-              del{' '}
-              <strong className="font-normal" style={{ color: 'var(--primary-color)' }}>
+              </strong>{" "}
+              del{" "}
+              <strong
+                className="font-normal"
+                style={{ color: "var(--primary-color)" }}
+              >
                 Politécnico Grancolombiano
-              </strong>{' '}
-              y continuo aprendiendo con cursos de{' '}
-              <strong className="font-normal" style={{ color: 'var(--accent-color)' }}>Platzi</strong> sobre
-              tecnologías web, DevOps y más.
+              </strong>{" "}
+              y continuo aprendiendo con cursos de{" "}
+              <strong
+                className="font-normal"
+                style={{ color: "var(--accent-color)" }}
+              >
+                Platzi
+              </strong>{" "}
+              sobre tecnologías web, DevOps y más.
             </motion.p>
 
             {/* Datos personales */}
@@ -368,7 +409,7 @@ const AboutSection: React.FC = () => {
                       rotate: 5,
                       boxShadow: `0 10px 25px color-mix(in srgb, var(--accent-color) 30%, transparent)`,
                     }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                    transition={{ type: "spring", stiffness: 300 }}
                   >
                     <item.icon size={18} />
                   </motion.span>
@@ -377,11 +418,14 @@ const AboutSection: React.FC = () => {
                   <div className="flex-1">
                     <p
                       className="uppercase text-xs font-semibold tracking-wider mb-1"
-                      style={{ color: 'var(--accent-color)' }}
+                      style={{ color: "var(--accent-color)" }}
                     >
                       {item.label}
                     </p>
-                    <p className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "var(--text-color)" }}
+                    >
                       {item.value}
                     </p>
                   </div>
@@ -404,7 +448,7 @@ const AboutSection: React.FC = () => {
             <motion.span
               className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
               style={{
-                color: 'var(--accent-color)',
+                color: "var(--accent-color)",
                 backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
                 borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
               }}
@@ -417,9 +461,9 @@ const AboutSection: React.FC = () => {
               className="text-3xl md:text-4xl lg:text-5xl font-bold"
               style={{
                 background: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               Mis Intereses
@@ -431,27 +475,30 @@ const AboutSection: React.FC = () => {
             {interests.map((interest, index) => (
               <motion.a
                 key={interest}
-                href={interestLinks[interest] || '#'}
+                href={interestLinks[interest] || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative flex flex-col items-center justify-center text-center p-6 h-36 rounded-3xl border backdrop-blur-xl transition-all duration-500"
                 style={{
-                  backgroundColor: hoveredInterest === interest 
-                    ? 'var(--card-bg-color)' 
-                    : `color-mix(in srgb, var(--secondary-background-color) 40%, transparent)`,
-                  borderColor: hoveredInterest === interest
-                    ? 'var(--accent-color)'
-                    : `color-mix(in srgb, var(--muted-color) 20%, transparent)`,
-                  boxShadow: hoveredInterest === interest
-                    ? `0 25px 50px color-mix(in srgb, var(--accent-color) 15%, transparent)`
-                    : 'none',
+                  backgroundColor:
+                    hoveredInterest === interest
+                      ? "var(--card-bg-color)"
+                      : `color-mix(in srgb, var(--secondary-background-color) 40%, transparent)`,
+                  borderColor:
+                    hoveredInterest === interest
+                      ? "var(--accent-color)"
+                      : `color-mix(in srgb, var(--muted-color) 20%, transparent)`,
+                  boxShadow:
+                    hoveredInterest === interest
+                      ? `0 25px 50px color-mix(in srgb, var(--accent-color) 15%, transparent)`
+                      : "none",
                 }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{
                   duration: 0.6,
                   delay: index * 0.1,
-                  type: 'spring',
+                  type: "spring",
                   stiffness: 100,
                 }}
                 viewport={{ once: true }}
@@ -463,7 +510,8 @@ const AboutSection: React.FC = () => {
                 <motion.div
                   className="absolute inset-0 rounded-3xl"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)',
+                    background:
+                      "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)",
                     opacity: hoveredInterest === interest ? 1 : 0,
                   }}
                   transition={{ duration: 0.3 }}
@@ -473,21 +521,22 @@ const AboutSection: React.FC = () => {
                 <div className="relative z-10 flex flex-col items-center h-full justify-center">
                   <motion.div
                     className="text-3xl mb-3"
-                    style={{ color: 'var(--primary-color)' }}
+                    style={{ color: "var(--primary-color)" }}
                     animate={{
                       scale: hoveredInterest === interest ? 1.2 : 1,
                       rotate: hoveredInterest === interest ? 5 : 0,
                     }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                    transition={{ type: "spring", stiffness: 300 }}
                   >
                     {technologyIcons[interest] || <span>★</span>}
                   </motion.div>
                   <span
                     className="text-sm font-medium transition-colors duration-300"
                     style={{
-                      color: hoveredInterest === interest
-                        ? 'var(--primary-color)'
-                        : 'var(--muted-color)',
+                      color:
+                        hoveredInterest === interest
+                          ? "var(--primary-color)"
+                          : "var(--muted-color)",
                     }}
                   >
                     {interest}
@@ -497,7 +546,7 @@ const AboutSection: React.FC = () => {
                 {/* Puntero decorativo */}
                 <motion.div
                   className="absolute top-3 right-3 w-2 h-2 rounded-full"
-                  style={{ backgroundColor: 'var(--accent-color)' }}
+                  style={{ backgroundColor: "var(--accent-color)" }}
                   animate={{
                     scale: hoveredInterest === interest ? 1.5 : 1,
                     opacity: hoveredInterest === interest ? 1 : 0.5,
@@ -521,7 +570,7 @@ const AboutSection: React.FC = () => {
           src="/images/wave-bottom.svg"
           alt="Wave Bottom"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
           className="w-full h-full"
         />
       </motion.div>

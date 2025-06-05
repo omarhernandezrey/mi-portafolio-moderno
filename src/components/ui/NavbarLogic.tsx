@@ -14,7 +14,7 @@ const NavbarLogic = () => {
     const handleResize = () => {
       const width = window.innerWidth;
       setIsMobile(width <= 1024); // Cambia a mobile/tablet si es menor o igual a 1024px
-      
+
       // Cierra el menú si cambia a desktop
       if (width > 1024 && isMenuOpen) {
         setIsMenuOpen(false);

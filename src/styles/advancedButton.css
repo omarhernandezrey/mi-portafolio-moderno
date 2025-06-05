@@ -15,13 +15,19 @@
   cursor: pointer;
   backdrop-filter: blur(1rem);
   border-radius: 9999px;
-  transition: transform 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border 0.3s ease,
+    box-shadow 0.3s ease;
   animation: gradient_301 5s ease infinite;
   border: double 4px transparent;
-  
+
   /* Fondo adaptable a paletas */
-  background-image: 
-    linear-gradient(var(--secondary-background-color), var(--secondary-background-color)),
+  background-image:
+    linear-gradient(
+      var(--secondary-background-color),
+      var(--secondary-background-color)
+    ),
     linear-gradient(
       137.48deg,
       var(--primary-color) 10%,
@@ -31,9 +37,10 @@
     );
   background-origin: border-box;
   background-clip: content-box, border-box;
-  
+
   /* Sombra con color de acento dinámico */
-  box-shadow: 0 8px 15px color-mix(in srgb, var(--accent-color) 40%, transparent);
+  box-shadow: 0 8px 15px
+    color-mix(in srgb, var(--accent-color) 40%, transparent);
 }
 
 #container-stars {
@@ -89,7 +96,8 @@ strong {
 
 .btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 12px 25px color-mix(in srgb, var(--primary-color) 60%, transparent);
+  box-shadow: 0 12px 25px
+    color-mix(in srgb, var(--primary-color) 60%, transparent);
 }
 
 .btn:active {
@@ -147,8 +155,11 @@ strong {
 }
 
 :root.palette8 .btn {
-  background-image: 
-    linear-gradient(var(--secondary-background-color), var(--secondary-background-color)),
+  background-image:
+    linear-gradient(
+      var(--secondary-background-color),
+      var(--secondary-background-color)
+    ),
     var(--sunset-gradient);
 }
 
@@ -194,7 +205,8 @@ strong {
 @keyframes pulse_3011 {
   0% {
     transform: scale(0.75);
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary-color) 70%, transparent);
+    box-shadow: 0 0 0 0
+      color-mix(in srgb, var(--primary-color) 70%, transparent);
   }
   70% {
     transform: scale(1);

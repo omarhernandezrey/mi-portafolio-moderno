@@ -6,7 +6,12 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import Card from "../shared/Card";
 
 /* ---------------------------------------------------------------------------
@@ -117,8 +122,7 @@ const projects: Project[] = [
     description:
       "Réplica sencilla de la portada de Google con HTML y CSS puros.",
     technologies: ["HTML", "CSS"],
-    repository:
-      "https://github.com/omarhernandezrey/33-Google-Chrome-Clone.io",
+    repository: "https://github.com/omarhernandezrey/33-Google-Chrome-Clone.io",
     demo: "https://omarhernandezrey.github.io/33-Google-Chrome-Clone.io/",
     category: "CSS",
   },
@@ -134,8 +138,7 @@ const projects: Project[] = [
   },
   {
     title: "Pagar Recibos",
-    description:
-      "Gestión básica de pagos de servicios con interfaz intuitiva.",
+    description: "Gestión básica de pagos de servicios con interfaz intuitiva.",
     technologies: ["HTML", "CSS", "JavaScript"],
     repository: "https://github.com/omarhernandezrey/28.1-PagarRecibos.io",
     demo: "https://omarhernandezrey.github.io/28.1-PagarRecibos.io/",
@@ -268,8 +271,13 @@ const ProjectsSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const sectionRef = useRef<HTMLElement | null>(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
+    [],
+  );
   // Parallax para varias formas
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
@@ -390,7 +398,7 @@ const ProjectsSection: React.FC = () => {
                 height: el.size,
                 left: `${el.x}%`,
                 top: `${el.y}%`,
-                backgroundColor: 'var(--accent-color)',
+                backgroundColor: "var(--accent-color)",
                 opacity: el.opacity,
               }}
               animate={{
@@ -403,7 +411,7 @@ const ProjectsSection: React.FC = () => {
                 duration: el.duration,
                 repeat: Infinity,
                 delay: el.delay,
-                ease: 'easeInOut',
+                ease: "easeInOut",
               }}
             />
           ))}
@@ -504,7 +512,7 @@ const ProjectsSection: React.FC = () => {
               className="flex flex-wrap gap-2 sm:gap-3 p-2 sm:p-3 backdrop-blur-lg rounded-xl sm:rounded-2xl border max-w-full"
               style={{
                 backgroundColor: "rgba(40,40,60,0.5)",
-                borderColor: "rgba(209,209,224,0.3)"
+                borderColor: "rgba(209,209,224,0.3)",
               }}
             >
               {categories.map((c) => (

@@ -34,5 +34,52 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Comandos de Verificación y Linting
+
+Para mantener la calidad del código, utiliza los siguientes comandos:
+
+### Verificación de ESLint
+```bash
+npx next lint
+```
+
+### Verificación de TypeScript
+```bash
+npx tsc --noEmit
+```
+
+### Build del proyecto
+```bash
+npx next build
+```
+
+### Verificación de formato con Prettier
+```bash
+npx prettier . --check
+```
+
+### Corrección automática de formato con Prettier
+```bash
+npx prettier . --write
+```
+
+### Verificación final de formato
+```bash
+npx prettier . --check
+```
+
+### Verificación de imports no utilizados
+```bash
+npx eslint . --rule "unused-imports/no-unused-imports: error"
+```
+
+### Comando completo de verificación
+Para ejecutar todas las verificaciones de una vez:
+```bash
+npx next lint && npx tsc --noEmit && npx next build && npx prettier . --check && npx eslint . --rule "unused-imports/no-unused-imports: error"
+```
+
 # mi-portafolio-moderno
-echo "# Deploy limpio" >> README.md
+
+Portafolio moderno desarrollado con Next.js, TypeScript y Tailwind CSS.

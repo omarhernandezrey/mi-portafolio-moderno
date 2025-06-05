@@ -16,6 +16,6 @@ export const createFloatingElements = (count = 12): FloatingElement[] => {
     y: Math.random() * 100,
     delay: Math.random() * 2,
     duration: Math.random() * 3 + 2,
-    opacity: Math.random() * 0.5 + 0.1
+    opacity: Math.random() * 0.5 + 0.1,
   }));
-}; 
+};
