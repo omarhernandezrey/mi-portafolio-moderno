@@ -427,7 +427,14 @@ export default function ServicesSection() {
           viewport={{ once: true }}
         >
           <motion.button
-            className="px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300"
+            onClick={() => {
+              const contactSection = document.querySelector("#contact");
+              contactSection?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+            className="px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 cursor-pointer"
             style={{
               background:
                 "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
@@ -439,9 +446,17 @@ export default function ServicesSection() {
               boxShadow: `0 15px 40px color-mix(in srgb, var(--accent-color) 40%, transparent)`,
             }}
             whileTap={{ scale: 0.95 }}
+            aria-label="Ir a la sección de contacto"
           >
             {/* Apóstrofe escapada para ESLint */}
             Let&apos;s Work Together
+            <motion.span
+              className="ml-2 inline-block"
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.span>
           </motion.button>
         </motion.div>
       </motion.div>

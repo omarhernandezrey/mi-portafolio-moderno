@@ -37,12 +37,13 @@ export function usePalette() {
   useEffect(() => {
     const stored = localStorage.getItem(PALETTE_KEY);
     if (stored) {
-      setPaletteIndex(parseInt(stored, 10));
-      applyPalette(parseInt(stored, 10));
+      const storedIndex = parseInt(stored, 10);
+      setPaletteIndex(storedIndex);
+      applyPalette(storedIndex);
     } else {
       applyPalette(0);
     }
-  }, [applyPalette]);
+  }, [applyPalette]); // applyPalette es estable gracias a useCallback
 
   // Cambiar paleta
   const togglePalette = useCallback(() => {

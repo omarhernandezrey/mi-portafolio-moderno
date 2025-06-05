@@ -7,7 +7,7 @@
 
 "use client";
 
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import {
   motion,
   AnimatePresence,
@@ -157,10 +157,17 @@ export default function PremiumSkillsSection() {
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   /* -------------------- filtrado por categoría -------------------- */
-  const filteredSkills =
-    selectedCategory === "All"
-      ? SKILLS
-      : SKILLS.filter((skill) => skill.category === selectedCategory);
+  const filteredSkills = useMemo(
+    () =>
+      selectedCategory === "All"
+        ? SKILLS
+        : SKILLS.filter((skill) => skill.category === selectedCategory),
+    [selectedCategory]
+  );
+
+  // Ref para acceder a filteredSkills sin crear dependencias problemáticas
+  const filteredSkillsRef = useRef(filteredSkills);
+  filteredSkillsRef.current = filteredSkills;
 
   /* ---------------- función genérica de animación ---------------- */
   const animateToValue = useCallback(
@@ -170,14 +177,15 @@ export default function PremiumSkillsSection() {
       }
 
       const start = performance.now();
-      const from = animatedValues[index] || 0;
-
+      
+      // Usamos una función para obtener el valor actual en lugar de la dependencia
       const animate = (now: number) => {
         const progress = Math.min((now - start) / ANIMATION_DURATION, 1);
         const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-        const current = Math.round(from + (target - from) * eased);
-
+        
         setAnimatedValues((prev) => {
+          const from = prev[index] || 0;
+          const current = Math.round(from + (target - from) * eased);
           const next = [...prev];
           next[index] = current;
           return next;
@@ -192,7 +200,7 @@ export default function PremiumSkillsSection() {
 
       animationRefs.current[index] = requestAnimationFrame(animate);
     },
-    [animatedValues],
+    [], // Sin dependencias para evitar re-creaciones innecesarias
   );
 
   /* -------------------- observer para disparar animación inicial -------------------- */
@@ -216,7 +224,8 @@ export default function PremiumSkillsSection() {
 
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
-  }, [filteredSkills, hasAnimated, animateToValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasAnimated, animateToValue]); // Removemos filteredSkills para evitar bucle infinito
 
   /* --------------- reset de animaciones al cambiar categoría --------------- */
   useEffect(() => {
@@ -227,7 +236,8 @@ export default function PremiumSkillsSection() {
       if (id) cancelAnimationFrame(id);
     });
     animationRefs.current = Array(filteredSkills.length).fill(null);
-  }, [selectedCategory, filteredSkills.length, filteredSkills]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory]); // Solo selectedCategory para evitar bucle infinito
 
   useEffect(() => {
     setFloatingElements(createFloatingElements());
@@ -426,7 +436,7 @@ export default function PremiumSkillsSection() {
 
         {/* grilla de skills */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {filteredSkills.map((skill, idx) => {
               const currentValue = animatedValues[idx] || 0;
               const offset =

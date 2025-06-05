@@ -30,15 +30,32 @@ const EducationModal: React.FC<EducationModalProps> = ({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const previouslyFocusedElement = document.activeElement as HTMLElement;
+    let previouslyFocusedElement: HTMLElement | null = null;
 
     if (isOpen) {
-      closeButtonRef.current?.focus();
-    }
+      // Solo capturar el elemento anterior cuando se abre el modal
+      previouslyFocusedElement = document.activeElement as HTMLElement;
+      // Pequeño delay para evitar conflictos de focus
+      const timer = setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 100);
 
-    return () => {
-      previouslyFocusedElement?.focus();
-    };
+      return () => {
+        clearTimeout(timer);
+        // Solo restaurar focus si el elemento aún existe y es válido
+        if (
+          previouslyFocusedElement &&
+          document.contains(previouslyFocusedElement)
+        ) {
+          try {
+            previouslyFocusedElement.focus();
+          } catch (error) {
+            // Ignorar errores de focus silenciosamente
+            console.debug("Focus restoration failed:", error);
+          }
+        }
+      };
+    }
   }, [isOpen]);
 
   useEffect(() => {

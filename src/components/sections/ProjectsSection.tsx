@@ -284,13 +284,9 @@ const ProjectsSection: React.FC = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
-  /* ---------------- detectar mobile (solo en cliente) ---------------- */
+  /* ---------------- inicializar elementos flotantes ---------------- */
   useEffect(() => {
-    // const checkIsMobile = () => setIsMobile(window.innerWidth < 640);
-    // checkIsMobile();
-    window.addEventListener("resize", () => {});
     setFloatingElements(createFloatingElements());
-    return () => window.removeEventListener("resize", () => {});
   }, []);
 
   /* ---------------- filtrado dinámico ---------------- */
@@ -545,7 +541,7 @@ const ProjectsSection: React.FC = () => {
 
           {/* grid de proyectos - SOLO 2 COLUMNAS MÁXIMO EN DESKTOP */}
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 sm:gap-12 md:gap-20 lg:gap-28 xl:gap-32">
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {filteredProjects.map((p, i) => (
                 <motion.div
                   key={`${p.title}-${selectedCategory}`}
