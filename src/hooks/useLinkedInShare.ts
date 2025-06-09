@@ -25,19 +25,19 @@ interface CertificateData {
 interface UseLinkedInShareProps {
   project: ProjectData;
   portfolioUrl?: string;
-  authorName?: string;
+  authorName?: string; // Agregamos authorName como opcional
 }
 
 interface UseLinkedInCertificateShareProps {
   certificate: CertificateData;
   portfolioUrl?: string;
-  authorName?: string;
+  authorName?: string; // Agregamos authorName como opcional
 }
 
 export const useLinkedInShare = ({ 
   project, 
   portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
-  // Removemos la variable no usada
+  authorName = 'Omar Hernández' // Valor por defecto
 }: UseLinkedInShareProps) => {
   // ► Mensaje pre-generado y memoizado para evitar re-renderizados
   const linkedInMessage = useMemo(() => {
@@ -55,11 +55,12 @@ ${project.description}
 💻 Código en GitHub: ${project.repository}
 
 ¡Echa un vistazo a mi portafolio completo! 👨‍💻
+${authorName ? `Desarrollado por: ${authorName}` : ''}
 
 🎯 BUSCO TRABAJO COMO DESARROLLADOR WEB - ¡Contáctame si tienes una oportunidad!
 
 #OpenToWork #WebDeveloper #HiringMe #BuscoTrabajo #WebDevelopment #${project.category.replace(/\s+/g, '')} #Portfolio #${project.technologies.map(tech => tech.replace(/\s+/g, '')).join(' #')} #Developer #Frontend #Backend #FullStack`;
-  }, [project]);
+  }, [project, authorName]);
 
   // ► URL de LinkedIn con parámetros para compartir
   const generateLinkedInUrl = useCallback(() => {
@@ -146,7 +147,7 @@ ${project.description}
 export const useLinkedInCertificateShare = ({
   certificate,
   portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
-  // Removemos la variable no usada
+  authorName = 'Omar Hernández' // Valor por defecto
 }: UseLinkedInCertificateShareProps) => {
   
   // ► Mensaje específico para certificados
@@ -163,13 +164,14 @@ export const useLinkedInCertificateShare = ({
 ${certificate.description}
 
 ✨ Este certificado forma parte de mi formación continua como desarrollador web, demostrando mi compromiso con el aprendizaje y la excelencia profesional.
+${authorName ? `\n👨‍💻 ${authorName}` : ''}
 
 🌐 Conoce más sobre mi formación y proyectos en: ${portfolioUrl}
 
 🎯 BUSCO TRABAJO COMO DESARROLLADOR WEB - ¡Contáctame si tienes una oportunidad!
 
 #OpenToWork #WebDeveloper #HiringMe #BuscoTrabajo #Certificacion #FormacionContinua #WebDevelopment #Developer #Frontend #Backend #FullStack #EducacionTecnologica #DesarrolloProfesional`;
-  }, [certificate, portfolioUrl]);
+  }, [certificate, portfolioUrl, authorName]);
 
   // ► Función para compartir certificado
   const shareCertificateToLinkedIn = useCallback(async () => {
