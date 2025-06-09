@@ -37,7 +37,7 @@ interface UseLinkedInCertificateShareProps {
 export const useLinkedInShare = ({ 
   project, 
   portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
-  authorName: _authorName = 'Omar Hernández'
+  // Removemos la variable no usada
 }: UseLinkedInShareProps) => {
   // ► Mensaje pre-generado y memoizado para evitar re-renderizados
   const linkedInMessage = useMemo(() => {
@@ -146,7 +146,7 @@ ${project.description}
 export const useLinkedInCertificateShare = ({
   certificate,
   portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
-  authorName: _authorName = 'Omar Hernández'
+  // Removemos la variable no usada
 }: UseLinkedInCertificateShareProps) => {
   
   // ► Mensaje específico para certificados
