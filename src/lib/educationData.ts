@@ -563,50 +563,7 @@ export const educationData = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/08DiplomaTerminal.png",
       },
-      // 42
-      {
-        title: "Curso de Pensamiento Lógico: Lenguajes de Programación",
-        institution: "Platzi",
-        duration: "12 horas (Aprobado el 21 de octubre de 2022)",
-        description:
-          "Participé y aprobé el curso de Pensamiento Lógico: Lenguajes de Programación, adquiriendo conocimientos sobre la lógica y fundamentos de diferentes lenguajes de programación, fortaleciendo mi capacidad de adaptarme a múltiples tecnologías.",
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate:
-          "/images/education/platzi/06DiplomaPensamientoLogicoLenguajes.png",
-      },
-      // 43
-      {
-        title:
-          "Curso de Pensamiento Lógico: Funciones y Estructuras de Control",
-        institution: "Platzi",
-        duration: "12 horas (Aprobado el 14 de octubre de 2022)",
-        description:
-          "Participé y aprobé el curso de Pensamiento Lógico: Funciones y Estructuras de Control, adquiriendo conocimientos sobre el uso y diseño de funciones, así como estructuras de control en programación para resolver problemas de forma eficiente.",
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate:
-          "/images/education/platzi/05DiplomaPensamientoLogicoEstructuras.png",
-      },
-      // 44
-      {
-        title: "Curso de Pensamiento Lógico: Algoritmos y Diagramas de Flujo",
-        institution: "Platzi",
-        duration: "12 horas (Aprobado el 19 de septiembre de 2022)",
-        description:
-          "Participé y aprobé el curso de Pensamiento Lógico: Algoritmos y Diagramas de Flujo, adquiriendo habilidades para diseñar soluciones estructuradas mediante el uso de algoritmos y diagramas de flujo, mejorando mis capacidades de análisis y resolución de problemas.",
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/04DiplomaPensamientoLogico.png",
-      },
-      // 45
-      {
-        title: "Curso Básico de Algoritmos y Pensamiento Lógico 2020",
-        institution: "Platzi",
-        duration: "15 horas (Aprobado el 24 de julio de 2022)",
-        description:
-          "Participé y aprobé el curso básico de Algoritmos y Pensamiento Lógico, adquiriendo habilidades para resolver problemas a través del diseño y análisis de algoritmos, así como fortaleciendo mi pensamiento lógico.",
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate:
-          "/images/education/platzi/02DiplomaPensamientoLogico2020.png",
-      },
+
       // 46
       {
         title: "Curso de Configuración de Entorno de Desarrollo en Windows",
@@ -618,17 +575,7 @@ export const educationData = [
         certificate:
           "/images/education/platzi/01DiplomaDelCursoDeConfiguracinDeEntornoDeDesarrolloEnWindows.png",
       },
-      // 47
-      {
-        title: "Curso de Programación Básica",
-        institution: "Platzi",
-        duration: "29 horas (Aprobado el 17 de diciembre de 2022)",
-        description:
-          "Participé y aprobé el curso de Programación Básica, adquiriendo fundamentos esenciales de programación, lógica computacional y resolución de problemas mediante el uso de lenguajes de programación.",
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate:
-          "/images/education/platzi/07NuevoDiplomaProgramacionBasica.png",
-      },
+
     ],
   },
   // Agrega más categorías e items según sea necesario

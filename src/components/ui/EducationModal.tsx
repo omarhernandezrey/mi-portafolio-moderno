@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaLinkedin, FaShare } from "react-icons/fa";
 import { Transition } from "@headlessui/react";
 
 interface EducationModalProps {
@@ -28,6 +28,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let previouslyFocusedElement: HTMLElement | null = null;
@@ -67,6 +68,64 @@ const EducationModal: React.FC<EducationModalProps> = ({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
+
+  // Función para compartir en LinkedIn - IGUAL que en proyectos
+  const handleShareToLinkedIn = () => {
+    setCopied(true);
+    
+    // Generar texto para LinkedIn igual que en LinkedInShareButton
+    const portfolioUrl = "https://omarh-portafolio-web.vercel.app";
+    
+    const linkedInText = `🎓 ¡Nuevo certificado obtenido!
+
+💼 🔍 DISPONIBLE PARA OPORTUNIDADES LABORALES COMO DESARROLLADOR WEB 🔍 💼
+
+📜 ${title}
+🏛️ ${institution}
+📅 ${duration}
+
+📋 Descripción:
+${description}
+
+✨ Este certificado forma parte de mi formación continua como desarrollador web, demostrando mi compromiso con el aprendizaje y la excelencia profesional.
+
+🌐 Conoce más sobre mi formación y proyectos en: ${portfolioUrl}
+
+🎯 BUSCO TRABAJO COMO DESARROLLADOR WEB - ¡Contáctame si tienes una oportunidad!
+
+#OpenToWork #WebDeveloper #HiringMe #BuscoTrabajo #Certificacion #FormacionContinua #WebDevelopment #Developer #Frontend #Backend #FullStack #EducacionTecnologica #DesarrolloProfesional`;
+
+    const text = encodeURIComponent(linkedInText);
+    
+    // Usar URL simplificada que mantiene opciones de imagen - IGUAL que proyectos
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(portfolioUrl)}&text=${text}`;
+    
+    // Abrir en ventana centrada y más grande - IGUAL que proyectos
+    const popup = window.open(
+      linkedInUrl,
+      'linkedin-share',
+      'width=700,height=600,scrollbars=yes,resizable=yes,left=' + 
+      (window.screen.width / 2 - 350) + ',top=' + (window.screen.height / 2 - 300)
+    );
+
+    if (popup) {
+      popup.focus();
+    }
+
+    // Detectar cuando se cierra la ventana - IGUAL que proyectos
+    const checkClosed = setInterval(() => {
+      if (popup?.closed) {
+        setCopied(false);
+        clearInterval(checkClosed);
+      }
+    }, 1000);
+
+    // Timeout de seguridad - IGUAL que proyectos
+    setTimeout(() => {
+      setCopied(false);
+      clearInterval(checkClosed);
+    }, 10000);
+  };
 
   return (
     <Transition show={isOpen} appear>
@@ -110,7 +169,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
             {/* Botón de Cierre */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 text-[var(--muted-color)] hover:text-[var(--accent-color)] focus:outline-none"
+              className="absolute top-4 right-4 text-[var(--muted-color)] hover:text-[var(--accent-color)] focus:outline-none z-10"
               aria-label="Cerrar modal"
               ref={closeButtonRef}
             >
@@ -119,6 +178,8 @@ const EducationModal: React.FC<EducationModalProps> = ({
 
             {/* Contenido del Modal */}
             <div className="p-8">
+
+
               {/* Logo */}
               <div className="flex justify-center mb-6">
                 <div className="h-24 w-24 rounded-full overflow-hidden bg-[var(--secondary-background-color)] border-4 border-[var(--accent-color)]">
@@ -153,6 +214,56 @@ const EducationModal: React.FC<EducationModalProps> = ({
               >
                 {description}
               </p>
+
+              {/* Botón de LinkedIn - IGUAL que en proyectos */}
+              {certificate && (
+                <div className="flex justify-center mb-6">
+                  <button
+                    onClick={handleShareToLinkedIn}
+                    disabled={copied}
+                    className="group relative flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed w-full max-w-[280px]"
+                    style={{
+                      backgroundColor: copied 
+                        ? 'rgba(10, 102, 194, 0.1)' 
+                        : 'rgba(10, 102, 194, 0.05)',
+                      color: '#0a66c2',
+                      border: '1px solid rgba(10, 102, 194, 0.2)',
+                    }}
+                    title="Compartir certificado en LinkedIn"
+                  >
+                    {/* Icono animado */}
+                    <div
+                      style={{
+                        transform: copied ? 'rotate(360deg) scale(1.1)' : 'rotate(0deg) scale(1)',
+                        transition: 'transform 0.5s',
+                      }}
+                    >
+                      {copied ? (
+                        <FaShare size={16} />
+                      ) : (
+                        <FaLinkedin size={16} />
+                      )}
+                    </div>
+
+                    {/* Texto del botón */}
+                    <span className="group-hover:text-[#0a66c2] transition-colors duration-300">
+                      {copied ? 'Compartiendo...' : 'Compartir en LinkedIn'}
+                    </span>
+
+                    {/* Icono de enlace externo */}
+                    <div
+                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        animation: 'pulse 1.5s infinite',
+                      }}
+                    >
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" />
+                      </svg>
+                    </div>
+                  </button>
+                </div>
+              )}
 
               {/* Certificado */}
               {certificate && (

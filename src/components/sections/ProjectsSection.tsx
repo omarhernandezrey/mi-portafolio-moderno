@@ -562,6 +562,7 @@ const ProjectsSection: React.FC = () => {
                     technologies={p.technologies}
                     repository={p.repository}
                     demo={p.demo}
+                    category={p.category}
                   />
                 </motion.div>
               ))}

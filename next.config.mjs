@@ -1,12 +1,48 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configuración para imágenes
+  // Configuración para imágenes optimizada para Vercel
   images: {
-    domains: ["localhost"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.vercel.app',
+      },
+      {
+        protocol: 'https', 
+        hostname: 'omarh-portafolio-web.vercel.app',
+      }
+    ],
+    formats: ['image/avif', 'image/webp'],
     unoptimized: false,
   },
 
-  // Puedes agregar aquí configuración para turbopack si lo necesitas en el futuro
+  // Optimización para build en Vercel
+  experimental: {
+    optimizePackageImports: ['react-icons', 'framer-motion'],
+  },
+
+  // Headers de seguridad
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
 
   // Configuración de webpack para SVGs
   webpack(config) {
