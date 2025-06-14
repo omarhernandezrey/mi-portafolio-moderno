@@ -1,57 +1,21 @@
 /** @type {import('next').NextConfig} */
+/* ───────── Config global ───────── */
 const nextConfig = {
-  // Configuración para imágenes optimizada para Vercel
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.vercel.app',
-      },
-      {
-        protocol: 'https', 
-        hostname: 'omarh-portafolio-web.vercel.app',
-      }
-    ],
-    formats: ['image/avif', 'image/webp'],
-    unoptimized: false,
-  },
-
-  // Optimización para build en Vercel
+  images: { formats: ["image/avif", "image/webp"] },
   experimental: {
-    optimizePackageImports: ['react-icons', 'framer-motion'],
+    optimizePackageImports: [
+      "@react-three/fiber",
+      "@react-three/drei",
+      "framer-motion",
+      "react-icons",
+    ],
   },
-
-  // Headers de seguridad
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-        ],
-      },
-    ];
-  },
-
-  // Configuración de webpack para SVGs
   webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
+    /* SVG → React */
+    config.module.rules.push({ test: /\.svg$/, use: ["@svgr/webpack"] });
+    /* GLB/GLTF como recurso */
+    config.module.rules.push({ test: /\.(glb|gltf)$/, type: "asset/resource" });
     return config;
   },
 };
-
 export default nextConfig;
