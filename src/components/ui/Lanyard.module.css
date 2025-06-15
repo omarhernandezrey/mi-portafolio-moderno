@@ -1,0 +1,244 @@
+/* Lanyard.module.css - Estilos optimizados para el componente 3D */
+
+.lanyardWrapper {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: transparent;
+}
+
+.lanyardCanvas {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 1.5rem;
+  cursor: grab;
+}
+
+.lanyardCanvas:active {
+  cursor: grabbing;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 450px;
+  gap: 1rem;
+}
+
+.loadingSpinner {
+  width: 4rem;
+  height: 4rem;
+  border: 3px solid transparent;
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  color: var(--muted-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 450px;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.errorIcon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--accent-color);
+}
+
+.errorTitle {
+  color: var(--text-color);
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.errorMessage {
+  color: var(--muted-color);
+  font-size: 0.875rem;
+  text-align: center;
+  max-width: 300px;
+}
+
+.retryButton {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retryButton:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.instructionsContainer {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: color-mix(in srgb, var(--background-color) 90%, transparent);
+  backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in srgb, var(--muted-color) 20%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  color: var(--muted-color);
+  text-align: center;
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out 2s forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .lanyardWrapper {
+    height: 400px;
+  }
+  
+  .instructionsContainer {
+    font-size: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .lanyardWrapper {
+    height: 350px;
+  }
+  
+  .loadingContainer {
+    min-height: 350px;
+  }
+  
+  .errorContainer {
+    min-height: 350px;
+    padding: 1rem;
+  }
+}
+
+/* Animaciones */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .loadingSpinner {
+    animation: none;
+  }
+  
+  .instructionsContainer {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .retryButton:hover {
+    transform: none;
+  }
+}
+
+/* Soporte para dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .lanyardCanvas {
+    cursor: default;
+  }
+  
+  .instructionsContainer {
+    display: none;
+  }
+}
+
+/* Optimizaciones de rendimiento */
+.lanyardWrapper * {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.lanyardCanvas {
+  will-change: transform;
+  image-rendering: optimizeQuality;
+}
+
+/* Estados de interacción */
+.lanyardWrapper:hover .instructionsContainer {
+  opacity: 0.8;
+}
+
+.lanyardWrapper:active .instructionsContainer {
+  opacity: 0;
+}
+
+/* Soporte para tema oscuro específico */
+@media (prefers-color-scheme: dark) {
+  .loadingSpinner {
+    border-top-color: var(--accent-color);
+  }
+}
+
+/* Efectos especiales para diferentes paletas */
+:root.palette6 .lanyardWrapper {
+  box-shadow: var(--neon-glow);
+}
+
+:root.palette7 .lanyardWrapper {
+  box-shadow: var(--leaf-shadow);
+}
+
+:root.palette9 .lanyardWrapper {
+  box-shadow: var(--wave-shadow);
+}
+
+:root.palette10 .lanyardWrapper {
+  box-shadow: var(--royal-glow);
+}

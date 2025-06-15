@@ -12,15 +12,15 @@
     "@emailjs/browser": "^4.4.1",
     "@headlessui/react": "^2.2.4",
     "@hookform/resolvers": "^5.0.1",
-    "@react-three/drei": "^9.80.0",
-    "@react-three/fiber": "^8.13.0",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.17.10",
     "@react-three/rapier": "^1.1.1",
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.15.0",
     "lucide-react": "^0.511.0",
-    "meshline": "^3.1.6",
+    "meshline": "^3.3.1",
     "next": "^15.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -28,7 +28,7 @@
     "react-icons": "^5.5.0",
     "sharp": "^0.34.2",
     "tailwind-merge": "^3.3.0",
-    "three": "^0.150.0",
+    "three": "^0.177.0",
     "tsparticles": "^3.8.1",
     "typewriter-effect": "^2.22.0",
     "zod": "^3.25.46"
@@ -53,5 +53,9 @@
     "postcss": "^8.5.4",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"
+  },
+  "overrides": {
+    "three": "^0.177.0",
+    "three-mesh-bvh": "^0.8.0"
   }
 }

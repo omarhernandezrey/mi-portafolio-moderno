@@ -26,4 +26,6 @@ declare global {
       meshLineMaterial: any;
     }
   }
-} 
+}
+
+export {};

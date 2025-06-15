@@ -388,3 +388,69 @@ button:hover {
   transform: scale(1);
   transform-origin: center;
 }
+
+/* ============= LANYARD 3D STYLES ============= */
+
+/* Animaciones adicionales para Lanyard */
+@keyframes gradient-shift {
+  0%, 100% { 
+    background-position: 0% 50%; 
+  }
+  50% { 
+    background-position: 100% 50%; 
+  }
+}
+
+/* Soporte para elementos 3D */
+.lanyard-container {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Optimizaciones de rendimiento para Three.js */
+canvas {
+  will-change: transform;
+  image-rendering: optimizeQuality;
+}
+
+/* Accesibilidad - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  canvas {
+    animation: none !important;
+  }
+  
+  .animate-spin {
+    animation: none !important;
+  }
+}
+
+/* Fix para problemas de z-index con Three.js */
+.three-canvas-container {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Mejoras de performance para móviles */
+@media (max-width: 768px) {
+  canvas {
+    image-rendering: optimizeSpeed;
+  }
+}
+
+/* Soporte específico para paletas y Lanyard */
+:root.palette6 .lanyard-wrapper {
+  box-shadow: var(--neon-glow, 0 0 20px rgba(255, 0, 255, 0.3));
+}
+
+:root.palette7 .lanyard-wrapper {
+  box-shadow: var(--leaf-shadow, 0 4px 15px rgba(76, 175, 80, 0.2));
+}
+
+:root.palette9 .lanyard-wrapper {
+  box-shadow: var(--wave-shadow, 0 4px 20px rgba(0, 180, 216, 0.3));
+}
+
+:root.palette10 .lanyard-wrapper {
+  box-shadow: var(--royal-glow, 0 0 15px rgba(156, 39, 176, 0.4));
+}
