@@ -15,87 +15,20 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
+import { useTranslation } from "@/hooks/useTranslation";
+import { skillsData, getLocalizedSkillsData, getLocalizedCategories } from "@/lib/skillsData";
 
 /* -------------------------------------------------------------------------------------------------
    Tipos y datos
 --------------------------------------------------------------------------------------------------*/
-type Skill = {
-  name: string;
-  percentage: string;
-  colorHex: string;
-  icon: string;
-  description: string;
-  category: string;
-};
-
-const SKILLS: Skill[] = [
-  {
-    name: "HTML5",
-    percentage: "95%",
-    colorHex: "#FF6D00",
-    icon: "/images/logos/html.svg",
-    description:
-      "Estructuras semánticas y optimizadas para SEO y accesibilidad.",
-    category: "Frontend",
-  },
-  {
-    name: "CSS3/Sass",
-    percentage: "92%",
-    colorHex: "#2965F1",
-    icon: "/images/logos/css.svg",
-    description:
-      "Diseños responsive, animaciones CSS y arquitectura escalable.",
-    category: "Frontend",
-  },
-  {
-    name: "JavaScript",
-    percentage: "98%",
-    colorHex: "#F0DB4F",
-    icon: "/images/logos/javascript.svg",
-    description: "ES6+, patrones avanzados y optimización de performance.",
-    category: "Frontend",
-  },
-  {
-    name: "TypeScript",
-    percentage: "90%",
-    colorHex: "#007ACC",
-    icon: "/images/logos/typescript.svg",
-    description: "Tipado estático para aplicaciones empresariales escalables.",
-    category: "Frontend",
-  },
-  {
-    name: "React/Next.js",
-    percentage: "96%",
-    colorHex: "#61DAFB",
-    icon: "/images/logos/react.svg",
-    description: "Aplicaciones SSR, ISR y estáticas optimizadas.",
-    category: "Frontend",
-  },
-  {
-    name: "Node.js",
-    percentage: "88%",
-    colorHex: "#68A063",
-    icon: "/images/logos/nodejs.svg",
-    description: "APIs REST/GraphQL, microservicios y autenticación JWT.",
-    category: "Backend",
-  },
-  {
-    name: "UI/UX Design",
-    percentage: "85%",
-    colorHex: "#FF4081",
-    icon: "/images/logos/figma.svg",
-    description: "Diseño de interfaces centrado en la experiencia de usuario.",
-    category: "Design",
-  },
-  {
-    name: "Cloud Architecture",
-    percentage: "82%",
-    colorHex: "#4285F4",
-    icon: "/images/logos/aws.svg",
-    description: "Infraestructura escalable en AWS, GCP y Azure.",
-    category: "DevOps",
-  },
-];
+// type Skill = {
+//   name: string;
+//   percentage: string;
+//   colorHex: string;
+//   icon: string;
+//   description: string;
+//   category: string;
+// };
 
 /* -------------------------------------------------------------------------------------------------
    Constantes para la animación de los círculos de progreso
@@ -130,9 +63,14 @@ const parsePercentage = (str: string): number =>
    Componente principal
 --------------------------------------------------------------------------------------------------*/
 export default function PremiumSkillsSection() {
+  /* ----------------------- i18n y datos ----------------------- */
+  const { t, language } = useTranslation();
+  const localizedSkills = useMemo(() => getLocalizedSkillsData(skillsData, language), [language]);
+  const localizedCategories = useMemo(() => getLocalizedCategories(skillsData, language), [language]);
+
   /* --------------------------- estados --------------------------- */
   const [animatedValues, setAnimatedValues] = useState<number[]>(() =>
-    SKILLS.map(() => 0),
+    skillsData.map(() => 0),
   );
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -160,14 +98,21 @@ export default function PremiumSkillsSection() {
   const filteredSkills = useMemo(
     () =>
       selectedCategory === "All"
-        ? SKILLS
-        : SKILLS.filter((skill) => skill.category === selectedCategory),
-    [selectedCategory]
+        ? localizedSkills
+        : localizedSkills.filter((skill) => skill.category === selectedCategory),
+    [selectedCategory, localizedSkills]
   );
 
   // Ref para acceder a filteredSkills sin crear dependencias problemáticas
   const filteredSkillsRef = useRef(filteredSkills);
   filteredSkillsRef.current = filteredSkills;
+
+  // Resetear animaciones cuando cambie el idioma
+  useEffect(() => {
+    setAnimatedValues(localizedSkills.map(() => 0));
+    setHasAnimated(false);
+    setHoveredIndex(null);
+  }, [language, localizedSkills]);
 
   /* ---------------- función genérica de animación ---------------- */
   const animateToValue = useCallback(
@@ -237,7 +182,7 @@ export default function PremiumSkillsSection() {
     });
     animationRefs.current = Array(filteredSkills.length).fill(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory]); // Solo selectedCategory para evitar bucle infinito
+  }, [selectedCategory, language]); // Incluir language para resetear al cambiar idioma
 
   useEffect(() => {
     setFloatingElements(createFloatingElements());
@@ -377,7 +322,7 @@ export default function PremiumSkillsSection() {
             }}
             whileHover={{ scale: 1.05 }}
           >
-            Technical Excellence
+            {t('skills.badge')}
           </motion.span>
 
           <h2
@@ -390,15 +335,14 @@ export default function PremiumSkillsSection() {
               backgroundClip: "text",
             }}
           >
-            Core Skills
+            {t('skills.title')}
           </h2>
 
           <p
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "var(--muted-color)" }}
           >
-            Mastering the modern development ecosystem to create exceptional
-            digital experiences
+            {t('skills.description')}
           </p>
         </motion.div>
 
@@ -419,11 +363,11 @@ export default function PremiumSkillsSection() {
           >
             <CategoryButton
               isActive={selectedCategory === "All"}
-              label="All Skills"
+              label={t('skills.allSkills')}
               onClick={() => setSelectedCategory("All")}
             />
 
-            {Array.from(new Set(SKILLS.map((s) => s.category))).map((cat) => (
+            {localizedCategories.map((cat) => (
               <CategoryButton
                 key={cat}
                 isActive={selectedCategory === cat}

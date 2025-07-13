@@ -4,7 +4,7 @@
 --------------------------------------------------------------------------- */
 
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -13,176 +13,16 @@ import {
   useTransform,
 } from "framer-motion";
 import Card from "../shared/Card";
+import { useTranslation } from "../../hooks/useTranslation";
+import { projectsData, getLocalizedProjectsData, getLocalizedProjectCategories } from "../../lib/projectsData";
 
 /* ---------------------------------------------------------------------------
-   Tipado del proyecto
+   Tipado del proyecto ahora viene de projectsData.ts
 --------------------------------------------------------------------------- */
-interface Project {
-  title: string;
-  description: string;
-  technologies: string[];
-  repository: string;
-  demo: string;
-  category: string;
-}
 
 /* ---------------------------------------------------------------------------
-   Lista completa de proyectos (mantener actualizada)
+   Los datos de proyectos ahora vienen de projectsData.ts
 --------------------------------------------------------------------------- */
-const projects: Project[] = [
-  {
-    title: "CineXpress - API REST con JavaScript",
-    description:
-      "Explora películas en tendencia, búsquedas por categoría o nombre y detalles completos consumiendo TMDB API.",
-    technologies: ["HTML", "CSS", "JavaScript", "Axios", "Vercel"],
-    repository:
-      "https://github.com/omarhernandezrey/31-cursoDeApiRestConJavascriptEjemplosConApisReales",
-    demo: "https://cinexpressonline.vercel.app/",
-    category: "JavaScript",
-  },
-  {
-    title: "Michis App - API REST con JavaScript",
-    description:
-      "Guarda y sube imágenes de gatitos usando The Cat API. Proyecto de fundamentos de API REST.",
-    technologies: ["HTML", "CSS", "JavaScript", "Fetch", "Axios"],
-    repository:
-      "https://github.com/omarhernandezrey/30_cursoDeApiRestConJavascriptFundamentos",
-    demo: "https://michis-app-api-rest.netlify.app/",
-    category: "JavaScript",
-  },
-  {
-    title: "Página Web Enfermería Roxana",
-    description:
-      "Plataforma moderna y responsiva para promover servicios profesionales de enfermería.",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"],
-    repository: "https://github.com/omarhernandezrey/enfermeriaroxanapag",
-    demo: "https://enfermeria-roxana.vercel.app/inicio",
-    category: "Next.js",
-  },
-  {
-    title: "Your Restaurant",
-    description:
-      "Sitio web de restaurante con CSS Grid, diseño responsivo y presentación de menús atractivos.",
-    technologies: ["HTML", "CSS", "CSS Grid"],
-    repository:
-      "https://github.com/omarhernandezrey/38-Curso-de-CSS-Grid-B-sico.io",
-    demo: "https://omarhernandezrey.github.io/38-Curso-de-CSS-Grid-B-sico.io/",
-    category: "CSS",
-  },
-  {
-    title: "Steam - Hamburguesas Artesanales",
-    description:
-      "Landing para hamburguesas artesanales con secciones de menú, promociones y contacto.",
-    technologies: ["HTML", "CSS"],
-    repository:
-      "https://github.com/omarhernandezrey/36-Curso-de-Dise-o-para-Developers-html.io",
-    demo: "https://omarhernandezrey.github.io/36-Curso-de-Dise-o-para-Developers-html.io/",
-    category: "CSS",
-  },
-  {
-    title: "Eco-store",
-    description:
-      "Tienda ecológica con categorías de cuidado personal y decoración sostenible.",
-    technologies: ["HTML", "CSS", "SCSS", "Flexbox"],
-    repository:
-      "https://github.com/omarhernandezrey/35-Curso-de-Fundamentos-de-Sass.io",
-    demo: "https://omarhernandezrey.github.io/35-Curso-de-Fundamentos-de-Sass.io/",
-    category: "CSS",
-  },
-  {
-    title: "Batatabit",
-    description:
-      "Landing responsive Mobile-First para precios y tendencias de criptomonedas.",
-    technologies: ["HTML", "CSS", "Responsive Design"],
-    repository:
-      "https://github.com/omarhernandezrey/34-Curso-de-Responsive-Design-Maquetaci-n-Mobile-First.io",
-    demo: "https://omarhernandezrey.github.io/34-Curso-de-Responsive-Design-Maquetaci-n-Mobile-First.io/",
-    category: "CSS",
-  },
-  {
-    title: "E-commerce Next.js",
-    description:
-      "E-commerce con carrito, pagos y contacto, desarrollado en Next.js + Tailwind.",
-    technologies: ["Next.js", "Tailwind CSS", "TypeScript", "Vercel"],
-    repository: "https://github.com/omarhernandezrey/tienda_Lizz.io",
-    demo: "https://tienda-lizz-io.vercel.app/",
-    category: "Next.js",
-  },
-  {
-    title: "Task Manager App",
-    description:
-      "Gestor de tareas con CRUD y persistencia en localStorage, dark/light mode.",
-    technologies: ["HTML", "CSS", "JavaScript", "localStorage"],
-    repository: "https://github.com/omarhernandezrey/46-Task-Manager",
-    demo: "https://omarhernandezrey.github.io/46-Task-Manager/",
-    category: "JavaScript",
-  },
-  {
-    title: "Google Chrome Clone",
-    description:
-      "Réplica sencilla de la portada de Google con HTML y CSS puros.",
-    technologies: ["HTML", "CSS"],
-    repository: "https://github.com/omarhernandezrey/33-Google-Chrome-Clone.io",
-    demo: "https://omarhernandezrey.github.io/33-Google-Chrome-Clone.io/",
-    category: "CSS",
-  },
-  {
-    title: "Plan de Comidas Semanal",
-    description:
-      "App para organizar un menú semanal de forma sencilla y visual.",
-    technologies: ["HTML", "CSS", "JavaScript"],
-    repository:
-      "https://github.com/omarhernandezrey/31.1--comidasDeLaSemana.io",
-    demo: "https://omarhernandezrey.github.io/31.1--comidasDeLaSemana.io/",
-    category: "JavaScript",
-  },
-  {
-    title: "Pagar Recibos",
-    description: "Gestión básica de pagos de servicios con interfaz intuitiva.",
-    technologies: ["HTML", "CSS", "JavaScript"],
-    repository: "https://github.com/omarhernandezrey/28.1-PagarRecibos.io",
-    demo: "https://omarhernandezrey.github.io/28.1-PagarRecibos.io/",
-    category: "JavaScript",
-  },
-  {
-    title: "Calculadora de Pago de Turnos",
-    description:
-      "Calcula pagos de turnos de enfermería con calendario interactivo.",
-    technologies: ["HTML", "CSS", "JavaScript"],
-    repository:
-      "https://github.com/omarhernandezrey/07.1-calculadoraDePagoTurnosEmfermeria.github.io",
-    demo: "https://omarhernandezrey.github.io/07.1-calculadoraDePagoTurnosEmfermeria.github.io/",
-    category: "JavaScript",
-  },
-  {
-    title: "Async Landing",
-    description:
-      "Landing personal con integración de contenido dinámico mediante APIs.",
-    technologies: ["HTML", "JavaScript"],
-    repository: "https://github.com/omarhernandezrey/22.1_async-landing",
-    demo: "https://omarhernandezrey.github.io/22.1_async-landing/",
-    category: "JavaScript",
-  },
-  {
-    title: "Frontend Developer JS Práctico",
-    description:
-      "E-commerce con carrito y navegación responsive, proyecto práctico.",
-    technologies: ["HTML", "CSS", "JavaScript"],
-    repository:
-      "https://github.com/omarhernandezrey/18-curso-frontend-developer-javascript-practico.io",
-    demo: "https://omarhernandezrey.github.io/18-curso-frontend-developer-javascript-practico.io/",
-    category: "JavaScript",
-  },
-  {
-    title: "Portafolio Personal",
-    description:
-      "Portafolio para destacar experiencia, skills y proyectos de desarrollo.",
-    technologies: ["HTML", "CSS", "JavaScript"],
-    repository: "https://github.com/omarhernandezrey/07-portafolio.github.io",
-    demo: "https://omarhernandezrey.github.io/07-portafolio.github.io/",
-    category: "CSS",
-  },
-];
 
 /* ---------------------------------------------------------------------------
    Botón de categoría (estilos y badge)
@@ -268,7 +108,8 @@ const createFloatingElements = (count = 12) =>
 --------------------------------------------------------------------------- */
 const ProjectsSection: React.FC = () => {
   /* ---------------- estados ---------------- */
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const { language, t } = useTranslation();
+  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [searchTerm, setSearchTerm] = useState<string>("");
   const sectionRef = useRef<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll({
@@ -289,21 +130,31 @@ const ProjectsSection: React.FC = () => {
     setFloatingElements(createFloatingElements());
   }, []);
 
+  /* ---------------- datos localizados con useMemo ---------------- */
+  const localizedProjects = useMemo(
+    () => getLocalizedProjectsData(projectsData, language),
+    [language]
+  );
+
+  const localizedCategories = useMemo(() => {
+    const categories = getLocalizedProjectCategories(projectsData, language);
+    return [t('projects.categories.all'), ...categories];
+  }, [language, t]);
+
   /* ---------------- filtrado dinámico ---------------- */
-  const filteredProjects = projects.filter((p) => {
+  const filteredProjects = localizedProjects.filter((p) => {
     const byCategory =
-      selectedCategory === "All" || p.category === selectedCategory;
+      selectedCategory === t('projects.categories.all') || p.category === selectedCategory;
     const bySearch = `${p.title} ${p.description} ${p.technologies.join(" ")}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     return byCategory && bySearch;
   });
 
-  const categories = ["All", ...new Set(projects.map((p) => p.category))];
   const getCount = (c: string) =>
-    c === "All"
-      ? projects.length
-      : projects.filter((p) => p.category === c).length;
+    c === t('projects.categories.all')
+      ? localizedProjects.length
+      : localizedProjects.filter((p) => p.category === c).length;
 
   /* --------------------------------------------------------------------- */
   return (
@@ -432,7 +283,7 @@ const ProjectsSection: React.FC = () => {
               }}
               whileHover={{ scale: 1.05 }}
             >
-              Proyectos Destacados
+              {t('projects.badge')}
             </motion.span>
 
             <h2
@@ -444,14 +295,14 @@ const ProjectsSection: React.FC = () => {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              Mis Proyectos
+              {t('projects.title')}
             </h2>
 
             <p
               className="text-sm sm:text-base md:text-lg lg:text-xl max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-4"
               style={{ color: "var(--muted-color)" }}
             >
-              Explora mi colección de aplicaciones web y proyectos de desarrollo
+              {t('projects.description')}
             </p>
           </motion.div>
 
@@ -472,7 +323,7 @@ const ProjectsSection: React.FC = () => {
             >
               <input
                 type="text"
-                placeholder="Buscar proyectos..."
+                placeholder={t('projects.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-transparent text-white placeholder-gray-400 focus:outline-none rounded-lg sm:rounded-xl text-sm sm:text-base"
@@ -511,7 +362,7 @@ const ProjectsSection: React.FC = () => {
                 borderColor: "rgba(209,209,224,0.3)",
               }}
             >
-              {categories.map((c) => (
+              {localizedCategories.map((c) => (
                 <div key={c} style={{ scrollSnapAlign: "start" }}>
                   <CategoryButton
                     label={c}
@@ -534,8 +385,8 @@ const ProjectsSection: React.FC = () => {
               className="text-xs sm:text-sm md:text-base px-4"
               style={{ color: "var(--muted-color)" }}
             >
-              Mostrando {filteredProjects.length} de {projects.length} proyectos
-              {searchTerm && ` para "${searchTerm}"`}
+              {t('projects.showingResults', { count: filteredProjects.length, total: localizedProjects.length })}
+              {searchTerm && ` ${t('projects.searchResults', { searchTerm })}`}
             </p>
           </motion.div>
 
@@ -587,18 +438,18 @@ const ProjectsSection: React.FC = () => {
                   className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4"
                   style={{ color: "var(--white-color)" }}
                 >
-                  No se encontraron proyectos
+                  {t('projects.noResults')}
                 </h3>
                 <p
                   className="text-sm sm:text-base mb-4"
                   style={{ color: "var(--muted-color)" }}
                 >
-                  Intenta ajustar tu búsqueda o los filtros.
+                  {t('projects.noResultsDescription')}
                 </p>
                 <button
                   onClick={() => {
                     setSearchTerm("");
-                    setSelectedCategory("All");
+                    setSelectedCategory(t('projects.categories.all'));
                   }}
                   className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 text-sm sm:text-base font-medium"
                   style={{
@@ -606,7 +457,7 @@ const ProjectsSection: React.FC = () => {
                     color: "var(--white-color)",
                   }}
                 >
-                  Limpiar filtros
+                  {t('projects.clearFilters')}
                 </button>
               </div>
             </motion.div>

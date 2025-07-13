@@ -1,0 +1,237 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "services": "Services",
+    "skills": "Skills",
+    "education": "Education",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "hero": {
+    "greeting": "Hello I'm",
+    "name": "Omar Hernández Rey",
+    "title": "Full Stack Web Developer",
+    "description": "I combine {creativity}, {innovation} and {technology} to create {unforgettable} web experiences.",
+    "creativity": "creativity",
+    "innovation": "innovation",
+    "technology": "technology",
+    "unforgettable": "unforgettable",
+    "viewProjects": "View Projects",
+    "ariaLabel": "View my projects"
+  },
+  "about": {
+    "badge": "Get to know me",
+    "title": "About me",
+    "description": "Hello! I'm {name}, a {role} with experience in both {frontend} and {backend}. I'm about to graduate with a {degree} from {university} and I continue learning with {platform} courses on web technologies, DevOps and more.",
+    "name": "Omar Hernández Rey",
+    "role": "Full Stack Web Developer",
+    "frontend": "Front-End",
+    "backend": "Back-End",
+    "degree": "Software Engineering",
+    "university": "Politécnico Grancolombiano",
+    "platform": "Platzi",
+    "downloadCV": "Download CV",
+    "personalData": {
+      "name": "Name",
+      "birthDate": "Birth Date",
+      "address": "Address",
+      "phone": "Phone"
+    },
+    "personalInfo": {
+      "fullName": "Omar Hernández Rey",
+      "birth": "February 14, 1990",
+      "location": "Carrera 2N #39D-16 Sur, Bogotá",
+      "phoneNumber": "(+57) 3219058278"
+    },
+    "interests": {
+      "badge": "Passions",
+      "title": "My Interests"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Some of my recent work",
+    "viewProject": "View Project",
+    "viewCode": "View Code",
+    "technologies": "Technologies"
+  },
+  "services": {
+    "badge": "What I Offer",
+    "title": "My Services",
+    "subtitle": "What I can do for you",
+    "description": "Comprehensive solutions tailored to bring your digital vision to life with cutting-edge technology and best practices",
+    "cta": "Let's Work Together",
+    "items": {
+      "frontend": {
+        "title": "Frontend Development",
+        "description": "Creating modern, responsive user interfaces using technologies like React and Next.js.",
+        "features": [
+          "React & Next.js",
+          "TypeScript",
+          "Responsive Design",
+          "Performance Optimization"
+        ]
+      },
+      "backend": {
+        "title": "Backend Development",
+        "description": "Building robust, scalable APIs with Node.js, Express, and SQL/NoSQL databases.",
+        "features": [
+          "Node.js & Express",
+          "Database Design",
+          "API Development",
+          "Microservices"
+        ]
+      },
+      "design": {
+        "title": "UI/UX Design",
+        "description": "Functional prototypes and design focused on enhancing user experience.",
+        "features": [
+          "User Research",
+          "Wireframing",
+          "Prototyping",
+          "Design Systems"
+        ]
+      },
+      "devops": {
+        "title": "DevOps Implementation",
+        "description": "Automating deployments and maintaining cloud infrastructure.",
+        "features": [
+          "CI/CD Pipelines",
+          "Cloud Infrastructure",
+          "Container Orchestration",
+          "Monitoring"
+        ]
+      }
+    }
+  },
+  "skills": {
+    "badge": "Technical Excellence",
+    "title": "Core Skills",
+    "subtitle": "Technologies I work with",
+    "description": "Mastering the modern development ecosystem to create exceptional digital experiences",
+    "viewAll": "All Skills",
+    "allSkills": "All Skills",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "database": "Database",
+      "tools": "Tools",
+      "mobile": "Mobile",
+      "devops": "DevOps",
+      "design": "Design",
+      "all": "All"
+    },
+    "skillDescriptions": {
+      "html5": "Semantic structures optimized for SEO and accessibility.",
+      "css3": "Responsive designs, CSS animations and scalable architecture.",
+      "javascript": "ES6+, advanced patterns and performance optimization.",
+      "typescript": "Static typing for scalable enterprise applications.",
+      "react": "SSR, ISR and optimized static applications.",
+      "nodejs": "REST/GraphQL APIs, microservices and JWT authentication.",
+      "uiux": "User-centered interface design focused on user experience.",
+      "cloud": "Scalable infrastructure on AWS, GCP and Azure."
+    }
+  },
+  "education": {
+    "title": "Education",
+    "subtitle": "My academic and professional training",
+    "academicTitle": "My Academic Journey",
+    "badge": "Education",
+    "headerTitle": "My Academic Journey",
+    "loadMore": "Load More",
+    "loading": "Loading more...",
+    "certificate": "Certificate",
+    "shareLinkedIn": "Share on LinkedIn",
+    "sharing": "Sharing...",
+    "close": "Close",
+    "closeModal": "Close modal",
+    "loadMoreEducation": "Load more education",
+    "categories": {
+      "university": "University",
+      "technical": "Technical Training (SENA)",
+      "talentTech": "Talento Tech Bogotá",
+      "itCertificate": "ITCertificate",
+      "onlineCourses": "Online Courses (SENA),(Platzi) and more..."
+    }
+  },
+  "contact": {
+    "badge": "Let's Connect",
+    "title": "Contact Me",
+    "subtitle": "Let's talk about your next project",
+    "description": "Ready to bring your ideas to life? Let's discuss your next project from Bogotá, Colombia",
+    "form": {
+      "name": "Your Name",
+      "email": "Your Email Address",
+      "message": "Tell me about your project...",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully!",
+      "error": "Error sending message. Please try again."
+    },
+    "info": {
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location"
+    }
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "madeWith": "Made with",
+    "in": "in",
+    "location": "Bogotá, Colombia",
+    "name": "Omar Hernández Rey",
+    "description": "Full Stack Web Developer passionate about creating innovative and functional digital experiences.",
+    "navigationTitle": "Navigation",
+    "followTitle": "Follow Me",
+    "findMe": "Find me in Bogotá",
+    "backToTop": "Home",
+    "whatsappMessage": "Hello, I'm interested in your services.",
+    "whatsappAria": "Contact via WhatsApp",
+    "backToTopAria": "Back to top",
+    "mapTitle": "Omar Hernández Rey's location in Bogotá, Colombia",
+    "navigation": {
+      "aboutMe": "About Me",
+      "projects": "Projects",
+      "skills": "Skills",
+      "contact": "Contact"
+    }
+  },
+  "projects": {
+    "badge": "Featured Projects",
+    "title": "My Projects",
+    "subtitle": "Some of my recent work",
+    "description": "Explore my collection of web applications and development projects",
+    "searchPlaceholder": "Search projects...",
+    "showingResults": "Showing {count} of {total} projects",
+    "searchResults": "for \"{searchTerm}\"",
+    "noResults": "No projects found",
+    "noResultsDescription": "Try adjusting your search or filters.",
+    "clearFilters": "Clear filters",
+    "viewProject": "View Project",
+    "viewCode": "View Code",
+    "technologies": "Technologies",
+    "categories": {
+      "all": "All",
+      "javascript": "JavaScript",
+      "css": "CSS",
+      "nextjs": "Next.js",
+      "react": "React"
+    }
+  },
+  "newsletter": {
+    "title": "Subscribe to my Newsletter",
+    "placeholder": "Your Email Address",
+    "subscribing": "Subscribing...",
+    "subscribe": "Subscribe",
+    "success": "Successfully subscribed!",
+    "error": "Error subscribing. Please try again."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "tryAgain": "Try again",
+    "close": "Close"
+  }
+}

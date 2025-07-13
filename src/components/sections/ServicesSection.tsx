@@ -6,57 +6,12 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import { useTranslation } from "@/hooks/useTranslation";
+import { servicesData, getLocalizedServicesData } from "@/lib/servicesData";
 
-const services = [
-  {
-    title: "Frontend Development",
-    description:
-      "Creating modern, responsive user interfaces using technologies like React and Next.js.",
-    icon: "/images/services/frontend.svg",
-    features: [
-      "React & Next.js",
-      "TypeScript",
-      "Responsive Design",
-      "Performance Optimization",
-    ],
-    gradient: "from-blue-500 to-cyan-500",
-  },
-  {
-    title: "Backend Development",
-    description:
-      "Building robust, scalable APIs with Node.js, Express, and SQL/NoSQL databases.",
-    icon: "/images/services/backend.svg",
-    features: [
-      "Node.js & Express",
-      "Database Design",
-      "API Development",
-      "Microservices",
-    ],
-    gradient: "from-green-500 to-emerald-500",
-  },
-  {
-    title: "UI/UX Design",
-    description:
-      "Functional prototypes and design focused on enhancing user experience.",
-    icon: "/images/services/design.svg",
-    features: ["User Research", "Wireframing", "Prototyping", "Design Systems"],
-    gradient: "from-purple-500 to-pink-500",
-  },
-  {
-    title: "DevOps Implementation",
-    description: "Automating deployments and maintaining cloud infrastructure.",
-    icon: "/images/services/devops.svg",
-    features: [
-      "CI/CD Pipelines",
-      "Cloud Infrastructure",
-      "Container Orchestration",
-      "Monitoring",
-    ],
-    gradient: "from-orange-500 to-red-500",
-  },
-];
+// Los datos se obtienen ahora del archivo servicesData.ts
 
 // --- Lógica de partículas flotantes tipo AboutSection ---
 const createFloatingElements = (count = 12) =>
@@ -73,6 +28,10 @@ const createFloatingElements = (count = 12) =>
 type FloatingElement = ReturnType<typeof createFloatingElements>[number];
 
 export default function ServicesSection() {
+  /* ----------------------- i18n y datos ----------------------- */
+  const { t, language } = useTranslation();
+  const localizedServices = useMemo(() => getLocalizedServicesData(servicesData, language), [language]);
+
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -210,7 +169,7 @@ export default function ServicesSection() {
             }}
             whileHover={{ scale: 1.05 }}
           >
-            What I Offer
+            {t('services.badge')}
           </motion.span>
 
           <h2
@@ -223,21 +182,20 @@ export default function ServicesSection() {
               backgroundClip: "text",
             }}
           >
-            My Services
+            {t('services.title')}
           </h2>
 
           <p
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "var(--muted-color)" }}
           >
-            Comprehensive solutions tailored to bring your digital vision to
-            life with cutting-edge technology and best practices
+            {t('services.description')}
           </p>
         </motion.div>
 
         {/* Grid de servicios */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((service, index) => (
+          {localizedServices.map((service, index) => (
             <motion.div
               key={index}
               className="relative group cursor-pointer"
@@ -448,8 +406,7 @@ export default function ServicesSection() {
             whileTap={{ scale: 0.95 }}
             aria-label="Ir a la sección de contacto"
           >
-            {/* Apóstrofe escapada para ESLint */}
-            Let&apos;s Work Together
+            {t('services.cta')}
             <motion.span
               className="ml-2 inline-block"
               animate={{ x: [0, 5, 0] }}

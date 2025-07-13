@@ -13,11 +13,14 @@ import {
 } from "react-icons/fa";
 import { MdColorLens } from "react-icons/md";
 import { usePalette } from "../../hooks/usePalette";
+import { useTranslation } from "../../hooks/useTranslation";
+import LanguageSelector from "./LanguageSelector";
 
 const NavbarDesktop = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("#hero");
   const { togglePalette } = usePalette();
+  const { t } = useTranslation();
 
   // Effect para manejar el scroll
   useEffect(() => {
@@ -70,13 +73,13 @@ const NavbarDesktop = () => {
   };
 
   const navLinks = [
-    { id: "#hero", label: "Home", icon: <FaHome /> },
-    { id: "#about", label: "About Me", icon: <FaUserAlt /> },
-    { id: "#education", label: "Education", icon: <FaGraduationCap /> },
-    { id: "#skills", label: "Skills", icon: <FaToolbox /> },
-    { id: "#services", label: "Services", icon: <FaCode /> },
-    { id: "#projects", label: "Projects", icon: <FaProjectDiagram /> },
-    { id: "#contact", label: "Contact", icon: <FaEnvelope /> },
+    { id: "#hero", label: t("navigation.home"), icon: <FaHome /> },
+    { id: "#about", label: t("navigation.about"), icon: <FaUserAlt /> },
+    { id: "#education", label: t("navigation.education"), icon: <FaGraduationCap /> },
+    { id: "#skills", label: t("navigation.skills"), icon: <FaToolbox /> },
+    { id: "#services", label: t("navigation.services"), icon: <FaCode /> },
+    { id: "#projects", label: t("navigation.projects"), icon: <FaProjectDiagram /> },
+    { id: "#contact", label: t("navigation.contact"), icon: <FaEnvelope /> },
   ];
 
   return (
@@ -87,11 +90,11 @@ const NavbarDesktop = () => {
           : "bg-[var(--background-color)]/80 backdrop-blur-md"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 xl:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="w-full px-2 sm:px-4">
+        <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo Section */}
           <div
-            className="flex items-center cursor-pointer group"
+            className="flex items-center cursor-pointer group flex-shrink-0"
             onClick={() => handleLinkClick("#hero")}
           >
             <div className="relative">
@@ -99,53 +102,59 @@ const NavbarDesktop = () => {
               <Image
                 src="/images/logo7.png"
                 alt="Logo"
-                width={56}
-                height={56}
-                className="relative h-14 w-14 object-contain rounded-full border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--accent-color)] transition-all duration-300 group-hover:scale-105"
+                width={48}
+                height={48}
+                className="relative h-10 w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14 object-contain rounded-full border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--accent-color)] transition-all duration-300 group-hover:scale-105"
               />
-            </div>
-            <div className="ml-4">
-              <div className="text-lg font-bold text-[var(--primary-color)] group-hover:text-[var(--accent-color)] transition-colors duration-300">
-                Omar Hernández Rey
-              </div>
-              <div className="text-sm text-[var(--text-color)]/70 font-medium">
-                Full Stack Developer
-              </div>
             </div>
           </div>
 
           {/* Navigation Links */}
-          <div className="flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => handleLinkClick(link.id)}
-                className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
-                  activeSection === link.id
-                    ? "text-[var(--accent-color)] bg-[var(--primary-color)]/10"
-                    : "text-[var(--text-color)] hover:text-[var(--primary-color)] hover:bg-[var(--secondary-background-color)]"
-                }`}
-              >
-                <span className="text-base">{link.icon}</span>
-                <span className="hidden xl:inline uppercase tracking-wider">
-                  {link.label}
-                </span>
-                {activeSection === link.id && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full"></div>
-                )}
-              </button>
-            ))}
+          <div className="hidden md:flex items-center justify-center flex-1 mx-2">
+            <div className="flex items-center space-x-1 lg:space-x-3 xl:space-x-4">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => handleLinkClick(link.id)}
+                  className={`relative flex items-center gap-1 lg:gap-2 px-2 lg:px-4 xl:px-5 py-2 rounded-full text-xs lg:text-sm font-medium transition-all duration-300 hover:scale-105 ${
+                    activeSection === link.id
+                      ? "text-[var(--accent-color)] bg-[var(--primary-color)]/10"
+                      : "text-[var(--text-color)] hover:text-[var(--primary-color)] hover:bg-[var(--secondary-background-color)]"
+                  }`}
+                >
+                  <span className="text-sm lg:text-base">{link.icon}</span>
+                  <span className="hidden lg:inline xl:uppercase xl:tracking-wider text-xs lg:text-sm">
+                    {link.label}
+                  </span>
+                  {activeSection === link.id && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full"></div>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Palette Toggle Button */}
-          <button
-            onClick={togglePalette}
-            className="relative flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
-            aria-label="Toggle Color Palette"
-          >
-            <MdColorLens size={20} />
-            <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-full blur opacity-50"></div>
-          </button>
+          {/* Actions Section */}
+          <div className="flex items-center gap-1 lg:gap-3 flex-shrink-0">
+            {/* Language Selector */}
+            <div className="hidden sm:block">
+              <LanguageSelector />
+            </div>
+            
+            {/* Palette Toggle Button */}
+            <button
+              onClick={togglePalette}
+              className="relative flex items-center justify-center w-8 h-8 lg:w-9 lg:h-9 text-[var(--primary-color)] hover:text-[var(--accent-color)] hover:scale-110 transition-all duration-300"
+              aria-label="Toggle Color Palette"
+            >
+              <MdColorLens size={16} className="lg:w-5 lg:h-5" />
+            </button>
+            
+            {/* Mobile Language Selector */}
+            <div className="sm:hidden">
+              <LanguageSelector />
+            </div>
+          </div>
         </div>
       </div>
 

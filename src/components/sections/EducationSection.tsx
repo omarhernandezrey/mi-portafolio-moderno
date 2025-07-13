@@ -5,6 +5,7 @@ import { educationData } from "../../lib/educationData";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import EducationModal from "../ui/EducationModal";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Icono de graduación personalizado
 const GraduationCapIcon = ({ size = 24 }) => (
@@ -23,6 +24,23 @@ interface EducationItem {
   logo: string;
   certificate?: string | null;
 }
+
+// Función para obtener datos internacionalizados
+const getLocalizedEducationData = (data: typeof educationData, language: string): EducationItem[] => {
+  const lang = language as 'es' | 'en';
+  
+  return data.flatMap((category) =>
+    category.items.map((item) => ({
+      category: typeof category.category === 'string' ? category.category : (category.category[lang] || category.category.es),
+      title: typeof item.title === 'string' ? item.title : (item.title[lang] || item.title.es),
+      institution: typeof item.institution === 'string' ? item.institution : (item.institution[lang] || item.institution.es),
+      duration: typeof item.duration === 'string' ? item.duration : (item.duration[lang] || item.duration.es),
+      description: typeof item.description === 'string' ? item.description : (item.description[lang] || item.description.es),
+      logo: item.logo,
+      certificate: item.certificate,
+    }))
+  );
+};
 
 // Componente para mostrar el logo en la línea de tiempo con fallback seguro
 function TimelineLogo({
@@ -66,15 +84,15 @@ function TimelineLogo({
   );
 }
 
-// Función para aplanar los datos
-const flattenEducationData = (data: typeof educationData): EducationItem[] => {
-  return data.flatMap((category) =>
-    category.items.map((item) => ({
-      category: category.category,
-      ...item,
-    })),
-  );
-};
+// Función para aplanar los datos (deprecada, ahora usamos getLocalizedEducationData)
+// const flattenEducationData = (data: typeof educationData): EducationItem[] => {
+//   return data.flatMap((category) =>
+//     category.items.map((item) => ({
+//       category: category.category,
+//       ...item,
+//     })),
+//   );
+// };
 
 // Defino la interfaz FloatingElement antes de su uso
 interface FloatingElement {
@@ -99,9 +117,10 @@ const createFloatingElements = (count = 12) =>
   }));
 
 const EducationSection = () => {
+  const { t, language, isHydrated } = useTranslation();
   const allItems = useMemo<EducationItem[]>(
-    () => flattenEducationData(educationData),
-    [],
+    () => getLocalizedEducationData(educationData, language),
+    [language],
   );
 
   const [visibleCount, setVisibleCount] = useState<number>(0);
@@ -633,42 +652,72 @@ const EducationSection = () => {
           />
         </div>
         {/* Header animado igual que AboutSection */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-8 sm:mb-12 md:mb-16"
-        >
-          <motion.span
-            className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
-            style={{
-              color: "var(--accent-color)",
-              backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
-              borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
-            }}
-            whileHover={{ scale: 1.05 }}
+        {isHydrated && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-8 sm:mb-12 md:mb-16"
           >
-            Educación
-          </motion.span>
-          <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Mi Trayectoria Académica
-          </h2>
-        </motion.div>
+            <motion.span
+              className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+              style={{
+                color: "var(--accent-color)",
+                backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
+                borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
+              }}
+              whileHover={{ scale: 1.05 }}
+            >
+              {t('education.badge')}
+            </motion.span>
+            <h2
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              {t('education.headerTitle')}
+            </h2>
+          </motion.div>
+        )}
+        
+        {/* Fallback para SSR */}
+        {!isHydrated && (
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <span
+              className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+              style={{
+                color: "var(--accent-color)",
+                backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
+                borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
+              }}
+            >
+              Educación
+            </span>
+            <h2
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Mi Trayectoria Académica
+            </h2>
+          </div>
+        )}
 
         <div className="container">
           <div className="title-wrapper">
             <h2 id="education-title" className="title">
-              Education
+              {isHydrated ? t('education.title') : 'Educación'}
             </h2>
             <div className="title-underline" />
           </div>
@@ -721,13 +770,13 @@ const EducationSection = () => {
                 tabIndex={0}
                 role="button"
                 aria-pressed="false"
-                aria-label="Cargar más educación"
+                aria-label={isHydrated ? t('education.loadMoreEducation') : 'Cargar más educación'}
               >
                 <div className="timeline-icon">
                   <div className="timeline-inner-circle">+</div>
                 </div>
                 <div className="timeline-content">
-                  <h3 className="item-title">Load More</h3>
+                  <h3 className="item-title">{isHydrated ? t('education.loadMore') : 'Cargar Más'}</h3>
                 </div>
               </div>
             )}
@@ -751,7 +800,7 @@ const EducationSection = () => {
             />
           )}
 
-          {isLoading && <p className="loading-text">Cargando más...</p>}
+          {isLoading && <p className="loading-text">{isHydrated ? t('education.loading') : 'Cargando más...'}</p>}
         </div>
       </section>
     </>

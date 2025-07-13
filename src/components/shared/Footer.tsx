@@ -12,9 +12,11 @@ import { FiArrowUp } from "react-icons/fi";
 import { motion } from "framer-motion";
 import TestimonialCard from "./TestimonialCard";
 import NewsletterForm from "./NewsletterForm";
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function Footer() {
   const [isScrollButtonHovered, setIsScrollButtonHovered] = useState(false);
+  const { t } = useTranslation();
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -64,10 +66,10 @@ export default function Footer() {
   ];
 
   const navigationLinks = [
-    { href: "#about", label: "Sobre Mí" },
-    { href: "#projects", label: "Proyectos" },
-    { href: "#skills", label: "Habilidades" },
-    { href: "#contact", label: "Contacto" },
+    { href: "#about", label: t("footer.navigation.aboutMe") },
+    { href: "#projects", label: t("footer.navigation.projects") },
+    { href: "#skills", label: t("footer.navigation.skills") },
+    { href: "#contact", label: t("footer.navigation.contact") },
   ];
 
   return (
@@ -111,14 +113,13 @@ export default function Footer() {
                 backgroundClip: "text",
               }}
             >
-              Omar Hernández Rey
+              {t("footer.name")}
             </h2>
             <p
               className="text-center lg:text-left max-w-xs leading-relaxed"
               style={{ color: "var(--muted-color)" }}
             >
-              Desarrollador Web Full Stack apasionado por crear experiencias
-              digitales innovadoras y funcionales.
+              {t("footer.description")}
             </p>
           </motion.div>
 
@@ -134,7 +135,7 @@ export default function Footer() {
               className="text-xl font-semibold mb-4"
               style={{ color: "var(--accent-color)" }}
             >
-              Navegación
+              {t("footer.navigationTitle")}
             </h3>
             <ul className="space-y-2">
               {navigationLinks.map((link, index) => (
@@ -169,7 +170,7 @@ export default function Footer() {
               className="text-xl font-semibold mb-4"
               style={{ color: "var(--accent-color)" }}
             >
-              Sígueme
+              {t("footer.followTitle")}
             </h3>
             <div className="flex space-x-6">
               {socialLinks.map((social, index) => (
@@ -241,7 +242,7 @@ export default function Footer() {
             className="text-xl font-semibold mb-6"
             style={{ color: "var(--accent-color)" }}
           >
-            Encuéntrame en Bogotá
+            {t("footer.findMe")}
           </h3>
           <div
             className="w-full h-64 rounded-xl overflow-hidden shadow-lg border transition-all duration-300 hover:shadow-2xl"
@@ -255,7 +256,7 @@ export default function Footer() {
               allowFullScreen
               loading="lazy"
               className="w-full h-full border-none"
-              title="Ubicación de Omar Hernández Rey en Bogotá, Colombia"
+              title={t("footer.mapTitle")}
             />
           </div>
         </motion.div>
@@ -280,8 +281,7 @@ export default function Footer() {
             className="text-center md:text-left"
             style={{ color: "var(--muted-color)" }}
           >
-            © {new Date().getFullYear()} Omar Hernández Rey. Todos los derechos
-            reservados.
+            © {new Date().getFullYear()} {t("footer.name")}. {t("footer.rights")}
           </p>
 
           <motion.button
@@ -296,7 +296,7 @@ export default function Footer() {
                 : "transparent",
               border: `1px solid ${isScrollButtonHovered ? "var(--accent-color)" : "var(--muted-color)"}`,
             }}
-            aria-label="Volver al inicio"
+            aria-label={t("footer.backToTopAria")}
             onMouseEnter={() => setIsScrollButtonHovered(true)}
             onMouseLeave={() => setIsScrollButtonHovered(false)}
             whileHover={{ scale: 1.05, y: -2 }}
@@ -311,19 +311,19 @@ export default function Footer() {
             >
               <FiArrowUp size={20} />
             </motion.div>
-            <span className="font-medium">Inicio</span>
+            <span className="font-medium">{t("footer.backToTop")}</span>
           </motion.button>
         </motion.div>
       </div>
 
       {/* Botón flotante de WhatsApp */}
       <motion.a
-        href="https://wa.me/573219052878?text=Hola%2C%20me%20interesa%20tus%20servicios."
+        href={`https://wa.me/573219052878?text=${encodeURIComponent(t("footer.whatsappMessage"))}`}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-20 right-6 p-4 rounded-full shadow-lg transition-all duration-300 z-50"
         style={{ backgroundColor: "#25D366" }}
-        aria-label="Contactar por WhatsApp"
+        aria-label={t("footer.whatsappAria")}
         initial={{ opacity: 0, scale: 0.5, y: 100 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 1 }}

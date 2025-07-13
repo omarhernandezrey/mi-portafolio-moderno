@@ -5,9 +5,11 @@ import Typewriter from "typewriter-effect";
 import ParticlesComponent from "@/components/ParticlesComponent";
 import "@/styles/advancedButton.css";
 import Image from "next/image";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function HeroSection() {
   const projectsRef = useRef<HTMLElement | null>(null);
+  const { t } = useTranslation();
 
   // Scroll suave mejorado con useRef
   const handleViewProjects = () => {
@@ -82,13 +84,13 @@ export default function HeroSection() {
             font-extrabold mb-6 leading-tight
           "
         >
-          ¡Hola Soy{" "}
+          {t("hero.greeting")}{" "}
           <span className="inline-block min-h-[1.2em]">
             <Typewriter
               options={{
                 strings: [
-                  `<span style="color: var(--accent-color)">Omar Hernández Rey</span>`,
-                  `<span style="color: var(--primary-color)">Desarrollador Web Full Stack</span>`,
+                  `<span style="color: var(--accent-color)">${t("hero.name")}</span>`,
+                  `<span style="color: var(--primary-color)">${t("hero.title")}</span>`,
                 ],
                 autoStart: true,
                 loop: true,
@@ -109,42 +111,23 @@ export default function HeroSection() {
             animate-fadeIn
           "
           style={{ color: "rgba(255, 255, 255, 0.9)" }}
-        >
-          Combino{" "}
-          <span
-            className="font-semibold"
-            style={{ color: "var(--accent-color)" }}
-          >
-            creatividad
-          </span>
-          ,{" "}
-          <span
-            className="font-semibold"
-            style={{ color: "var(--primary-color)" }}
-          >
-            innovación
-          </span>{" "}
-          y <span className="font-semibold">tecnología</span> para crear
-          experiencias web{" "}
-          <span
-            className="underline"
-            style={{
-              textDecorationColor: `color-mix(in srgb, var(--accent-color) 50%, transparent)`,
-            }}
-          >
-            inolvidables
-          </span>
-          .
-        </p>
+          dangerouslySetInnerHTML={{
+            __html: t("hero.description")
+              .replace("{creativity}", `<span class="font-semibold" style="color: var(--accent-color)">${t("hero.creativity")}</span>`)
+              .replace("{innovation}", `<span class="font-semibold" style="color: var(--primary-color)">${t("hero.innovation")}</span>`)
+              .replace("{technology}", `<span class="font-semibold">${t("hero.technology")}</span>`)
+              .replace("{unforgettable}", `<span class="underline" style="text-decoration-color: color-mix(in srgb, var(--accent-color) 50%, transparent)">${t("hero.unforgettable")}</span>`),
+          }}
+        />
 
         {/* Botón interactivo mejorado */}
         <button
           type="button"
           className="btn relative group"
           onClick={handleViewProjects}
-          aria-label="Ver mis proyectos"
+          aria-label={t("hero.ariaLabel")}
         >
-          <strong className="relative z-10">Ver Proyectos</strong>
+          <strong className="relative z-10">{t("hero.viewProjects")}</strong>
           <div id="container-stars">
             <div id="stars" className="group-hover:animate-pulse" />
           </div>

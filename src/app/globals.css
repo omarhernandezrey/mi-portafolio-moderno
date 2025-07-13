@@ -13,6 +13,16 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Animaciones globales */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Configuración para el cambio dinámico de colores */
 
 /* Paleta por defecto (palette1) */

@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // --- Lógica de partículas flotantes tipo AboutSection ---
 const createFloatingElements = (count = 12) =>
@@ -23,6 +24,7 @@ export default function ContactForm() {
   const form = useRef<HTMLFormElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [isSending, setIsSending] = useState(false);
+  const { t } = useTranslation();
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
     [],
@@ -181,7 +183,7 @@ export default function ContactForm() {
             }}
             whileHover={{ scale: 1.05 }}
           >
-            Conectemos
+{t("contact.badge")}
           </motion.span>
 
           <h2
@@ -193,15 +195,14 @@ export default function ContactForm() {
               backgroundClip: "text",
             }}
           >
-            Contáctame
+{t("contact.title")}
           </h2>
 
           <p
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "var(--muted-color)" }}
           >
-            ¿Listo para dar vida a tus ideas? Conversemos sobre tu próximo
-            proyecto desde Bogotá, Colombia
+{t("contact.description")}
           </p>
         </motion.div>
 
@@ -244,7 +245,7 @@ export default function ContactForm() {
                 <input
                   type="text"
                   name="user_name"
-                  placeholder="Tu Nombre"
+                  placeholder={t("contact.form.name")}
                   onFocus={() => setFocusedField("name")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full p-4 rounded-xl border transition-all duration-300 bg-transparent"
@@ -286,7 +287,7 @@ export default function ContactForm() {
                 <input
                   type="email"
                   name="user_email"
-                  placeholder="Tu Correo Electrónico"
+                  placeholder={t("contact.form.email")}
                   onFocus={() => setFocusedField("email")}
                   onBlur={() => setFocusedField(null)}
                   className="w-full p-4 rounded-xl border transition-all duration-300 bg-transparent"
@@ -327,7 +328,7 @@ export default function ContactForm() {
               >
                 <textarea
                   name="message"
-                  placeholder="Cuéntame sobre tu proyecto..."
+                  placeholder={t("contact.form.message")}
                   rows={6}
                   onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
@@ -401,11 +402,11 @@ export default function ContactForm() {
                             ease: "linear",
                           }}
                         />
-                        Enviando...
+{t("contact.form.sending")}
                       </>
                     ) : (
                       <>
-                        Enviar Mensaje
+{t("contact.form.send")}
                         <motion.span
                           animate={{ x: [0, 5, 0] }}
                           transition={{ duration: 1.5, repeat: Infinity }}
@@ -432,19 +433,19 @@ export default function ContactForm() {
           {[
             {
               icon: "📧",
-              title: "Email",
+              title: t("contact.info.email"),
               value: "hernandezreyomar@gmail.com",
               href: "mailto:hernandezreyomar@gmail.com",
             },
             {
               icon: "📱",
-              title: "Phone",
+              title: t("contact.info.phone"),
               value: "+57 321 905 2878",
               href: "tel:+573219052878",
             },
             {
               icon: "📍",
-              title: "Location",
+              title: t("contact.info.location"),
               value: "Bogotá, Colombia",
               href: "https://maps.google.com/?q=Bogotá,Colombia",
             },
@@ -452,8 +453,8 @@ export default function ContactForm() {
             <motion.a
               key={idx}
               href={contact.href}
-              target={contact.title === "Location" ? "_blank" : "_self"}
-              rel={contact.title === "Location" ? "noopener noreferrer" : ""}
+              target={contact.title === t("contact.info.location") ? "_blank" : "_self"}
+              rel={contact.title === t("contact.info.location") ? "noopener noreferrer" : ""}
               whileHover={{
                 scale: 1.05,
                 y: -8,

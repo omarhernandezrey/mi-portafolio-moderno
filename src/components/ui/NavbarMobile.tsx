@@ -17,6 +17,8 @@ import { MdColorLens } from "react-icons/md"; // Icono de paleta
 import { BiBrain } from "react-icons/bi";
 import { FaTools } from "react-icons/fa";
 import { usePalette } from "../../hooks/usePalette";
+import { useTranslation } from "../../hooks/useTranslation";
+import LanguageSelector from "./LanguageSelector";
 
 interface NavbarMobileProps {
   isOpen: boolean;
@@ -27,6 +29,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState<string>("#hero");
   const { togglePalette } = usePalette();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -132,35 +135,56 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
           {/* Espacio para el navbar fijo */}
           <div className="h-20 flex-shrink-0"></div>
           
+          {/* Selector de idioma y paleta - Sección superior */}
+          <div className="flex-shrink-0 px-4 py-4 border-b border-[var(--accent-color)]/20 relative z-50">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 flex-1">
+                <span className="text-sm text-[var(--text-color)]/70 font-medium">
+                  {t("navigation.language")}:
+                </span>
+                <div className="relative z-50">
+                  <LanguageSelector isMobile={true} />
+                </div>
+              </div>
+              <button
+                onClick={togglePalette}
+                className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 hover:text-[var(--accent-hover-color)] focus:outline-none p-2 rounded-lg hover:bg-[var(--background-color)]"
+                aria-label="Toggle Palette"
+              >
+                <MdColorLens size={24} />
+              </button>
+            </div>
+          </div>
+          
           {/* Enlaces de navegación */}
           <div className="flex-1 px-4 py-6">
             <ul className="flex flex-col space-y-4">
               {[
-                { id: "#hero", label: "Home", icon: <AiOutlineHome size={20} /> },
+                { id: "#hero", label: t("navigation.home"), icon: <AiOutlineHome size={20} /> },
                 {
                   id: "#about",
-                  label: "About Me",
+                  label: t("navigation.about"),
                   icon: <AiOutlineUser size={20} />,
                 },
                 {
                   id: "#education",
-                  label: "Education",
+                  label: t("navigation.education"),
                   icon: <AiOutlineBook size={20} />,
                 },
-                { id: "#skills", label: "Skills", icon: <BiBrain size={20} /> },
+                { id: "#skills", label: t("navigation.skills"), icon: <BiBrain size={20} /> },
                 {
                   id: "#services",
-                  label: "Services",
+                  label: t("navigation.services"),
                   icon: <FaTools size={20} />,
                 },
                 {
                   id: "#projects",
-                  label: "Projects",
+                  label: t("navigation.projects"),
                   icon: <AiOutlineProject size={20} />,
                 },
                 {
                   id: "#contact",
-                  label: "Contact",
+                  label: t("navigation.contact"),
                   icon: <AiOutlineMail size={20} />,
                 },
               ].map((link) => (
@@ -182,10 +206,10 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
             </ul>
           </div>
 
-          {/* Iconos sociales y botón de paleta de colores */}
+          {/* Iconos sociales */}
           <div className="flex-shrink-0 mt-auto">
             <div className="border-t border-[var(--accent-color)] px-4 py-4">
-              <div className="flex items-center justify-center gap-6">
+              <div className="flex items-center justify-center gap-8">
                 <a
                   href="https://github.com/omarhernandezrey"
                   target="_blank"
@@ -193,7 +217,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
                   className="text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
                   aria-label="GitHub"
                 >
-                  <AiFillGithub size={28} />
+                  <AiFillGithub size={32} />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/omarhernandezrey/"
@@ -202,15 +226,8 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
                   className="text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
                   aria-label="LinkedIn"
                 >
-                  <AiFillLinkedin size={28} />
+                  <AiFillLinkedin size={32} />
                 </a>
-                <button
-                  onClick={togglePalette}
-                  className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 hover:text-[var(--accent-hover-color)] focus:outline-none"
-                  aria-label="Toggle Palette"
-                >
-                  <MdColorLens size={28} />
-                </button>
               </div>
             </div>
           </div>

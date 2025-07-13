@@ -10,6 +10,7 @@ import {
   FaMapMarkerAlt,
   FaPhoneAlt,
 } from "react-icons/fa";
+import { useTranslation } from "@/hooks/useTranslation";
 
 /* ──────────────────────────────────────────────────────────
    Función para crear partículas aleatorias (solo en cliente) */
@@ -25,6 +26,8 @@ const createFloatingElements = (count = 12) =>
   }));
 
 const AboutSection: React.FC = () => {
+  const { t } = useTranslation();
+  
   /* Estado para partículas flotantes (solo cliente) */
   const [floatingElements, setFloatingElements] = useState<
     ReturnType<typeof createFloatingElements>
@@ -68,18 +71,26 @@ const AboutSection: React.FC = () => {
 
   /* Datos personales */
   const personalData = [
-    { icon: FaUser, label: "Nombre", value: "Omar Hernández Rey" },
+    { 
+      icon: FaUser, 
+      label: t("about.personalData.name"), 
+      value: t("about.personalInfo.fullName") 
+    },
     {
       icon: FaCalendarAlt,
-      label: "Fecha de Nacimiento",
-      value: "14 de febrero de 1990",
+      label: t("about.personalData.birthDate"),
+      value: t("about.personalInfo.birth"),
     },
     {
       icon: FaMapMarkerAlt,
-      label: "Dirección",
-      value: "Carrera 2N #39D-16 Sur, Bogotá",
+      label: t("about.personalData.address"),
+      value: t("about.personalInfo.location"),
     },
-    { icon: FaPhoneAlt, label: "Teléfono", value: "(+57) 3219058278" },
+    { 
+      icon: FaPhoneAlt, 
+      label: t("about.personalData.phone"), 
+      value: t("about.personalInfo.phoneNumber") 
+    },
   ];
 
   /* Efecto: genera partículas tras montar (evita discrepancia SSR/CSR) */
@@ -277,7 +288,7 @@ const AboutSection: React.FC = () => {
                   d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v6m0 0l-3-3m3 3l3-3M12 4v8"
                 />
               </motion.svg>
-              Download CV
+{t("about.downloadCV")}
             </motion.a>
           </motion.div>
 
@@ -304,7 +315,7 @@ const AboutSection: React.FC = () => {
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                Conóceme
+                {t("about.badge")}
               </motion.span>
 
               <h2
@@ -316,7 +327,7 @@ const AboutSection: React.FC = () => {
                   backgroundClip: "text",
                 }}
               >
-                Sobre mí
+                {t("about.title")}
               </h2>
             </div>
 
@@ -333,58 +344,17 @@ const AboutSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-            >
-              ¡Hola! Soy{" "}
-              <strong
-                className="font-normal"
-                style={{ color: "var(--text-color)" }}
-              >
-                Omar Hernández Rey
-              </strong>
-              , un{" "}
-              <strong
-                className="font-normal"
-                style={{ color: "var(--primary-color)" }}
-              >
-                Desarrollador Web Full Stack
-              </strong>{" "}
-              con experiencia tanto en{" "}
-              <strong
-                className="font-normal"
-                style={{ color: "var(--accent-color)" }}
-              >
-                Front-End
-              </strong>{" "}
-              como en{" "}
-              <strong
-                className="font-normal"
-                style={{ color: "var(--accent-color)" }}
-              >
-                Back-End
-              </strong>
-              . Estoy a punto de graduarme en{" "}
-              <strong
-                className="font-normal"
-                style={{ color: "var(--primary-color)" }}
-              >
-                Ingeniería de Software
-              </strong>{" "}
-              del{" "}
-              <strong
-                className="font-normal"
-                style={{ color: "var(--primary-color)" }}
-              >
-                Politécnico Grancolombiano
-              </strong>{" "}
-              y continuo aprendiendo con cursos de{" "}
-              <strong
-                className="font-normal"
-                style={{ color: "var(--accent-color)" }}
-              >
-                Platzi
-              </strong>{" "}
-              sobre tecnologías web, DevOps y más.
-            </motion.p>
+              dangerouslySetInnerHTML={{
+                __html: t("about.description")
+                  .replace("{name}", `<strong class="font-normal" style="color: var(--text-color)">${t("about.name")}</strong>`)
+                  .replace("{role}", `<strong class="font-normal" style="color: var(--primary-color)">${t("about.role")}</strong>`)
+                  .replace("{frontend}", `<strong class="font-normal" style="color: var(--accent-color)">${t("about.frontend")}</strong>`)
+                  .replace("{backend}", `<strong class="font-normal" style="color: var(--accent-color)">${t("about.backend")}</strong>`)
+                  .replace("{degree}", `<strong class="font-normal" style="color: var(--primary-color)">${t("about.degree")}</strong>`)
+                  .replace("{university}", `<strong class="font-normal" style="color: var(--primary-color)">${t("about.university")}</strong>`)
+                  .replace("{platform}", `<strong class="font-normal" style="color: var(--accent-color)">${t("about.platform")}</strong>`),
+              }}
+            />
 
             {/* Datos personales */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -454,7 +424,7 @@ const AboutSection: React.FC = () => {
               }}
               whileHover={{ scale: 1.05 }}
             >
-              Pasiones
+              {t("about.interests.badge")}
             </motion.span>
 
             <h3
@@ -466,7 +436,7 @@ const AboutSection: React.FC = () => {
                 backgroundClip: "text",
               }}
             >
-              Mis Intereses
+              {t("about.interests.title")}
             </h3>
           </div>
 

@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FaTimes, FaLinkedin, FaShare } from "react-icons/fa";
 import { Transition } from "@headlessui/react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface EducationModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
   logo,
   certificate,
 }) => {
+  const { t } = useTranslation();
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
@@ -170,7 +172,7 @@ ${description}
             <button
               onClick={onClose}
               className="absolute top-4 right-4 text-[var(--muted-color)] hover:text-[var(--accent-color)] focus:outline-none z-10"
-              aria-label="Cerrar modal"
+              aria-label={t('education.closeModal')}
               ref={closeButtonRef}
             >
               <FaTimes size={24} />
@@ -229,7 +231,7 @@ ${description}
                       color: '#0a66c2',
                       border: '1px solid rgba(10, 102, 194, 0.2)',
                     }}
-                    title="Compartir certificado en LinkedIn"
+                    title={t('education.shareLinkedIn')}
                   >
                     {/* Icono animado */}
                     <div
@@ -247,7 +249,7 @@ ${description}
 
                     {/* Texto del botón */}
                     <span className="group-hover:text-[#0a66c2] transition-colors duration-300">
-                      {copied ? 'Compartiendo...' : 'Compartir en LinkedIn'}
+                      {copied ? t('education.sharing') : t('education.shareLinkedIn')}
                     </span>
 
                     {/* Icono de enlace externo */}
@@ -269,7 +271,7 @@ ${description}
               {certificate && (
                 <div className="mt-6">
                   <h3 className="text-xl font-semibold text-[var(--accent-color)] mb-4 text-center">
-                    Certificado
+                    {t('education.certificate')}
                   </h3>
                   <div className="flex justify-center">
                     {/* Enlace al certificado completo */}
@@ -297,7 +299,7 @@ ${description}
                   onClick={onClose}
                   className="bg-[var(--accent-color)] text-[var(--background-color)] py-2 px-8 rounded-full hover:bg-[var(--primary-hover-color)] transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-[var(--accent-hover-color)]"
                 >
-                  Cerrar
+                  {t('education.close')}
                 </button>
               </div>
             </div>

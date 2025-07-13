@@ -1,0 +1,237 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "projects": "Proyectos",
+    "services": "Servicios",
+    "skills": "Habilidades",
+    "education": "Educación",
+    "contact": "Contacto",
+    "language": "Idioma"
+  },
+  "hero": {
+    "greeting": "¡Hola Soy",
+    "name": "Omar Hernández Rey",
+    "title": "Desarrollador Web Full Stack",
+    "description": "Combino {creativity}, {innovation} y {technology} para crear experiencias web {unforgettable}.",
+    "creativity": "creatividad",
+    "innovation": "innovación",
+    "technology": "tecnología",
+    "unforgettable": "inolvidables",
+    "viewProjects": "Ver Proyectos",
+    "ariaLabel": "Ver mis proyectos"
+  },
+  "about": {
+    "badge": "Conóceme",
+    "title": "Sobre mí",
+    "description": "¡Hola! Soy {name}, un {role} con experiencia tanto en {frontend} como en {backend}. Estoy a punto de graduarme en {degree} del {university} y continuo aprendiendo con cursos de {platform} sobre tecnologías web, DevOps y más.",
+    "name": "Omar Hernández Rey",
+    "role": "Desarrollador Web Full Stack",
+    "frontend": "Front-End",
+    "backend": "Back-End",
+    "degree": "Ingeniería de Software",
+    "university": "Politécnico Grancolombiano",
+    "platform": "Platzi",
+    "downloadCV": "Download CV",
+    "personalData": {
+      "name": "Nombre",
+      "birthDate": "Fecha de Nacimiento",
+      "address": "Dirección",
+      "phone": "Teléfono"
+    },
+    "personalInfo": {
+      "fullName": "Omar Hernández Rey",
+      "birth": "14 de febrero de 1990",
+      "location": "Carrera 2N #39D-16 Sur, Bogotá",
+      "phoneNumber": "(+57) 3219058278"
+    },
+    "interests": {
+      "badge": "Pasiones",
+      "title": "Mis Intereses"
+    }
+  },
+  "projects": {
+    "title": "Proyectos",
+    "subtitle": "Algunos de mis trabajos recientes",
+    "viewProject": "Ver Proyecto",
+    "viewCode": "Ver Código",
+    "technologies": "Tecnologías"
+  },
+  "services": {
+    "badge": "Lo que Ofrezco",
+    "title": "Mis Servicios",
+    "subtitle": "Lo que puedo hacer por ti",
+    "description": "Soluciones integrales diseñadas para dar vida a tu visión digital con tecnología de vanguardia y mejores prácticas",
+    "cta": "Trabajemos Juntos",
+    "items": {
+      "frontend": {
+        "title": "Desarrollo Frontend",
+        "description": "Creando interfaces de usuario modernas y responsivas usando tecnologías como React y Next.js.",
+        "features": [
+          "React & Next.js",
+          "TypeScript",
+          "Diseño Responsivo",
+          "Optimización de Rendimiento"
+        ]
+      },
+      "backend": {
+        "title": "Desarrollo Backend",
+        "description": "Construyendo APIs robustas y escalables con Node.js, Express y bases de datos SQL/NoSQL.",
+        "features": [
+          "Node.js & Express",
+          "Diseño de Bases de Datos",
+          "Desarrollo de APIs",
+          "Microservicios"
+        ]
+      },
+      "design": {
+        "title": "Diseño UI/UX",
+        "description": "Prototipos funcionales y diseño enfocado en mejorar la experiencia del usuario.",
+        "features": [
+          "Investigación de Usuario",
+          "Wireframing",
+          "Prototipado",
+          "Sistemas de Diseño"
+        ]
+      },
+      "devops": {
+        "title": "Implementación DevOps",
+        "description": "Automatizando despliegues y manteniendo infraestructura en la nube.",
+        "features": [
+          "Pipelines CI/CD",
+          "Infraestructura en la Nube",
+          "Orquestación de Contenedores",
+          "Monitoreo"
+        ]
+      }
+    }
+  },
+  "skills": {
+    "badge": "Excelencia Técnica",
+    "title": "Habilidades Principales",
+    "subtitle": "Tecnologías con las que trabajo",
+    "description": "Dominando el ecosistema de desarrollo moderno para crear experiencias digitales excepcionales",
+    "viewAll": "Todas las Habilidades",
+    "allSkills": "Todas las Habilidades",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "database": "Base de Datos",
+      "tools": "Herramientas",
+      "mobile": "Móvil",
+      "devops": "DevOps",
+      "design": "Diseño",
+      "all": "Todas"
+    },
+    "skillDescriptions": {
+      "html5": "Estructuras semánticas y optimizadas para SEO y accesibilidad.",
+      "css3": "Diseños responsive, animaciones CSS y arquitectura escalable.",
+      "javascript": "ES6+, patrones avanzados y optimización de performance.",
+      "typescript": "Tipado estático para aplicaciones empresariales escalables.",
+      "react": "Aplicaciones SSR, ISR y estáticas optimizadas.",
+      "nodejs": "APIs REST/GraphQL, microservicios y autenticación JWT.",
+      "uiux": "Diseño de interfaces centrado en la experiencia de usuario.",
+      "cloud": "Infraestructura escalable en AWS, GCP y Azure."
+    }
+  },
+  "education": {
+    "title": "Educación",
+    "subtitle": "Mi formación académica y profesional",
+    "academicTitle": "Mi Trayectoria Académica",
+    "badge": "Educación",
+    "headerTitle": "Mi Trayectoria Académica",
+    "loadMore": "Cargar Más",
+    "loading": "Cargando más...",
+    "certificate": "Certificado",
+    "shareLinkedIn": "Compartir en LinkedIn",
+    "sharing": "Compartiendo...",
+    "close": "Cerrar",
+    "closeModal": "Cerrar modal",
+    "loadMoreEducation": "Cargar más educación",
+    "categories": {
+      "university": "Universidad",
+      "technical": "Formación Técnica (SENA)",
+      "talentTech": "Talento Tech Bogotá",
+      "itCertificate": "ITCertificate",
+      "onlineCourses": "Cursos en Línea (SENA),(Platzi) y mas..."
+    }
+  },
+  "contact": {
+    "badge": "Conectemos",
+    "title": "Contáctame",
+    "subtitle": "Hablemos sobre tu próximo proyecto",
+    "description": "¿Listo para dar vida a tus ideas? Conversemos sobre tu próximo proyecto desde Bogotá, Colombia",
+    "form": {
+      "name": "Tu Nombre",
+      "email": "Tu Correo Electrónico",
+      "message": "Cuéntame sobre tu proyecto...",
+      "send": "Enviar Mensaje",
+      "sending": "Enviando...",
+      "success": "¡Mensaje enviado exitosamente!",
+      "error": "Error al enviar el mensaje. Inténtalo de nuevo."
+    },
+    "info": {
+      "email": "Email",
+      "phone": "Teléfono",
+      "location": "Ubicación"
+    }
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "madeWith": "Hecho con",
+    "in": "en",
+    "location": "Bogotá, Colombia",
+    "name": "Omar Hernández Rey",
+    "description": "Desarrollador Web Full Stack apasionado por crear experiencias digitales innovadoras y funcionales.",
+    "navigationTitle": "Navegación",
+    "followTitle": "Sígueme",
+    "findMe": "Encuéntrame en Bogotá",
+    "backToTop": "Inicio",
+    "whatsappMessage": "Hola, me interesa tus servicios.",
+    "whatsappAria": "Contactar por WhatsApp",
+    "backToTopAria": "Volver al inicio",
+    "mapTitle": "Ubicación de Omar Hernández Rey en Bogotá, Colombia",
+    "navigation": {
+      "aboutMe": "Sobre Mí",
+      "projects": "Proyectos",
+      "skills": "Habilidades",
+      "contact": "Contacto"
+    }
+  },
+  "projects": {
+    "badge": "Proyectos Destacados",
+    "title": "Mis Proyectos",
+    "subtitle": "Algunos de mis trabajos recientes",
+    "description": "Explora mi colección de aplicaciones web y proyectos de desarrollo",
+    "searchPlaceholder": "Buscar proyectos...",
+    "showingResults": "Mostrando {count} de {total} proyectos",
+    "searchResults": "para \"{searchTerm}\"",
+    "noResults": "No se encontraron proyectos",
+    "noResultsDescription": "Intenta ajustar tu búsqueda o los filtros.",
+    "clearFilters": "Limpiar filtros",
+    "viewProject": "Ver Proyecto",
+    "viewCode": "Ver Código",
+    "technologies": "Tecnologías",
+    "categories": {
+      "all": "Todos",
+      "javascript": "JavaScript",
+      "css": "CSS",
+      "nextjs": "Next.js",
+      "react": "React"
+    }
+  },
+  "newsletter": {
+    "title": "Suscríbete a mi Newsletter",
+    "placeholder": "Tu Correo Electrónico",
+    "subscribing": "Suscribiendo...",
+    "subscribe": "Suscribirse",
+    "success": "¡Suscripción exitosa!",
+    "error": "Error al suscribirse. Inténtalo de nuevo."
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "tryAgain": "Intentar de nuevo",
+    "close": "Cerrar"
+  }
+}
