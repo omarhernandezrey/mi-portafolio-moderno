@@ -258,6 +258,26 @@ export const educationData: EducationCategory[] = [
       },
 
       // 1
+        {
+              title: {
+          es: "Curso Profesional de Consumo de API REST con JavaScript",
+          en: "Professional Course on REST API Consumption with JavaScript"
+        },
+        institution: {
+          es: "Platzi",
+          en: "Platzi"
+        },
+        duration: {
+          es: "16 horas (Aprobado el 30 de enero de 2025)",
+          en: "16 hours (Approved on January 30, 2025)"
+        },
+        description: {
+          es: "Curso profesional enfocado en consumir APIs REST con JavaScript, mejorando el rendimiento y la usabilidad de las aplicaciones web mediante prácticas modernas.",
+          en: "Professional course focused on consuming REST APIs with JavaScript, improving performance and usability of web applications through modern practices."
+        },
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/48cursoDeApiRestConJavascriptPerformanceYUsabilidad.jpg"
+      },
       {
         title: {
           es: "Práctico de Consumo de API REST con JavaScript",
