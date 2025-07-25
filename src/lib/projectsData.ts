@@ -19,6 +19,50 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
+      {
+      title: {
+        es: "Lanyard 3D - Componente Interactivo con Física",
+        en: "Lanyard 3D - Interactive Physics Component"
+      },
+      description: {
+        es: "Componente 3D ultra-realista de lanyard con física avanzada usando Three.js, React y Rapier. Simulación realista, renderizado PBR, interacción intuitiva y diseño responsive.",
+        en: "Ultra-realistic 3D lanyard component with advanced physics using Three.js, React, and Rapier. Real-time simulation, PBR rendering, intuitive interaction, and responsive design."
+      },
+      technologies: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Three.js",
+        "Rapier",
+        "@react-three/fiber",
+        "@react-three/drei",
+        "@react-three/rapier",
+        "Tailwind CSS"
+      ],
+      repository: "https://github.com/omarhernandezrey/lanyard-project", // <-- actualízalo si es privado o cambiará
+      demo: "https://lanyard-project.vercel.app/",
+      category: {
+        es: "3D Interactivo",
+        en: "Interactive 3D"
+      }
+    },
+    {
+    title: {
+      es: "Product Card - Proyecto con Web Components",
+      en: "Product Card - Web Components Project"
+    },
+    description: {
+      es: "Tarjeta de producto moderna creada con Web Components nativos usando JavaScript vanilla. Componente completamente encapsulado, reutilizable, con diseño responsive y estilos modernos.",
+      en: "Modern product card built with native Web Components using vanilla JavaScript. Fully encapsulated, reusable component with responsive layout and modern styles."
+    },
+    technologies: ["HTML", "CSS", "JavaScript", "Web Components", "Vercel"],
+    repository: "https://github.com/omarhernandezrey/32proyectoCursoDeJavaScriptWebComponents",
+    demo: "https://32proyecto-curso-de-java-script-web.vercel.app/",
+    category: {
+      es: "Web Components",
+      en: "Web Components"
+    }
+  },
   {
     title: {
       es: "CineXpress - API REST con JavaScript",

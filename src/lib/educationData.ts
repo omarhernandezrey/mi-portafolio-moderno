@@ -258,6 +258,26 @@ export const educationData: EducationCategory[] = [
       },
 
       // 1
+          {
+            title: {
+              es: "Curso Básico de Web Components con JavaScript",
+              en: "Basic Course on Web Components with JavaScript"
+            },
+            institution: {
+              es: "Platzi",
+              en: "Platzi"
+            },
+            duration: {
+              es: "19 horas (Aprobado el 30 de enero de 2025)",
+              en: "19 hours (Approved on January 30, 2025)"
+            },
+            description: {
+              es: "Curso básico sobre la creación de componentes web reutilizables usando JavaScript, Shadow DOM y Custom Elements, siguiendo estándares modernos.",
+              en: "Basic course on creating reusable web components using JavaScript, Shadow DOM, and Custom Elements following modern standards."
+            },
+            logo: "/images/education/platzi/platzi-logo.png",
+            certificate: "/images/education/platzi/49diplomaWebComponentsJavascript.jpg"
+          },
         {
               title: {
           es: "Curso Profesional de Consumo de API REST con JavaScript",
