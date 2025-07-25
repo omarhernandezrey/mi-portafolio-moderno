@@ -55,17 +55,43 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
           width: rect.width
         });
       } else {
-        // Para desktop, usar scroll offset
+        // Para desktop, usar coordenadas de viewport (no añadir scroll)
+        const dropdownHeight = 120; // Altura estimada del dropdown
+        const dropdownWidth = Math.max(rect.width, 140);
+        
+        let finalTop = rect.bottom + 8;
+        let finalLeft = rect.left;
+        
+        // Si se sale por abajo, posicionar arriba del botón
+        if (finalTop + dropdownHeight > window.innerHeight) {
+          finalTop = rect.top - dropdownHeight - 8;
+        }
+        
+        // Si se sale por la derecha, ajustar hacia la izquierda
+        if (finalLeft + dropdownWidth > window.innerWidth) {
+          finalLeft = window.innerWidth - dropdownWidth - 16;
+        }
+        
+        // Asegurar que no se salga por la izquierda
+        if (finalLeft < 16) {
+          finalLeft = 16;
+        }
+        
+        // Asegurar que no se salga por arriba
+        if (finalTop < 16) {
+          finalTop = rect.bottom + 8;
+        }
+        
         setDropdownPosition({
-          top: rect.bottom + window.scrollY + 8,
-          left: rect.left + window.scrollX,
-          width: rect.width
+          top: finalTop,
+          left: finalLeft,
+          width: dropdownWidth
         });
       }
     }
   };
 
-  // Cerrar dropdown al hacer clic fuera
+  // Cerrar dropdown al hacer clic fuera y manejar scroll
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -87,10 +113,33 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
       }
     };
 
+    const handleScroll = () => {
+      if (isOpen) {
+        if (isMobile) {
+          // En móvil, cerrar el dropdown al hacer scroll
+          setIsOpen(false);
+        } else {
+          // En desktop, actualizar posición del dropdown
+          updateDropdownPosition();
+        }
+      }
+    };
+
+    const handleResize = () => {
+      if (isOpen) {
+        updateDropdownPosition();
+      }
+    };
+
     if (isOpen) {
       // Para móvil, también escuchar en el document para clics fuera
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleEscape);
+      
+      // Añadir listeners para scroll y resize - múltiples elementos
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      document.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', handleResize);
       
       // Para móvil, también prevenir scroll del fondo cuando el dropdown está abierto
       if (isMobile) {
@@ -104,6 +153,9 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
       if (isMobile) {
         document.body.style.overflowY = 'unset';
       }
@@ -126,7 +178,12 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
   const toggleDropdown = () => {
     if (!isAnimating) {
       if (!isOpen) {
+        // Actualizar posición inmediatamente antes de abrir
         updateDropdownPosition();
+        // Pequeño delay para asegurar que la posición se calcule correctamente
+        requestAnimationFrame(() => {
+          updateDropdownPosition();
+        });
       }
       setIsOpen(!isOpen);
     }
@@ -200,12 +257,13 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
             <div
               role="listbox"
               aria-label="Language selection"
-              className="absolute top-full left-0 mt-2 py-2 rounded-lg border backdrop-blur-xl overflow-hidden shadow-2xl z-[99999]"
+              className="absolute top-full left-0 mt-2 py-2 rounded-lg border backdrop-blur-xl overflow-hidden shadow-2xl"
               style={{
                 width: Math.max(dropdownPosition.width, 140),
                 backgroundColor: 'var(--card-bg-color)',
                 borderColor: `color-mix(in srgb, var(--primary-color) 30%, transparent)`,
                 boxShadow: `0 20px 40px color-mix(in srgb, var(--primary-color) 15%, transparent)`,
+                zIndex: 2147483647, // Máximo z-index posible
                 animation: 'fadeIn 0.2s ease-out'
               }}
             >
@@ -285,12 +343,13 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
                 style={{
                   top: dropdownPosition.top,
                   left: dropdownPosition.left,
-                  width: Math.max(dropdownPosition.width, 140),
+                  width: dropdownPosition.width,
                   backgroundColor: 'var(--card-bg-color)',
                   borderColor: `color-mix(in srgb, var(--primary-color) 30%, transparent)`,
                   boxShadow: `0 20px 40px color-mix(in srgb, var(--primary-color) 15%, transparent)`,
-                  zIndex: 99999,
-                  animation: 'fadeIn 0.2s ease-out'
+                  zIndex: 2147483647, // Máximo z-index posible
+                  animation: 'fadeIn 0.2s ease-out',
+                  pointerEvents: 'auto' // Asegurar que reciba eventos
                 }}
               >
                 {languages.map((lang) => (

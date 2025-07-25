@@ -20,16 +20,13 @@ const detectClientLanguage = (): string => {
   if (typeof window === 'undefined') return 'es';
   
   try {
-    // Prioridad: localStorage -> navigator -> default
+    // Prioridad: localStorage (elección explícita del usuario) -> español por defecto
     const savedLanguage = localStorage.getItem('i18nextLng');
     if (savedLanguage && ['es', 'en'].includes(savedLanguage)) {
       return savedLanguage;
     }
     
-    const browserLang = navigator.language.toLowerCase();
-    if (browserLang.includes('es')) return 'es';
-    if (browserLang.includes('en')) return 'en';
-    
+    // Siempre iniciar en español por defecto, no detectar automáticamente del navegador
     return 'es';
   } catch {
     return 'es';
@@ -50,6 +47,14 @@ const initConfig = {
   // Configuración de interpolación
   interpolation: {
     escapeValue: false, // React ya escapa por defecto
+    prefix: '{',
+    suffix: '}',
+    formatSeparator: ',',
+    unescapePrefix: '-',
+    nestingPrefix: '$t(',
+    nestingSuffix: ')',
+    nestingOptionsSeparator: ',',
+    defaultVariables: {},
   },
   
   // Configuración de reactividad para evitar problemas de hidratación

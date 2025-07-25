@@ -31,16 +31,13 @@ const getInitialClientLanguage = (): string => {
   if (typeof window === 'undefined') return 'es';
   
   try {
-    // Prioridad: localStorage -> navigator -> default
+    // Prioridad: localStorage (elección explícita del usuario) -> español por defecto
     const savedLanguage = localStorage.getItem('i18nextLng');
     if (savedLanguage && ['es', 'en'].includes(savedLanguage)) {
       return savedLanguage;
     }
     
-    const browserLang = navigator.language.toLowerCase();
-    if (browserLang.includes('es')) return 'es';
-    if (browserLang.includes('en')) return 'en';
-    
+    // Siempre iniciar en español por defecto, no detectar automáticamente del navegador
     return 'es';
   } catch {
     return 'es';
@@ -110,7 +107,15 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
       try {
         return t(key, options);
       } catch {
-        return key; // Fallback si hay error
+        // Fallback con interpolación manual si hay error
+        let text = key;
+        if (options) {
+          Object.entries(options).forEach(([placeholder, value]) => {
+            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+            text = text.replace(regex, String(value));
+          });
+        }
+        return text;
       }
     },
     isReady: i18nInstance.isInitialized && isHydrated,

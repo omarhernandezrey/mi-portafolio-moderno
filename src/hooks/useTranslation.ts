@@ -55,16 +55,6 @@ export const useTranslation = () => {
     "about.personalInfo.location": "Carrera 2N #39D-16 Sur, Bogotá",
     "about.personalInfo.phoneNumber": "(+57) 3219058278",
 
-    // Projects
-    "projects.badge": "Proyectos Destacados",
-    "projects.title": "Mis Proyectos",
-    "projects.subtitle": "Algunos de mis trabajos recientes",
-    "projects.description": "Explora mi colección de aplicaciones web y proyectos de desarrollo",
-    "projects.searchPlaceholder": "Buscar proyectos...",
-    "projects.viewProject": "Ver Proyecto",
-    "projects.viewCode": "Ver Código",
-    "projects.technologies": "Tecnologías",
-
     // Services
     "services.badge": "Lo que Ofrezco",
     "services.title": "Mis Servicios",

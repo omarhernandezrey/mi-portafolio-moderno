@@ -55,9 +55,9 @@ export const projectsData: Project[] = [
       es: "Tarjeta de producto moderna creada con Web Components nativos usando JavaScript vanilla. Componente completamente encapsulado, reutilizable, con diseño responsive y estilos modernos.",
       en: "Modern product card built with native Web Components using vanilla JavaScript. Fully encapsulated, reusable component with responsive layout and modern styles."
     },
-    technologies: ["HTML", "CSS", "JavaScript", "Web Components", "Vercel"],
+    technologies: ["HTML", "CSS", "JavaScript", "Web Components", "Vercel, netlify"],
     repository: "https://github.com/omarhernandezrey/32proyectoCursoDeJavaScriptWebComponents",
-    demo: "https://32proyecto-curso-de-java-script-web.vercel.app/",
+    demo: "https://32proyectocursodejavascriptwebcompone.netlify.app/",
     category: {
       es: "Web Components",
       en: "Web Components"
