@@ -105,6 +105,21 @@ export const useTranslation = () => {
     "contact.form.success": "¡Mensaje enviado exitosamente!",
     "contact.form.error": "Error al enviar el mensaje. Inténtalo de nuevo.",
 
+    // Projects
+    "projects.badge": "Proyectos Destacados",
+    "projects.title": "Mis Proyectos",
+    "projects.subtitle": "Algunos de mis trabajos recientes",
+    "projects.description": "Explora mi colección de aplicaciones web y proyectos de desarrollo",
+    "projects.searchPlaceholder": "Buscar proyectos...",
+    "projects.showingResults": "Mostrando {count} de {total} proyectos",
+    "projects.searchResults": "para \"{searchTerm}\"",
+    "projects.noResults": "No se encontraron proyectos",
+    "projects.noResultsDescription": "Intenta ajustar tu búsqueda o los filtros.",
+    "projects.clearFilters": "Limpiar filtros",
+    "projects.viewProject": "Ver Proyecto",
+    "projects.viewCode": "Ver Código",
+    "projects.technologies": "Tecnologías",
+
     // Footer
     "footer.rights": "Todos los derechos reservados.",
     "footer.madeWith": "Hecho con",
@@ -121,23 +136,43 @@ export const useTranslation = () => {
   };
 
   /**
-   * Función de traducción mejorada que maneja hidratación
+   * Función de traducción mejorada que maneja hidratación e interpolación
    * @param key - Clave de traducción
    * @param options - Opciones adicionales para interpolación
-   * @returns Texto traducido o fallback
+   * @returns Texto traducido o fallback con interpolación
    */
   const tr = (key: string, options?: Record<string, unknown>): string => {
     try {
-      // Si no está hidratado, usar fallback
+      // Si no está hidratado, usar fallback con interpolación manual
       if (!isHydrated) {
-        return fallbacks[key] || key;
+        let text = fallbacks[key] || key;
+        
+        // Aplicar interpolación manual si hay opciones
+        if (options) {
+          Object.entries(options).forEach(([placeholder, value]) => {
+            const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+            text = text.replace(regex, String(value));
+          });
+        }
+        
+        return text;
       }
 
       // Si está hidratado, usar traducción normal
       return t(key, options);
     } catch (error) {
       console.warn(`Translation error for key "${key}":`, error);
-      return fallbacks[key] || key;
+      
+      // En caso de error, usar fallback con interpolación manual
+      let text = fallbacks[key] || key;
+      if (options) {
+        Object.entries(options).forEach(([placeholder, value]) => {
+          const regex = new RegExp(`\\{${placeholder}\\}`, 'g');
+          text = text.replace(regex, String(value));
+        });
+      }
+      
+      return text;
     }
   };
 
