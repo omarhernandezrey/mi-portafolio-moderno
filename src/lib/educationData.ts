@@ -258,6 +258,26 @@ export const educationData: EducationCategory[] = [
       },
 
       // 1
+            {
+              title: {
+                es: "Curso de Debugging con Chrome DevTools",
+                en: "Debugging with Chrome DevTools Course"
+              },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "18 horas (Aprobado el 31 de enero de 2025)",
+                en: "18 hours (Approved on January 31, 2025)"
+              },
+              description: {
+                es: "Curso especializado en el uso profesional de las Chrome DevTools para depurar aplicaciones web de manera eficiente. A lo largo del contenido, se abordan técnicas avanzadas de inspección de elementos, monitoreo de rendimiento, análisis de red, manejo de errores JavaScript y optimización del flujo de trabajo en tiempo real. Ideal para desarrolladores que buscan mejorar sus habilidades de diagnóstico en el navegador y aumentar la calidad de su código.",
+                en: "Specialized course on the professional use of Chrome DevTools to efficiently debug web applications. The content covers advanced techniques for element inspection, performance monitoring, network analysis, JavaScript error handling, and real-time workflow optimization. Ideal for developers aiming to improve their in-browser diagnostic skills and increase code quality."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/50cursoDeDebuggingConChromeDevTools.jpg"
+            },
           {
             title: {
               es: "Curso Básico de Web Components con JavaScript",
