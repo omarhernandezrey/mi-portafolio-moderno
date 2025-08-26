@@ -38,7 +38,7 @@ const initConfig = {
   resources,
   lng: 'es', // Siempre español para SSR
   fallbackLng: 'es',
-  debug: false, // Desactivar debug para producción
+  debug: false, // Debug desactivado para producción
   
   // Configuración de namespace
   defaultNS: 'common',
@@ -67,10 +67,11 @@ const initConfig = {
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'span'],
   },
   
-  // Desactivar detección automática para evitar diferencias SSR/Cliente
+  // Configuración de detección mínima para el cliente
   detection: {
-    order: [], // No detectar automáticamente
-    caches: [], // No cachear automáticamente
+    order: ['localStorage'], // Solo usar localStorage en el cliente
+    lookupLocalStorage: 'i18nextLng',
+    caches: ['localStorage'],
   },
 };
 
@@ -81,13 +82,12 @@ i18n
   .then(() => {
     // Solo en el cliente, después de la hidratación
     if (typeof window !== 'undefined') {
-      // Pequeño delay para asegurar que la hidratación esté completa
-      setTimeout(() => {
-        const clientLanguage = detectClientLanguage();
-        if (clientLanguage !== 'es') {
-          i18n.changeLanguage(clientLanguage);
-        }
-      }, 100);
+      const clientLanguage = detectClientLanguage();
+      if (clientLanguage !== i18n.language) {
+        i18n.changeLanguage(clientLanguage).catch((error) => {
+          console.error('Error setting initial client language:', error);
+        });
+      }
     }
   })
   .catch((error) => {

@@ -41,6 +41,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === language) || languages[0];
+  
 
   // Calcular posición del dropdown
   const updateDropdownPosition = () => {
@@ -96,14 +97,31 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       
-      // Verificar si el clic fue fuera del botón y del dropdown
-      if (
-        dropdownRef.current && 
-        !dropdownRef.current.contains(target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(target)
-      ) {
+      // Para desktop con portal, necesitamos verificar de forma diferente
+      if (!isMobile && isOpen) {
+        // En desktop, el dropdown está en un portal, así que verificamos si el clic fue en el botón
+        if (buttonRef.current && buttonRef.current.contains(target)) {
+          return; // No cerrar si se hace clic en el botón
+        }
+        
+        // Verificar si el clic fue en algún elemento del dropdown del portal
+        const portalDropdown = document.querySelector('[role="listbox"][aria-label="Language selection"]');
+        if (portalDropdown && portalDropdown.contains(target)) {
+          return; // No cerrar si se hace clic dentro del dropdown
+        }
+        
+        // Cerrar si el clic fue fuera del botón y del dropdown
         setIsOpen(false);
+      } else if (isMobile) {
+        // Para móvil, usar la lógica original
+        if (
+          dropdownRef.current && 
+          !dropdownRef.current.contains(target) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(target)
+        ) {
+          setIsOpen(false);
+        }
       }
     };
 
@@ -168,11 +186,15 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
     setIsAnimating(true);
     setIsOpen(false);
 
-    // Agregar un pequeño delay para la animación
-    setTimeout(async () => {
+    try {
       await setLanguage(langCode);
+      // Pequeño delay para asegurar que el cambio se complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+    } catch (error) {
+      console.error('LanguageSelector: Error changing language:', error);
+    } finally {
       setIsAnimating(false);
-    }, 200);
+    }
   };
 
   const toggleDropdown = () => {
@@ -351,6 +373,10 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
                   animation: 'fadeIn 0.2s ease-out',
                   pointerEvents: 'auto' // Asegurar que reciba eventos
                 }}
+                onMouseDown={(e) => {
+                  // Prevenir que el evento mousedown se propague y cause el cierre del dropdown
+                  e.stopPropagation();
+                }}
               >
                 {languages.map((lang) => (
                   <button
@@ -377,7 +403,15 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
                         e.currentTarget.style.backgroundColor = 'transparent';
                       }
                     }}
-                    onClick={() => handleLanguageChange(lang.code)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleLanguageChange(lang.code);
+                    }}
+                    onMouseDown={(e) => {
+                      // Prevenir propagación del mousedown
+                      e.stopPropagation();
+                    }}
                     disabled={isAnimating}
                   >
                     {/* Bandera */}

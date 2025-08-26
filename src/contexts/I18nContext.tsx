@@ -37,7 +37,7 @@ const getInitialClientLanguage = (): string => {
       return savedLanguage;
     }
     
-    // Siempre iniciar en español por defecto, no detectar automáticamente del navegador
+    // Si no hay idioma guardado, usar español por defecto
     return 'es';
   } catch {
     return 'es';
@@ -48,8 +48,10 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
   const [isHydrated, setIsHydrated] = useState(false);
   const { t, i18n: i18nInstance } = useTranslation('common');
   
-  // Estado del idioma actual
-  const [currentLanguage, setCurrentLanguage] = useState<string>('es');
+  // Estado del idioma actual - inicializar con el idioma de i18n si está disponible
+  const [currentLanguage, setCurrentLanguage] = useState<string>(() => 
+    i18nInstance.isInitialized ? i18nInstance.language : 'es'
+  );
   
   // Detectar hidratación
   useEffect(() => {
@@ -60,9 +62,12 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
     if (initialLang !== 'es' && i18nInstance.isInitialized) {
       i18nInstance.changeLanguage(initialLang).then(() => {
         setCurrentLanguage(initialLang);
+      }).catch((error) => {
+        console.error('Error changing language on hydration:', error);
+        setCurrentLanguage('es');
       });
     } else {
-      setCurrentLanguage('es');
+      setCurrentLanguage(initialLang);
     }
   }, [i18nInstance]);
   
@@ -70,11 +75,22 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
   useEffect(() => {
     const handleLanguageChange = (lng: string) => {
       setCurrentLanguage(lng);
+      
+      // Asegurar que localStorage esté sincronizado
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('i18nextLng', lng);
+      }
     };
 
     if (i18nInstance.isInitialized) {
+      // Escuchar cambios de idioma
       i18nInstance.on('languageChanged', handleLanguageChange);
-      setCurrentLanguage(i18nInstance.language);
+      
+      // Sincronizar estado inicial
+      const currentLng = i18nInstance.language;
+      if (currentLng !== currentLanguage) {
+        setCurrentLanguage(currentLng);
+      }
     }
 
     return () => {
@@ -82,22 +98,42 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
         i18nInstance.off('languageChanged', handleLanguageChange);
       }
     };
-  }, [i18nInstance]);
+  }, [i18nInstance, currentLanguage]);
 
   // Función para cambiar idioma
   const setLanguage = useCallback(async (lang: string) => {
+    if (!['es', 'en'].includes(lang)) {
+      console.error('Invalid language code:', lang);
+      return;
+    }
+
+    if (lang === currentLanguage) {
+      return;
+    }
+
     try {
+      // Forzar el cambio de idioma
       await i18nInstance.changeLanguage(lang);
+      
+      // Actualizar el estado local
       setCurrentLanguage(lang);
       
       // Guardar en localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('i18nextLng', lang);
       }
+      
+      // Forzar re-render después de un pequeño delay
+      setTimeout(() => {
+        if (i18nInstance.language !== lang) {
+          i18nInstance.changeLanguage(lang);
+        }
+      }, 50);
     } catch (error) {
       console.error('Error changing language:', error);
+      throw error;
     }
-  }, [i18nInstance]);
+  }, [i18nInstance, currentLanguage]);
 
   // Memoizar el valor del contexto
   const contextValue = useMemo<I18nContextType>(() => ({
