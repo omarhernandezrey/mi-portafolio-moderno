@@ -257,7 +257,29 @@ export const educationData: EducationCategory[] = [
           "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png",
       },
 
-      // 1
+      // 1 
+
+            {
+              title: {
+                es: "Curso de Introducción al Testing con JavaScript",
+                en: "Introduction to Testing with JavaScript Course"
+              },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "17 horas (Aprobado el 30 de enero de 2025)",
+                en: "17 hours (Approved on January 30, 2025)"
+              },
+              description: {
+                es: "Curso introductorio enfocado en las bases del testing aplicado a proyectos con JavaScript. Se abordan conceptos fundamentales de pruebas automatizadas, tipos de test, configuración de entornos y buenas prácticas para garantizar la calidad del código. Ideal para desarrolladores que buscan iniciar en el mundo del testing y fortalecer la confiabilidad de sus aplicaciones.",
+                en: "Introductory course focused on the basics of testing in JavaScript projects. It covers fundamental concepts of automated testing, types of tests, environment setup, and best practices to ensure code quality. Ideal for developers starting in the testing world and aiming to strengthen the reliability of their applications."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/51diploma-javascript-testing.jpg"
+            },
+
             {
               title: {
                 es: "Curso de Debugging con Chrome DevTools",
