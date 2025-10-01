@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { FaTimes, FaLinkedin, FaShare } from "react-icons/fa";
 import { Transition } from "@headlessui/react";
@@ -31,6 +32,20 @@ const EducationModal: React.FC<EducationModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const modalRootRef = useRef<HTMLElement | null>(null);
+
+  // Asegurar portal en body para evitar stacking contexts
+  useEffect(() => {
+    setMounted(true);
+    let container = document.getElementById("modal-root") as HTMLElement | null;
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "modal-root";
+      document.body.appendChild(container);
+    }
+    modalRootRef.current = container;
+  }, []);
 
   // Evitar scroll del body cuando el modal está abierto
   useEffect(() => {
@@ -140,7 +155,9 @@ ${description}
     }, 10000);
   };
 
-  return (
+  if (!mounted || !modalRootRef.current) return null;
+
+  return createPortal(
     <Transition show={isOpen} appear>
       {/* Overlay */}
       <Transition.Child
@@ -152,7 +169,7 @@ ${description}
         leaveTo="opacity-0"
       >
         <div
-          className="fixed inset-0 bg-black/70 z-[10050]"
+          className="fixed inset-0 bg-black/70 z-[99998]"
           onClick={onClose}
           aria-hidden="true"
         ></div>
@@ -168,7 +185,7 @@ ${description}
         leaveTo="scale-90 opacity-0"
       >
         <div
-          className="fixed inset-0 flex items-center justify-center z-[10100] px-4"
+          className="fixed inset-0 flex items-center justify-center z-[99999] px-4"
           aria-modal="true"
           role="dialog"
           aria-labelledby="modal-title"
@@ -317,7 +334,8 @@ ${description}
           </div>
         </div>
       </Transition.Child>
-    </Transition>
+    </Transition>,
+    modalRootRef.current
   );
 };
 
