@@ -175,7 +175,7 @@ ${description}
           aria-describedby="modal-description"
         >
           <div
-            className="bg-gradient-to-br from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)] text-[var(--text-color)] rounded-lg shadow-2xl w-[95%] sm:w-[90%] max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[80vh] overflow-hidden overscroll-none relative"
+            className="bg-gradient-to-br from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)] text-[var(--text-color)] rounded-lg shadow-2xl w-[95%] sm:w-[90%] max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[80vh] overflow-y-auto overscroll-contain relative"
             onClick={(e) => e.stopPropagation()}
             ref={modalRef}
           >
