@@ -32,6 +32,17 @@ const EducationModal: React.FC<EducationModalProps> = ({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
 
+  // Evitar scroll del body cuando el modal está abierto
+  useEffect(() => {
+    if (isOpen) {
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = previousOverflow;
+      };
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     let previouslyFocusedElement: HTMLElement | null = null;
 
@@ -135,13 +146,13 @@ ${description}
       <Transition.Child
         enter="transition-opacity duration-300"
         enterFrom="opacity-0"
-        enterTo="opacity-50"
+        enterTo="opacity-100"
         leave="transition-opacity duration-200"
-        leaveFrom="opacity-50"
+        leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
         <div
-          className="fixed inset-0 bg-black bg-opacity-70 z-40"
+          className="fixed inset-0 bg-black/70 z-[10050]"
           onClick={onClose}
           aria-hidden="true"
         ></div>
@@ -157,21 +168,21 @@ ${description}
         leaveTo="scale-90 opacity-0"
       >
         <div
-          className="fixed inset-0 flex items-center justify-center z-50 px-4"
+          className="fixed inset-0 flex items-start justify-center z-[10100] px-4 pt-[3.75rem] sm:pt-[4.75rem] md:pt-[5.5rem] pb-6"
           aria-modal="true"
           role="dialog"
           aria-labelledby="modal-title"
           aria-describedby="modal-description"
         >
           <div
-            className="bg-gradient-to-br from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)] text-[var(--text-color)] rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative"
+            className="bg-gradient-to-br from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)] text-[var(--text-color)] rounded-lg shadow-2xl w-[95%] sm:w-[90%] max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl max-h-[calc(100vh-5.75rem)] sm:max-h-[calc(100vh-6.75rem)] md:max-h-[calc(100vh-7.5rem)] overflow-y-auto overscroll-contain relative"
             onClick={(e) => e.stopPropagation()}
             ref={modalRef}
           >
             {/* Botón de Cierre */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 text-[var(--muted-color)] hover:text-[var(--accent-color)] focus:outline-none z-10"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-[var(--muted-color)] hover:text-[var(--accent-color)] focus:outline-none z-10"
               aria-label={t('education.closeModal')}
               ref={closeButtonRef}
             >
@@ -179,16 +190,16 @@ ${description}
             </button>
 
             {/* Contenido del Modal */}
-            <div className="p-8">
+            <div className="p-4 sm:p-6 md:p-8">
 
 
               {/* Logo */}
-              <div className="flex justify-center mb-6">
-                <div className="h-24 w-24 rounded-full overflow-hidden bg-[var(--secondary-background-color)] border-4 border-[var(--accent-color)]">
+              <div className="flex justify-center mb-4 sm:mb-6">
+                <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden bg-[var(--secondary-background-color)] border-2 sm:border-4 border-[var(--accent-color)]">
                   <Image
                     src={logo}
                     alt={`${institution} logo`}
-                    width={96} // 24px * 4
+                    width={96}
                     height={96}
                     className="h-full w-full object-cover"
                   />
@@ -198,11 +209,11 @@ ${description}
               {/* Título y Detalles */}
               <h2
                 id="modal-title"
-                className="text-3xl font-bold text-center mb-4 text-[var(--primary-color)]"
+                className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-2 sm:mb-4 text-[var(--primary-color)]"
               >
                 {title}
               </h2>
-              <p className="text-center text-[var(--accent-color)] text-lg font-medium mb-2">
+              <p className="text-center text-[var(--accent-color)] text-base sm:text-lg font-medium mb-2">
                 {institution}
               </p>
               <p className="text-center text-[var(--muted-color)] mb-6">
@@ -270,7 +281,7 @@ ${description}
               {/* Certificado */}
               {certificate && (
                 <div className="mt-6">
-                  <h3 className="text-xl font-semibold text-[var(--accent-color)] mb-4 text-center">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[var(--accent-color)] mb-4 text-center">
                     {t('education.certificate')}
                   </h3>
                   <div className="flex justify-center">
@@ -284,9 +295,9 @@ ${description}
                       <Image
                         src={certificate}
                         alt="Certificado"
-                        width={600} // Ajusta según tus necesidades
-                        height={400}
-                        className="w-full max-w-[600px] max-h-[400px] rounded-lg object-contain"
+                        width={800}
+                        height={600}
+                        className="w-full h-auto rounded-lg object-contain max-h-[45vh] md:max-h-[50vh]"
                       />
                     </a>
                   </div>
