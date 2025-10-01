@@ -84,14 +84,14 @@ const NavbarDesktop = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out ${
+      className={`fixed top-0 left-0 w-full z-50 relative transition-all duration-500 ease-in-out ${
         scrolled
           ? "bg-[var(--background-color)]/95 backdrop-blur-xl shadow-2xl border-b border-[var(--accent-color)]/20"
           : "bg-[var(--background-color)]/80 backdrop-blur-md"
       }`}
     >
       <div className="w-full px-2 sm:px-4">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex flex-wrap items-center justify-between min-h-16 lg:min-h-20 py-2">
           {/* Logo Section */}
           <div
             className="flex items-center cursor-pointer group flex-shrink-0"
@@ -102,28 +102,27 @@ const NavbarDesktop = () => {
               <Image
                 src="/images/logo7.png"
                 alt="Logo"
-                width={48}
-                height={48}
-                className="relative h-10 w-10 lg:h-12 lg:w-12 xl:h-14 xl:w-14 object-contain rounded-full border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--accent-color)] transition-all duration-300 group-hover:scale-105"
+                width={44}
+                height={44}
+                className="relative h-9 w-9 lg:h-11 lg:w-11 xl:h-12 xl:w-12 object-contain rounded-full border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--accent-color)] transition-all duration-300 group-hover:scale-105"
               />
             </div>
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center justify-center flex-1 mx-2">
-            <div className="flex items-center space-x-1 lg:space-x-3 xl:space-x-4">
+          <div className="hidden md:flex items-center justify-center flex-1 mx-2 min-w-0 max-w-full">
+            <div className="flex flex-wrap items-center gap-x-2 md:gap-x-2.5 lg:gap-x-3 xl:gap-x-3 gap-y-2 pr-2">
               {navLinks.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => handleLinkClick(link.id)}
-                  className={`relative flex items-center gap-1 lg:gap-2 px-2 lg:px-4 xl:px-5 py-2 rounded-full text-xs lg:text-sm font-medium transition-all duration-300 hover:scale-105 ${
+                  className={`relative flex items-center px-2 lg:px-3 xl:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 hover:scale-105 ${
                     activeSection === link.id
                       ? "text-[var(--accent-color)] bg-[var(--primary-color)]/10"
                       : "text-[var(--text-color)] hover:text-[var(--primary-color)] hover:bg-[var(--secondary-background-color)]"
                   }`}
                 >
-                  <span className="text-sm lg:text-base">{link.icon}</span>
-                  <span className="hidden lg:inline xl:uppercase xl:tracking-wider text-xs lg:text-sm">
+                  <span className="text-xs md:text-sm xl:tracking-wider">
                     {link.label}
                   </span>
                   {activeSection === link.id && (
@@ -135,7 +134,7 @@ const NavbarDesktop = () => {
           </div>
 
           {/* Actions Section */}
-          <div className="flex items-center gap-1 lg:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-1 lg:gap-2 shrink min-w-0">
             {/* Language Selector */}
             <div className="hidden sm:block">
               <LanguageSelector />

@@ -168,14 +168,14 @@ ${description}
         leaveTo="scale-90 opacity-0"
       >
         <div
-          className="fixed inset-0 flex items-start justify-center z-[10100] px-4 pt-[3.75rem] sm:pt-[4.75rem] md:pt-[5.5rem] pb-6"
+          className="fixed inset-0 flex items-center justify-center z-[10100] px-4"
           aria-modal="true"
           role="dialog"
           aria-labelledby="modal-title"
           aria-describedby="modal-description"
         >
           <div
-            className="bg-gradient-to-br from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)] text-[var(--text-color)] rounded-lg shadow-2xl w-[95%] sm:w-[90%] max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl max-h-[calc(100vh-5.75rem)] sm:max-h-[calc(100vh-6.75rem)] md:max-h-[calc(100vh-7.5rem)] overflow-y-auto overscroll-contain relative"
+            className="bg-gradient-to-br from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)] text-[var(--text-color)] rounded-lg shadow-2xl w-[95%] sm:w-[90%] max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[80vh] overflow-hidden overscroll-none relative"
             onClick={(e) => e.stopPropagation()}
             ref={modalRef}
           >
@@ -186,16 +186,16 @@ ${description}
               aria-label={t('education.closeModal')}
               ref={closeButtonRef}
             >
-              <FaTimes size={24} />
+              <FaTimes size={22} />
             </button>
 
             {/* Contenido del Modal */}
-            <div className="p-4 sm:p-6 md:p-8">
+            <div className="p-3 sm:p-4 md:p-4">
 
 
               {/* Logo */}
-              <div className="flex justify-center mb-4 sm:mb-6">
-                <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden bg-[var(--secondary-background-color)] border-2 sm:border-4 border-[var(--accent-color)]">
+              <div className="flex justify-center mb-2.5 sm:mb-3.5">
+                <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full overflow-hidden bg-[var(--secondary-background-color)] border-2 border-[var(--accent-color)]">
                   <Image
                     src={logo}
                     alt={`${institution} logo`}
@@ -209,21 +209,21 @@ ${description}
               {/* Título y Detalles */}
               <h2
                 id="modal-title"
-                className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-2 sm:mb-4 text-[var(--primary-color)]"
+                className="text-base sm:text-lg md:text-xl font-bold text-center mb-1.5 sm:mb-2.5 text-[var(--primary-color)]"
               >
                 {title}
               </h2>
-              <p className="text-center text-[var(--accent-color)] text-base sm:text-lg font-medium mb-2">
+              <p className="text-center text-[var(--accent-color)] text-xs sm:text-sm font-medium mb-1.5">
                 {institution}
               </p>
-              <p className="text-center text-[var(--muted-color)] mb-6">
+              <p className="text-center text-[var(--muted-color)] text-[11px] sm:text-xs mb-3.5">
                 {duration}
               </p>
 
               {/* Descripción */}
               <p
                 id="modal-description"
-                className="text-[var(--text-color)] leading-relaxed mb-6 text-justify"
+                className="text-[var(--text-color)] text-[13px] sm:text-sm leading-relaxed mb-4 text-justify"
               >
                 {description}
               </p>
@@ -280,8 +280,8 @@ ${description}
 
               {/* Certificado */}
               {certificate && (
-                <div className="mt-6">
-                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[var(--accent-color)] mb-4 text-center">
+                <div className="mt-4">
+                  <h3 className="text-xs sm:text-sm md:text-base font-semibold text-[var(--accent-color)] mb-2.5 text-center">
                     {t('education.certificate')}
                   </h3>
                   <div className="flex justify-center">
@@ -297,7 +297,7 @@ ${description}
                         alt="Certificado"
                         width={800}
                         height={600}
-                        className="w-full h-auto rounded-lg object-contain max-h-[45vh] md:max-h-[50vh]"
+                        className="w-full h-auto rounded-lg object-contain max-h-[30vh] md:max-h-[35vh]"
                       />
                     </a>
                   </div>
@@ -305,10 +305,10 @@ ${description}
               )}
 
               {/* Botón de Cierre */}
-              <div className="mt-8 flex justify-center">
+              <div className="mt-5 flex justify-center">
                 <button
                   onClick={onClose}
-                  className="bg-[var(--accent-color)] text-[var(--background-color)] py-2 px-8 rounded-full hover:bg-[var(--primary-hover-color)] transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-[var(--accent-hover-color)]"
+                  className="bg-[var(--accent-color)] text-[var(--background-color)] py-1.5 px-5 rounded-full hover:bg-[var(--primary-hover-color)] transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-[var(--accent-hover-color)] text-xs sm:text-sm"
                 >
                   {t('education.close')}
                 </button>

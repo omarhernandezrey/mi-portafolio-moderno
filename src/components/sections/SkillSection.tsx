@@ -35,7 +35,7 @@ import { skillsData, getLocalizedSkillsData, getLocalizedCategories } from "@/li
 --------------------------------------------------------------------------------------------------*/
 const RADIUS = 36;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
-const ANIMATION_DURATION = 1200;
+const ANIMATION_DURATION = 1200; // duración por defecto
 
 /* -------------------------------------------------------------------------------------------------
    Partículas de fondo (decorativas)
@@ -78,6 +78,11 @@ export default function PremiumSkillsSection() {
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
     [],
   );
+  // Ref para leer el valor actual sin re-dependencias en callbacks
+  const animatedValuesRef = useRef<number[]>([]);
+  useEffect(() => {
+    animatedValuesRef.current = animatedValues;
+  }, [animatedValues]);
 
   /* -------------------------- refs ---------------------------- */
   const sectionRef = React.useRef<HTMLElement>(null);
@@ -116,21 +121,23 @@ export default function PremiumSkillsSection() {
 
   /* ---------------- función genérica de animación ---------------- */
   const animateToValue = useCallback(
-    (index: number, target: number) => {
+    (index: number, target: number, duration: number = ANIMATION_DURATION, fromOverride?: number) => {
       if (animationRefs.current[index]) {
         cancelAnimationFrame(animationRefs.current[index]!);
       }
 
       const start = performance.now();
+      const startFrom =
+        typeof fromOverride === "number"
+          ? fromOverride
+          : animatedValuesRef.current[index] ?? 0;
       
       // Usamos una función para obtener el valor actual en lugar de la dependencia
       const animate = (now: number) => {
-        const progress = Math.min((now - start) / ANIMATION_DURATION, 1);
+        const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-        
+        const current = Math.round(startFrom + (target - startFrom) * eased);
         setAnimatedValues((prev) => {
-          const from = prev[index] || 0;
-          const current = Math.round(from + (target - from) * eased);
           const next = [...prev];
           next[index] = current;
           return next;
@@ -148,19 +155,18 @@ export default function PremiumSkillsSection() {
     [], // Sin dependencias para evitar re-creaciones innecesarias
   );
 
-  /* -------------------- observer para disparar animación inicial -------------------- */
+  /* -------------------- observer para establecer llenas por defecto -------------------- */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !hasAnimated) {
+            // Mantener barras llenas por defecto sin animación
+            const filled = filteredSkillsRef.current.map((skill) =>
+              parsePercentage(skill.percentage)
+            );
+            setAnimatedValues(filled);
             setHasAnimated(true);
-            filteredSkills.forEach((skill, idx) => {
-              setTimeout(
-                () => animateToValue(idx, parsePercentage(skill.percentage)),
-                idx * 150,
-              );
-            });
           }
         });
       },
@@ -172,10 +178,11 @@ export default function PremiumSkillsSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasAnimated, animateToValue]); // Removemos filteredSkills para evitar bucle infinito
 
-  /* --------------- reset de animaciones al cambiar categoría --------------- */
+  /* --------------- al cambiar categoría/idioma: mantener llenas por defecto --------------- */
   useEffect(() => {
-    setHasAnimated(false);
-    setAnimatedValues(filteredSkills.map(() => 0));
+    // Establecer de inmediato los porcentajes visibles
+    setAnimatedValues(filteredSkills.map((s) => parsePercentage(s.percentage)));
+    setHasAnimated(true);
     setHoveredIndex(null);
     animationRefs.current.forEach((id) => {
       if (id) cancelAnimationFrame(id);
@@ -191,20 +198,20 @@ export default function PremiumSkillsSection() {
   /* ---------------- manejadores de hover ---------------- */
   const handleSkillHover = (idx: number) => {
     setHoveredIndex(idx);
-    animateToValue(idx, parsePercentage(filteredSkills[idx].percentage));
+    // Al pasar el mouse: volver a 0 y llenar rápidamente al porcentaje
+    const target = parsePercentage(filteredSkills[idx].percentage);
+    animateToValue(idx, target, 350, 0);
   };
 
   const handleSkillLeave = (idx: number) => {
     setHoveredIndex(null);
-    if (hasAnimated) {
-      setAnimatedValues((prev) => {
-        const next = [...prev];
-        next[idx] = parsePercentage(filteredSkills[idx].percentage);
-        return next;
-      });
-    } else {
-      animateToValue(idx, 0);
-    }
+    // Mantener llena en su porcentaje al salir
+    const target = parsePercentage(filteredSkills[idx].percentage);
+    setAnimatedValues((prev) => {
+      const next = [...prev];
+      next[idx] = target;
+      return next;
+    });
   };
 
   /* ------------------------------------------------------------------------------------------------
