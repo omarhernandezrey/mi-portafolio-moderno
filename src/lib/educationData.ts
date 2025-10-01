@@ -257,7 +257,28 @@ export const educationData: EducationCategory[] = [
           "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png",
       },
 
-      // 1 
+      // 1 Platzi
+
+            {
+              title: {
+                es: "Curso de Frameworks y Librerías de JavaScript",
+                en: "Frameworks and Libraries of JavaScript Course"
+              },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "13 horas (Aprobado el 31 de enero de 2025)",
+                en: "13 hours (Approved on January 31, 2025)"
+              },
+              description: {
+                es: "Curso enfocado en el estudio de los principales frameworks y librerías del ecosistema JavaScript. Incluye la comprensión de su estructura, ventajas, casos de uso y diferencias clave entre ellos. Ideal para fortalecer las bases del desarrollo moderno en frontend y backend con JavaScript.",
+                en: "Course focused on studying the main frameworks and libraries within the JavaScript ecosystem. It covers their structure, advantages, use cases, and key differences. Ideal for strengthening modern frontend and backend development foundations with JavaScript."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/52 diploma-frameworks-javascript.jpg"
+            },
 
             {
               title: {
