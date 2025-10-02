@@ -7,25 +7,41 @@ import NavbarMobile from "./NavbarMobile";
 const NavbarLogic = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   useEffect(() => {
+    setMounted(true);
+    
     const handleResize = () => {
       const width = window.innerWidth;
-      setIsMobile(width <= 1024); // Cambia a mobile/tablet si es menor o igual a 1024px
+      setIsMobile(width <= 1024);
 
-      // Cierra el menú si cambia a desktop
       if (width > 1024 && isMenuOpen) {
         setIsMenuOpen(false);
       }
     };
 
-    handleResize(); // Detecta el tamaño inicial
+    handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
   }, [isMenuOpen]);
+
+  // Renderizar ambos navbars hasta que se monte, CSS controlará cuál se ve
+  if (!mounted) {
+    return (
+      <>
+        <div className="lg:hidden">
+          <NavbarMobile isOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        </div>
+        <div className="hidden lg:block">
+          <NavbarDesktop />
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

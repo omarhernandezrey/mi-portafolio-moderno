@@ -33,6 +33,48 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Utilidades para alturas de viewport confiables en móviles */
+.h-screen-dvh {
+  height: 100dvh;
+}
+
+@supports not (height: 100dvh) {
+  .h-screen-dvh {
+    height: 100vh;
+  }
+}
+
+/* Safe areas para dispositivos con notch */
+@supports (padding: max(0px)) {
+  .pt-safe {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+}
+
+/* Panel del menú móvil: evita scroll del contenido cuando el panel cabe en pantalla */
+.mobile-menu-panel {
+  /* Si el contenido es más alto que la pantalla, permitir scroll suave interno */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Compactar el menú en móviles con pantallas bajas para evitar scroll */
+@media (max-height: 640px) {
+  .mobile-menu-panel .menu-links {
+    gap: 0.5rem !important;
+  }
+  .mobile-menu-panel .menu-link {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  .mobile-menu-panel .social-icons svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 /* Fix para iPhone y dispositivos iOS */
 body {
   /* Prevenir zoom en iOS al hacer focus en inputs */
@@ -44,9 +86,16 @@ body {
 }
 
 /* Mejorar performance en móviles */
+/* Importante: NO aplicar transform globalmente porque crea nuevos
+   stacking contexts y rompe position: fixed/sticky en móviles.
+   Mantener solo backface-visibility para optimizar renderizado. */
 * {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+/* Utilidad opcional para forzar capa GPU en elementos puntuales */
+.gpu-layer {
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
@@ -594,6 +643,7 @@ input[type="url"],
 input[type="search"],
 textarea {
   -webkit-appearance: none;
+  appearance: none;
   border-radius: 0;
 }
 
