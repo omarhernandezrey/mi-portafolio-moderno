@@ -3,19 +3,17 @@
 
 User-agent: *
 Allow: /
+Crawl-delay: 1
 
 # Bloquear archivos innecesarios para crawlers
 Disallow: /api/
-Disallow: /_next/
-Disallow: /static/
+Disallow: /_next/static/
+Disallow: /*.json
 
 # Permitir acceso a recursos estáticos importantes
 Allow: /images/
 Allow: /files/
+Allow: /portfolio-preview.jpg
 
 # Sitemap
 Sitemap: https://omarh-portafolio-web.vercel.app/sitemap.xml
-
-# Crawl-delay para bots agresivos
-User-agent: *
-Crawl-delay: 1
