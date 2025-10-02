@@ -198,10 +198,14 @@ export default function RootLayout({
     <html lang="es">
       <head>
         {/* ═══════════════════════════════════════════════════════════════ */}
-        {/* META VIEWPORT Y BÁSICOS */}
+        {/* META VIEWPORT Y BÁSICOS - OPTIMIZADO PARA TODOS LOS DISPOSITIVOS */}
         {/* ═══════════════════════════════════════════════════════════════ */}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
         <meta charSet="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="format-detection" content="date=no" />
+        <meta name="format-detection" content="address=no" />
+        <meta name="format-detection" content="email=no" />
         
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* FAVICON Y PWA */}
@@ -255,15 +259,38 @@ export default function RootLayout({
         <meta name="rating" content="general" />
         <meta name="distribution" content="global" />
         
-        {/* Mobile & PWA */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* MOBILE & PWA - OPTIMIZADO PARA TODOS LOS DISPOSITIVOS */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
         <meta name="mobile-web-app-capable" content="yes" />
+        
+        {/* iOS Specific - iPhone 7, 8, X, 11, 12, 13, 14, 15, etc. */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Omar Hernández" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="60x60" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+        
+        {/* Android & Windows */}
         <meta name="application-name" content="Omar Hernández Portfolio" />
         <meta name="msapplication-TileColor" content="#0070f3" />
         <meta name="msapplication-TileImage" content="/favicon.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        
+        {/* Disable auto-detection of phone numbers, emails, etc. */}
+        <meta name="x5-orientation" content="portrait" />
+        <meta name="screen-orientation" content="portrait" />
+        <meta name="full-screen" content="yes" />
+        <meta name="browsermode" content="application" />
         
         {/* Verificación de dominios */}
         <meta name="google-site-verification" content="" />

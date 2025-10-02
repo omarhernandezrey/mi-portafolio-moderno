@@ -4,13 +4,51 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilos globales adicionales */
+/* ═══════════════════════════════════════════════════════════════
+   OPTIMIZACIONES MÓVILES - COMPATIBLE CON TODOS LOS DISPOSITIVOS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Estilos globales */
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 html,
 body {
   font-family: var(--main-font-family);
   overflow-x: hidden !important;
   scroll-behavior: smooth;
+  width: 100%;
+  position: relative;
+  /* Mejor rendering en móviles */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fix para iPhone y dispositivos iOS */
+body {
+  /* Prevenir zoom en iOS al hacer focus en inputs */
+  -webkit-text-size-adjust: 100%;
+  /* Mejor scroll en iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Prevenir pull-to-refresh en algunos navegadores móviles */
+  overscroll-behavior-y: contain;
+}
+
+/* Mejorar performance en móviles */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 /* Animaciones globales */
@@ -383,4 +421,220 @@ button:hover {
   position: absolute;
   width: 100%;
   z-index: -1; /* Mantén las partículas detrás del contenido */
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OPTIMIZACIONES RESPONSIVE - TODOS LOS DISPOSITIVOS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Fix para inputs en iOS - prevenir zoom automático */
+input, select, textarea {
+  font-size: 16px !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Botones más grandes en móviles para mejor touch */
+@media (max-width: 768px) {
+  button, a[role="button"], .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 20px;
+  }
+}
+
+/* Mejoras para iPhone 7 y dispositivos pequeños */
+@media (max-width: 375px) {
+  html {
+    font-size: 14px;
+  }
+  
+  h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3 {
+    font-size: 1.25rem !important;
+  }
+}
+
+/* Optimización para iPhone 7, 8 (375x667) */
+@media (min-width: 375px) and (max-width: 375px) and (min-height: 667px) and (max-height: 667px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Optimización para iPhone X, 11, 12, 13 (notch devices) */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Fix para landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  html, body {
+    min-height: 100vh;
+  }
+}
+
+/* Mejorar visibilidad de links en móviles */
+@media (max-width: 768px) {
+  a {
+    text-decoration-skip-ink: auto;
+    -webkit-tap-highlight-color: rgba(0, 123, 255, 0.1);
+  }
+}
+
+/* Prevenir selección accidental en móviles */
+@media (max-width: 768px) {
+  img, button, a {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  p, span, h1, h2, h3, h4, h5, h6 {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
+/* Mejorar scroll en iOS */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* Fix para modal y overlays en móviles */
+.modal-overlay, .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimización para imágenes en móviles */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Fix para videos responsive */
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mejorar performance de animaciones en móviles */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Container responsive */
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+/* Fix para formularios en iOS */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+/* Mejorar legibilidad en pantallas pequeñas */
+@media (max-width: 768px) {
+  body {
+    line-height: 1.6;
+  }
+  
+  p {
+    font-size: 1rem;
+  }
+}
+
+/* Fix para sticky headers en iOS */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Optimización para grids en móviles */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Fix para flexbox en Safari iOS */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+}
+
+/* Mejorar espaciado en móviles */
+@media (max-width: 768px) {
+  section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
 }
