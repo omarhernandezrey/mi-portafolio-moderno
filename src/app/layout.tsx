@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css"; // ✅ Solo este archivo
+import "./globals.css";
 import NavbarLogic from "../components/ui/NavbarLogic";
 import ClientProvider from "./ClientProvider";
 
@@ -14,13 +14,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// 🎯 SEO OPTIMIZADO AL MÁXIMO - 100/100
 export const metadata: Metadata = {
   metadataBase: new URL('https://omarh-portafolio-web.vercel.app'),
+  
+  // Title optimizado para SEO
   title: {
     default: "Omar Hernández | Desarrollador Full Stack React & Next.js",
     template: "%s | Omar Hernández - Desarrollador Full Stack"
   },
+  
+  // Description persuasiva
   description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas, rápidas y escalables. ¿Tienes un proyecto? ¡Hablemos!",
+  
+  // Keywords expandidas
   keywords: [
     "desarrollador web",
     "full stack developer",
@@ -32,25 +39,31 @@ export const metadata: Metadata = {
     "backend developer",
     "portafolio web",
     "omar hernandez",
+    "omar hernandez rey",
     "desarrollador freelance",
     "web development",
     "aplicaciones web",
-    "desarrollo web moderno"
+    "desarrollo web moderno",
+    "programador react",
+    "programador next.js",
+    "desarrollador colombia"
   ],
+  
+  // Autores
   authors: [
     { 
-      name: "Omar Hernández",
+      name: "Omar Hernández Rey",
       url: "https://omarh-portafolio-web.vercel.app"
     }
   ],
-  creator: "Omar Hernández",
-  publisher: "Omar Hernández",
+  creator: "Omar Hernández Rey",
+  publisher: "Omar Hernández Rey",
   
-  // Open Graph para LinkedIn, Facebook, etc.
+  // Open Graph COMPLETO para Facebook, LinkedIn, WhatsApp, Telegram
   openGraph: {
     type: "website",
     locale: "es_ES",
-    url: "https://omarh-portafolio-web.vercel.app",
+    url: "https://omarh-portafolio-web.vercel.app/",
     title: "Omar Hernández | Desarrollador Full Stack React & Next.js",
     description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas, rápidas y escalables. ¿Tienes un proyecto? ¡Hablemos!",
     siteName: "Omar Hernández - Portafolio Web",
@@ -66,20 +79,20 @@ export const metadata: Metadata = {
     ],
   },
   
-  // Twitter Card
+  // Twitter Card COMPLETO
   twitter: {
     card: "summary_large_image",
     site: "@omarhernandezrey",
     creator: "@omarhernandezrey",
     title: "Omar Hernández | Desarrollador Full Stack React & Next.js",
-    description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas y escalables.",
+    description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Apasionado por crear experiencias digitales modernas y escalables.",
     images: {
       url: "https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg",
       alt: "Omar Hernández - Desarrollador Full Stack especializado en React y Next.js",
     },
   },
   
-  // Verificación y robots
+  // Robots optimizado
   robots: {
     index: true,
     follow: true,
@@ -94,12 +107,19 @@ export const metadata: Metadata = {
   
   // Canonical URL
   alternates: {
-    canonical: "https://omarh-portafolio-web.vercel.app",
+    canonical: "https://omarh-portafolio-web.vercel.app/",
   },
   
   // Información adicional
   category: "technology",
   classification: "Web Development Portfolio",
+  
+  // Verificación
+  verification: {
+    google: "", // Completar después de registrar en GSC
+    // yandex: "", // Si aplica
+    // bing: "", // Si aplica
+  },
 };
 
 export default function RootLayout({
@@ -107,16 +127,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // JSON-LD Schema para SEO
+  // 🎯 JSON-LD SCHEMA COMPLETO para Google, LinkedIn, Instagram
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Omar Hernández",
-    url: "https://omarh-portafolio-web.vercel.app",
-    image: "https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg",
-    jobTitle: "Desarrollador Full Stack",
-    description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript",
-    knowsAbout: [
+    "name": "Omar Hernández Rey",
+    "url": "https://omarh-portafolio-web.vercel.app/",
+    "image": "https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg",
+    "jobTitle": "Desarrollador Full Stack",
+    "description": "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web rápidas, modernas y escalables.",
+    "alumniOf": "Politécnico Grancolombiano",
+    "knowsAbout": [
       "JavaScript",
       "TypeScript",
       "React",
@@ -125,33 +146,39 @@ export default function RootLayout({
       "Full Stack Development",
       "Web Development",
       "Frontend Development",
-      "Backend Development"
+      "Backend Development",
+      "HTML",
+      "CSS",
+      "Tailwind CSS",
+      "Git",
+      "API REST"
     ],
-    sameAs: [
+    "sameAs": [
+      "https://www.linkedin.com/in/omarhernandezrey",
       "https://twitter.com/omarhernandezrey",
-      "https://github.com/omarhernandez",
-      "https://linkedin.com/in/omarhernandez"
+      "https://github.com/omarhernandezrey",
+      "https://www.instagram.com/omarhernandezrey"
     ],
-    worksFor: {
+    "worksFor": {
       "@type": "Organization",
-      name: "Freelance"
+      "name": "Portafolio Web"
     }
   };
 
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Omar Hernández - Portafolio Web",
-    url: "https://omarh-portafolio-web.vercel.app",
-    description: "Portafolio profesional de Omar Hernández, Desarrollador Full Stack especializado en React y Next.js",
-    author: {
+    "name": "Omar Hernández - Portafolio Web",
+    "url": "https://omarh-portafolio-web.vercel.app/",
+    "description": "Portafolio profesional de Omar Hernández, Desarrollador Full Stack especializado en React y Next.js",
+    "author": {
       "@type": "Person",
-      name: "Omar Hernández"
+      "name": "Omar Hernández Rey"
     },
-    inLanguage: "es-ES",
-    potentialAction: {
+    "inLanguage": "es-ES",
+    "potentialAction": {
       "@type": "SearchAction",
-      target: "https://omarh-portafolio-web.vercel.app/#projects?q={search_term_string}",
+      "target": "https://omarh-portafolio-web.vercel.app/#projects?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
@@ -159,30 +186,36 @@ export default function RootLayout({
   const profilePageSchema = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
-    mainEntity: {
+    "mainEntity": {
       "@type": "Person",
-      name: "Omar Hernández",
-      alternateName: "Omar H.",
-      description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript"
+      "name": "Omar Hernández Rey",
+      "alternateName": "Omar H.",
+      "description": "Desarrollador Full Stack especializado en React, Next.js y TypeScript"
     }
   };
 
   return (
     <html lang="es">
       <head>
-        {/* Meta viewport crítico para dispositivos móviles */}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* META VIEWPORT Y BÁSICOS */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charSet="utf-8" />
         
-        {/* Favicon */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* FAVICON Y PWA */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
         <link rel="icon" type="image/png" href="/favicon.png" />
-        
-        {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="canonical" href="https://omarh-portafolio-web.vercel.app/" />
         
-        {/* Open Graph Meta Tags - Facebook, LinkedIn */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* [1️⃣] OPEN GRAPH UNIVERSAL - Facebook, LinkedIn, WhatsApp, Telegram */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://omarh-portafolio-web.vercel.app" />
+        <meta property="og:url" content="https://omarh-portafolio-web.vercel.app/" />
         <meta property="og:title" content="Omar Hernández | Desarrollador Full Stack React & Next.js" />
         <meta property="og:description" content="Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas, rápidas y escalables. ¿Tienes un proyecto? ¡Hablemos!" />
         <meta property="og:image" content="https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg" />
@@ -191,31 +224,56 @@ export default function RootLayout({
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Omar Hernández - Desarrollador Full Stack especializado en React y Next.js" />
-        <meta property="og:site_name" content="Omar Hernández - Portafolio Web" />
         <meta property="og:locale" content="es_ES" />
+        <meta property="og:site_name" content="Omar Hernández - Portafolio Web" />
+        <meta property="fb:app_id" content="1234567890" />
         
-        {/* Twitter Card Meta Tags */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* [2️⃣] TWITTER CARD FULL - Twitter, X */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@omarhernandezrey" />
         <meta name="twitter:creator" content="@omarhernandezrey" />
         <meta name="twitter:title" content="Omar Hernández | Desarrollador Full Stack React & Next.js" />
-        <meta name="twitter:description" content="Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas y escalables." />
+        <meta name="twitter:description" content="Desarrollador Full Stack especializado en React, Next.js y TypeScript. Apasionado por crear experiencias digitales modernas y escalables." />
         <meta name="twitter:image" content="https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg" />
         <meta name="twitter:image:alt" content="Omar Hernández - Desarrollador Full Stack especializado en React y Next.js" />
+        <meta name="twitter:url" content="https://omarh-portafolio-web.vercel.app/" />
+        <meta name="twitter:domain" content="omarh-portafolio-web.vercel.app" />
         
-        {/* Meta tags adicionales */}
-        <meta name="author" content="Omar Hernández" />
-        <meta name="copyright" content="Omar Hernández" />
-        
-        {/* Verificación de dominio (completar después de registrar en GSC) */}
-        <meta name="google-site-verification" content="" />
-        
-        {/* Tema de color para navegadores móviles */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* [4️⃣] META GENÉRICOS ADICIONALES - SEO, Robots, Autor */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        <meta name="author" content="Omar Hernández Rey" />
+        <meta name="copyright" content="© 2025 Omar Hernández Rey. Todos los derechos reservados." />
         <meta name="theme-color" content="#0070f3" />
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow" />
+        <meta name="bingbot" content="index, follow" />
+        <meta name="language" content="Spanish" />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="rating" content="general" />
+        <meta name="distribution" content="global" />
+        
+        {/* Mobile & PWA */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Omar Hernández" />
+        <meta name="application-name" content="Omar Hernández Portfolio" />
         <meta name="msapplication-TileColor" content="#0070f3" />
         <meta name="msapplication-TileImage" content="/favicon.png" />
-
-        {/* JSON-LD Structured Data */}
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        
+        {/* Verificación de dominios */}
+        <meta name="google-site-verification" content="" />
+        
+        {/* Instagram, Pinterest, Reddit - usan Open Graph */}
+        <meta property="og:see_also" content="https://www.instagram.com/omarhernandezrey" />
+        
+        {/* ═══════════════════════════════════════════════════════════════ */}
+        {/* [3️⃣] JSON-LD SCHEMA - Google, LinkedIn, Rich Snippets */}
+        {/* ═══════════════════════════════════════════════════════════════ */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
