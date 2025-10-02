@@ -1,0 +1,21 @@
+# Robots.txt para Mi Portafolio Moderno
+# https://omarh-portafolio-web.vercel.app
+
+User-agent: *
+Allow: /
+
+# Bloquear archivos innecesarios para crawlers
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# Permitir acceso a recursos estáticos importantes
+Allow: /images/
+Allow: /files/
+
+# Sitemap
+Sitemap: https://omarh-portafolio-web.vercel.app/sitemap.xml
+
+# Crawl-delay para bots agresivos
+User-agent: *
+Crawl-delay: 1

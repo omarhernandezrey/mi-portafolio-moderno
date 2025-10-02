@@ -15,10 +15,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Omar Hernández - Desarrollador Web Full Stack",
-  description: "Desarrollador Web especializado en React, Next.js y tecnologías modernas. Explora mi portafolio con proyectos innovadores y soluciones web completas.",
-  keywords: "desarrollador web, full stack, react, nextjs, javascript, typescript, portafolio, omar hernandez",
-  authors: [{ name: "Omar Hernández" }],
+  metadataBase: new URL('https://omarh-portafolio-web.vercel.app'),
+  title: {
+    default: "Omar Hernández | Desarrollador Full Stack React & Next.js",
+    template: "%s | Omar Hernández - Desarrollador Full Stack"
+  },
+  description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas, rápidas y escalables. ¿Tienes un proyecto? ¡Hablemos!",
+  keywords: [
+    "desarrollador web",
+    "full stack developer",
+    "react developer",
+    "nextjs developer",
+    "javascript",
+    "typescript",
+    "frontend developer",
+    "backend developer",
+    "portafolio web",
+    "omar hernandez",
+    "desarrollador freelance",
+    "web development",
+    "aplicaciones web",
+    "desarrollo web moderno"
+  ],
+  authors: [
+    { 
+      name: "Omar Hernández",
+      url: "https://omarh-portafolio-web.vercel.app"
+    }
+  ],
   creator: "Omar Hernández",
   publisher: "Omar Hernández",
   
@@ -27,15 +51,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     url: "https://omarh-portafolio-web.vercel.app",
-    title: "Omar Hernández - Desarrollador Web Full Stack",
-    description: "Desarrollador Web especializado en React, Next.js y tecnologías modernas. Explora mi portafolio con proyectos innovadores y soluciones web completas.",
-    siteName: "Portafolio Omar Hernández",
+    title: "Omar Hernández | Desarrollador Full Stack React & Next.js",
+    description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas, rápidas y escalables. ¿Tienes un proyecto? ¡Hablemos!",
+    siteName: "Omar Hernández - Portafolio Web",
     images: [
       {
-        url: "https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg",
+        url: "/portfolio-preview.jpg",
         width: 1200,
         height: 630,
-        alt: "Portafolio de Omar Hernández - Desarrollador Web",
+        alt: "Omar Hernández - Desarrollador Full Stack especializado en React y Next.js",
       },
     ],
   },
@@ -43,10 +67,10 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "Omar Hernández - Desarrollador Web Full Stack",
-    description: "Desarrollador Web especializado en React, Next.js y tecnologías modernas. Explora mi portafolio con proyectos innovadores.",
+    title: "Omar Hernández | Desarrollador Full Stack React & Next.js",
+    description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript. Creo aplicaciones web modernas y escalables.",
     creator: "@omarhernandezrey",
-    images: ["https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg"],
+    images: ["/portfolio-preview.jpg"],
   },
   
   // Verificación y robots
@@ -66,6 +90,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://omarh-portafolio-web.vercel.app",
   },
+  
+  // Información adicional
+  category: "technology",
+  classification: "Web Development Portfolio",
 };
 
 export default function RootLayout({
@@ -73,6 +101,66 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // JSON-LD Schema para SEO
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Omar Hernández",
+    url: "https://omarh-portafolio-web.vercel.app",
+    image: "https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg",
+    jobTitle: "Desarrollador Full Stack",
+    description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript",
+    knowsAbout: [
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Node.js",
+      "Full Stack Development",
+      "Web Development",
+      "Frontend Development",
+      "Backend Development"
+    ],
+    sameAs: [
+      "https://twitter.com/omarhernandezrey",
+      "https://github.com/omarhernandez",
+      "https://linkedin.com/in/omarhernandez"
+    ],
+    worksFor: {
+      "@type": "Organization",
+      name: "Freelance"
+    }
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Omar Hernández - Portafolio Web",
+    url: "https://omarh-portafolio-web.vercel.app",
+    description: "Portafolio profesional de Omar Hernández, Desarrollador Full Stack especializado en React y Next.js",
+    author: {
+      "@type": "Person",
+      name: "Omar Hernández"
+    },
+    inLanguage: "es-ES",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://omarh-portafolio-web.vercel.app/#projects?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const profilePageSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: {
+      "@type": "Person",
+      name: "Omar Hernández",
+      alternateName: "Omar H.",
+      description: "Desarrollador Full Stack especializado en React, Next.js y TypeScript"
+    }
+  };
+
   return (
     <html lang="es">
       <head>
@@ -82,16 +170,34 @@ export default function RootLayout({
         {/* Favicon */}
         <link rel="icon" type="image/png" href="/favicon.png" />
         
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+        
         {/* Meta tags adicionales para LinkedIn */}
         <meta name="linkedin:owner" content="Omar Hernández" />
         <meta name="linkedin:creator" content="@omarhernandezrey" />
         
-        {/* Verificación de dominio (opcional) */}
+        {/* Verificación de dominio (completar después de registrar en GSC) */}
         <meta name="google-site-verification" content="" />
         
         {/* Tema de color para navegadores móviles */}
         <meta name="theme-color" content="#0070f3" />
         <meta name="msapplication-TileColor" content="#0070f3" />
+
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageSchema) }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
