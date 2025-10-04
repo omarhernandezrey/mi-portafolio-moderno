@@ -258,6 +258,27 @@ export const educationData: EducationCategory[] = [
       },
 
       // 1 Platzi
+            {
+              title: {
+                es: "Audiocurso de Frameworks y Arquitecturas Frontend: Casos de Estudio",
+                en: "Frontend Frameworks and Architectures: Case Studies Audiocourse"
+              },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "13 horas (Aprobado el 31 de enero de 2025)",
+                en: "13 hours (Approved on January 31, 2025)"
+              },
+              description: {
+                es: "Audiocurso centrado en el análisis de frameworks y arquitecturas frontend mediante casos de estudio reales. Aborda patrones de diseño, principios de escalabilidad, rendimiento y mantenibilidad en proyectos modernos. Ideal para desarrolladores que buscan entender cómo elegir e implementar arquitecturas frontend efectivas.",
+                en: "Audiocourse focused on analyzing frontend frameworks and architectures through real-world case studies. It covers design patterns, scalability principles, performance, and maintainability in modern projects. Ideal for developers aiming to understand how to select and implement effective frontend architectures."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/53 diploma-arquitectura-frontend.jpg"
+            },
+
 
             {
               title: {
