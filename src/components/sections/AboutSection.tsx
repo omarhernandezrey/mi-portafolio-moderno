@@ -26,7 +26,13 @@ const createFloatingElements = (count = 12) =>
   }));
 
 const AboutSection: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const currentLanguage = language === "en" ? "en" : "es";
+  const cvDownloadPath = (
+    currentLanguage === "en"
+      ? "/files/Omar_Hernandez_Rey_English-ATS.pdf"
+      : "/files/Omar_Hernandez_Rey_Español-ATS.pdf"
+  );
   
   /* Estado para partículas flotantes (solo cliente) */
   const [floatingElements, setFloatingElements] = useState<
@@ -251,7 +257,7 @@ const AboutSection: React.FC = () => {
 
             {/* Botón de descarga de CV */}
             <motion.a
-              href="/files/CV-Omar-Hernandez-Rey.pdf"
+              href={cvDownloadPath}
               target="_blank"
               rel="noopener noreferrer"
               download
