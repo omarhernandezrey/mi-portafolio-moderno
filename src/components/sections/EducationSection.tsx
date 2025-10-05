@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { educationData } from "../../lib/educationData";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import EducationModal from "../ui/EducationModal";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -28,6 +28,140 @@ interface EducationItem {
 
 const INITIAL_VISIBLE_ITEMS = 8;
 const LOAD_MORE_STEP = 4;
+
+interface HighlightedCourse {
+  id: string;
+  title: { es: string; en: string };
+  institution: { es: string; en: string };
+  summary: { es: string; en: string };
+  logo: string;
+  certificate?: string | null;
+}
+
+const highlightedCoursesData: HighlightedCourse[] = [
+  {
+    id: 'itcertificate-fullstack',
+    title: {
+      es: 'Full Stack Developer Certified Specialist',
+      en: 'Full Stack Developer Certified Specialist',
+    },
+    institution: {
+      es: 'ITCertificate',
+      en: 'ITCertificate',
+    },
+    summary: {
+      es: 'Certificación que avala dominio integral en frontend y backend.',
+      en: 'Certification proving end-to-end mastery in frontend and backend.',
+    },
+    logo: '/images/education/ITCertificate/itcertificate-logo.png',
+    certificate:
+      '/images/education/ITCertificate/fullStackDeveloperCertifiedSpecialist_page-0001.jpg',
+  },
+  {
+    id: 'talento-tech-bootcamp',
+    title: {
+      es: 'Bootcamp en Desarrollo Web Full Stack',
+      en: 'Full Stack Web Development Bootcamp',
+    },
+    institution: {
+      es: 'Talento Tech Bogotá',
+      en: 'Talento Tech Bogotá',
+    },
+    summary: {
+      es: 'Entrenamiento intensivo con proyectos reales y tecnologías modernas.',
+      en: 'Intensive training with real projects and modern technologies.',
+    },
+    logo: '/images/education/talento-tech/talento-tech-logo.png',
+    certificate:
+      '/images/education/talento-tech/desarrolloWebFullStack_page-0001.jpg',
+  },
+  {
+    id: 'sena-tecnologo-adsi',
+    title: {
+      es: 'Tecnólogo ADSI',
+      en: 'ADSI Technologist',
+    },
+    institution: {
+      es: 'Servicio Nacional de Aprendizaje (SENA)',
+      en: 'National Learning Service (SENA)',
+    },
+    summary: {
+      es: 'Formación técnica en análisis, diseño y mantenimiento de sistemas.',
+      en: 'Technical training in systems analysis, design, and maintenance.',
+    },
+    logo: '/images/education/sena/sena-logo.png',
+    certificate:
+      '/images/education/sena/01tecnologoEnTituloAnalisisYDesarrolloDeSistemasDeInformacion.png',
+  },
+  {
+    id: 'universidad-ingenieria-software',
+    title: {
+      es: 'Ingeniería de Software',
+      en: 'Software Engineering',
+    },
+    institution: {
+      es: 'Politécnico Grancolombiano',
+      en: 'Politécnico Grancolombiano',
+    },
+    summary: {
+      es: 'Programa universitario enfocado en arquitectura y metodologías ágiles.',
+      en: 'University program focused on architecture and agile methodologies.',
+    },
+    logo: '/images/education/politecnico/politecnico-logo.png',
+    certificate: null,
+  },
+  {
+    id: 'platzi-backend-intro',
+    title: {
+      es: 'Introducción al Desarrollo Backend',
+      en: 'Introduction to Backend Development',
+    },
+    institution: {
+      es: 'Platzi',
+      en: 'Platzi',
+    },
+    summary: {
+      es: 'Fundamentos para crear APIs robustas y servicios escalables.',
+      en: 'Foundations for building robust APIs and scalable services.',
+    },
+    logo: '/images/education/platzi/platzi-logo.png',
+    certificate: '/images/education/platzi/26DiplomaDelCursoDeIntroduccinAlDesarrolloBackend.png',
+  },
+  {
+    id: 'platzi-sql',
+    title: {
+      es: 'Curso de Base de Datos con SQL',
+      en: 'Database Course with SQL',
+    },
+    institution: {
+      es: 'Platzi',
+      en: 'Platzi',
+    },
+    summary: {
+      es: 'Dominio de consultas, modelado y optimización de bases relacionales.',
+      en: 'Mastery of querying, modelling and optimising relational databases.',
+    },
+    logo: '/images/education/platzi/platzi-logo.png',
+    certificate: '/images/education/platzi/27DiplomaDelCursoDeBasesDeDatosConSql.png',
+  },
+  {
+    id: 'sena-mysql',
+    title: {
+      es: 'Construcción de Bases de Datos con MySQL',
+      en: 'MySQL Database Construction',
+    },
+    institution: {
+      es: 'Servicio Nacional de Aprendizaje (SENA)',
+      en: 'National Learning Service (SENA)',
+    },
+    summary: {
+      es: 'Diseño e implementación de soluciones relacionales en MySQL.',
+      en: 'Design and implementation of relational solutions in MySQL.',
+    },
+    logo: '/images/education/sena/sena-logo.png',
+    certificate: '/images/education/sena/03certificadoAprobacionConstruccionDeBasesDeDatosConMysql.png',
+  },
+];
 
 const spanishMonths: Record<string, number> = {
   enero: 0,
@@ -213,16 +347,35 @@ const EducationSection = () => {
   );
   const totalItems = allItems.length;
   const latestItem = allItems[0] ?? null;
-  const fallbackTotalLabel = language === "en"
+  const currentLanguage = language === 'en' ? 'en' : 'es';
+  const fallbackTotalLabel = currentLanguage === 'en'
     ? `${totalItems} courses completed`
     : `${totalItems} cursos completados`;
+  const highlightedCourses = useMemo(() =>
+    highlightedCoursesData.map((course) => ({
+      id: course.id,
+      title: course.title[currentLanguage],
+      institution: course.institution[currentLanguage],
+      summary: course.summary[currentLanguage],
+      logo: course.logo,
+      certificate: course.certificate ?? null,
+    })),
+    [currentLanguage],
+  );
+  const highlightCount = highlightedCourses.length;
 
+  const [activeHighlight, setActiveHighlight] = useState<number>(0);
   const [visibleCount, setVisibleCount] = useState<number>(0);
   const [visibleItems, setVisibleItems] = useState<EducationItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<EducationItem | null>(null);
   const loadMoreTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const highlightIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  // Soporte para swipe táctil en móviles
+  const touchStartXRef = React.useRef<number | null>(null);
+  const touchStartYRef = React.useRef<number | null>(null);
+  const touchStartTimeRef = React.useRef<number | null>(null);
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
     [],
   );
@@ -272,6 +425,109 @@ const EducationSection = () => {
     }, 250);
   }, [visibleCount, allItems]);
 
+  const clearHighlightAutoplay = useCallback(() => {
+    if (highlightIntervalRef.current) {
+      clearInterval(highlightIntervalRef.current);
+      highlightIntervalRef.current = null;
+    }
+  }, []);
+
+  const startHighlightAutoplay = useCallback(() => {
+    clearHighlightAutoplay();
+    if (highlightedCourses.length <= 1) return;
+    highlightIntervalRef.current = setInterval(() => {
+      setActiveHighlight((prev) => (prev + 1) % highlightedCourses.length);
+    }, 6500);
+  }, [highlightedCourses.length, clearHighlightAutoplay]);
+
+  const goToHighlight = useCallback((targetIndex: number) => {
+    if (!highlightedCourses.length) return;
+    const length = highlightedCourses.length;
+    const normalized = ((targetIndex % length) + length) % length;
+    setActiveHighlight(normalized);
+    startHighlightAutoplay();
+  }, [highlightedCourses.length, startHighlightAutoplay]);
+
+  const handlePrevHighlight = useCallback(() => {
+    goToHighlight(activeHighlight - 1);
+  }, [goToHighlight, activeHighlight]);
+
+  const handleNextHighlight = useCallback(() => {
+    goToHighlight(activeHighlight + 1);
+  }, [goToHighlight, activeHighlight]);
+
+  const handleHighlightPointerEnter = useCallback(() => {
+    clearHighlightAutoplay();
+  }, [clearHighlightAutoplay]);
+
+  const handleHighlightPointerLeave = useCallback(() => {
+    startHighlightAutoplay();
+  }, [startHighlightAutoplay]);
+
+  useEffect(() => {
+    startHighlightAutoplay();
+    return () => {
+      clearHighlightAutoplay();
+    };
+  }, [startHighlightAutoplay, clearHighlightAutoplay]);
+
+  useEffect(() => {
+    if (!highlightedCourses.length) {
+      setActiveHighlight(0);
+      return;
+    }
+    setActiveHighlight((prev) => {
+      if (prev >= highlightedCourses.length) {
+        return highlightedCourses.length - 1;
+      }
+      return prev;
+    });
+  }, [highlightedCourses.length]);
+
+  // Gestos táctiles para el carrusel destacado
+  const onTouchStartHighlight = useCallback((e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStartXRef.current = t.clientX;
+    touchStartYRef.current = t.clientY;
+    touchStartTimeRef.current = Date.now();
+    handleHighlightPointerEnter(); // pausar autoplay mientras se interactúa
+  }, [handleHighlightPointerEnter]);
+
+  const onTouchEndHighlight = useCallback((e: React.TouchEvent) => {
+    if (touchStartXRef.current == null || touchStartTimeRef.current == null) {
+      handleHighlightPointerLeave();
+      return;
+    }
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartXRef.current;
+    const dy = Math.abs(t.clientY - (touchStartYRef.current ?? t.clientY));
+    const dt = Date.now() - touchStartTimeRef.current;
+
+    // Umbrales: desplazamiento horizontal significativo, poco desplazamiento vertical
+    const distanceThreshold = Math.max(40, window.innerWidth * 0.08);
+    const verticalThreshold = 60;
+    const timeThreshold = 800; // ms, swipes rápidos o medianos
+
+    if (Math.abs(dx) > distanceThreshold && dy < verticalThreshold && dt < timeThreshold) {
+      if (dx < 0) {
+        handleNextHighlight();
+      } else {
+        handlePrevHighlight();
+      }
+    }
+
+    // Reset
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+    touchStartTimeRef.current = null;
+    handleHighlightPointerLeave(); // reanudar autoplay
+  }, [handleNextHighlight, handlePrevHighlight, handleHighlightPointerLeave]);
+
+  useEffect(() => {
+    setActiveHighlight(0);
+    startHighlightAutoplay();
+  }, [currentLanguage, startHighlightAutoplay]);
+
   useEffect(() => {
     setFloatingElements(createFloatingElements());
   }, []);
@@ -281,8 +537,11 @@ const EducationSection = () => {
       if (loadMoreTimeout.current) {
         clearTimeout(loadMoreTimeout.current);
       }
+      clearHighlightAutoplay();
     };
-  }, []);
+  }, [clearHighlightAutoplay]);
+
+  const activeCourse = highlightedCourses[activeHighlight] ?? null;
 
   const openModal = (item: EducationItem) => {
     setSelectedItem(item);
@@ -396,6 +655,387 @@ const EducationSection = () => {
           border: 1px solid color-mix(in srgb, var(--accent-color) 35%, transparent);
           box-shadow: 0 8px 20px color-mix(in srgb, var(--accent-color) 15%, transparent);
           color: color-mix(in srgb, var(--accent-color) 70%, white 30%);
+        }
+
+        .highlights-section {
+          margin: 4rem auto 0;
+          max-width: 72rem;
+          padding: 0 1rem 4rem;
+        }
+
+        .highlights-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .highlights-header h3 {
+          font-size: 1.8rem;
+          font-weight: 800;
+          margin-bottom: 0.6rem;
+          background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .highlights-header p {
+          font-size: 0.95rem;
+          color: var(--muted-color);
+          max-width: 34rem;
+          margin: 0.5rem auto 0;
+          line-height: 1.6;
+        }
+
+        .highlights-shell {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 1rem;
+          align-items: stretch;
+          position: relative; /* para posicionar nav absolutos en desktop */
+        }
+
+        .highlights-stage {
+          position: relative;
+          overflow: hidden;
+          border-radius: 1.75rem;
+          background: color-mix(in srgb, var(--secondary-background-color) 82%, transparent);
+          border: 1px solid color-mix(in srgb, var(--accent-color) 18%, transparent);
+          box-shadow: 0 25px 60px color-mix(in srgb, var(--accent-color) 18%, transparent);
+          min-height: 320px;
+        }
+
+        .highlights-card {
+          width: 100%;
+          height: 100%;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 2.25rem;
+          padding: 2.75rem 3rem;
+          align-items: center;
+        }
+
+        .highlights-media {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          border-radius: 1.25rem;
+          overflow: hidden;
+          background: linear-gradient(135deg, color-mix(in srgb, var(--accent-color) 20%, transparent), color-mix(in srgb, var(--primary-color) 25%, transparent));
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-color) 25%, transparent);
+        }
+
+        .highlights-media img {
+          object-fit: cover;
+        }
+
+        .highlights-media::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(160deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%);
+          pointer-events: none;
+        }
+
+        .highlights-placeholder {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          color: color-mix(in srgb, var(--accent-color) 80%, white 20%);
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .highlights-content {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          color: var(--text-color);
+        }
+
+        .highlights-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: color-mix(in srgb, var(--accent-color) 75%, white 25%);
+        }
+
+        .highlights-logo {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          background: color-mix(in srgb, var(--accent-color) 15%, transparent);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 18%, transparent);
+        }
+
+        .highlights-title {
+          font-size: 1.75rem;
+          font-weight: 800;
+          line-height: 1.25;
+        }
+
+        .highlights-summary {
+          font-size: 1rem;
+          line-height: 1.7;
+          color: var(--muted-color);
+          max-width: 32rem;
+        }
+
+        .highlights-footer {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+        }
+
+        .highlights-progress {
+          display: inline-flex;
+          align-items: baseline;
+          gap: 0.35rem;
+          font-weight: 600;
+          color: color-mix(in srgb, var(--accent-color) 70%, white 30%);
+        }
+
+        .highlights-link {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.55rem 1.35rem;
+          border-radius: 9999px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 70%, white 30%));
+          color: var(--background-color);
+          box-shadow: 0 15px 35px color-mix(in srgb, var(--accent-color) 25%, transparent);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .highlights-link:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 18px 40px color-mix(in srgb, var(--accent-color) 35%, transparent);
+        }
+
+        .highlights-nav {
+          border: none;
+          width: 3rem;
+          height: 3rem;
+          border-radius: 9999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: color-mix(in srgb, var(--accent-color) 18%, transparent);
+          color: color-mix(in srgb, var(--accent-color) 75%, white 25%);
+          font-size: 1.5rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 18%, transparent);
+          position: absolute; /* centrado vertical en desktop */
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 3;
+        }
+
+        .highlights-nav:first-of-type { left: 0.6rem; }
+        .highlights-nav:last-of-type { right: 0.6rem; }
+
+        .highlights-nav:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 18px 40px color-mix(in srgb, var(--accent-color) 28%, transparent);
+        }
+
+        .highlights-nav:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
+        .highlights-dots {
+          margin-top: 1.1rem;
+          display: flex;
+          justify-content: center;
+          gap: 0.25rem;
+        }
+
+        .highlights-dot {
+          width: 6px;
+          height: 6px;
+          padding: 0;
+          line-height: 0;
+          min-width: 0;
+          min-height: 0;
+          box-sizing: content-box;
+          border-radius: 9999px;
+          border: 1px solid color-mix(in srgb, var(--accent-color) 50%, transparent);
+          background: color-mix(in srgb, var(--accent-color) 25%, transparent);
+          cursor: pointer;
+          transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .highlights-dot.active {
+          background: color-mix(in srgb, var(--accent-color) 75%, white 25%);
+          box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 15%, transparent);
+        }
+
+        @media (max-width: 560px) {
+          .highlights-dot {
+            width: 5px;
+            height: 5px;
+            min-width: 0;
+            min-height: 0;
+          }
+
+          .highlights-dots {
+            gap: 0.22rem;
+          }
+        }
+
+        @media (max-width: 420px) {
+          .highlights-dot {
+            width: 4px;
+            height: 4px;
+            min-width: 0;
+            min-height: 0;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .highlights-card {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.5rem;
+            padding: 2.5rem 2rem;
+          }
+
+          .highlights-media {
+            aspect-ratio: 16 / 10;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .highlights-section {
+            margin-top: 2.4rem;
+          }
+
+          .highlights-shell {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.9rem 1rem;
+            align-items: start;
+            padding: 0.15rem 0;
+          }
+
+          .highlights-stage {
+            grid-column: 1 / -1;
+            order: -1;
+            width: 100%;
+            min-height: 0;
+            border-radius: 1.4rem;
+          }
+
+          .highlights-card {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 0.9rem;
+            padding: 1.4rem 1rem;
+          }
+
+          .highlights-media {
+            aspect-ratio: 4 / 3;
+            border-radius: 1rem;
+          }
+
+          .highlights-content {
+            align-items: flex-start;
+            text-align: left;
+          }
+
+          .highlights-badge {
+            justify-content: flex-start;
+          }
+
+          .highlights-footer {
+            justify-content: flex-start;
+          }
+
+          .highlights-nav {
+            position: static;
+            transform: none;
+            width: 2.4rem;
+            height: 2.4rem;
+            background: color-mix(in srgb, var(--accent-color) 22%, transparent);
+            box-shadow: 0 10px 20px color-mix(in srgb, var(--accent-color) 18%, transparent);
+            justify-self: center;
+          }
+
+          .highlights-nav:first-of-type { grid-column: 1; grid-row: 2; }
+          .highlights-nav:last-of-type { grid-column: 2; grid-row: 2; }
+
+          .highlights-dots {
+            margin-top: 0.9rem;
+            gap: 0.4rem;
+          }
+        }
+
+        @media (max-width: 560px) {
+          .highlights-header h3 {
+            font-size: 1.35rem;
+          }
+
+          .highlights-summary {
+            font-size: 0.9rem;
+            max-width: 26rem;
+          }
+
+          .highlights-nav { width: 2.2rem; height: 2.2rem; }
+          .highlights-summary { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        }
+
+        @media (max-width: 420px) {
+          .highlights-section {
+            margin-top: 2.1rem;
+          }
+
+          .highlights-card {
+            padding: 1.2rem 1rem;
+            border-radius: 0.9rem;
+          }
+
+          .highlights-media {
+            aspect-ratio: 3 / 2;
+            border-radius: 0.85rem;
+          }
+
+          .highlights-title {
+            font-size: 1.16rem;
+          }
+
+          .highlights-summary {
+            font-size: 0.85rem;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+          }
+
+          .highlights-nav {
+            width: 2rem;
+            height: 2rem;
+          }
+
+          .highlights-dots {
+            margin-top: 0.8rem;
+            gap: 0.35rem;
+          }
         }
 
         .timeline {
@@ -995,6 +1635,138 @@ const EducationSection = () => {
               className="timeline-end-point"
             ></div>
           </div>
+
+          {highlightCount > 0 && activeCourse && (
+            <div className="highlights-section">
+              <div className="highlights-header">
+                <h3>{isHydrated ? t('education.highlightsTitle') : 'Certificaciones destacadas'}</h3>
+                <p>{isHydrated ? t('education.highlightsSubtitle') : 'Una selección de logros que resumen mi crecimiento profesional.'}</p>
+              </div>
+
+              <div className="highlights-shell">
+                <button
+                  type="button"
+                  className="highlights-nav"
+                  onClick={handlePrevHighlight}
+                  onMouseEnter={handleHighlightPointerEnter}
+                  onMouseLeave={handleHighlightPointerLeave}
+                  onFocus={handleHighlightPointerEnter}
+                  onBlur={handleHighlightPointerLeave}
+                  aria-label={isHydrated ? t('education.carouselPrevious') : 'Ver certificación anterior'}
+                  disabled={highlightCount <= 1}
+                >
+                  ‹
+                </button>
+
+                <div
+                  className="highlights-stage"
+                  onMouseEnter={handleHighlightPointerEnter}
+                  onMouseLeave={handleHighlightPointerLeave}
+                  onFocusCapture={handleHighlightPointerEnter}
+                  onBlurCapture={handleHighlightPointerLeave}
+                  onTouchStart={onTouchStartHighlight}
+                  onTouchEnd={onTouchEndHighlight}
+                  role="region"
+                  aria-live="polite"
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.article
+                      key={`${activeCourse.id}-${currentLanguage}`}
+                      className="highlights-card"
+                      initial={{ opacity: 0, y: 32, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -28, scale: 0.98 }}
+                      transition={{ duration: 0.45, ease: 'easeOut' }}
+                    >
+                      <div className="highlights-media">
+                        {activeCourse.certificate ? (
+                          <Image
+                            src={activeCourse.certificate}
+                            alt={`${activeCourse.title} ${isHydrated ? t('education.certificate').toLowerCase() : 'certificado'}`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 560px"
+                            priority={activeHighlight === 0}
+                          />
+                        ) : (
+                          <div className="highlights-placeholder">
+                            <div className="highlights-logo">
+                              <Image src={activeCourse.logo} alt={activeCourse.institution} width={40} height={40} />
+                            </div>
+                            <span>{activeCourse.institution}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="highlights-content">
+                        <div className="highlights-badge">
+                          <span className="highlights-logo">
+                            <Image src={activeCourse.logo} alt={activeCourse.institution} width={36} height={36} />
+                          </span>
+                          {activeCourse.institution}
+                        </div>
+                        <h4 className="highlights-title">{activeCourse.title}</h4>
+                        <p className="highlights-summary">{activeCourse.summary}</p>
+                        <div className="highlights-footer">
+                          <span className="highlights-progress">
+                            <strong>{String(activeHighlight + 1).padStart(2, '0')}</strong>
+                            <span aria-hidden="true">/</span>
+                            <span>{String(highlightCount).padStart(2, '0')}</span>
+                          </span>
+                          {activeCourse.certificate && (
+                            <a
+                              className="highlights-link"
+                              href={activeCourse.certificate}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onMouseEnter={handleHighlightPointerEnter}
+                              onMouseLeave={handleHighlightPointerLeave}
+                              onFocus={handleHighlightPointerEnter}
+                              onBlur={handleHighlightPointerLeave}
+                            >
+                              {isHydrated ? t('education.viewCertificate') : 'Ver certificado'}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.article>
+                  </AnimatePresence>
+                </div>
+
+                <button
+                  type="button"
+                  className="highlights-nav"
+                  onClick={handleNextHighlight}
+                  onMouseEnter={handleHighlightPointerEnter}
+                  onMouseLeave={handleHighlightPointerLeave}
+                  onFocus={handleHighlightPointerEnter}
+                  onBlur={handleHighlightPointerLeave}
+                  aria-label={isHydrated ? t('education.carouselNext') : 'Ver certificación siguiente'}
+                  disabled={highlightCount <= 1}
+                >
+                  ›
+                </button>
+              </div>
+
+              <div className="highlights-dots">
+                {highlightedCourses.map((course, index) => {
+                  const isActive = index === activeHighlight;
+                  return (
+                    <button
+                      key={course.id}
+                      type="button"
+                      className={`highlights-dot${isActive ? ' active' : ''}`}
+                      onClick={() => goToHighlight(index)}
+                      onMouseEnter={handleHighlightPointerEnter}
+                      onMouseLeave={handleHighlightPointerLeave}
+                      onFocus={handleHighlightPointerEnter}
+                      onBlur={handleHighlightPointerLeave}
+                      aria-label={isHydrated ? t('education.goToHighlight', { index: index + 1 }) : `Ir a la certificación ${index + 1}`}
+                      aria-pressed={isActive}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {isLoading && (
             <p className="loading-text">{isHydrated ? t('education.loading') : 'Cargando más...'}</p>
