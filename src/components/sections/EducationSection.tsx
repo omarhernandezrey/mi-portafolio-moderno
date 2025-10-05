@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { educationData } from "../../lib/educationData";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
@@ -210,11 +210,8 @@ const EducationSection = () => {
   );
   const latestItem = allItems[0] ?? null;
 
-  const [visibleCount, setVisibleCount] = useState<number>(0);
-  const [visibleItems, setVisibleItems] = useState<EducationItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const visibleItems = allItems;
   const [selectedItem, setSelectedItem] = useState<EducationItem | null>(null);
-  const [hasMore, setHasMore] = useState<boolean>(true);
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
     [],
   );
@@ -231,37 +228,6 @@ const EducationSection = () => {
   useEffect(() => {
     setFloatingElements(createFloatingElements());
   }, []);
-
-  const loadMoreItems = useCallback(() => {
-    if (visibleCount >= allItems.length) {
-      setHasMore(false);
-      return;
-    }
-
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      const nextCount = Math.min(visibleCount + 1, allItems.length);
-      setVisibleItems(allItems.slice(0, nextCount));
-      setVisibleCount(nextCount);
-      setIsLoading(false);
-      if (nextCount >= allItems.length) {
-        setHasMore(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [visibleCount, allItems]);
-
-  useEffect(() => {
-    const initialLoad = () => {
-      const initialBatch = Math.min(7, allItems.length);
-      setVisibleItems(allItems.slice(0, initialBatch));
-      setVisibleCount(initialBatch);
-      setIsLoading(false);
-      setHasMore(initialBatch < allItems.length);
-    };
-    initialLoad();
-  }, [allItems]);
 
   const openModal = (item: EducationItem) => {
     setSelectedItem(item);
@@ -523,12 +489,6 @@ const EducationSection = () => {
           z-index: 2;
         }
 
-        .load-more .timeline-content {
-          background-color: var(--card-bg-color);
-          border: 2px dashed var(--accent-color);
-          cursor: pointer;
-        }
-
         .loading-text {
           color: var(--muted-color);
           margin-top: 20px;
@@ -586,11 +546,6 @@ const EducationSection = () => {
         }
 
         .timeline-item:nth-child(7) { animation-delay: 0.7s; }
-
-        .load-more {
-          opacity: 1 !important;
-          animation: none !important;
-        }
 
         /* Hover effects */
         .timeline-item:hover .timeline-content {
@@ -879,25 +834,6 @@ const EducationSection = () => {
               );
             })}
 
-            {hasMore && (
-              <div
-                className="timeline-item load-more left"
-                onClick={loadMoreItems}
-                onKeyPress={(e) => e.key === "Enter" && loadMoreItems()}
-                tabIndex={0}
-                role="button"
-                aria-pressed="false"
-                aria-label={isHydrated ? t('education.loadMoreEducation') : 'Cargar más educación'}
-              >
-                <div className="timeline-icon">
-                  <div className="timeline-inner-circle">+</div>
-                </div>
-                <div className="timeline-content">
-                  <h3 className="item-title">{isHydrated ? t('education.loadMore') : 'Cargar Más'}</h3>
-                </div>
-              </div>
-            )}
-
             <div
               id="infinite-scroll-sentinel"
               className="timeline-end-point"
@@ -917,7 +853,6 @@ const EducationSection = () => {
             />
           )}
 
-          {isLoading && <p className="loading-text">{isHydrated ? t('education.loading') : 'Cargando más...'}</p>}
         </div>
       </section>
     </>
