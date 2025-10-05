@@ -76,6 +76,7 @@ export const useTranslation = () => {
     "education.badge": "Educación",
     "education.headerTitle": "Mi Trayectoria Académica",
     "education.loadMore": "Cargar Más",
+    "education.latestBadge": "Nuevo",
     "education.loading": "Cargando más...",
     "education.certificate": "Certificado",
     "education.shareLinkedIn": "Compartir en LinkedIn",

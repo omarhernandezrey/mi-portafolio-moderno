@@ -23,23 +23,109 @@ interface EducationItem {
   description: string;
   logo: string;
   certificate?: string | null;
+  completionTimestamp?: number | null;
 }
+
+const spanishMonths: Record<string, number> = {
+  enero: 0,
+  febrero: 1,
+  marzo: 2,
+  abril: 3,
+  mayo: 4,
+  junio: 5,
+  julio: 6,
+  agosto: 7,
+  septiembre: 8,
+  setiembre: 8,
+  octubre: 9,
+  noviembre: 10,
+  diciembre: 11,
+};
+
+const normalizeSpanish = (text: string): string =>
+  text
+    .normalize('NFD')
+    .replace(/[^\w\s]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+const parseSpanishDate = (duration?: string): number | null => {
+  if (!duration) return null;
+  const match = duration.match(/(?:Aprobado|Finalizado|Completado|Terminado) el ([0-9]{1,2}) de ([a-zA-ZÀ-ſ]+) de ([0-9]{4})/i);
+  if (!match) return null;
+  const [, dayStr, monthRaw, yearStr] = match;
+  const monthKey = normalizeSpanish(monthRaw).replace(/\s+/g, '');
+  const month = spanishMonths[monthKey];
+  if (typeof month !== 'number') return null;
+  const day = Number(dayStr);
+  const year = Number(yearStr);
+  const date = new Date(year, month, day);
+  return Number.isNaN(date.getTime()) ? null : date.getTime();
+};
+
+const parseEnglishDate = (duration?: string): number | null => {
+  if (!duration) return null;
+  const match = duration.match(/(?:Approved|Completed|Finished|Issued|Earned) on ([A-Za-z]+ \d{1,2}, \d{4})/i);
+  if (!match) return null;
+  const parsed = new Date(match[1]);
+  return Number.isNaN(parsed.getTime()) ? null : parsed.getTime();
+};
+
+const getCompletionTimestamp = (duration: string | { es?: string; en?: string }): number | null => {
+  if (typeof duration === 'string') {
+    return parseEnglishDate(duration) ?? parseSpanishDate(duration);
+  }
+
+  return (
+    parseEnglishDate(duration.en) ??
+    parseSpanishDate(duration.es) ??
+    null
+  );
+};
 
 // Función para obtener datos internacionalizados
 const getLocalizedEducationData = (data: typeof educationData, language: string): EducationItem[] => {
   const lang = language as 'es' | 'en';
   
-  return data.flatMap((category) =>
-    category.items.map((item) => ({
-      category: typeof category.category === 'string' ? category.category : (category.category[lang] || category.category.es),
-      title: typeof item.title === 'string' ? item.title : (item.title[lang] || item.title.es),
-      institution: typeof item.institution === 'string' ? item.institution : (item.institution[lang] || item.institution.es),
-      duration: typeof item.duration === 'string' ? item.duration : (item.duration[lang] || item.duration.es),
-      description: typeof item.description === 'string' ? item.description : (item.description[lang] || item.description.es),
-      logo: item.logo,
-      certificate: item.certificate,
-    }))
-  );
+  return data
+    .flatMap((category) =>
+      category.items.map((item) => {
+        const localizedDuration =
+          typeof item.duration === 'string'
+            ? item.duration
+            : item.duration?.[lang] || item.duration?.es || '';
+        const completionTimestamp = getCompletionTimestamp(item.duration ?? localizedDuration);
+
+        return {
+          category:
+            typeof category.category === 'string'
+              ? category.category
+              : category.category[lang] || category.category.es,
+          title:
+            typeof item.title === 'string'
+              ? item.title
+              : item.title[lang] || item.title.es,
+          institution:
+            typeof item.institution === 'string'
+              ? item.institution
+              : item.institution[lang] || item.institution.es,
+          duration: localizedDuration,
+          description:
+            typeof item.description === 'string'
+              ? item.description
+              : item.description[lang] || item.description.es,
+          logo: item.logo,
+          certificate: item.certificate,
+          completionTimestamp,
+        };
+      }),
+    )
+    .sort((a, b) => {
+      const aDate = a.completionTimestamp ?? Number.NEGATIVE_INFINITY;
+      const bDate = b.completionTimestamp ?? Number.NEGATIVE_INFINITY;
+      if (aDate === bDate) return 0;
+      return bDate - aDate;
+    });
 };
 
 // Componente para mostrar el logo en la línea de tiempo con fallback seguro
@@ -122,6 +208,7 @@ const EducationSection = () => {
     () => getLocalizedEducationData(educationData, language),
     [language],
   );
+  const latestItem = allItems[0] ?? null;
 
   const [visibleCount, setVisibleCount] = useState<number>(0);
   const [visibleItems, setVisibleItems] = useState<EducationItem[]>([]);
@@ -171,9 +258,7 @@ const EducationSection = () => {
       setVisibleItems(allItems.slice(0, initialBatch));
       setVisibleCount(initialBatch);
       setIsLoading(false);
-      if (initialBatch >= allItems.length) {
-        setHasMore(false);
-      }
+      setHasMore(initialBatch < allItems.length);
     };
     initialLoad();
   }, [allItems]);
@@ -474,6 +559,32 @@ const EducationSection = () => {
         .timeline-item:nth-child(4) { animation-delay: 0.4s; }
         .timeline-item:nth-child(5) { animation-delay: 0.5s; }
         .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+        .timeline-item.latest-item .timeline-content {
+          border-color: color-mix(in srgb, var(--accent-color) 70%, transparent);
+          box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 35%, transparent);
+        }
+
+        .timeline-item.latest-item .timeline-icon {
+          background-color: var(--accent-color);
+          color: var(--background-color);
+        }
+
+        .latest-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 0.75rem;
+          padding: 0.25rem 0.65rem;
+          font-size: 0.65rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          border-radius: 9999px;
+          background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 70%, white 30%));
+          color: var(--background-color);
+          box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color) 35%, transparent);
+        }
+
         .timeline-item:nth-child(7) { animation-delay: 0.7s; }
 
         .load-more {
@@ -730,11 +841,12 @@ const EducationSection = () => {
 
             {visibleItems.map((item, index) => {
               const alignment = index % 2 === 0 ? "right" : "left";
+              const isLatest = Boolean(latestItem && item === latestItem);
 
               return (
                 <div
                   key={index}
-                  className={`timeline-item ${alignment}`}
+                  className={`timeline-item ${alignment}${isLatest ? ' latest-item' : ''}`}
                   onClick={() => openModal(item)}
                   onKeyPress={(e) => e.key === "Enter" && openModal(item)}
                   tabIndex={0}
@@ -754,6 +866,11 @@ const EducationSection = () => {
                       className="item-title"
                     >
                       {item.title}
+                      {isLatest && (
+                        <span className="latest-badge">
+                          {isHydrated ? t('education.latestBadge') : 'Nuevo'}
+                        </span>
+                      )}
                     </h3>
                     <p className="item-institution">{item.institution}</p>
                     <p className="item-duration">{item.duration}</p>
