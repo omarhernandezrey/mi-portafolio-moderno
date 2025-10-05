@@ -931,7 +931,7 @@ const EducationSection = () => {
             {visibleItems.map((item, index) => {
               const alignment = index % 2 === 0 ? "right" : "left";
               const isLatest = Boolean(latestItem && item === latestItem);
-              const itemNumber = index + 1;
+              const itemNumber = Math.max(totalItems - index, 1);
 
               return (
                 <div
