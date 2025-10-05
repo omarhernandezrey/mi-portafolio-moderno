@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { educationData } from "../../lib/educationData";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
@@ -25,6 +25,9 @@ interface EducationItem {
   certificate?: string | null;
   completionTimestamp?: number | null;
 }
+
+const INITIAL_VISIBLE_ITEMS = 8;
+const LOAD_MORE_STEP = 4;
 
 const spanishMonths: Record<string, number> = {
   enero: 0,
@@ -208,10 +211,18 @@ const EducationSection = () => {
     () => getLocalizedEducationData(educationData, language),
     [language],
   );
+  const totalItems = allItems.length;
   const latestItem = allItems[0] ?? null;
+  const fallbackTotalLabel = language === "en"
+    ? `${totalItems} courses completed`
+    : `${totalItems} cursos completados`;
 
-  const visibleItems = allItems;
+  const [visibleCount, setVisibleCount] = useState<number>(0);
+  const [visibleItems, setVisibleItems] = useState<EducationItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<EducationItem | null>(null);
+  const loadMoreTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
     [],
   );
@@ -226,7 +237,51 @@ const EducationSection = () => {
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   useEffect(() => {
+    if (loadMoreTimeout.current) {
+      clearTimeout(loadMoreTimeout.current);
+      loadMoreTimeout.current = null;
+    }
+    const initialBatch = Math.min(INITIAL_VISIBLE_ITEMS, allItems.length);
+    setVisibleItems(allItems.slice(0, initialBatch));
+    setVisibleCount(initialBatch);
+    setHasMore(initialBatch < allItems.length);
+    setIsLoading(false);
+  }, [allItems]);
+
+  const loadMoreItems = useCallback(() => {
+    if (visibleCount >= allItems.length) {
+      setHasMore(false);
+      return;
+    }
+
+    setIsLoading(true);
+
+    const nextCount = Math.min(visibleCount + LOAD_MORE_STEP, allItems.length);
+    const updatedItems = allItems.slice(0, nextCount);
+
+    if (loadMoreTimeout.current) {
+      clearTimeout(loadMoreTimeout.current);
+    }
+
+    loadMoreTimeout.current = setTimeout(() => {
+      setVisibleItems(updatedItems);
+      setVisibleCount(nextCount);
+      setHasMore(nextCount < allItems.length);
+      setIsLoading(false);
+      loadMoreTimeout.current = null;
+    }, 250);
+  }, [visibleCount, allItems]);
+
+  useEffect(() => {
     setFloatingElements(createFloatingElements());
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (loadMoreTimeout.current) {
+        clearTimeout(loadMoreTimeout.current);
+      }
+    };
   }, []);
 
   const openModal = (item: EducationItem) => {
@@ -320,6 +375,27 @@ const EducationSection = () => {
           background: linear-gradient(to right, var(--primary-color), var(--accent-color));
           margin: 0 auto;
           border-radius: 0.25rem;
+        }
+
+        .timeline-meta {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 1.5rem;
+          font-size: 0.95rem;
+          font-weight: 500;
+          color: var(--muted-color);
+          letter-spacing: 0.02em;
+        }
+
+        .timeline-meta .total-count {
+          padding: 0.4rem 1rem;
+          border-radius: 9999px;
+          background-color: color-mix(in srgb, var(--accent-color) 12%, transparent);
+          border: 1px solid color-mix(in srgb, var(--accent-color) 35%, transparent);
+          box-shadow: 0 8px 20px color-mix(in srgb, var(--accent-color) 15%, transparent);
+          color: color-mix(in srgb, var(--accent-color) 70%, white 30%);
         }
 
         .timeline {
@@ -453,6 +529,49 @@ const EducationSection = () => {
           border-color: transparent var(--card-bg-color) transparent transparent;
         }
 
+        .timeline-item.load-more .timeline-content {
+          border-style: dashed;
+          border-width: 2px;
+          border-color: color-mix(in srgb, var(--accent-color) 50%, transparent);
+          background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+          text-align: center;
+          cursor: pointer;
+        }
+
+        .timeline-item.load-more .timeline-inner-circle {
+          background-color: color-mix(in srgb, var(--accent-color) 65%, transparent);
+          color: var(--background-color);
+          font-weight: 700;
+        }
+
+        .timeline-item.load-more:hover .timeline-content {
+          transform: scale(1.05);
+          box-shadow: 0 12px 26px color-mix(in srgb, var(--accent-color) 25%, transparent);
+        }
+
+        .timeline-item.load-more.loading .timeline-content,
+        .timeline-item.load-more[aria-disabled="true"] .timeline-content {
+          opacity: 0.6;
+          cursor: wait;
+          box-shadow: none;
+        }
+
+        .item-index {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 0.5rem;
+          min-width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 9999px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          background-color: color-mix(in srgb, var(--accent-color) 12%, transparent);
+          color: color-mix(in srgb, var(--accent-color) 70%, white 30%);
+          border: 2px solid color-mix(in srgb, var(--accent-color) 55%, transparent);
+          box-shadow: 0 6px 16px color-mix(in srgb, var(--accent-color) 20%, transparent);
+        }
+
         .item-title {
           font-size: 0.9rem;
           color: var(--primary-color);
@@ -527,6 +646,13 @@ const EducationSection = () => {
         .timeline-item.latest-item .timeline-icon {
           background-color: var(--accent-color);
           color: var(--background-color);
+        }
+
+        .timeline-item.latest-item .item-index {
+          background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 70%, white 30%));
+          color: var(--background-color);
+          border-color: transparent;
+          box-shadow: 0 10px 24px color-mix(in srgb, var(--accent-color) 35%, transparent);
         }
 
         .latest-badge {
@@ -788,6 +914,14 @@ const EducationSection = () => {
             <div className="title-underline" />
           </div>
 
+          <div className="timeline-meta">
+            <span className="total-count">
+              {isHydrated
+                ? t('education.totalCount', { count: totalItems })
+                : fallbackTotalLabel}
+            </span>
+          </div>
+
           <div className="timeline">
             <div className="timeline-line" />
             <div className="cap-icon">
@@ -797,6 +931,7 @@ const EducationSection = () => {
             {visibleItems.map((item, index) => {
               const alignment = index % 2 === 0 ? "right" : "left";
               const isLatest = Boolean(latestItem && item === latestItem);
+              const itemNumber = index + 1;
 
               return (
                 <div
@@ -816,6 +951,7 @@ const EducationSection = () => {
                     />
                   </div>
                   <div className="timeline-content">
+                    <span className="item-index">{itemNumber.toString().padStart(2, '0')}</span>
                     <h3
                       id={`education-item-title-${index}`}
                       className="item-title"
@@ -834,11 +970,35 @@ const EducationSection = () => {
               );
             })}
 
+            {hasMore && (
+              <div
+                className={`timeline-item load-more left${isLoading ? ' loading' : ''}`}
+                onClick={() => !isLoading && loadMoreItems()}
+                onKeyPress={(e) => e.key === "Enter" && !isLoading && loadMoreItems()}
+                tabIndex={0}
+                role="button"
+                aria-pressed="false"
+                aria-disabled={isLoading}
+                aria-label={isHydrated ? t('education.loadMoreEducation') : 'Cargar más educación'}
+              >
+                <div className="timeline-icon">
+                  <div className="timeline-inner-circle">+</div>
+                </div>
+                <div className="timeline-content">
+                  <h3 className="item-title">{isHydrated ? t('education.loadMore') : 'Cargar Más'}</h3>
+                </div>
+              </div>
+            )}
+
             <div
               id="infinite-scroll-sentinel"
               className="timeline-end-point"
             ></div>
           </div>
+
+          {isLoading && (
+            <p className="loading-text">{isHydrated ? t('education.loading') : 'Cargando más...'}</p>
+          )}
 
           {selectedItem && (
             <EducationModal

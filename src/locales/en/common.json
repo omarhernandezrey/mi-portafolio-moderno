@@ -141,6 +141,7 @@
     "badge": "Education",
     "headerTitle": "My Academic Journey",
     "loadMore": "Load More",
+    "totalCount": "{count} courses completed",
     "latestBadge": "Latest",
     "loading": "Loading more...",
     "certificate": "Certificate",

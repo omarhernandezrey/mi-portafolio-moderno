@@ -141,6 +141,7 @@
     "badge": "Educación",
     "headerTitle": "Mi Trayectoria Académica",
     "loadMore": "Cargar Más",
+    "totalCount": "{count} cursos completados",
     "latestBadge": "Nuevo",
     "loading": "Cargando más...",
     "certificate": "Certificado",
