@@ -844,13 +844,22 @@ const EducationSection = () => {
         .highlights-logo {
           width: 44px;
           height: 44px;
-          border-radius: 12px;
-          background: color-mix(in srgb, var(--accent-color) 15%, transparent);
+          border-radius: 50%;
+          background: #fff;
+          border: 2px solid color-mix(in srgb, var(--accent-color) 55%, transparent);
           display: inline-flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
           box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 18%, transparent);
+        }
+
+        .highlights-logo img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+          display: block;
         }
 
         .highlights-title {
