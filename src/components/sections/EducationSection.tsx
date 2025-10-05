@@ -689,9 +689,9 @@ const EducationSection = () => {
         .highlights-shell {
           display: grid;
           grid-template-columns: auto 1fr auto;
-          gap: 1rem;
+          gap: 0; /* nav pegados al borde del stage */
           align-items: stretch;
-          position: relative; /* para posicionar nav absolutos en desktop */
+          position: relative;
         }
 
         .highlights-stage {
@@ -828,7 +828,7 @@ const EducationSection = () => {
         }
 
         .highlights-nav {
-          border: none;
+          border: 1px solid color-mix(in srgb, var(--accent-color) 35%, transparent);
           width: 3rem;
           height: 3rem;
           border-radius: 9999px;
@@ -836,24 +836,28 @@ const EducationSection = () => {
           align-items: center;
           justify-content: center;
           background: color-mix(in srgb, var(--accent-color) 18%, transparent);
+          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
           color: color-mix(in srgb, var(--accent-color) 75%, white 25%);
           font-size: 1.5rem;
           font-weight: 700;
           cursor: pointer;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
           box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 18%, transparent);
-          position: absolute; /* centrado vertical en desktop */
-          top: 50%;
-          transform: translateY(-50%);
+          position: static; /* desktop: usar grid */
+          align-self: center; /* centro vertical respecto al stage */
           z-index: 3;
         }
 
-        .highlights-nav:first-of-type { left: 0.6rem; }
-        .highlights-nav:last-of-type { right: 0.6rem; }
+        /* solape medio ancho sobre el borde del stage */
+        .highlights-nav:first-of-type { margin-right: -1.5rem; }
+        .highlights-nav:last-of-type { margin-left: -1.5rem; }
 
         .highlights-nav:hover {
-          transform: translateY(-2px);
+          transform: scale(1.06);
           box-shadow: 0 18px 40px color-mix(in srgb, var(--accent-color) 28%, transparent);
+          background: color-mix(in srgb, var(--accent-color) 24%, transparent);
+          border-color: color-mix(in srgb, var(--accent-color) 45%, transparent);
         }
 
         .highlights-nav:disabled {
@@ -861,6 +865,10 @@ const EducationSection = () => {
           cursor: not-allowed;
           transform: none;
           box-shadow: none;
+        }
+        .highlights-nav:focus-visible {
+          outline: 2px solid color-mix(in srgb, var(--accent-color) 65%, transparent);
+          outline-offset: 2px;
         }
 
         .highlights-dots {
@@ -978,6 +986,7 @@ const EducationSection = () => {
             background: color-mix(in srgb, var(--accent-color) 22%, transparent);
             box-shadow: 0 10px 20px color-mix(in srgb, var(--accent-color) 18%, transparent);
             justify-self: center;
+            margin: 0; /* reset solape desktop */
           }
 
           .highlights-nav:first-of-type { grid-column: 1; grid-row: 2; }
@@ -1377,6 +1386,17 @@ const EducationSection = () => {
         @media (min-width: 1024px) {
           .title {
             font-size: 3rem;
+          }
+          /* Botones carrusel prolijos en desktop */
+          .highlights-nav {
+            width: 3.25rem;
+            height: 3.25rem;
+          }
+          .highlights-nav:first-of-type {
+            left: clamp(0.5rem, 1vw, 1rem);
+          }
+          .highlights-nav:last-of-type {
+            right: clamp(0.5rem, 1vw, 1rem);
           }
 
           .timeline-line {
