@@ -375,18 +375,6 @@ function TimelineLogo({
       width={80}
       height={80}
       className="timeline-logo"
-      style={{
-        objectFit: "contain",
-        borderRadius: "50%",
-        boxShadow: "0 4px 16px rgba(243,156,18,0.15)",
-        background: "#fff",
-        border: "2px solid #f39c12",
-        padding: "4px",
-        display: "block",
-        margin: "0 auto",
-        transform: "scale(1.08)",
-        transition: "transform 0.2s",
-      }}
       onError={() => setImgError(true)}
     />
   );
@@ -1211,9 +1199,10 @@ const EducationSection = () => {
         }
 
         .timeline-logo {
-          width: 65%;
-          height: 65%;
-          object-fit: contain;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
           display: block;
         }
 
