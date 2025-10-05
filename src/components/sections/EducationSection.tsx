@@ -40,40 +40,21 @@ interface HighlightedCourse {
 
 const highlightedCoursesData: HighlightedCourse[] = [
   {
-    id: 'itcertificate-fullstack',
+    id: 'universidad-ingenieria-software',
     title: {
-      es: 'Full Stack Developer Certified Specialist',
-      en: 'Full Stack Developer Certified Specialist',
+      es: 'Ingeniería de Software',
+      en: 'Software Engineering',
     },
     institution: {
-      es: 'ITCertificate',
-      en: 'ITCertificate',
+      es: 'Politécnico Grancolombiano',
+      en: 'Politécnico Grancolombiano',
     },
     summary: {
-      es: 'Certificación que avala dominio integral en frontend y backend.',
-      en: 'Certification proving end-to-end mastery in frontend and backend.',
+      es: 'Formación universitaria en arquitectura, metodologías ágiles y desarrollo.',
+      en: 'University training in architecture, agile methodologies, and development.',
     },
-    logo: '/images/education/ITCertificate/itcertificate-logo.png',
-    certificate:
-      '/images/education/ITCertificate/fullStackDeveloperCertifiedSpecialist_page-0001.jpg',
-  },
-  {
-    id: 'talento-tech-bootcamp',
-    title: {
-      es: 'Bootcamp en Desarrollo Web Full Stack',
-      en: 'Full Stack Web Development Bootcamp',
-    },
-    institution: {
-      es: 'Talento Tech Bogotá',
-      en: 'Talento Tech Bogotá',
-    },
-    summary: {
-      es: 'Entrenamiento intensivo con proyectos reales y tecnologías modernas.',
-      en: 'Intensive training with real projects and modern technologies.',
-    },
-    logo: '/images/education/talento-tech/talento-tech-logo.png',
-    certificate:
-      '/images/education/talento-tech/desarrolloWebFullStack_page-0001.jpg',
+    logo: '/images/education/politecnico/politecnico-logo.png',
+    certificate: null,
   },
   {
     id: 'sena-tecnologo-adsi',
@@ -86,29 +67,99 @@ const highlightedCoursesData: HighlightedCourse[] = [
       en: 'National Learning Service (SENA)',
     },
     summary: {
-      es: 'Formación técnica en análisis, diseño y mantenimiento de sistemas.',
-      en: 'Technical training in systems analysis, design, and maintenance.',
+      es: 'Base sólida en análisis, desarrollo y mantenimiento de sistemas.',
+      en: 'Solid foundation in analysis, development, and systems maintenance.',
     },
     logo: '/images/education/sena/sena-logo.png',
     certificate:
       '/images/education/sena/01tecnologoEnTituloAnalisisYDesarrolloDeSistemasDeInformacion.png',
   },
   {
-    id: 'universidad-ingenieria-software',
+    id: 'talento-tech-bootcamp',
     title: {
-      es: 'Ingeniería de Software',
-      en: 'Software Engineering',
+      es: 'Bootcamp en Desarrollo Web Full Stack',
+      en: 'Full Stack Web Development Bootcamp',
     },
     institution: {
-      es: 'Politécnico Grancolombiano',
-      en: 'Politécnico Grancolombiano',
+      es: 'Talento Tech Bogotá',
+      en: 'Talento Tech Bogotá',
     },
     summary: {
-      es: 'Programa universitario enfocado en arquitectura y metodologías ágiles.',
-      en: 'University program focused on architecture and agile methodologies.',
+      es: 'Entrenamiento intensivo práctico con tecnologías modernas.',
+      en: 'Intensive, practical training with modern technologies.',
     },
-    logo: '/images/education/politecnico/politecnico-logo.png',
-    certificate: null,
+    logo: '/images/education/talento-tech/talento-tech-logo.png',
+    certificate:
+      '/images/education/talento-tech/desarrolloWebFullStack_page-0001.jpg',
+  },
+  {
+    id: 'itcertificate-fullstack',
+    title: {
+      es: 'Full Stack Developer Certified Specialist',
+      en: 'Full Stack Developer Certified Specialist',
+    },
+    institution: {
+      es: 'ITCertificate',
+      en: 'ITCertificate',
+    },
+    summary: {
+      es: 'Demuestra dominio integral en frontend y backend.',
+      en: 'Demonstrates end-to-end mastery in frontend and backend.',
+    },
+    logo: '/images/education/ITCertificate/itcertificate-logo.png',
+    certificate:
+      '/images/education/ITCertificate/fullStackDeveloperCertifiedSpecialist_page-0001.jpg',
+  },
+  {
+    id: 'itcertificate-backend-pro',
+    title: {
+      es: 'Back End Developer Certified Professional',
+      en: 'Back End Developer Certified Professional',
+    },
+    institution: {
+      es: 'ITCertificate',
+      en: 'ITCertificate',
+    },
+    summary: {
+      es: 'Habilidades avanzadas en servidores, bases de datos y lógica de aplicaciones.',
+      en: 'Advanced skills in servers, databases, and application logic.',
+    },
+    logo: '/images/education/ITCertificate/itcertificate-logo.png',
+    certificate: '/images/education/ITCertificate/backEndDeveloperCertifiedProfessional_page-0001.jpg',
+  },
+  {
+    id: 'sena-mysql',
+    title: {
+      es: 'Construcción de Bases de Datos con MySQL',
+      en: 'MySQL Database Construction',
+    },
+    institution: {
+      es: 'Servicio Nacional de Aprendizaje (SENA)',
+      en: 'National Learning Service (SENA)',
+    },
+    summary: {
+      es: 'Diseño, implementación y gestión de bases de datos relacionales con MySQL.',
+      en: 'Design, implementation, and management of relational databases with MySQL.',
+    },
+    logo: '/images/education/sena/sena-logo.png',
+    certificate: '/images/education/sena/03certificadoAprobacionConstruccionDeBasesDeDatosConMysql.png',
+  },
+  {
+    id: 'sena-metodologia-programacion',
+    title: {
+      es: 'Metodología de la Programación de Sistemas Informáticos',
+      en: 'Methodology of Programming for Information Systems',
+    },
+    institution: {
+      es: 'Servicio Nacional de Aprendizaje (SENA)',
+      en: 'National Learning Service (SENA)',
+    },
+    summary: {
+      es: 'Fundamentos de programación y análisis de sistemas.',
+      en: 'Foundations of programming and systems analysis.',
+    },
+    logo: '/images/education/sena/sena-logo.png',
+    certificate: '/images/education/sena/02certificadoAprobacionMetodologiaDeLaProgramacionDeSistemasInformaticos.png',
   },
   {
     id: 'platzi-backend-intro',
@@ -121,8 +172,8 @@ const highlightedCoursesData: HighlightedCourse[] = [
       en: 'Platzi',
     },
     summary: {
-      es: 'Fundamentos para crear APIs robustas y servicios escalables.',
-      en: 'Foundations for building robust APIs and scalable services.',
+      es: 'Conceptos fundamentales sobre servidores, APIs y bases de datos.',
+      en: 'Fundamental concepts of servers, APIs, and databases.',
     },
     logo: '/images/education/platzi/platzi-logo.png',
     certificate: '/images/education/platzi/26DiplomaDelCursoDeIntroduccinAlDesarrolloBackend.png',
@@ -138,28 +189,62 @@ const highlightedCoursesData: HighlightedCourse[] = [
       en: 'Platzi',
     },
     summary: {
-      es: 'Dominio de consultas, modelado y optimización de bases relacionales.',
-      en: 'Mastery of querying, modelling and optimising relational databases.',
+      es: 'Diseño, consultas y gestión eficiente de bases de datos relacionales.',
+      en: 'Design, querying, and efficient management of relational databases.',
     },
     logo: '/images/education/platzi/platzi-logo.png',
     certificate: '/images/education/platzi/27DiplomaDelCursoDeBasesDeDatosConSql.png',
   },
   {
-    id: 'sena-mysql',
+    id: 'platzi-audiocurso-arquitecturas-frontend',
     title: {
-      es: 'Construcción de Bases de Datos con MySQL',
-      en: 'MySQL Database Construction',
+      es: 'Audiocurso de Frameworks y Arquitecturas Frontend: Casos de Estudio',
+      en: 'Audio Course: Frontend Frameworks and Architectures – Case Studies',
     },
     institution: {
-      es: 'Servicio Nacional de Aprendizaje (SENA)',
-      en: 'National Learning Service (SENA)',
+      es: 'Platzi',
+      en: 'Platzi',
     },
     summary: {
-      es: 'Diseño e implementación de soluciones relacionales en MySQL.',
-      en: 'Design and implementation of relational solutions in MySQL.',
+      es: 'Análisis de arquitecturas y frameworks modernos de frontend.',
+      en: 'Analysis of modern frontend architectures and frameworks.',
     },
-    logo: '/images/education/sena/sena-logo.png',
-    certificate: '/images/education/sena/03certificadoAprobacionConstruccionDeBasesDeDatosConMysql.png',
+    logo: '/images/education/platzi/platzi-logo.png',
+    certificate: '/images/education/platzi/53%20diploma-arquitectura-frontend.jpg',
+  },
+  {
+    id: 'platzi-frameworks-librerias-js',
+    title: {
+      es: 'Curso de Frameworks y Librerías de JavaScript',
+      en: 'JavaScript Frameworks and Libraries Course',
+    },
+    institution: {
+      es: 'Platzi',
+      en: 'Platzi',
+    },
+    summary: {
+      es: 'Comprensión de frameworks y librerías del ecosistema JavaScript.',
+      en: 'Understanding frameworks and libraries in the JavaScript ecosystem.',
+    },
+    logo: '/images/education/platzi/platzi-logo.png',
+    certificate: '/images/education/platzi/52%20diploma-frameworks-javascript.jpg',
+  },
+  {
+    id: 'platzi-git-github',
+    title: {
+      es: 'Curso Profesional de Git y GitHub',
+      en: 'Professional Git and GitHub Course',
+    },
+    institution: {
+      es: 'Platzi',
+      en: 'Platzi',
+    },
+    summary: {
+      es: 'Control de versiones, repositorios y colaboración profesional.',
+      en: 'Version control, repositories, and professional collaboration.',
+    },
+    logo: '/images/education/platzi/platzi-logo.png',
+    certificate: '/images/education/platzi/09DiplomaGitGithub.png',
   },
 ];
 
