@@ -225,6 +225,18 @@ body {
 
   /* Tipografía moderna, neutra (igual que palette1) */
   --main-font-family: "Inter", "Segoe UI", arial, sans-serif;
+  /* Ajustes adicionales específicos para modo claro (palette4)
+     - Variables para botones, hovers y contrastes que no estaban
+       definidas y causaban problemas de legibilidad en modo claro. */
+  --button-bg-color: transparent; /* botones por defecto: transparente sobre fondo claro */
+  --button-hover-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+  --primary-hover-color: color-mix(in srgb, var(--primary-color) 85%, transparent);
+  --accent-hover-color: color-mix(in srgb, var(--accent-color) 85%, transparent);
+  --accent-border-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
+  --muted-border-color: color-mix(in srgb, var(--text-color) 10%, transparent);
+  /* Asegurar suficiente contraste para textos sobre fondos claros */
+  --text-on-primary: #ffffff; /* texto dentro de botones/accent */
+  --text-on-card: #1f2937; /* texto sobre tarjetas blancas */
 }
 
 /* palette5 */
