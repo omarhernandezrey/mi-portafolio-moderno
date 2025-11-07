@@ -24,6 +24,7 @@ interface EducationItem {
   logo: string;
   certificate?: string | null;
   completionTimestamp?: number | null;
+  isNew?: boolean;
 }
 
 const INITIAL_VISIBLE_ITEMS = 8;
@@ -230,6 +231,23 @@ const highlightedCoursesData: HighlightedCourse[] = [
     certificate: '/images/education/platzi/52%20diploma-frameworks-javascript.jpg',
   },
   {
+    id: 'platzi-curso-react-2023',
+    title: {
+      es: 'Curso de React.js',
+      en: 'React.js Course',
+    },
+    institution: {
+      es: 'Platzi',
+      en: 'Platzi',
+    },
+    summary: {
+      es: 'Construcción de interfaces dinámicas con hooks, estado y buenas prácticas en React.',
+      en: 'Building dynamic interfaces with hooks, state, and React best practices.',
+    },
+    logo: '/images/education/platzi/platzi-logo.png',
+    certificate: '/images/education/platzi/54 diploma-react.jpg',
+  },
+  {
     id: 'platzi-git-github',
     title: {
       es: 'Curso Profesional de Git y GitHub',
@@ -339,10 +357,13 @@ const getLocalizedEducationData = (data: typeof educationData, language: string)
           logo: item.logo,
           certificate: item.certificate,
           completionTimestamp,
+          isNew: Boolean(item.isNew),
         };
       }),
     )
     .sort((a, b) => {
+      if (a.isNew && !b.isNew) return -1;
+      if (!a.isNew && b.isNew) return 1;
       const aDate = a.completionTimestamp ?? Number.NEGATIVE_INFINITY;
       const bDate = b.completionTimestamp ?? Number.NEGATIVE_INFINITY;
       if (aDate === bDate) return 0;
@@ -419,7 +440,7 @@ const EducationSection = () => {
     [language],
   );
   const totalItems = allItems.length;
-  const latestItem = allItems[0] ?? null;
+  const latestItem = allItems.find((item) => item.isNew) ?? allItems[0] ?? null;
   const currentLanguage = language === 'en' ? 'en' : 'es';
   const fallbackTotalLabel = currentLanguage === 'en'
     ? `${totalItems} courses completed`
@@ -1673,7 +1694,7 @@ const EducationSection = () => {
 
             {visibleItems.map((item, index) => {
               const alignment = index % 2 === 0 ? "right" : "left";
-              const isLatest = Boolean(latestItem && item === latestItem);
+              const isLatest = Boolean(item.isNew || (latestItem && item === latestItem));
               const itemNumber = Math.max(totalItems - index, 1);
 
               return (

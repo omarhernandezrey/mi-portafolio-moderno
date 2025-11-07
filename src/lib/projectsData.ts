@@ -20,6 +20,30 @@ export interface Project {
 
 export const projectsData: Project[] = [
       {
+  title: {
+    es: "Proyecto React.js - Aplicación Web lista de Tareas",
+    en: "React.js Project - Interactive Web Application"
+  },
+  description: {
+    es: "Proyecto práctico desarrollado durante el Curso de React.js en Platzi. Implementa componentes funcionales, hooks, enrutamiento, manejo de estado y diseño responsive. Desplegado en Vercel como demostración de una aplicación moderna y escalable.",
+    en: "Practical project developed during the React.js Course at Platzi. Implements functional components, hooks, routing, state management, and responsive design. Deployed on Vercel as a demonstration of a modern and scalable application."
+  },
+  technologies: [
+    "React",
+    "JavaScript",
+    "HTML5",
+    "CSS3",
+    "Vercel"
+  ],
+  repository: "https://github.com/omarhernandezrey/54-Curso-de-React.js",
+  demo: "https://54-curso-de-react-js.vercel.app/",
+  category: {
+    es: "Frontend",
+    en: "Frontend"
+  }
+},
+
+      {
       title: {
         es: "Lanyard 3D - Componente Interactivo con Física",
         en: "Lanyard 3D - Interactive Physics Component"

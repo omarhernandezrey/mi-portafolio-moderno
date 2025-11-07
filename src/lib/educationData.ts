@@ -19,6 +19,7 @@ interface EducationItem {
   } | string;
   logo: string;
   certificate?: string | null;
+  isNew?: boolean;
 }
 
 interface EducationCategory {
@@ -256,13 +257,35 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png",
       },
+      // Platzi Courses
 
-      // 1 Platzi
-            {
-              title: {
-                es: "Audiocurso de Frameworks y Arquitecturas Frontend: Casos de Estudio",
-                en: "Frontend Frameworks and Architectures: Case Studies Audiocourse"
-              },
+      {
+        title: {
+          es: "Curso de React.js",
+          en: "React.js Course"
+        },
+        institution: {
+          es: "Platzi",
+          en: "Platzi"
+        },
+        duration: {
+          es: "25 horas (Aprobado el 13 de noviembre de 2023)",
+          en: "25 hours (Approved on November 13, 2023)"
+        },
+        description: {
+          es: "Curso enfocado en el desarrollo de aplicaciones web modernas utilizando React.js. Cubre componentes funcionales, manejo de estado, hooks, ciclo de vida, enrutamiento y mejores prácticas para construir interfaces de usuario dinámicas y mantenibles.",
+          en: "Course focused on developing modern web applications using React.js. It covers functional components, state management, hooks, lifecycle, routing, and best practices for building dynamic and maintainable user interfaces."
+        },
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/54 diploma-react.jpg",
+        isNew: true,
+      },
+
+      {
+        title: {
+          es: "Audiocurso de Frameworks y Arquitecturas Frontend: Casos de Estudio",
+          en: "Frontend Frameworks and Architectures: Case Studies Audiocourse"
+        },
               institution: {
                 es: "Platzi",
                 en: "Platzi"

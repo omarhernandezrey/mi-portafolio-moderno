@@ -3,9 +3,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { FaTimes, FaLinkedin, FaShare } from "react-icons/fa";
+import { FaTimes, FaCopy, FaCheck } from "react-icons/fa";
 import { Transition } from "@headlessui/react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useLinkedInCertificateShare } from "@/hooks/useLinkedInShare";
 
 interface EducationModalProps {
   isOpen: boolean;
@@ -34,6 +35,15 @@ const EducationModal: React.FC<EducationModalProps> = ({
   const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
   const modalRootRef = useRef<HTMLElement | null>(null);
+  const { copyCertificateToClipboard } = useLinkedInCertificateShare({
+    certificate: {
+      title,
+      institution,
+      duration,
+      description,
+      certificate,
+    },
+  });
 
   // Asegurar portal en body para evitar stacking contexts
   useEffect(() => {
@@ -98,61 +108,15 @@ const EducationModal: React.FC<EducationModalProps> = ({
   }, [isOpen, onClose]);
 
   // Función para compartir en LinkedIn - IGUAL que en proyectos
-  const handleShareToLinkedIn = () => {
-    setCopied(true);
-    
-    // Generar texto para LinkedIn igual que en LinkedInShareButton
-    const portfolioUrl = "https://omarh-portafolio-web.vercel.app";
-    
-    const linkedInText = `🎓 ¡Nuevo certificado obtenido!
-
-💼 🔍 DISPONIBLE PARA OPORTUNIDADES LABORALES COMO DESARROLLADOR WEB 🔍 💼
-
-📜 ${title}
-🏛️ ${institution}
-📅 ${duration}
-
-📋 Descripción:
-${description}
-
-✨ Este certificado forma parte de mi formación continua como desarrollador web, demostrando mi compromiso con el aprendizaje y la excelencia profesional.
-
-🌐 Conoce más sobre mi formación y proyectos en: ${portfolioUrl}
-
-🎯 BUSCO TRABAJO COMO DESARROLLADOR WEB - ¡Contáctame si tienes una oportunidad!
-
-#OpenToWork #WebDeveloper #HiringMe #BuscoTrabajo #Certificacion #FormacionContinua #WebDevelopment #Developer #Frontend #Backend #FullStack #EducacionTecnologica #DesarrolloProfesional`;
-
-    const text = encodeURIComponent(linkedInText);
-    
-    // Usar URL simplificada que mantiene opciones de imagen - IGUAL que proyectos
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(portfolioUrl)}&text=${text}`;
-    
-    // Abrir en ventana centrada y más grande - IGUAL que proyectos
-    const popup = window.open(
-      linkedInUrl,
-      'linkedin-share',
-      'width=700,height=600,scrollbars=yes,resizable=yes,left=' + 
-      (window.screen.width / 2 - 350) + ',top=' + (window.screen.height / 2 - 300)
-    );
-
-    if (popup) {
-      popup.focus();
+  const handleCopyInformation = async () => {
+    if (copied) return;
+    const copiedOk = await copyCertificateToClipboard();
+    if (!copiedOk) {
+      alert(t('education.copyError'));
+      return;
     }
-
-    // Detectar cuando se cierra la ventana - IGUAL que proyectos
-    const checkClosed = setInterval(() => {
-      if (popup?.closed) {
-        setCopied(false);
-        clearInterval(checkClosed);
-      }
-    }, 1000);
-
-    // Timeout de seguridad - IGUAL que proyectos
-    setTimeout(() => {
-      setCopied(false);
-      clearInterval(checkClosed);
-    }, 10000);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   if (!mounted || !modalRootRef.current) return null;
@@ -245,11 +209,11 @@ ${description}
                 {description}
               </p>
 
-              {/* Botón de LinkedIn - IGUAL que en proyectos */}
+              {/* Botón para copiar información del curso */}
               {certificate && (
                 <div className="flex justify-center mb-6">
                   <button
-                    onClick={handleShareToLinkedIn}
+                    onClick={handleCopyInformation}
                     disabled={copied}
                     className="group relative flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed w-full max-w-[280px]"
                     style={{
@@ -259,25 +223,25 @@ ${description}
                       color: '#0a66c2',
                       border: '1px solid rgba(10, 102, 194, 0.2)',
                     }}
-                    title={t('education.shareLinkedIn')}
+                    title={copied ? t('education.copied') : t('education.copyInfo')}
                   >
                     {/* Icono animado */}
                     <div
                       style={{
-                        transform: copied ? 'rotate(360deg) scale(1.1)' : 'rotate(0deg) scale(1)',
-                        transition: 'transform 0.5s',
+                        transform: copied ? 'scale(1.1)' : 'scale(1)',
+                        transition: 'transform 0.3s',
                       }}
                     >
                       {copied ? (
-                        <FaShare size={16} />
+                        <FaCheck size={16} />
                       ) : (
-                        <FaLinkedin size={16} />
+                        <FaCopy size={16} />
                       )}
                     </div>
 
                     {/* Texto del botón */}
                     <span className="group-hover:text-[#0a66c2] transition-colors duration-300">
-                      {copied ? t('education.sharing') : t('education.shareLinkedIn')}
+                      {copied ? t('education.copied') : t('education.copyInfo')}
                     </span>
 
                     {/* Icono de enlace externo */}

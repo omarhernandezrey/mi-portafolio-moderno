@@ -5,6 +5,40 @@
 
 import { useCallback, useMemo } from 'react';
 
+const buildAbsoluteUrl = (path: string, base?: string) => {
+  if (!path) return base ?? '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (!base) return path;
+  return `${base.replace(/\/$/, '')}${path.startsWith('/') ? path : `/${path}`}`;
+};
+
+const buildShareArticleUrl = ({
+  url,
+  title,
+  summary,
+  source,
+}: {
+  url: string;
+  title: string;
+  summary: string;
+  source?: string;
+}) => {
+  const share = new URL('https://www.linkedin.com/shareArticle');
+  share.searchParams.set('mini', 'true');
+  share.searchParams.set('url', url);
+  share.searchParams.set('title', title);
+  share.searchParams.set('summary', summary);
+  if (source) {
+    share.searchParams.set('source', source);
+  }
+  return share.toString();
+};
+
+const truncateForLinkedIn = (text: string, maxLength = 1200) => {
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength - 3)}...`;
+};
+
 interface ProjectData {
   title: string;
   description: string;
@@ -83,29 +117,37 @@ ${authorName ? `Desarrollado por: ${authorName}` : ''}
       console.log('No se pudo copiar al portapapeles:', error);
     }
 
-    // 2. Abrir LinkedIn directamente en el feed principal (mantiene todas las opciones)
-    const linkedinUrl = 'https://www.linkedin.com/feed/';
-    
-    // Abrir en nueva pestaña
-    const newWindow = window.open(linkedinUrl, '_blank');
+    const sharedUrl = project.demo || portfolioUrl;
+    const linkedInShareUrl = buildShareArticleUrl({
+      url: sharedUrl,
+      title: `${project.title} – Proyecto destacado`,
+      summary: truncateForLinkedIn(linkedInMessage),
+      source: authorName,
+    });
+    const width = 720;
+    const height = 640;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    const shareWindow = window.open(
+      linkedInShareUrl,
+      'linkedin-share',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no`
+    );
 
-    if (newWindow) {
-      newWindow.focus();
-      
-      // Mostrar instrucciones después de un momento
+    if (shareWindow) {
+      shareWindow.focus();
       setTimeout(() => {
-        alert(`✅ LinkedIn abierto en nueva pestaña!
+        alert(`✅ Ventana de LinkedIn abierta con el proyecto adjunto.
 
 📋 INSTRUCCIONES:
-1. Haz clic en "Empezar una publicación"
-2. Pega el texto (Ctrl+V) - ya está copiado
-3. Agrega imagen usando las opciones de LinkedIn
-4. ¡Publica y muestra que buscas trabajo!
-
-💡 El mensaje incluye que buscas trabajo como desarrollador web.`);
+1. Pega el texto (Ctrl+V) - ya está copiado
+2. Revisa la vista previa y agrega una imagen si lo deseas
+3. Publica para compartir tu disponibilidad laboral`);
       }, 1500);
+    } else {
+      window.location.href = linkedInShareUrl;
     }
-  }, [linkedInMessage]);
+  }, [linkedInMessage, project.demo, portfolioUrl]);
 
   // ► Función alternativa para copiar texto solamente
   const copyToClipboard = useCallback(async () => {
@@ -174,6 +216,18 @@ ${authorName ? `\n👨‍💻 ${authorName}` : ''}
   }, [certificate, portfolioUrl, authorName]);
 
   // ► Función para compartir certificado
+  const certificateShareUrl = useMemo(() => {
+    const preferred = certificate.certificate
+      ? buildAbsoluteUrl(certificate.certificate, portfolioUrl)
+      : portfolioUrl;
+    return buildShareArticleUrl({
+      url: preferred ?? portfolioUrl,
+      title: `${certificate.title} – ${certificate.institution}`,
+      summary: truncateForLinkedIn(certificateMessage),
+      source: authorName,
+    });
+  }, [certificate.certificate, portfolioUrl, certificateMessage, certificate.title, certificate.institution, authorName]);
+
   const shareCertificateToLinkedIn = useCallback(async () => {
     try {
       // Copiar mensaje al portapapeles
@@ -185,26 +239,30 @@ ${authorName ? `\n👨‍💻 ${authorName}` : ''}
       console.log('No se pudo copiar al portapapeles:', error);
     }
 
-    // Abrir LinkedIn
-    const linkedinUrl = 'https://www.linkedin.com/feed/';
-    const newWindow = window.open(linkedinUrl, '_blank');
+    const width = 720;
+    const height = 640;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    const newWindow = window.open(
+      certificateShareUrl,
+      'linkedin-share',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no`
+    );
 
     if (newWindow) {
       newWindow.focus();
-      
       setTimeout(() => {
-        alert(`🎓 ¡LinkedIn abierto para compartir tu certificado!
+        alert(`🎓 Ventana de LinkedIn lista con tu certificado.
 
 📋 INSTRUCCIONES:
-1. Haz clic en "Empezar una publicación"
-2. Pega el texto (Ctrl+V) - ya está copiado
-3. Agrega imagen de tu certificado con las opciones de LinkedIn
-4. ¡Muestra tu nueva certificación y que buscas trabajo!
-
-💡 El mensaje incluye todos los detalles del certificado y que buscas trabajo.`);
-      }, 1500);
+1. Pega el texto (Ctrl+V) - ya está copiado
+2. Verifica la vista previa (ya contiene el enlace adjunto)
+3. ¡Publica y destaca tu nueva certificación!`);
+      }, 1200);
+    } else {
+      window.location.href = certificateShareUrl;
     }
-  }, [certificateMessage]);
+  }, [certificateMessage, certificateShareUrl]);
 
   // ► Función para copiar solo el mensaje
   const copyCertificateToClipboard = useCallback(async () => {

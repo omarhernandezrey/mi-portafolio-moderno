@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import { FaLinkedin, FaShare, FaExternalLinkAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useLinkedInShare } from "@/hooks/useLinkedInShare";
 
 interface Project {
   title: string;
@@ -24,73 +25,21 @@ const LinkedInShareButton: React.FC<LinkedInShareButtonProps> = ({
   className = "",
 }) => {
   const [isSharing, setIsSharing] = useState(false);
+  const { shareToLinkedIn } = useLinkedInShare({ project });
 
-  // Función para generar el texto del post de LinkedIn
-  const generateLinkedInText = () => {
-    const portfolioUrl = "https://omarh-portafolio-web.vercel.app";
-    
-    const linkedInText = `🚀 ¡Quiero compartir mi nuevo proyecto: "${project.title}"!
-
-💼 🔍 DISPONIBLE PARA OPORTUNIDADES LABORALES COMO DESARROLLADOR WEB 🔍 💼
-
-📋 ${project.description}
-
-💻 Tecnologías utilizadas:
-${project.technologies.map(tech => `• ${tech}`).join('\n')}
-
-🔗 Enlaces:
-• Demo en vivo: ${project.demo}
-• Código fuente: ${project.repository}
-• Mi portafolio: ${portfolioUrl}
-
-🎯 BUSCO TRABAJO COMO DESARROLLADOR WEB - ¡Contáctame si tienes una oportunidad!
-
-#OpenToWork #WebDeveloper #HiringMe #BuscoTrabajo #WebDevelopment #${project.category.replace(/\s+/g, '')} #Programming #Frontend #Developer #Tech #Innovation #FullStack
-${project.technologies.map(tech => `#${tech.replace(/[^a-zA-Z0-9]/g, '')}`).join(' ')}`;
-
-    return linkedInText;
-  };
-
-  // Función para abrir LinkedIn con el post prellenado
-  const shareToLinkedIn = () => {
+  const handleShare = async () => {
+    if (isSharing) return;
     setIsSharing(true);
-    
-    const text = encodeURIComponent(generateLinkedInText());
-    const portfolioUrl = "https://omarh-portafolio-web.vercel.app";
-    
-    // Usar URL simplificada que mantiene opciones de imagen
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(portfolioUrl)}&text=${text}`;
-    
-    // Abrir en ventana centrada y más grande
-    const popup = window.open(
-      linkedInUrl,
-      'linkedin-share',
-      'width=700,height=600,scrollbars=yes,resizable=yes,left=' + 
-      (window.screen.width / 2 - 350) + ',top=' + (window.screen.height / 2 - 300)
-    );
-
-    if (popup) {
-      popup.focus();
+    try {
+      await shareToLinkedIn();
+    } finally {
+      setTimeout(() => setIsSharing(false), 3000);
     }
-
-    // Detectar cuando se cierra la ventana
-    const checkClosed = setInterval(() => {
-      if (popup?.closed) {
-        setIsSharing(false);
-        clearInterval(checkClosed);
-      }
-    }, 1000);
-
-    // Timeout de seguridad
-    setTimeout(() => {
-      setIsSharing(false);
-      clearInterval(checkClosed);
-    }, 10000);
   };
 
   return (
     <motion.button
-      onClick={shareToLinkedIn}
+      onClick={handleShare}
       disabled={isSharing}
       className={`group relative flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
       style={{
