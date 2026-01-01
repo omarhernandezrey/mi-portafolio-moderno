@@ -108,7 +108,7 @@ const AboutSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="relative min-h-screen py-32 px-4 overflow-hidden"
+      className="relative min-h-screen py-32 px-2 sm:px-4 overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
@@ -218,7 +218,7 @@ const AboutSection: React.FC = () => {
 
       {/* ───────── Contenido principal ───────── */}
       <motion.div
-        className="relative z-10 mx-auto max-w-6xl"
+        className="relative z-10 mx-auto max-w-full sm:max-w-7xl px-2 sm:px-4"
         style={{ opacity }}
       >
         {/* Grid principal (foto + texto) */}
@@ -363,7 +363,7 @@ const AboutSection: React.FC = () => {
             />
 
             {/* Datos personales */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6">
               {personalData.map((item, index) => (
                 <motion.div
                   key={index}
@@ -447,14 +447,14 @@ const AboutSection: React.FC = () => {
           </div>
 
           {/* Tarjetas de intereses */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-6">
             {interests.map((interest, index) => (
               <motion.a
                 key={interest}
                 href={interestLinks[interest] || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center text-center p-6 h-36 rounded-3xl border backdrop-blur-xl transition-all duration-500"
+                className="group relative flex flex-col items-center justify-center text-center p-2 sm:p-4 md:p-6 h-24 sm:h-32 md:h-36 rounded-xl sm:rounded-2xl md:rounded-3xl border backdrop-blur-xl transition-all duration-500"
                 style={{
                   backgroundColor:
                     hoveredInterest === interest
@@ -496,7 +496,7 @@ const AboutSection: React.FC = () => {
                 {/* Contenido */}
                 <div className="relative z-10 flex flex-col items-center h-full justify-center">
                   <motion.div
-                    className="text-3xl mb-3"
+                    className="text-xl sm:text-2xl md:text-3xl mb-1 sm:mb-2 md:mb-3"
                     style={{ color: "var(--primary-color)" }}
                     animate={{
                       scale: hoveredInterest === interest ? 1.2 : 1,
@@ -507,7 +507,7 @@ const AboutSection: React.FC = () => {
                     {technologyIcons[interest] || <span>★</span>}
                   </motion.div>
                   <span
-                    className="text-sm font-medium transition-colors duration-300"
+                    className="text-xs sm:text-sm font-medium transition-colors duration-300"
                     style={{
                       color:
                         hoveredInterest === interest

@@ -12,7 +12,19 @@ import {
   FaGithub,
   FaMicrophone,
 } from "react-icons/fa";
-import { SiTailwindcss, SiTypescript, SiVercel, SiAxios } from "react-icons/si";
+import { 
+  SiTailwindcss, 
+  SiTypescript, 
+  SiVercel, 
+  SiAxios,
+  SiPrisma,
+  SiPostgresql,
+  SiRedis,
+  SiZod,
+  SiVitest,
+  SiThreedotjs,
+  SiNetlify,
+} from "react-icons/si";
 import { MdPhoneIphone } from "react-icons/md";
 import { BsFiletypeScss } from "react-icons/bs";
 import { DiResponsive } from "react-icons/di";
@@ -95,6 +107,65 @@ const technologyIcons: Record<string, JSX.Element> = {
   ),
   Axios: (
     <SiAxios style={{ color: "#4b5563", width: "48px", height: "48px" }} />
+  ),
+
+  // Nuevas tecnologías agregadas
+  "Next.js 14": (
+    <RiNextjsFill style={{ color: "#000", width: "48px", height: "48px" }} />
+  ),
+  "React 18": (
+    <FaReact style={{ color: "#3b82f6", width: "48px", height: "48px" }} />
+  ),
+  "Prisma ORM": (
+    <SiPrisma style={{ color: "#2d3748", width: "48px", height: "48px" }} />
+  ),
+  Prisma: (
+    <SiPrisma style={{ color: "#2d3748", width: "48px", height: "48px" }} />
+  ),
+  PostgreSQL: (
+    <SiPostgresql style={{ color: "#336791", width: "48px", height: "48px" }} />
+  ),
+  Redis: (
+    <SiRedis style={{ color: "#dc2626", width: "48px", height: "48px" }} />
+  ),
+  "Tailwind CSS 4": (
+    <SiTailwindcss style={{ color: "#14b8a6", width: "48px", height: "48px" }} />
+  ),
+  Zod: (
+    <SiZod style={{ color: "#3b82f6", width: "48px", height: "48px" }} />
+  ),
+  JWT: (
+    <FaCode style={{ color: "#fb923c", width: "48px", height: "48px" }} />
+  ),
+  Vitest: (
+    <SiVitest style={{ color: "#6d9f00", width: "48px", height: "48px" }} />
+  ),
+  OpenAPI: (
+    <FaCloudSun style={{ color: "#85ea2d", width: "48px", height: "48px" }} />
+  ),
+  "Three.js": (
+    <SiThreedotjs style={{ color: "#000", width: "48px", height: "48px" }} />
+  ),
+  Rapier: (
+    <FaRobot style={{ color: "#f59e0b", width: "48px", height: "48px" }} />
+  ),
+  "@react-three/fiber": (
+    <FaReact style={{ color: "#3b82f6", width: "48px", height: "48px" }} />
+  ),
+  "@react-three/drei": (
+    <FaReact style={{ color: "#14b8a6", width: "48px", height: "48px" }} />
+  ),
+  "@react-three/rapier": (
+    <FaReact style={{ color: "#f59e0b", width: "48px", height: "48px" }} />
+  ),
+  "Web Components": (
+    <FaCode style={{ color: "#6366f1", width: "48px", height: "48px" }} />
+  ),
+  "Vercel, netlify": (
+    <SiVercel style={{ color: "#000", width: "48px", height: "48px" }} />
+  ),
+  Netlify: (
+    <SiNetlify style={{ color: "#00c7b7", width: "48px", height: "48px" }} />
   ),
 
   // Intereses personales

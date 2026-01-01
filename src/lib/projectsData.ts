@@ -16,9 +16,73 @@ export interface Project {
     es: string;
     en: string;
   };
+  features?: {
+    es: string[];
+    en: string[];
+  };
 }
 
 export const projectsData: Project[] = [
+{
+  title: {
+    es: "Diccionario Dev - Diccionario Técnico Web en Español",
+    en: "Diccionario Dev - Spanish Technical Web Dictionary"
+  },
+  description: {
+    es: "Plataforma completa de aprendizaje para desarrollo web con más de 200 términos técnicos en español. Incluye búsqueda inteligente, preview interactivo de código, módulos de entrenamiento (quizzes, entrevistas en vivo), sistema de autenticación JWT, panel de administración, API REST documentada con OpenAPI, extensiones para navegador y VS Code. Desplegado en Vercel con PostgreSQL, Redis y arquitectura escalable.",
+    en: "Comprehensive web development learning platform with over 200 technical terms in Spanish. Features intelligent search, interactive code preview, training modules (quizzes, live interviews), JWT authentication system, admin panel, OpenAPI-documented REST API, browser and VS Code extensions. Deployed on Vercel with PostgreSQL, Redis and scalable architecture."
+  },
+  technologies: [
+    "Next.js 14",
+    "React 18",
+    "TypeScript",
+    "Prisma ORM",
+    "PostgreSQL",
+    "Redis",
+    "Tailwind CSS 4",
+    "Zod",
+    "JWT",
+    "Vitest",
+    "OpenAPI",
+    "Vercel"
+  ],
+  repository: "https://github.com/omarhernandezrey/diccionario-dev",
+  demo: "https://diccionario-dev-xi.vercel.app/",
+  category: {
+    es: "Full Stack",
+    en: "Full Stack"
+  },
+  features: {
+    es: [
+      "200+ términos técnicos en español con traducciones",
+      "Preview interactivo para HTML/CSS/JavaScript/Tailwind",
+      "Sistema de autenticación JWT con cookies HttpOnly",
+      "Panel de administración completo (CRUD)",
+      "Módulos de entrenamiento: quizzes y entrevistas en vivo",
+      "API REST documentada con OpenAPI",
+      "Rate limiting con Redis",
+      "Extensiones oficiales (navegador y VS Code)",
+      "Modo offline con Service Worker",
+      "Sistema de favoritos y historial",
+      "Rutas SEO optimizadas por término",
+      "Testing con Vitest y 60%+ cobertura"
+    ],
+    en: [
+      "200+ technical terms in Spanish with translations",
+      "Interactive preview for HTML/CSS/JavaScript/Tailwind",
+      "JWT authentication system with HttpOnly cookies",
+      "Full admin panel (CRUD)",
+      "Training modules: quizzes and live interviews",
+      "OpenAPI-documented REST API",
+      "Rate limiting with Redis",
+      "Official extensions (browser and VS Code)",
+      "Offline mode with Service Worker",
+      "Favorites and history system",
+      "SEO-optimized routes per term",
+      "Testing with Vitest and 60%+ coverage"
+    ]
+  }
+},
       {
   title: {
     es: "Proyecto React.js - Aplicación Web lista de Tareas",

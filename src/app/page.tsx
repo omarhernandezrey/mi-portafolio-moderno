@@ -2,6 +2,7 @@ import React from "react";
 import "./globals.css"; // Import global styles
 import HeroSection from "../components/sections/HeroSection";
 import AboutSection from "../components/sections/AboutSection";
+import TechMarquee from "../components/sections/TechMarquee";
 import EducationSection from "../components/sections/EducationSection";
 import ServicesSection from "../components/sections/ServicesSection";
 import SkillSection from "../components/sections/SkillSection";
@@ -14,6 +15,7 @@ export default function Home() {
     <>
       <HeroSection />
       <AboutSection />
+      <TechMarquee />
       <EducationSection />
       <SkillSection />
       <ServicesSection />

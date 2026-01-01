@@ -57,7 +57,7 @@ export default function ServicesSection() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative min-h-screen py-32 px-4 overflow-hidden"
+      className="relative min-h-screen py-32 px-2 sm:px-4 overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
@@ -149,7 +149,7 @@ export default function ServicesSection() {
 
       {/* Contenido principal */}
       <motion.div
-        className="relative z-10 max-w-7xl mx-auto"
+        className="relative z-10 max-w-full sm:max-w-7xl mx-auto px-2 sm:px-4"
         style={{ opacity }}
       >
         {/* Encabezado */}
@@ -194,7 +194,7 @@ export default function ServicesSection() {
         </motion.div>
 
         {/* Grid de servicios */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {localizedServices.map((service, index) => (
             <motion.div
               key={index}
@@ -213,7 +213,7 @@ export default function ServicesSection() {
             >
               {/* Tarjeta de servicio */}
               <motion.div
-                className="relative h-full p-8 rounded-3xl border backdrop-blur-xl transition-all duration-500"
+                className="relative h-full p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl border backdrop-blur-xl transition-all duration-500"
                 style={{
                   backgroundColor:
                     hoveredIndex === index

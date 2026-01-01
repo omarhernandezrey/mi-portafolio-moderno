@@ -168,26 +168,30 @@ const Card: React.FC<CardProps> = ({
         
         {/* Tecnologías */}
         {technologies && technologies.length > 0 && (
-          <div className="flex justify-center gap-2 mt-4">
-            {technologies.map((tech, index) => (
-              <div
-                key={index}
-                className="group relative flex flex-col items-center cursor-pointer"
-              >
-                {technologyIcons[tech] ? (
-                  <div className="transform transition-transform group-hover:scale-110">
-                    {technologyIcons[tech]}
-                  </div>
-                ) : (
-                  <span className="text-[var(--accent-color)] text-sm font-medium">
+          <div className="mt-4 px-2">
+            <div className="flex flex-wrap justify-center gap-2 max-w-full overflow-hidden">
+              {technologies.map((tech, index) => (
+                <div
+                  key={index}
+                  className="group relative flex flex-col items-center cursor-pointer min-w-0"
+                >
+                  {technologyIcons[tech] ? (
+                    <div className="transform transition-transform group-hover:scale-110 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center">
+                      <div className="scale-[0.67] sm:scale-75 md:scale-100 origin-center">
+                        {technologyIcons[tech]}
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="text-[var(--accent-color)] text-xs sm:text-sm font-medium px-2 py-1 bg-[var(--secondary-background-color)] rounded">
+                      {tech}
+                    </span>
+                  )}
+                  <span className="absolute bottom-[-30px] opacity-0 group-hover:opacity-100 group-hover:translate-y-[-5px] bg-[var(--secondary-background-color)] text-[var(--text-color)] text-xs px-2 py-1 rounded transition-all whitespace-nowrap z-10">
                     {tech}
                   </span>
-                )}
-                <span className="absolute bottom-[-30px] opacity-0 group-hover:opacity-100 group-hover:translate-y-[-5px] bg-[var(--secondary-background-color)] text-[var(--text-color)] text-xs px-2 py-1 rounded transition-all">
-                  {tech}
-                </span>
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

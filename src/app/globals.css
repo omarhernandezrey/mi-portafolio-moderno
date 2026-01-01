@@ -667,13 +667,6 @@ textarea {
   backface-visibility: hidden;
 }
 
-/* Optimización para grids en móviles */
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
 /* Fix para flexbox en Safari iOS */
 .flex-container {
   display: flex;

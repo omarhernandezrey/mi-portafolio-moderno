@@ -221,7 +221,7 @@ export default function PremiumSkillsSection() {
     <section
       ref={sectionRef}
       id="skills"
-      className="relative min-h-screen py-32 px-4 overflow-hidden"
+      className="relative min-h-screen py-32 px-2 sm:px-4 overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
@@ -311,7 +311,7 @@ export default function PremiumSkillsSection() {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-full sm:max-w-7xl mx-auto px-2 sm:px-4">
         {/* cabecera */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -386,7 +386,7 @@ export default function PremiumSkillsSection() {
         </motion.div>
 
         {/* grilla de skills */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           <AnimatePresence>
             {filteredSkills.map((skill, idx) => {
               const currentValue = animatedValues[idx] || 0;
@@ -413,7 +413,7 @@ export default function PremiumSkillsSection() {
                 >
                   {/* tarjeta */}
                   <div
-                    className="relative h-full p-8 backdrop-blur-xl border rounded-3xl transition-all duration-500 transform-gpu"
+                    className="relative h-full p-4 sm:p-6 md:p-8 backdrop-blur-xl border rounded-2xl md:rounded-3xl transition-all duration-500 transform-gpu"
                     style={{
                       backgroundColor: hovered
                         ? "var(--card-bg-color)"
