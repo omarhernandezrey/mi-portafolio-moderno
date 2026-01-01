@@ -125,7 +125,7 @@ const TechMarquee: React.FC = () => {
   const duplicatedTechs = [...technologies, ...technologies];
 
   return (
-    <section className="relative w-full overflow-hidden py-12 sm:py-16 px-2 sm:px-4 bg-gradient-to-b from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)]">
+    <section className="relative w-full overflow-hidden py-12 sm:py-16 bg-gradient-to-b from-[var(--background-color)] via-[var(--secondary-background-color)] to-[var(--background-color)]">
       {/* Efectos de fondo */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--primary-color)] rounded-full blur-[120px] opacity-20 animate-pulse"></div>
@@ -152,10 +152,6 @@ const TechMarquee: React.FC = () => {
 
       {/* Contenedor principal del marquee */}
       <div className="relative isolate">
-        {/* Gradientes de desvanecimiento en los bordes */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-r from-[var(--background-color)] to-transparent z-[200] pointer-events-none"></div>
-        <div className="absolute right-0 top-0 bottom-0 w-32 md:w-48 bg-gradient-to-l from-[var(--background-color)] to-transparent z-[200] pointer-events-none"></div>
-
         {/* Primera fila - Izquierda a Derecha */}
         <motion.div
           className="flex gap-8 mb-8 relative z-10"
