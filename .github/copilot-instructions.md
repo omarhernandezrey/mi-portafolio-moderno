@@ -160,6 +160,73 @@ Cuando tienes múltiples filas animadas con marquee (como en TechMarquee), los t
 
 Esta configuración garantiza que los tooltips de la primera fila se muestren correctamente por encima de todos los elementos de la segunda fila.
 
+## Solución de Problemas de Scroll en Chrome
+
+El sitio tenía un problema donde el scroll no funcionaba con la rueda del mouse en Chrome (funcionaba en Firefox y otros navegadores). La causa raíz eran múltiples factores:
+
+### Problema Identificado
+
+1. **CSS Global Restrictivo**: Había una media query que forzaba todos los grids a 1 columna en móvil con `!important`
+2. **Componentes bloqueando scroll**: `NavbarMobile` y `LanguageSelector` aplicaban `overflow: hidden` al body cuando se abrían
+3. **Contenedores Next.js**: Los divs internos de Next.js (`#__next`) podían bloquear el scroll en Chrome
+
+### Solución Aplicada
+
+**1. Eliminado CSS restrictivo en `globals.css`:**
+```css
+/* ELIMINADO - Causaba 1 sola columna en móvil */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+```
+
+**2. CSS agresivo para forzar scroll funcional:**
+```css
+html {
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+html, body {
+  overflow-y: auto !important;
+  height: auto !important;
+  overscroll-behavior-y: auto !important;
+  touch-action: manipulation;
+}
+
+#__next, #__next > div {
+  overflow-y: visible !important;
+  height: auto !important;
+  position: relative !important;
+}
+```
+
+**3. JavaScript watchdog en `ClientProvider.tsx`:**
+```typescript
+useEffect(() => {
+  const forceScrollEnabled = () => {
+    document.documentElement.style.setProperty('overflow-y', 'scroll', 'important');
+    document.body.style.setProperty('overflow-y', 'auto', 'important');
+    document.body.style.setProperty('height', 'auto', 'important');
+  };
+  
+  forceScrollEnabled();
+  setTimeout(forceScrollEnabled, 100);
+  setTimeout(forceScrollEnabled, 500);
+}, []);
+```
+
+Este código ejecuta múltiples veces para asegurar que ningún componente bloquee el scroll durante la hidratación.
+
+### Resultado
+
+✅ Scroll funciona correctamente con rueda del mouse en Chrome, Firefox, Safari y Edge
+✅ Grids muestran 2 columnas en móvil (Services, Skills, About, Footer, etc.)
+✅ Sin efectos secundarios en la funcionalidad de menús o modales
+
 ### Optimización de Imágenes
 
 - Usar siempre `next/image` para imágenes

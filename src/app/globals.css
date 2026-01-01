@@ -20,17 +20,48 @@ html {
   text-size-adjust: 100%;
 }
 
+html {
+  /* Forzar scroll en todos los casos */
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  scroll-behavior: smooth;
+  /* Fix específico para Chrome */
+  -webkit-overflow-scrolling: touch;
+}
+
 html,
 body {
   font-family: var(--main-font-family);
   overflow-x: hidden !important;
+  overflow-y: auto !important;
   scroll-behavior: smooth;
   width: 100%;
+  height: auto !important;
+  min-height: 100vh;
   position: relative;
+  /* Asegurar que el scroll funcione en todos los dispositivos */
+  overscroll-behavior-y: auto !important;
+  touch-action: manipulation;
+  -webkit-overflow-scrolling: touch;
   /* Mejor rendering en móviles */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Forzar que todos los elementos no interfieran con el scroll */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Permitir scroll en todos los contenedores - FIX CHROME */
+#__next,
+#__next > div {
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh;
+  position: relative !important;
 }
 
 /* Utilidades para alturas de viewport confiables en móviles */

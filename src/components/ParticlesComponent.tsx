@@ -59,7 +59,6 @@ export default function ParticlesComponent() {
       "/images/logos/nodejs.svg",
       "/images/logos/postgresql.svg",
       "/images/logos/react-js.svg",
-      "/images/logos/sqlite.svg",
       "/images/logos/svelte.svg",
       "/images/logos/tailwind-css.svg",
       "/images/logos/typescript.svg",
