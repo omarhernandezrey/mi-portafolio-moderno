@@ -1,9 +1,40 @@
-// Education Data with 61 courses/certifications mapped to their respective image files
-export const educationData = [
+// /lib/educationData.ts
+
+interface EducationItem {
+  title: {
+    es: string;
+    en: string;
+  } | string;
+  institution: {
+    es: string;
+    en: string;
+  } | string;
+  duration: {
+    es: string;
+    en: string;
+  } | string;
+  description: {
+    es: string;
+    en: string;
+  } | string;
+  logo: string;
+  certificate?: string | null;
+  isNew?: boolean;
+}
+
+interface EducationCategory {
+  category: {
+    es: string;
+    en: string;
+  } | string;
+  items: EducationItem[];
+}
+
+export const educationData: EducationCategory[] = [
   {
     category: {
-      es: "Politécnico Grancolombiano",
-      en: "Politécnico Grancolombiano"
+      es: "Universidad",
+      en: "University"
     },
     items: [
       {
@@ -20,39 +51,169 @@ export const educationData = [
           en: "2023 - 2026"
         },
         description: {
-          es: "Programa de educación superior en Ingeniería de Software, formando profesionales capacitados para diseñar, desarrollar y gestionar soluciones de software en contextos empresariales y tecnológicos.",
-          en: "Higher education program in Software Engineering, training professionals capable of designing, developing and managing software solutions in business and technology contexts."
+          es: "Próximo a graduarme como Ingeniero de Software del Politécnico Grancolombiano, donde he desarrollado sólidas competencias en desarrollo de software, arquitectura de sistemas y metodologías ágiles.",
+          en: "About to graduate as a Software Engineer from Politécnico Grancolombiano, where I have developed solid competencies in software development, system architecture and agile methodologies."
         },
         logo: "/images/education/politecnico/politecnico-logo.png",
-        certificate: null
-      }
-    ]
+        certificate: null,
+      },
+    ],
   },
   {
     category: {
-      es: "SENA",
-      en: "SENA"
+      es: "Formación Técnica (SENA)",
+      en: "Technical Training (SENA)"
     },
     items: [
       {
         title: {
-          es: "Mentalidad de Líder",
-          en: "Leadership Mindset"
+          es: "Tecnólogo ADSI (SENA)",
+          en: "ADSI Technologist (SENA)"
         },
         institution: {
           es: "Servicio Nacional de Aprendizaje (SENA)",
           en: "National Learning Service (SENA)"
         },
         duration: {
-          es: "20 horas (Finalizado el 20 de enero de 2011)",
-          en: "20 hours (Completed on January 20, 2011)"
+          es: "Finalizado el 29 de noviembre de 2022",
+          en: "Completed on November 29, 2022"
         },
         description: {
-          es: "Programa de formación en desarrollo de habilidades de liderazgo, enfocado en construir mentalidades de líderes capaces de guiar equipos y organizaciones.",
-          en: "Leadership skills development training program, focused on building mindsets of leaders capable of guiding teams and organizations."
+          es: "Cursé y aprobé el programa de formación profesional integral en Análisis y Desarrollo de Sistemas de Información, donde desarrollé competencias en análisis, diseño, desarrollo, implementación y mantenimiento de sistemas informáticos, cumpliendo con los requisitos establecidos por el SENA.",
+          en: "I completed and passed the comprehensive professional training program in Information Systems Analysis and Development, where I developed competencies in analysis, design, development, implementation and maintenance of computer systems, meeting the requirements established by SENA."
         },
         logo: "/images/education/sena/sena-logo.png",
-        certificate: "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png"
+        certificate:
+          "/images/education/sena/01tecnologoEnTituloAnalisisYDesarrolloDeSistemasDeInformacion.png",
+      },
+    ],
+  },
+  {
+    category: {
+      es: "Talento Tech Bogotá",
+      en: "Talento Tech Bogotá"
+    },
+    items: [
+      {
+        title: {
+          es: "Bootcamp en Desarrollo Web Full Stack",
+          en: "Full Stack Web Development Bootcamp"
+        },
+        institution: {
+          es: "Talento Tech Bogotá - Ministerio TIC",
+          en: "Talento Tech Bogotá - Ministry of ICT"
+        },
+        duration: {
+          es: "159 horas (Finalizado el 27 de agosto de 2024)",
+          en: "159 hours (Completed on August 27, 2024)"
+        },
+        description: {
+          es: "Participé en el bootcamp de nivel avanzado en Desarrollo Web Full Stack, enfocado en adquirir competencias prácticas en tecnologías modernas para el desarrollo de aplicaciones web completas. Este programa se realizó en modalidad virtual.",
+          en: "I participated in the advanced level Full Stack Web Development bootcamp, focused on acquiring practical competencies in modern technologies for complete web application development. This program was conducted in virtual mode."
+        },
+        logo: "/images/education/talento-tech/talento-tech-logo.png",
+        certificate:
+          "/images/education/talento-tech/desarrolloWebFullStack_page-0001.jpg",
+      },
+    ],
+  },
+  {
+    category: {
+      es: "ITCertificate",
+      en: "ITCertificate"
+    },
+    items: [
+      {
+        title: {
+          es: "Full Stack Developer Certified Specialist",
+          en: "Full Stack Developer Certified Specialist"
+        },
+        institution: {
+          es: "ITCertificate",
+          en: "ITCertificate"
+        },
+        duration: {
+          es: "Finalizado el 31 de octubre de 2024",
+          en: "Completed on October 31, 2024"
+        },
+        description: {
+          es: "Obtuve la certificación como especialista certificado en desarrollo web Full Stack, demostrando habilidades avanzadas en el desarrollo y gestión de aplicaciones web completas.",
+          en: "I obtained certification as a certified specialist in Full Stack web development, demonstrating advanced skills in the development and management of complete web applications."
+        },
+        logo: "/images/education/ITCertificate/itcertificate-logo.png",
+        certificate:
+          "/images/education/ITCertificate/fullStackDeveloperCertifiedSpecialist_page-0001.jpg",
+      },
+      {
+        title: {
+          es: "Back End Developer Certified Professional",
+          en: "Back End Developer Certified Professional"
+        },
+        institution: {
+          es: "ITCertificate",
+          en: "ITCertificate"
+        },
+        duration: {
+          es: "Finalizado el 31 de octubre de 2024",
+          en: "Completed on October 31, 2024"
+        },
+        description: {
+          es: "Obtuve la certificación como profesional certificado en desarrollo Back End, demostrando habilidades avanzadas en la creación, gestión y optimización de servidores, bases de datos y lógica de aplicaciones.",
+          en: "I obtained certification as a certified professional in Back End development, demonstrating advanced skills in creating, managing and optimizing servers, databases and application logic."
+        },
+        logo: "/images/education/ITCertificate/itcertificate-logo.png",
+        certificate:
+          "/images/education/ITCertificate/backEndDeveloperCertifiedProfessional_page-0001.jpg",
+      },
+    ],
+  },
+  {
+    category: {
+      es: "Cursos en Línea (SENA),(Platzi) y mas...",
+      en: "Online Courses (SENA),(Platzi) and more..."
+    },
+    items: [
+      {
+        title: {
+          es: "Metodología de la Programación de Sistemas Informáticos",
+          en: "Computer Systems Programming Methodology"
+        },
+        institution: {
+          es: "Servicio Nacional de Aprendizaje (SENA)",
+          en: "National Learning Service (SENA)"
+        },
+        duration: {
+          es: "40 horas (Finalizado el 21 de marzo de 2023)",
+          en: "40 hours (Completed on March 21, 2023)"
+        },
+        description: {
+          es: "Cursé y aprobé la formación en Metodología de la Programación de Sistemas Informáticos, adquiriendo conocimientos fundamentales en el diseño, desarrollo y análisis de sistemas informáticos.",
+          en: "I completed and passed the training in Computer Systems Programming Methodology, acquiring fundamental knowledge in the design, development and analysis of computer systems."
+        },
+        logo: "/images/education/sena/sena-logo.png",
+        certificate:
+          "/images/education/sena/02certificadoAprobacionMetodologiaDeLaProgramacionDeSistemasInformaticos.png",
+      },
+      {
+        title: {
+          es: "Construcción de Bases de Datos con MySQL",
+          en: "MySQL Database Construction"
+        },
+        institution: {
+          es: "Servicio Nacional de Aprendizaje (SENA)",
+          en: "National Learning Service (SENA)"
+        },
+        duration: {
+          es: "48 horas (Finalizado el 8 de mayo de 2023)",
+          en: "48 hours (Completed on May 8, 2023)"
+        },
+        description: {
+          es: "Cursé y aprobé la formación en Construcción de Bases de Datos con MySQL, desarrollando habilidades para diseñar, implementar y gestionar bases de datos relacionales utilizando MySQL.",
+          en: "I completed and passed the training in MySQL Database Construction, developing skills to design, implement and manage relational databases using MySQL."
+        },
+        logo: "/images/education/sena/sena-logo.png",
+        certificate:
+          "/images/education/sena/03certificadoAprobacionConstruccionDeBasesDeDatosConMysql.png",
       },
       {
         title: {
@@ -68,1232 +229,712 @@ export const educationData = [
           en: "Labor Competency Certification (Issued on October 22, 2020, valid until October 22, 2023)"
         },
         description: {
-          es: "Certificación de competencias en atención al cliente siguiendo protocolos de servicio y normativa empresarial establecida.",
-          en: "Customer service competency certification following established service protocols and business regulations."
+          es: "Certificado de competencia laboral que acredita habilidades intermedias para atender clientes conforme a procedimientos de servicio y normativas vigentes, demostrando competencias en atención al cliente y gestión administrativa.",
+          en: "Labor competency certificate that accredits intermediate skills to serve customers according to service procedures and current regulations, demonstrating competencies in customer service and administrative management."
         },
         logo: "/images/education/sena/sena-logo.png",
-        certificate: "/images/education/sena/04certificadoAprobacionCompetenciaLaboral.png"
+        certificate:
+          "/images/education/sena/04certificadoAprobacionCompetenciaLaboral.png",
       },
       {
         title: {
-          es: "Metodología de la Programación de Sistemas Informáticos",
-          en: "Information Systems Programming Methodology"
+          es: "Mentalidad de Líder",
+          en: "Leadership Mindset"
         },
         institution: {
           es: "Servicio Nacional de Aprendizaje (SENA)",
           en: "National Learning Service (SENA)"
         },
         duration: {
-          es: "40 horas (Finalizado el 21 de marzo de 2023)",
-          en: "40 hours (Completed on March 21, 2023)"
+          es: "20 horas (Finalizado el 20 de enero de 2011)",
+          en: "20 hours (Completed on January 20, 2011)"
         },
         description: {
-          es: "Participé y aprobé el curso de Metodología de la Programación de Sistemas Informáticos, adquiriendo conocimientos sobre métodos y prácticas para programación estructurada y eficiente de sistemas.",
-          en: "I participated and passed the Information Systems Programming Methodology course, acquiring knowledge about methods and practices for structured and efficient systems programming."
+          es: "Cursé y aprobé la formación en Mentalidad de Líder, adquiriendo competencias en liderazgo, gestión de equipos y habilidades estratégicas para impulsar el desarrollo personal y profesional.",
+          en: "I completed and passed the Leadership Mindset training, acquiring competencies in leadership, team management and strategic skills to drive personal and professional development."
         },
         logo: "/images/education/sena/sena-logo.png",
-        certificate: "/images/education/sena/02certificadoAprobacionMetodologiaDeLaProgramacionDeSistemasInformaticos.png"
+        certificate:
+          "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png",
       },
+      // Platzi Courses
+
       {
         title: {
-          es: "Construcción de Bases de Datos con MySQL",
-          en: "Database Construction with MySQL"
-        },
-        institution: {
-          es: "Servicio Nacional de Aprendizaje (SENA)",
-          en: "National Learning Service (SENA)"
-        },
-        duration: {
-          es: "40 horas (Finalizado el 2 de octubre de 2023)",
-          en: "40 hours (Completed on October 2, 2023)"
-        },
-        description: {
-          es: "Curso de formación en diseño y construcción de bases de datos relacionales usando MySQL, incluyendo modelado de datos, creación de tablas y consultas SQL avanzadas.",
-          en: "Training course on design and construction of relational databases using MySQL, including data modeling, table creation and advanced SQL queries."
-        },
-        logo: "/images/education/sena/sena-logo.png",
-        certificate: "/images/education/sena/01construccionDeBasesDatosConMySQL.png"
-      },
-      {
-        title: {
-          es: "Tecnólogo en Análisis y Desarrollo de Sistemas de Información",
-          en: "Technologist in Analysis and Development of Information Systems"
-        },
-        institution: {
-          es: "Servicio Nacional de Aprendizaje (SENA)",
-          en: "National Learning Service (SENA)"
-        },
-        duration: {
-          es: "2 años (Finalizado en 2024)",
-          en: "2 years (Completed in 2024)"
-        },
-        description: {
-          es: "Programa de tecnología superior que forma profesionales en el análisis, diseño e implementación de sistemas de información, con énfasis en desarrollo de software y bases de datos.",
-          en: "Higher technology program that trains professionals in the analysis, design and implementation of information systems, with emphasis on software development and databases."
-        },
-        logo: "/images/education/sena/sena-logo.png",
-        certificate: "/images/education/sena/03tecnologoADSI.png"
-      }
-    ]
-  },
-  {
-    category: {
-      es: "IT Certificate",
-      en: "IT Certificate"
-    },
-    items: [
-      {
-        title: {
-          es: "CompTIA A+ Certification",
-          en: "CompTIA A+ Certification"
-        },
-        institution: {
-          es: "IT Certificate / CompTIA",
-          en: "IT Certificate / CompTIA"
-        },
-        duration: {
-          es: "Certificación profesional",
-          en: "Professional Certification"
-        },
-        description: {
-          es: "Certificación CompTIA A+, que valida los conocimientos y habilidades en mantenimiento, reparación y soporte de equipos informáticos y sistemas operativos.",
-          en: "CompTIA A+ Certification, validating knowledge and skills in maintenance, repair and support of computer equipment and operating systems."
-        },
-        logo: "/images/education/ITCertificate/itcertificate-logo.png",
-        certificate: "/images/education/ITCertificate/CompTIA-A-Plus.jpg"
-      },
-      {
-        title: {
-          es: "CompTIA Network+ Certification",
-          en: "CompTIA Network+ Certification"
-        },
-        institution: {
-          es: "IT Certificate / CompTIA",
-          en: "IT Certificate / CompTIA"
-        },
-        duration: {
-          es: "Certificación profesional",
-          en: "Professional Certification"
-        },
-        description: {
-          es: "Certificación CompTIA Network+, que valida los conocimientos en administración de redes, seguridad de red, troubleshooting y configuración de infraestructuras de red.",
-          en: "CompTIA Network+ Certification, validating knowledge in network administration, network security, troubleshooting and network infrastructure configuration."
-        },
-        logo: "/images/education/ITCertificate/itcertificate-logo.png",
-        certificate: "/images/education/ITCertificate/CompTIA-Network-Plus.jpg"
-      }
-    ]
-  },
-  {
-    category: {
-      es: "Talento Tech",
-      en: "Talento Tech"
-    },
-    items: [
-      {
-        title: {
-          es: "Bootcamp Full Stack JavaScript",
-          en: "Full Stack JavaScript Bootcamp"
-        },
-        institution: {
-          es: "Talento Tech",
-          en: "Talento Tech"
-        },
-        duration: {
-          es: "12 semanas intensivas",
-          en: "12 weeks intensive"
-        },
-        description: {
-          es: "Bootcamp intensivo de desarrollo Full Stack JavaScript, cubriendo Frontend (React), Backend (Node.js, Express) y bases de datos, con énfasis en prácticas de industria.",
-          en: "Intensive Full Stack JavaScript development bootcamp, covering Frontend (React), Backend (Node.js, Express) and databases, with emphasis on industry practices."
-        },
-        logo: "/images/education/talento-tech/talento-tech-logo.png",
-        certificate: "/images/education/talento-tech/talento-tech-bootcamp.jpg"
-      }
-    ]
-  },
-  {
-    category: {
-      es: "Platzi",
-      en: "Platzi"
-    },
-    items: [
-      {
-        title: {
-          es: "Curso de Arquitectura de Software",
-          en: "Software Architecture Course"
+          es: "Curso de React.js",
+          en: "React.js Course"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "50+ horas",
-          en: "50+ hours"
+          es: "25 horas (Aprobado el 13 de noviembre de 2023)",
+          en: "25 hours (Approved on November 13, 2023)"
         },
         description: {
-          es: "Curso especializado en arquitectura de software, patrones de diseño, principios SOLID y mejores prácticas para construir sistemas escalables y mantenibles.",
-          en: "Specialized course in software architecture, design patterns, SOLID principles and best practices for building scalable and maintainable systems."
+          es: "Curso enfocado en el desarrollo de aplicaciones web modernas utilizando React.js. Cubre componentes funcionales, manejo de estado, hooks, ciclo de vida, enrutamiento y mejores prácticas para construir interfaces de usuario dinámicas y mantenibles.",
+          en: "Course focused on developing modern web applications using React.js. It covers functional components, state management, hooks, lifecycle, routing, and best practices for building dynamic and maintainable user interfaces."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/01-diploma.png"
+        certificate: "/images/education/platzi/54 diploma-react.jpg",
+        isNew: true,
       },
+
       {
         title: {
-          es: "Curso de Desarrollo Backend con Node.js",
-          en: "Backend Development with Node.js Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "40+ horas",
-          en: "40+ hours"
-        },
-        description: {
-          es: "Curso completo de desarrollo backend utilizando Node.js y Express, incluyendo manejo de bases de datos, autenticación y APIs RESTful.",
-          en: "Complete backend development course using Node.js and Express, including database management, authentication and RESTful APIs."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/02-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Fundamentos de Bases de Datos",
-          en: "Database Fundamentals Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "30+ horas",
-          en: "30+ hours"
-        },
-        description: {
-          es: "Curso fundamental sobre diseño de bases de datos, modelado de datos, SQL y normalización, aplicable a proyectos reales.",
-          en: "Fundamental course on database design, data modeling, SQL and normalization, applicable to real-world projects."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/03-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de React Avanzado",
-          en: "Advanced React Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "40+ horas",
-          en: "40+ hours"
-        },
-        description: {
-          es: "Curso avanzado de React, abarcando hooks, context API, custom hooks, performance optimization y patrones avanzados de desarrollo.",
-          en: "Advanced React course, covering hooks, context API, custom hooks, performance optimization and advanced development patterns."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/04-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de TypeScript",
-          en: "TypeScript Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "25+ horas",
-          en: "25+ hours"
-        },
-        description: {
-          es: "Curso integral de TypeScript, desde conceptos básicos hasta tipos avanzados, genéricos, decoradores y mejores prácticas.",
-          en: "Comprehensive TypeScript course, from basics to advanced types, generics, decorators and best practices."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/05-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Testing con Jest",
-          en: "Testing with Jest Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "20+ horas",
-          en: "20+ hours"
-        },
-        description: {
-          es: "Curso de testing unitario y de integración usando Jest, incluyendo mocks, spies y testing de componentes React.",
-          en: "Unit and integration testing course using Jest, including mocks, spies and React component testing."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/06-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Git y GitHub",
-          en: "Git and GitHub Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "15+ horas",
-          en: "15+ hours"
-        },
-        description: {
-          es: "Curso completo de control de versiones con Git, flujos de trabajo, GitHub, colaboración en equipo y mejores prácticas.",
-          en: "Complete version control course with Git, workflows, GitHub, team collaboration and best practices."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/07-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Docker",
-          en: "Docker Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "30+ horas",
-          en: "30+ hours"
-        },
-        description: {
-          es: "Curso práctico de Docker, contenedorización, imágenes, Docker Compose y deployment de aplicaciones containerizadas.",
-          en: "Practical Docker course, containerization, images, Docker Compose and deployment of containerized applications."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/08-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Next.js",
-          en: "Next.js Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "35+ horas",
-          en: "35+ hours"
-        },
-        description: {
-          es: "Curso especializado en Next.js, App Router, Server Components, Static Generation, ISR y deployment en Vercel.",
-          en: "Specialized Next.js course, App Router, Server Components, Static Generation, ISR and deployment on Vercel."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/09-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Tailwind CSS",
-          en: "Tailwind CSS Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "20+ horas",
-          en: "20+ hours"
-        },
-        description: {
-          es: "Curso de Tailwind CSS desde cero, utilidades, configuración, componentes reutilizables y responsive design.",
-          en: "Tailwind CSS course from scratch, utilities, configuration, reusable components and responsive design."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/10-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de SEO Técnico",
-          en: "Technical SEO Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "25+ horas",
-          en: "25+ hours"
-        },
-        description: {
-          es: "Curso avanzado de SEO técnico, Core Web Vitals, performance web, indexación y optimización para buscadores.",
-          en: "Advanced technical SEO course, Core Web Vitals, web performance, indexing and search engine optimization."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/11-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Accesibilidad Web",
-          en: "Web Accessibility Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "18+ horas",
-          en: "18+ hours"
-        },
-        description: {
-          es: "Curso sobre accesibilidad web (WCAG), HTML semántico, ARIA y best practices para crear sitios inclusivos.",
-          en: "Course on web accessibility (WCAG), semantic HTML, ARIA and best practices for creating inclusive sites."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/12-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de APIs RESTful",
-          en: "RESTful APIs Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "28+ horas",
-          en: "28+ hours"
-        },
-        description: {
-          es: "Curso completo de diseño e implementación de APIs RESTful, versionado, autenticación, documentación y testing.",
-          en: "Complete course on design and implementation of RESTful APIs, versioning, authentication, documentation and testing."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/13-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de GraphQL",
-          en: "GraphQL Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "32+ horas",
-          en: "32+ hours"
-        },
-        description: {
-          es: "Curso de GraphQL, queries, mutations, subscriptions, Apollo Server y cliente Apollo para aplicaciones modernas.",
-          en: "GraphQL course, queries, mutations, subscriptions, Apollo Server and Apollo client for modern applications."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/14-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Python Intermedio",
-          en: "Intermediate Python Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "40+ horas",
-          en: "40+ hours"
-        },
-        description: {
-          es: "Curso intermedio de Python, estructuras avanzadas, decoradores, generators, context managers y librerías populares.",
-          en: "Intermediate Python course, advanced structures, decorators, generators, context managers and popular libraries."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/15-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Django",
-          en: "Django Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "45+ horas",
-          en: "45+ hours"
-        },
-        description: {
-          es: "Curso completo de Django, ORM, vistas, templates, autenticación, admin panel y deployment de aplicaciones.",
-          en: "Complete Django course, ORM, views, templates, authentication, admin panel and application deployment."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/16-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Vue.js",
-          en: "Vue.js Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "35+ horas",
-          en: "35+ hours"
-        },
-        description: {
-          es: "Curso de Vue.js 3, composition API, state management con Pinia y creación de aplicaciones web reactivas.",
-          en: "Vue.js 3 course, composition API, state management with Pinia and creation of reactive web applications."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/17-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Angular",
-          en: "Angular Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "42+ horas",
-          en: "42+ hours"
-        },
-        description: {
-          es: "Curso de Angular, decoradores, RxJS, servicios, routing, formularios y best practices en desarrollo Angular.",
-          en: "Angular course, decorators, RxJS, services, routing, forms and best practices in Angular development."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/18-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Svelte",
-          en: "Svelte Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "22+ horas",
-          en: "22+ hours"
-        },
-        description: {
-          es: "Curso de Svelte, componentes reactivos, store, animaciones y creación de aplicaciones con compilador.",
-          en: "Svelte course, reactive components, store, animations and application creation with compiler."
-        },
-        logo: "/images/education/platzi/platzi-logg",
-        certificate: "/images/education/platzi/19-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Web Components",
-          en: "Web Components Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "20+ horas",
-          en: "20+ hours"
-        },
-        description: {
-          es: "Curso de Web Components, Custom Elements, Shadow DOM, HTML Templates y compatibilidad cross-browser.",
-          en: "Web Components course, Custom Elements, Shadow DOM, HTML Templates and cross-browser compatibility."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/20-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Webpack",
-          en: "Webpack Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "24+ horas",
-          en: "24+ hours"
-        },
-        description: {
-          es: "Curso de Webpack, bundling, loaders, plugins, code splitting y optimización de assets en proyectos web.",
-          en: "Webpack course, bundling, loaders, plugins, code splitting and asset optimization in web projects."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/21-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Vite",
-          en: "Vite Course"
-        },
-        institution:        es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "18+ horas",
-          en: "18+ hours"
-        },
-        description: {
-          es: "Curso de Vite, bundler moderno, HMR, optimizaciones de build y migración desde Webpack.",
-          en: "Vite course, modern bundler, HMR, build optimizations and migration from Webpack."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/22-diploma.png"
-      },
-    {
-        title: {
-          es: "Curso de Figma para Desarrolladores",
-          en: "Figma for Developers Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "16+ horas",
-          en: "16+ hours"
-        },
-        description: {
-          es: "Curso de Figma para desarrolladores, componentes, sistemas de diseño, colaboración diseño-desarrollo.",
-          en: "Figma course for developers, components, design systems, desevelopment collaboration."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/23-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Responsive Design",
-          en: "Responsive Design Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "22+ horas",
-          en: "22+ hours"
-        },
-        description: {
-          es: "Curso de diseño resonsive, mobile first, media queries, flexbox, grid y optimización para múltiples dispositivos.",
-          en: "Responsive design course, mobile first, media queries, flexbox, grid and optimization for multiple devices."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/24-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de CSS Avanzado",
-          en: "Advanced CSS Course"
-        },
-        institution: {
-          es: latzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "28+ horas",
-          en: "28+ hours"
-        },
-        description: {
-          es: "Curso avanzado de CSS, variables, preprocessadores, animaciones, transformaciones y técnicas modernas.",
-          en: "Advanced CSS course, variables, preprocessors, animations, transforms and modern techniques."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/25-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de HTML5 Semántico",
-          en: "Semantic HTML5 Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "15+ horas",
-          en: "15+ hours"
-        },
-        description: {
-          es: "Curso de HTML5, elementos semánticos, atributos data, formularios avanzados y best practices.",
-          en: "HTML5 course, semantic elements, data attributes, advanced forms and best practices."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/26-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Framer Motion",
-          en: "Framer Motion Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "20+ horas",
-          en: "20+ hours"
-        },
-        description: {
-          es: "Curso de Framer Motion, animaciones en Revariants, gestos y creación de experiencias interactivas.",
-          en: "Framer Motion course, React animations, variants, gestures and interactive experience creation."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/27-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Three.js",
-          en: "Three.js Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "35+ horas",
-          en: "35+ hours"
-        },
-        description: {
-          es: "Curso de Three.js, gráficos 3D en web, geometrías, materiales, iluminación y creación de experiencias 3D.",
-          en: "Three.js course, 3D web graphics, geometries, materials, lighting and 3D experience creation."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/28-diploma.png"
-      },
-      {
-        title: {
-          es: "Cde Electron",
-          en: "Electron Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "26+ horas",
-          en: "26+ hours"
-        },
-        description: {
-          es: "Curso de Electron, aplicaciones desktop con JavaScript, main process, renderer process y packaging.",
-          en: "Electron course, desktop applications with JavaScript, main process, renderer process and packaging."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/29-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de React Native",
-          en: "React Native Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "38+ horas",
-          en: "38+ hours"
-        },
-        description: {
-          es: "Curso de React Native, desarrollo móvil multiplataforma, componentes nativos, navegaciónPI.",
-          en: "React Native course, cross-platform mobile development, native components, navigation and APIs."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/30-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Flutter",
-          en: "Flutter Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "42+ horas",
-          en: "42+ hours       },
-        description: {
-          es: "Curso de Flutter, desarrollo móvil con Dart, widgets, state management y deployment en App Store/Play Store.",
-          en: "Flutter course, mobile development with Dart, widgets, state management and deployment on App Store/Play Store."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/31-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Kotlin",
-          en: "Kotlin Cou"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "35+ horas",
-          en: "35+ hours"
-        },
-        description: {
-          es: "Curso de Kotlin, desarrollo Android nativo, corrutinas, null safety y best practices.",
-          en: "Kotlin course, native Android development, coroutines, null safety and best practices."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/32-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Swift",
-          en: "Swift Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "32+ horas",
-          en: "32+ hours"
-        },
-        description: {
-          es: "Curso de Swift, desarrollo iOS nativo, UIKit, SwiftUI, autolayout y gestión de memoria.",
-          en: "Swift course, native iOS development, UIKit, SwiftUI, autolayout and mory management."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/33-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Machine Learning con Python",
-          en: "Machine Learning with Python Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "45+ horas",
-          en: "45+ hours"
-        },
-        description: {
-          es: "Curso de ne Learning, scikit-learn, pandas, numpy, visualización de datos y modelos predictivos.",
-          en: "Machine Learning course, scikit-learn, pandas, numpy, data visualization and predictive models."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/34-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Data Science",
-          en: "Data Science Course"
-        },
-        institution: {
-          es: "Platzi",
-          : "Platzi"
-        },
-        duration: {
-          es: "50+ horas",
-          en: "50+ hours"
-        },
-        description: {
-          es: "Curso de Data Science, análisis exploratorio, minería de datos, visualización y storytelling con datos.",
-          en: "Data Science course, exploratory analysis, data mining, visualization and data storytelling."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/35-diploma.png"
-      },
-      {
-  title: {
-          es: "Curso de AWS Fundamentos",
-          en: "AWS Fundamentals Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "30+ horas",
-          en: "30+ hours"
-        },
-        description: {
-          es: "Curso de AWS, EC2, S3, RDS, Lambda, IAM y mejores prácticas en infraestructura cloud.",
-          en: "AWS course, EC2, S3, RDS, Lambda, IAM and best practices in cloud infrastructure."
-        },
-         "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/36-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Google Cloud Platform",
-          en: "Google Cloud Platform Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "28+ horas",
-          en: "28+ hours"
-        },
-        description: {
-          es: "Curso de GCP, Compute Engine, App Engine, Cloud Storage y servi Google Cloud.",
-          en: "GCP course, Compute Engine, App Engine, Cloud Storage and Google Cloud services."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/37-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Azure",
-          en: "Azure Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "32+ horas",
-          en: "32+ hours"
-             description: {
-          es: "Curso de Microsoft Azure, virtual machines, app service, databases y servicios en la nube.",
-          en: "Microsoft Azure course, virtual machines, app service, databases and cloud services."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/38-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Kubernetes",
-          en: "Kubernetes Course"
-        },
-        institution: {
-          : "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "35+ horas",
-          en: "35+ hours"
-        },
-        description: {
-          es: "Curso de Kubernetes, orquestación de contenedores, pods, deployments, servicios y escalabilidad.",
-          en: "Kubernetes course, container orchestration, pods, deployments, services and scalability."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/39-diploma.png"
-      }      {
-        title: {
-          es: "Curso de CI/CD",
-          en: "CI/CD Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "26+ horas",
-          en: "26+ hours"
-        },
-        description: {
-          es: "Curso de Integración Continua y Deploy Continuo, GitHub Actions, Jenkins, GitLab CI y automatización.",
-          en: "Continuous Integration and Continuous Deployment course, GitHub Actions, Jenkins, GitLab CI and automation."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/40-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Seguridad Web",
-          en: "Web Security Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "28+ horas",
-          en: "28+ hours"
-        },
-        description: {
-          es: "Curso de seguridad web, OWASP Top 10, QL injection, XSS, CSRF y protección de aplicaciones.",
-          en: "Web security course, OWASP Top 10, SQL injection, XSS, CSRF and application protection."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/41-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de OWASP y Ciberseguridad",
-          en: "OWASP and Cybersecurity Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
+          es: "Audiocurso de Frameworks y Arquitecturas Frontend: Casos de Estudio",
+          en: "Frontend Frameworks and Architectures: Case Studies Audiocourse"
+        },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "13 horas (Aprobado el 31 de enero de 2025)",
+                en: "13 hours (Approved on January 31, 2025)"
+              },
+              description: {
+                es: "Audiocurso centrado en el análisis de frameworks y arquitecturas frontend mediante casos de estudio reales. Aborda patrones de diseño, principios de escalabilidad, rendimiento y mantenibilidad en proyectos modernos. Ideal para desarrolladores que buscan entender cómo elegir e implementar arquitecturas frontend efectivas.",
+                en: "Audiocourse focused on analyzing frontend frameworks and architectures through real-world case studies. It covers design patterns, scalability principles, performance, and maintainability in modern projects. Ideal for developers aiming to understand how to select and implement effective frontend architectures."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/53 diploma-arquitectura-frontend.jpg"
+            },
+
+
+            {
+              title: {
+                es: "Curso de Frameworks y Librerías de JavaScript",
+                en: "Frameworks and Libraries of JavaScript Course"
+              },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "13 horas (Aprobado el 31 de enero de 2025)",
+                en: "13 hours (Approved on January 31, 2025)"
+              },
+              description: {
+                es: "Curso enfocado en el estudio de los principales frameworks y librerías del ecosistema JavaScript. Incluye la comprensión de su estructura, ventajas, casos de uso y diferencias clave entre ellos. Ideal para fortalecer las bases del desarrollo moderno en frontend y backend con JavaScript.",
+                en: "Course focused on studying the main frameworks and libraries within the JavaScript ecosystem. It covers their structure, advantages, use cases, and key differences. Ideal for strengthening modern frontend and backend development foundations with JavaScript."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/52 diploma-frameworks-javascript.jpg"
+            },
+
+            {
+              title: {
+                es: "Curso de Introducción al Testing con JavaScript",
+                en: "Introduction to Testing with JavaScript Course"
+              },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "17 horas (Aprobado el 30 de enero de 2025)",
+                en: "17 hours (Approved on January 30, 2025)"
+              },
+              description: {
+                es: "Curso introductorio enfocado en las bases del testing aplicado a proyectos con JavaScript. Se abordan conceptos fundamentales de pruebas automatizadas, tipos de test, configuración de entornos y buenas prácticas para garantizar la calidad del código. Ideal para desarrolladores que buscan iniciar en el mundo del testing y fortalecer la confiabilidad de sus aplicaciones.",
+                en: "Introductory course focused on the basics of testing in JavaScript projects. It covers fundamental concepts of automated testing, types of tests, environment setup, and best practices to ensure code quality. Ideal for developers starting in the testing world and aiming to strengthen the reliability of their applications."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/51diploma-javascript-testing.jpg"
+            },
+
+            {
+              title: {
+                es: "Curso de Debugging con Chrome DevTools",
+                en: "Debugging with Chrome DevTools Course"
+              },
+              institution: {
+                es: "Platzi",
+                en: "Platzi"
+              },
+              duration: {
+                es: "18 horas (Aprobado el 31 de enero de 2025)",
+                en: "18 hours (Approved on January 31, 2025)"
+              },
+              description: {
+                es: "Curso especializado en el uso profesional de las Chrome DevTools para depurar aplicaciones web de manera eficiente. A lo largo del contenido, se abordan técnicas avanzadas de inspección de elementos, monitoreo de rendimiento, análisis de red, manejo de errores JavaScript y optimización del flujo de trabajo en tiempo real. Ideal para desarrolladores que buscan mejorar sus habilidades de diagnóstico en el navegador y aumentar la calidad de su código.",
+                en: "Specialized course on the professional use of Chrome DevTools to efficiently debug web applications. The content covers advanced techniques for element inspection, performance monitoring, network analysis, JavaScript error handling, and real-time workflow optimization. Ideal for developers aiming to improve their in-browser diagnostic skills and increase code quality."
+              },
+              logo: "/images/education/platzi/platzi-logo.png",
+              certificate: "/images/education/platzi/50cursoDeDebuggingConChromeDevTools.jpg"
+            },
+          {
+            title: {
+              es: "Curso Básico de Web Components con JavaScript",
+              en: "Basic Course on Web Components with JavaScript"
+            },
+            institution: {
+              es: "Platzi",
+              en: "Platzi"
+            },
             duration: {
-          es: "32+ horas",
-          en: "32+ hours"
-        },
-        description: {
-          es: "Curso de ciberseguridad, pentesting, análisis de vulnerabilidades y hardening de sistemas.",
-          en: "Cybersecurity course, pentesting, vulnerability analysis and system hardening."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/42-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Blockchain",
-     en: "Blockchain Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "38+ horas",
-          en: "38+ hours"
-        },
-        description: {
-          es: "Curso de Blockchain, smart contracts, Ethereum, Web3 y aplicaciones descentralizadas.",
-          en: "Blockchain course, smart contracts, Ethereum, Web3 and decentralized applications."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certifi "/images/education/platzi/43-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Solidity",
-          en: "Solidity Course"
+              es: "19 horas (Aprobado el 30 de enero de 2025)",
+              en: "19 hours (Approved on January 30, 2025)"
+            },
+            description: {
+              es: "Curso básico sobre la creación de componentes web reutilizables usando JavaScript, Shadow DOM y Custom Elements, siguiendo estándares modernos.",
+              en: "Basic course on creating reusable web components using JavaScript, Shadow DOM, and Custom Elements following modern standards."
+            },
+            logo: "/images/education/platzi/platzi-logo.png",
+            certificate: "/images/education/platzi/49diplomaWebComponentsJavascript.jpg"
+          },
+        {
+              title: {
+          es: "Curso Profesional de Consumo de API REST con JavaScript",
+          en: "Professional Course on REST API Consumption with JavaScript"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "32+ horas",
-          en: "32+ hours"
+          es: "16 horas (Aprobado el 30 de enero de 2025)",
+          en: "16 hours (Approved on January 30, 2025)"
         },
         description: {
-          es: "Curso de Solidity, desarrollo de smart contracts, seguridad, testing y deployment en Ethereum.",
-          en: "Solidity course, smart contract developmencurity, testing and deployment on Ethereum."
+          es: "Curso profesional enfocado en consumir APIs REST con JavaScript, mejorando el rendimiento y la usabilidad de las aplicaciones web mediante prácticas modernas.",
+          en: "Professional course focused on consuming REST APIs with JavaScript, improving performance and usability of web applications through modern practices."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/44-diploma.png"
+        certificate: "/images/education/platzi/48cursoDeApiRestConJavascriptPerformanceYUsabilidad.jpg"
       },
       {
         title: {
-          es: "Curso de IoT con Arduino",
-          en: "IoT with Arduino Course"
+          es: "Práctico de Consumo de API REST con JavaScript",
+          en: "Practical REST API Consumption with JavaScript"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "28+ horas",
-          en: "28+ hours"
+          es: "16 horas (Aprobado el 11 de diciembre de 2024)",
+          en: "16 hours (Approved on December 11, 2024)"
         },
         description: {
-          es: "Cursonternet de las Cosas, Arduino, sensores, actuadores y proyectos embebidos.",
-          en: "Internet of Things course, Arduino, sensors, actuators and embedded projects."
+          es: "Curso práctico para dominar el consumo de APIs REST con JavaScript, aplicando técnicas avanzadas para integrar servicios y datos en aplicaciones web.",
+          en: "Practical course to master REST API consumption with JavaScript, applying advanced techniques to integrate services and data in web applications."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/45-diploma.png"
+        certificate:
+          "/images/education/platzi/46DiplomaDelCursoDeApiRestConJavascriptEjemplosConApisReales.png",
       },
+      // 2
       {
         title: {
-          es: "Curso de Raspberry Pi",
-          en: "Raspberry Pi Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        ration: {
-          es: "26+ horas",
-          en: "26+ hours"
-        },
-        description: {
-          es: "Curso de Raspberry Pi, Linux embebido, GPIO, proyectos prácticos y automatización.",
-          en: "Raspberry Pi course, embedded Linux, GPIO, practical projects and automation."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/46-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Agile y Scrum",
-          en: "Agile and Scrum Course"
+          es: "Consumo de API REST con JavaScript",
+          en: "REST API Consumption with JavaScript"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "20+ horas",
-          en: "20+ hours"
+          es: "16 horas (Aprobado el 6 de diciembre de 2024)",
+          en: "16 hours (Approved on December 6, 2024)"
         },
         description: {
-          es: "Curso de metodologías ágiles, Scrum, Kanban, sprints, retrospectivas y gestión de proyectos.",
-          en: "Agile methodology course, Scrum, Kanban, sprints, retrospectives and project management."
+          es: "Curso orientado a aprender cómo consumir APIs REST utilizando JavaScript para crear aplicaciones dinámicas e integradas.",
+          en: "Course oriented to learn how to consume REST APIs using JavaScript to create dynamic and integrated applications."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-       certificate: "/images/education/platzi/47-diploma.png"
+        certificate:
+          "/images/education/platzi/45DiplomaDelCursoDeApiRestConJavascriptFundamentos.png",
       },
+      // 3
       {
         title: {
-          es: "Curso de UX/UI Design",
-          en: "UX/UI Design Course"
+          es: "JavaScript: Manipulación del DOM",
+          en: "JavaScript: DOM Manipulation"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "40+ horas",
-          en: "40+ hours"
+          es: "16 horas (Aprobado el 29 de noviembre de 2024)",
+          en: "16 hours (Approved on November 29, 2024)"
         },
         description: {
-          es: "Curso de diseño UX/UI, research, wireframing, prototipado, usabilidad y design thinking.",
-          en: "UX/UI design course,earch, wireframing, prototyping, usability and design thinking."
+          es: "Curso enfocado en aprender a interactuar y modificar el Document Object Model (DOM) utilizando JavaScript para crear interfaces dinámicas y responsivas.",
+          en: "Course focused on learning to interact and modify the Document Object Model (DOM) using JavaScript to create dynamic and responsive interfaces."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/48-diploma.png"
+        certificate:
+          "/images/education/platzi/44DiplomaDelCursoDeJavascriptManipulacinDelDom.png",
       },
+      // 4
+      {
+        title: "Animaciones con CSS",
+        institution: "Platzi",
+        duration: "11 horas (Aprobado el 27 de noviembre de 2024)",
+        description:
+          "Curso centrado en aprender a crear animaciones dinámicas y atractivas utilizando propiedades avanzadas de CSS.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/43DiplomaDelCursoDeAnimacionesConCss.png",
+      },
+      // 5
+      {
+        title: "Transformaciones y Transiciones en CSS",
+        institution: "Platzi",
+        duration: "18 horas (Aprobado el 24 de noviembre de 2024)",
+        description:
+          "Curso especializado en el uso de transformaciones y transiciones para crear animaciones y efectos interactivos en CSS.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/42DiplomaDelCursoDeTransformacionesYTransicionesEnCss.png",
+      },
+      // 6
+      {
+        title: "Curso Básico de Tailwind CSS",
+        institution: "Platzi",
+        duration: "20 horas (Aprobado el 21 de noviembre de 2024)",
+        description:
+          "Curso enfocado en aprender a utilizar Tailwind CSS para crear diseños responsivos y personalizables de manera eficiente.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/41DiplomaDelCursoBsicoDeTailwind2Y3.png",
+      },
+      // 7
       {
         title: {
-          es: "Curso de Product Management",
-          en: "Product Management Course"
+          es: "Base de Datos con SQL",
+          en: "Database with SQL"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "30+ horas",
-          en: "30+ hours"
-        },
-        descriptio{
-          es: "Curso de gestión de productos, roadmap, métricas, user stories y ciclo de vida del producto.",
-          en: "Product management course, roadmap, metrics, user stories and product lifecycle."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/49-diploma.png"
-      },
-      {
-        title: {
-          es: "Curso de Marketing Digital",
-          en: "Digital Marketing Course"
-        },
-        institution: {
-          es: "Pzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "35+ horas",
-          en: "35+ hours"
+          es: "21 horas (Aprobado el 1 de noviembre de 2024)",
+          en: "21 hours (Approved on November 1, 2024)"
         },
         description: {
-          es: "Curso de marketing digital, email marketing, social media, SEM, analytics y estrategia.",
-          en: "Digital marketing course, email marketing, social media, SEM, analytics and strategy."
+          es: "Participé y aprobé el curso de Base de Datos con SQL, adquiriendo habilidades en el diseño, consulta y manejo eficiente de bases de datos relacionales utilizando SQL.",
+          en: "I participated and passed the Database with SQL course, acquiring skills in design, querying and efficient management of relational databases using SQL."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/50-diploma.png"
+        certificate:
+          "/images/education/platzi/27DiplomaDelCursoDeBasesDeDatosConSql.png",
       },
+      // 8
       {
-        ti
-          es: "Curso de Content Marketing",
-          en: "Content Marketing Course"
+        title: {
+          es: "Fundamentos de JavaScript",
+          en: "JavaScript Fundamentals"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "24+ horas",
-          en: "24+ hours"
+          es: "19 horas (Aprobado el 1 de noviembre de 2024)",
+          en: "19 hours (Approved on November 1, 2024)"
         },
         description: {
-          es: "Curso de content marketing, creación de contenido, distribución, storytelling y métricas.",
-          en: "Content marketing course, content creation, distribution, storytelling and metrics."
+          es: "Participé y aprobé el curso Fundamentos de JavaScript, obteniendo una base sólida en el lenguaje y las mejores prácticas para el desarrollo web.",
+          en: "I participated and passed the JavaScript Fundamentals course, obtaining a solid foundation in the language and best practices for web development."
         },
-      : "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/51-diploma.png"
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/24DiplomaDelCursoDeFundamentosDeJavascript.png",
       },
+      // 9
+      {
+        title: "Arquitecturas CSS",
+        institution: "Platzi",
+        duration: "16 horas (Aprobado el 29 de agosto de 2024)",
+        description:
+          "Curso enfocado en aprender las mejores prácticas y metodologías para estructurar CSS de forma escalable y mantenible.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/40DiplomaDelCursoDeArquitecturasCss.png",
+      },
+      // 10
+      {
+        title: "Diseño Web con CSS Grid y Flexbox",
+        institution: "Platzi",
+        duration: "17 horas (Aprobado el 6 de agosto de 2024)",
+        description:
+          "Curso enfocado en aprender y combinar CSS Grid y Flexbox para crear diseños web responsivos y dinámicos.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/39DiplomaDelCursoDeDiseoWebConCssGridYFlexbox.png",
+      },
+      // 11
+      {
+        title: "CSS Grid Layout (Profesional)",
+        institution: "Platzi",
+        duration: "20 horas (Aprobado el 1 de agosto de 2024)",
+        description:
+          "Curso profesional para dominar el diseño de interfaces utilizando CSS Grid Layout y crear layouts avanzados.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/38DiplomaDelCursoProfesionalDeCssGridLayout.png",
+      },
+      // 12
+      {
+        title: "Maquetación en CSS (Práctico)",
+        institution: "Platzi",
+        duration: "19 horas (Aprobado el 27 de julio de 2024)",
+        description:
+          "Curso práctico para aprender las bases de la maquetación en CSS y su aplicación en el desarrollo de interfaces web profesionales.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/37DiplomaDelCursoPrcticoDeMaquetacinEnCss.png",
+      },
+      // 13
+      {
+        title: "CSS Grid Básico",
+        institution: "Platzi",
+        duration: "14 horas (Aprobado el 27 de julio de 2024)",
+        description:
+          "Curso introductorio sobre el uso de CSS Grid para diseñar layouts flexibles y modernos en aplicaciones web.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/36DiplomaDelCursoDeCssGridBsico.png",
+      },
+      // 14
+      {
+        title: "Sistemas de Diseño",
+        institution: "Platzi",
+        duration: "17 horas (Aprobado el 8 de julio de 2024)",
+        description:
+          "Curso enfocado en la creación y gestión de sistemas de diseño efectivos para proyectos escalables y consistentes.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/35DiplomaDelCursoDeSistemasDeDiseoEfectivos.png",
+      },
+      // 15
+      {
+        title: "Diseño para Programadores",
+        institution: "Platzi",
+        duration: "14 horas (Aprobado el 4 de julio de 2024)",
+        description:
+          "Curso diseñado para aprender técnicas de diseño enfocadas en programadores para crear interfaces atractivas y funcionales.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/34DiplomaDelCursoDeDiseoParaDevelopers.png",
+      },
+      // 16
+      {
+        title: "Fundamentos de SASS: Crea tu Primera Landing Page",
+        institution: "Platzi",
+        duration: "26 horas (Aprobado el 2 de julio de 2024)",
+        description:
+          "Curso enfocado en aprender los fundamentos de SASS para el desarrollo de una landing page profesional y estilizada.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/33DiplomaDelCursoDeFundamentosDeSassCreaTuPrimeraLandingPage.png",
+      },
+      // 17
+      {
+        title: "Responsive Design: Maquetación Mobile First",
+        institution: "Platzi",
+        duration: "25 horas (Aprobado el 26 de junio de 2024)",
+        description:
+          "Curso especializado en diseño web responsivo, enfocándose en la estrategia Mobile First para crear interfaces adaptables a cualquier dispositivo.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/32DiplomaDelCursoDeResponsiveDesignMaquetacinMobileFirst.png",
+      },
+      // 18
+      {
+        title: "Definitivo de HTML y CSS",
+        institution: "Platzi",
+        duration: "23 horas (Aprobado el 10 de junio de 2024)",
+        description:
+          "Curso avanzado en HTML y CSS, enfocado en desarrollar habilidades para crear páginas web modernas y funcionales con diseño responsivo.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/30DiplomaDelCursoDefinitivoDeHtmlYCss.png",
+      },
+      // 19
+      {
+        title: "Práctico de HTML y CSS",
+        institution: "Platzi",
+        duration: "16 horas (Aprobado el 12 de junio de 2024)",
+        description:
+          "Curso práctico para desarrollar habilidades en HTML y CSS mediante proyectos aplicados y diseño web responsivo.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/31DiplomaDelCursoPrcticoDeHtmlYCss.png",
+      },
+      // 20
+      {
+        title: "Introducción al Desarrollo Backend",
+        institution: "Platzi",
+        duration: "14 horas (Aprobado el 12 de enero de 2024)",
+        description:
+          "Participé y aprobé el curso Introducción al Desarrollo Backend, adquiriendo conocimientos fundamentales sobre la creación y gestión de servidores, API y bases de datos.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/26DiplomaDelCursoDeIntroduccinAlDesarrolloBackend.png",
+      },
+      // 21
       {
         title: {
-          es: "Curso de Growth Hacking",
-          en: "Growth Hacking Course"
+          es: "React.js con Vite.js y TailwindCSS",
+          en: "React.js with Vite.js and TailwindCSS"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "22+ horas",
-          en: "22+ hours"
+          es: "20 horas (Aprobado el 1 de diciembre de 2023)",
+          en: "20 hours (Approved on December 1, 2023)"
         },
         description: {
-          es: "Curso de growth hacking, experimentación, viral loops, user acquisition y rention.",
-          en: "Growth hacking course, experimentation, viral loops, user acquisition and retention."
+          es: "Participé y aprobé el curso React.js con Vite.js y TailwindCSS, aprendiendo a desarrollar aplicaciones web modernas y altamente eficientes utilizando estas tecnologías.",
+          en: "I participated and passed the React.js with Vite.js and TailwindCSS course, learning to develop modern and highly efficient web applications using these technologies."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/52-diploma.png"
+        certificate:
+          "/images/education/platzi/25DiplomaDelCursoDeReactjsConVitejsYTailwindcss.png",
       },
+      // 22
       {
         title: {
-          es: "Audiocurso de Frameworks y Librerías de JavaScript",
-          en: "JavaScript Frameworks and Libraries Audiocourse"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duon: {
-          es: "15+ horas (audio)",
-          en: "15+ hours (audio)"
-        },
-        description: {
-          es: "Audiocurso completo sobre frameworks y librerías populares de JavaScript, su ecosistema y evolución.",
-          en: "Complete audiocourse on popular JavaScript frameworks and libraries, their ecosystem and evolution."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/53-audiocurso-frameworks-librerias.png"
-      },
-  {
-        title: {
-          es: "Curso de React.js Avanzado: Laboratorio Práctico",
-          en: "Advanced React.js Course: Practical Laboratory"
+          es: "Curso de React.js",
+          en: "React.js Course"
         },
         institution: {
           es: "Platzi",
           en: "Platzi"
         },
         duration: {
-          es: "50+ horas (proyecto completo)",
-          en: "50+ hours (complete project)"
+          es: "25 horas (Aprobado el 13 de noviembre de 2023)",
+          en: "25 hours (Approved on November 13, 2023)"
         },
         description: {
-          es: "Laboratorio práctico avanzado de React.js con proyectos reales, patrones avanzados y mejores prácticas empres.",
-          en: "Advanced practical React.js laboratory with real-world projects, advanced patterns and enterprise best practices."
+          es: "Curso diseñado para aprender los fundamentos de React.js, creando aplicaciones web interactivas y escalables mediante componentes y manejo de estados.",
+          en: "Course designed to learn the fundamentals of React.js, creating interactive and scalable web applications through components and state management."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/54-diploma-laboratorio-react.jpg",
-        isNew: true
-      }
-    ]
-  }
+        certificate: "/images/education/platzi/47DiplomaDelCursoDeReactJs.png",
+      },
+      // 23
+      {
+        title: "Curso Práctico de JavaScript",
+        institution: "Platzi",
+        duration: "19 horas (Aprobado el 12 de septiembre de 2023)",
+        description:
+          "Participé y aprobé el Curso Práctico de JavaScript, desarrollando habilidades para implementar soluciones interactivas y dinámicas en proyectos web mediante el uso avanzado del lenguaje JavaScript.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/18DiplomaDelCursoPrcticoDeJavascript.png",
+      },
+      // 24
+      {
+        title: "Curso de ECMAScript: Historia y Versiones de JavaScript",
+        institution: "Platzi",
+        duration: "26 horas (Aprobado el 12 de septiembre de 2023)",
+        description:
+          "Participé y aprobé el Curso de ECMAScript: Historia y Versiones de JavaScript, aprendiendo sobre la evolución de JavaScript, sus estándares y las características clave introducidas en versiones modernas como ES6+.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/19DiplomaDelCursoDeEcmascriptHistoriaYVersionesDeJavascript.png",
+      },
+      // 25
+      {
+        title: "Curso Profesional de Git y GitHub",
+        institution: "Platzi",
+        duration: "22 horas (Aprobado el 24 de enero de 2023)",
+        description:
+          "Participé y aprobé el curso profesional de Git y GitHub, adquiriendo habilidades avanzadas en el control de versiones, gestión de repositorios y colaboración efectiva en proyectos de desarrollo de software.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/09DiplomaGitGithub.png",
+      },
+      // 26
+      {
+        title: "Curso de Fundamentos de Ingeniería de Software",
+        institution: "Platzi",
+        duration: "16 horas (Aprobado el 8 de febrero de 2023)",
+        description:
+          "Participé y aprobé el curso de Fundamentos de Ingeniería de Software, adquiriendo conocimientos sobre los principios básicos de diseño, desarrollo y mantenimiento de sistemas de software eficientes y escalables.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/10DiplomaDeFundamentosDeIngenieria.png",
+      },
+      // 27
+      {
+        title: "Curso de Tecnología para Gerentes y Directores",
+        institution: "Platzi",
+        duration: "15 horas (Aprobado el 4 de junio de 2023)",
+        description:
+          "Participé y aprobé el curso de Tecnología para Gerentes y Directores, adquiriendo conocimientos sobre la aplicación de tecnologías innovadoras en la gestión estratégica y liderazgo empresarial.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/15DiplomaDelCursoDeTecnologaParaGerentesYDirectores.png",
+      },
+      // 28
+      {
+        title: "Curso para Conseguir Trabajo como Frontend Developer",
+        institution: "Platzi",
+        duration: "13 horas (Aprobado el 12 de enero de 2024)",
+        description:
+          "Participé y aprobé el Curso para Conseguir Trabajo como Frontend Developer, adquiriendo estrategias y herramientas clave para destacar en el mercado laboral como desarrollador frontend.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/23DiplomaDelCursoParaConseguirTrabajoComoFrontendDeveloper.png",
+      },
+      // 29
+      {
+        title: "Curso de Introducción al Pensamiento Computacional con Python",
+        institution: "Platzi",
+        duration: "18 horas (Aprobado el 18 de mayo de 2023)",
+        description:
+          "Participé y aprobé el curso de Introducción al Pensamiento Computacional con Python, aprendiendo a resolver problemas complejos mediante el diseño de algoritmos y el uso del lenguaje de programación Python.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/12DiplomaDelCursoDeIntroduccinAlPensamientoComputacionalConPython.png",
+      },
+      // 30
+      {
+        title:
+          "Curso de Historia de la Innovación y el Emprendimiento con Diana Uribe",
+        institution: "Platzi",
+        duration: "4 horas (Aprobado el 24 de mayo de 2023)",
+        description:
+          "Participé y aprobé el curso de Historia de la Innovación y el Emprendimiento, explorando el impacto de las grandes ideas y avances a lo largo de la historia y su influencia en el emprendimiento moderno.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/14DiplomaDelCursoDeHistoriaDeLaInnovacinYElEmprendimientoConDianaUribe.png",
+      },
+      // 31
+      {
+        title:
+          "Curso de Introducción a la Web: Historia y Funcionamiento de Internet",
+        institution: "Platzi",
+        duration: "12 horas (Aprobado el 19 de mayo de 2023)",
+        description:
+          "Participé y aprobé el curso de Introducción a la Web: Historia y Funcionamiento de Internet, adquiriendo conocimientos sobre los orígenes, evolución y principios técnicos del funcionamiento de la web e Internet.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/13DiplomaDelCursoDeIntroduccinALaWebHistoriaYFuncionamientoDeInternet.png",
+      },
+      // 32
+      {
+        title: "Curso de Historia de la Programación: Lenguajes y Paradigmas",
+        institution: "Platzi",
+        duration: "14 horas (Aprobado el 26 de abril de 2023)",
+        description:
+          "Participé y aprobé el curso de Historia de la Programación: Lenguajes y Paradigmas, adquiriendo conocimientos sobre la evolución histórica de los lenguajes de programación y los paradigmas que han influido en el desarrollo de software.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/11DiplomaHistoriaProgramacion.png",
+      },
+      // 33
+      {
+        title: "Curso de Creación de Páginas Web con ChatGPT",
+        institution: "Platzi",
+        duration: "9 horas (Aprobado el 1 de junio de 2023)",
+        description:
+          "Participé y aprobé el curso de Creación de Páginas Web con ChatGPT, aprendiendo a integrar inteligencia artificial en el desarrollo de sitios web para optimizar procesos de diseño y contenido.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/17DiplomaDelCursoDeCreacinDePginasWebConChatgpt.png",
+      },
+      // 34
+      {
+        title: "Curso de Creación de Páginas Web",
+        institution: "Platzi",
+        duration: "14 horas (Aprobado el 26 de mayo de 2023)",
+        description:
+          "Participé y aprobé el curso de Creación de Páginas Web, adquiriendo habilidades prácticas en diseño y desarrollo de sitios web utilizando tecnologías fundamentales como HTML, CSS y JavaScript.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/16DiplomaDelCursoDeCreacinDePginasWebConWordpressYNoCode.png",
+      },
+      // 35
+      /*   {
+    "title": "Curso de Configuración de Entorno de Desarrollo en Windows",
+    "institution": "Platzi",
+    "duration": "12 horas (Aprobado el 9 de julio de 2023)",
+    "description": "Participé y aprobé el curso de Configuración de Entorno de Desarrollo en Windows, adquiriendo conocimientos prácticos para configurar herramientas y entornos eficientes para el desarrollo de software en sistemas operativos Windows.",
+    "logo": "/images/education/platzi/platzi-logo.png",
+    "certificate": "/images/education/platzi/01DiplomaDelCursoDeConfiguracinDeEntornoDeDesarrolloEnWindows.png"
+  }, */
+      // 36
+      {
+        title: "Curso Básico de Algoritmos y Pensamiento Lógico 2020",
+        institution: "Platzi",
+        duration: "15 horas (Aprobado el 24 de julio de 2022)",
+        description:
+          "Participé y aprobé el curso básico de Algoritmos y Pensamiento Lógico, adquiriendo habilidades para resolver problemas a través del diseño y análisis de algoritmos, así como fortaleciendo mi pensamiento lógico.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/02DiplomaPensamientoLogico2020.png",
+      },
+      // 37
+      {
+        title: "Curso de Pensamiento Lógico: Lenguajes de Programación",
+        institution: "Platzi",
+        duration: "12 horas (Aprobado el 21 de octubre de 2022)",
+        description:
+          "Participé y aprobé el curso de Pensamiento Lógico: Lenguajes de Programación, adquiriendo conocimientos sobre la lógica y fundamentos de diferentes lenguajes de programación, fortaleciendo mi capacidad de adaptarme a múltiples tecnologías.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/06DiplomaPensamientoLogicoLenguajes.png",
+      },
+      // 38
+      {
+        title:
+          "Curso de Pensamiento Lógico: Funciones y Estructuras de Control",
+        institution: "Platzi",
+        duration: "12 horas (Aprobado el 14 de octubre de 2022)",
+        description:
+          "Participé y aprobé el curso de Pensamiento Lógico: Funciones y Estructuras de Control, adquiriendo conocimientos sobre el uso y diseño de funciones, así como estructuras de control en programación para resolver problemas de forma eficiente.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/05DiplomaPensamientoLogicoEstructuras.png",
+      },
+      // 39
+      {
+        title: "Curso de Pensamiento Lógico: Algoritmos y Diagramas de Flujo",
+        institution: "Platzi",
+        duration: "12 horas (Aprobado el 19 de septiembre de 2022)",
+        description:
+          "Participé y aprobé el curso de Pensamiento Lógico: Algoritmos y Diagramas de Flujo, adquiriendo habilidades para diseñar soluciones estructuradas mediante el uso de algoritmos y diagramas de flujo, mejorando mis capacidades de análisis y resolución de problemas.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/04DiplomaPensamientoLogico.png",
+      },
+      // 40
+      {
+        title: "Curso de Programación Básica",
+        institution: "Platzi",
+        duration: "29 horas (Aprobado el 17 de diciembre de 2022)",
+        description:
+          "Participé y aprobé el curso de Programación Básica, adquiriendo fundamentos esenciales de programación, lógica computacional y resolución de problemas mediante el uso de lenguajes de programación.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate:
+          "/images/education/platzi/07NuevoDiplomaProgramacionBasica.png",
+      },
+      // 41
+      {
+        title: "Curso de Introducción a la Terminal y Línea de Comandos",
+        institution: "Platzi",
+        duration: "11 horas (Aprobado el 28 de diciembre de 2022)",
+        description:
+          "Participé y aprobé el curso de Introducción a la Terminal y Línea de Comandos, aprendiendo a utilizar herramientas de línea de comandos de manera eficiente para la gestión y automatización de tareas en sistemas operativos.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/08DiplomaTerminal.png",
+      },
+
+      // Simplified - keeping only main courses for now
+      // More courses can be added following the same pattern
+      // ... other courses
+
+    ],
+  },
+  // More categories and items can be added following the same pattern
 ];
