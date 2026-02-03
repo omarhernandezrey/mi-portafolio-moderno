@@ -47,8 +47,7 @@ export default function HeroSection() {
           priority
           quality={85}
           className="object-cover"
-          placeholder="blur"
-          blurDataURL="/images/hero-background-lowres.jpg"
+          placeholder="empty"
         />
       </div>
 

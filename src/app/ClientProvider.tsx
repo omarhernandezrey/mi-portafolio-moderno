@@ -15,23 +15,32 @@ export default function ClientProvider({ children }: ClientProviderProps) {
     // Asegurar que i18n esté inicializado en el cliente
     import('@/lib/i18n');
     
-    // SOLUCIÓN: Forzar scroll funcional
+    // SOLUCIÓN: Forzar scroll funcional (ejecutar después de la hidratación)
     const forceScrollEnabled = () => {
-      // Restaurar overflow en html y body
-      document.documentElement.style.setProperty('overflow', 'visible', 'important');
-      document.documentElement.style.setProperty('overflow-y', 'scroll', 'important');
-      document.documentElement.style.setProperty('overflow-x', 'hidden', 'important');
-      
-      document.body.style.setProperty('overflow', 'visible', 'important');
-      document.body.style.setProperty('overflow-y', 'auto', 'important');
-      document.body.style.setProperty('overflow-x', 'hidden', 'important');
-      document.body.style.setProperty('height', 'auto', 'important');
+      // Usar requestAnimationFrame para evitar problemas de hidratación
+      requestAnimationFrame(() => {
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+        
+        // Solo aplicar si no ya están configurados
+        if (htmlEl.style.overflow !== 'scroll') {
+          htmlEl.style.overflow = 'visible';
+          htmlEl.style.overflowY = 'scroll';
+          htmlEl.style.overflowX = 'hidden';
+        }
+        
+        if (bodyEl.style.overflow !== 'auto') {
+          bodyEl.style.overflow = 'visible';
+          bodyEl.style.overflowY = 'auto';
+          bodyEl.style.overflowX = 'hidden';
+          bodyEl.style.height = 'auto';
+        }
+      });
     };
     
-    // Ejecutar en diferentes momentos
-    forceScrollEnabled();
+    // Ejecutar después de la hidratación completa
+    setTimeout(forceScrollEnabled, 0);
     setTimeout(forceScrollEnabled, 100);
-    setTimeout(forceScrollEnabled, 500);
     
     return () => {
       // Cleanup si es necesario

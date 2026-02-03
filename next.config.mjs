@@ -14,6 +14,7 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
     unoptimized: false,
+    qualities: [60, 75, 85, 95],
   },
 
   // Optimización para build en Vercel
@@ -51,6 +52,16 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     });
     return config;
+  },
+
+  // Configuración de Turbopack
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
   },
 };
 

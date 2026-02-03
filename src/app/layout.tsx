@@ -195,7 +195,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <head>
         {/* ═══════════════════════════════════════════════════════════════ */}
         {/* META VIEWPORT Y BÁSICOS - OPTIMIZADO PARA TODOS LOS DISPOSITIVOS */}
