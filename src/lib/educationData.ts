@@ -37,6 +37,7 @@ export const educationData: EducationCategory[] = [
       en: "University"
     },
     items: [
+      // 85 - Ingeniero de Software
       {
         title: {
           es: "Ingeniero de Software",
@@ -65,6 +66,7 @@ export const educationData: EducationCategory[] = [
       en: "Technical Training (SENA)"
     },
     items: [
+      // 84 - Tecnólogo ADSI (SENA)
       {
         title: {
           es: "Tecnólogo ADSI (SENA)",
@@ -94,6 +96,7 @@ export const educationData: EducationCategory[] = [
       en: "Talento Tech Bogotá"
     },
     items: [
+      // 83 - Bootcamp en Desarrollo Web Full Stack
       {
         title: {
           es: "Bootcamp en Desarrollo Web Full Stack",
@@ -123,6 +126,7 @@ export const educationData: EducationCategory[] = [
       en: "ITCertificate"
     },
     items: [
+      // 82 - Full Stack Developer Certified Specialist
       {
         title: {
           es: "Full Stack Developer Certified Specialist",
@@ -144,6 +148,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/ITCertificate/fullStackDeveloperCertifiedSpecialist_page-0001.jpg",
       },
+      // 81 - Back End Developer Certified Professional
       {
         title: {
           es: "Back End Developer Certified Professional",
@@ -173,6 +178,7 @@ export const educationData: EducationCategory[] = [
       en: "Online Courses (SENA),(Platzi) and more..."
     },
     items: [
+      // 80 - Metodología de la Programación de Sistemas Informáticos
       {
         title: {
           es: "Metodología de la Programación de Sistemas Informáticos",
@@ -194,6 +200,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/sena/02certificadoAprobacionMetodologiaDeLaProgramacionDeSistemasInformaticos.png",
       },
+      // 79 - Construcción de Bases de Datos con MySQL
       {
         title: {
           es: "Construcción de Bases de Datos con MySQL",
@@ -215,6 +222,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/sena/03certificadoAprobacionConstruccionDeBasesDeDatosConMysql.png",
       },
+      // 78 - Atender Clientes de Acuerdo con Procedimiento de Servicio y Normativa
       {
         title: {
           es: "Atender Clientes de Acuerdo con Procedimiento de Servicio y Normativa - Nivel Intermedio",
@@ -236,6 +244,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/sena/04certificadoAprobacionCompetenciaLaboral.png",
       },
+      // 77 - Mentalidad de Líder
       {
         title: {
           es: "Mentalidad de Líder",
@@ -258,7 +267,7 @@ export const educationData: EducationCategory[] = [
           "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png",
       },
       // Platzi Courses
-
+      // 86 - Curso de React.js Nuevo
       {
         title: {
           es: "Curso de React.js",
@@ -280,7 +289,7 @@ export const educationData: EducationCategory[] = [
         certificate: "/images/education/platzi/54 diploma-react.jpg",
         isNew: true,
       },
-
+      // 85 - Audiocurso de Frameworks y Arquitecturas Frontend
       {
         title: {
           es: "Audiocurso de Frameworks y Arquitecturas Frontend: Casos de Estudio",
@@ -301,8 +310,7 @@ export const educationData: EducationCategory[] = [
               logo: "/images/education/platzi/platzi-logo.png",
               certificate: "/images/education/platzi/53 diploma-arquitectura-frontend.jpg"
             },
-
-
+            // 84 - Curso de Frameworks y Librerías de JavaScript
             {
               title: {
                 es: "Curso de Frameworks y Librerías de JavaScript",
@@ -323,7 +331,7 @@ export const educationData: EducationCategory[] = [
               logo: "/images/education/platzi/platzi-logo.png",
               certificate: "/images/education/platzi/52 diploma-frameworks-javascript.jpg"
             },
-
+            // 83 - Curso de Introducción al Testing con JavaScript
             {
               title: {
                 es: "Curso de Introducción al Testing con JavaScript",
@@ -344,7 +352,7 @@ export const educationData: EducationCategory[] = [
               logo: "/images/education/platzi/platzi-logo.png",
               certificate: "/images/education/platzi/51diploma-javascript-testing.jpg"
             },
-
+            // 82 - Curso de Debugging con Chrome DevTools
             {
               title: {
                 es: "Curso de Debugging con Chrome DevTools",
@@ -365,6 +373,7 @@ export const educationData: EducationCategory[] = [
               logo: "/images/education/platzi/platzi-logo.png",
               certificate: "/images/education/platzi/50cursoDeDebuggingConChromeDevTools.jpg"
             },
+          // 81 - Curso Básico de Web Components con JavaScript
           {
             title: {
               es: "Curso Básico de Web Components con JavaScript",
@@ -385,6 +394,7 @@ export const educationData: EducationCategory[] = [
             logo: "/images/education/platzi/platzi-logo.png",
             certificate: "/images/education/platzi/49diplomaWebComponentsJavascript.jpg"
           },
+        // 80 - Curso Profesional de Consumo de API REST con JavaScript
         {
               title: {
           es: "Curso Profesional de Consumo de API REST con JavaScript",
@@ -405,6 +415,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/48cursoDeApiRestConJavascriptPerformanceYUsabilidad.jpg"
       },
+      // 79 - Práctico de Consumo de API REST con JavaScript
       {
         title: {
           es: "Práctico de Consumo de API REST con JavaScript",
@@ -426,7 +437,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/46DiplomaDelCursoDeApiRestConJavascriptEjemplosConApisReales.png",
       },
-      // 2
+      // 78 - Consumo de API REST con JavaScript
       {
         title: {
           es: "Consumo de API REST con JavaScript",
@@ -448,7 +459,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/45DiplomaDelCursoDeApiRestConJavascriptFundamentos.png",
       },
-      // 3
+      // 77 - JavaScript: Manipulación del DOM
       {
         title: {
           es: "JavaScript: Manipulación del DOM",
@@ -470,7 +481,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/44DiplomaDelCursoDeJavascriptManipulacinDelDom.png",
       },
-      // 4
+      // 76 - Animaciones con CSS
       {
         title: "Animaciones con CSS",
         institution: "Platzi",
@@ -481,7 +492,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/43DiplomaDelCursoDeAnimacionesConCss.png",
       },
-      // 5
+      // 75 - Transformaciones y Transiciones en CSS
       {
         title: "Transformaciones y Transiciones en CSS",
         institution: "Platzi",
@@ -492,7 +503,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/42DiplomaDelCursoDeTransformacionesYTransicionesEnCss.png",
       },
-      // 6
+      // 74 - Curso Básico de Tailwind CSS
       {
         title: "Curso Básico de Tailwind CSS",
         institution: "Platzi",
@@ -503,7 +514,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/41DiplomaDelCursoBsicoDeTailwind2Y3.png",
       },
-      // 7
+      // 73 - Base de Datos con SQL
       {
         title: {
           es: "Base de Datos con SQL",
@@ -525,7 +536,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/27DiplomaDelCursoDeBasesDeDatosConSql.png",
       },
-      // 8
+      // 72 - Fundamentos de JavaScript
       {
         title: {
           es: "Fundamentos de JavaScript",
@@ -547,7 +558,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/24DiplomaDelCursoDeFundamentosDeJavascript.png",
       },
-      // 9
+      // 71 - Arquitecturas CSS
       {
         title: "Arquitecturas CSS",
         institution: "Platzi",
@@ -558,7 +569,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/40DiplomaDelCursoDeArquitecturasCss.png",
       },
-      // 10
+      // 70 - Diseño Web con CSS Grid y Flexbox
       {
         title: "Diseño Web con CSS Grid y Flexbox",
         institution: "Platzi",
@@ -569,7 +580,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/39DiplomaDelCursoDeDiseoWebConCssGridYFlexbox.png",
       },
-      // 11
+      // 69 - CSS Grid Layout (Profesional)
       {
         title: "CSS Grid Layout (Profesional)",
         institution: "Platzi",
@@ -580,7 +591,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/38DiplomaDelCursoProfesionalDeCssGridLayout.png",
       },
-      // 12
+      // 68 - Maquetación en CSS (Práctico)
       {
         title: "Maquetación en CSS (Práctico)",
         institution: "Platzi",
@@ -591,7 +602,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/37DiplomaDelCursoPrcticoDeMaquetacinEnCss.png",
       },
-      // 13
+      // 67 - CSS Grid Básico
       {
         title: "CSS Grid Básico",
         institution: "Platzi",
@@ -602,7 +613,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/36DiplomaDelCursoDeCssGridBsico.png",
       },
-      // 14
+      // 66 - Sistemas de Diseño
       {
         title: "Sistemas de Diseño",
         institution: "Platzi",
@@ -613,7 +624,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/35DiplomaDelCursoDeSistemasDeDiseoEfectivos.png",
       },
-      // 15
+      // 65 - Diseño para Programadores
       {
         title: "Diseño para Programadores",
         institution: "Platzi",
@@ -624,7 +635,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/34DiplomaDelCursoDeDiseoParaDevelopers.png",
       },
-      // 16
+      // 64 - Fundamentos de SASS: Crea tu Primera Landing Page
       {
         title: "Fundamentos de SASS: Crea tu Primera Landing Page",
         institution: "Platzi",
@@ -635,7 +646,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/33DiplomaDelCursoDeFundamentosDeSassCreaTuPrimeraLandingPage.png",
       },
-      // 17
+      // 63 - Responsive Design: Maquetación Mobile First
       {
         title: "Responsive Design: Maquetación Mobile First",
         institution: "Platzi",
@@ -646,7 +657,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/32DiplomaDelCursoDeResponsiveDesignMaquetacinMobileFirst.png",
       },
-      // 18
+      // 62 - Definitivo de HTML y CSS
       {
         title: "Definitivo de HTML y CSS",
         institution: "Platzi",
@@ -657,7 +668,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/30DiplomaDelCursoDefinitivoDeHtmlYCss.png",
       },
-      // 19
+      // 61 - Práctico de HTML y CSS
       {
         title: "Práctico de HTML y CSS",
         institution: "Platzi",
@@ -668,7 +679,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/31DiplomaDelCursoPrcticoDeHtmlYCss.png",
       },
-      // 20
+      // 60 - Introducción al Desarrollo Backend
       {
         title: "Introducción al Desarrollo Backend",
         institution: "Platzi",
@@ -679,7 +690,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/26DiplomaDelCursoDeIntroduccinAlDesarrolloBackend.png",
       },
-      // 21
+      // 59 - React.js con Vite.js y TailwindCSS
       {
         title: {
           es: "React.js con Vite.js y TailwindCSS",
@@ -701,7 +712,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/25DiplomaDelCursoDeReactjsConVitejsYTailwindcss.png",
       },
-      // 22
+      // 58 - Curso de React.js
       {
         title: {
           es: "Curso de React.js",
@@ -722,7 +733,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/47DiplomaDelCursoDeReactJs.png",
       },
-      // 23
+      // 57 - Curso Práctico de JavaScript
       {
         title: "Curso Práctico de JavaScript",
         institution: "Platzi",
@@ -733,7 +744,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/18DiplomaDelCursoPrcticoDeJavascript.png",
       },
-      // 24
+      // 56 - Curso de ECMAScript: Historia y Versiones de JavaScript
       {
         title: "Curso de ECMAScript: Historia y Versiones de JavaScript",
         institution: "Platzi",
@@ -744,7 +755,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/19DiplomaDelCursoDeEcmascriptHistoriaYVersionesDeJavascript.png",
       },
-      // 25
+      // 55 - Curso Profesional de Git y GitHub
       {
         title: "Curso Profesional de Git y GitHub",
         institution: "Platzi",
@@ -754,7 +765,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/09DiplomaGitGithub.png",
       },
-      // 26
+      // 54 - Curso de Fundamentos de Ingeniería de Software
       {
         title: "Curso de Fundamentos de Ingeniería de Software",
         institution: "Platzi",
@@ -765,7 +776,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/10DiplomaDeFundamentosDeIngenieria.png",
       },
-      // 27
+      // 53 - Curso de Tecnología para Gerentes y Directores
       {
         title: "Curso de Tecnología para Gerentes y Directores",
         institution: "Platzi",
@@ -776,7 +787,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/15DiplomaDelCursoDeTecnologaParaGerentesYDirectores.png",
       },
-      // 28
+      // 52 - Curso para Conseguir Trabajo como Frontend Developer
       {
         title: "Curso para Conseguir Trabajo como Frontend Developer",
         institution: "Platzi",
@@ -787,7 +798,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/23DiplomaDelCursoParaConseguirTrabajoComoFrontendDeveloper.png",
       },
-      // 29
+      // 51 - Curso de Introducción al Pensamiento Computacional con Python
       {
         title: "Curso de Introducción al Pensamiento Computacional con Python",
         institution: "Platzi",
@@ -798,7 +809,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/12DiplomaDelCursoDeIntroduccinAlPensamientoComputacionalConPython.png",
       },
-      // 30
+      // 50 - Curso de Historia de la Innovación y el Emprendimiento con Diana Uribe
       {
         title:
           "Curso de Historia de la Innovación y el Emprendimiento con Diana Uribe",
@@ -810,7 +821,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/14DiplomaDelCursoDeHistoriaDeLaInnovacinYElEmprendimientoConDianaUribe.png",
       },
-      // 31
+      // 49 - Curso de Introducción a la Web: Historia y Funcionamiento de Internet
       {
         title:
           "Curso de Introducción a la Web: Historia y Funcionamiento de Internet",
@@ -822,7 +833,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/13DiplomaDelCursoDeIntroduccinALaWebHistoriaYFuncionamientoDeInternet.png",
       },
-      // 32
+      // 48 - Curso de Historia de la Programación: Lenguajes y Paradigmas
       {
         title: "Curso de Historia de la Programación: Lenguajes y Paradigmas",
         institution: "Platzi",
@@ -833,7 +844,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/11DiplomaHistoriaProgramacion.png",
       },
-      // 33
+      // 47 - Curso de Creación de Páginas Web con ChatGPT
       {
         title: "Curso de Creación de Páginas Web con ChatGPT",
         institution: "Platzi",
@@ -844,7 +855,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/17DiplomaDelCursoDeCreacinDePginasWebConChatgpt.png",
       },
-      // 34
+      // 46 - Curso de Creación de Páginas Web
       {
         title: "Curso de Creación de Páginas Web",
         institution: "Platzi",
@@ -855,16 +866,9 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/16DiplomaDelCursoDeCreacinDePginasWebConWordpressYNoCode.png",
       },
-      // 35
-      /*   {
-    "title": "Curso de Configuración de Entorno de Desarrollo en Windows",
-    "institution": "Platzi",
-    "duration": "12 horas (Aprobado el 9 de julio de 2023)",
-    "description": "Participé y aprobé el curso de Configuración de Entorno de Desarrollo en Windows, adquiriendo conocimientos prácticos para configurar herramientas y entornos eficientes para el desarrollo de software en sistemas operativos Windows.",
-    "logo": "/images/education/platzi/platzi-logo.png",
-    "certificate": "/images/education/platzi/01DiplomaDelCursoDeConfiguracinDeEntornoDeDesarrolloEnWindows.png"
-  }, */
-      // 36
+      // 45 - Construcción de Bases de Datos con MySQL
+      // Note: This certificate is from SENA, listed separately above in the courses section
+      // 44 - Curso Básico de Algoritmos y Pensamiento Lógico 2020
       {
         title: "Curso Básico de Algoritmos y Pensamiento Lógico 2020",
         institution: "Platzi",
@@ -875,7 +879,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/02DiplomaPensamientoLogico2020.png",
       },
-      // 37
+      // 43 - Curso de Pensamiento Lógico: Lenguajes de Programación
       {
         title: "Curso de Pensamiento Lógico: Lenguajes de Programación",
         institution: "Platzi",
@@ -886,7 +890,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/06DiplomaPensamientoLogicoLenguajes.png",
       },
-      // 38
+      // 42 - Curso de Pensamiento Lógico: Funciones y Estructuras de Control
       {
         title:
           "Curso de Pensamiento Lógico: Funciones y Estructuras de Control",
@@ -898,7 +902,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/05DiplomaPensamientoLogicoEstructuras.png",
       },
-      // 39
+      // 41 - Curso de Pensamiento Lógico: Algoritmos y Diagramas de Flujo
       {
         title: "Curso de Pensamiento Lógico: Algoritmos y Diagramas de Flujo",
         institution: "Platzi",
@@ -908,7 +912,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/04DiplomaPensamientoLogico.png",
       },
-      // 40
+      // 40 - Curso de Programación Básica
       {
         title: "Curso de Programación Básica",
         institution: "Platzi",
@@ -919,7 +923,7 @@ export const educationData: EducationCategory[] = [
         certificate:
           "/images/education/platzi/07NuevoDiplomaProgramacionBasica.png",
       },
-      // 41
+      // 39 - Curso de Introducción a la Terminal y Línea de Comandos
       {
         title: "Curso de Introducción a la Terminal y Línea de Comandos",
         institution: "Platzi",
@@ -931,7 +935,7 @@ export const educationData: EducationCategory[] = [
       },
 
       // ============ OTROS CURSOS DE PLATZI ============
-      // 42 - Historia de la Programación
+      // 38 - Curso de Historia de la Programación
       {
         title: "Curso de Historia de la Programación",
         institution: "Platzi",
@@ -941,7 +945,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/11DiplomaHistoriaProgramacion.png",
       },
-      // 43 - Introducción a la Web
+      // 37 - Introducción a la Web
       {
         title: "Curso de Introducción a la Web: Historia y Funcionamiento de Internet",
         institution: "Platzi",
@@ -951,7 +955,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/13DiplomaDelCursoDeIntroduccinALaWebHistoriaYFuncionamientoDeInternet.png",
       },
-      // 44 - Historia de la Innovación
+      // 36 - Historia de la Innovación
       {
         title: "Curso de Historia de la Innovación y el Emprendimiento",
         institution: "Platzi",
@@ -961,7 +965,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/14DiplomaDelCursoDeHistoriaDeLaInnovacinYElEmprendimientoConDianaUribe.png",
       },
-      // 46 - Asincronismo con JavaScript
+      // 35 - Asincronismo con JavaScript
       {
         title: "Curso de Asincronismo con JavaScript",
         institution: "Platzi",
@@ -971,7 +975,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/20DiplomaDelCursoDeAsincronismoConJavascript.png",
       },
-      // 47 - NPM: Gestión de Paquetes y Dependencias
+      // 34 - NPM: Gestión de Paquetes y Dependencias
       {
         title: "Curso de NPM: Gestión de Paquetes y Dependencias en JavaScript",
         institution: "Platzi",
@@ -981,7 +985,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/21DiplomaDelCursoDeNpmGestinDePaquetesYDependenciasEnJavascript.png",
       },
-      // 48 - Prueba Técnica: E-Commerce
+      // 33 - Prueba Técnica: E-Commerce
       {
         title: "Prueba Técnica: E-Commerce Profesional con React.js",
         institution: "Platzi",
@@ -991,7 +995,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/22DiplomaDePruebaTcnicaECommerceProfesionalConReactjs.png",
       },
-      // 49 - Fundamentos de JavaScript
+      // 32 - Fundamentos de JavaScript (duplicado, se renumera)
       {
         title: "Curso de Fundamentos de JavaScript",
         institution: "Platzi",
@@ -1001,7 +1005,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/24DiplomaDelCursoDeFundamentosDeJavascript.png",
       },
-      // 50 - Introducción al Desarrollo Backend
+      // 31 - Introducción al Desarrollo Backend
       {
         title: "Curso de Introducción al Desarrollo Backend",
         institution: "Platzi",
@@ -1011,7 +1015,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/26DiplomaDelCursoDeIntroduccinAlDesarrolloBackend.png",
       },
-      // 51 - Bases de Datos con SQL
+      // 30 - Bases de Datos con SQL
       {
         title: "Curso de Bases de Datos con SQL",
         institution: "Platzi",
@@ -1021,7 +1025,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/27DiplomaDelCursoDeBasesDeDatosConSql.png",
       },
-      // 52 - Frontend Developer
+      // 29 - Frontend Developer
       {
         title: "Curso de Frontend Developer",
         institution: "Platzi",
@@ -1031,7 +1035,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/28DiplomaDelCursoDeFrontendDeveloper.png",
       },
-      // 53 - Práctico de Frontend Developer
+      // 28 - Práctico de Frontend Developer
       {
         title: "Curso Práctico de Frontend Developer",
         institution: "Platzi",
@@ -1041,7 +1045,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/29DiplomaDelCursoPrcticoDeFrontendDeveloper.png",
       },
-      // 54 - HTML y CSS Definitivo
+      // 27 - HTML y CSS Definitivo
       {
         title: "Curso Definitivo de HTML y CSS",
         institution: "Platzi",
@@ -1051,7 +1055,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/30DiplomaDelCursoDefinitivoDeHtmlYCss.png",
       },
-      // 55 - Práctico de HTML y CSS
+      // 26 - Práctico de HTML y CSS
       {
         title: "Curso Práctico de HTML y CSS",
         institution: "Platzi",
@@ -1061,7 +1065,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/31DiplomaDelCursoPrcticoDeHtmlYCss.png",
       },
-      // 56 - Responsive Design
+      // 25 - Responsive Design
       {
         title: "Curso de Responsive Design: Maquetación Mobile First",
         institution: "Platzi",
@@ -1071,7 +1075,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/32DiplomaDelCursoDeResponsiveDesignMaquetacinMobileFirst.png",
       },
-      // 57 - Fundamentos de Sass
+      // 24 - Fundamentos de Sass
       {
         title: "Curso de Fundamentos de Sass: Crea tu Primera Landing Page",
         institution: "Platzi",
@@ -1081,7 +1085,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/33DiplomaDelCursoDeFundamentosDeSassCreaTuPrimeraLandingPage.png",
       },
-      // 58 - Diseño para Developers
+      // 23 - Diseño para Developers
       {
         title: "Curso de Diseño para Developers",
         institution: "Platzi",
@@ -1091,7 +1095,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/34DiplomaDelCursoDeDiseoParaDevelopers.png",
       },
-      // 59 - Sistemas de Diseño Efectivos
+      // 22 - Sistemas de Diseño Efectivos
       {
         title: "Curso de Sistemas de Diseño Efectivos",
         institution: "Platzi",
@@ -1101,7 +1105,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/35DiplomaDelCursoDeSistemasDeDiseoEfectivos.png",
       },
-      // 60 - CSS Grid Básico
+      // 21 - CSS Grid Básico
       {
         title: "Curso de CSS Grid Básico",
         institution: "Platzi",
@@ -1111,7 +1115,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/36DiplomaDelCursoDeCssGridBsico.png",
       },
-      // 61 - Práctico de Maquetación en CSS
+      // 20 - Práctico de Maquetación en CSS
       {
         title: "Curso Práctico de Maquetación en CSS",
         institution: "Platzi",
@@ -1121,7 +1125,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/37DiplomaDelCursoPrcticoDeMaquetacinEnCss.png",
       },
-      // 62 - CSS Grid Profesional
+      // 19 - CSS Grid Profesional
       {
         title: "Curso Profesional de CSS Grid Layout",
         institution: "Platzi",
@@ -1131,7 +1135,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/38DiplomaDelCursoProfesionalDeCssGridLayout.png",
       },
-      // 63 - Diseño Web con CSS Grid y Flexbox
+      // 18 - Diseño Web con CSS Grid y Flexbox
       {
         title: "Curso de Diseño Web con CSS Grid y Flexbox",
         institution: "Platzi",
@@ -1141,7 +1145,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/39DiplomaDelCursoDeDiseoWebConCssGridYFlexbox.png",
       },
-      // 64 - Arquitecturas CSS
+      // 17 - Arquitecturas CSS
       {
         title: "Curso de Arquitecturas CSS",
         institution: "Platzi",
@@ -1151,7 +1155,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/40DiplomaDelCursoDeArquitecturasCss.png",
       },
-      // 65 - Tailwind CSS Básico
+      // 16 - Tailwind CSS Básico
       {
         title: "Curso Básico de Tailwind CSS 2 y 3",
         institution: "Platzi",
@@ -1161,7 +1165,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/41DiplomaDelCursoBsicoDeTailwind2Y3.png",
       },
-      // 66 - Transformaciones y Transiciones en CSS
+      // 15 - Transformaciones y Transiciones en CSS
       {
         title: "Curso de Transformaciones y Transiciones en CSS",
         institution: "Platzi",
@@ -1171,7 +1175,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/42DiplomaDelCursoDeTransformacionesYTransicionesEnCss.png",
       },
-      // 67 - Animaciones con CSS
+      // 14 - Animaciones con CSS
       {
         title: "Curso de Animaciones con CSS",
         institution: "Platzi",
@@ -1181,7 +1185,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/43DiplomaDelCursoDeAnimacionesConCss.png",
       },
-      // 68 - Manipulación del DOM con JavaScript
+      // 13 - Manipulación del DOM con JavaScript
       {
         title: "Curso de JavaScript: Manipulación del DOM",
         institution: "Platzi",
@@ -1191,7 +1195,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/44DiplomaDelCursoDeJavascriptManipulacinDelDom.png",
       },
-      // 69 - API REST con JavaScript: Fundamentos
+      // 12 - API REST con JavaScript: Fundamentos
       {
         title: "Curso de API REST con JavaScript: Fundamentos",
         institution: "Platzi",
@@ -1201,7 +1205,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/45DiplomaDelCursoDeApiRestConJavascriptFundamentos.png",
       },
-      // 70 - API REST con JavaScript: Ejemplos
+      // 11 - API REST con JavaScript: Ejemplos
       {
         title: "Curso de API REST con JavaScript: Ejemplos con APIs Reales",
         institution: "Platzi",
@@ -1211,7 +1215,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/46DiplomaDelCursoDeApiRestConJavascriptEjemplosConApisReales.png",
       },
-      // 72 - Básico de Algoritmos
+      // 10 - Básico de Algoritmos
       {
         title: "Curso Básico de Algoritmos y Pensamiento Lógico",
         institution: "Platzi",
@@ -1221,7 +1225,7 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/03DiplomaBasicoProgramacion.png",
       },
-      // 73 - Configuración de Entorno de Desarrollo
+      // 09 - Configuración de Entorno de Desarrollo
       {
         title: "Curso de Configuración de Entorno de Desarrollo en Windows",
         institution: "Platzi",
