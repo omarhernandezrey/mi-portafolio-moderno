@@ -930,9 +930,329 @@ export const educationData: EducationCategory[] = [
         certificate: "/images/education/platzi/08DiplomaTerminal.png",
       },
 
-      // Simplified - keeping only main courses for now
-      // More courses can be added following the same pattern
-      // ... other courses
+      // ============ OTROS CURSOS DE PLATZI ============
+      // 42 - Historia de la Programación
+      {
+        title: "Curso de Historia de la Programación",
+        institution: "Platzi",
+        duration: "7 horas",
+        description:
+          "Curso sobre la historia y evolución de la programación y los lenguajes de programación a través del tiempo.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/11DiplomaHistoriaProgramacion.png",
+      },
+      // 43 - Introducción a la Web
+      {
+        title: "Curso de Introducción a la Web: Historia y Funcionamiento de Internet",
+        institution: "Platzi",
+        duration: "15 horas",
+        description:
+          "Aprende la historia de Internet, cómo funciona la web y los conceptos fundamentales detrás de las tecnologías que usamos a diario.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/13DiplomaDelCursoDeIntroduccinALaWebHistoriaYFuncionamientoDeInternet.png",
+      },
+      // 44 - Historia de la Innovación
+      {
+        title: "Curso de Historia de la Innovación y el Emprendimiento",
+        institution: "Platzi",
+        duration: "18 horas",
+        description:
+          "Explora la historia de la innovación y el emprendimiento con Diana Uribe, aprendiendo sobre grandes innovadores y sus contribuciones.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/14DiplomaDelCursoDeHistoriaDeLaInnovacinYElEmprendimientoConDianaUribe.png",
+      },
+      // 45 - Creación de Páginas Web con ChatGPT
+      {
+        title: "Curso de Creación de Páginas Web con ChatGPT",
+        institution: "Platzi",
+        duration: "8 horas",
+        description:
+          "Aprende a crear páginas web utilizando ChatGPT como herramienta de asistencia en el desarrollo web.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/17DiplomaDelCursoDeCreacinDePginasWebConChatgpt.png",
+      },
+      // 46 - Asincronismo con JavaScript
+      {
+        title: "Curso de Asincronismo con JavaScript",
+        institution: "Platzi",
+        duration: "21 horas",
+        description:
+          "Domina las técnicas de programación asincrónica en JavaScript: Callbacks, Promesas, Async/Await y manejo de operaciones asincrónicas.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/20DiplomaDelCursoDeAsincronismoConJavascript.png",
+      },
+      // 47 - NPM: Gestión de Paquetes y Dependencias
+      {
+        title: "Curso de NPM: Gestión de Paquetes y Dependencias en JavaScript",
+        institution: "Platzi",
+        duration: "12 horas",
+        description:
+          "Aprende a utilizar NPM para gestionar paquetes y dependencias en proyectos JavaScript, optimizando tu flujo de trabajo.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/21DiplomaDelCursoDeNpmGestinDePaquetesYDependenciasEnJavascript.png",
+      },
+      // 48 - Prueba Técnica: E-Commerce
+      {
+        title: "Prueba Técnica: E-Commerce Profesional con React.js",
+        institution: "Platzi",
+        duration: "20 horas",
+        description:
+          "Desarrolla un e-commerce profesional usando React.js en este curso práctico de prueba técnica.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/22DiplomaDePruebaTcnicaECommerceProfesionalConReactjs.png",
+      },
+      // 49 - Fundamentos de JavaScript
+      {
+        title: "Curso de Fundamentos de JavaScript",
+        institution: "Platzi",
+        duration: "16 horas",
+        description:
+          "Aprende los fundamentos esenciales de JavaScript: variables, operadores, funciones, objetos, arrays y más.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/24DiplomaDelCursoDeFundamentosDeJavascript.png",
+      },
+      // 50 - Introducción al Desarrollo Backend
+      {
+        title: "Curso de Introducción al Desarrollo Backend",
+        institution: "Platzi",
+        duration: "15 horas",
+        description:
+          "Aprende los conceptos fundamentales del desarrollo backend: servidores, APIs, bases de datos y autenticación.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/26DiplomaDelCursoDeIntroduccinAlDesarrolloBackend.png",
+      },
+      // 51 - Bases de Datos con SQL
+      {
+        title: "Curso de Bases de Datos con SQL",
+        institution: "Platzi",
+        duration: "22 horas",
+        description:
+          "Domina SQL: consultas, tablas, relaciones, y optimización de bases de datos relacionales.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/27DiplomaDelCursoDeBasesDeDatosConSql.png",
+      },
+      // 52 - Frontend Developer
+      {
+        title: "Curso de Frontend Developer",
+        institution: "Platzi",
+        duration: "25 horas",
+        description:
+          "Conviértete en un desarrollador frontend completo aprendiendo HTML, CSS, JavaScript y herramientas modernas.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/28DiplomaDelCursoDeFrontendDeveloper.png",
+      },
+      // 53 - Práctico de Frontend Developer
+      {
+        title: "Curso Práctico de Frontend Developer",
+        institution: "Platzi",
+        duration: "20 horas",
+        description:
+          "Aprende practicando: construye proyectos reales como un desarrollador frontend profesional.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/29DiplomaDelCursoPrcticoDeFrontendDeveloper.png",
+      },
+      // 54 - HTML y CSS Definitivo
+      {
+        title: "Curso Definitivo de HTML y CSS",
+        institution: "Platzi",
+        duration: "23 horas",
+        description:
+          "Domina HTML y CSS desde los fundamentos hasta técnicas avanzadas para crear sitios web profesionales.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/30DiplomaDelCursoDefinitivoDeHtmlYCss.png",
+      },
+      // 55 - Práctico de HTML y CSS
+      {
+        title: "Curso Práctico de HTML y CSS",
+        institution: "Platzi",
+        duration: "18 horas",
+        description:
+          "Aprende HTML y CSS de forma práctica construyendo proyectos reales desde cero.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/31DiplomaDelCursoPrcticoDeHtmlYCss.png",
+      },
+      // 56 - Responsive Design
+      {
+        title: "Curso de Responsive Design: Maquetación Mobile First",
+        institution: "Platzi",
+        duration: "19 horas",
+        description:
+          "Aprende a crear sitios web responsivos aplicando la metodología Mobile First para adaptarse a todos los dispositivos.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/32DiplomaDelCursoDeResponsiveDesignMaquetacinMobileFirst.png",
+      },
+      // 57 - Fundamentos de Sass
+      {
+        title: "Curso de Fundamentos de Sass: Crea tu Primera Landing Page",
+        institution: "Platzi",
+        duration: "17 horas",
+        description:
+          "Aprende Sass para escribir CSS más eficiente y mantenible, creando tu primera landing page profesional.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/33DiplomaDelCursoDeFundamentosDeSassCreaTuPrimeraLandingPage.png",
+      },
+      // 58 - Diseño para Developers
+      {
+        title: "Curso de Diseño para Developers",
+        institution: "Platzi",
+        duration: "15 horas",
+        description:
+          "Aprende principios de diseño esencial para desarrolladores: composición, tipografía, color y más.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/34DiplomaDelCursoDeDiseoParaDevelopers.png",
+      },
+      // 59 - Sistemas de Diseño Efectivos
+      {
+        title: "Curso de Sistemas de Diseño Efectivos",
+        institution: "Platzi",
+        duration: "16 horas",
+        description:
+          "Crea y mantén sistemas de diseño efectivos para mejorar la consistencia y eficiencia en proyectos grandes.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/35DiplomaDelCursoDeSistemasDeDiseoEfectivos.png",
+      },
+      // 60 - CSS Grid Básico
+      {
+        title: "Curso de CSS Grid Básico",
+        institution: "Platzi",
+        duration: "13 horas",
+        description:
+          "Aprende los fundamentos de CSS Grid, una herramienta poderosa para crear layouts bidimensionales complejos.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/36DiplomaDelCursoDeCssGridBsico.png",
+      },
+      // 61 - Práctico de Maquetación en CSS
+      {
+        title: "Curso Práctico de Maquetación en CSS",
+        institution: "Platzi",
+        duration: "16 horas",
+        description:
+          "Practica técnicas avanzadas de maquetación en CSS construyendo layouts reales y profesionales.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/37DiplomaDelCursoPrcticoDeMaquetacinEnCss.png",
+      },
+      // 62 - CSS Grid Profesional
+      {
+        title: "Curso Profesional de CSS Grid Layout",
+        institution: "Platzi",
+        duration: "18 horas",
+        description:
+          "Domina CSS Grid a nivel profesional: crear layouts complejos, responsive y optimizados.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/38DiplomaDelCursoProfesionalDeCssGridLayout.png",
+      },
+      // 63 - Diseño Web con CSS Grid y Flexbox
+      {
+        title: "Curso de Diseño Web con CSS Grid y Flexbox",
+        institution: "Platzi",
+        duration: "20 horas",
+        description:
+          "Combina CSS Grid y Flexbox para crear diseños web modernos, flexibles y responsivos.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/39DiplomaDelCursoDeDiseoWebConCssGridYFlexbox.png",
+      },
+      // 64 - Arquitecturas CSS
+      {
+        title: "Curso de Arquitecturas CSS",
+        institution: "Platzi",
+        duration: "14 horas",
+        description:
+          "Aprende arquitecturas CSS profesionales: BEM, SMACSS, Atomic Design y más para código escalable.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/40DiplomaDelCursoDeArquitecturasCss.png",
+      },
+      // 65 - Tailwind CSS Básico
+      {
+        title: "Curso Básico de Tailwind CSS 2 y 3",
+        institution: "Platzi",
+        duration: "12 horas",
+        description:
+          "Aprende Tailwind CSS desde cero: utility-first CSS framework para crear interfaces rápidamente.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/41DiplomaDelCursoBsicoDeTailwind2Y3.png",
+      },
+      // 66 - Transformaciones y Transiciones en CSS
+      {
+        title: "Curso de Transformaciones y Transiciones en CSS",
+        institution: "Platzi",
+        duration: "11 horas",
+        description:
+          "Crea animaciones y transiciones suaves con CSS para mejorar la experiencia del usuario.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/42DiplomaDelCursoDeTransformacionesYTransicionesEnCss.png",
+      },
+      // 67 - Animaciones con CSS
+      {
+        title: "Curso de Animaciones con CSS",
+        institution: "Platzi",
+        duration: "13 horas",
+        description:
+          "Domina @keyframes y animaciones CSS avanzadas para crear interfaces dinámicas y atractivas.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/43DiplomaDelCursoDeAnimacionesConCss.png",
+      },
+      // 68 - Manipulación del DOM con JavaScript
+      {
+        title: "Curso de JavaScript: Manipulación del DOM",
+        institution: "Platzi",
+        duration: "15 horas",
+        description:
+          "Aprende a manipular el DOM con JavaScript: seleccionar elementos, modificar contenido, manejar eventos.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/44DiplomaDelCursoDeJavascriptManipulacinDelDom.png",
+      },
+      // 69 - API REST con JavaScript: Fundamentos
+      {
+        title: "Curso de API REST con JavaScript: Fundamentos",
+        institution: "Platzi",
+        duration: "14 horas",
+        description:
+          "Aprende los conceptos fundamentales de REST APIs y cómo consumirlas con JavaScript (Fetch, XMLHttpRequest).",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/45DiplomaDelCursoDeApiRestConJavascriptFundamentos.png",
+      },
+      // 70 - API REST con JavaScript: Ejemplos
+      {
+        title: "Curso de API REST con JavaScript: Ejemplos con APIs Reales",
+        institution: "Platzi",
+        duration: "16 horas",
+        description:
+          "Practica consumiendo APIs reales con JavaScript: Open Weather, OMDb, GitHub API y más.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/46DiplomaDelCursoDeApiRestConJavascriptEjemplosConApisReales.png",
+      },
+      // 71 - API REST con JavaScript: Performance
+      {
+        title: "Curso de API REST con JavaScript: Performance y Usabilidad",
+        institution: "Platzi",
+        duration: "17 horas",
+        description:
+          "Optimiza aplicaciones que consumen APIs: caché, loading states, error handling y mejores prácticas de UX.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/48cursoDeApiRestConJavascriptPerformanceYUsabilidad.jpg",
+      },
+      // 72 - Básico de Algoritmos
+      {
+        title: "Curso Básico de Algoritmos y Pensamiento Lógico",
+        institution: "Platzi",
+        duration: "15 horas",
+        description:
+          "Aprende algoritmos fundamentales y desarrolla tu pensamiento lógico para resolver problemas de programación.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/03DiplomaBasicoProgramacion.png",
+      },
+      // 73 - Configuración de Entorno de Desarrollo
+      {
+        title: "Curso de Configuración de Entorno de Desarrollo en Windows",
+        institution: "Platzi",
+        duration: "12 horas",
+        description:
+          "Aprende a configurar tu entorno de desarrollo profesional en Windows con todas las herramientas necesarias.",
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/01DiplomaDelCursoDeConfiguracinDeEntornoDeDesarrolloEnWindows.png",
+      },
+
+      // Fin de cursos de Platzi
 
     ],
   },
