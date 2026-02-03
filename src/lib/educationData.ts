@@ -961,16 +961,6 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/14DiplomaDelCursoDeHistoriaDeLaInnovacinYElEmprendimientoConDianaUribe.png",
       },
-      // 45 - Creación de Páginas Web con ChatGPT
-      {
-        title: "Curso de Creación de Páginas Web con ChatGPT",
-        institution: "Platzi",
-        duration: "8 horas",
-        description:
-          "Aprende a crear páginas web utilizando ChatGPT como herramienta de asistencia en el desarrollo web.",
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/17DiplomaDelCursoDeCreacinDePginasWebConChatgpt.png",
-      },
       // 46 - Asincronismo con JavaScript
       {
         title: "Curso de Asincronismo con JavaScript",
@@ -1220,16 +1210,6 @@ export const educationData: EducationCategory[] = [
           "Practica consumiendo APIs reales con JavaScript: Open Weather, OMDb, GitHub API y más.",
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/46DiplomaDelCursoDeApiRestConJavascriptEjemplosConApisReales.png",
-      },
-      // 71 - API REST con JavaScript: Performance
-      {
-        title: "Curso de API REST con JavaScript: Performance y Usabilidad",
-        institution: "Platzi",
-        duration: "17 horas",
-        description:
-          "Optimiza aplicaciones que consumen APIs: caché, loading states, error handling y mejores prácticas de UX.",
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/48cursoDeApiRestConJavascriptPerformanceYUsabilidad.jpg",
       },
       // 72 - Básico de Algoritmos
       {
