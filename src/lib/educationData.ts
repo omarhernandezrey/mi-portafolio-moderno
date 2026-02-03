@@ -267,7 +267,51 @@ export const educationData: EducationCategory[] = [
           "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png",
       },
       // Platzi Courses
-      // 86 - Curso de React.js Nuevo
+      // 87 - Curso de React.js Nuevo
+      {
+        title: {
+          es: "Laboratorio de React.js: E-commerce Profesional",
+          en: "React.js Lab: Professional E-commerce"
+        },
+        institution: {
+          es: "Platzi",
+          en: "Platzi"
+        },
+        duration: {
+          es: "7 horas de teoría y práctica (Aprobado el 2 de diciembre de 2023)",
+          en: "7 hours of theory and practice (Approved on December 2, 2023)"
+        },
+        description: {
+          es: "Laboratorio práctico orientado al desarrollo de un e-commerce profesional con React.js. Incluye implementación de catálogo de productos, carrito de compras, manejo de estado, componentes reutilizables, flujo de compra y buenas prácticas para aplicaciones comerciales reales.",
+          en: "Hands-on lab focused on building a professional e-commerce application with React.js. Includes product catalog implementation, shopping cart, state management, reusable components, purchase flow, and best practices for real-world commercial applications."
+        },
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/56-diploma-laboratorio-react.jpg",
+        isNew: false
+      },
+
+      {
+        title: {
+          es: "Curso de React.js con Vite.js y TailwindCSS",
+          en: "React.js with Vite.js and TailwindCSS Course"
+        },
+        institution: {
+          es: "Platzi",
+          en: "Platzi"
+        },
+        duration: {
+          es: "20 horas de teoría y práctica (Aprobado el 1 de diciembre de 2023)",
+          en: "20 hours of theory and practice (Approved on December 1, 2023)"
+        },
+        description: {
+          es: "Curso práctico enfocado en la construcción de aplicaciones web modernas utilizando React.js junto a Vite.js como herramienta de desarrollo y TailwindCSS para estilos. Incluye creación de componentes, manejo de estado, configuración del entorno, diseño responsive y buenas prácticas en proyectos frontend.",
+          en: "Practical course focused on building modern web applications using React.js with Vite.js as the development tool and TailwindCSS for styling. Covers component creation, state management, environment setup, responsive design, and frontend best practices."
+        },
+        logo: "/images/education/platzi/platzi-logo.png",
+        certificate: "/images/education/platzi/55-diploma-react-vite-tailwindcss.jpg",
+        isNew: true
+      },
+      // 86 - Curso de React.js
       {
         title: {
           es: "Curso de React.js",
@@ -286,8 +330,7 @@ export const educationData: EducationCategory[] = [
           en: "Course focused on developing modern web applications using React.js. It covers functional components, state management, hooks, lifecycle, routing, and best practices for building dynamic and maintainable user interfaces."
         },
         logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/54 diploma-react.jpg",
-        isNew: true,
+        certificate: "/images/education/platzi/54 diploma-react.jpg"
       },
       // 85 - Audiocurso de Frameworks y Arquitecturas Frontend
       {
@@ -310,7 +353,7 @@ export const educationData: EducationCategory[] = [
               logo: "/images/education/platzi/platzi-logo.png",
               certificate: "/images/education/platzi/53 diploma-arquitectura-frontend.jpg"
             },
-            // 84 - Curso de Frameworks y Librerías de JavaScript
+            // 85 - Curso de Frameworks y Librerías de JavaScript
             {
               title: {
                 es: "Curso de Frameworks y Librerías de JavaScript",
@@ -711,27 +754,6 @@ export const educationData: EducationCategory[] = [
         logo: "/images/education/platzi/platzi-logo.png",
         certificate:
           "/images/education/platzi/25DiplomaDelCursoDeReactjsConVitejsYTailwindcss.png",
-      },
-      // 58 - Curso de React.js
-      {
-        title: {
-          es: "Curso de React.js",
-          en: "React.js Course"
-        },
-        institution: {
-          es: "Platzi",
-          en: "Platzi"
-        },
-        duration: {
-          es: "25 horas (Aprobado el 13 de noviembre de 2023)",
-          en: "25 hours (Approved on November 13, 2023)"
-        },
-        description: {
-          es: "Curso diseñado para aprender los fundamentos de React.js, creando aplicaciones web interactivas y escalables mediante componentes y manejo de estados.",
-          en: "Course designed to learn the fundamentals of React.js, creating interactive and scalable web applications through components and state management."
-        },
-        logo: "/images/education/platzi/platzi-logo.png",
-        certificate: "/images/education/platzi/47DiplomaDelCursoDeReactJs.png",
       },
       // 57 - Curso Práctico de JavaScript
       {

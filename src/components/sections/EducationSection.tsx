@@ -27,8 +27,8 @@ interface EducationItem {
   isNew?: boolean;
 }
 
-const INITIAL_VISIBLE_ITEMS = 8;
-const LOAD_MORE_STEP = 4;
+const INITIAL_VISIBLE_ITEMS = 30;
+const LOAD_MORE_STEP = 8;
 
 interface HighlightedCourse {
   id: string;
@@ -362,8 +362,6 @@ const getLocalizedEducationData = (data: typeof educationData, language: string)
       }),
     )
     .sort((a, b) => {
-      if (a.isNew && !b.isNew) return -1;
-      if (!a.isNew && b.isNew) return 1;
       const aDate = a.completionTimestamp ?? Number.NEGATIVE_INFINITY;
       const bDate = b.completionTimestamp ?? Number.NEGATIVE_INFINITY;
       if (aDate === bDate) return 0;
