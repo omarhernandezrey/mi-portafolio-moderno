@@ -23,7 +23,103 @@ export interface Project {
 }
 
 export const projectsData: Project[] = [
+  {
+  title: {
+    es: "E-Commerce SaaS Full Stack - Plataforma Completa de Tienda Online Personalizable",
+    en: "E-Commerce SaaS Full Stack - Complete Customizable Online Store Platform"
+  },
+  description: {
+    es: "Plataforma SaaS completa que permite a emprendedores crear su propia tienda online personalizada sin conocimientos técnicos. Incluye sistema de autenticación JWT, panel de administración, carrito de compras persistente, gestión de órdenes, búsqueda inteligente, API REST documentada, panel de control de tienda y arquitectura escalable para múltiples comercios.",
+    en: "Complete SaaS platform that allows entrepreneurs to create their own customized online store without technical knowledge. Features JWT authentication system, admin panel, persistent shopping cart, order management, intelligent search, documented REST API, store control panel and scalable architecture for multiple businesses."
+  },
+  technologies: [
+    "React 18",
+    "TypeScript",
+    "Vite 7.3.1",
+    "Node.js 22",
+    "Express.js",
+    "Prisma ORM",
+    "PostgreSQL",
+    "Tailwind CSS 3",
+    "Zod",
+    "JWT",
+    "bcryptjs",
+    "React Router v6",
+    "Context API",
+    "Zustand",
+    "Jest",
+    "Vitest",
+    "Winston"
+  ],
+  repository: "https://github.com/omarhernandezrey/56-curso-react-practico-clase-21",
+  demo: "https://55-curso-de-react-js-con-vite-js-y.vercel.app/",
+  category: {
+    es: "Full Stack",
+    en: "Full Stack"
+  },
+  features: {
+    es: [
+      "Sistema de autenticación completo: Registro, Login, Logout con validaciones robustas",
+      "Carrito de compras persistente con localStorage y sincronización en tiempo real",
+      "Historial de órdenes con detalles completos de cada compra",
+      "Gestión de perfil de usuario: Edición de datos personales y contraseña",
+      "Búsqueda inteligente de productos en tiempo real",
+      "Filtrado de productos por categoría",
+      "Grid de productos responsive y optimizado",
+      "Panel de detalles de producto con galería de imágenes",
+      "Rutas protegidas con Context API (requieren autenticación)",
+      "Persistencia completa en localStorage de sesión y carrito",
+      "Diseño responsive: Mobile First (móvil, tablet, desktop)",
+      "API REST con Express: Usuarios, productos, órdenes, autenticación",
+      "Base de datos PostgreSQL con Prisma ORM",
+      "Validación de datos con Zod en frontend y backend",
+      "Encriptación de contraseñas con bcryptjs",
+      "Middleware de autenticación JWT",
+      "CORS configurado para desarrollo y producción",
+      "Manejo de errores con middleware personalizado",
+      "Logging centralizado con Winston",
+      "Rate limiting y seguridad en API",
+      "Documentación exhaustiva de endpoints",
+      "Testing con Jest y Vitest",
+      "Arquitectura escalable para múltiples tiendas",
+      "Página 404 personalizada",
+      "Navegación intuitiva con React Router v6",
+      "Transiciones suaves y animaciones CSS",
+      "Accesibilidad web (ARIA labels, semantic HTML)"
+    ],
+    en: [
+      "Complete authentication system: Registration, Login, Logout with robust validations",
+      "Persistent shopping cart with localStorage and real-time synchronization",
+      "Order history with complete details of each purchase",
+      "User profile management: Edit personal data and password",
+      "Intelligent real-time product search",
+      "Product filtering by category",
+      "Responsive and optimized product grid",
+      "Product detail panel with image gallery",
+      "Protected routes with Context API (authentication required)",
+      "Complete persistence in localStorage of session and cart",
+      "Responsive design: Mobile First (mobile, tablet, desktop)",
+      "REST API with Express: Users, products, orders, authentication",
+      "PostgreSQL database with Prisma ORM",
+      "Data validation with Zod on frontend and backend",
+      "Password encryption with bcryptjs",
+      "JWT authentication middleware",
+      "CORS configured for development and production",
+      "Error handling with custom middleware",
+      "Centralized logging with Winston",
+      "Rate limiting and API security",
+      "Comprehensive endpoint documentation",
+      "Testing with Jest and Vitest",
+      "Scalable architecture for multiple stores",
+      "Custom 404 page",
+      "Intuitive navigation with React Router v6",
+      "Smooth transitions and CSS animations",
+      "Web accessibility (ARIA labels, semantic HTML)"
+    ]
+  }
+},
 {
+
   title: {
     es: "Diccionario Dev - Diccionario Técnico Web en Español",
     en: "Diccionario Dev - Spanish Technical Web Dictionary"
@@ -83,29 +179,29 @@ export const projectsData: Project[] = [
     ]
   }
 },
-      {
-  title: {
-    es: "Proyecto React.js - Aplicación Web lista de Tareas",
-    en: "React.js Project - Interactive Web Application"
+        {
+    title: {
+      es: "Proyecto React.js - Aplicación Web lista de Tareas",
+      en: "React.js Project - Interactive Web Application"
+    },
+    description: {
+      es: "Proyecto práctico desarrollado durante el Curso de React.js en Platzi. Implementa componentes funcionales, hooks, enrutamiento, manejo de estado y diseño responsive. Desplegado en Vercel como demostración de una aplicación moderna y escalable.",
+      en: "Practical project developed during the React.js Course at Platzi. Implements functional components, hooks, routing, state management, and responsive design. Deployed on Vercel as a demonstration of a modern and scalable application."
+    },
+    technologies: [
+      "React",
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Vercel"
+    ],
+    repository: "https://github.com/omarhernandezrey/54-Curso-de-React.js",
+    demo: "https://54-curso-de-react-js.vercel.app/",
+    category: {
+      es: "Frontend",
+      en: "Frontend"
+    }
   },
-  description: {
-    es: "Proyecto práctico desarrollado durante el Curso de React.js en Platzi. Implementa componentes funcionales, hooks, enrutamiento, manejo de estado y diseño responsive. Desplegado en Vercel como demostración de una aplicación moderna y escalable.",
-    en: "Practical project developed during the React.js Course at Platzi. Implements functional components, hooks, routing, state management, and responsive design. Deployed on Vercel as a demonstration of a modern and scalable application."
-  },
-  technologies: [
-    "React",
-    "JavaScript",
-    "HTML5",
-    "CSS3",
-    "Vercel"
-  ],
-  repository: "https://github.com/omarhernandezrey/54-Curso-de-React.js",
-  demo: "https://54-curso-de-react-js.vercel.app/",
-  category: {
-    es: "Frontend",
-    en: "Frontend"
-  }
-},
 
       {
       title: {
