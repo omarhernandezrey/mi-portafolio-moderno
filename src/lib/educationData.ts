@@ -268,6 +268,28 @@ export const educationData: EducationCategory[] = [
       },
       // Platzi Courses
       // 87 - Curso de React.js Nuevo
+        {
+          title: {
+            es: "Curso de React.js: Patrones de Render y Composición",
+            en: "React.js Course: Render Patterns and Composition"
+          },
+          institution: {
+            es: "Platzi",
+            en: "Platzi"
+          },
+          duration: {
+            es: "15 horas de teoría y práctica (Aprobado el 1 de febrero de 2025)",
+            en: "15 hours of theory and practice (Approved on February 1, 2025)"
+          },
+          description: {
+            es: "Curso enfocado en patrones avanzados de renderizado y composición en React.js. Incluye render props, children como función, compound components, control de estado compartido, abstracción de lógica reutilizable y mejores prácticas para construir componentes escalables y mantenibles.",
+            en: "Course focused on advanced rendering and composition patterns in React.js. Covers render props, function as children, compound components, shared state control, reusable logic abstraction, and best practices for building scalable and maintainable components."
+          },
+          logo: "/images/education/platzi/platzi-logo.png",
+          certificate: "/images/education/platzi/57-diploma-react-patrones-render.jpg",
+          isNew: true
+        },
+
       {
         title: {
           es: "Laboratorio de React.js: E-commerce Profesional",
