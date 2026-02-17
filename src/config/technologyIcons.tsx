@@ -11,6 +11,7 @@ import {
   FaGraduationCap,
   FaGithub,
   FaMicrophone,
+  FaLock,
 } from "react-icons/fa";
 import { 
   SiTailwindcss, 
@@ -24,6 +25,9 @@ import {
   SiVitest,
   SiThreedotjs,
   SiNetlify,
+  SiExpressjs,
+  SiJest,
+  SiVite,
 } from "react-icons/si";
 import { MdPhoneIphone } from "react-icons/md";
 import { BsFiletypeScss } from "react-icons/bs";
@@ -166,6 +170,30 @@ const technologyIcons: Record<string, JSX.Element> = {
   ),
   Netlify: (
     <SiNetlify style={{ color: "#00c7b7", width: "48px", height: "48px" }} />
+  ),
+  "React Router v6": (
+    <FaReact style={{ color: "#f97316", width: "48px", height: "48px" }} />
+  ),
+  "Context API": (
+    <FaReact style={{ color: "#3b82f6", width: "48px", height: "48px" }} />
+  ),
+  Zustand: (
+    <FaCode style={{ color: "#8b5cf6", width: "48px", height: "48px" }} />
+  ),
+  "Express.js": (
+    <SiExpressjs style={{ color: "#000", width: "48px", height: "48px" }} />
+  ),
+  Bcryptjs: (
+    <FaLock style={{ color: "#059669", width: "48px", height: "48px" }} />
+  ),
+  Jest: (
+    <SiJest style={{ color: "#15803d", width: "48px", height: "48px" }} />
+  ),
+  Vite: (
+    <SiVite style={{ color: "#646cff", width: "48px", height: "48px" }} />
+  ),
+  "Tailwind CSS 3": (
+    <SiTailwindcss style={{ color: "#14b8a6", width: "48px", height: "48px" }} />
   ),
 
   // Intereses personales
