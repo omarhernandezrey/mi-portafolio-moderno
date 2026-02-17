@@ -20,101 +20,125 @@ export interface Project {
     es: string[];
     en: string[];
   };
+  highlights?: {
+    es: string[];
+    en: string[];
+  };
+  architecture?: {
+    es: {
+      description: string;
+      layers: string[];
+    };
+    en: {
+      description: string;
+      layers: string[];
+    };
+  };
 }
 
 export const projectsData: Project[] = [
   {
-  title: {
-    es: "E-Commerce SaaS Full Stack - Plataforma Completa de Tienda Online Personalizable",
-    en: "E-Commerce SaaS Full Stack - Complete Customizable Online Store Platform"
+  "title": {
+    "es": "Gestor de Tareas Profesional - TODO App con Patrones Avanzados de React",
+    "en": "Professional Task Manager - TODO App with Advanced React Patterns"
   },
-  description: {
-    es: "Plataforma SaaS completa que permite a emprendedores crear su propia tienda online personalizada sin conocimientos técnicos. Incluye sistema de autenticación JWT, panel de administración, carrito de compras persistente, gestión de órdenes, búsqueda inteligente, API REST documentada, panel de control de tienda y arquitectura escalable para múltiples comercios.",
-    en: "Complete SaaS platform that allows entrepreneurs to create their own customized online store without technical knowledge. Features JWT authentication system, admin panel, persistent shopping cart, order management, intelligent search, documented REST API, store control panel and scalable architecture for multiple businesses."
+  "description": {
+    "es": "Aplicación moderna y completa de gestión de tareas construida con React 18 y Zustand. Incluye sistema avanzado de recordatorios con alertas de audio, dashboard estadístico, subtareas anidadas, etiquetado por colores, notas enriquecidas, timer Pomodoro, persistencia en localStorage, temas claro/oscuro, animaciones suaves y diseño responsive Mobile-First para máxima productividad.",
+    "en": "Modern and complete task management application built with React 18 and Zustand. Features advanced reminder system with audio alerts, statistical dashboard, nested subtasks, color-coded tagging, enriched notes, Pomodoro timer, localStorage persistence, light/dark themes, smooth animations and responsive Mobile-First design for maximum productivity."
   },
-  technologies: [
-    "React 18",
-    "TypeScript",
-    "Vite 7.3.1",
-    "Node.js 22",
-    "Express.js",
-    "Prisma ORM",
-    "PostgreSQL",
-    "Tailwind CSS 3",
-    "Zod",
-    "JWT",
-    "bcryptjs",
-    "React Router v6",
-    "Context API",
-    "Zustand",
-    "Jest",
-    "Vitest",
-    "Winston"
+  "technologies": [
+    "React",
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "Vercel"
   ],
-  repository: "https://github.com/omarhernandezrey/56-curso-react-practico-clase-21",
-  demo: "https://55-curso-de-react-js-con-vite-js-y.vercel.app/",
-  category: {
-    es: "Full Stack",
-    en: "Full Stack"
+  "repository": "https://github.com/omarhernandezrey/57-curso-react-patrones-render",
+  "demo": "https://57-curso-react-patrones-render.vercel.app",
+  "category": {
+    "es": "Productividad & Gestión",
+    "en": "Productivity & Management"
   },
-  features: {
-    es: [
-      "Sistema de autenticación completo: Registro, Login, Logout con validaciones robustas",
-      "Carrito de compras persistente con localStorage y sincronización en tiempo real",
-      "Historial de órdenes con detalles completos de cada compra",
-      "Gestión de perfil de usuario: Edición de datos personales y contraseña",
-      "Búsqueda inteligente de productos en tiempo real",
-      "Filtrado de productos por categoría",
-      "Grid de productos responsive y optimizado",
-      "Panel de detalles de producto con galería de imágenes",
-      "Rutas protegidas con Context API (requieren autenticación)",
-      "Persistencia completa en localStorage de sesión y carrito",
-      "Diseño responsive: Mobile First (móvil, tablet, desktop)",
-      "API REST con Express: Usuarios, productos, órdenes, autenticación",
-      "Base de datos PostgreSQL con Prisma ORM",
-      "Validación de datos con Zod en frontend y backend",
-      "Encriptación de contraseñas con bcryptjs",
-      "Middleware de autenticación JWT",
-      "CORS configurado para desarrollo y producción",
-      "Manejo de errores con middleware personalizado",
-      "Logging centralizado con Winston",
-      "Rate limiting y seguridad en API",
-      "Documentación exhaustiva de endpoints",
-      "Testing con Jest y Vitest",
-      "Arquitectura escalable para múltiples tiendas",
-      "Página 404 personalizada",
-      "Navegación intuitiva con React Router v6",
-      "Transiciones suaves y animaciones CSS",
-      "Accesibilidad web (ARIA labels, semantic HTML)"
+  "features": {
+    "es": [
+      "✅ CRUD Completo de Tareas: Crear, leer, actualizar y eliminar con validaciones",
+      "🎯 Estados de Tarea: Completadas, activas, atrasadas con indicadores visuales",
+      "⭐ Sistema de Prioridades: Alta, Media, Baja con códigos de color diferenciados",
+      "📅 Fechas de Vencimiento: Establecer y seguimiento automático de tareas atrasadas",
+      "🏷️ Categorías Personalizadas: Organiza tareas por contexto (Trabajo, Personal, Estudio)",
+      "🔔 Sistema Avanzado de Recordatorios: Fecha/hora específica con alertas modales",
+      "🔊 Alertas de Audio: Web Audio API generando sonido persistente cada 3 segundos",
+      "🎚️ Control de Sonido: Toggle para silenciar alertas sin cerrar el modal",
+      "📊 Dashboard de Estadísticas: Total, completadas, activas, atrasadas en tiempo real",
+      "📈 Gráficos Estadísticos: Distribución por prioridad y progreso visual",
+      "📝 Notas y Descripciones: Texto enriquecido para cada tarea",
+      "📋 Sistema de Subtareas: Tareas anidadas con progreso individual",
+      "⏲️ Timer Pomodoro Integrado: Sesiones de 25 min, pausa, reanuda, contador de sesiones",
+      "🏷️ Etiquetas Múltiples: 8 colores diferentes para categorizar por temas",
+      "🔍 Búsqueda Inteligente: Filtro en tiempo real por título y descripción",
+      "🗂️ Filtros Avanzados: Por estado, categoría, prioridad, etiqueta y fecha",
+      "↕️ Ordenamiento Dinámico: Por fecha, prioridad, alfabético, estado",
+      "🎨 Tema Oscuro/Claro: Toggle persistente con CSS variables",
+      "📱 Diseño Responsive: Mobile-First (móvil, tablet, desktop)",
+      "💾 Persistencia Automática: localStorage con sincronización en tiempo real",
+      "⚡ Estado Global con Zustand: Ligero, rápido y escalable",
+      "🎬 Animaciones Suaves: Framer Motion con transiciones profesionales",
+      "🚨 Diálogos de Confirmación: Modal para acciones destructivas",
+      "🎯 Rutas Protegidas: Navegación intuitiva con React Router",
+      "♿ Accesibilidad Web: ARIA labels, semantic HTML, navegación por teclado",
+      "📴 Modo Offline: Funciona completamente sin conexión a internet",
+      "🎪 UI Profesional: Badges, gradientes, shadows e iconografía personalizada",
+      "⚡ Performance Optimizado: Code splitting, lazy loading, memoización",
+      "📤 Exportación de Datos: Descarga historial de tareas en JSON",
+      "🔄 Sincronización: Actualizaciones en tiempo real entre componentes"
     ],
-    en: [
-      "Complete authentication system: Registration, Login, Logout with robust validations",
-      "Persistent shopping cart with localStorage and real-time synchronization",
-      "Order history with complete details of each purchase",
-      "User profile management: Edit personal data and password",
-      "Intelligent real-time product search",
-      "Product filtering by category",
-      "Responsive and optimized product grid",
-      "Product detail panel with image gallery",
-      "Protected routes with Context API (authentication required)",
-      "Complete persistence in localStorage of session and cart",
-      "Responsive design: Mobile First (mobile, tablet, desktop)",
-      "REST API with Express: Users, products, orders, authentication",
-      "PostgreSQL database with Prisma ORM",
-      "Data validation with Zod on frontend and backend",
-      "Password encryption with bcryptjs",
-      "JWT authentication middleware",
-      "CORS configured for development and production",
-      "Error handling with custom middleware",
-      "Centralized logging with Winston",
-      "Rate limiting and API security",
-      "Comprehensive endpoint documentation",
-      "Testing with Jest and Vitest",
-      "Scalable architecture for multiple stores",
-      "Custom 404 page",
-      "Intuitive navigation with React Router v6",
-      "Smooth transitions and CSS animations",
-      "Web accessibility (ARIA labels, semantic HTML)"
+    "en": [
+      "✅ Complete CRUD Tasks: Create, read, update and delete with validations",
+      "🎯 Task States: Completed, active, overdue with visual indicators",
+      "⭐ Priority System: High, Medium, Low with differentiated color codes",
+      "📅 Due Dates: Set and automatic tracking of overdue tasks",
+      "🏷️ Custom Categories: Organize tasks by context (Work, Personal, Study)",
+      "🔔 Advanced Reminder System: Specific date/time with modal alerts",
+      "🔊 Audio Alerts: Web Audio API generating persistent sound every 3 seconds",
+      "🎚️ Sound Control: Toggle to mute alerts without closing the modal",
+      "📊 Statistics Dashboard: Total, completed, active, overdue in real-time",
+      "📈 Statistical Charts: Distribution by priority and visual progress",
+      "📝 Notes and Descriptions: Rich text for each task",
+      "📋 Subtasks System: Nested tasks with individual progress",
+      "⏲️ Integrated Pomodoro Timer: 25 min sessions, pause, resume, session counter",
+      "🏷️ Multiple Tags: 8 different colors for categorizing by themes",
+      "🔍 Intelligent Search: Real-time filter by title and description",
+      "🗂️ Advanced Filters: By state, category, priority, tag and date",
+      "↕️ Dynamic Sorting: By date, priority, alphabetical, state",
+      "🎨 Dark/Light Theme: Persistent toggle with CSS variables",
+      "📱 Responsive Design: Mobile-First (mobile, tablet, desktop)",
+      "💾 Automatic Persistence: localStorage with real-time synchronization",
+      "⚡ Global State with Zustand: Lightweight, fast and scalable",
+      "🎬 Smooth Animations: Framer Motion with professional transitions",
+      "🚨 Confirmation Dialogs: Modal for destructive actions",
+      "🎯 Protected Routes: Intuitive navigation with React Router",
+      "♿ Web Accessibility: ARIA labels, semantic HTML, keyboard navigation",
+      "📴 Offline Mode: Works completely without internet",
+      "🎪 Professional UI: Badges, gradients, shadows and custom iconography",
+      "⚡ Optimized Performance: Code splitting, lazy loading, memoization",
+      "📤 Data Export: Download task history in JSON",
+      "🔄 Real-time Sync: Updates across components instantly"
+    ]
+  },
+  "highlights": {
+    "es": [
+      "🏆 Patrones Profesionales: Componentes modulares, hooks personalizados, state management escalable",
+      "🎓 Código Educativo: Perfecto para aprender React avanzado, Zustand y mejores prácticas",
+      "🚀 Producción Ready: Optimizado, probado y listo para usar o extender",
+      "🎨 Diseño Premium: UI/UX profesional con animaciones y transiciones suaves",
+      "📱 100% Funcional Offline: Toda la app funciona sin conexión de red"
+    ],
+    "en": [
+      "🏆 Professional Patterns: Modular components, custom hooks, scalable state management",
+      "🎓 Educational Code: Perfect for learning advanced React, Zustand and best practices",
+      "🚀 Production Ready: Optimized, tested and ready to use or extend",
+      "🎨 Premium Design: Professional UI/UX with smooth animations and transitions",
+      "📱 100% Offline Functional: Entire app works without internet connection"
     ]
   }
 },
