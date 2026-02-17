@@ -25,7 +25,7 @@ import {
   SiVitest,
   SiThreedotjs,
   SiNetlify,
-  SiExpressjs,
+  SiExpress,
   SiJest,
   SiVite,
 } from "react-icons/si";
@@ -181,7 +181,7 @@ const technologyIcons: Record<string, JSX.Element> = {
     <FaCode style={{ color: "#8b5cf6", width: "48px", height: "48px" }} />
   ),
   "Express.js": (
-    <SiExpressjs style={{ color: "#000", width: "48px", height: "48px" }} />
+    <SiExpress style={{ color: "#000", width: "48px", height: "48px" }} />
   ),
   Bcryptjs: (
     <FaLock style={{ color: "#059669", width: "48px", height: "48px" }} />
