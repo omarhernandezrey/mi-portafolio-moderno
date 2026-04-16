@@ -224,7 +224,7 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 
 ---
 
-### [ ] Tarea 0.3 — Crear bot de Telegram (5 min, gratis para siempre)
+### [x] Tarea 0.3 — Crear bot de Telegram (5 min, gratis para siempre)
 
 **Pasos para Omar:**
 
