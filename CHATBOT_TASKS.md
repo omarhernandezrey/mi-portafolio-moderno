@@ -355,7 +355,7 @@ create index idx_conversations_session on conversations(session_id);
 ```
 - **Aceptación:** tabla visible en Table Editor.
 
-### [ ] Tarea 1.2 — Crear tabla `messages`
+### [x] Tarea 1.2 — Crear tabla `messages`
 ```sql
 create table messages (
   id uuid primary key default gen_random_uuid(),
