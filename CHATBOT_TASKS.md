@@ -1146,7 +1146,7 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
   - Checklist mensual: revisar Gemini quota, Supabase storage, Telegram funcionando.
 - **Aceptación:** sección "Rotación de claves" presente en README.
 
-### [ ] Tarea 14.7 — Pre-commit hook anti-secretos
+### [x] Tarea 14.7 — Pre-commit hook anti-secretos
 - Añadir a `package.json` script `precommit:secrets`:
 ```json
 "scripts": {
