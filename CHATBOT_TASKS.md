@@ -692,7 +692,7 @@ NO los menciones en el texto visible.
 - Manejar errores: si Gemini falla, retornar mensaje fallback en el idioma correcto
 - **Aceptación:** test unitario manual: import y llamar con prompt simple retorna texto.
 
-### [ ] Tarea 4.3 — Rate limiting in-memory por IP
+### [x] Tarea 4.3 — Rate limiting in-memory por IP
 - En `route.ts` añadir Map<ip, {count, resetAt}>
 - Límite: 20 mensajes / 10 min por IP
 - Si excede: retornar 429 con mensaje amable

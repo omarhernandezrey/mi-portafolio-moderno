@@ -16,8 +16,31 @@ const chatSchema = z.object({
   }).optional(),
 });
 
+// Rate limiting in-memory
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
 export async function POST(req: NextRequest) {
   try {
+    // Rate Limit Logic
+    const ip = req.headers.get('x-forwarded-for') || 'anonymous';
+    const now = Date.now();
+    const limit = 20;
+    const windowMs = 10 * 60 * 1000; // 10 minutes
+
+    const currentLimit = rateLimitMap.get(ip);
+
+    if (currentLimit && now < currentLimit.resetAt) {
+      if (currentLimit.count >= limit) {
+        return NextResponse.json({ 
+          reply: 'Has enviado muchos mensajes en poco tiempo. Por favor, espera unos minutos o contacta a Omar directamente por WhatsApp.',
+          error: 'Rate limit exceeded' 
+        }, { status: 429 });
+      }
+      currentLimit.count++;
+    } else {
+      rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs });
+    }
+
     const body = await req.json();
     const result = chatSchema.safeParse(body);
 
