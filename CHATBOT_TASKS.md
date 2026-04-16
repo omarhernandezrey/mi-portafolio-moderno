@@ -741,7 +741,7 @@ El visitante recibió wa.me link.
 
 ## FASE 6 — Componente Chat Widget (UI)
 
-### [ ] Tarea 6.1 — Crear `ChatWidget.tsx`
+### [x] Tarea 6.1 — Crear `ChatWidget.tsx`
 - Crear `src/components/shared/ChatWidget.tsx` (`"use client"`)
 - Estado: `isOpen`, `messages: {role, content}[]`, `input`, `isLoading`, `sessionId` (nanoid en mount, persistir en `localStorage`)
 - Estructura:

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarLogic from "../components/ui/NavbarLogic";
 import ClientProvider from "./ClientProvider";
+import ChatWidget from "@/components/shared/ChatWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -320,6 +321,7 @@ export default function RootLayout({
         <ClientProvider>
           <NavbarLogic />
           {children}
+          <ChatWidget />
         </ClientProvider>
       </body>
     </html>
