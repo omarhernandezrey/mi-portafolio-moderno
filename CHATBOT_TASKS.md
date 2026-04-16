@@ -336,7 +336,7 @@ NEXT_PUBLIC_SITE_URL=https://omarhernandez.dev    # ajustar al dominio real
 
 ## FASE 1 — Base de datos Supabase
 
-### [ ] Tarea 1.1 — Crear tabla `conversations`
+### [x] Tarea 1.1 — Crear tabla `conversations`
 - En Supabase → SQL Editor → ejecutar:
 ```sql
 create table conversations (
