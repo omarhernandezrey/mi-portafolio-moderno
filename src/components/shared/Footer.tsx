@@ -6,7 +6,6 @@ import {
   FaLinkedin,
   FaTwitter,
   FaEnvelope,
-  FaWhatsapp,
 } from "react-icons/fa";
 import { FiArrowUp } from "react-icons/fi";
 import { motion } from "framer-motion";
@@ -315,33 +314,6 @@ export default function Footer() {
           </motion.button>
         </motion.div>
       </div>
-
-      {/* Botón flotante de WhatsApp */}
-      <motion.a
-        href={`https://wa.me/573219052878?text=${encodeURIComponent(t("footer.whatsappMessage"))}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-20 right-6 p-4 rounded-full shadow-lg transition-all duration-300 z-50"
-        style={{ backgroundColor: "#25D366" }}
-        aria-label={t("footer.whatsappAria")}
-        initial={{ opacity: 0, scale: 0.5, y: 100 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1 }}
-        whileHover={{
-          scale: 1.1,
-          y: -5,
-          backgroundColor: "#20B357",
-          boxShadow: "0 10px 30px rgba(37, 211, 102, 0.4)",
-        }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <motion.div
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, delay: 2 }}
-        >
-          <FaWhatsapp size={24} color="white" />
-        </motion.div>
-      </motion.a>
 
       {/* Wave inferior decorativo */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-0">

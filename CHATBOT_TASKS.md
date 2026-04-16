@@ -789,7 +789,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 
 ## FASE 7 — Integración en el portafolio
 
-### [ ] Tarea 7.1 — Eliminar botón flotante de WhatsApp existente
+### [x] Tarea 7.1 — Eliminar botón flotante de WhatsApp existente
 - Buscar en `src/app/layout.tsx` y `src/components/shared/Footer.tsx` el botón flotante de WhatsApp
 - Eliminarlo (mantener el ícono de WhatsApp dentro del Footer normal)
 - **Aceptación:** ya no hay botón flotante WhatsApp visible.
