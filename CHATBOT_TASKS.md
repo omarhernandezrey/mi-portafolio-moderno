@@ -807,7 +807,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 
 ## FASE 8 — Cierre de venta y agendado
 
-### [ ] Tarea 8.1 — Detección de intención en el system prompt
+### [x] Tarea 8.1 — Detección de intención en el system prompt
 - Refinar prompt para que clasifique intent en `client | recruiter | tech_question | other`
 - Cuando intent = `client` y tenga budget+timeline → ofrecer Cal.com consult URL
 - Cuando intent = `recruiter` y tenga company+role → ofrecer Cal.com interview URL
