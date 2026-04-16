@@ -528,7 +528,7 @@ export const supabaseServer = createClient(
   4. **NEXT_STEPS** — 3 CTAs por nivel de calor del lead (frío → enviar caso de éxito; tibio → agendar 15min Cal.com; caliente → pedir anticipo + brief)
 - **Aceptación:** archivo > 200 líneas, sin lorem ipsum, en es/en.
 
-### [ ] Tarea 3.4 — Crear `objections.ts` (manual de objeciones)
+### [x] Tarea 3.4 — Crear `objections.ts` (manual de objeciones)
 - Crear `src/lib/chatbot/data/objections.ts`
 - Exportar `OBJECTIONS` con mínimo 12 objeciones reales y respuesta argumentada (es/en):
   - "Está muy caro"
