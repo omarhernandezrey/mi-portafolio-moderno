@@ -709,7 +709,7 @@ NO los menciones en el texto visible.
 - Try/catch silencioso (no romper el chat si Telegram falla)
 - **Aceptación:** llamar manualmente envía mensaje al teléfono.
 
-### [ ] Tarea 5.2 — Plantilla de notificación de lead
+### [x] Tarea 5.2 — Plantilla de notificación de lead
 - En `route.ts` cuando se inserte un lead, llamar `notifyTelegram` con:
 ```
 🎯 *Nuevo lead*

@@ -116,12 +116,29 @@ export async function POST(req: NextRequest) {
     const calcom = extractCalcom(rawReply);
     const cleanText = cleanReply(rawReply);
 
-    // Si hay un lead, lo insertamos
+    // Si hay un lead, lo insertamos y notificamos
     if (lead) {
       await supabaseServer.from('leads').insert({
         conversation_id: conversationId,
         ...lead
       });
+
+      const { notifyTelegram } = await import('@/lib/chatbot/telegram');
+      const telegramMsg = `
+🎯 *Nuevo lead detectado*
+Tipo: ${lead.type}
+Nombre: ${lead.name}
+Email: ${lead.email}
+Tel: ${lead.phone || 'N/A'}
+Empresa: ${lead.company || 'N/A'}
+Servicio: ${lead.service_requested || 'N/A'}
+Presupuesto: ${lead.budget || 'N/A'}
+Plazo: ${lead.timeline || 'N/A'}
+Notas: ${lead.notes}
+---
+Última msg: "${message}"
+      `.trim();
+      await notifyTelegram(telegramMsg);
     }
 
     // Generar URLs si aplica
