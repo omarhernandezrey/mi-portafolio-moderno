@@ -813,7 +813,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Cuando intent = `recruiter` y tenga company+role → ofrecer Cal.com interview URL
 - **Aceptación:** simulación reclutador → bot ofrece interview URL.
 
-### [ ] Tarea 8.2 — Botón "Agendar" inline
+### [x] Tarea 8.2 — Botón "Agendar" inline
 - Cuando API responda con `calcomUrl`, el widget renderiza CTA grande con `target="_blank"`
 - **Aceptación:** click abre Cal.com en nueva pestaña.
 
