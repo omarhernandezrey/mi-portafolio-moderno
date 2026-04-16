@@ -141,12 +141,23 @@ Notas: ${lead.notes}
       await notifyTelegram(telegramMsg);
     }
 
-    // Generar URLs si aplica
+    // Generar URLs si aplica y notificar handoff
     let handoffUrl;
     if (handoff) {
       const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
       const text = encodeURIComponent(`Hola Omar, vengo del chat de tu portafolio.\nResumen: ${handoff.summary}`);
       handoffUrl = `https://wa.me/${whatsapp}?text=${text}`;
+
+      const { notifyTelegram } = await import('@/lib/chatbot/telegram');
+      const telegramMsg = `
+🔔 *Handoff a WhatsApp solicitado*
+Sesión: ${sessionId}
+Resumen: ${handoff.summary}
+Urgencia: ${handoff.urgency}
+---
+El visitante recibió el link directo a tu WhatsApp.
+      `.trim();
+      await notifyTelegram(telegramMsg);
     }
 
     let calcomUrl;

@@ -727,7 +727,7 @@ Notas: {notes}
 ```
 - **Aceptación:** simular conversación que cualifique → llega notificación al teléfono.
 
-### [ ] Tarea 5.3 — Plantilla de handoff
+### [x] Tarea 5.3 — Plantilla de handoff
 - Cuando se detecte `<<<HANDOFF>>>`, además de generar el `wa.me` link, enviar a Telegram:
 ```
 🔔 *Handoff a WhatsApp solicitado*
