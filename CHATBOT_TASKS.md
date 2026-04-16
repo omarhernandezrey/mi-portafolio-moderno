@@ -1162,7 +1162,7 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
 
 > El portafolio YA ES un ecosistema vivo: i18n bilingüe, datos en `src/lib/*Data.ts`, theming con CSS variables, secciones modulares, EmailJS, certificados dinámicos. **Nada de eso se debe destruir.** El chatbot debe **integrarse**, no reemplazar.
 
-### [ ] Tarea 15.1 — Inventario de lo que NO se toca
+### [x] Tarea 15.1 — Inventario de lo que NO se toca
 - Crear `CHATBOT_INTEGRATION_MAP.md` con tabla:
 
 | Archivo / sistema existente | ¿Se modifica? | Cómo lo usa el chatbot |
