@@ -994,7 +994,7 @@ alter table conversations add column facts jsonb default '{}';
 
 > **Principio:** las claves se configuran UNA vez, viven en UN lugar centralizado y son **portables** entre Vercel hoy y Google Cloud / Cloud Run mañana sin reescribir código. CERO claves hardcodeadas en el repo. CERO claves en el bundle del cliente.
 
-### [ ] Tarea 14.1 — Inventario único de variables (`src/config/env.ts`)
+### [x] Tarea 14.1 — Inventario único de variables (`src/config/env.ts`)
 - Crear `src/config/env.ts` como **única fuente de verdad** para leer env vars.
 - Validar TODAS las variables al arrancar con zod. Si falta una → fallar fast con mensaje claro.
 ```ts
