@@ -921,7 +921,7 @@ from messages group by 1 order by 1 desc;
   10. Red flag (cliente abusivo / pide pirateo / etc.) → rechazo digno
 - **Aceptación:** archivo creado con 10 escenarios completos, sin TODOs.
 
-### [ ] Tarea 11.2 — Runner de evaluación
+### [x] Tarea 11.2 — Runner de evaluación
 - Crear `scripts/eval-chatbot.ts`
 - Para cada escenario: hacer requests reales a `/api/chat` (server local), capturar respuestas, evaluar `mustPass` con regex/keyword matching simple
 - Imprimir tabla: escenario | pasó / falló | razones
