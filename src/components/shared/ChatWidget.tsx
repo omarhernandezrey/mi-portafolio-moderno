@@ -23,6 +23,9 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
+  const [showAttention, setShowAttention] = useState(false);
+  const [hasOpenedOnce, setHasOpenedOpenedOnce] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -35,6 +38,15 @@ export default function ChatWidget() {
       localStorage.setItem('chatbot_session_id', id);
     }
     setSessionId(id);
+
+    // Animación de atención después de 30 segundos si no se ha abierto
+    const timer = setTimeout(() => {
+      if (!localStorage.getItem('chatbot_opened_once')) {
+        setShowAttention(true);
+      }
+    }, 30000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Auto-scroll al final
@@ -48,8 +60,13 @@ export default function ChatWidget() {
   useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 300);
+      if (!hasOpenedOnce) {
+        setHasOpenedOpenedOnce(true);
+        setShowAttention(false);
+        localStorage.setItem('chatbot_opened_once', 'true');
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, hasOpenedOnce]);
 
   const toggleChat = () => setIsOpen(!isOpen);
 
@@ -97,8 +114,31 @@ export default function ChatWidget() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end sm:bottom-6 sm:right-6">
+      {/* Burbuja de Atención */}
+      <AnimatePresence>
+        {showAttention && !isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 20, scale: 0.8 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 20, scale: 0.8 }}
+            className="mb-2 mr-2 rounded-2xl bg-[var(--white-color)] border border-[var(--primary-color)] px-4 py-2 text-xs font-medium text-[var(--text-color)] shadow-xl"
+          >
+            {currentLanguage === 'es' ? '¿Hablamos? 👋' : 'Let\'s talk? 👋'}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Botón Flotante */}
       <motion.button
+        animate={showAttention && !isOpen ? { 
+          rotate: [0, -10, 10, -10, 10, 0],
+          scale: [1, 1.1, 1, 1.1, 1]
+        } : {}}
+        transition={{ 
+          duration: 1.5, 
+          repeat: showAttention && !isOpen ? Infinity : 0,
+          repeatDelay: 5
+        }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={toggleChat}

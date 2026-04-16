@@ -798,7 +798,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Importar `ChatWidget` en `src/app/layout.tsx` (dentro de `<body>`, después del children)
 - **Aceptación:** widget aparece en todas las páginas (home, certificates, etc.).
 
-### [ ] Tarea 7.3 — Animación de "atención" cada 30s
+### [x] Tarea 7.3 — Animación de "atención" cada 30s
 - En el botón flotante, cada 30s sin abrir: hacer un wiggle (framer-motion `animate={{rotate:[0,-10,10,0]}}`)
 - Mostrar burbuja con preview "¿Hablamos? 👋" 1 vez por sesión
 - **Aceptación:** efecto visible, no se repite tras cerrarlo.
