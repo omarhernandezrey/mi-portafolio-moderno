@@ -484,7 +484,7 @@ export const supabaseServer = createClient(
 
 - **Aceptación:** archivo `src/lib/chatbot/data/_omar_inputs.md` existe, **sin campos vacíos** (si el usuario no responde uno, el agente DEBE detenerse y pedirlo, no inventar).
 
-### [ ] Tarea 3.1 — Crear `persona.ts` (voz de Omar)
+### [x] Tarea 3.1 — Crear `persona.ts` (voz de Omar)
 - Crear `src/lib/chatbot/data/persona.ts`
 - Exportar constante `PERSONA` con secciones: identidad, voz, muletillas, frases prohibidas, valores, ICP, red flags, garantías, diferenciadores
 - Cargar literalmente desde `_omar_inputs.md` (no parafrasear)
