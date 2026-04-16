@@ -32,6 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+src/lib/chatbot/data/_omar_inputs.md
+secrets/
+!secrets/README.md
 
 # vercel
 .vercel

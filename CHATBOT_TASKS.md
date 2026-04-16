@@ -1034,7 +1034,7 @@ export const clientEnv = clientSchema.parse({
   - `grep -r "process.env" src/ --include="*.ts" --include="*.tsx"` solo retorna ocurrencias dentro de `src/config/env.ts`.
   - Si se borra una variable de `.env.local` y se hace `npm run build` → falla con error claro indicando QUÉ falta.
 
-### [ ] Tarea 14.2 — `.env.example` versionado y `.env.local` ignorado
+### [x] Tarea 14.2 — `.env.example` versionado y `.env.local` ignorado
 - Crear `.env.example` (SÍ se commitea, sin valores reales) con TODAS las claves y comentarios:
 ```env
 # === LLM (https://aistudio.google.com/app/apikey) ===
