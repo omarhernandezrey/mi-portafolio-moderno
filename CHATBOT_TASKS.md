@@ -1116,7 +1116,7 @@ echo "✅ Variables sincronizadas con Vercel."
   - Ejecutar el script tras `vercel link` sube las 9 variables.
   - `vercel env ls` lista las 9 en production y preview.
 
-### [ ] Tarea 14.5 — Plan de portabilidad a Google Cloud (documentado)
+### [x] Tarea 14.5 — Plan de portabilidad a Google Cloud (documentado)
 - Añadir `scripts/sync-gcp-env.sh` plantilla (no se ejecuta hoy, queda lista para mañana):
 ```bash
 #!/usr/bin/env bash
