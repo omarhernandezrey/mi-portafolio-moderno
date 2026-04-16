@@ -301,7 +301,7 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 
 ---
 
-### [ ] Tarea 0.5 — Crear archivo `.env.local` (3 min, lo hace el agente con tus datos)
+### [x] Tarea 0.5 — Crear archivo `.env.local` (3 min, lo hace el agente con tus datos)
 
 **Para Omar:**
 - Cuando termines las tareas 0.1 a 0.4, dile al agente AI: **"ya tengo todas las claves en mis-claves-chatbot.txt"**.
