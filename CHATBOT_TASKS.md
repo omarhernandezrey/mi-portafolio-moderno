@@ -407,7 +407,7 @@ npm install @google/generative-ai @supabase/supabase-js nanoid
 ```
 - **Aceptación:** las 3 deps en `package.json`, `npm install` sin errores.
 
-### [ ] Tarea 2.2 — Crear cliente Supabase server-only
+### [x] Tarea 2.2 — Crear cliente Supabase server-only
 - Crear `src/lib/supabaseServer.ts`:
 ```ts
 import { createClient } from "@supabase/supabase-js";
