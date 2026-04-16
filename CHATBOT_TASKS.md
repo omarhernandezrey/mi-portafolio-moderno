@@ -777,7 +777,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Usar `useTranslation()` en el widget
 - **Aceptación:** cambiar idioma en navbar → widget cambia textos.
 
-### [ ] Tarea 6.4 — Estilos responsive y accesibilidad
+### [x] Tarea 6.4 — Estilos responsive y accesibilidad
 - Móvil (`<640px`): panel ocupa 100vw × 80vh, sticky bottom
 - `aria-label` en botón flotante
 - `role="dialog"` `aria-modal="true"` en panel

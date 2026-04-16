@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, Phone, Calendar } from 'lucide-react';
 import { nanoid } from 'nanoid';
@@ -24,6 +24,8 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   // Inicializar sessionId desde localStorage
   useEffect(() => {
@@ -42,9 +44,16 @@ export default function ChatWidget() {
     }
   }, [messages, isLoading]);
 
+  // Enfocar input al abrir
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      setTimeout(() => inputRef.current?.focus(), 300);
+    }
+  }, [isOpen]);
+
   const toggleChat = () => setIsOpen(!isOpen);
 
-  const handleSubmit = async (e?: React.FormEvent, overrideInput?: string) => {
+  const handleSubmit = useCallback(async (e?: React.FormEvent, overrideInput?: string) => {
     if (e) e.preventDefault();
     const finalInput = overrideInput || input;
     if (!finalInput.trim() || isLoading) return;
@@ -70,22 +79,32 @@ export default function ChatWidget() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, isLoading, sessionId, currentLanguage, t]);
 
   const handleQuickAction = (actionKey: string) => {
     const message = t(`chatbot.quickActions.${actionKey}`);
     handleSubmit(undefined, message);
   };
 
+  // Cerrar con Escape
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
+
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end sm:bottom-6 sm:right-6">
       {/* Botón Flotante */}
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={toggleChat}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg focus:outline-none"
-        aria-label={t('chatbot.ariaOpen')}
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2"
+        aria-label={isOpen ? t('chatbot.ariaClose') : t('chatbot.ariaOpen')}
+        aria-expanded={isOpen}
       >
         {isOpen ? <X size={28} /> : <MessageCircle size={28} />}
       </motion.button>
@@ -94,12 +113,14 @@ export default function ChatWidget() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={panelRef}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="mb-4 flex h-[600px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[var(--muted-color)] bg-[var(--background-color)] shadow-2xl sm:max-h-[80vh] sm:w-[90vw] md:w-[380px]"
+            className="mb-4 flex h-[600px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[var(--muted-color)] bg-[var(--background-color)] shadow-2xl transition-all duration-300 max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:mb-0 max-sm:h-[85vh] max-sm:w-full max-sm:rounded-b-none"
             role="dialog"
             aria-modal="true"
+            aria-labelledby="chatbot-header"
           >
             {/* Header */}
             <div className="flex items-center justify-between bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] p-4 text-white">
@@ -108,13 +129,13 @@ export default function ChatWidget() {
                   <Bot size={24} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold">{t('chatbot.title')}</h3>
+                  <h3 id="chatbot-header" className="text-sm font-bold">{t('chatbot.title')}</h3>
                   <p className="text-[10px] opacity-80">{t('chatbot.status')}</p>
                 </div>
               </div>
               <button 
                 onClick={toggleChat} 
-                className="rounded-full p-1 hover:bg-white/10"
+                className="rounded-full p-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
                 aria-label={t('chatbot.ariaClose')}
               >
                 <X size={20} />
@@ -137,7 +158,7 @@ export default function ChatWidget() {
                           <button
                             key={key}
                             onClick={() => handleQuickAction(key)}
-                            className="rounded-xl border border-[var(--primary-color)] px-4 py-2 text-left text-xs text-[var(--primary-color)] transition-colors hover:bg-[var(--primary-color)] hover:text-white"
+                            className="rounded-xl border border-[var(--primary-color)] px-4 py-3 text-left text-xs text-[var(--primary-color)] transition-colors hover:bg-[var(--primary-color)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
                           >
                             {t(`chatbot.quickActions.${key}`)}
                           </button>
@@ -150,11 +171,13 @@ export default function ChatWidget() {
                     key={idx} 
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
-                    <div className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm ${
-                      msg.role === 'user' 
-                        ? 'bg-[var(--primary-color)] text-white rounded-br-none' 
-                        : 'bg-[var(--white-color)] border border-[var(--muted-color)] text-[var(--text-color)] rounded-bl-none'
-                    }`}>
+                    <div 
+                      className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
+                        msg.role === 'user' 
+                          ? 'bg-[var(--primary-color)] text-white rounded-br-none' 
+                          : 'bg-[var(--white-color)] border border-[var(--muted-color)] text-[var(--text-color)] rounded-bl-none'
+                      }`}
+                    >
                       {msg.content}
                     </div>
                     
@@ -165,7 +188,7 @@ export default function ChatWidget() {
                           href={msg.handoffUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-full bg-green-500 px-3 py-1 text-[10px] text-white transition-colors hover:bg-green-600"
+                          className="flex items-center gap-2 rounded-full bg-green-500 px-4 py-2 text-[10px] font-bold text-white transition-all hover:bg-green-600 hover:shadow-md active:scale-95"
                         >
                           <Phone size={12} />
                           {t('chatbot.handoff')}
@@ -176,7 +199,7 @@ export default function ChatWidget() {
                           href={msg.calcomUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-full bg-blue-500 px-3 py-1 text-[10px] text-white transition-colors hover:bg-blue-600"
+                          className="flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-[10px] font-bold text-white transition-all hover:bg-blue-600 hover:shadow-md active:scale-95"
                         >
                           <Calendar size={12} />
                           {t('chatbot.calendar')}
@@ -187,8 +210,11 @@ export default function ChatWidget() {
                 ))}
                 {isLoading && (
                   <div className="flex justify-start">
-                    <div className="animate-pulse bg-[var(--white-color)] border border-[var(--muted-color)] rounded-2xl px-4 py-2 text-[10px] text-[var(--muted-color)]">
-                      {t('chatbot.loading')}
+                    <div className="flex items-center gap-1 rounded-2xl border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-[10px] text-[var(--muted-color)]">
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)]" />
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.2s]" />
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.4s]" />
+                      <span className="ml-1">{t('chatbot.loading')}</span>
                     </div>
                   </div>
                 )}
@@ -196,15 +222,16 @@ export default function ChatWidget() {
             </div>
 
             {/* Footer (Input) */}
-            <div className="border-t border-[var(--muted-color)] p-4">
+            <div className="border-t border-[var(--muted-color)] p-4 max-sm:pb-8">
               <form 
                 className="flex items-center gap-2"
                 onSubmit={handleSubmit}
               >
                 <input
+                  ref={inputRef}
                   type="text"
                   placeholder={t('chatbot.placeholder')}
-                  className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none text-[var(--text-color)]"
+                  className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]/20 text-[var(--text-color)]"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
@@ -212,7 +239,8 @@ export default function ChatWidget() {
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--primary-color)] text-white disabled:opacity-50 transition-transform active:scale-95"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--primary-color)] text-white disabled:opacity-50 transition-all hover:scale-105 active:scale-90 shadow-md"
+                  aria-label={t('chatbot.send') || 'Send'}
                 >
                   <Send size={18} />
                 </button>
