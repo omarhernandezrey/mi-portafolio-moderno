@@ -656,7 +656,7 @@ NO los menciones en el texto visible.
   5. Contiene los marcadores `<<<LEAD>>>`, `<<<HANDOFF>>>`, `<<<CALCOM>>>` exactos
   6. `npx tsc --noEmit` sin errores
 
-### [ ] Tarea 3.6 — Parser de bloques estructurados
+### [x] Tarea 3.6 — Parser de bloques estructurados
 - Crear `src/lib/chatbot/parser.ts`
 - Exportar:
   - `extractLead(text: string): Lead | null`
