@@ -9,6 +9,7 @@ const chatSchema = z.object({
   sessionId: z.string().min(1),
   message: z.string().min(1).max(2000),
   language: z.enum(['es', 'en']),
+  website: z.string().optional(), // Honeypot field
   visitorMeta: z.object({
     name: z.string().optional(),
     email: z.string().email().optional(),
@@ -48,7 +49,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request data', details: result.error.format() }, { status: 400 });
     }
 
-    const { sessionId, message, language, visitorMeta } = result.data;
+    const { sessionId, message, language, visitorMeta, website } = result.data;
+
+    // Honeypot check
+    if (website) {
+      return NextResponse.json({ reply: 'Bot detected' }, { status: 200 });
+    }
 
     // Validación extra anti-spam y prompt injection
     const forbiddenPatterns = [/ignore previous instructions/i, /system:/i, /<script/i, /you are now/i];

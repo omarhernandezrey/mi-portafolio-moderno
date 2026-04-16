@@ -832,7 +832,7 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 - En API: rechazar mensajes > 2000 chars, vacíos, o que parezcan prompt injection (`ignore previous`, `system:`, etc.)
 - **Aceptación:** request con 5000 chars → 400.
 
-### [ ] Tarea 9.2 — Honeypot en widget
+### [x] Tarea 9.2 — Honeypot en widget
 - Añadir input oculto `name="website"` con `tabIndex={-1}` `aria-hidden`
 - Si llega lleno al API → descartar silenciosamente
 - **Aceptación:** bot llenando el campo → no se procesa.

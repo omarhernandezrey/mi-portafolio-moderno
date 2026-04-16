@@ -267,6 +267,16 @@ export default function ChatWidget() {
                 className="flex items-center gap-2"
                 onSubmit={handleSubmit}
               >
+                {/* Honeypot field */}
+                <input
+                  type="text"
+                  name="website"
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={input === '---bot---' ? 'spam' : ''} // Solo para pruebas internas si fuera necesario
+                  readOnly
+                />
                 <input
                   ref={inputRef}
                   type="text"
