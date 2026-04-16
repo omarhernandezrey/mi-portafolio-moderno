@@ -828,7 +828,7 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 
 ## FASE 9 — Anti-spam y robustez
 
-### [ ] Tarea 9.1 — Validación de input
+### [x] Tarea 9.1 — Validación de input
 - En API: rechazar mensajes > 2000 chars, vacíos, o que parezcan prompt injection (`ignore previous`, `system:`, etc.)
 - **Aceptación:** request con 5000 chars → 400.
 

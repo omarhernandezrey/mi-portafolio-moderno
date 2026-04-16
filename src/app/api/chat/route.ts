@@ -50,6 +50,15 @@ export async function POST(req: NextRequest) {
 
     const { sessionId, message, language, visitorMeta } = result.data;
 
+    // Validación extra anti-spam y prompt injection
+    const forbiddenPatterns = [/ignore previous instructions/i, /system:/i, /<script/i, /you are now/i];
+    if (forbiddenPatterns.some(pattern => pattern.test(message))) {
+      return NextResponse.json({ 
+        reply: 'Lo siento, no puedo procesar ese tipo de mensajes por motivos de seguridad.',
+        error: 'Security validation failed' 
+      }, { status: 400 });
+    }
+
     // 1. Buscar o crear conversación
     const { data: existingConv, error: convError } = await supabaseServer
       .from('conversations')
