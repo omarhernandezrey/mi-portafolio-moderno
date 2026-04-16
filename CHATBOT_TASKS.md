@@ -546,7 +546,7 @@ export const supabaseServer = createClient(
 - Cada objeción incluye: `trigger` (frases que la activan), `acknowledge` (validación empática), `reframe` (reencuadre), `proof` (evidencia/caso real), `cta` (siguiente paso)
 - **Aceptación:** importar `OBJECTIONS` retorna array ≥ 12, cada uno con los 5 campos llenos.
 
-### [ ] Tarea 3.5 — Crear builder del system prompt unificado
+### [x] Tarea 3.5 — Crear builder del system prompt unificado
 - Crear `src/lib/chatbot/systemPrompt.ts`
 - Importar `PERSONA`, `SERVICES_CATALOG`, `salesPlaybook`, `OBJECTIONS`, `projectsData`, `educationData`, `skillsData`
 - Exportar `function buildSystemPrompt(language: 'es'|'en', context?: {visitorName?, intent?}): string`
