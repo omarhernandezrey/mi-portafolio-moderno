@@ -9,6 +9,23 @@
     "contact": "Contact",
     "language": "Language"
   },
+  "chatbot": {
+    "title": "Omar's Assistant",
+    "status": "Online now",
+    "placeholder": "Type a message...",
+    "welcome": "Hi 👋 I'm Omar's assistant. How can I help you today?",
+    "loading": "Typing...",
+    "error": "Sorry, an error occurred. Could you try again?",
+    "handoff": "Talk on WhatsApp",
+    "calendar": "Schedule a meeting",
+    "ariaOpen": "Open chat",
+    "ariaClose": "Close chat",
+    "quickActions": {
+      "hire": "I want to hire a service",
+      "recruiter": "I have a job offer",
+      "tech": "Technical question"
+    }
+  },
   "hero": {
     "greeting": "Hello I'm",
     "name": "Omar Hernández Rey",

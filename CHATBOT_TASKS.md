@@ -771,7 +771,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Si viene `calcomUrl`: render botón "Agendar reunión"
 - **Aceptación:** conversación completa funciona en `npm run dev`.
 
-### [ ] Tarea 6.3 — Internacionalización del widget
+### [x] Tarea 6.3 — Internacionalización del widget
 - Añadir claves a `src/locales/es/common.json` y `src/locales/en/common.json`:
   - `chatbot.title`, `chatbot.placeholder`, `chatbot.send`, `chatbot.welcome`, `chatbot.quickActions.hire`, `chatbot.quickActions.recruiter`, `chatbot.quickActions.tech`, `chatbot.handoffButton`, `chatbot.calendarButton`, `chatbot.error`
 - Usar `useTranslation()` en el widget

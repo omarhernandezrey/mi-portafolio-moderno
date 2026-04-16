@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, Phone, Calendar } from 'lucide-react';
 import { nanoid } from 'nanoid';
 import { sendChatMessage } from '@/services/chatService';
+import { useTranslation } from 'react-i18next';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -14,6 +15,9 @@ interface Message {
 }
 
 export default function ChatWidget() {
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language === 'en' ? 'en' : 'es';
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -40,18 +44,17 @@ export default function ChatWidget() {
 
   const toggleChat = () => setIsOpen(!isOpen);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const handleSubmit = async (e?: React.FormEvent, overrideInput?: string) => {
+    if (e) e.preventDefault();
+    const finalInput = overrideInput || input;
+    if (!finalInput.trim() || isLoading) return;
 
-    const userMsg = input;
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+    setMessages(prev => [...prev, { role: 'user', content: finalInput }]);
     setIsLoading(true);
 
     try {
-      // Por ahora forzamos 'es' hasta que integremos i18n en la siguiente tarea
-      const response = await sendChatMessage(sessionId, userMsg, 'es');
+      const response = await sendChatMessage(sessionId, finalInput, currentLanguage);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: response.reply,
@@ -62,11 +65,16 @@ export default function ChatWidget() {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'Lo siento, ha ocurrido un error. ¿Podrías intentarlo de nuevo?' 
+        content: t('chatbot.error') 
       }]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleQuickAction = (actionKey: string) => {
+    const message = t(`chatbot.quickActions.${actionKey}`);
+    handleSubmit(undefined, message);
   };
 
   return (
@@ -77,7 +85,7 @@ export default function ChatWidget() {
         whileTap={{ scale: 0.9 }}
         onClick={toggleChat}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg focus:outline-none"
-        aria-label="Abrir chat"
+        aria-label={t('chatbot.ariaOpen')}
       >
         {isOpen ? <X size={28} /> : <MessageCircle size={28} />}
       </motion.button>
@@ -100,11 +108,15 @@ export default function ChatWidget() {
                   <Bot size={24} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold">Asistente de Omar</h3>
-                  <p className="text-[10px] opacity-80">En línea ahora</p>
+                  <h3 className="text-sm font-bold">{t('chatbot.title')}</h3>
+                  <p className="text-[10px] opacity-80">{t('chatbot.status')}</p>
                 </div>
               </div>
-              <button onClick={toggleChat} className="rounded-full p-1 hover:bg-white/10">
+              <button 
+                onClick={toggleChat} 
+                className="rounded-full p-1 hover:bg-white/10"
+                aria-label={t('chatbot.ariaClose')}
+              >
                 <X size={20} />
               </button>
             </div>
@@ -116,8 +128,21 @@ export default function ChatWidget() {
             >
               <div className="flex flex-col gap-4">
                 {messages.length === 0 && !isLoading && (
-                   <div className="text-center text-sm text-[var(--muted-color)] mt-10">
-                     Hola 👋 Soy el asistente de Omar. ¿En qué puedo ayudarte hoy?
+                   <div className="flex flex-col gap-4">
+                     <div className="text-center text-sm text-[var(--muted-color)] mt-4">
+                       {t('chatbot.welcome')}
+                     </div>
+                     <div className="flex flex-col gap-2">
+                        {['hire', 'recruiter', 'tech'].map((key) => (
+                          <button
+                            key={key}
+                            onClick={() => handleQuickAction(key)}
+                            className="rounded-xl border border-[var(--primary-color)] px-4 py-2 text-left text-xs text-[var(--primary-color)] transition-colors hover:bg-[var(--primary-color)] hover:text-white"
+                          >
+                            {t(`chatbot.quickActions.${key}`)}
+                          </button>
+                        ))}
+                     </div>
                    </div>
                 )}
                 {messages.map((msg, idx) => (
@@ -143,7 +168,7 @@ export default function ChatWidget() {
                           className="flex items-center gap-2 rounded-full bg-green-500 px-3 py-1 text-[10px] text-white transition-colors hover:bg-green-600"
                         >
                           <Phone size={12} />
-                          Hablar por WhatsApp
+                          {t('chatbot.handoff')}
                         </a>
                       )}
                       {msg.calcomUrl && (
@@ -154,7 +179,7 @@ export default function ChatWidget() {
                           className="flex items-center gap-2 rounded-full bg-blue-500 px-3 py-1 text-[10px] text-white transition-colors hover:bg-blue-600"
                         >
                           <Calendar size={12} />
-                          Agendar reunión
+                          {t('chatbot.calendar')}
                         </a>
                       )}
                     </div>
@@ -163,7 +188,7 @@ export default function ChatWidget() {
                 {isLoading && (
                   <div className="flex justify-start">
                     <div className="animate-pulse bg-[var(--white-color)] border border-[var(--muted-color)] rounded-2xl px-4 py-2 text-[10px] text-[var(--muted-color)]">
-                      Escribiendo...
+                      {t('chatbot.loading')}
                     </div>
                   </div>
                 )}
@@ -178,7 +203,7 @@ export default function ChatWidget() {
               >
                 <input
                   type="text"
-                  placeholder="Escribe un mensaje..."
+                  placeholder={t('chatbot.placeholder')}
                   className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none text-[var(--text-color)]"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
