@@ -1139,7 +1139,7 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
 - Documentar en `scripts/README.md` el flujo Vercel→GCP cuando llegue el día.
 - **Aceptación:** scripts existen, `scripts/README.md` explica los dos comandos y cuándo usar cada uno.
 
-### [ ] Tarea 14.6 — Rotación de claves (procedimiento)
+### [x] Tarea 14.6 — Rotación de claves (procedimiento)
 - Añadir sección a `README.md`:
   - Cómo rotar `GEMINI_API_KEY`: revocar en AI Studio, generar nueva, actualizar `.env.local`, correr `sync-vercel-env.sh`, redeploy.
   - Igual para Supabase, Telegram, Cal.com.

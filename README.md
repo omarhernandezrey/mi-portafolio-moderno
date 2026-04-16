@@ -199,3 +199,22 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 ---
 
 ⭐ Si este proyecto te ha sido útil, no olvides darle una estrella en GitHub! 
+---
+
+## 🔐 Operación y Seguridad (Chatbot AI)
+
+### Rotación de Claves
+Si sospechas que una clave se ha filtrado, sigue estos pasos:
+1. **Revocar**: Ve al dashboard del servicio (Google AI Studio, Supabase, etc.) y elimina la clave antigua.
+2. **Generar**: Crea una nueva clave en el mismo dashboard.
+3. **Actualizar Local**: Pon la nueva clave en tu archivo `.env.local`.
+4. **Sincronizar**: Ejecuta `./scripts/sync-vercel-env.sh` para actualizar Vercel automáticamente.
+5. **Redeploy**: Realiza un nuevo deploy en Vercel para aplicar los cambios.
+
+### Monitoreo Mensual
+- **Gemini**: Revisa el uso en [Google AI Studio](https://aistudio.google.com/app/plan).
+- **Supabase**: Revisa el almacenamiento y uso de base de datos en el dashboard de Supabase.
+- **Telegram**: Asegúrate de que el bot siga respondiendo a tus comandos.
+
+### Backups
+Las claves deben guardarse cifradas en la carpeta `secrets/` siguiendo las instrucciones de su README. Nunca subas claves sin cifrar al repositorio.
