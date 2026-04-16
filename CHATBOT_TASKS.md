@@ -491,7 +491,7 @@ export const supabaseServer = createClient(
 - En español e inglés (objeto bilingüe `{es, en}`)
 - **Aceptación:** importar `PERSONA` muestra los 5 diferenciadores y las 3 muletillas EXACTAS que escribió el usuario.
 
-### [ ] Tarea 3.2 — Crear `catalog.ts` (servicios + precios)
+### [x] Tarea 3.2 — Crear `catalog.ts` (servicios + precios)
 - Crear `src/lib/chatbot/data/catalog.ts`
 - Exportar `SERVICES_CATALOG` con cada servicio:
 ```ts
