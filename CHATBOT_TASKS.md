@@ -368,7 +368,7 @@ create index idx_messages_conversation on messages(conversation_id);
 ```
 - **Aceptación:** tabla creada con FK a `conversations`.
 
-### [ ] Tarea 1.3 — Crear tabla `leads`
+### [x] Tarea 1.3 — Crear tabla `leads`
 ```sql
 create table leads (
   id uuid primary key default gen_random_uuid(),
