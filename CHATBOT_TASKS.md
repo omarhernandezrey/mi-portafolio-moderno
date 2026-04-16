@@ -510,7 +510,7 @@ export const supabaseServer = createClient(
 - Llenar TODOS los servicios listados en `_omar_inputs.md`
 - **Aceptación:** mínimo 8 servicios con precios reales del usuario, sin placeholders `0` ni `TODO`.
 
-### [ ] Tarea 3.3 — Crear `salesPlaybook.ts` (manual de cierre)
+### [x] Tarea 3.3 — Crear `salesPlaybook.ts` (manual de cierre)
 - Crear `src/lib/chatbot/data/salesPlaybook.ts`
 - Exportar 4 bloques:
   1. **DISCOVERY_QUESTIONS** — preguntas SPIN para descubrir necesidad (mínimo 8, en es/en):
