@@ -794,7 +794,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Eliminarlo (mantener el ícono de WhatsApp dentro del Footer normal)
 - **Aceptación:** ya no hay botón flotante WhatsApp visible.
 
-### [ ] Tarea 7.2 — Montar `ChatWidget` global
+### [x] Tarea 7.2 — Montar `ChatWidget` global
 - Importar `ChatWidget` en `src/app/layout.tsx` (dentro de `<body>`, después del children)
 - **Aceptación:** widget aparece en todas las páginas (home, certificates, etc.).
 
