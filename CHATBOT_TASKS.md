@@ -259,7 +259,7 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 
 ---
 
-### [ ] Tarea 0.4 — Crear cuenta Cal.com (10 min, gratis)
+### [x] Tarea 0.4 — Crear cuenta Cal.com (10 min, gratis)
 
 **Pasos para Omar:**
 1. Abre: **https://cal.com/signup**
