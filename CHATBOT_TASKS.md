@@ -1093,7 +1093,7 @@ para no perderlas si formateas la PC.
 ```
 - **Aceptación:** carpeta `secrets/` existe, `secrets/README.md` commiteado, `secrets/*.age` ignorado.
 
-### [ ] Tarea 14.4 — Configurar variables en Vercel (script reproducible)
+### [x] Tarea 14.4 — Configurar variables en Vercel (script reproducible)
 - Crear `scripts/sync-vercel-env.sh` (ejecutable):
 ```bash
 #!/usr/bin/env bash
