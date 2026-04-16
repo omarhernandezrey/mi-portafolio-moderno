@@ -427,7 +427,7 @@ export const supabaseServer = createClient(
 
 > Esta fase es **EL CORAZÓN** del chatbot. Si esta fase queda débil, el bot suena genérico y NO vende. Cada tarea aquí es CRÍTICA. NO saltarse, NO acortar, NO improvisar contenido. Si falta info del usuario, preguntar antes de inventar.
 
-### [ ] Tarea 3.0 — Recolectar datos del usuario (Omar) — manual
+### [x] Tarea 3.0 — Recolectar datos del usuario (Omar) — manual
 > El agente debe **pedir al usuario** que llene `src/lib/chatbot/data/_omar_inputs.md` (crear plantilla vacía con TODOS estos campos):
 
 ```markdown
