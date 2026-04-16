@@ -885,7 +885,7 @@ from messages group by 1 order by 1 desc;
 
 > El bot puede compilar perfecto y aun así NO vender. Esta fase prueba que **realmente cierra**.
 
-### [ ] Tarea 11.1 — Crear suite de escenarios de evaluación
+### [x] Tarea 11.1 — Crear suite de escenarios de evaluación
 - Crear `src/lib/chatbot/eval/scenarios.ts`
 - Exportar `SCENARIOS` array con mínimo 10 conversaciones simuladas. Cada escenario:
 ```ts
