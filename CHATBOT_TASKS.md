@@ -837,7 +837,7 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 - Si llega lleno al API → descartar silenciosamente
 - **Aceptación:** bot llenando el campo → no se procesa.
 
-### [ ] Tarea 9.3 — Manejo de cuota Gemini agotada
+### [x] Tarea 9.3 — Manejo de cuota Gemini agotada
 - Si Gemini retorna 429 o quota error: responder con mensaje fallback + link directo a WhatsApp
 - Notificar a Telegram: "⚠️ Cuota Gemini agotada"
 - **Aceptación:** simular error → usuario recibe fallback útil.

@@ -46,8 +46,15 @@ export async function generateReply(
     const text = res.text;
     return text || "Lo siento, no he podido generar una respuesta.";
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Gemini modern SDK Error:", error);
+
+    // Detectar cuota agotada (Error 429)
+    const err = error as { status?: number; message?: string };
+    if (err.status === 429 || err.message?.includes('quota') || err.message?.includes('429')) {
+      return "<<<QUOTA_EXCEEDED>>>";
+    }
+
     return "Lo siento, he tenido un pequeño error técnico. ¿Podrías repetirme eso o prefieres hablar directamente con Omar vía WhatsApp?";
   }
 }

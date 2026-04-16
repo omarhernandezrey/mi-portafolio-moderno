@@ -117,7 +117,23 @@ export async function POST(req: NextRequest) {
     const systemPrompt = buildSystemPrompt(language, { 
       visitorName: conversation.visitor_name || visitorMeta?.name 
     });
-    const rawReply = await generateReply(systemPrompt, history, message);
+    let rawReply = await generateReply(systemPrompt, history, message);
+
+    let handoffUrl;
+
+    // Manejo de cuota agotada
+    if (rawReply === '<<<QUOTA_EXCEEDED>>>') {
+      const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+      const text = encodeURIComponent(`Hola Omar, el chatbot parece estar muy ocupado.\nMi mensaje era: ${message}`);
+      handoffUrl = `https://wa.me/${whatsapp}?text=${text}`;
+      
+      rawReply = language === 'es' 
+        ? "Lo siento, mi 'cerebro' de IA ha alcanzado su límite de consultas gratuitas por hoy. Pero no te preocupes, puedes escribirme directamente a mi WhatsApp y te responderé enseguida."
+        : "I'm sorry, my AI 'brain' has reached its free limit for today. But don't worry, you can message me directly on WhatsApp and I'll get back to you right away.";
+
+      const { notifyTelegram } = await import('@/lib/chatbot/telegram');
+      await notifyTelegram(`⚠️ *Cuota Gemini agotada*: El visitante ${sessionId} ha sido derivado a WhatsApp.`);
+    }
 
     // 4. Guardar mensaje del usuario y respuesta del asistente
     await supabaseServer.from('messages').insert([
@@ -157,7 +173,6 @@ Notas: ${lead.notes}
     }
 
     // Generar URLs si aplica y notificar handoff
-    let handoffUrl;
     if (handoff) {
       const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
       const text = encodeURIComponent(`Hola Omar, vengo del chat de tu portafolio.\nResumen: ${handoff.summary}`);
