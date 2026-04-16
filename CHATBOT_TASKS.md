@@ -670,7 +670,7 @@ NO los menciones en el texto visible.
 
 ## FASE 4 — API Route del chat
 
-### [ ] Tarea 4.1 — Crear endpoint `POST /api/chat`
+### [x] Tarea 4.1 — Crear endpoint `POST /api/chat`
 - Crear `src/app/api/chat/route.ts`
 - Recibe JSON: `{ sessionId: string, message: string, language: 'es'|'en', visitorMeta?: {name?, email?, phone?} }`
 - Pasos:
