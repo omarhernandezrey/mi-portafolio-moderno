@@ -388,7 +388,7 @@ create table leads (
 ```
 - **Aceptación:** tabla creada.
 
-### [ ] Tarea 1.4 — Habilitar RLS y política service-role only
+### [x] Tarea 1.4 — Habilitar RLS y política service-role only
 ```sql
 alter table conversations enable row level security;
 alter table messages enable row level security;
