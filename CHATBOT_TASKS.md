@@ -817,7 +817,7 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Cuando API responda con `calcomUrl`, el widget renderiza CTA grande con `target="_blank"`
 - **Aceptación:** click abre Cal.com en nueva pestaña.
 
-### [ ] Tarea 8.3 — Pre-rellenar `wa.me` con contexto
+### [x] Tarea 8.3 — Pre-rellenar `wa.me` con contexto
 - En `route.ts` para handoff: construir
 ```
 https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del chat de tu portafolio.\nResumen: ${summary}`)}
