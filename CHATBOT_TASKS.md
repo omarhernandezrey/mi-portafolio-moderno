@@ -401,7 +401,7 @@ alter table leads enable row level security;
 
 ## FASE 2 — Dependencias y cliente Supabase
 
-### [ ] Tarea 2.1 — Instalar dependencias
+### [x] Tarea 2.1 — Instalar dependencias
 ```bash
 npm install @google/generative-ai @supabase/supabase-js nanoid
 ```
