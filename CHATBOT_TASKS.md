@@ -684,7 +684,7 @@ NO los menciones en el texto visible.
   8. Retornar `{ reply: string, handoffUrl?: string, calcomUrl?: string }`
 - **Aceptación:** `curl -X POST http://localhost:3000/api/chat -d '{"sessionId":"test","message":"hola","language":"es"}'` retorna JSON con `reply`.
 
-### [ ] Tarea 4.2 — Wrapper Gemini
+### [x] Tarea 4.2 — Wrapper Gemini
 - Crear `src/lib/chatbot/gemini.ts`
 - Exportar `async function generateReply(systemPrompt: string, history: {role, content}[], userMessage: string): Promise<string>`
 - Usar `@google/generative-ai`, modelo `gemini-2.0-flash-exp` (o `gemini-2.0-flash` si está GA)
