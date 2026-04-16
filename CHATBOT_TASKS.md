@@ -702,7 +702,7 @@ NO los menciones en el texto visible.
 
 ## FASE 5 — Notificaciones a Telegram
 
-### [ ] Tarea 5.1 — Helper `notifyTelegram`
+### [x] Tarea 5.1 — Helper `notifyTelegram`
 - Crear `src/lib/chatbot/telegram.ts`
 - Exportar `async function notifyTelegram(text: string): Promise<void>`
 - POST a `https://api.telegram.org/bot${TOKEN}/sendMessage` con `{chat_id, text, parse_mode: 'Markdown'}`
