@@ -195,7 +195,7 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 
 ---
 
-### [ ] Tarea 0.2 — Crear proyecto Supabase (8 min, gratis, sin tarjeta)
+### [x] Tarea 0.2 — Crear proyecto Supabase (8 min, gratis, sin tarjeta)
 
 **Pasos para Omar:**
 1. Abre: **https://supabase.com**
