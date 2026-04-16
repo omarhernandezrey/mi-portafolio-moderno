@@ -753,7 +753,7 @@ El visitante recibió wa.me link.
 - Mensaje inicial del assistant (sin llamar API): saludo + 3 botones rápidos: "Quiero contratar un servicio", "Tengo una oferta laboral", "Pregunta técnica"
 - **Aceptación:** botón visible, panel abre/cierra, se puede escribir.
 
-### [ ] Tarea 6.2 — Conectar widget al endpoint
+### [x] Tarea 6.2 — Conectar widget al endpoint
 - Crear `src/services/chatService.ts`:
 ```ts
 export async function sendChatMessage(sessionId: string, message: string, language: 'es'|'en') {
