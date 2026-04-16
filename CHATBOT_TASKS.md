@@ -1069,7 +1069,7 @@ src/lib/chatbot/data/_omar_inputs.md
 - Ejecutar `git check-ignore -v .env.local` → debe confirmar que está ignorado.
 - **Aceptación:** `git status` no lista `.env.local` ni `_omar_inputs.md`; `.env.example` SÍ está trackeado.
 
-### [ ] Tarea 14.3 — Bóveda local cifrada (backup portable de claves)
+### [x] Tarea 14.3 — Bóveda local cifrada (backup portable de claves)
 - Crear `secrets/` en la raíz (ignorado por git, ver Tarea 14.2).
 - Añadir `secrets/README.md` (este archivo SÍ se commitea):
 ```markdown
