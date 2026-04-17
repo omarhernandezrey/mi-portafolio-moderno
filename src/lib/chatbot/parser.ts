@@ -39,8 +39,19 @@ const extractBlock = (text: string, startMarker: string, endMarker: string = '<<
 const parseSafeJSON = <T>(jsonStr: string | null): T | null => {
   if (!jsonStr) return null;
   try {
-    return JSON.parse(jsonStr) as T;
+    // Limpiamos posibles caracteres invisibles o espacios al inicio/final del bloque
+    const cleaned = jsonStr.trim();
+    return JSON.parse(cleaned) as T;
   } catch (error) {
+    // Si falla el primer intento, intentamos extraer solo lo que parece un objeto JSON {}
+    try {
+      const matches = jsonStr.match(/\{[\s\S]*\}/);
+      if (matches) {
+        return JSON.parse(matches[0]) as T;
+      }
+    } catch (e) {
+      console.error('Final attempt to parse JSON failed:', e);
+    }
     console.error('Error parsing chatbot JSON block:', error);
     return null;
   }

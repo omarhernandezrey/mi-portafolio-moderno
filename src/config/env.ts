@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const serverSchema = z.object({
-  GOOGLE_API_KEY: z.string().min(20),
+  GROQ_API_KEY: z.string().min(20),
   SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
   TELEGRAM_BOT_TOKEN: z.string().min(20),

@@ -1,14 +1,5 @@
-import { GoogleGenAI } from "@google/genai";
+import Groq from "groq-sdk";
 import { serverEnv } from "@/config/env";
-
-interface ContentPart {
-  text: string;
-}
-
-interface Content {
-  role: string;
-  parts: ContentPart[];
-}
 
 export async function generateReply(
   systemPrompt: string,
@@ -16,37 +7,34 @@ export async function generateReply(
   userMessage: string
 ): Promise<string> {
   try {
-    const ai = new GoogleGenAI({
-      apiKey: serverEnv.GOOGLE_API_KEY,
+    const groq = new Groq({
+      apiKey: serverEnv.GROQ_API_KEY,
     });
 
-    const contents: Content[] = [
-      ...history
-        .filter(m => m.role !== 'system')
-        .map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.content }]
-        })),
-      { role: 'user', parts: [{ text: userMessage }] }
+    const messages = [
+      { role: "system", content: systemPrompt },
+      ...history.map(m => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.content
+      })),
+      { role: "user", content: userMessage }
     ];
 
-    const res = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: contents,
-      config: {
-        systemInstruction: systemPrompt,
-      }
+    const completion = await groq.chat.completions.create({
+      messages: messages as any,
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.7,
+      max_completion_tokens: 800,
     });
 
-    const text = res.text;
-    return text || "Lo siento, no he podido generar una respuesta.";
+    return completion.choices[0]?.message?.content || "Lo siento, no he podido generar una respuesta.";
 
   } catch (error: unknown) {
-    console.error("Gemini modern SDK Error:", error);
+    console.error("Groq SDK Error:", error);
 
-    // Detectar cuota agotada (Error 429)
     const err = error as { status?: number; message?: string };
-    if (err.status === 429 || err.message?.includes('quota') || err.message?.includes('429')) {
+    // Manejo de cuota Groq
+    if (err.status === 429) {
       return "<<<QUOTA_EXCEEDED>>>";
     }
 

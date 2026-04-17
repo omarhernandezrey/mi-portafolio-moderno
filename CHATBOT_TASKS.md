@@ -928,7 +928,7 @@ from messages group by 1 order by 1 desc;
 - Score total y exit code 1 si pasa < 90%
 - **Aceptación:** `npx tsx scripts/eval-chatbot.ts` ejecuta y muestra score.
 
-### [ ] Tarea 11.3 — Iterar hasta score ≥ 90%
+### [x] Tarea 11.3 — Iterar hasta score ≥ 90%
 - Si score < 90%: el agente DEBE iterar el system prompt (ajustar persona/playbook/objections), re-correr eval, hasta llegar a ≥ 90%
 - Documentar en `src/lib/chatbot/eval/CHANGELOG.md` cada iteración: qué se cambió y por qué
 - **Aceptación:** salida del runner muestra ≥ 90% de pruebas pasadas.
