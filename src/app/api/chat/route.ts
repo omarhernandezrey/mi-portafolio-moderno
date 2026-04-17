@@ -114,11 +114,21 @@ export async function POST(req: NextRequest) {
       content: m.content
     }));
 
-    // 3. Generar respuesta con Gemini
+    // 3. Generar respuesta con Gemini (usando Groq)
     const systemPrompt = buildSystemPrompt(language, { 
-      visitorName: conversation.visitor_name || visitorMeta?.name 
+      visitorName: conversation.visitor_name || visitorMeta?.name,
+      intent: (conversation as any).intent // Pasamos la intención guardada si existe
     });
-    let rawReply = await generateReply(systemPrompt, history, message);
+
+    // Inyectar hechos previos si existen
+    const facts = (conversation as any).facts || {};
+    const contextWithFacts = `
+# LO QUE YA SÉ DEL VISITANTE:
+${JSON.stringify(facts, null, 2)}
+---
+${systemPrompt}`;
+
+    let rawReply = await generateReply(contextWithFacts, history, message);
 
     let handoffUrl;
 
@@ -133,7 +143,7 @@ export async function POST(req: NextRequest) {
         : "I'm sorry, my AI 'brain' has reached its free limit for today. But don't worry, you can message me directly on WhatsApp and I'll get back to you right away.";
 
       const { notifyTelegram } = await import('@/lib/chatbot/telegram');
-      await notifyTelegram(`⚠️ *Cuota Gemini agotada*: El visitante ${sessionId} ha sido derivado a WhatsApp.`);
+      await notifyTelegram(`⚠️ *Cuota Gemini/Groq agotada*: El visitante ${sessionId} ha sido derivado a WhatsApp.`);
     }
 
     // 4. Guardar mensaje del usuario y respuesta del asistente
@@ -142,7 +152,34 @@ export async function POST(req: NextRequest) {
       { conversation_id: conversationId, role: 'assistant', content: rawReply }
     ]);
 
-    // 5. Procesar bloques estructurados
+    // 5. Extraer nuevos hechos y actualizar memoria (Post-procesamiento)
+    if (rawReply !== '<<<QUOTA_EXCEEDED>>>' && rawReply.length > 20) {
+      // Llamada asíncrona rápida para extraer hechos sin bloquear el response
+      (async () => {
+        try {
+          const extractionPrompt = `Extrae hechos clave de este mensaje del usuario: "${message}". Responde SOLO un objeto JSON con campos como: name, email, company, budget, timeline, service, stack. Si no hay nada nuevo, responde {}.`;
+          const factsReply = await generateReply(extractionPrompt, [], "Extrae los hechos.");
+          const newFacts = JSON.parse(factsReply.match(/\{[\s\S]*\}/)?.[0] || '{}');
+          
+          if (Object.keys(newFacts).length > 0) {
+            const updatedFacts = { ...facts, ...newFacts };
+            await supabaseServer
+              .from('conversations')
+              .update({ 
+                facts: updatedFacts,
+                visitor_name: updatedFacts.name || conversation.visitor_name,
+                visitor_email: updatedFacts.email || (conversation as any).visitor_email,
+                intent: updatedFacts.service || (conversation as any).intent
+              })
+              .eq('id', conversationId);
+          }
+        } catch (e) {
+          console.error('Fact extraction failed:', e);
+        }
+      })();
+    }
+
+    // 6. Procesar bloques estructurados
     const lead = extractLead(rawReply);
     const handoff = extractHandoff(rawReply);
     const calcom = extractCalcom(rawReply);

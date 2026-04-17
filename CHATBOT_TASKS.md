@@ -979,7 +979,7 @@ Revisa esta respuesta del asistente de Omar. ¿Cumple con: voz de Omar, máximo 
 - Cachear: si la primera respuesta es OK, no gastar segunda llamada en mensajes triviales (saludo, despedida)
 - **Aceptación:** logs muestran que en mensajes complejos se hace auto-revisión y a veces corrige.
 
-### [ ] Tarea 13.3 — Memory de hechos clave del visitante
+### [x] Tarea 13.3 — Memory de hechos clave del visitante
 - En `conversations` añadir columna JSONB `facts`:
 ```sql
 alter table conversations add column facts jsonb default '{}';
