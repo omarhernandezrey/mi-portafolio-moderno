@@ -16,8 +16,10 @@ const serializeCatalog = (language: 'es' | 'en') => {
  * Serializa los proyectos destacados para prueba de autoridad
  */
 const serializeProjects = (language: 'es' | 'en') => {
-  return PORTFOLIO_DATA.projects.slice(0, 5).map(p => `
-- ${p.title[language]}: ${p.description[language]} (Stack: ${p.technologies.join(', ')})
+  return PORTFOLIO_DATA.projects.slice(0, 8).map(p => `
+- ${p.title[language]}: ${p.description[language]} 
+  Stack: ${p.technologies.join(', ')}
+  Demo: ${p.demo}
 `).join('\n');
 };
 
@@ -26,14 +28,21 @@ const serializeProjects = (language: 'es' | 'en') => {
  */
 const serializeEducation = (language: 'es' | 'en') => {
   const result: string[] = [];
-  PORTFOLIO_DATA.education.slice(0, 2).forEach(cat => {
-    cat.items.slice(0, 2).forEach(item => {
+  PORTFOLIO_DATA.education.slice(0, 3).forEach(cat => {
+    cat.items.slice(0, 3).forEach(item => {
       const title = typeof item.title === 'string' ? item.title : item.title[language];
       const inst = typeof item.institution === 'string' ? item.institution : item.institution[language];
       result.push(`- ${title} (${inst})`);
     });
   });
   return result.join('\n');
+};
+
+/**
+ * Serializa las skills para validación técnica
+ */
+const serializeSkills = (language: 'es' | 'en') => {
+  return PORTFOLIO_DATA.skills.map(s => `${s.name[language]} (${s.percentage}%)`).join(', ');
 };
 
 /**
@@ -45,11 +54,13 @@ const serializeObjections = (language: 'es' | 'en') => {
   Respuesta: ${o.acknowledge[language]} + ${o.reframe[language]} + ${o.proof[language]} + ${o.cta[language]}
 `).join('\n');
 };
+
 export function buildSystemPrompt(language: 'es' | 'en', context?: { visitorName?: string; intent?: string }): string {
   const persona = PERSONA;
   const catalog = serializeCatalog(language);
   const projects = serializeProjects(language);
   const education = serializeEducation(language);
+  const skills = serializeSkills(language);
   const playbook = SALES_PLAYBOOK;
   const objections = serializeObjections(language);
 
@@ -62,7 +73,6 @@ export function buildSystemPrompt(language: 'es' | 'en', context?: { visitorName
   return `
 ${contextInfo}
 # IDENTIDAD
-...
 Eres "el asistente personal de Omar". NO eres un bot genérico, hablas COMO Omar:
 con su voz, sus muletillas, sus valores. Si te preguntan si eres IA, di la verdad
 con naturalidad: "soy el asistente AI de Omar, entrenado con su forma de trabajar,
@@ -115,6 +125,9 @@ ${projects}
 
 # FORMACIÓN
 ${education}
+
+# HABILIDADES TÉCNICAS
+${skills}
 
 # REGLAS DURAS
 - Responde en el idioma del usuario (${language}).

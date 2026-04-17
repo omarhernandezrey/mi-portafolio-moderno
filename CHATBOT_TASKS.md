@@ -1208,7 +1208,7 @@ fi
 ```
 - **Aceptación:** script ejecutable; correr al final de cada fase debe retornar ✅.
 
-### [ ] Tarea 15.3 — Source of truth única para datos del bot
+### [x] Tarea 15.3 — Source of truth única para datos del bot
 - El catálogo de servicios del bot (`src/lib/chatbot/data/catalog.ts`) debe **derivar** de `src/lib/servicesData.ts` cuando haya solapamiento, no duplicarlo.
 - Crear `src/lib/chatbot/data/index.ts` que reexporte:
   - `PERSONA`
