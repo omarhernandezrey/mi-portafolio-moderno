@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, Phone, Calendar } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, Phone, Calendar, ShieldCheck } from 'lucide-react';
 import { nanoid } from 'nanoid';
 import { sendChatMessage } from '@/services/chatService';
 import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -24,13 +25,13 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
   const [showAttention, setShowAttention] = useState(false);
-  const [hasOpenedOnce, setHasOpenedOpenedOnce] = useState(false);
+  const [hasConsented, setHasConsented] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Inicializar sessionId desde localStorage
+  // Inicializar sessionId y consentimiento desde localStorage
   useEffect(() => {
     let id = localStorage.getItem('chatbot_session_id');
     if (!id) {
@@ -38,6 +39,8 @@ export default function ChatWidget() {
       localStorage.setItem('chatbot_session_id', id);
     }
     setSessionId(id);
+    
+    setHasConsented(localStorage.getItem('chatbot_consent') === 'true');
 
     // Animación de atención después de 30 segundos si no se ha abierto
     const timer = setTimeout(() => {
@@ -58,20 +61,22 @@ export default function ChatWidget() {
 
   // Enfocar input al abrir
   useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (isOpen && inputRef.current && hasConsented) {
       setTimeout(() => inputRef.current?.focus(), 300);
-      if (!hasOpenedOnce) {
-        setHasOpenedOpenedOnce(true);
-        setShowAttention(false);
-        localStorage.setItem('chatbot_opened_once', 'true');
-      }
     }
-  }, [isOpen, hasOpenedOnce]);
+  }, [isOpen, hasConsented]);
 
   const toggleChat = () => setIsOpen(!isOpen);
 
+  const handleConsent = () => {
+    setHasConsented(true);
+    localStorage.setItem('chatbot_consent', 'true');
+  };
+
   const handleSubmit = useCallback(async (e?: React.FormEvent, overrideInput?: string) => {
     if (e) e.preventDefault();
+    if (!hasConsented) return;
+    
     const finalInput = overrideInput || input;
     if (!finalInput.trim() || isLoading) return;
 
@@ -96,7 +101,7 @@ export default function ChatWidget() {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, sessionId, currentLanguage, t]);
+  }, [input, isLoading, sessionId, currentLanguage, t, hasConsented]);
 
   const handleQuickAction = (actionKey: string) => {
     const message = t(`chatbot.quickActions.${actionKey}`);
@@ -188,75 +193,108 @@ export default function ChatWidget() {
               className="flex-1 overflow-y-auto p-4 scroll-smooth"
             >
               <div className="flex flex-col gap-4">
-                {messages.length === 0 && !isLoading && (
-                   <div className="flex flex-col gap-4">
-                     <div className="text-center text-sm text-[var(--muted-color)] mt-4">
-                       {t('chatbot.welcome')}
-                     </div>
-                     <div className="flex flex-col gap-2">
-                        {['hire', 'recruiter', 'tech'].map((key) => (
-                          <button
-                            key={key}
-                            onClick={() => handleQuickAction(key)}
-                            className="rounded-xl border border-[var(--primary-color)] px-4 py-3 text-left text-xs text-[var(--primary-color)] transition-colors hover:bg-[var(--primary-color)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
-                          >
-                            {t(`chatbot.quickActions.${key}`)}
-                          </button>
-                        ))}
-                     </div>
-                   </div>
-                )}
-                {messages.map((msg, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
-                  >
-                    <div 
-                      className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
-                        msg.role === 'user' 
-                          ? 'bg-[var(--primary-color)] text-white rounded-br-none' 
-                          : 'bg-[var(--white-color)] border border-[var(--muted-color)] text-[var(--text-color)] rounded-bl-none'
-                      }`}
+                {/* Pantalla de Consentimiento */}
+                {!hasConsented ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-6">
+                    <div className="p-4 bg-[var(--primary-color)]/10 rounded-full text-[var(--primary-color)]">
+                      <ShieldCheck size={48} />
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="font-bold text-[var(--text-color)]">
+                        {currentLanguage === 'es' ? 'Tu privacidad es lo primero' : 'Your privacy first'}
+                      </h4>
+                      <p className="text-xs text-[var(--muted-color)] leading-relaxed">
+                        {currentLanguage === 'es' 
+                          ? 'Para poder ayudarte, necesito que aceptes mi política de tratamiento de datos personales (Habeas Data).'
+                          : 'To help you, I need you to accept my personal data processing policy.'}
+                      </p>
+                    </div>
+                    <Link 
+                      href={currentLanguage === 'es' ? '/privacidad' : '/privacy'}
+                      className="text-[10px] text-[var(--primary-color)] underline"
+                      target="_blank"
                     >
-                      {msg.content}
-                    </div>
-                    
-                    {/* Botones de acción dinámicos */}
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {msg.handoffUrl && (
-                        <a 
-                          href={msg.handoffUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-full bg-[var(--accent-color)] px-4 py-2 text-[10px] font-bold text-white transition-all hover:brightness-110 hover:shadow-md active:scale-95"
-                        >
-                          <Phone size={12} />
-                          {t('chatbot.handoff')}
-                        </a>
-                      )}
-                      {msg.calcomUrl && (
-                        <a 
-                          href={msg.calcomUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-full bg-[var(--primary-color)] px-4 py-2 text-[10px] font-bold text-white transition-all hover:brightness-110 hover:shadow-md active:scale-95"
-                        >
-                          <Calendar size={12} />
-                          {t('chatbot.calendar')}
-                        </a>
-                      )}
-                    </div>
+                      {currentLanguage === 'es' ? 'Ver política completa' : 'View full policy'}
+                    </Link>
+                    <button
+                      onClick={handleConsent}
+                      className="w-full py-3 bg-[var(--primary-color)] text-white rounded-xl text-sm font-bold shadow-lg hover:brightness-110 transition-all active:scale-95"
+                    >
+                      {currentLanguage === 'es' ? 'Aceptar y continuar' : 'Accept and continue'}
+                    </button>
                   </div>
-                ))}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="flex items-center gap-1 rounded-2xl border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-[10px] text-[var(--muted-color)]">
-                      <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)]" />
-                      <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.2s]" />
-                      <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.4s]" />
-                      <span className="ml-1">{t('chatbot.loading')}</span>
-                    </div>
-                  </div>
+                ) : (
+                  <>
+                    {messages.length === 0 && !isLoading && (
+                      <div className="flex flex-col gap-4">
+                        <div className="text-center text-sm text-[var(--muted-color)] mt-4">
+                          {t('chatbot.welcome')}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            {['hire', 'recruiter', 'tech'].map((key) => (
+                              <button
+                                key={key}
+                                onClick={() => handleQuickAction(key)}
+                                className="rounded-xl border border-[var(--primary-color)] px-4 py-3 text-left text-xs text-[var(--primary-color)] transition-colors hover:bg-[var(--primary-color)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                              >
+                                {t(`chatbot.quickActions.${key}`)}
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+                    {messages.map((msg, idx) => (
+                      <div 
+                        key={idx} 
+                        className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                      >
+                        <div 
+                          className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
+                            msg.role === 'user' 
+                              ? 'bg-[var(--primary-color)] text-white rounded-br-none' 
+                              : 'bg-[var(--white-color)] border border-[var(--muted-color)] text-[var(--text-color)] rounded-bl-none'
+                          }`}
+                        >
+                          {msg.content}
+                        </div>
+                        
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {msg.handoffUrl && (
+                            <a 
+                              href={msg.handoffUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 rounded-full bg-[var(--accent-color)] px-4 py-2 text-[10px] font-bold text-white transition-all hover:brightness-110 hover:shadow-md active:scale-95"
+                            >
+                              <Phone size={12} />
+                              {t('chatbot.handoff')}
+                            </a>
+                          )}
+                          {msg.calcomUrl && (
+                            <a 
+                              href={msg.calcomUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 rounded-full bg-[var(--primary-color)] px-4 py-2 text-[10px] font-bold text-white transition-all hover:brightness-110 hover:shadow-md active:scale-95"
+                            >
+                              <Calendar size={12} />
+                              {t('chatbot.calendar')}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="flex items-center gap-1 rounded-2xl border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-[10px] text-[var(--muted-color)]">
+                          <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)]" />
+                          <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.2s]" />
+                          <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.4s]" />
+                          <span className="ml-1">{t('chatbot.loading')}</span>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -274,21 +312,21 @@ export default function ChatWidget() {
                   className="hidden"
                   tabIndex={-1}
                   autoComplete="off"
-                  value={input === '---bot---' ? 'spam' : ''} // Solo para pruebas internas si fuera necesario
+                  value={input === '---bot---' ? 'spam' : ''} 
                   readOnly
                 />
                 <input
                   ref={inputRef}
                   type="text"
                   placeholder={t('chatbot.placeholder')}
-                  className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]/20 text-[var(--text-color)]"
+                  className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]/20 text-[var(--text-color)] disabled:opacity-50"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  disabled={isLoading}
+                  disabled={isLoading || !hasConsented}
                 />
                 <button
                   type="submit"
-                  disabled={!input.trim() || isLoading}
+                  disabled={!input.trim() || isLoading || !hasConsented}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--primary-color)] text-white disabled:opacity-50 transition-all hover:scale-105 active:scale-90 shadow-md"
                   aria-label={t('chatbot.send') || 'Send'}
                 >

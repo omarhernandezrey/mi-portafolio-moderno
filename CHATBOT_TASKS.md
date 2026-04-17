@@ -1266,7 +1266,7 @@ fi
   - Base legal: consentimiento explícito al iniciar chat
 - **Aceptación:** dos páginas accesibles en `/privacidad` y `/privacy`, en sitemap.
 
-### [ ] Tarea 16.2 — Consentimiento explícito en el widget
+### [x] Tarea 16.2 — Consentimiento explícito en el widget
 - Antes del primer mensaje: el widget muestra checkbox "Acepto la [política de privacidad](/privacidad)"
 - Sin marcarlo, el botón enviar está deshabilitado
 - Guardar consentimiento en `conversations.consent_at timestamptz`
