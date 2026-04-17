@@ -965,7 +965,7 @@ from messages group by 1 order by 1 desc;
 
 ## FASE 13 — Hardening final del prompt
 
-### [ ] Tarea 13.1 — Few-shot examples en el prompt
+### [x] Tarea 13.1 — Few-shot examples en el prompt
 - Añadir al final de `buildSystemPrompt` 3 conversaciones ejemplo perfectas (cliente, reclutador, objeción)
 - Cada ejemplo: 4-5 turnos donde el bot hace TODO bien
 - **Aceptación:** el prompt incluye sección `# EJEMPLOS` con 3 conversaciones.
