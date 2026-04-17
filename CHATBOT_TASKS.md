@@ -1254,7 +1254,7 @@ fi
 
 > Recoges nombre, email, teléfono, empresa. En Colombia aplica **Ley 1581 de 2012 (Habeas Data)**. En Europa GDPR. Sin esto te pueden multar y los reclutadores serios NO contratan empresas que no cumplen.
 
-### [ ] Tarea 16.1 — Política de privacidad
+### [x] Tarea 16.1 — Política de privacidad
 - Crear página `src/app/privacidad/page.tsx` (es) y `src/app/privacy/page.tsx` (en)
 - Contenido mínimo:
   - Quién es el responsable (Omar Hernández Rey, Bogotá, email)
