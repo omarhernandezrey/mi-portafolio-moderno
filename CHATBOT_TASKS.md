@@ -1219,7 +1219,7 @@ fi
 - El `systemPrompt` SOLO importa de `src/lib/chatbot/data/index.ts`.
 - **Aceptación:** modificar un proyecto en `projectsData.ts` y ejecutar la suite de eval → el bot menciona el proyecto actualizado sin tocar ningún otro archivo.
 
-### [ ] Tarea 15.4 — Coherencia visual con el theme
+### [x] Tarea 15.4 — Coherencia visual con el theme
 - El `ChatWidget` usa **EXCLUSIVAMENTE** `var(--primary-color)`, `var(--accent-color)`, `var(--background-color)`, `var(--text-color)`, `var(--muted-color)`, `var(--white-color)`.
 - Se integra con el `PaletteToggle` existente: si el usuario cambia paleta, el widget reacciona sin recargar.
 - **Aceptación:** cambiar paleta con el toggle → widget cambia colores en vivo.

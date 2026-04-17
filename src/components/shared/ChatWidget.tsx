@@ -228,7 +228,7 @@ export default function ChatWidget() {
                           href={msg.handoffUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-full bg-green-500 px-4 py-2 text-[10px] font-bold text-white transition-all hover:bg-green-600 hover:shadow-md active:scale-95"
+                          className="flex items-center gap-2 rounded-full bg-[var(--accent-color)] px-4 py-2 text-[10px] font-bold text-white transition-all hover:brightness-110 hover:shadow-md active:scale-95"
                         >
                           <Phone size={12} />
                           {t('chatbot.handoff')}
@@ -239,7 +239,7 @@ export default function ChatWidget() {
                           href={msg.calcomUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-[10px] font-bold text-white transition-all hover:bg-blue-600 hover:shadow-md active:scale-95"
+                          className="flex items-center gap-2 rounded-full bg-[var(--primary-color)] px-4 py-2 text-[10px] font-bold text-white transition-all hover:brightness-110 hover:shadow-md active:scale-95"
                         >
                           <Calendar size={12} />
                           {t('chatbot.calendar')}
