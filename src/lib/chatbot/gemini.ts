@@ -21,7 +21,7 @@ export async function generateReply(
     ];
 
     const completion = await groq.chat.completions.create({
-      messages: messages as any,
+      messages: messages as { role: "system" | "user" | "assistant"; content: string }[],
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
       max_completion_tokens: 800,
