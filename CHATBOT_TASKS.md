@@ -1235,7 +1235,7 @@ fi
 - Si el usuario llega vía form, opcionalmente disparar a Telegram igual (unificar canales) — crear `src/lib/chatbot/contactBridge.ts` que reciba leads del form y los inserte en `leads` con `source='contact_form'`.
 - **Aceptación:** enviar email con el form → aparece fila en `leads` con `source='contact_form'` y notificación en Telegram.
 
-### [ ] Tarea 15.7 — Auditoría de regresiones
+### [x] Tarea 15.7 — Auditoría de regresiones
 - Antes de la Fase 10 (deploy), correr este checklist y dejarlo registrado en `CHATBOT_INTEGRATION_MAP.md`:
   - [ ] Home renderiza igual que antes (comparar screenshots antes/después)
   - [ ] Sección Projects muestra los mismos proyectos
