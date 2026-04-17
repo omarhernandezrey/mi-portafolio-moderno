@@ -846,7 +846,7 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 
 ## FASE 10 — Despliegue
 
-### [ ] Tarea 10.1 — Configurar variables en Vercel
+### [x] Tarea 10.1 — Configurar variables en Vercel
 - Vercel Dashboard → Project → Settings → Environment Variables
 - Añadir las 8 variables del `.env.local` (Production + Preview)
 - **Aceptación:** `vercel env ls` lista las 8.
