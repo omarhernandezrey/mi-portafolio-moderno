@@ -1181,7 +1181,7 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
 
 - **Aceptación:** archivo creado y referenciado desde el README y desde este documento.
 
-### [ ] Tarea 15.2 — Reglas anti-hardcoding (validación automática)
+### [x] Tarea 15.2 — Reglas anti-hardcoding (validación automática)
 - Añadir script `scripts/check-no-hardcode.sh`:
 ```bash
 #!/usr/bin/env bash

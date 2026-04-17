@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { serverEnv } from "@/config/env";
 
 interface ContentPart {
   text: string;
@@ -15,14 +16,8 @@ export async function generateReply(
   userMessage: string
 ): Promise<string> {
   try {
-    const apiKey = process.env.GOOGLE_API_KEY;
-    
-    if (!apiKey) {
-      throw new Error("GOOGLE_API_KEY is not defined in environment variables");
-    }
-
     const ai = new GoogleGenAI({
-      apiKey: apiKey,
+      apiKey: serverEnv.GOOGLE_API_KEY,
     });
 
     const contents: Content[] = [

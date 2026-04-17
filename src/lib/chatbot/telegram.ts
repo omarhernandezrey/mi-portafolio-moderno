@@ -1,11 +1,8 @@
-export async function notifyTelegram(text: string): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+import { serverEnv } from "@/config/env";
 
-  if (!token || !chatId) {
-    console.error('Telegram credentials missing');
-    return;
-  }
+export async function notifyTelegram(text: string): Promise<void> {
+  const token = serverEnv.TELEGRAM_BOT_TOKEN;
+  const chatId = serverEnv.TELEGRAM_CHAT_ID;
 
   try {
     const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {

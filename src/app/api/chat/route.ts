@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { supabaseServer } from '@/lib/supabaseServer';
-import { generateReply } from '@/lib/chatbot/gemini';
-import { buildSystemPrompt } from '@/lib/chatbot/systemPrompt';
-import { cleanReply, extractLead, extractHandoff, extractCalcom } from '@/lib/chatbot/parser';
+import { clientEnv } from '@/config/env';
+import { supabaseServer } from '../../../lib/supabaseServer';
+import { generateReply } from '../../../lib/chatbot/gemini';
+import { buildSystemPrompt } from '../../../lib/chatbot/systemPrompt';
+import { cleanReply, extractLead, extractHandoff, extractCalcom } from '../../../lib/chatbot/parser';
 
 const chatSchema = z.object({
   sessionId: z.string().min(1),
@@ -123,7 +124,7 @@ export async function POST(req: NextRequest) {
 
     // Manejo de cuota agotada
     if (rawReply === '<<<QUOTA_EXCEEDED>>>') {
-      const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+      const whatsapp = clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER;
       const text = encodeURIComponent(`Hola Omar, el chatbot parece estar muy ocupado.\nMi mensaje era: ${message}`);
       handoffUrl = `https://wa.me/${whatsapp}?text=${text}`;
       
@@ -174,7 +175,7 @@ Notas: ${lead.notes}
 
     // Generar URLs si aplica y notificar handoff
     if (handoff) {
-      const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+      const whatsapp = clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER;
       const text = encodeURIComponent(`Hola Omar, vengo del chat de tu portafolio.\nResumen: ${handoff.summary}`);
       handoffUrl = `https://wa.me/${whatsapp}?text=${text}`;
 
@@ -193,8 +194,8 @@ El visitante recibió el link directo a tu WhatsApp.
     let calcomUrl;
     if (calcom) {
       calcomUrl = calcom.type === 'interview' 
-        ? process.env.NEXT_PUBLIC_CALCOM_INTERVIEW_URL 
-        : process.env.NEXT_PUBLIC_CALCOM_CONSULT_URL;
+        ? clientEnv.NEXT_PUBLIC_CALCOM_INTERVIEW_URL 
+        : clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL;
     }
 
     return NextResponse.json({
@@ -203,8 +204,13 @@ El visitante recibió el link directo a tu WhatsApp.
       calcomUrl
     });
 
-  } catch (error) {
-    console.error('API Chat Error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (error: unknown) {
+    console.error('API Chat Error Detailed:', error);
+    const err = error as Error;
+    return NextResponse.json({ 
+      error: 'Internal server error', 
+      message: err.message,
+      stack: err.stack 
+    }, { status: 500 });
   }
 }
