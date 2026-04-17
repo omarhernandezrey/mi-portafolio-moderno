@@ -1305,7 +1305,7 @@ fi
 - Disclaimer al inicio: "Plantilla base; revisar con abogado para casos particulares"
 - **Aceptación:** archivo accesible y mencionado por el bot cuando se cierre venta.
 
-### [ ] Tarea 17.4 — FAQ pública
+### [x] Tarea 17.4 — FAQ pública
 - Crear `src/app/faq/page.tsx` con 15 preguntas reales (sacadas de `_omar_inputs.md`):
   - ¿Cuánto cuesta una landing? ¿Qué incluye? ¿Cuánto tarda? ¿Cómo te pago? ¿En qué moneda? ¿Trabajas con plantillas? ¿Y si no me gusta? ¿Mantenimiento? ¿SEO incluido? ¿Hosting? ¿Migración? ¿Stack? ¿Trabajas remoto? ¿Facturas? ¿Garantía?
 - El bot referencia la FAQ cuando aplica
