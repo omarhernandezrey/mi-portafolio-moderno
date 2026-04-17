@@ -1300,7 +1300,7 @@ fi
 - El bot, cuando un lead pide propuesta, llena variables (nombre, servicio, precio del catálogo, plazo) y envía link al PDF generado bajo demanda — **fallback gratis:** generar HTML imprimible vía `/api/proposal/[leadId]` y dejar que el cliente lo descargue como PDF desde el navegador (Print to PDF)
 - **Aceptación:** ruta `/api/proposal/[leadId]` retorna HTML imprimible con datos reales del lead.
 
-### [ ] Tarea 17.3 — Contrato simple de servicios
+### [x] Tarea 17.3 — Contrato simple de servicios
 - Crear `public/docs/contrato-servicios.md` con cláusulas básicas: partes, objeto, alcance, plazo, valor, anticipo, propiedad intelectual, confidencialidad, terminación, jurisdicción Bogotá Colombia
 - Disclaimer al inicio: "Plantilla base; revisar con abogado para casos particulares"
 - **Aceptación:** archivo accesible y mencionado por el bot cuando se cierre venta.
