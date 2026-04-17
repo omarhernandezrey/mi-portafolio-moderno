@@ -3,7 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarLogic from "../components/ui/NavbarLogic";
 import ClientProvider from "./ClientProvider";
-import ChatWidget from "@/components/shared/ChatWidget";
+import dynamic from "next/dynamic";
+
+const ChatWidget = dynamic(() => import("@/components/shared/ChatWidget"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

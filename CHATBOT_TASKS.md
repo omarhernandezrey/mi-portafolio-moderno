@@ -1224,7 +1224,7 @@ fi
 - Se integra con el `PaletteToggle` existente: si el usuario cambia paleta, el widget reacciona sin recargar.
 - **Aceptación:** cambiar paleta con el toggle → widget cambia colores en vivo.
 
-### [ ] Tarea 15.5 — No romper SEO ni performance
+### [x] Tarea 15.5 — No romper SEO ni performance
 - El `ChatWidget` se carga con `next/dynamic` con `ssr: false` y `loading: () => null` para NO bloquear el First Contentful Paint.
 - Verificar que Lighthouse Performance sigue ≥ 90 tras añadir el widget.
 - **Aceptación:** Lighthouse antes vs después: caída ≤ 3 puntos; FCP < 1.8s.
