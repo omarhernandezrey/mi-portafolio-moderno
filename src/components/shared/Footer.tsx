@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   FaGithub,
   FaLinkedin,
@@ -276,12 +277,22 @@ export default function Footer() {
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <p
-            className="text-center md:text-left"
-            style={{ color: "var(--muted-color)" }}
-          >
-            © {new Date().getFullYear()} {t("footer.name")}. {t("footer.rights")}
-          </p>
+          <div className="text-center md:text-left space-y-2">
+            <p style={{ color: "var(--muted-color)" }}>
+              © {new Date().getFullYear()} {t("footer.name")}. {t("footer.rights")}
+            </p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              <Link href="/privacidad" className="text-[10px] text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline decoration-dotted">
+                Privacidad
+              </Link>
+              <Link href="/faq" className="text-[10px] text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline decoration-dotted">
+                FAQ
+              </Link>
+            </div>
+            <p className="text-[9px] text-[var(--muted-color)] opacity-60">
+              Este sitio utiliza almacenamiento local (localStorage) para la sesión del chat. Sin cookies de terceros.
+            </p>
+          </div>
 
           <motion.button
             onClick={scrollToTop}

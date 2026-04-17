@@ -1279,7 +1279,7 @@ fi
 - Documentar el endpoint en la política de privacidad
 - **Aceptación:** llamar el endpoint con email de prueba elimina todas las filas asociadas.
 
-### [ ] Tarea 16.4 — Banner de cookies (mínimo)
+### [x] Tarea 16.4 — Banner de cookies (mínimo)
 - Si NO usas analytics aún, basta una nota pequeña: "Este sitio usa almacenamiento local para tu sesión de chat. No usamos cookies de terceros."
 - Si más adelante añades GA/Plausible: banner real con accept/reject (usar `vanilla-cookieconsent` gratis o componente propio)
 - **Aceptación:** nota visible en footer o como banner discreto.
