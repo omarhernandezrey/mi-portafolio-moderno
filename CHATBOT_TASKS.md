@@ -1295,7 +1295,7 @@ fi
 - Secciones: objetivo del proyecto, público objetivo, referencias visuales, funcionalidades must-have / nice-to-have, plazo deseado, presupuesto, dominio/hosting actual, contenido (¿lo tienes?)
 - **Aceptación:** archivo accesible en `https://tudominio.com/docs/brief-template.md`.
 
-### [ ] Tarea 17.2 — Plantilla de propuesta
+### [x] Tarea 17.2 — Plantilla de propuesta
 - Crear `public/docs/propuesta-template.md` con secciones: contexto, propuesta de solución, alcance detallado, entregables, fases y plazos, inversión, condiciones, próximo paso
 - El bot, cuando un lead pide propuesta, llena variables (nombre, servicio, precio del catálogo, plazo) y envía link al PDF generado bajo demanda — **fallback gratis:** generar HTML imprimible vía `/api/proposal/[leadId]` y dejar que el cliente lo descargue como PDF desde el navegador (Print to PDF)
 - **Aceptación:** ruta `/api/proposal/[leadId]` retorna HTML imprimible con datos reales del lead.
