@@ -1272,7 +1272,7 @@ fi
 - Guardar consentimiento en `conversations.consent_at timestamptz`
 - **Aceptación:** sin marcar checkbox, no se puede enviar; al marcar, se guarda timestamp en DB.
 
-### [ ] Tarea 16.3 — Derecho al olvido (endpoint)
+### [x] Tarea 16.3 — Derecho al olvido (endpoint)
 - Crear `POST /api/privacy/delete` que recibe `{email, reason}`, busca todas las conversaciones/leads con ese email y los borra
 - Confirmar por email al usuario
 - Notificar a Telegram: "🗑️ Borrado solicitado: {email}"
