@@ -57,7 +57,23 @@ export default function ContactForm() {
         "x2atfK6sd3q0ZLUMV", // Tu Public Key
       )
       .then(
-        () => {
+        async () => {
+          // Registrar en el bridge del chatbot (Supabase + Telegram)
+          try {
+            const formData = new FormData(form.current!);
+            await fetch('/api/contact/bridge', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: formData.get('user_name'),
+                email: formData.get('user_email'),
+                message: formData.get('message'),
+              })
+            });
+          } catch (e) {
+            console.error("Bridge error:", e);
+          }
+
           alert("Mensaje enviado correctamente 🎉");
           setIsSending(false);
           form.current?.reset();

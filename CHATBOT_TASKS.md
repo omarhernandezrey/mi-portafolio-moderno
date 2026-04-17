@@ -1229,7 +1229,7 @@ fi
 - Verificar que Lighthouse Performance sigue ≥ 90 tras añadir el widget.
 - **Aceptación:** Lighthouse antes vs después: caída ≤ 3 puntos; FCP < 1.8s.
 
-### [ ] Tarea 15.6 — Convivencia con ContactForm (no canibalización)
+### [x] Tarea 15.6 — Convivencia con ContactForm (no canibalización)
 - El `ContactForm` existente (`src/components/sections/ContactForm.tsx`) NO se elimina. Es el canal "formal" para quien no quiere chat.
 - En el widget: si el usuario cierra el chat sin completar, NO insistir más de 1 vez por sesión.
 - Si el usuario llega vía form, opcionalmente disparar a Telegram igual (unificar canales) — crear `src/lib/chatbot/contactBridge.ts` que reciba leads del form y los inserte en `leads` con `source='contact_form'`.
