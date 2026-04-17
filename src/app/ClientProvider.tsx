@@ -2,9 +2,16 @@
 
 import { useEffect } from 'react';
 import { I18nProvider } from '@/contexts/I18nContext';
+import dynamic from 'next/dynamic';
 
 // Importar i18n para inicializar
 import '@/lib/i18n';
+
+// Cargar ChatWidget de forma dinámica para optimizar performance (SSR: false)
+const ChatWidget = dynamic(() => import('@/components/shared/ChatWidget'), {
+  ssr: false,
+  loading: () => null,
+});
 
 interface ClientProviderProps {
   children: React.ReactNode;
@@ -50,6 +57,7 @@ export default function ClientProvider({ children }: ClientProviderProps) {
   return (
     <I18nProvider>
       {children}
+      <ChatWidget />
     </I18nProvider>
   );
 }
