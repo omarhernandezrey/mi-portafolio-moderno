@@ -970,7 +970,7 @@ from messages group by 1 order by 1 desc;
 - Cada ejemplo: 4-5 turnos donde el bot hace TODO bien
 - **Aceptación:** el prompt incluye sección `# EJEMPLOS` con 3 conversaciones.
 
-### [ ] Tarea 13.2 — Auto-revisión del bot
+### [x] Tarea 13.2 — Auto-revisión del bot
 - En `gemini.ts`, tras generar respuesta, hacer **segunda llamada** corta a Gemini con prompt:
 ```
 Revisa esta respuesta del asistente de Omar. ¿Cumple con: voz de Omar, máximo 4 frases, no inventa precios, hace avanzar la venta? Responde solo "OK" o "FIX: <razón>".
