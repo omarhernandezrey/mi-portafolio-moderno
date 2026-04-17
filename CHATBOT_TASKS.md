@@ -1290,7 +1290,7 @@ fi
 
 > Un bot que solo conversa NO cierra. Necesita **enviar documentos**: brief, propuesta, contrato, FAQs. Todos en PDF o link público.
 
-### [ ] Tarea 17.1 — Plantilla de brief en Markdown
+### [x] Tarea 17.1 — Plantilla de brief en Markdown
 - Crear `public/docs/brief-template.md` (servible como descarga)
 - Secciones: objetivo del proyecto, público objetivo, referencias visuales, funcionalidades must-have / nice-to-have, plazo deseado, presupuesto, dominio/hosting actual, contenido (¿lo tienes?)
 - **Aceptación:** archivo accesible en `https://tudominio.com/docs/brief-template.md`.
