@@ -42,6 +42,27 @@ export default function ChatWidget() {
     
     setHasConsented(localStorage.getItem('chatbot_consent') === 'true');
 
+    // Lógica de Re-engagement
+    const checkReengage = async (sid: string) => {
+      try {
+        const r = await fetch(`/api/chat/re-engage?sessionId=${sid}`);
+        const data = await r.json();
+        if (data.reengage) {
+          const reMsg = currentLanguage === 'es' 
+            ? `¡Qué bueno verte de nuevo ${data.name}! 👋 ¿Seguimos donde quedamos sobre tu interés en ${data.intent || 'un proyecto'}?`
+            : `Great to see you again ${data.name}! 👋 Shall we pick up where we left off regarding your interest in ${data.intent || 'a project'}?`;
+          
+          setMessages([{ role: 'assistant', content: reMsg }]);
+          setIsOpen(true); // Abrimos el chat proactivamente
+          setShowAttention(false);
+        }
+      } catch (e) {
+        console.error('Re-engage check failed:', e);
+      }
+    };
+
+    if (id) checkReengage(id);
+
     // Animación de atención después de 30 segundos si no se ha abierto
     const timer = setTimeout(() => {
       if (!localStorage.getItem('chatbot_opened_once')) {
@@ -50,7 +71,7 @@ export default function ChatWidget() {
     }, 30000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [currentLanguage]);
 
   // Auto-scroll al final
   useEffect(() => {

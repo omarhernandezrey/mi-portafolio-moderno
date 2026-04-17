@@ -955,7 +955,7 @@ from messages group by 1 order by 1 desc;
   - Envíe a Telegram: `🥶 Lead frío sin respuesta: {name} ({service_requested})`
 - **Aceptación:** insertar lead falso con `created_at` antiguo, ejecutar cron manual → cambia status y notifica.
 
-### [ ] Tarea 12.2 — Re-engagement message
+### [x] Tarea 12.2 — Re-engagement message
 - Si visitante vuelve al sitio con mismo `sessionId` (localStorage) tras > 24h:
   - Widget muestra mensaje proactivo: "¡Qué bueno verte de nuevo {nombre}! ¿Seguimos donde quedamos sobre {service_requested}?"
 - Datos sacados de `conversations` por sessionId
