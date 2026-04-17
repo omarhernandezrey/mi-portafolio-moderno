@@ -948,7 +948,7 @@ from messages group by 1 order by 1 desc;
 
 ## FASE 12 — Follow-up automático (lead nurturing)
 
-### [ ] Tarea 12.1 — Marcar leads sin respuesta
+### [x] Tarea 12.1 — Marcar leads sin respuesta
 - Crear edge function/cron en Supabase (o Vercel Cron) que cada 24h:
   - Busque leads con `status='new'` creados hace > 48h sin actualización
   - Marque como `status='cold'`
