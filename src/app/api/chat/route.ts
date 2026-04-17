@@ -21,6 +21,14 @@ const chatSchema = z.object({
 // Rate limiting in-memory
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
+interface ChatConversation {
+  id: string;
+  visitor_name: string | null;
+  visitor_email?: string | null;
+  intent?: string | null;
+  facts?: Record<string, unknown>;
+}
+
 export async function POST(req: NextRequest) {
   try {
     // Rate Limit Logic
@@ -69,7 +77,7 @@ export async function POST(req: NextRequest) {
     // 1. Buscar o crear conversación
     const { data: existingConv, error: convError } = await supabaseServer
       .from('conversations')
-      .select('id, visitor_name')
+      .select('id, visitor_name, visitor_email, intent, facts')
       .eq('session_id', sessionId)
       .maybeSingle();
 
@@ -77,7 +85,7 @@ export async function POST(req: NextRequest) {
       console.error('Error fetching conversation:', convError);
     }
 
-    let conversation;
+    let conversation: ChatConversation;
 
     if (!existingConv) {
       const { data: newConv, error: createError } = await supabaseServer
@@ -94,9 +102,9 @@ export async function POST(req: NextRequest) {
 
       if (createError) throw createError;
       if (!newConv) throw new Error('Failed to create conversation');
-      conversation = newConv;
+      conversation = newConv as unknown as ChatConversation;
     } else {
-      conversation = existingConv;
+      conversation = existingConv as unknown as ChatConversation;
     }
 
     const conversationId = conversation.id;
@@ -117,11 +125,11 @@ export async function POST(req: NextRequest) {
     // 3. Generar respuesta con Gemini (usando Groq)
     const systemPrompt = buildSystemPrompt(language, { 
       visitorName: conversation.visitor_name || visitorMeta?.name,
-      intent: (conversation as any).intent // Pasamos la intención guardada si existe
+      intent: conversation.intent || undefined
     });
 
     // Inyectar hechos previos si existen
-    const facts = (conversation as any).facts || {};
+    const facts = conversation.facts || {};
     const contextWithFacts = `
 # LO QUE YA SÉ DEL VISITANTE:
 ${JSON.stringify(facts, null, 2)}
@@ -168,8 +176,8 @@ ${systemPrompt}`;
               .update({ 
                 facts: updatedFacts,
                 visitor_name: updatedFacts.name || conversation.visitor_name,
-                visitor_email: updatedFacts.email || (conversation as any).visitor_email,
-                intent: updatedFacts.service || (conversation as any).intent
+                visitor_email: updatedFacts.email || conversation.visitor_email,
+                intent: updatedFacts.service || conversation.intent
               })
               .eq('id', conversationId);
           }
