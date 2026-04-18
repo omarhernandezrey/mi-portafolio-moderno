@@ -8,15 +8,6 @@ const serverSchema = z.object({
   TELEGRAM_CHAT_ID: z.string().min(1),
 });
 
-const clientSchema = z.object({
-  NEXT_PUBLIC_CALCOM_INTERVIEW_URL: z.string().url(),
-  NEXT_PUBLIC_CALCOM_CONSULT_URL: z.string().url(),
-  NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().min(1),
-  NEXT_PUBLIC_SITE_URL: z.string().url(),
-});
-
-type ServerEnv = z.infer<typeof serverSchema>;
-
 export const serverEnv = {
   get GROQ_API_KEY() { return process.env.GROQ_API_KEY || ""; },
   get SUPABASE_URL() { return process.env.SUPABASE_URL || ""; },
