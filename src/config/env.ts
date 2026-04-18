@@ -16,6 +16,7 @@ const clientSchema = z.object({
 });
 
 type ServerEnv = z.infer<typeof serverSchema>;
+type ClientEnv = z.infer<typeof clientSchema>;
 
 export const serverEnv = (() => {
   if (typeof window !== "undefined") return {} as ServerEnv;
@@ -23,7 +24,6 @@ export const serverEnv = (() => {
   const result = serverSchema.safeParse(process.env);
   
   if (!result.success) {
-    // VALORES DE RESPALDO PARA EL BUILD (Evita el error "supabaseUrl is required")
     return {
       GROQ_API_KEY: process.env.GROQ_API_KEY || "build_placeholder",
       SUPABASE_URL: process.env.SUPABASE_URL || "https://placeholder.supabase.co",
@@ -43,5 +43,12 @@ export const clientEnv = (() => {
     NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "000",
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://localhost",
   };
-  return data as z.infer<typeof clientSchema>;
+
+  const result = clientSchema.safeParse(data);
+  
+  if (!result.success) {
+    return data as ClientEnv;
+  }
+  
+  return result.data;
 })();
