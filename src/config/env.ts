@@ -8,7 +8,6 @@ const serverSchema = z.object({
   TELEGRAM_CHAT_ID: z.string().min(1),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const clientSchema = z.object({
   NEXT_PUBLIC_CALCOM_INTERVIEW_URL: z.string().url(),
   NEXT_PUBLIC_CALCOM_CONSULT_URL: z.string().url(),
@@ -17,33 +16,27 @@ const clientSchema = z.object({
 });
 
 type ServerEnv = z.infer<typeof serverSchema>;
-type ClientEnv = z.infer<typeof clientSchema>;
 
-export const serverEnv = (() => {
-  if (typeof window !== "undefined") return {} as ServerEnv;
+export const serverEnv = {
+  get GROQ_API_KEY() { return process.env.GROQ_API_KEY || ""; },
+  get SUPABASE_URL() { return process.env.SUPABASE_URL || ""; },
+  get SUPABASE_SERVICE_ROLE_KEY() { return process.env.SUPABASE_SERVICE_ROLE_KEY || ""; },
+  get TELEGRAM_BOT_TOKEN() { return process.env.TELEGRAM_BOT_TOKEN || ""; },
+  get TELEGRAM_CHAT_ID() { return process.env.TELEGRAM_CHAT_ID || ""; },
   
-  const result = serverSchema.safeParse(process.env);
-  
-  if (!result.success) {
-    return {
-      GROQ_API_KEY: process.env.GROQ_API_KEY || "build_placeholder",
-      SUPABASE_URL: process.env.SUPABASE_URL || "https://placeholder.supabase.co",
-      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "build_placeholder",
-      TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN || "build_placeholder",
-      TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || "000000000",
-    } as ServerEnv;
+  // Función para validar solo cuando sea necesario
+  validate() {
+    if (typeof window !== "undefined") return;
+    const result = serverSchema.safeParse(process.env);
+    if (!result.success) {
+      console.error("❌ Faltan variables de entorno en el servidor:", result.error.format());
+    }
   }
-  
-  return result.data;
-})();
+};
 
-export const clientEnv = (() => {
-  const data = {
-    NEXT_PUBLIC_CALCOM_INTERVIEW_URL: process.env.NEXT_PUBLIC_CALCOM_INTERVIEW_URL || "https://cal.com",
-    NEXT_PUBLIC_CALCOM_CONSULT_URL: process.env.NEXT_PUBLIC_CALCOM_CONSULT_URL || "https://cal.com",
-    NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "000",
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://localhost",
-  };
-
-  return data as ClientEnv;
-})();
+export const clientEnv = {
+  get NEXT_PUBLIC_CALCOM_INTERVIEW_URL() { return process.env.NEXT_PUBLIC_CALCOM_INTERVIEW_URL || ""; },
+  get NEXT_PUBLIC_CALCOM_CONSULT_URL() { return process.env.NEXT_PUBLIC_CALCOM_CONSULT_URL || ""; },
+  get NEXT_PUBLIC_WHATSAPP_NUMBER() { return process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ""; },
+  get NEXT_PUBLIC_SITE_URL() { return process.env.NEXT_PUBLIC_SITE_URL || ""; },
+};

@@ -33,6 +33,9 @@ interface ChatConversation {
 
 export async function POST(req: NextRequest) {
   try {
+    // Validar variables de entorno (solo loguea si faltan)
+    serverEnv.validate();
+    
     // Rate Limit Logic
     const ip = req.headers.get('x-forwarded-for') || 'anonymous';
     const now = Date.now();
