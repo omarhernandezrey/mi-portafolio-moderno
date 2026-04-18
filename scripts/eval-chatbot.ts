@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { SCENARIOS, ADVERSARIAL_SCENARIOS, EvalScenario } from '../src/lib/chatbot/eval/scenarios';
 
-const API_URL = 'http://localhost:3000/api/chat';
+const PORT = process.env.PORT || 3000;
+const API_URL = `http://localhost:${PORT}/api/chat`;
 
 interface EvalResult {
   pass: boolean;
