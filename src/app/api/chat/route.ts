@@ -6,6 +6,8 @@ import { generateReply } from '../../../lib/chatbot/gemini';
 import { buildSystemPrompt } from '../../../lib/chatbot/systemPrompt';
 import { cleanReply, extractLead, extractHandoff, extractCalcom } from '../../../lib/chatbot/parser';
 
+export const dynamic = 'force-dynamic';
+
 const chatSchema = z.object({
   sessionId: z.string().min(1),
   message: z.string().min(1).max(2000),
