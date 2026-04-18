@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   // Verificación de seguridad simple (puedes mejorarla con un token en el header)
   const authHeader = req.headers.get('authorization');
