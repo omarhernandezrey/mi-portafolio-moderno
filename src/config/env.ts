@@ -25,8 +25,9 @@ export const serverEnv = (() => {
   const result = serverSchema.safeParse(process.env);
   
   if (!result.success) {
-    // No lanzamos error para permitir el build en Vercel
-    console.warn("⚠️ Validación de variables de servidor falló. Esto es normal durante el build si las claves son secretas.");
+    // Si falla la validación (como en el build de Vercel), devolvemos el objeto process.env
+    // casteado a ServerEnv para que TypeScript no se queje, pero sin usar 'any'
+    console.warn("⚠️ Validación de variables de servidor falló. Esto es normal durante el build.");
     return process.env as unknown as ServerEnv;
   }
   
@@ -35,10 +36,10 @@ export const serverEnv = (() => {
 
 export const clientEnv = (() => {
   const data = {
-    NEXT_PUBLIC_CALCOM_INTERVIEW_URL: process.env.NEXT_PUBLIC_CALCOM_INTERVIEW_URL,
-    NEXT_PUBLIC_CALCOM_CONSULT_URL: process.env.NEXT_PUBLIC_CALCOM_CONSULT_URL,
-    NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER,
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_CALCOM_INTERVIEW_URL: process.env.NEXT_PUBLIC_CALCOM_INTERVIEW_URL || "",
+    NEXT_PUBLIC_CALCOM_CONSULT_URL: process.env.NEXT_PUBLIC_CALCOM_CONSULT_URL || "",
+    NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "",
   };
 
   const result = clientSchema.safeParse(data);
