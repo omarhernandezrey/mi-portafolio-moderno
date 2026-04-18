@@ -15,9 +15,11 @@ const clientSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.string().url(),
 });
 
+type ServerEnv = z.infer<typeof serverSchema>;
+
 export const serverEnv = (() => {
   if (typeof window !== "undefined") {
-    return {} as any;
+    return {} as ServerEnv;
   }
   
   const result = serverSchema.safeParse(process.env);
@@ -25,7 +27,7 @@ export const serverEnv = (() => {
   if (!result.success) {
     // No lanzamos error para permitir el build en Vercel
     console.warn("⚠️ Validación de variables de servidor falló. Esto es normal durante el build si las claves son secretas.");
-    return process.env as any;
+    return process.env as unknown as ServerEnv;
   }
   
   return result.data;
