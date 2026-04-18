@@ -8,6 +8,7 @@ const serverSchema = z.object({
   TELEGRAM_CHAT_ID: z.string().min(1),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const clientSchema = z.object({
   NEXT_PUBLIC_CALCOM_INTERVIEW_URL: z.string().url(),
   NEXT_PUBLIC_CALCOM_CONSULT_URL: z.string().url(),
@@ -20,7 +21,9 @@ type ClientEnv = z.infer<typeof clientSchema>;
 
 export const serverEnv = (() => {
   if (typeof window !== "undefined") return {} as ServerEnv;
+  
   const result = serverSchema.safeParse(process.env);
+  
   if (!result.success) {
     return {
       GROQ_API_KEY: process.env.GROQ_API_KEY || "build_placeholder",
@@ -30,6 +33,7 @@ export const serverEnv = (() => {
       TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID || "000000000",
     } as ServerEnv;
   }
+  
   return result.data;
 })();
 
@@ -40,8 +44,6 @@ export const clientEnv = (() => {
     NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "000",
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://localhost",
   };
-  const result = clientSchema.safeParse(data);
-  // Usamos result.data si tiene éxito para asegurar que clientSchema se utiliza
-  return result.success ? result.data : (data as ClientEnv);
+
+  return data as ClientEnv;
 })();
-// Final fix for Vercel deployment
