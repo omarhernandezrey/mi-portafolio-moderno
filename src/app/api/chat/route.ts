@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { clientEnv } from '@/config/env';
+import { clientEnv, serverEnv } from '@/config/env';
 import { supabaseServer } from '../../../lib/supabaseServer';
 import { generateReply } from '../../../lib/chatbot/gemini';
 import { buildSystemPrompt } from '../../../lib/chatbot/systemPrompt';
