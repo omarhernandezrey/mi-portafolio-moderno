@@ -19,14 +19,14 @@ type ServerEnv = z.infer<typeof serverSchema>;
 
 export const serverEnv = (() => {
   if (typeof window !== "undefined") {
+    // Retornamos un objeto vacío con el tipo ServerEnv para el cliente
     return {} as ServerEnv;
   }
   
   const result = serverSchema.safeParse(process.env);
   
   if (!result.success) {
-    // Si falla la validación (como en el build de Vercel), devolvemos el objeto process.env
-    // casteado a ServerEnv para que TypeScript no se queje, pero sin usar 'any'
+    // Durante el build, devolvemos process.env forzando el tipo sin usar 'any'
     console.warn("⚠️ Validación de variables de servidor falló. Esto es normal durante el build.");
     return process.env as unknown as ServerEnv;
   }
