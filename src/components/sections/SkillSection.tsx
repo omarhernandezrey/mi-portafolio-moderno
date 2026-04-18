@@ -175,7 +175,6 @@ export default function PremiumSkillsSection() {
 
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasAnimated, animateToValue]); // Removemos filteredSkills para evitar bucle infinito
 
   /* --------------- al cambiar categoría/idioma: mantener llenas por defecto --------------- */

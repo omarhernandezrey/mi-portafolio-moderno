@@ -147,7 +147,7 @@ ${authorName ? `Desarrollado por: ${authorName}` : ''}
     } else {
       window.location.href = linkedInShareUrl;
     }
-  }, [linkedInMessage, project.demo, portfolioUrl]);
+  }, [linkedInMessage, project.demo, project.title, portfolioUrl, authorName]);
 
   // ► Función alternativa para copiar texto solamente
   const copyToClipboard = useCallback(async () => {

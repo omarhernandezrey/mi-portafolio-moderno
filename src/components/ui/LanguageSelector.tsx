@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useI18n } from '@/contexts/I18nContext';
@@ -41,13 +41,13 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === language) || languages[0];
-  
+
 
   // Calcular posición del dropdown
-  const updateDropdownPosition = () => {
+  const updateDropdownPosition = useCallback(() => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      
+
       if (isMobile) {
         // Para móvil, posicionar relativo al contenedor padre
         setDropdownPosition({
@@ -59,30 +59,30 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
         // Para desktop, usar coordenadas de viewport (no añadir scroll)
         const dropdownHeight = 120; // Altura estimada del dropdown
         const dropdownWidth = Math.max(rect.width, 140);
-        
+
         let finalTop = rect.bottom + 8;
         let finalLeft = rect.left;
-        
+
         // Si se sale por abajo, posicionar arriba del botón
         if (finalTop + dropdownHeight > window.innerHeight) {
           finalTop = rect.top - dropdownHeight - 8;
         }
-        
+
         // Si se sale por la derecha, ajustar hacia la izquierda
         if (finalLeft + dropdownWidth > window.innerWidth) {
           finalLeft = window.innerWidth - dropdownWidth - 16;
         }
-        
+
         // Asegurar que no se salga por la izquierda
         if (finalLeft < 16) {
           finalLeft = 16;
         }
-        
+
         // Asegurar que no se salga por arriba
         if (finalTop < 16) {
           finalTop = rect.bottom + 8;
         }
-        
+
         setDropdownPosition({
           top: finalTop,
           left: finalLeft,
@@ -90,8 +90,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
         });
       }
     }
-  };
-
+  }, [isMobile]);
   // Cerrar dropdown al hacer clic fuera y manejar scroll
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -178,7 +177,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
         document.body.style.overflowY = 'unset';
       }
     };
-  }, [isOpen, isMobile]);
+  }, [isOpen, isMobile, updateDropdownPosition]);
 
   const handleLanguageChange = async (langCode: string) => {
     if (langCode === language || isAnimating) return;
