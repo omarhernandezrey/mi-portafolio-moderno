@@ -195,6 +195,338 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 
 ---
 
+## 🎯 REGLAS MAESTRAS DE EJECUCIÓN (CONTRATO COMPLETO PARA CUALQUIER IA)
+
+> **Por qué existen estas reglas.** Este documento debe poder ser ejecutado por **cualquier** asistente de código —desde Claude Code o Codex (agénticos avanzados) hasta GitHub Copilot Chat o Gemini CLI (asistentes minimalistas que solo editan archivos y corren comandos básicos)— sin que la calidad del resultado dependa de la inteligencia del agente. Si seguís estas reglas al pie de la letra, el resultado es el mismo.
+>
+> Estas reglas son un **contrato vinculante**. Si una regla entra en conflicto con tu instinto, gana la regla. Si dos reglas entran en conflicto, gana la regla con número más bajo. Si crees haber encontrado una excepción, **detente y pregúntale al humano** antes de avanzar.
+
+---
+
+### A. IDENTIDAD Y ALCANCE
+
+**A.1.** Tu rol es **ejecutor disciplinado**, no arquitecto. El arquitecto es este documento. NO rediseñes nada.
+
+**A.2.** Tu única fuente de verdad es **`CHATBOT_TASKS.md`**. Si algo no está aquí, **no existe**. NO te bases en memoria de proyectos previos, blog posts, ni "buenas prácticas" generales.
+
+**A.3.** Trabajas **una tarea a la vez**, en el orden estricto del documento (FASE 0 → FASE 1 → … → FASE 30). Dentro de una fase, en orden numérico (X.1 → X.2 → X.3).
+
+**A.4.** **Alcance de archivos por tarea:** solo puedes crear/modificar/borrar los archivos listados explícitamente en la tarea. Si necesitas tocar otro archivo para que la tarea funcione (ej. import path, tipo compartido), **pídele permiso al humano** con el formato:
+```
+"Tarea X.Y necesita modificar también <ruta>. Razón: <1 frase>. ¿Procedo?"
+```
+NO toques archivos fuera de alcance sin esta confirmación.
+
+**A.5.** **Prohibido refactorizar** código que no sea parte de la tarea, aunque te parezca mejorable. Anota el hallazgo al final de tu mensaje como `Mejora futura: <descripción>` y sigue.
+
+**A.6.** **Prohibido inventar tareas, fases, dependencias, comandos o archivos** que no estén en el documento.
+
+---
+
+### B. ORDEN, DEPENDENCIAS Y ESTADO
+
+**B.1.** Antes de empezar cualquier tarea, ejecuta este chequeo en este orden:
+   1. `git status` → debe estar limpio en la rama actual (sin cambios sin commitear de tareas previas).
+   2. `git branch --show-current` → debes estar en `main` o en la rama de la tarea inmediatamente anterior.
+   3. `npm run build` → debe pasar verde (build estable es el punto de partida).
+   4. Lee la tarea completa **una vez** antes de tocar nada.
+
+**B.2.** Si el build está roto al iniciar (heredado de otra tarea o sesión), **NO empieces la nueva tarea**. Crea una rama `fix/build-roto-<descripción>`, repara, commitea, mergea a `main`, y solo entonces empieza la tarea pendiente.
+
+**B.3.** **Dependencias entre tareas:** algunas tareas dependen explícitamente de otras (ej. "requiere Tarea X.Y completada"). Si la dependencia NO está en `[x]`, detente y avisa: `"Tarea X.Y requiere Tarea Z.W (no marcada). ¿Salto y vuelvo, o ejecuto Z.W primero?"`.
+
+**B.4.** **Tareas marcadas `[x]` son inmutables** salvo que la auditoría retroactiva detecte fraude. NO re-ejecutes una tarea ya marcada. Si encuentras un bug en código de una tarea anterior, créalo como tarea nueva (`fix(chatbot): tarea X.Y revisión — <bug>`).
+
+**B.5.** **Tareas manuales del humano** (marcadas "Para Omar"): **NO las ejecutes tú**. Pega los pasos literalmente y espera la confirmación `"lista X.Y"` del humano antes de marcar `[x]`.
+
+---
+
+### C. CÓDIGO: ESTILO, TIPOS Y CONVENCIONES
+
+**C.1.** **TypeScript estricto.** Cero `any` salvo justificado en comentario `// any-justificado: <razón>`. Cero `@ts-ignore` salvo con `// @ts-expect-error: <razón>` y razón concreta.
+
+**C.2.** **Imports y rutas:**
+   - Usa alias `@/` (ej. `@/lib/chatbot/llm`) siempre que el archivo esté bajo `src/`.
+   - Imports relativos (`../../`) solo cuando el alias no aplica.
+   - Orden: 1) externos (react, next, zod), 2) internos `@/`, 3) relativos, 4) tipos (`import type {}` aparte si > 1).
+
+**C.3.** **Naming:**
+   - Archivos: `camelCase.ts` para utilidades, `PascalCase.tsx` para componentes React, `kebab-case.md` para docs.
+   - Variables/funciones: `camelCase`. Clases/Tipos/Interfaces: `PascalCase`. Constantes "globales": `SCREAMING_SNAKE`.
+   - Booleanos: prefijo `is`, `has`, `can`, `should` (`isLoading`, `hasLead`).
+
+**C.4.** **Tamaño:**
+   - Una función > 80 líneas → divídela.
+   - Un archivo > 400 líneas → divídelo (salvo `*.test.ts`, `*.config.*`, prompts/markdown embebido).
+   - Un componente JSX > 250 líneas → extrae subcomponentes.
+
+**C.5.** **Sin código muerto.** Si dejas algo comentado por si acaso, **bórralo**. Git lo recuerda. Excepción: bloques marcados con `// TODO Tarea X.Y` apuntando a una tarea futura del documento.
+
+**C.6.** **Cero `console.log` en código de producción** salvo en `route.ts` (instrumentación de latencia con `console.time/timeEnd` o `console.error` real). Para debug temporal, usa `console.debug` y bórralos antes del commit.
+
+**C.7.** **Manejo de errores:** todo `await fetch`, `await supabase.from(...)`, `await fs.*` debe estar en `try/catch` o devolver un `{ data, error }` chequeado. NO lances errores que el endpoint no atrape (502 al cliente).
+
+**C.8.** **Validación de input externo (siempre):** todo body de API route va por `zod.safeParse`. Todo query param también. Todo header del que dependa la lógica también.
+
+**C.9.** **Variables de entorno:** prohibido leer `process.env.X` fuera de `src/config/env.ts`. Si necesitas una nueva var, sigue Tarea 14.1: añadir al schema, exponer por getter, documentar en `.env.example`.
+
+**C.10.** **Comentarios:** solo si el "porqué" no es obvio del código. Cero comentarios obvios (`// suma a y b`). Documenta intención, no implementación. Idioma del comentario: español.
+
+**C.11.** **Internacionalización (i18n):** todo string visible al usuario va por `t('key')` (Tarea 6.3). Cero strings hardcoded en JSX.
+
+**C.12.** **Accesibilidad mínima:** botones con `aria-label`, imágenes con `alt`, contrastes AA, foco visible. No mergees UI que rompa Lighthouse Accesibilidad < 95.
+
+---
+
+### D. GIT, RAMAS Y MERGES
+
+**D.1.** **Una tarea = una rama.** Formato: `feat/tarea-X.Y`, `fix/tarea-X.Y-<descripción>`, `docs/<descripción>`, `chore/<descripción>`. Sin excepciones.
+
+**D.2.** **Crear la rama desde `main` actualizado:** `git checkout main && git pull --ff-only && git checkout -b feat/tarea-X.Y`. Si `git pull` requiere merge, detente y avisa al humano.
+
+**D.3.** **Merge a `main`:** solo `--ff-only`. Si fast-forward no es posible (main avanzó), rebase la rama: `git fetch && git rebase origin/main`. NO uses merge commits.
+
+**D.4.** **NO borrar ramas tras merge.** Cada rama queda como historial trazable de su tarea. Esta es regla DURA del proyecto.
+
+**D.5.** **Prohibido `git push --force` a `main`.** Force-push solo a ramas propias y solo si el humano lo aprueba en el chat.
+
+**D.6.** **NO hacer `push` automático sin permiso explícito del humano.** Tu trabajo termina al merge local. El humano decide cuándo `git push origin main`.
+
+**D.7.** **Prohibido `--no-verify`, `--no-gpg-sign`, `-c commit.gpgsign=false`.** Si un hook falla, repara la causa. Los hooks existen por razones documentadas.
+
+**D.8.** **Prohibido `git reset --hard`, `git clean -fd`, `git checkout .`, `rm -rf` sobre archivos del repo** sin confirmación explícita del humano. Estos son destructivos.
+
+**D.9.** **Conflicto de merge:** detente y pide ayuda. NO resuelvas conflictos automáticamente salvo que sean trivialmente whitespace.
+
+**D.10.** **`.gitignore`:** `.env.local`, `.claude/`, `node_modules/`, `.next/`, `dist/`, `coverage/`, `*.log`, `secrets/` (sin `.example.age`). Verifica con `git check-ignore` antes de `git add` si tienes dudas.
+
+---
+
+### E. COMMITS (CONVENTIONAL COMMITS EN ESPAÑOL)
+
+**E.1.** **Formato obligatorio del subject (línea 1):**
+```
+<tipo>(<ámbito>): tarea X.Y — <título corto en español>
+```
+- **tipos permitidos:** `feat` (nueva funcionalidad), `fix` (bug), `docs` (solo docs), `style` (formato sin cambio funcional), `refactor` (cambio interno sin nuevo comportamiento), `perf` (optimización), `test` (tests), `chore` (build, deps, config), `revert` (revierte commit previo).
+- **ámbitos sugeridos:** `chatbot`, `widget`, `admin`, `payments`, `telegram`, `db`, `env`, `legal`, `seo`, `infra`.
+- Subject ≤ 72 caracteres. En **español**. Imperativo presente ("añade", no "añadido").
+
+**E.2.** **Cuerpo del commit (obligatorio para tareas):**
+   - Línea en blanco tras el subject.
+   - Bullet por archivo modificado: `- <ruta>: <qué cambió y por qué>`.
+   - Línea en blanco.
+   - Línea de aceptación: `Aceptación: <criterios verificados, separados por ;>`.
+   - Línea final: `Ref: CHATBOT_TASKS.md tarea X.Y`.
+
+**E.3.** **Un commit por tarea.** El commit incluye: cambios de código + actualización del checkbox `[x]` en `CHATBOT_TASKS.md`. Nada más.
+
+**E.4.** **Co-authorship:** si fuiste asistido por una IA, añade al final del cuerpo:
+```
+Co-Authored-By: <Nombre IA> <noreply@<vendor>.com>
+```
+
+**E.5.** **Prohibidos** los mensajes vagos: `wip`, `update`, `fix stuff`, `cambios varios`, `🚀`, emojis solos como subject.
+
+**E.6.** **Stage explícito:** `git add <archivos específicos>`. Prohibido `git add .` y `git add -A` salvo en tareas donde TODO el directorio es alcance (raro). Esto evita commitear basura por accidente.
+
+---
+
+### F. AUDITORÍA Y "DEFINITION OF DONE"
+
+**F.1.** Una tarea está **completa** cuando se cumplen TODOS los criterios de aceptación, **verificados con evidencia objetiva** (no "creo que sí"). Evidencias válidas:
+   - **Build/types/lint:** salida real de `npm run build`, `npx tsc --noEmit`, `npm run lint` pegada al humano si dudas.
+   - **DB:** `select` real con resultado pegado.
+   - **API:** `curl -i` con request y response pegados (o capturados en log).
+   - **UI:** descripción del flujo manual probado + lo que ves (puedes pedirle screenshot al humano si es UI compleja).
+   - **Notificación externa (Telegram, email):** mensaje de confirmación del humano (`"sí, llegó"`).
+
+**F.2.** **Si NO puedes verificar un criterio offline** (ej. requiere Vercel desplegado, requiere chat real con cliente), márcalo como `[!]` con nota `"verificable solo en producción"` y delega la verificación al humano. NO lo marques `[x]` por suposición.
+
+**F.3.** **Comandos de auditoría estándar (corre los que apliquen a la tarea):**
+   - Cualquier cambio de código TS/JS: `npx tsc --noEmit && npm run lint && npm run build`.
+   - Cambio de schema DB: query SQL `select` que confirma la migración aplicada.
+   - Cambio de API: `curl` al endpoint con payload válido + payload inválido.
+   - Cambio de prompt: ejecutar `npm run eval:chatbot` (FASE 11) si existe; verificar score ≥ baseline.
+   - Cambio de UI: `npm run dev`, abrir navegador, probar el flow y describir qué viste.
+
+**F.4.** **Marcar `[x]` es un acto formal.** Implica que firmas: "lo audité, pasa los criterios, está listo para producción". Si después se descubre que no, asume el costo de re-trabajo en una nueva tarea de `fix`.
+
+**F.5.** **Mejoras futuras** detectadas durante una tarea: anótalas como `Mejora futura:` en el mensaje al humano; NO las metas en este commit. El humano decide si las convierte en tarea nueva.
+
+---
+
+### G. SEGURIDAD Y SECRETOS
+
+**G.1.** **Cero secretos en el repo.** Ni en código, ni en docs, ni en mensajes de commit, ni en logs. Ni siquiera "de prueba".
+
+**G.2.** **Verifica `.gitignore` antes de cada commit** si tocaste algo cerca de `.env`, `secrets/`, `credentials*`, `*.key`, `*.pem`, `*.age`, `service-account*.json`.
+
+**G.3.** **Si descubres un secreto leakeado** (en código, en commit anterior, en log): detente, avisa al humano de inmediato. NO intentes "limpiar el historial" tú mismo.
+
+**G.4.** **Validación de input siempre** (zod). **Sanitización de output** cuando se renderiza HTML (usa React por defecto; nunca `dangerouslySetInnerHTML` con datos externos).
+
+**G.5.** **Endpoints sensibles** (admin, webhook, payment): protegidos con auth (cookie firmada, HMAC, IP allowlist según corresponda). NO publiques rutas admin sin protección "para probar".
+
+**G.6.** **CORS y rate limiting:** todo endpoint POST público debe tener rate limit (Tarea 4.3 establece el patrón). Si añades un nuevo endpoint, replica el patrón.
+
+**G.7.** **Dependencias nuevas:** prohibidas salvo que estén listadas en una tarea explícita. Si crees que falta una, **pregunta**. Antes de instalar: verifica que sea open source con licencia compatible (MIT, Apache 2.0, BSD), > 100 stars o mantenida por org reconocida, último commit < 12 meses.
+
+**G.8.** **Auditoría de dependencias:** tras `npm install` corre `npm audit --omit=dev`. Si hay vuln HIGH/CRITICAL, detente y reporta.
+
+---
+
+### H. COSTOS Y RECURSOS ($0 ABSOLUTO)
+
+**H.1.** **Cero servicios pagos.** Cero servicios que requieran tarjeta de crédito al registrarse, incluso en plan free.
+
+**H.2.** Antes de añadir cualquier proveedor externo: verifica que cumple H.1. Si dudas, pregúntale al humano.
+
+**H.3.** **Cuotas:** cada proveedor free tiene límites. Si una tarea está cerca del límite (ej. > 80% del free tier), añade alerta a Telegram (patrón Tarea 21.x).
+
+**H.4.** **Failover obligatorio para LLM** (FASE 27): si añades un nuevo punto de uso de LLM, debe pasar por `generateReply` (no llamar a Groq/OpenRouter directo).
+
+**H.5.** **Kill switch:** si una API externa empieza a cobrar de la noche a la mañana, el código debe poder desactivarla con una env var. NO acoples lógica crítica a un solo proveedor sin escape.
+
+---
+
+### I. COMUNICACIÓN CON EL HUMANO (OMAR)
+
+**I.1.** **Idioma:** español de Colombia, claro, directo, sin tecnicismos innecesarios. Si usas un término técnico, defínelo en una frase.
+
+**I.2.** **Antes de empezar una tarea**, anuncia: `"Empiezo Tarea X.Y — <título>. Voy a modificar: <archivos>. Tiempo estimado: <minutos>."`
+
+**I.3.** **Durante la tarea**, actualiza solo en hitos (no narres cada `Read`/`Edit`). Hitos válidos: encontré algo inesperado, cambié de enfoque, build falló, terminé un sub-paso significativo.
+
+**I.4.** **Al terminar una tarea**, reporta:
+```
+✅ Tarea X.Y completada.
+Archivos: <lista>
+Aceptación verificada: <bullets>
+Commit: <hash corto> "<subject>"
+Build: verde
+Próxima tarea sugerida: X.Y+1
+```
+
+**I.5.** **Cuando necesites una decisión del humano**, da 2-3 opciones concretas con tradeoffs. NO digas "¿qué prefieres?" en vacío.
+
+**I.6.** **Cuando detectes ambigüedad** (un criterio puede leerse de dos formas, dos archivos parecen contradecirse): di `"Ambigüedad en X.Y: <descripción>. Opciones: a) <...>, b) <...>. Recomiendo <a/b> porque <razón>."` Espera respuesta.
+
+**I.7.** **Confidencialidad:** datos del humano (clientes reales, ingresos, conversaciones de leads, claves) NO se incluyen en mensajes hacia logs externos, pastebins, gists, ni se mencionan en commits.
+
+**I.8.** **Brevedad:** mensaje de status ≤ 6 líneas. Mensaje de cierre de tarea ≤ 12 líneas. Si necesitas más, condensa.
+
+---
+
+### J. MANEJO DE BLOQUEOS Y ERRORES
+
+**J.1.** **Regla de los 3 intentos** (Tarea 26.4): si una solución falla 3 veces seguidas, **detente**. NO insistas con variaciones del mismo enfoque. Reporta:
+```
+Atascado en Tarea X.Y. Intenté:
+1) <enfoque A> → falló: <error>
+2) <enfoque B> → falló: <error>
+3) <enfoque C> → falló: <error>
+Posibles causas raíz: <a, b, c>
+Opciones de salida: <a, b, c>
+Espero tu decisión.
+```
+
+**J.2.** **Build roto > 1 commit** = bloqueador. NO continúes a la siguiente tarea hasta que `npm run build` esté verde. Si no logras repararlo, revierte: `git revert HEAD --no-edit` y reporta.
+
+**J.3.** **Test/eval roto:** si la suite de evaluación (FASE 11) cae bajo el umbral por una tarea, esa tarea NO está completa. Repara antes de marcar `[x]`.
+
+**J.4.** **Cuando el error es del entorno** (npm cache corrupto, node_modules raros, permisos): documenta lo que viste, sugiere `rm -rf node_modules && npm ci`, pero **NO ejecutes operaciones destructivas** sin permiso del humano.
+
+**J.5.** **Errores que vienen de afuera** (API caída, rate limit, DNS): clasifícalos como "ambientales", NO como bug del código. Reintenta con backoff razonable o escala al humano.
+
+---
+
+### K. CALIDAD: BUILD, LINT, TIPOS, TESTS
+
+**K.1.** **Comandos canónicos del proyecto** (memorízalos):
+   - `npm run dev` — dev server (Next.js).
+   - `npm run build` — build de producción. **Debe pasar SIEMPRE antes y después de cada tarea.**
+   - `npm run start` — servir build.
+   - `npm run lint` — ESLint. Cero errores. Warnings: tolerados pero a documentar.
+   - `npx tsc --noEmit` — type-check sin emitir. Cero errores.
+   - `npm run eval:chatbot` — suite de evaluación de venta (cuando exista, FASE 11).
+
+**K.2.** **Definición de "verde":** `npm run build` finaliza con código de salida 0 y sin warnings nuevos respecto a `main`.
+
+**K.3.** **Lint warnings:** si una tarea introduce un nuevo warning, justifícalo en el commit o repáralo. Cero warnings nuevos por inercia.
+
+**K.4.** **TypeScript:** `strict: true` en `tsconfig.json` es inviolable. Si una tarea requiere bajar la rigidez, **pregunta primero**.
+
+**K.5.** **Performance budget** (cuando aplique): cualquier ruta nueva no debe degradar el LCP > 200ms ni añadir > 50KB al First Load JS sin justificación documentada.
+
+---
+
+### L. CONTINUIDAD ENTRE IAs (HANDOFF DE SESIÓN)
+
+**L.1.** Este proyecto puede ser continuado por una IA distinta en otra sesión. **NO asumas estado en memoria.** Todo lo importante va al documento o al commit.
+
+**L.2.** Al cerrar una sesión (cuando el humano dice "hasta mañana" o similar), genera un breve resumen estilo:
+```
+📌 Estado actual del proyecto:
+- Última tarea completada: X.Y (commit <hash>)
+- En curso: ninguna / X.Y al <paso>
+- Bloqueos pendientes del humano: <lista o ninguno>
+- Próxima tarea: X.Y+1 — <título>
+- Build main: verde / roto (<razón>)
+```
+
+**L.3.** Al iniciar una sesión nueva, **lee este documento de inicio a fin antes de tocar nada**. Verifica el estado real con `git log --oneline -20`, `git status`, `npm run build`. NO confíes en el resumen anterior si el código lo contradice.
+
+**L.4.** **Si una tarea está marcada `[x]` pero el código no respalda los criterios** (te das cuenta auditando), no la "destarques" silenciosamente. Reporta: `"Tarea X.Y marcada [x] pero auditoría retrospectiva falla: <criterio>. ¿Abro tarea fix?"`.
+
+---
+
+### M. DOCUMENTACIÓN
+
+**M.1.** **NO crees archivos `.md` nuevos** salvo que una tarea lo pida explícitamente. Reutiliza los existentes.
+
+**M.2.** **Actualiza `.env.example`** cada vez que una tarea introduzca una nueva variable de entorno, con comentario explicando para qué sirve.
+
+**M.3.** **Actualiza `CHATBOT_INTEGRATION_MAP.md`** (FASE 15) cuando una tarea conecte dos sistemas que antes no se conocían.
+
+**M.4.** **Actualiza este documento** solo para: marcar `[x]` y agregar tareas nuevas pre-acordadas con el humano. NO reformatees secciones existentes sin permiso.
+
+**M.5.** **README operacional** (Tarea 10.4) es el único README que debe estar siempre al día con la realidad del repo.
+
+---
+
+### N. ANTI-HALUCINACIÓN (LO MÁS IMPORTANTE)
+
+**N.1.** **NO inventes APIs, métodos, paquetes, opciones de CLI, env vars, columnas de DB, propiedades de objeto, tipos.** Si dudas, **lee el código real** o **lee la documentación oficial** (si tienes acceso a `WebFetch`).
+
+**N.2.** **Si no estás 100% seguro de algo, dilo.** "No estoy seguro de X, lo verifico" es siempre mejor que afirmar algo falso.
+
+**N.3.** **Verifica antes de afirmar.** "El archivo Z exporta `foo`" requiere haber leído Z. "El comando devuelve X" requiere haberlo corrido.
+
+**N.4.** **Cuando cites tu memoria de proyecto** (de sesión anterior, de un .md interno, etc.): verifica que sigue siendo cierto leyendo el archivo actual. La memoria envejece.
+
+**N.5.** **Cero confabulación de paths.** Antes de `Read`/`Edit` un archivo cuya existencia no has confirmado en esta sesión, usa `Glob` o `ls`. Inventar un path para "ver si existe" desperdicia turnos.
+
+**N.6.** **Cero "yo creo que esto funciona".** O lo verificas o lo dices: "no verificado, requiere prueba manual".
+
+---
+
+### Resumen ejecutivo (para pegar arriba de cada tarea)
+
+```
+1. Pre-flight: git status limpio, en main, build verde, leí la tarea entera.
+2. git checkout -b feat/tarea-X.Y
+3. Implemento SOLO los archivos listados.
+4. Audito CADA criterio con evidencia objetiva.
+5. Marco [x] en CHATBOT_TASKS.md.
+6. git add <archivos> && git commit -m "feat(<ámbito>): tarea X.Y — <título>" (cuerpo + Ref).
+7. npm run build → verde.
+8. git checkout main && git merge --ff-only feat/tarea-X.Y. NO borro la rama.
+9. Reporto al humano con el formato I.4. Espero "siguiente" o instrucciones.
+```
+
+---
+
 ## Stack final
 - **LLM:** Multi-proveedor con failover automático (ver FASE 27) — orden:
   1. Groq Cloud — Llama 3.3 70B (rápido y potente, sin tarjeta)
@@ -3263,18 +3595,22 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 
 ---
 
-## Reglas de oro para cualquier agente IA (Claude Code, Copilot, Codex, Cursor, Aider, Gemini, etc.)
+## Reglas de oro (resumen — el contrato completo está en "🎯 REGLAS MAESTRAS DE EJECUCIÓN")
 
-1. **Seguir SIEMPRE el flujo de 5 pasos** descrito al inicio del documento (Implementar → Auditar → Marcar → Commit en español → Validar build).
-2. **Una tarea = una auditoría = un marcado = un commit en español.** Nunca agrupar.
-3. **NO marcar `[x]` sin auditar realmente** los criterios de aceptación (no asumir éxito).
-4. **NO** modificar archivos fuera de los listados en cada tarea.
-5. **NO** instalar dependencias no listadas en Tarea 2.1.
-6. **NO** subir `.env.local` ni keys al repo.
-7. **NO** usar `--no-verify` ni saltar hooks de git.
-8. Si una tarea falla en la auditoría → corregir y re-auditar; **no avanzar** a la siguiente.
-9. Si una tarea falla irremediablemente → detenerse y reportar; **no improvisar** la siguiente.
-10. Antes de empezar cada fase: leer la fase completa.
-11. Tras cada commit: ejecutar `npm run build` para validar que el repo queda verde.
-12. Tipos estrictos: nada de `any` salvo justificado en comentario.
-13. Mensajes de commit **en español**, descriptivos, siguiendo la plantilla del flujo.
+> Esta lista es un **recordatorio rápido**. La fuente vinculante son las "REGLAS MAESTRAS DE EJECUCIÓN" (sección secciones A–N, después del FLUJO OBLIGATORIO). Si una regla aquí parece chocar con las maestras, **gana la maestra**.
+
+1. **Una tarea = una rama = una auditoría = un commit en español = un build verde.** (D.1, E, F, K) — Nunca agrupar tareas.
+2. **NO marcar `[x]` sin evidencia objetiva** de cada criterio de aceptación. (F.1, F.4)
+3. **NO modificar archivos fuera del alcance** listado en la tarea. Si necesitas otro archivo, **pide permiso**. (A.4)
+4. **NO instalar dependencias** no listadas en una tarea explícita. (G.7)
+5. **NO subir secretos** (`.env.local`, keys, tokens) al repo. (G.1, G.2)
+6. **NO usar `--no-verify`**, force-push a `main`, ni operaciones destructivas (`reset --hard`, `clean -fd`) sin permiso. (D.5, D.7, D.8)
+7. **NO borrar la rama tras merge** — queda como historial trazable. (D.4)
+8. **NO usar servicios pagos** ni que pidan tarjeta de crédito. (H.1, H.2)
+9. **NO acceder a `process.env`** fuera de `src/config/env.ts`. (C.9)
+10. **NO inventes** APIs, métodos, paquetes, columnas, paths. Si dudas, lee el código o la doc real. (N.1, N.5)
+11. **Regla de los 3 intentos:** si fallás 3 veces seguidas, detente y escala con causa raíz + opciones. (J.1)
+12. **Tipos estrictos:** cero `any` salvo justificado; cero `@ts-ignore` salvo `@ts-expect-error` con razón. (C.1)
+13. **Commits en español**, formato Conventional Commits, una tarea por commit. (E.1, E.2, E.3)
+14. **Pre-flight obligatorio** antes de cada tarea: git limpio + en main + build verde + tarea leída entera. (B.1)
+15. **Idioma de comunicación con Omar:** español de Colombia, claro, directo. Reportes ≤ 12 líneas. (I.1, I.8)
