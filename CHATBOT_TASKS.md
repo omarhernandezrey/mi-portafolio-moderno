@@ -2183,7 +2183,7 @@ Añadir al `03-ESTRATEGIA_INGRESOS.md`:
 - El bot, cuando llegue un reclutador, **prioriza** ese lead (más estable que freelance)
 - **Aceptación:** `02-MARKETING_DISTRIBUCION.md` (FASE 23.2) tiene checklist diario de aplicaciones a empleos.
 
-### [ ] [GEM] Tarea 24.7 — Inversión en habilidades que pagan más
+### [x] [GEM] Tarea 24.7 — Inversión en habilidades que pagan más
 - Mientras esperas leads, **estudia 1 habilidad de pricing alto** (gratis):
   - Migración / performance React (clientes pagan $50/h por esto)
   - Integraciones IA / LLM en apps (mercado en explosión 2025)

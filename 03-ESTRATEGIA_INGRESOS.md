@@ -57,3 +57,25 @@ La diferencia NO es el bot. Es la disciplina diaria de FASE 22 + tráfico de FAS
 ✅ Cobra menos pero mantén dignidad. Cobra $300 con respeto > $1000 mendigando.
 ✅ Mejor 0 clientes este mes que 1 cliente tóxico.
 ✅ El silencio profesional es respuesta. Si insisten gratis, no respondes.
+
+# Plan de Estudio Mensual (Habilidades de Alto Valor)
+
+Para aumentar el valor de la hora y cerrar mejores proyectos, me comprometo a estudiar 1 habilidad técnica avanzada cada mes (gratis):
+
+- **Mes 1: Migración y Performance React**
+  - Foco: Core Web Vitals, optimización de bundles, server components vs client components.
+  - Objetivo: Poder cobrar $50/h por optimización de apps lentas.
+
+- **Mes 2: Integraciones IA / LLM Avanzadas**
+  - Foco: RAG (Retrieval Augmented Generation), LangChain, embeddings con Supabase Vector.
+  - Objetivo: Crear chatbots que "lean" documentos reales del cliente.
+
+- **Mes 3: Pasarelas de Pago Pro (Stripe/Wompi)**
+  - Foco: Suscripciones, manejo de webhooks, conciliación de pagos, facturación automática.
+  - Objetivo: Especializarme en MVPs para SaaS (Software as a Service).
+
+- **Mes 4: DevOps y CI/CD para Startups**
+  - Foco: Docker, GitHub Actions avanzadas, monitoreo proactivo (Sentry/Datadog free tiers).
+  - Objetivo: Ofrecer "infraestructura robusta" como parte del paquete MVP.
+
+**Regla de Oro:** Cada habilidad aprendida debe verse reflejada en un nuevo paquete en el catálogo o un aumento del 15% en los precios base.
