@@ -203,19 +203,32 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ## 🔐 Operación y Seguridad (Chatbot AI)
 
+### Gestión de Leads
+Para ver y gestionar tus leads y conversaciones:
+1. **Supabase**: Accede a tu proyecto en [Supabase Table Editor](https://supabase.com/dashboard/projects).
+   - Revisa la tabla `leads` para ver contactos cualificados.
+   - Revisa la tabla `conversations` y `messages` para ver el historial completo del chat.
+2. **Dashboard Admin**: Accede a `/admin` en tu sitio web con tu contraseña de administrador.
+
+### Personalización del Chatbot
+Para cambiar la "personalidad" o los precios del asistente:
+1. Edita el archivo `src/lib/chatbot/data/persona.ts` (voz y estilo).
+2. Edita `src/lib/chatbot/data/catalog.ts` (servicios y precios).
+3. Edita `src/lib/chatbot/data/objections.ts` (cómo responde a dudas).
+4. El "cerebro" principal está en `src/lib/chatbot/systemPrompt.ts`.
+
 ### Rotación de Claves
-Si sospechas que una clave se ha filtrado, sigue estos pasos:
-1. **Revocar**: Ve al dashboard del servicio (Groq Console, Supabase, etc.) y elimina la clave antigua.
-2. **Generar**: Crea una nueva clave en el mismo dashboard.
-3. **Actualizar Local**: Pon la nueva clave en tu archivo `.env.local`.
-4. **Sincronizar**: Ejecuta `./scripts/sync-vercel-env.sh` para actualizar Vercel automáticamente.
-5. **Redeploy**: Realiza un nuevo deploy en Vercel para aplicar los cambios.
+Si sospechas que una clave se ha filtrado:
+1. **Revocar**: Ve al dashboard del servicio (Groq, OpenRouter, Supabase, etc.).
+2. **Generar**: Crea una nueva clave.
+3. **Actualizar Local**: Ponla en tu archivo `.env.local`.
+4. **Sincronizar**: Ejecuta `npm run sync-vercel-env` (requiere Vercel CLI).
+5. **Redeploy**: Realiza un `git push` a `main`.
 
-### Monitoreo Mensual
-- **Groq** (LLM principal): Revisa el uso en [Groq Console](https://console.groq.com/).
-- **Proveedores de respaldo (FASE 27)**: revisa cuotas en OpenRouter, Cerebras y Cloudflare Workers AI si los activaste.
-- **Supabase**: Revisa el almacenamiento y uso de base de datos en el dashboard de Supabase.
-- **Telegram**: Asegúrate de que el bot siga respondiendo a tus comandos.
+### Límites de Free Tier ($0/mes)
+Este sistema está diseñado para costar **$0 siempre**:
+- **Groq/OpenRouter**: Límites diarios gratuitos. Si se agotan, el bot usa el siguiente proveedor en la cadena (Cerebras, Cloudflare o Ollama local).
+- **Supabase**: 500MB de base de datos. Si se llena, puedes limpiar mensajes antiguos en la tabla `messages`.
+- **Vercel**: 100GB de transferencia mensual.
 
-### Backups
-Las claves deben guardarse cifradas en la carpeta `secrets/` siguiendo las instrucciones de su README. Nunca subas claves sin cifrar al repositorio.
+Si un proveedor empieza a cobrar o se agota su cuota, el sistema tiene un **failover automático** para seguir funcionando con los otros 4 proveedores configurados.

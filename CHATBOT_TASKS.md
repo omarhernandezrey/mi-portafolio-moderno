@@ -1290,7 +1290,7 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 - Añadir las 8 variables del `.env.local` (Production + Preview)
 - **Aceptación:** `vercel env ls` lista las 8.
 
-### [ ] Tarea 10.2 — Deploy y smoke test
+### [x] Tarea 10.2 — Deploy y smoke test
 - `git push` a main → esperar build
 - En la URL de prod: abrir widget → enviar 1 mensaje → verificar:
   - Llega respuesta del bot
@@ -1298,10 +1298,10 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
   - Si cualifica lead → llega Telegram
 - **Aceptación:** los 3 checks anteriores pasan en producción.
 
-### [ ] Tarea 10.3 — Monitoreo básico
+### [!] Tarea 10.3 — Monitoreo básico
 - En Supabase crear vista:
 ```sql
-create view daily_stats as
+create or replace view daily_stats as
 select date_trunc('day', created_at) as day,
        count(*) filter (where role='user') as user_msgs,
        count(distinct conversation_id) as conversations
@@ -1310,7 +1310,7 @@ from messages group by 1 order by 1 desc;
 - Crear tabla `leads_weekly` view similar
 - **Aceptación:** consultar la vista en SQL Editor retorna filas tras smoke test.
 
-### [ ] Tarea 10.4 — README de operación
+### [x] Tarea 10.4 — README de operación
 - Añadir sección al `README.md` principal:
   - Cómo regenerar API keys si se filtran
   - Cómo ver leads en Supabase
