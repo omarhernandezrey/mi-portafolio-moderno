@@ -1772,7 +1772,7 @@ fi
 
 > Cerrar venta sin método de cobro = no cobrar. El bot debe enviar links de pago según país y moneda del cliente.
 
-### [ ] Tarea 18.1 — Crear cuentas de cobro (manual usuario)
+### [x] Tarea 18.1 — Crear cuentas de cobro (manual usuario)
 **Pasos para Omar:**
 
 1. **PayPal (USD/EUR)** — https://paypal.com → cuenta personal/business (Colombia soportado)

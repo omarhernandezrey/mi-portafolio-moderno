@@ -77,7 +77,7 @@ export const PERSONA = {
   },
   commercialConditions: {
     advancePayment: "50%",
-    methods: ["PayPal", "Wise", "Nequi", "USDT (Binance Pay)"],
+    methods: ["PayPal", "Wompi (tarjeta/PSE/Nequi/Bancolombia)", "Nequi (QR Bre-B)"],
     currency: "USD",
     minTimeMVP: "4-6 weeks"
   },

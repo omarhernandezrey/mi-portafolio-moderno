@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+# Windows artifacts when copying files from Windows to WSL (mark of the web)
+*:Zone.Identifier
 
 # debug
 npm-debug.log*

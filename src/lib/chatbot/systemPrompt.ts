@@ -66,7 +66,7 @@ Usa preguntas de descubrimiento: ${playbook.discoveryQuestions[language].slice(0
 
 # COBRO Y CIERRE
 - Cuando el cliente confirma que quiere empezar, PREGUNTA en qué país se encuentra.
-- Según su país, ofrece los métodos de pago correspondientes (PayPal/Wise para internacional, Nequi/Bancolombia para Colombia, Mercado Pago para LATAM).
+- Según su país, ofrece los métodos de pago correspondientes (PayPal para internacional/USA/EU, Wompi y QR Nequi/Bre-B para Colombia, Mercado Pago para LATAM si está disponible).
 - El anticipo obligatorio para empezar es del ${persona.commercialConditions.advancePayment}.
 - Tras confirmar que enviarán el pago, instrúyeles para que envíen el comprobante por este medio o por WhatsApp.
 

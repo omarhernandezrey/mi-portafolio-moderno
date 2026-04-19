@@ -17,7 +17,7 @@ const FAQS = [
   },
   {
     q: '¿Qué métodos de pago aceptas?',
-    a: 'Acepto PayPal, Wise, Nequi (para Colombia) y USDT (Binance Pay). Para proyectos cerrados pido un 50% de anticipo para iniciar.'
+    a: 'Acepto PayPal (internacional, USD/EUR), Wompi (tarjeta crédito/débito, PSE, Nequi o Bancolombia para Colombia) y QR Nequi/Bre-B directo. Para proyectos cerrados pido un 50% de anticipo para iniciar.'
   },
   {
     q: '¿Trabajas con plantillas como WordPress o Wix?',
