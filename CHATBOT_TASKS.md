@@ -2081,7 +2081,7 @@ ___________________________________________
 - **Aceptación:** frase escrita, NO genérica, con justificación.
 - **Crítico:** sin nicho definido, el chatbot vende "cualquier cosa" → suena a commodity → precios bajos.
 
-### [ ] [GEM] Tarea 24.2 — Pricing en USD (no en pesos colombianos)
+### [x] [GEM] Tarea 24.2 — Pricing en USD (no en pesos colombianos)
 - Re-revisar `_omar_inputs.md` y `catalog.ts`: **TODOS los precios en USD**, mínimo de mercado internacional:
 
 | Servicio | Precio mínimo recomendado |

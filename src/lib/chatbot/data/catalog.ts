@@ -18,7 +18,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Una página de aterrizaje optimizada para conversión, ideal para productos o servicios específicos.',
       en: 'A conversion-optimized landing page, ideal for specific products or services.'
     },
-    priceRange: { min: 300, max: 600, currency: 'USD' },
+    priceRange: { min: 250, max: 600, currency: 'USD' },
     deliveryDays: { min: 3, max: 7 },
     includes: {
       es: ['Diseño UI responsivo', 'Optimización de carga', 'Integración de formulario', 'SEO básico'],
@@ -127,7 +127,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Tranquilidad total con soporte continuo y actualizaciones de seguridad.',
       en: 'Total peace of mind with ongoing support and security updates.'
     },
-    priceRange: { min: 100, max: 300, currency: 'USD' },
+    priceRange: { min: 300, max: 800, currency: 'USD' },
     deliveryDays: { min: 30, max: 30 },
     includes: {
       es: ['Backups diarios', 'Actualizaciones de seguridad', 'Soporte prioritario', 'Pequeños cambios mensuales'],
