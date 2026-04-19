@@ -1956,7 +1956,7 @@ Contenido (el agente lo crea, Omar lo imprime/pega en el espejo):
 
 - **Aceptación:** archivo creado en raíz; Omar lo lee y confirma.
 
-### [ ] [GEM] Tarea 22.2 — Auto-resumen diario en Telegram
+### [x] [GEM] Tarea 22.2 — Auto-resumen diario en Telegram
 - Cron diario 8am Bogotá → mensaje a Telegram:
 ```
 ☀️ Buenos días Omar
