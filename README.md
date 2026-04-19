@@ -205,14 +205,15 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ### Rotación de Claves
 Si sospechas que una clave se ha filtrado, sigue estos pasos:
-1. **Revocar**: Ve al dashboard del servicio (Google AI Studio, Supabase, etc.) y elimina la clave antigua.
+1. **Revocar**: Ve al dashboard del servicio (Groq Console, Supabase, etc.) y elimina la clave antigua.
 2. **Generar**: Crea una nueva clave en el mismo dashboard.
 3. **Actualizar Local**: Pon la nueva clave en tu archivo `.env.local`.
 4. **Sincronizar**: Ejecuta `./scripts/sync-vercel-env.sh` para actualizar Vercel automáticamente.
 5. **Redeploy**: Realiza un nuevo deploy en Vercel para aplicar los cambios.
 
 ### Monitoreo Mensual
-- **Gemini**: Revisa el uso en [Google AI Studio](https://aistudio.google.com/app/plan).
+- **Groq** (LLM principal): Revisa el uso en [Groq Console](https://console.groq.com/).
+- **Proveedores de respaldo (FASE 27)**: revisa cuotas en OpenRouter, Cerebras y Cloudflare Workers AI si los activaste.
 - **Supabase**: Revisa el almacenamiento y uso de base de datos en el dashboard de Supabase.
 - **Telegram**: Asegúrate de que el bot siga respondiendo a tus comandos.
 

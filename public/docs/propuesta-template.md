@@ -14,7 +14,7 @@ Desarrollaremos una plataforma web moderna utilizando el siguiente stack tecnol�
 - **Frontend:** Next.js 15 (React 19) para máxima velocidad y SEO.
 - **Backend:** Node.js / Supabase para una gestión de datos escalable.
 - **Estilos:** Tailwind CSS para un diseño responsivo y profesional.
-- **IA:** Integración de Gemini API (si aplica) para funcionalidades inteligentes.
+- **IA:** Integración de chatbot LLM open-source (Llama 3 vía Groq u Ollama) para funcionalidades inteligentes, sin dependencias de servicios de pago.
 
 ## 3. Alcance Detallado
 - {{scope_items}}

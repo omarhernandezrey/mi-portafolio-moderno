@@ -1,32 +1,71 @@
 # Chatbot AI 24/7 — Plan de Tareas Atómicas
 
+> **Misión del documento.** Convertir un portafolio personal en una máquina de captar clientes 24/7, sin pagar nada por tecnología, ejecutando una tarea pequeña a la vez. La meta a 12 meses: que el portafolio traiga tantos leads que Omar tenga que contratar gente para responderlos.
+
+---
+
+## 📖 Cómo leer este documento (mapa para humanos y para IAs)
+
+Este archivo es **largo a propósito** porque describe TODO lo necesario, paso a paso, sin que tengas que adivinar nada. Si te sientes perdido, usa este mapa:
+
+### Para humanos (Omar)
+1. **Lee solo dos cosas hoy:** la sección "🚀 EMPIEZA AQUÍ" (abajo) y la "FASE 0" (cuentas). Todo lo demás lo ejecuta la IA por ti.
+2. **No leas las tareas técnicas.** Tu trabajo es: crear cuentas, copiar claves, responder al agente "lista X.Y" cuando termine cada paso.
+3. **Si te pierdes:** vuelve a esta sección, mira el "Índice de fases" más abajo y pregúntale a la IA: "¿en qué fase estamos y qué falta?".
+4. **Si la IA se atasca:** copia el bloque de "Paso 4 — Si te atascas" en EMPIEZA AQUÍ.
+
+### Para cualquier IA (Claude Code, Codex, GitHub Copilot, Gemini, Cursor, Aider, etc.)
+1. **Este documento es tu única fuente de verdad.** NO improvises, NO inventes tareas que no estén aquí, NO saltes pasos.
+2. **Una tarea = una rama git = un commit en español = un build verde.** Sin excepciones (ver "Reglas de oro" al final).
+3. **Cada tarea tiene 4 bloques:** título numerado, descripción/pasos, criterios de aceptación, sección "Si algo falla". Ejecuta los pasos, valida los criterios, marca `[x]` SOLO si todos pasan.
+4. **No accedas a `process.env` directo:** todo va por `src/config/env.ts` (regla de la FASE 14).
+5. **No metas dependencias nuevas** que no estén listadas en una tarea explícita. Si crees que falta una, **pregunta primero**.
+6. **No uses servicios pagos ni proveedores que pidan tarjeta de crédito.** Esta es regla dura del proyecto (ver FASE 25).
+7. **Idioma de comunicación con Omar:** español de Colombia, tono claro y directo.
+
+### Convenciones visuales
+- `[ ]` = tarea pendiente · `[x]` = tarea verificada y commiteada
+- 🟢 = camino feliz · 🟡 = aceptable con compromiso · 🔴 = bloqueador, no avanzar
+- "Para Omar" = acción manual del humano · "Para la IA" = acción automatizable
+- "Aceptación" = lista de checks objetivos; si UNO falla, la tarea NO está completa
+
 ---
 
 ## 🚀 EMPIEZA AQUÍ (lo único que Omar tiene que hacer)
 
-**Paso 1.** Abre tu terminal con Gemini CLI o GitHub Copilot dentro del proyecto.
+**Paso 1.** Abre tu terminal con cualquier asistente de código (Claude Code, GitHub Copilot, Codex, Cursor, Aider, Gemini Code Assist, Continue, etc.) dentro de la carpeta del proyecto.
 
 **Paso 2.** Copia y pega LITERAL este mensaje al agente:
 
 ```
-Lee el archivo CHATBOT_TASKS.md completo. Presta atención especial a:
+Lee el archivo CHATBOT_TASKS.md completo. Vas a actuar como agente de
+ejecución autónomo, en español. Reglas obligatorias:
 
-1. REGLA PRIMORDIAL DE GIT: Para cada tarea (X.Y), DEBES:
-   -Idioma: Siempre en español hablame.
-   - Crear una rama descriptiva: `git checkout -b feat/tarea-X.Y`.
-   - Realizar todo el trabajo, auditoría y marcado de [x] en esa rama.
-   - Una vez la tarea pase el "Validar build" (Paso 5), haz merge a `main`, borra la rama de la tarea y regresa a `main`.
-   - NUNCA trabajes tareas diferentes en la misma rama.
+1. GIT POR TAREA: Para cada tarea (X.Y) DEBES:
+   - Crear una rama descriptiva: `git checkout -b feat/tarea-X.Y`
+   - Hacer todo el trabajo, auditoría y marcado de [x] en esa rama.
+   - Una vez la tarea pase el "Validar build" (Paso 5 del flujo), hacer
+     merge a `main`, borrar la rama de la tarea y volver a `main`.
+   - NUNCA mezclar tareas distintas en la misma rama.
 
-2. FLUJO OBLIGATORIO (5 pasos: Implementar → Auditar → Marcar → Commit en español → Validar build).
-3. La FASE 26 (descomposición de tareas grandes).
+2. FLUJO DE 5 PASOS por cada tarea (no negociable):
+   Implementar → Auditar → Marcar [x] → Commit en español → Validar build.
 
-Empecemos con la Tarea 0.1 de la FASE 0:
-- Pégame los pasos numerados literales como aparecen en el documento.
-- Espera mi confirmación "lista 0.1" antes de avanzar a la 0.2.
-- NO hagas tú mismo lo que es manual mío.
-- NO marques [x] sin auditar realmente.
-- Al terminar la FASE 0 completa, hazme el commit final en español y avísame antes de la FASE 1.
+3. PROHIBIDO:
+   - Marcar [x] sin auditar realmente cada criterio.
+   - Saltar tareas, agrupar tareas o improvisar tareas que no están aquí.
+   - Usar servicios pagos o que exijan tarjeta de crédito.
+   - Tocar archivos fuera del alcance listado en la tarea.
+   - Usar `--no-verify` ni saltar hooks de git.
+
+4. EMPIEZA con la Tarea 0.1 de la FASE 0:
+   - Pégame los pasos numerados literales como aparecen en el documento.
+   - Espera mi confirmación "lista 0.1" antes de avanzar a la 0.2.
+   - NO hagas tú lo que está marcado como manual mío.
+   - Al terminar la FASE 0 completa, avísame antes de empezar la FASE 1.
+
+5. Si en algún momento detectas ambigüedad, dime "ambigüedad en X.Y"
+   y dame 2-3 opciones para que decida. NO inventes la respuesta.
 
 Procedamos.
 ```
@@ -41,21 +80,21 @@ Aplica el protocolo de Tarea 26.4 (escalada): no insistas más de 3 veces,
 analiza la causa raíz, dame opciones (a/b/c) y espera mi decisión.
 ```
 
-**Paso 5.** Cada noche antes de dormir, pega esto para confirmar avance:
+**Paso 5.** Cada noche, antes de dormir, pega esto para confirmar avance:
 
 ```
 Resúmeme: ¿qué tareas se completaron hoy (con commits hechos)?
 ¿Cuál es la siguiente? ¿Hay algún bloqueo manual mío pendiente?
 ```
 
-> **Importante:** este documento es la única fuente de verdad. NO improvises. NO saltes pasos. La ejecución disciplinada es lo que convierte 92 tareas en un negocio funcionando.
+> **Importante:** este documento es la única fuente de verdad. NO improvises. NO saltes pasos. La ejecución disciplinada es lo que convierte ~120 tareas en un negocio funcionando.
 
 ---
 
-> **Para ejecutar con GitHub Copilot y Gemini CLI.**
-> Cada tarea es **autocontenida**, **pequeña** y tiene **criterios de aceptación claros**.
+> **Compatibilidad de IAs.** Probado y pensado para: Claude Code, GitHub Copilot Workspace, Codex CLI, Cursor, Aider, Gemini Code Assist, Continue.dev, Roo Code y cualquier agente que pueda leer/escribir archivos y correr comandos.
+> Cada tarea es **autocontenida**, **pequeña** y tiene **criterios de aceptación objetivos**.
 > Ejecutar en orden. NO saltar tareas. NO combinar tareas.
-> Antes de cada tarea: leer la sección "Contexto" y los archivos listados.
+> Antes de cada tarea: leer la sección "Contexto" (si existe) y los archivos listados.
 
 ## Índice de fases
 | # | Fase | Objetivo |
@@ -64,7 +103,7 @@ Resúmeme: ¿qué tareas se completaron hoy (con commits hechos)?
 | 1 | Base de datos Supabase | Tablas conversations / messages / leads |
 | 2 | Dependencias y cliente | Instalar libs y crear cliente Supabase |
 | 3 | Cerebro de ventas | Persona, catálogo, playbook, objeciones, prompt |
-| 4 | API route del chat | `/api/chat` con Gemini y rate limit |
+| 4 | API route del chat | `/api/chat` con Groq y rate limit |
 | 5 | Notificaciones Telegram | Helper + plantillas |
 | 6 | Chat Widget UI | Componente flotante reactivo |
 | 7 | Integración portafolio | Reemplazar botón WhatsApp y montar |
@@ -87,6 +126,10 @@ Resúmeme: ¿qué tareas se completaron hoy (con commits hechos)?
 | 24 | Estrategia económica real | Nicho, pricing USD, paquetes, plan honesto a 12 meses |
 | 25 | Garantía $0 absoluto | Auditoría de costos + frenos automáticos + kill switch |
 | 26 | Open source + ejecutabilidad | Verificación licencias, Plan B, descomposición para IAs |
+| 27 | Resiliencia multi-proveedor LLM | Failover automático Groq → OpenRouter → Cerebras → Cloudflare → Ollama (todo gratis sin tarjeta) |
+| 28 | Diferenciadores de conversión | Funcionalidades únicas que convierten visitantes en leads pagos (RAG, voz, vision, calculadora, A/B, follow-up email, multi-idioma, CRM Notion) |
+| 29 | Motor de tráfico orgánico | SEO programático, blog MDX, lead magnets, newsletter, Plausible Analytics, schema.org, OG dinámicas, distribución LATAM |
+| 30 | Escalabilidad operacional | Para cuando lleguen miles de leads: auto-onboarding, tickets, facturación CO, roles, webhooks, status page, backups, docs internas |
 
 ---
 
@@ -130,7 +173,7 @@ Ref: CHATBOT_TASKS.md tarea X.Y
 feat(chatbot): tarea 4.1 — endpoint POST /api/chat
 
 - Crea src/app/api/chat/route.ts con validación zod del payload
-- Integra Gemini vía wrapper de tarea 4.2 y persiste en Supabase
+- Integra Groq vía wrapper de tarea 4.2 y persiste en Supabase
 - Detecta bloques <<<LEAD>>> y <<<HANDOFF>>> y dispara notificación
 - Verificado: curl con sessionId de prueba retorna {reply} y crea fila en messages
 
@@ -151,19 +194,24 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 ---
 
 ## Stack final
-- **LLM:** Google Gemini 2.0 Flash (free tier 1500 req/día, sin tarjeta)
+- **LLM:** Multi-proveedor con failover automático (ver FASE 27) — orden:
+  1. Groq Cloud — Llama 3.3 70B (rápido y potente, sin tarjeta)
+  2. OpenRouter — `meta-llama/llama-3.3-70b-instruct:free` (sin tarjeta, ~200/día)
+  3. Cerebras — Llama 3.1 70B (ultrarrápido, 1M tokens/día gratis sin tarjeta)
+  4. Cloudflare Workers AI — `@cf/meta/llama-3.1-8b-instruct` (~10k req/día gratis sin tarjeta)
+  5. Ollama local — `llama3.2:3b` (último recurso offline, $0 perpetuo)
 - **DB:** Supabase free (500 MB)
 - **Notificación móvil:** Telegram Bot API (gratis ilimitado)
 - **Handoff humano:** link `wa.me` con resumen pre-rellenado
 - **Agendado:** Cal.com free
 - **Hosting:** Vercel (ya en uso)
-- **Costo:** $0 / mes para siempre
+- **Costo:** $0 / mes para siempre — verificado abril 2026, ningún proveedor exige tarjeta
 
 ---
 
 ## FASE 0 — Cuentas y credenciales (manual del usuario, GUIADO PASO A PASO)
 
-> **Instrucción para el agente AI (Copilot / Gemini CLI):**
+> **Instrucción para cualquier agente IA (Claude Code, Copilot, Codex, Cursor, Aider, Gemini Code Assist, etc.):**
 > El usuario (Omar) NO tiene cuentas creadas todavía y necesita que lo guíes como si nunca hubiera hecho esto. Para cada tarea de esta fase:
 > 1. **Pega LITERALMENTE los pasos numerados** que aparecen abajo en la conversación.
 > 2. **Espera la confirmación del usuario** ("listo", "lista 0.X") antes de avanzar.
@@ -173,25 +221,24 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 
 ---
 
-### [x] Tarea 0.1 — Crear API Key de Gemini (5 min, gratis, sin tarjeta)
+### [x] Tarea 0.1 — Crear API Key de Groq (5 min, gratis, sin tarjeta)
 
 **Pasos para Omar:**
-1. Abre en tu navegador: **https://aistudio.google.com/app/apikey**
-2. Inicia sesión con tu cuenta de Gmail (`hernandezreyomar@gmail.com`).
-3. Si te aparece un popup de términos, marca aceptar y dale "Continue".
-4. Click en el botón azul **"Create API key"**.
-5. Si te pregunta proyecto: elige **"Create API key in new project"**.
-6. Aparece una ventana con una clave larga que empieza con `AIza...` (unos 39 caracteres).
+1. Abre en tu navegador: **https://console.groq.com/keys**
+2. Inicia sesión (puedes usar Google o crear cuenta).
+3. Click en el botón **"Create API Key"**.
+4. Ponle nombre: `Portafolio Omar`.
+5. Aparece una ventana con una clave larga que empieza con `gsk_...`.
 7. Click en el ícono de copiar 📋 al lado de la clave.
-8. Abre el Bloc de notas (o VSCode) y pégala en un archivo nuevo. Escribe arriba: `GEMINI_API_KEY=AIza...`
+8. Abre el Bloc de notas (o VSCode) y pégala en un archivo nuevo. Escribe arriba: `GROQ_API_KEY=gsk_...`
 9. Guarda ese archivo en tu escritorio como `mis-claves-chatbot.txt` (esto es temporal).
 
 **Si algo falla:**
 - "No me deja crear key" → asegúrate de estar logueado con Gmail; prueba en modo incógnito.
-- "Me pide tarjeta de crédito" → NO la pide para Gemini Free. Si te la pide, estás en Vertex AI por error; vuelve al link exacto de arriba.
+- "Me pide tarjeta de crédito" → NO la pide para Groq Free. Si te la pide, estás en Vertex AI por error; vuelve al link exacto de arriba.
 - "Region no disponible" → cambia a una VPN gratuita (Proton VPN free) y elige Estados Unidos.
 
-**Aceptación:** clave con formato `AIza...` (39 chars aprox.) guardada en `mis-claves-chatbot.txt`. El usuario confirma "lista 0.1".
+**Aceptación:** clave con formato `gsk_...` (~56 chars) guardada en `mis-claves-chatbot.txt`. El usuario confirma "lista 0.1".
 
 ---
 
@@ -312,7 +359,7 @@ Ejecutar `npm run build` UNA VEZ MÁS tras el commit para confirmar que el repo 
 1. Pide al usuario el contenido de `mis-claves-chatbot.txt`.
 2. Crea el archivo `.env.local` en la raíz del proyecto (`/home/omarhernandez/personalProjects/mi-portafolio-moderno/.env.local`) con este formato exacto:
 ```env
-GEMINI_API_KEY=AIza...        # <- la del usuario
+GROQ_API_KEY=gsk_...        # <- la del usuario
 SUPABASE_URL=https://...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
 TELEGRAM_BOT_TOKEN=...:AAH...
@@ -403,9 +450,11 @@ alter table leads enable row level security;
 
 ### [x] Tarea 2.1 — Instalar dependencias
 ```bash
-npm install @google/generative-ai @supabase/supabase-js nanoid
+npm install groq-sdk @supabase/supabase-js nanoid
 ```
 - **Aceptación:** las 3 deps en `package.json`, `npm install` sin errores.
+
+> 📌 **NOTA 2026-04-18:** los proveedores adicionales de FASE 27 (OpenRouter, Cerebras, Cloudflare, Ollama) usan `fetch` nativo, sin SDK extra a instalar. Solo `groq-sdk` se instala como dependencia.
 
 ### [x] Tarea 2.2 — Crear cliente Supabase server-only
 - Crear `src/lib/supabaseServer.ts`:
@@ -677,20 +726,23 @@ NO los menciones en el texto visible.
   1. Validar con zod
   2. Buscar/crear `conversation` por `session_id`
   3. Cargar últimos 20 messages de la conversación
-  4. Llamar Gemini con `systemPrompt` + historial + nuevo mensaje
+  4. Llamar Groq con `systemPrompt` + historial + nuevo mensaje
   5. Guardar mensaje user + respuesta assistant en `messages`
   6. Detectar bloques `<<<LEAD>>>...<<<END>>>` → insertar en `leads` → llamar `notifyTelegram` (Tarea 5.1) → eliminar bloque del texto retornado
   7. Detectar `<<<HANDOFF>>>` → generar link `wa.me` con resumen → adjuntar al response
   8. Retornar `{ reply: string, handoffUrl?: string, calcomUrl?: string }`
 - **Aceptación:** `curl -X POST http://localhost:3000/api/chat -d '{"sessionId":"test","message":"hola","language":"es"}'` retorna JSON con `reply`.
 
-### [x] Tarea 4.2 — Wrapper Gemini
-- Crear `src/lib/chatbot/gemini.ts`
+### [x] Tarea 4.2 — Wrapper Groq
+- Crear `src/lib/chatbot/groq.ts`
 - Exportar `async function generateReply(systemPrompt: string, history: {role, content}[], userMessage: string): Promise<string>`
-- Usar `@google/generative-ai`, modelo `gemini-2.0-flash-exp` (o `gemini-2.0-flash` si está GA)
+- Usar `groq-sdk`, modelo `llama-3.3-70b-versatile`
 - Temperatura 0.7, maxOutputTokens 800
-- Manejar errores: si Gemini falla, retornar mensaje fallback en el idioma correcto
+- Manejar errores: si Groq falla, retornar mensaje fallback en el idioma correcto
 - **Aceptación:** test unitario manual: import y llamar con prompt simple retorna texto.
+
+> 📌 **NOTA 2026-04-18 — Superseded por FASE 27.**
+> El wrapper Groq sigue activo, pero ahora vive como **un adaptador más** dentro de `src/lib/chatbot/providers/groq.ts`. La lógica de generación pasa por `src/lib/chatbot/llm.ts`, que orquesta Groq + OpenRouter + Cerebras + Cloudflare + Ollama con failover automático. El archivo histórico `src/lib/chatbot/groq.ts` quedó como reexport delgado para no romper imports existentes (Tarea 27.5).
 
 ### [x] Tarea 4.3 — Rate limiting in-memory por IP
 - En `route.ts` añadir Map<ip, {count, resetAt}>
@@ -837,10 +889,13 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 - Si llega lleno al API → descartar silenciosamente
 - **Aceptación:** bot llenando el campo → no se procesa.
 
-### [x] Tarea 9.3 — Manejo de cuota Gemini agotada
-- Si Gemini retorna 429 o quota error: responder con mensaje fallback + link directo a WhatsApp
-- Notificar a Telegram: "⚠️ Cuota Gemini agotada"
+### [x] Tarea 9.3 — Manejo de cuota Groq agotada
+- Si Groq retorna 429 o quota error: responder con mensaje fallback + link directo a WhatsApp
+- Notificar a Telegram: "⚠️ Cuota Groq agotada"
 - **Aceptación:** simular error → usuario recibe fallback útil.
+
+> 📌 **NOTA 2026-04-18 — Comportamiento ampliado por FASE 27.**
+> Hoy, cuando Groq devuelve 429, el orquestador `llm.ts` **NO** muestra fallback de inmediato: salta al siguiente proveedor de la cadena (OpenRouter → Cerebras → Cloudflare → Ollama). El mensaje fallback + WhatsApp + alerta a Telegram solo se dispara si **los 5 proveedores fallan**, lo cual es prácticamente imposible. Ver Tarea 27.2.
 
 ---
 
@@ -971,7 +1026,7 @@ from messages group by 1 order by 1 desc;
 - **Aceptación:** el prompt incluye sección `# EJEMPLOS` con 3 conversaciones.
 
 ### [x] Tarea 13.2 — Auto-revisión del bot
-- En `gemini.ts`, tras generar respuesta, hacer **segunda llamada** corta a Gemini con prompt:
+- En `llm.ts` (FASE 27 — sustituye al wrapper antiguo de proveedor único), tras generar respuesta, hacer **segunda llamada** corta al mismo orquestador con prompt:
 ```
 Revisa esta respuesta del asistente de Omar. ¿Cumple con: voz de Omar, máximo 4 frases, no inventa precios, hace avanzar la venta? Responde solo "OK" o "FIX: <razón>".
 ```
@@ -984,7 +1039,7 @@ Revisa esta respuesta del asistente de Omar. ¿Cumple con: voz de Omar, máximo 
 ```sql
 alter table conversations add column facts jsonb default '{}';
 ```
-- Tras cada turno, pedir a Gemini extraer hechos nuevos: `{name?, email?, company?, budget?, timeline?, painPoint?, stack?}` y hacer merge en `facts`
+- Tras cada turno, pedir a Groq extraer hechos nuevos: `{name?, email?, company?, budget?, timeline?, painPoint?, stack?}` y hacer merge en `facts`
 - Inyectar `facts` actuales en cada nueva llamada al inicio del prompt: `# LO QUE YA SÉ DEL VISITANTE`
 - **Aceptación:** tras 5 turnos donde el usuario suelta info dispersa, `select facts from conversations` muestra objeto consolidado.
 
@@ -1001,11 +1056,18 @@ alter table conversations add column facts jsonb default '{}';
 import { z } from "zod";
 
 const serverSchema = z.object({
-  GEMINI_API_KEY: z.string().min(20),
+  GROQ_API_KEY: z.string().min(1),
   SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
   TELEGRAM_BOT_TOKEN: z.string().min(20),
   TELEGRAM_CHAT_ID: z.string().min(3),
+  // FASE 27 — proveedores LLM de respaldo (todos opcionales)
+  OPENROUTER_API_KEY: z.string().optional(),
+  CEREBRAS_API_KEY: z.string().optional(),
+  CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
+  CLOUDFLARE_API_TOKEN: z.string().optional(),
+  OLLAMA_BASE_URL: z.string().url().optional(),
+  LLM_PROVIDER_CHAIN: z.string().optional(),
 });
 
 const clientSchema = z.object({
@@ -1037,8 +1099,16 @@ export const clientEnv = clientSchema.parse({
 ### [x] Tarea 14.2 — `.env.example` versionado y `.env.local` ignorado
 - Crear `.env.example` (SÍ se commitea, sin valores reales) con TODAS las claves y comentarios:
 ```env
-# === LLM (https://aistudio.google.com/app/apikey) ===
-GEMINI_API_KEY=
+# === LLM principal (Groq — gratis, sin tarjeta — https://console.groq.com/keys) ===
+GROQ_API_KEY=
+
+# === FASE 27 — proveedores LLM de respaldo (todos opcionales, sin tarjeta) ===
+OPENROUTER_API_KEY=
+CEREBRAS_API_KEY=
+CLOUDFLARE_ACCOUNT_ID=
+CLOUDFLARE_API_TOKEN=
+OLLAMA_BASE_URL=http://localhost:11434
+LLM_PROVIDER_CHAIN=
 
 # === Supabase (Project Settings → API) ===
 SUPABASE_URL=https://xxx.supabase.co
@@ -1141,9 +1211,10 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
 
 ### [x] Tarea 14.6 — Rotación de claves (procedimiento)
 - Añadir sección a `README.md`:
-  - Cómo rotar `GEMINI_API_KEY`: revocar en AI Studio, generar nueva, actualizar `.env.local`, correr `sync-vercel-env.sh`, redeploy.
+  - Cómo rotar `GROQ_API_KEY`: revocar en https://console.groq.com/keys, generar nueva, actualizar `.env.local`, correr `sync-vercel-env.sh`, redeploy.
+  - Cómo rotar las claves de respaldo de FASE 27 (`OPENROUTER_API_KEY`, `CEREBRAS_API_KEY`, `CLOUDFLARE_API_TOKEN`): revocar en su dashboard respectivo, generar nueva, actualizar `.env.local`, redeploy.
   - Igual para Supabase, Telegram, Cal.com.
-  - Checklist mensual: revisar Gemini quota, Supabase storage, Telegram funcionando.
+  - Checklist mensual: revisar quota de Groq + proveedores de FASE 27, Supabase storage, Telegram funcionando.
 - **Aceptación:** sección "Rotación de claves" presente en README.
 
 ### [x] Tarea 14.7 — Pre-commit hook anti-secretos
@@ -1261,7 +1332,7 @@ fi
   - Qué datos recopila (nombre, email, tel, empresa, contenido del chat)
   - Para qué (responder consultas, generar propuestas, contacto comercial)
   - Cuánto tiempo (24 meses tras último contacto)
-  - Con quién se comparten (Supabase como encargado del tratamiento, Google Gemini)
+  - Con quién se comparten (Supabase como encargado del tratamiento, Google Groq)
   - Derechos del titular (acceso, rectificación, supresión — escribir a tu email)
   - Base legal: consentimiento explícito al iniciar chat
 - **Aceptación:** dos páginas accesibles en `/privacidad` y `/privacy`, en sitemap.
@@ -1338,7 +1409,7 @@ fi
 
 **Aceptación:** mínimo 3 métodos activos, todos los links abren correctamente desde móvil.
 
-### [ ] Tarea 18.2 — Helper `getPaymentOptions(currency, country)`
+### [x] Tarea 18.2 — Helper `getPaymentOptions(currency, country)`
 - Crear `src/lib/chatbot/payments.ts`
 - Exportar función que retorna métodos disponibles según contexto:
   - Cliente Colombia → Nequi + Bancolombia + PayPal + USDT
@@ -1347,14 +1418,14 @@ fi
 - Cada método: `{name, url, instructions, currency, fee}`
 - **Aceptación:** llamar con `('USD', 'US')` retorna ≥ 2 opciones con links válidos.
 
-### [ ] Tarea 18.3 — System prompt actualizado con cobro
+### [x] Tarea 18.3 — System prompt actualizado con cobro
 - Añadir al `systemPrompt.ts` sección `# COBRO`:
   - "Cuando el cliente confirma compra, pregunta país. Según país, ofrece 2-3 métodos de pago de `getPaymentOptions`."
   - "Pide anticipo del {PERSONA.anticipo}% para empezar."
   - "Tras recibir comprobante, emite bloque `<<<PAYMENT_RECEIVED>>>{leadId, amount, method}<<<END>>>` para que se notifique a Omar."
 - **Aceptación:** simular cierre de venta → bot ofrece métodos de pago correctos según país.
 
-### [ ] Tarea 18.4 — Endpoint para confirmar pago
+### [x] Tarea 18.4 — Endpoint para confirmar pago
 - `POST /api/payment/confirm` recibe `{leadId, amount, method, screenshot?}`
 - Sube screenshot a Supabase Storage (bucket gratis 1GB)
 - Notifica a Telegram con foto: "💰 *Pago recibido* {amount} {method} — Lead {name}"
@@ -1367,13 +1438,13 @@ fi
 
 > El bot cierra el 80%. El último 20% lo cierra Omar. Necesita poder responder DESDE Telegram y que el mensaje le llegue al cliente en el chat web sin abrir el navegador.
 
-### [ ] Tarea 19.1 — Telegram bot recibe mensajes (webhook)
+### [x] Tarea 19.1 — Telegram bot recibe mensajes (webhook)
 - Crear `POST /api/telegram/webhook` que recibe updates de Telegram
 - Configurar webhook: `curl https://api.telegram.org/bot$TOKEN/setWebhook?url=https://tudominio.com/api/telegram/webhook`
 - Solo procesar mensajes que vengan de `TELEGRAM_CHAT_ID` (Omar), ignorar resto
 - **Aceptación:** enviar mensaje al bot desde Telegram → llega POST a Vercel logs.
 
-### [ ] Tarea 19.2 — Comandos del bot para Omar
+### [x] Tarea 19.2 — Comandos del bot para Omar
 - Implementar comandos:
   - `/leads` → últimos 5 leads
   - `/conv {sessionId}` → últimos 10 mensajes de esa conversación
@@ -1381,14 +1452,14 @@ fi
   - `/auto {sessionId}` → desactiva takeover, el bot vuelve a responder
 - **Aceptación:** los 4 comandos funcionan desde Telegram.
 
-### [ ] Tarea 19.3 — Pull en el widget (sin WebSockets, gratis)
+### [x] Tarea 19.3 — Pull en el widget (sin WebSockets, gratis)
 - En el widget, mientras está abierto, hacer `GET /api/chat/poll?sessionId=X&since=lastMessageTimestamp` cada 5 segundos
 - Si hay mensajes nuevos del assistant (puestos por Omar vía `/reply`), agregarlos a la UI
 - Mostrar indicador "Omar está en línea ahora" cuando `human_takeover=true`
 - **Aceptación:** Omar envía `/reply` desde Telegram → el cliente lo ve en el widget en ≤ 5s.
 
-### [ ] Tarea 19.4 — Cuando hay takeover, el bot NO responde solo
-- En `/api/chat`: si la conversación tiene `human_takeover=true`, no llamar a Gemini; solo guardar mensaje user y notificar a Omar por Telegram para que responda
+### [x] Tarea 19.4 — Cuando hay takeover, el bot NO responde solo
+- En `/api/chat`: si la conversación tiene `human_takeover=true`, no llamar a Groq; solo guardar mensaje user y notificar a Omar por Telegram para que responda
 - **Aceptación:** durante takeover, las respuestas solo vienen de Omar, no del bot.
 
 ---
@@ -1397,7 +1468,7 @@ fi
 
 > Necesitas ver tus leads, conversaciones, conversiones sin entrar a Supabase cada vez.
 
-### [ ] Tarea 20.1 — Ruta `/admin` con auth simple
+### [x] Tarea 20.1 — Ruta `/admin` con auth simple
 - Crear `src/app/admin/page.tsx`
 - Auth por contraseña vía cookie firmada (no hace falta NextAuth):
   - `POST /api/admin/login` recibe `{password}`, compara con `ADMIN_PASSWORD` en env, setea cookie httpOnly firmada (HMAC con `ADMIN_SECRET`)
@@ -1405,14 +1476,14 @@ fi
 - Añadir `ADMIN_PASSWORD` y `ADMIN_SECRET` a `env.ts` y `.env.example`
 - **Aceptación:** sin cookie, `/admin` redirige a `/admin/login`.
 
-### [ ] Tarea 20.2 — Vistas del dashboard
+### [x] Tarea 20.2 — Vistas del dashboard
 - `/admin` (resumen): KPIs del mes (conversaciones, leads, leads pagados, conversion rate, ingresos USD)
 - `/admin/leads` (tabla): filtrable por status, ordenable por fecha, click → detalle
 - `/admin/leads/[id]`: datos del lead + transcripción completa de la conversación + botones "Marcar contactado", "Marcar perdido", "Generar propuesta"
 - `/admin/conversations` (todas las conversaciones, no solo leads)
 - **Aceptación:** las 4 rutas funcionan, datos reales de Supabase, responsive.
 
-### [ ] Tarea 20.3 — Export CSV
+### [x] Tarea 20.3 — Export CSV
 - Botón "Exportar leads CSV" en `/admin/leads` → genera CSV con todos los campos
 - Útil para llevar a Notion/Excel/CRM externo si decides escalar
 - **Aceptación:** descarga CSV abre correctamente en Excel.
@@ -1430,9 +1501,9 @@ fi
 
 ### [ ] Tarea 21.2 — Alertas de cuota
 - Crear `scripts/check-quotas.ts` que cada 6h:
-  - Cuenta requests del día a Gemini (tabla `api_logs`)
+  - Cuenta requests del día a Groq (tabla `api_logs`)
   - Cuenta tamaño de Supabase (vía API)
-  - Si Gemini ≥ 80% de 1500 → Telegram "⚠️ Gemini al 80%"
+  - Si Groq ≥ 80% de 1500 → Telegram "⚠️ Groq al 80%"
   - Si Supabase ≥ 80% de 500MB → Telegram "⚠️ Supabase al 80%, revisar limpiar mensajes viejos"
 - **Aceptación:** simular contadores altos → llega alerta.
 
@@ -1740,7 +1811,7 @@ Añadir al `ESTRATEGIA_INGRESOS.md`:
 
 | Servicio | Free tier real (verificado oct-2025) | Riesgo | Mitigación obligatoria |
 |---|---|---|---|
-| **Gemini API (Flash)** | 1500 req/día, 15 req/min, sin tarjeta | Si excede → 429 (NO cobra) | Confirmado seguro: Google nunca cobra sin upgrade manual |
+| **Groq API** | RPM/TPM variados, gratis siempre | Si excede → 429 (NO cobra) | Confirmado seguro: Groq nunca cobra sin upgrade manual |
 | **Supabase** | 500 MB DB, 1 GB storage, 50k MAU, 2 GB egress | Pausa el proyecto tras 7 días sin actividad | Tarea 25.1 (ping cron) |
 | **Telegram Bot API** | Ilimitado, gratis para siempre | Ninguno | OK |
 | **Cal.com** | Eventos ilimitados, 1 calendar gratis | Features premium NO se usan | OK |
@@ -1757,7 +1828,7 @@ Añadir al `ESTRATEGIA_INGRESOS.md`:
 
 1. **Vercel Hobby tiene LÍMITE de cron jobs** (1 por proyecto, 1/día). FASE 12, 21, 22 usan crons. → Mover a GitHub Actions.
 2. **Supabase free pausa el proyecto** tras 7 días sin queries. → Cron de keep-alive.
-3. **Vercel Function timeout 10s** en Hobby. Una llamada lenta a Gemini puede cortar. → Configurar timeout y fallback.
+3. **Vercel Function timeout 10s** en Hobby. Una llamada lenta a Groq puede cortar. → Configurar timeout y fallback.
 4. **Dominio**: si usas `tudominio.dev` cuesta ~$12 USD/año. Si NO compras dominio, usas el subdominio gratis `tu-proyecto.vercel.app`.
 
 ---
@@ -1799,42 +1870,47 @@ jobs:
 - Crear `src/lib/chatbot/limits.ts` con límites HARDCODED conservadores:
 ```ts
 export const LIMITS = {
-  MAX_GEMINI_CALLS_PER_DAY: 1200,    // 80% de 1500 free
+  // FASE 27 — límites por proveedor de la cadena multi-LLM
+  MAX_LLM_CALLS_PER_DAY: 5000,        // suma combinada de toda la cadena (groq + openrouter + cerebras + cloudflare + ollama)
+  MAX_GROQ_CALLS_PER_DAY: 1200,       // 80% de cuota Groq Free típica
+  MAX_OPENROUTER_CALLS_PER_DAY: 180,  // 80% de ~200/día por modelo :free
+  MAX_CEREBRAS_CALLS_PER_DAY: 800,    // tokens generosos pero conservador
+  MAX_CLOUDFLARE_CALLS_PER_DAY: 8000, // 80% de 10k/día
   MAX_MESSAGES_PER_CONVERSATION: 50,  // si pasa, forzar handoff humano
   MAX_CONVERSATIONS_PER_DAY: 100,     // si pasa, mostrar "alta demanda, déjanos email"
   MAX_DB_SIZE_MB: 400,                // 80% de 500
   MAX_STORAGE_MB: 800                 // 80% de 1024
 };
 ```
-- Antes de cada llamada a Gemini: contar uso del día (tabla `api_logs`) y si excede LIMITS → fallback a mensaje "estamos en hora pico, déjanos tu email"
-- **Aceptación:** simular contadores altos → API responde fallback, NO llama a Gemini, NO genera costo.
+- Antes de cada llamada a `llm.ts`: contar uso del día por proveedor (tabla `api_logs`) y si **toda la cadena** excede sus LIMITS → fallback a mensaje "estamos en hora pico, déjanos tu email"
+- **Aceptación:** simular contadores altos en TODOS los proveedores → API responde fallback, NO llama a ningún LLM, NO genera costo.
 
 ### [ ] Tarea 25.4 — Tabla `api_logs` para tracking de uso
 ```sql
 create table api_logs (
   id uuid primary key default gen_random_uuid(),
-  service text not null,        -- 'gemini', 'supabase_storage', etc.
+  service text not null,        -- 'groq' | 'openrouter' | 'cerebras' | 'cloudflare' | 'ollama' | 'supabase_storage' | etc.
   action text,
   cost_units numeric default 1,
   created_at timestamptz default now()
 );
 create index idx_api_logs_service_day on api_logs(service, created_at);
 ```
-- Cada llamada a Gemini → insert en `api_logs`
+- Cada llamada del orquestador `llm.ts` (FASE 27) → insert en `api_logs` con el `service` que **realmente respondió** (no el primero intentado)
 - Vista `daily_usage`:
 ```sql
 create view daily_usage as
 select date_trunc('day', created_at) as day, service, sum(cost_units) as total
 from api_logs group by 1, 2 order by 1 desc;
 ```
-- **Aceptación:** tras 10 llamadas al chat, `select * from daily_usage where service='gemini'` retorna 10.
+- **Aceptación:** tras 10 llamadas al chat, `select * from daily_usage where service in ('groq','openrouter','cerebras','cloudflare','ollama')` suma 10 (distribuido entre los proveedores que respondieron).
 
 ### [ ] Tarea 25.5 — Bloqueo manual de upgrades automáticos
 **Pasos para Omar (manual):**
 
 1. **Vercel** → Project Settings → Billing → confirmar que el plan es **Hobby (gratis)**, NO conectar tarjeta.
 2. **Supabase** → Organization → Billing → confirmar plan **Free**, NO conectar tarjeta. Activar **Spend Cap = $0** si la opción aparece.
-3. **Google Cloud (Gemini)** → AI Studio NO pide tarjeta. Si en algún momento te llevan a Vertex AI / GCP Console, **NO actives "billing account"**. Si lo haces por error, desactívalo de inmediato.
+3. **Google Cloud (Groq)** → AI Studio NO pide tarjeta. Si en algún momento te llevan a Vertex AI / GCP Console, **NO actives "billing account"**. Si lo haces por error, desactívalo de inmediato.
 4. **GitHub** → Settings → Billing → confirmar plan **Free**.
 5. **Cal.com** → Settings → Billing → confirmar plan **Free**.
 
@@ -1847,9 +1923,9 @@ from api_logs group by 1, 2 order by 1 desc;
 - **Aceptación:** decisión documentada en `OPERACION_DIARIA.md`, dominio configurado.
 
 ### [ ] Tarea 25.7 — Alerta de "casi al límite"
-- En `quota-check` (Tarea 25.2): si Gemini llega a 80% de límite diario → Telegram avisa
+- En `quota-check` (Tarea 25.2): si Groq llega a 80% de límite diario → Telegram avisa
 - Si llega a 95% → además, cambiar variable `EMERGENCY_FALLBACK=true` en runtime que desvía nuevas conversaciones a "déjanos tu email, te respondemos pronto"
-- **Aceptación:** simular 95% → conversaciones nuevas reciben fallback en lugar de tocar Gemini.
+- **Aceptación:** simular 95% → conversaciones nuevas reciben fallback en lugar de tocar Groq.
 
 ### [ ] Tarea 25.8 — Costo total mensual real (verificación)
 - Ejecutar al final de cada mes:
@@ -1857,7 +1933,7 @@ from api_logs group by 1, 2 order by 1 desc;
 echo "=== Costos del mes ==="
 echo "Vercel: $(vercel billing 2>/dev/null || echo '$0 - Hobby plan')"
 echo "Supabase: revisar dashboard → Settings → Usage"
-echo "Gemini: revisar AI Studio → Usage"
+echo "Groq: revisar AI Studio → Usage"
 ```
 - Si CUALQUIER servicio muestra > $0: revisar inmediatamente qué pasó
 - Documentar mes a mes en `COSTOS_MENSUALES.md`
@@ -1872,7 +1948,7 @@ Con todas las tareas anteriores ejecutadas, el costo mensual queda así:
 ```
 Vercel Hobby:          $0
 Supabase Free:         $0
-Gemini Free:           $0
+Groq Free:           $0
 Telegram Bot:          $0
 Cal.com Free:          $0
 GitHub Actions:        $0 (público) o $0 dentro de 2000 min (privado)
@@ -1909,7 +1985,7 @@ TOTAL FIJO:            $0/mes (o $1/mes si dominio propio)
 
 ## FASE 26 — Cierre: verificación open source + ejecutabilidad por IAs
 
-> Última revisión antes de empezar. Garantiza que (a) **todo el código que escribes es open source**, (b) las APIs gratuitas son sostenibles, y (c) **cada tarea es lo suficientemente pequeña** para que Copilot/Gemini CLI la complete sin atascarse.
+> Última revisión antes de empezar. Garantiza que (a) **todo el código que escribes es open source**, (b) las APIs gratuitas son sostenibles, y (c) **cada tarea es lo suficientemente pequeña** para que Copilot/Groq CLI la complete sin atascarse.
 
 ### Tabla de verificación open source — cada dependencia
 
@@ -1920,14 +1996,18 @@ TOTAL FIJO:            $0/mes (o $1/mes si dominio propio)
 | `typescript` | Lenguaje | Apache-2.0 | ✅ Sí | Migrable a JS |
 | `tailwindcss` | CSS | MIT | ✅ Sí | Migrable a CSS vanilla |
 | `framer-motion` | Animaciones | MIT | ✅ Sí | Migrable a CSS animations |
-| `@google/generative-ai` (SDK) | SDK Gemini | Apache-2.0 | ✅ Sí | Cambiar a Groq/Ollama si Gemini cobra |
+| `groq-sdk` | SDK Groq | Apache-2.0 | ✅ Sí | Multi-proveedor activo (FASE 27): si Groq se rate-limita, falla a OpenRouter/Cerebras/Cloudflare/Ollama sin tocar código |
 | `@supabase/supabase-js` | SDK Supabase | MIT | ✅ Sí | Migrable a self-hosted Supabase |
 | `zod` | Validación | MIT | ✅ Sí | Standard |
 | `nanoid` | IDs | MIT | ✅ Sí | Standard |
 | `react-hook-form` | Forms | MIT | ✅ Sí | Standard |
 | `react-i18next` | i18n | MIT | ✅ Sí | Standard |
 | `age` (cifrado bóveda) | CLI | BSD-3 | ✅ Sí | Standard |
-| **Gemini API** | API LLM | propietaria de Google | ⚠️ Servicio (no SDK) | **Plan B:** Groq (Llama 3.3 free), Ollama local, OpenRouter free models |
+| **Groq API** | API LLM | propietaria | ⚠️ Servicio (no SDK) | **Plan B activo (FASE 27):** failover a OpenRouter (`:free`), Cerebras, Cloudflare Workers AI, Ollama local |
+| **OpenRouter** | API LLM agregadora | propietaria | ⚠️ Servicio | Modelos `:free` no requieren tarjeta. Plan B: salta al siguiente proveedor del failover |
+| **Cerebras Cloud** | API LLM | propietaria | ⚠️ Servicio | Llama 3.1 70B gratis sin tarjeta. Plan B: siguiente proveedor del failover |
+| **Cloudflare Workers AI** | API LLM | propietaria | ⚠️ Servicio | ~10k req/día gratis sin tarjeta. Plan B: siguiente proveedor del failover |
+| **Ollama** | Runtime LLM local | MIT | ✅ Sí | Self-hosted en WSL/PC del usuario. Cero dependencias externas |
 | **Supabase** | BaaS | infra propietaria pero **producto open source** (https://github.com/supabase/supabase) | ✅ Sí (self-hostable) | Plan B: self-host gratis en VPS de $5 si quieres |
 | **Telegram Bot API** | API mensajería | propietaria | ⚠️ Servicio | Plan B: Discord webhook (también gratis) |
 | **Cal.com** | SaaS | **open source** (https://github.com/calcom/cal.com) | ✅ Sí | Plan B: self-host |
@@ -1944,13 +2024,12 @@ Crear `PLAN_B_OPENSOURCE.md`:
 ```markdown
 # Migraciones de emergencia (si un servicio empieza a cobrar)
 
-## Si Gemini cobra
-- **Reemplazo 1:** Groq (https://groq.com) — Llama 3.3 70B gratis, mejor velocidad
-  - Cambiar `src/lib/chatbot/gemini.ts` por `groq.ts` con `groq-sdk` (MIT)
-  - 2 horas de trabajo
-- **Reemplazo 2:** Ollama local (gratis siempre, corre en tu PC con Llama 3.2 3B)
-  - Solo viable si tienes GPU o aceptas latencia
-- **Reemplazo 3:** OpenRouter (https://openrouter.ai) free models
+## Si Groq cobra
+> **Ya no es un problema.** Desde FASE 27 el sistema tiene failover automático: cuando Groq falla, el siguiente proveedor de la cadena responde sin que toques código. Cadena actual (todos sin tarjeta):
+- **Reemplazo 1 (automático):** OpenRouter (https://openrouter.ai) — modelos `:free` (Llama 3.3 70B, DeepSeek R1, etc.)
+- **Reemplazo 2 (automático):** Cerebras (https://cloud.cerebras.ai) — Llama 3.1 70B ultrarrápido, 1M tokens/día gratis
+- **Reemplazo 3 (automático):** Cloudflare Workers AI (https://developers.cloudflare.com/workers-ai/) — ~10k req/día gratis
+- **Reemplazo 4 (automático):** Ollama local con Llama 3.2 3B — corre en tu PC, sin internet, $0 perpetuo
 
 ## Si Supabase cobra
 - Self-host Supabase en VPS Hetzner $4/mes (un café)
@@ -1972,7 +2051,7 @@ Crear `PLAN_B_OPENSOURCE.md`:
 
 - **Aceptación:** archivo creado y referenciado desde el README.
 
-### [ ] Tarea 26.2 — Reglas de oro de ejecución para IAs (Copilot / Gemini CLI)
+### [ ] Tarea 26.2 — Reglas de oro de ejecución para IAs (Copilot / Groq CLI)
 
 Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan, a veces "creen" que terminaron sin terminar. Para mitigarlo, antes de cada tarea grande, el agente DEBE descomponerla en sub-tareas atómicas máximo de 30 líneas de código cada una.
 
@@ -1982,7 +2061,7 @@ Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan,
 
 **Tareas que requieren descomposición obligatoria** (ya identificadas):
 - Tarea 3.5 (system prompt unificado) → dividir en: estructura → identidad → playbook → catálogo → reglas → ejemplos
-- Tarea 4.1 (endpoint /api/chat) → dividir en: validación zod → buscar/crear conv → cargar historial → llamar Gemini → parsear bloques → guardar messages → response
+- Tarea 4.1 (endpoint /api/chat) → dividir en: validación zod → buscar/crear conv → cargar historial → llamar Groq → parsear bloques → guardar messages → response
 - Tarea 6.1 (ChatWidget) → dividir en: botón flotante → panel cerrado/abierto → header → body mensajes → footer input → estado sessionId
 - Tarea 19.2 (comandos Telegram) → 1 sub-tarea por comando (`/leads`, `/conv`, `/reply`, `/auto`)
 - Tarea 20.2 (vistas dashboard) → 1 sub-tarea por ruta (`/admin`, `/admin/leads`, `/admin/leads/[id]`, `/admin/conversations`)
@@ -2033,6 +2112,1006 @@ Antes de hacer el deploy de FASE 10, hacer manualmente con Omar (no la IA):
 4. Si promedio < 7/10: **NO deployar.** Volver a FASE 13 (hardening del prompt).
 
 **Aceptación:** Omar firma con su nombre en `VALIDACION_PREDEPLOY.md` que el promedio es ≥ 7/10.
+
+---
+
+## FASE 27 — Resiliencia multi-proveedor LLM (failover gratis sin tarjeta)
+
+> **Motivación.** Groq Free tiene rate limits bajos (≈30 req/min, 14k tokens/min). En desarrollo y evaluación (Fase 11) la cuota se agota en pruebas continuas. Esta fase reemplaza la dependencia única de Groq por una **cadena de 5 proveedores totalmente gratis y sin tarjeta**, con failover automático. Sigue siendo $0/mes y compatible con la promesa de FASE 25.
+>
+> **Verificación 2026-04-18:** ningún proveedor de la cadena requiere tarjeta de crédito ni billing activo. Si alguno introduce esa fricción en el futuro, basta con removerlo de `PROVIDER_CHAIN`.
+
+**Cadena de failover (orden):**
+1. **Groq** — `llama-3.3-70b-versatile` (rápido, ya configurado)
+2. **OpenRouter** — `meta-llama/llama-3.3-70b-instruct:free` (~200 req/día por modelo)
+3. **Cerebras** — `llama3.1-70b` (1M tokens/día gratis)
+4. **Cloudflare Workers AI** — `@cf/meta/llama-3.1-8b-instruct` (~10k req/día)
+5. **Ollama local** — `llama3.2:3b` (offline, último recurso)
+
+**Reglas de salto entre proveedores:**
+- HTTP 401 / 403 (clave inválida) → log, marcar proveedor como deshabilitado por el resto del proceso, saltar al siguiente
+- HTTP 429 (rate limit) → saltar al siguiente, sin log ruidoso
+- Timeout > 8s → saltar al siguiente
+- Error de red → saltar al siguiente
+- Si el proveedor responde con texto vacío → saltar al siguiente
+- Si **todos** los proveedores fallan → devolver `<<<QUOTA_EXCEEDED>>>` (lo que ya espera `route.ts`)
+
+---
+
+### [x] Tarea 27.1 — Crear adaptadores de proveedores
+- Crear directorio `src/lib/chatbot/providers/`
+- Crear un módulo por proveedor con la **misma firma**: `async function call(systemPrompt, history, userMessage): Promise<string>`
+- Archivos:
+  - `providers/groq.ts` — `groq-sdk`, `llama-3.3-70b-versatile`
+  - `providers/openrouter.ts` — `fetch` a `https://openrouter.ai/api/v1/chat/completions`, modelo `meta-llama/llama-3.3-70b-instruct:free`
+  - `providers/cerebras.ts` — `fetch` a `https://api.cerebras.ai/v1/chat/completions`, modelo `llama3.1-70b`
+  - `providers/cloudflare.ts` — `fetch` a `https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/ai/run/@cf/meta/llama-3.1-8b-instruct`
+  - `providers/ollama.ts` — `fetch` a `${OLLAMA_BASE_URL}/api/chat` (default `http://localhost:11434`), modelo `llama3.2:3b`
+- Cada adaptador debe **lanzar** una `Error` tipada (`ProviderError`) con `{ status?: number, retryable: boolean }` para que el orquestador decida si saltar.
+- **Aceptación:** los 5 archivos existen, cada uno < 60 líneas, exportan `call` con la misma firma, y `npx tsc --noEmit` pasa.
+
+### [x] Tarea 27.2 — Crear orquestador `llm.ts` con failover
+- Crear `src/lib/chatbot/llm.ts`
+- Exportar `generateReply(systemPrompt, history, userMessage)` con la **misma firma** que el viejo `groq.ts`
+- Definir `PROVIDER_CHAIN = ['groq', 'openrouter', 'cerebras', 'cloudflare', 'ollama']` (configurable por env `LLM_PROVIDER_CHAIN` opcional)
+- Por cada proveedor de la cadena: importar dinámicamente el adaptador, llamar con timeout de 8s (`AbortController`), si responde texto no-vacío → retornarlo; si tira `ProviderError` o timeout → log corto y `continue`
+- Si toda la cadena falla → retornar `<<<QUOTA_EXCEEDED>>>`
+- Adicional: si un proveedor responde 401/403, agregarlo a un `Set<string>` interno `disabledProviders` para no reintentarlo durante esta lambda/proceso
+- **Aceptación:** test manual `npx tsx -e "import('./src/lib/chatbot/llm').then(m => m.generateReply('eres un bot', [], 'hola').then(console.log))"` retorna texto.
+
+### [x] Tarea 27.3 — Actualizar `src/config/env.ts` con keys nuevas (opcionales)
+- Añadir como **opcionales** (no rompen build si faltan):
+```ts
+OPENROUTER_API_KEY: z.string().optional(),
+CEREBRAS_API_KEY: z.string().optional(),
+CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
+CLOUDFLARE_API_TOKEN: z.string().optional(),
+OLLAMA_BASE_URL: z.string().url().optional(),
+LLM_PROVIDER_CHAIN: z.string().optional(),  // CSV: "groq,openrouter,..."
+```
+- Añadir getters paralelos en `serverEnv` que devuelven `""` si no están definidos
+- **Regla:** un proveedor sin su key se saltea silenciosamente en el orquestador (no es error)
+- **Aceptación:** `npm run build` pasa con las nuevas vars vacías; pasa también con vars llenas.
+
+### [x] Tarea 27.4 — Migrar `src/app/api/chat/route.ts`
+- Cambiar:
+  ```ts
+  import { generateReply } from '../../../lib/chatbot/groq';
+  ```
+  por:
+  ```ts
+  import { generateReply } from '../../../lib/chatbot/llm';
+  ```
+- **No tocar nada más** del route.ts. La firma es idéntica.
+- **Aceptación:** `curl -X POST http://localhost:3000/api/chat -d '{"sessionId":"test","message":"hola","language":"es"}'` retorna `reply` no vacío.
+
+### [x] Tarea 27.5 — Deprecar `src/lib/chatbot/groq.ts` (mantener export)
+- Convertir el archivo en un reexport delgado para no romper imports antiguos:
+  ```ts
+  // DEPRECATED: usar `llm.ts` (FASE 27). Reexportado solo para retrocompatibilidad.
+  export { generateReply } from './llm';
+  ```
+- **Aceptación:** `grep -r "from.*chatbot/groq" src` sigue funcionando (devuelve la misma función).
+
+### [x] Tarea 27.6 — Documentar nuevas variables en `.env.example`
+- Añadir bloque al final, todas comentadas como opcionales:
+```bash
+# === FASE 27 — Multi-provider failover (todas opcionales) ===
+# Cuanto más llenes, más resiliente el sistema. Mínimo recomendado: GROQ_API_KEY + OPENROUTER_API_KEY.
+OPENROUTER_API_KEY=
+CEREBRAS_API_KEY=
+CLOUDFLARE_ACCOUNT_ID=
+CLOUDFLARE_API_TOKEN=
+OLLAMA_BASE_URL=http://localhost:11434
+# Orden de prioridad CSV (default: "groq,openrouter,cerebras,cloudflare,ollama")
+LLM_PROVIDER_CHAIN=
+```
+- **Aceptación:** `.env.example` commiteado con las nuevas vars vacías.
+
+### [ ] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
+**Pasos para Omar (todos sin tarjeta):**
+
+1. **OpenRouter** — https://openrouter.ai/keys
+   - Login con GitHub → "Create Key" → guardar como `OPENROUTER_API_KEY=sk-or-v1-...`
+2. **Cerebras** — https://cloud.cerebras.ai
+   - Login con email → "API Keys" → "Create Key" → guardar como `CEREBRAS_API_KEY=csk-...`
+3. **Cloudflare Workers AI** — https://dash.cloudflare.com/profile/api-tokens
+   - "Create Token" → template "Workers AI" → guardar `CLOUDFLARE_API_TOKEN=...`
+   - En el dashboard principal copiar `Account ID` (sidebar derecho) → guardar `CLOUDFLARE_ACCOUNT_ID=...`
+4. **Ollama local** (opcional, si quieres respaldo offline):
+   ```bash
+   curl -fsSL https://ollama.com/install.sh | sh
+   ollama pull llama3.2:3b   # ~2 GB, modelo pequeño que cabe en 7-8 GB RAM
+   ollama serve              # corre en background en localhost:11434
+   ```
+
+**Si algo falla:**
+- "OpenRouter pide pago" → estás viendo modelos pagos. Solo usa los que terminan en `:free`.
+- "Cerebras pide tarjeta" → no la pide para tier free. Si te aparece, salta el paso, el sistema sigue funcionando con los demás.
+- "Cloudflare Workers AI dice billing required" → cierra y abre con cuenta nueva, el plan free de Workers AI no requiere tarjeta para los 10k req/día.
+- "Ollama no instala en WSL" → revisa que `systemd` esté activo (`wsl --shutdown` y `wsl` para reiniciar).
+
+**Aceptación:** al menos 2 de las 4 keys remotas están en `.env.local`. El sistema funciona aún si solo tienes Groq + OpenRouter.
+
+---
+
+## FASE 28 — Diferenciadores de conversión (lo que hace que un visitante se convierta en cliente que paga)
+
+> **Motivación.** Tener "un chatbot" no diferencia. Tener un chatbot que **responde con voz, ve imágenes, cita tus proyectos reales, hace seguimiento por email, ofrece una calculadora interactiva y agenda con timezone correcto** sí. Esta fase suma 10 funcionalidades que portafolios genéricos NO tienen, todas $0 y open source.
+>
+> **Verificación 2026-04-18:** todas las APIs y librerías de esta fase son gratis sin tarjeta o tienen tier free permanente verificado.
+
+**Stack adicional (todo gratis):**
+- **Email:** Resend (3.000 emails/mes gratis, sin tarjeta)
+- **Vector DB:** Supabase pgvector extension (incluido en plan free)
+- **Voz:** Web Speech API (nativa del navegador, $0 perpetuo)
+- **Vision:** Llama 3.2 11B Vision en Groq (mismo plan free)
+- **CRM:** Notion API (gratis con cuenta personal)
+
+---
+
+### [ ] Tarea 28.1 — Speed-to-lead: notificación Telegram en < 30s con botón de respuesta rápida
+
+**Para qué sirve.** Estudios de InsideSales muestran que responder un lead en < 5 min lo cierra 9× más que responder en 1 hora. Cuando llega un lead, Telegram debe sonarte INMEDIATO con un mensaje accionable.
+
+**Archivos afectados:**
+- `src/lib/chatbot/telegram.ts` (extender `notifyTelegram` con botones inline)
+- `src/app/api/chat/route.ts` (pasar `conversation_id` y `lead_id` a la notificación)
+
+**Implementación:**
+1. En `telegram.ts` añadir función `notifyLead(lead, conversationId)` que envía mensaje formateado con `parse_mode: 'MarkdownV2'` y `reply_markup` con `inline_keyboard`:
+   - Botón "💬 Responder ahora" → URL `https://t.me/<tu_bot>?start=reply_<conversationId>`
+   - Botón "📋 Ver conversación" → URL `${SITE_URL}/admin/leads/${lead.id}`
+   - Botón "✅ Marcar contactado" → callback_data `mark_contacted_${lead.id}`
+2. En `route.ts`, reemplazar la llamada actual `notifyTelegram(...)` post-`extractLead` por `notifyLead(lead, conversationId)`.
+3. Latencia objetivo: medir con `console.time` que desde `extractLead` hasta `notifyLead` resuelto pasen < 1.5s.
+
+**Aceptación:**
+- [ ] Llega notificación en Telegram con 3 botones inline visibles.
+- [ ] Click en "Ver conversación" abre `/admin/leads/<id>` y carga sin error.
+- [ ] Click en "Responder ahora" abre Telegram con tu bot.
+- [ ] Tiempo desde el último mensaje del usuario en el widget hasta la notificación push del celular: ≤ 30s en pruebas reales (no localhost).
+
+**Si algo falla:**
+- "Telegram dice 'parse error'" → escapa `_`, `*`, `[`, `]`, `(`, `)` con `\` en MarkdownV2.
+- "El botón callback no responde" → la FASE 19 ya tiene el endpoint `/api/telegram/webhook`, asegúrate de que esté registrado el webhook.
+
+---
+
+### [ ] Tarea 28.2 — Email follow-up automatizado vía Resend (3000 emails/mes gratis)
+
+**Para qué sirve.** El cron de FASE 12 ya marca leads fríos. Falta enviarles email automático con propuesta personalizada para reactivarlos. Esto solo lo logra automatización; ningún humano da abasto.
+
+**Archivos afectados:**
+- `src/lib/chatbot/email.ts` (nuevo)
+- `src/lib/chatbot/templates/followup.ts` (nuevo, plantillas español)
+- `src/app/api/cron/followup/route.ts` (extender con envío de email)
+- `src/config/env.ts` (añadir `RESEND_API_KEY` opcional)
+- `.env.example` (documentar nueva var)
+
+**Implementación:**
+1. `npm install resend` (paquete oficial, MIT, ~30 KB).
+2. En `email.ts`:
+   ```ts
+   import { Resend } from 'resend';
+   const resend = new Resend(serverEnv.resendApiKey);
+   export async function sendFollowupEmail({ to, name, lastTopic, calcomUrl }) { /* ... */ }
+   ```
+3. Plantilla `followup.ts`: 3 variantes (24h sin respuesta / 72h / 7 días) en español de Colombia, con CTA al Cal.com y firma de Omar.
+4. En el cron de FASE 12, después de marcar `cold`, si `lead.email` existe → `sendFollowupEmail(...)`.
+5. Cuenta gratis: registrarse en https://resend.com con GitHub, sin tarjeta. Verificar dominio del portafolio (DNS TXT, gratis).
+
+**Aceptación:**
+- [ ] Endpoint del cron envía email a un lead de prueba y llega a la bandeja en < 60s.
+- [ ] El email se ve correcto en Gmail móvil (no roto, no en spam si dominio verificado).
+- [ ] Resend dashboard muestra el evento "delivered".
+- [ ] El lead queda marcado `followup_sent_at` en DB para no spamear.
+
+**Si algo falla:**
+- "Email cae en spam" → verifica DNS (SPF + DKIM) en Resend dashboard. Sin esto, el 80% va a spam.
+- "Resend pide tarjeta" → no la pide. Si te la pide, estás en plan equivocado; usa el botón "Free".
+
+---
+
+### [ ] Tarea 28.3 — RAG con pgvector: el bot cita tus proyectos REALES, no inventa
+
+**Para qué sirve.** Hoy el bot puede inventar tu experiencia. Con RAG, busca semánticamente en tus proyectos/casos de éxito reales antes de responder. Bot deja de mentir → cierra ventas reales.
+
+**Archivos afectados:**
+- Migración SQL nueva: `supabase/migrations/0002_pgvector.sql`
+- `src/lib/chatbot/rag.ts` (nuevo)
+- `src/lib/chatbot/embeddings.ts` (nuevo)
+- `src/data/knowledgeBase.ts` (nuevo, fuente de verdad: proyectos, casos, testimonios)
+- `scripts/seed-rag.ts` (genera embeddings y los sube a Supabase)
+- `src/app/api/chat/route.ts` (consulta RAG antes de generar respuesta)
+
+**Implementación:**
+1. Migración SQL:
+   ```sql
+   CREATE EXTENSION IF NOT EXISTS vector;
+   CREATE TABLE knowledge_chunks (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     content TEXT NOT NULL,
+     embedding vector(384),
+     metadata JSONB DEFAULT '{}',
+     created_at TIMESTAMPTZ DEFAULT now()
+   );
+   CREATE INDEX ON knowledge_chunks USING ivfflat (embedding vector_cosine_ops);
+   ```
+2. Embeddings: usar **modelo open source local** `Xenova/all-MiniLM-L6-v2` con `@xenova/transformers` (corre en Node, $0, sin API). Dimensión 384.
+3. `knowledgeBase.ts`: array TypeScript con `{ title, content, type: 'project'|'testimonial'|'service' }`. Mínimo 10 entradas reales de Omar.
+4. `seed-rag.ts`: lee `knowledgeBase.ts`, genera embedding por entrada, hace `upsert` a Supabase. Correr con `npx tsx scripts/seed-rag.ts`.
+5. `rag.ts` exporta `searchSimilar(query, topK=3)` que genera embedding del query y hace `match_chunks` SQL.
+6. En `route.ts`, antes de `generateReply`, llamar `const context = await searchSimilar(message); const fullPrompt = systemPrompt + '\n\nCONTEXTO RELEVANTE:\n' + context.map(c => c.content).join('\n')`.
+
+**Aceptación:**
+- [ ] `select count(*) from knowledge_chunks` retorna ≥ 10 filas.
+- [ ] Pregunta de prueba "¿qué proyectos has hecho con Next.js?" → respuesta del bot menciona al menos un proyecto real del `knowledgeBase.ts` (no inventa).
+- [ ] Latencia añadida por RAG: ≤ 300ms.
+- [ ] Reseed (`npx tsx scripts/seed-rag.ts`) es idempotente (no duplica filas).
+
+**Si algo falla:**
+- "Modelo `all-MiniLM` no descarga" → primera ejecución descarga ~80 MB, sé paciente. Si falla, fallback: cachealo en `~/.cache/huggingface/`.
+- "Resultados irrelevantes" → revisa que el `content` de cada chunk sea ≤ 500 tokens (chunks grandes diluyen la búsqueda).
+
+---
+
+### [ ] Tarea 28.4 — Voz: input por micrófono usando Web Speech API (gratis, navegador)
+
+**Para qué sirve.** Móvil es el 70% del tráfico. Escribir es lento. Hablarle al chat sube tasa de envío de mensajes 3-4× según UX research.
+
+**Archivos afectados:**
+- `src/components/shared/ChatWidget.tsx` (añadir botón micrófono)
+- `src/hooks/useSpeechToText.ts` (nuevo)
+
+**Implementación:**
+1. Hook `useSpeechToText` que envuelve `window.SpeechRecognition || window.webkitSpeechRecognition`.
+2. Configurar idioma según `language` ('es-CO' o 'en-US').
+3. Botón micrófono al lado del input. Estados: idle / escuchando (pulso animado) / procesando.
+4. Mientras escucha, mostrar transcripción en tiempo real en el input.
+5. Detección de silencio (4s) → auto-stop y enviar.
+6. Fallback elegante: si el navegador no soporta (Firefox, Safari iOS antiguo) → ocultar botón, no romper UI.
+
+**Aceptación:**
+- [ ] Botón micrófono visible en Chrome desktop y Chrome Android.
+- [ ] Hablar "hola, necesito un sitio web" lo transcribe correctamente y lo envía.
+- [ ] En Firefox no aparece el botón (no rompe nada).
+- [ ] Permisos de micrófono se piden al primer click, no al cargar.
+- [ ] Lighthouse Accessibility ≥ 95 (botón con `aria-label`).
+
+**Si algo falla:**
+- "Permiso denegado" → muestra toast: "Permite el micrófono en la barra de URL".
+- "Transcripción inglés en español" → fuerza `recognition.lang = 'es-CO'` antes de `start()`.
+
+---
+
+### [ ] Tarea 28.5 — Multi-idioma: añadir português brasileiro (mercado LATAM 215M personas)
+
+**Para qué sirve.** Brasil es el mercado tech más grande de LATAM. Cobrar en USD a clientes brasileños vale 5× lo que vale a clientes colombianos. Solo hay que traducir.
+
+**Archivos afectados:**
+- `src/i18n/locales/pt.ts` (nuevo)
+- `src/lib/chatbot/systemPrompt.ts` (añadir caso `pt`)
+- `src/lib/chatbot/persona.ts` (variante PT-BR)
+- `src/components/shared/ChatWidget.tsx` (selector idioma con `pt`)
+- Type `Language = 'es' | 'en'` → `'es' | 'en' | 'pt'` en todos los lugares (zod, types)
+
+**Implementación:**
+1. Traducir todas las strings UI de `i18n/locales/es.ts` a `pt.ts` (DeepL gratis tier para acelerar; revisar a mano).
+2. `systemPrompt.ts`: bloque `if (language === 'pt')` con prompt en portugués brasileño, mismas reglas de venta.
+3. Detección automática: `navigator.language.startsWith('pt')` → setea `pt` por defecto.
+4. Selector visible en widget con banderas: 🇨🇴 ES / 🇺🇸 EN / 🇧🇷 PT.
+
+**Aceptación:**
+- [ ] Cargar la web desde un navegador con `navigator.language='pt-BR'` muestra UI en portugués.
+- [ ] Conversación de prueba en PT-BR genera respuestas correctas en portugués.
+- [ ] `npm run build` sin errores de tipos por el nuevo `'pt'`.
+- [ ] Suite de evaluación FASE 11 corre también para `pt` con ≥ 85% pass rate (puede ser menor que es/en al inicio).
+
+**Si algo falla:**
+- "El bot mezcla español y portugués" → reforzar en el prompt: "Responde EXCLUSIVAMENTE en português brasileiro. Si el usuario escribe en otro idioma, responde en portugués y ofrece cambiar idioma."
+
+---
+
+### [ ] Tarea 28.6 — Cal.com con timezone auto-detectado del visitante
+
+**Para qué sirve.** Hoy si un cliente de México ve Cal.com en hora Bogotá, se confunde y NO agenda. Auto-detectar y mostrar en su zona horaria sube conversión de agendado 30%+.
+
+**Archivos afectados:**
+- `src/components/shared/ChatWidget.tsx` (al construir URL Cal.com, añadir `?timezone=...`)
+- `src/lib/chatbot/calcom.ts` (nuevo helper)
+
+**Implementación:**
+1. Helper `buildCalcomUrl(baseUrl)`:
+   ```ts
+   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+   return `${baseUrl}?timezone=${encodeURIComponent(tz)}`;
+   ```
+2. Usar en cualquier lugar donde se renderice un link a `NEXT_PUBLIC_CALCOM_*`.
+3. También pasar `?name=` y `?email=` si están en `visitorMeta` (autorelleno del form Cal.com).
+
+**Aceptación:**
+- [ ] Click en "agendar" desde un navegador en Bogotá → Cal.com abre mostrando hora Bogotá.
+- [ ] Cambiar timezone del SO a New York y recargar → Cal.com abre mostrando hora ET.
+- [ ] Si `visitorMeta.name` existe, el campo "Tu nombre" del Cal.com llega rellenado.
+
+**Si algo falla:**
+- "Cal.com ignora el query param" → revisa que el evento del Cal.com tenga "Show timezone selector" activo.
+
+---
+
+### [ ] Tarea 28.7 — A/B testing de aperturas (qué saludo cierra más)
+
+**Para qué sirve.** Saber con datos qué primera frase del bot convierte más leads. Sin medir, optimizas a ciegas.
+
+**Archivos afectados:**
+- Migración SQL: añadir columna `variant TEXT` a `conversations`
+- `src/lib/chatbot/openings.ts` (nuevo, array de variantes)
+- `src/app/api/chat/route.ts` (asignar variant en creación de conversación)
+- `src/app/admin/page.tsx` (añadir card "Conversión por variante")
+
+**Implementación:**
+1. SQL: `ALTER TABLE conversations ADD COLUMN variant TEXT;`
+2. `openings.ts`: array con 4 variantes (saludo formal, casual, pregunta directa, propuesta de valor). Cada una con id `'A'|'B'|'C'|'D'`.
+3. En route.ts al crear conversación: `const variant = ['A','B','C','D'][Math.floor(Math.random()*4)];` y guardar.
+4. La primera respuesta del bot usa el opening de la variante asignada.
+5. Admin: query `SELECT variant, COUNT(*), COUNT(*) FILTER (WHERE EXISTS (SELECT 1 FROM leads WHERE conversation_id = conversations.id)) AS leads_count FROM conversations GROUP BY variant`.
+6. Tabla en `/admin` con tasa de conversión por variante.
+
+**Aceptación:**
+- [ ] 4 conversaciones nuevas distribuyen entre las 4 variantes (no todas A).
+- [ ] Admin muestra columna "tasa lead/conv %" por variante.
+- [ ] Tras 50 conversaciones, identificar la mejor variante (mayor %).
+
+**Si algo falla:**
+- "No hay datos suficientes" → necesitas ≥ 100 conversaciones por variante para significancia. Mientras tanto, no decisiones drásticas.
+
+---
+
+### [ ] Tarea 28.8 — Calculadora interactiva de presupuesto (lead magnet sin chatbot)
+
+**Para qué sirve.** Mucha gente no quiere chatear pero sí quiere saber "cuánto me costaría". Calculadora pública = leads sin fricción. Pide email al final para enviar PDF.
+
+**Archivos afectados:**
+- `src/app/calculadora/page.tsx` (nuevo, ruta pública)
+- `src/components/calculator/BudgetCalculator.tsx` (nuevo)
+- `src/lib/calculator/pricing.ts` (lógica de precios derivada de `catalog.ts`)
+- `src/app/api/calculator/route.ts` (POST: guarda lead + envía PDF por email)
+
+**Implementación:**
+1. Wizard 5 pasos: tipo de proyecto → features → urgencia → industria → email.
+2. En cada paso muestra precio estimado actualizándose en vivo.
+3. Al final: form de email + botón "Enviar propuesta personalizada en PDF".
+4. POST `/api/calculator`: genera PDF con `pdf-lib` (open source, MIT), guarda lead con `source='calculator'`, envía PDF por Resend.
+5. SEO: meta description "Calcula cuánto cuesta tu sitio web/app en 2 minutos. Gratis, sin compromiso."
+6. Link prominente en navbar y al final de cada página.
+
+**Aceptación:**
+- [ ] `/calculadora` carga sin error.
+- [ ] Completar el flujo en móvil sin ningún tap fuera de pantalla.
+- [ ] Lead queda en DB con `source='calculator'` y `budget` = monto estimado.
+- [ ] Email con PDF llega en < 60s.
+- [ ] Lighthouse Performance ≥ 90 en `/calculadora`.
+
+**Si algo falla:**
+- "PDF se ve mal en móvil" → genera tamaño A4, no Letter, y prueba abrir en iPhone.
+
+---
+
+### [ ] Tarea 28.9 — Análisis de imagen: cliente sube screenshot y bot lo entiende (Llama Vision)
+
+**Para qué sirve.** "Quiero algo así" + screenshot de competencia es la conversación real de ventas. Hoy el bot no puede ver. Con Llama 3.2 Vision (gratis en Groq) sí.
+
+**Archivos afectados:**
+- `src/components/shared/ChatWidget.tsx` (botón adjuntar imagen)
+- `src/lib/chatbot/providers/groq.ts` (modelo `llama-3.2-11b-vision-preview` cuando hay imagen)
+- `src/app/api/chat/route.ts` (aceptar `imageDataUrl` opcional en payload)
+- `src/app/api/chat/upload/route.ts` (nuevo, valida tamaño/tipo, devuelve data URL)
+
+**Implementación:**
+1. Botón "📎" en widget que abre file picker, accept=`image/jpeg,image/png,image/webp`.
+2. Validación: ≤ 4 MB, ≤ 1024×1024 (redimensionar client-side con canvas).
+3. Convertir a base64 data URL antes de enviar al backend.
+4. En backend, si `imageDataUrl` viene → forzar provider Groq (único con vision en la cadena), modelo `llama-3.2-11b-vision-preview`, formato Groq vision.
+5. Resto de proveedores: si llega imagen y son llamados, ignoran la imagen y responden "no puedo ver imágenes con este proveedor, intenta de nuevo en un momento".
+
+**Aceptación:**
+- [ ] Subir screenshot de un sitio web → bot describe lo que ve y propone un proyecto similar.
+- [ ] Imagen de 5 MB → frontend la rechaza con mensaje claro.
+- [ ] PNG transparente funciona.
+- [ ] Sin imagen, los demás proveedores siguen funcionando normal (failover intacto).
+
+**Si algo falla:**
+- "Groq dice 'invalid image format'" → asegúrate que el data URL incluya el prefijo `data:image/png;base64,`.
+- "Costo se dispara" → vision sí cuenta tokens distinto. Limita a 1 imagen por conversación con flag `had_image_analysis`.
+
+---
+
+### [ ] Tarea 28.10 — Auto-resumen a Notion (CRM gratis para Omar)
+
+**Para qué sirve.** El admin de FASE 20 es para revisar puntual; Notion es donde Omar trabajará el pipeline diario. Sin un CRM, leads se pierden en el ruido.
+
+**Archivos afectados:**
+- `src/lib/chatbot/notion.ts` (nuevo)
+- `src/app/api/chat/route.ts` (al detectar lead, también push a Notion)
+- `src/config/env.ts` (`NOTION_API_KEY`, `NOTION_DATABASE_ID` opcionales)
+
+**Implementación:**
+1. `npm install @notionhq/client` (oficial, MIT).
+2. Notion: crear database con columnas: Nombre, Email, Tipo (Cliente/Reclutador), Servicio, Presupuesto, Estado (Nuevo/Contactado/Propuesta/Ganado/Perdido), Conversación URL, Fecha, Notas.
+3. Helper `pushLeadToNotion(lead, conversationUrl)` que hace `notion.pages.create(...)`.
+4. En route.ts, después de `extractLead` y guardar en Supabase, llamar `pushLeadToNotion` (no bloqueante: `.catch(console.error)`).
+5. Si `NOTION_API_KEY` no existe → skip silencioso (la integración es opcional).
+
+**Aceptación:**
+- [ ] Lead nuevo aparece en la database de Notion en < 10s.
+- [ ] Estado por defecto = "Nuevo".
+- [ ] Click en "Conversación URL" abre `/admin/leads/<id>`.
+- [ ] Si borras `NOTION_API_KEY` del `.env.local`, todo sigue funcionando (solo no llega a Notion).
+
+**Si algo falla:**
+- "Notion dice 401" → la integración hay que **invitarla** explícitamente al database (botón "Share" → "Add connections").
+- "Propiedades no coinciden" → respeta exactamente los nombres de columna; Notion API es case-sensitive.
+
+---
+
+## FASE 29 — Motor de tráfico orgánico (sin tráfico no hay leads, sin leads no hay clientes)
+
+> **Motivación.** El mejor chatbot del mundo no sirve si nadie llega al portafolio. Esta fase construye un **motor de tráfico orgánico SEO + distribución** que opera 24/7 sin Omar tener que postear todos los días. Todo open source, todo $0.
+>
+> **Verificación 2026-04-18:** todas las herramientas son gratis y no requieren tarjeta.
+
+**Stack adicional (todo gratis):**
+- **Blog:** MDX con `next-mdx-remote` (open source, MIT)
+- **Sitemap:** generación nativa Next.js 15
+- **Schema.org:** JSON-LD inline en cada página
+- **OG dinámicas:** `@vercel/og` (gratis en Vercel free)
+- **Newsletter:** Resend (ya activo en FASE 28.2) + Supabase tabla `subscribers`
+- **Analytics:** Plausible Community Edition (self-hosted gratis) o Vercel Analytics (free tier)
+- **Distribución:** GitHub Actions (gratis 2000 min/mes) para auto-submit a directorios
+
+---
+
+### [ ] Tarea 29.1 — Blog MDX con generación estática (1 post/semana de SEO long-tail)
+
+**Para qué sirve.** Cada post = 1 página indexada en Google = nuevo punto de entrada de tráfico. 52 posts en 1 año = 52 ventanas para que te encuentren.
+
+**Archivos afectados:**
+- `src/app/blog/page.tsx` (lista posts)
+- `src/app/blog/[slug]/page.tsx` (post individual)
+- `content/blog/*.mdx` (carpeta nueva con posts)
+- `src/lib/blog.ts` (lectura/parseo MDX)
+
+**Implementación:**
+1. `npm install gray-matter next-mdx-remote rehype-pretty-code shiki` (todos open source MIT).
+2. Cada post `.mdx` con frontmatter: `title, slug, date, description, tags, image, author`.
+3. Lista paginada en `/blog`, 10 por página.
+4. Post individual con: tabla de contenidos, tiempo de lectura, autor, fecha, tags clicables, CTA al chatbot al final.
+5. Componente `<NewsletterCTA />` reusable insertable dentro de MDX.
+6. Crear primer post template: `0001-como-elegir-dev-web-2026.mdx`.
+
+**Aceptación:**
+- [ ] `/blog` lista posts ordenados por fecha desc.
+- [ ] `/blog/<slug>` renderiza correctamente con syntax highlighting.
+- [ ] `npm run build` genera estáticamente cada post (`.next/server/app/blog/<slug>.html`).
+- [ ] Lighthouse Performance ≥ 95 en post individual.
+
+**Si algo falla:**
+- "MDX no compila" → revisa que no haya `<` sin escapar en el contenido.
+
+---
+
+### [ ] Tarea 29.2 — SEO programático: rutas dinámicas por servicio × ciudad
+
+**Para qué sirve.** Generar 50-200 páginas indexables del tipo `/servicios/desarrollo-web/bogota`, `/servicios/chatbot-ia/medellin`. Cada combinación servicio×ciudad atrapa una búsqueda local específica.
+
+**Archivos afectados:**
+- `src/app/servicios/[servicio]/[ciudad]/page.tsx` (nuevo)
+- `src/data/servicios.ts` (lista de servicios + plantillas)
+- `src/data/ciudades.ts` (ciudades LATAM target)
+
+**Implementación:**
+1. `servicios.ts`: 5-10 servicios (desarrollo web, chatbots IA, automatización, e-commerce, etc.) con plantilla H1/H2/CTA.
+2. `ciudades.ts`: 20 ciudades (Bogotá, Medellín, Cali, CDMX, Buenos Aires, Lima, Santiago, Montevideo, etc.).
+3. `generateStaticParams()` en el page → genera todas las combinaciones (5 × 20 = 100 páginas).
+4. Cada página con título único, H1 con `{servicio} en {ciudad}`, contenido auto-generado pero NO duplicado (variar 2-3 párrafos).
+5. CTA al chatbot con prompt pre-rellenado: "Hola, vengo de la página de {servicio} en {ciudad}".
+
+**Aceptación:**
+- [ ] `npm run build` genera ≥ 100 páginas estáticas en `/servicios/*`.
+- [ ] Cada página tiene meta title y description únicos (no duplicados).
+- [ ] Lighthouse SEO = 100 en muestra aleatoria.
+- [ ] Sin penalización por contenido duplicado (verificar con `siteliner.com` gratis).
+
+**Si algo falla:**
+- "Google marca contenido duplicado" → varía más los párrafos por ciudad (datos locales, ejemplos locales).
+
+---
+
+### [ ] Tarea 29.3 — Sitemap dinámico + robots.txt
+
+**Para qué sirve.** Sin sitemap, Google indexa solo lo que encuentra; con sitemap, le dices exactamente qué indexar y cuándo.
+
+**Archivos afectados:**
+- `src/app/sitemap.ts` (nuevo, Next.js 15 nativo)
+- `src/app/robots.ts` (nuevo)
+
+**Implementación:**
+1. `sitemap.ts` exporta función que retorna array `MetadataRoute.Sitemap`:
+   - rutas estáticas (/, /sobre-mi, /proyectos, /servicios, /blog, /calculadora)
+   - rutas dinámicas (cada post de blog, cada servicio×ciudad)
+   - cada entrada con `lastModified`, `changeFrequency`, `priority`
+2. `robots.ts` con `Allow: /` y `Sitemap: https://<tu-dominio>/sitemap.xml`.
+3. Bloquear `/admin/*` y `/api/*` del crawling.
+
+**Aceptación:**
+- [ ] `https://<dominio>/sitemap.xml` retorna XML válido.
+- [ ] Google Search Console acepta el sitemap sin errores.
+- [ ] `https://<dominio>/robots.txt` muestra reglas correctas.
+
+**Si algo falla:**
+- "Sitemap muestra rutas con `localhost`" → asegúrate de leer `process.env.NEXT_PUBLIC_SITE_URL` (vía `src/config/env.ts`).
+
+---
+
+### [ ] Tarea 29.4 — Schema.org JSON-LD (Person, Service, FAQPage, BreadcrumbList)
+
+**Para qué sirve.** Rich snippets en Google: estrellas, FAQs desplegables, breadcrumbs visuales. Aumenta CTR del resultado 20-30%.
+
+**Archivos afectados:**
+- `src/components/seo/JsonLd.tsx` (nuevo, server component)
+- `src/app/layout.tsx` (`<JsonLd type="Person" />` global)
+- `src/app/servicios/[servicio]/[ciudad]/page.tsx` (`<JsonLd type="Service" />`)
+- `src/app/blog/[slug]/page.tsx` (`<JsonLd type="Article" />`)
+- Cualquier página con FAQ (`<JsonLd type="FAQPage" />`)
+
+**Implementación:**
+1. Componente `JsonLd` que recibe `type` y `data`, renderiza `<script type="application/ld+json">{JSON.stringify(data)}</script>`.
+2. Datos `Person` para Omar: name, url, sameAs (links GitHub/LinkedIn), jobTitle, worksFor.
+3. `Service` por servicio×ciudad.
+4. `Article` por post de blog.
+5. Validar con https://search.google.com/test/rich-results
+
+**Aceptación:**
+- [ ] Rich Results Test pasa sin warnings en Person, Service, Article.
+- [ ] FAQ del homepage muestra preview FAQ-rich-snippet en el test.
+- [ ] No duplicar JSON-LD en páginas anidadas.
+
+**Si algo falla:**
+- "Rich Results dice 'unparseable structured data'" → JSON inválido; usa `JSON.stringify` con tipos estrictos.
+
+---
+
+### [ ] Tarea 29.5 — Open Graph images dinámicas por ruta (Vercel OG)
+
+**Para qué sirve.** Cuando alguien comparte tu post en LinkedIn/Twitter, ve una imagen rica con título y branding. CTR de un share con OG decente vs. genérico: 5×.
+
+**Archivos afectados:**
+- `src/app/api/og/route.tsx` (nuevo, edge runtime)
+- Cada layout/page exporta `generateMetadata` con `openGraph.images`
+
+**Implementación:**
+1. `npm install @vercel/og` (incluido en Vercel, gratis).
+2. Endpoint OG:
+   ```tsx
+   export const runtime = 'edge';
+   export async function GET(req) {
+     const { searchParams } = new URL(req.url);
+     const title = searchParams.get('title') ?? 'Omar Hernández';
+     return new ImageResponse(<div>...</div>, { width: 1200, height: 630 });
+   }
+   ```
+3. En cada `generateMetadata` de página: `openGraph: { images: [`/api/og?title=${encodeURIComponent(title)}`] }`.
+4. Diseño: fondo gradient con colores del portafolio, logo, título grande, autor.
+
+**Aceptación:**
+- [ ] Compartir cualquier URL del portafolio en LinkedIn muestra OG personalizada.
+- [ ] Validar con https://www.opengraph.xyz/
+- [ ] OG image carga en < 1s (edge runtime).
+
+**Si algo falla:**
+- "Imagen sale en blanco" → fonts deben pasarse explícitas a `ImageResponse` o usar fonts del sistema.
+
+---
+
+### [ ] Tarea 29.6 — Lead magnets descargables: PDFs gated por email
+
+**Para qué sirve.** "Guía gratuita: cómo elegir desarrollador en 2026" → email del visitante. Lead frío convertible vía newsletter (29.7).
+
+**Archivos afectados:**
+- `src/app/recursos/page.tsx` (nuevo, lista de descargables)
+- `src/app/api/leadmagnet/route.ts` (POST: guarda email, envía PDF por Resend)
+- `public/leadmagnets/*.pdf` (PDFs reales de Omar)
+- Migración: tabla `subscribers` (email, source, created_at)
+
+**Implementación:**
+1. Crear 3 PDFs reales (10-15 páginas cada uno):
+   - "Checklist: ¿qué pedirle a un desarrollador antes de pagarle?"
+   - "Guía: precios reales de desarrollo web en LATAM 2026"
+   - "Plantilla: brief de proyecto digital"
+2. Página `/recursos` con cards. Cada card pide email para desbloquear.
+3. POST `/api/leadmagnet`: validar email zod, upsert en `subscribers`, enviar PDF como attachment con Resend.
+4. Después de 24h, email automático "¿pudiste leer la guía?" → conversación → Cal.com.
+
+**Aceptación:**
+- [ ] Pedir un PDF → email llega en < 60s con attachment.
+- [ ] Email de seguimiento llega 24h después.
+- [ ] `subscribers` tiene la fila con source correcto.
+
+**Si algo falla:**
+- "Resend rechaza attachment > 10 MB" → comprime PDFs (https://www.ilovepdf.com/compress_pdf, gratis).
+
+---
+
+### [ ] Tarea 29.7 — Newsletter (Resend + Supabase, sin servicios pagos)
+
+**Para qué sirve.** Mantener relación con leads fríos por meses hasta que estén listos para comprar. CAC orgánico = $0.
+
+**Archivos afectados:**
+- `src/app/api/newsletter/subscribe/route.ts` (nuevo)
+- `src/app/api/newsletter/send/route.ts` (cron mensual)
+- `src/components/newsletter/NewsletterForm.tsx` (form embebible)
+- `content/newsletters/*.md` (archivo por edición)
+
+**Implementación:**
+1. Form simple email + botón "Suscribirme" en blog footer y homepage.
+2. Endpoint subscribe: upsert en `subscribers` con `confirmed=false`, envía email de confirmación con link único `/api/newsletter/confirm?token=...`.
+3. Cron mensual (Vercel Cron, gratis): leer último archivo `.md` en `content/newsletters/`, renderizar a HTML, enviar a todos los `confirmed=true`.
+4. Footer del email: link de unsubscribe one-click.
+
+**Aceptación:**
+- [ ] Suscribirse → email de confirmación llega.
+- [ ] Click confirma → `confirmed=true` en DB.
+- [ ] Cron mensual envía a todos los confirmados.
+- [ ] Unsubscribe one-click funciona (sin login).
+
+**Si algo falla:**
+- "Resend rate limit en envío masivo" → free tier permite 100 emails/día, batch en chunks de 100 con `setTimeout`.
+
+---
+
+### [ ] Tarea 29.8 — Analytics: Vercel Analytics (free) o Plausible self-hosted (open source)
+
+**Para qué sirve.** Saber qué páginas convierten, qué tráfico viene de dónde, qué CTAs funcionan. Sin esto, optimizas a ciegas.
+
+**Archivos afectados:**
+- `src/app/layout.tsx` (script analytics)
+- `package.json` (`@vercel/analytics` o `plausible-tracker`)
+
+**Implementación:**
+**Opción A (más simple, recomendada):** Vercel Analytics free.
+1. `npm install @vercel/analytics`
+2. En `layout.tsx`: `<Analytics />` antes de `</body>`.
+3. Dashboard auto-disponible en Vercel.
+
+**Opción B (más privacy, GDPR-ready):** Plausible Community Edition self-hosted en Fly.io free tier.
+1. Deploy Plausible CE en Fly.io (gratis 3 VMs).
+2. `<script defer data-domain="<dominio>" src="https://<plausible>/js/script.js"></script>` en layout.
+
+**Aceptación:**
+- [ ] Pageviews aparecen en dashboard tras 24h.
+- [ ] Tracking de eventos custom: `chatbot_opened`, `lead_created`, `cta_clicked`.
+- [ ] Sin cookies (cumplimiento GDPR).
+
+**Si algo falla:**
+- "No registra eventos" → bloqueadores de ads bloquean Vercel Analytics; Plausible los evita.
+
+---
+
+### [ ] Tarea 29.9 — RSS feed (descubrimiento por agregadores y bots)
+
+**Para qué sirve.** RSS sigue siendo la columna vertebral de descubrimiento de contenido técnico (Feedly, Inoreader, Mastodon). Cada nuevo post llega a tus suscriptores RSS sin que tengan que abrir el sitio.
+
+**Archivos afectados:**
+- `src/app/feed.xml/route.ts` (nuevo)
+- `src/app/layout.tsx` (link rel="alternate" type="application/rss+xml")
+
+**Implementación:**
+1. Endpoint que retorna XML RSS 2.0 con últimos 20 posts.
+2. Cada `<item>` con title, link, description, pubDate, guid.
+3. Header `Content-Type: application/xml; charset=utf-8`.
+4. Validar con https://validator.w3.org/feed/
+
+**Aceptación:**
+- [ ] `/feed.xml` retorna XML válido (validator W3C pasa).
+- [ ] Suscribirse desde Feedly → posts aparecen.
+
+**Si algo falla:**
+- "Feed no actualiza" → revisa cache headers (`Cache-Control: max-age=300`).
+
+---
+
+### [ ] Tarea 29.10 — Auto-submit a directorios LATAM y Hacker News (GitHub Actions)
+
+**Para qué sirve.** Backlinks de calidad = ranking SEO. Hacerlo a mano es tedioso; automatizar = horas recuperadas.
+
+**Archivos afectados:**
+- `.github/workflows/submit-directories.yml` (nuevo)
+- `scripts/submit-directories.ts` (nuevo)
+
+**Implementación:**
+1. Lista de directorios target (todos free, sin pago):
+   - dev.to (POST API gratis con token)
+   - hashnode.com (cross-posting con canonical)
+   - hackernoon.com (RSS auto-import)
+   - producthunt.com (manual primer launch, después tracking)
+   - betalist.com (form gratis)
+   - sourcetool.com, alternativeto.net, etc.
+2. GitHub Action mensual: lee últimos posts del feed.xml, los cross-postea via API a dev.to y Hashnode con canonical URL apuntando al portafolio (no penalización SEO).
+3. Notifica a Telegram cuando termina.
+
+**Aceptación:**
+- [ ] Workflow corre mensual sin errores en GitHub Actions.
+- [ ] Post nuevo aparece en dev.to con canonical correcto.
+- [ ] Telegram recibe notificación.
+
+**Si algo falla:**
+- "dev.to API 401" → revisa que `DEV_TO_API_KEY` esté en GitHub Secrets.
+
+---
+
+## FASE 30 — Escalabilidad operacional (para cuando lleguen miles de leads y NO des abasto)
+
+> **Motivación.** Cuando las FASE 28-29 funcionen, vas a recibir más leads de los que puedes responder solo. Esta fase prepara la infraestructura para subcontratar/contratar sin que el sistema explote: tickets, roles, automatización de onboarding, facturación, status page, backups robustos.
+>
+> **Quién la necesita.** Probablemente no en el mes 1. Definitivamente sí cuando estés cerrando ≥ 10 clientes/mes. Implementar JUSTO ANTES de necesitar, no después.
+>
+> **Verificación 2026-04-18:** todas las herramientas son open source / free tier permanente sin tarjeta.
+
+**Stack adicional (todo gratis):**
+- **Tickets:** tabla Supabase + UI custom (no usar Zendesk pago)
+- **Time tracking:** columnas Supabase
+- **Facturación CO:** `pdf-lib` (open source MIT)
+- **Webhooks:** `svix-react` (open source) o implementación nativa fetch
+- **Status page:** Uptime Kuma (open source, self-host en Fly.io free)
+- **Backups:** Cloudflare R2 (10 GB gratis sin tarjeta)
+
+---
+
+### [ ] Tarea 30.1 — Auto-onboarding del cliente: form → contrato firmado → pago → kickoff
+
+**Para qué sirve.** Eliminar el ping-pong manual cliente↔Omar antes de empezar el proyecto. Sistema lleva al cliente solo desde "acepto" hasta "proyecto iniciado".
+
+**Archivos afectados:**
+- `src/app/onboarding/[token]/page.tsx` (wizard 4 pasos: brief → contrato → pago → confirmación)
+- `src/app/api/onboarding/*` (endpoints por paso)
+- `src/lib/contracts/generate.ts` (genera contrato PDF firmable digital)
+
+**Implementación:**
+1. Lead acepta propuesta → sistema genera token único → email con link `/onboarding/<token>`.
+2. Paso 1: brief detallado (form).
+3. Paso 2: contrato PDF generado con datos del lead, firma digital con DocuSeal (open source, self-host).
+4. Paso 3: link de pago 50% (FASE 18).
+5. Paso 4: confirmación + invitación a Slack/Telegram del proyecto.
+6. Notion: estado del lead pasa a "En proceso" automáticamente.
+
+**Aceptación:**
+- [ ] Flujo completo end-to-end con lead de prueba en < 15 min.
+- [ ] Contrato firmado queda almacenado en Supabase Storage.
+- [ ] Pago confirmado dispara cambio de estado en Notion + Telegram.
+
+**Si algo falla:**
+- "DocuSeal complejo" → fallback: email con PDF y firma manual escaneada.
+
+---
+
+### [ ] Tarea 30.2 — Sistema de tickets en `/admin` (no más WhatsApp infinito)
+
+**Para qué sirve.** Cuando tienes 10 clientes activos, WhatsApp/Telegram se vuelve caos. Tickets = orden + historial + asignable.
+
+**Archivos afectados:**
+- Migración: tablas `tickets`, `ticket_messages`
+- `src/app/admin/tickets/page.tsx` (lista)
+- `src/app/admin/tickets/[id]/page.tsx` (detalle + responder)
+- `src/app/api/tickets/*` (CRUD)
+
+**Implementación:**
+1. SQL: `tickets (id, project_id, title, status, priority, assigned_to, created_at)` y `ticket_messages (ticket_id, sender, content, attachments, created_at)`.
+2. Ticket creable desde admin o desde portal cliente (futuro).
+3. Estados: open / in_progress / waiting_client / closed.
+4. Notificación Telegram al asignado cuando hay nuevo ticket o respuesta.
+5. SLA visual: ticket > 24h sin respuesta → rojo.
+
+**Aceptación:**
+- [ ] Crear ticket de prueba, responder, cerrar.
+- [ ] Lista filtrable por estado/prioridad.
+- [ ] Notificación Telegram correcta.
+
+**Si algo falla:**
+- "Adjuntos no suben" → usa Supabase Storage (1 GB gratis incluido).
+
+---
+
+### [ ] Tarea 30.3 — Time tracking simple integrado (cuánto tiempo invierto por cliente)
+
+**Para qué sirve.** Saber rentabilidad real por cliente. "Cliente A me paga $500 pero le invierto 40h → $12.5/h, malo." Sin medir, no sabes a quién subir el precio o despedir.
+
+**Archivos afectados:**
+- Migración: tabla `time_entries (project_id, description, started_at, stopped_at, duration_seconds)`
+- `src/app/admin/timer/page.tsx` (botón start/stop por proyecto)
+- `src/app/admin/reports/time/page.tsx` (reporte horas por cliente)
+
+**Implementación:**
+1. Botón flotante en admin: "▶ Iniciar tracking" → seleccionar proyecto → entrada con `started_at = now()`.
+2. Botón "■ Detener" → `stopped_at = now()`, calcula `duration_seconds`.
+3. Reporte: tabla por cliente con horas totales, tarifa, ingreso, ratio $/h.
+
+**Aceptación:**
+- [ ] Iniciar y detener tracker registra entrada correcta.
+- [ ] Reporte muestra horas y $/h por cliente.
+- [ ] Funciona offline (queue local + sync) — opcional v2.
+
+**Si algo falla:**
+- "Olvido apagar el timer" → cron cierra entradas > 8h con flag `auto_closed=true`.
+
+---
+
+### [ ] Tarea 30.4 — Facturación Colombia básica (PDF DIAN-friendly con `pdf-lib`)
+
+**Para qué sirve.** Cliente paga → necesitas factura. Manualmente es 10 min/cliente. Automatizado es 0 min.
+
+**Archivos afectados:**
+- `src/lib/invoicing/generate.ts` (genera PDF con `pdf-lib`)
+- `src/app/api/invoices/[id]/route.ts` (GET retorna PDF)
+- Migración: tabla `invoices (id, lead_id, amount, currency, status, pdf_url, created_at)`
+
+**Implementación:**
+1. Al confirmar pago (FASE 18) → generar `invoice` automática con número correlativo.
+2. PDF con: datos Omar (NIT, dirección, régimen), datos cliente, concepto, monto, IVA si aplica, total.
+3. Almacenar en Supabase Storage. Email al cliente con link.
+4. Si Omar pasa a régimen común DIAN: integrar después con Siigo/Alegra (NO ahora, sería over-engineering).
+
+**Aceptación:**
+- [ ] Pago confirmado → factura PDF generada y enviada por email en < 30s.
+- [ ] PDF abre correctamente en Adobe Reader.
+- [ ] Numeración correlativa sin saltos.
+
+**Si algo falla:**
+- "DIAN exige factura electrónica" → solo aplica desde cierto umbral de ingresos. Verifica tu régimen actual con contador.
+
+---
+
+### [ ] Tarea 30.5 — Plantillas de propuesta por nicho (no más copy-paste manual)
+
+**Para qué sirve.** Una propuesta para "clínica dental" debe sonar distinta a una para "e-commerce de moda". Plantillas por nicho = 80% del trabajo automatizado.
+
+**Archivos afectados:**
+- `public/docs/propuesta-template.md` (existente, generalizar)
+- `public/docs/templates/clinica-dental.md`, `e-commerce.md`, `restaurante.md`, etc.
+- `src/lib/proposals/generate.ts` (selecciona plantilla por `lead.industry`)
+
+**Implementación:**
+1. Crear ≥ 5 plantillas por industria que defina FASE 24.1 (nicho).
+2. Cada plantilla con merge fields `{{customer_name}}`, `{{pain_points}}`, `{{stack}}`, `{{timeline}}`, `{{price}}`.
+3. Endpoint `/proposal/<lead_id>` selecciona plantilla automáticamente según `lead.industry`.
+
+**Aceptación:**
+- [ ] 5 plantillas distintas en `/public/docs/templates/`.
+- [ ] Lead con `industry='clinica-dental'` genera propuesta con esa plantilla.
+- [ ] Si `industry` no matchea ninguna → usa la genérica.
+
+**Si algo falla:**
+- "Sin nicho definido" → bloqueador. Volver a Tarea 24.1 antes de esto.
+
+---
+
+### [ ] Tarea 30.6 — Roles y permisos en `/admin` (Omar admin + asistente futuro)
+
+**Para qué sirve.** Cuando contrates a alguien que responda leads, NO debe ver tus números de facturación. RBAC básico.
+
+**Archivos afectados:**
+- Migración: tabla `users (id, email, role enum)` con roles `owner | assistant | viewer`
+- `src/middleware.ts` (validar rol por ruta)
+- Cada page de admin: comprueba `requiredRole`
+
+**Implementación:**
+1. Roles: `owner` (todo), `assistant` (leads + tickets, no finanzas), `viewer` (solo lectura).
+2. Login Supabase Auth (gratis incluido).
+3. Middleware redirige según rol.
+
+**Aceptación:**
+- [ ] Crear usuario `assistant`, login → no ve `/admin/reports/time` ni `/admin/invoices`.
+- [ ] Owner ve todo.
+
+**Si algo falla:**
+- "Supabase Auth complejo" → empezar con magic link (más simple que password).
+
+---
+
+### [ ] Tarea 30.7 — Sistema de webhooks (eventos para integrar con cualquier herramienta futura)
+
+**Para qué sirve.** Que cuando llega un lead, además de Telegram/Notion, puedas dispararse cualquier cosa: Discord, Slack, Make.com, Zapier alternative gratis (n8n self-hosted).
+
+**Archivos afectados:**
+- Migración: tabla `webhooks (id, url, events text[], secret, active)`
+- `src/lib/events/dispatcher.ts` (dispara eventos a webhooks subscribed)
+- `src/app/admin/webhooks/page.tsx` (UI para registrar)
+
+**Implementación:**
+1. Eventos: `lead.created`, `lead.contacted`, `payment.received`, `project.started`, `ticket.opened`.
+2. Dispatcher: por cada evento, busca webhooks suscritos, hace POST con payload firmado HMAC.
+3. Retry policy: 3 intentos exponential backoff.
+
+**Aceptación:**
+- [ ] Crear webhook a webhook.site (testing gratis), disparar evento, recibe payload.
+- [ ] HMAC signature verifica correctamente.
+- [ ] Retry funciona con webhook que retorna 500.
+
+**Si algo falla:**
+- "Lock en Supabase con muchos webhooks" → dispatch async con `Promise.allSettled`.
+
+---
+
+### [ ] Tarea 30.8 — Status page público (transparencia + confianza enterprise)
+
+**Para qué sirve.** Cliente enterprise antes de firmar revisa "¿este servicio se cae?". Status page público = profesionalismo + transparencia.
+
+**Archivos afectados:**
+- Deployment Uptime Kuma en Fly.io free tier
+- DNS: subdominio `status.<tu-dominio>` apuntando a Fly
+- Link en footer del portafolio
+
+**Implementación:**
+1. Uptime Kuma (open source, MIT) deploy en Fly.io con `flyctl launch`.
+2. Configurar monitores: portafolio (HTTP 200), API chat, Supabase, Resend.
+3. Status page público con uptime histórico, incidents.
+4. Notificaciones a Telegram en down.
+
+**Aceptación:**
+- [ ] `status.<dominio>` carga.
+- [ ] Tirar el portafolio → status muestra rojo en < 1 min.
+- [ ] Telegram recibe alerta.
+
+**Si algo falla:**
+- "Fly free tier acabado" → Uptime Kuma local + cron pingea desde GitHub Actions.
+
+---
+
+### [ ] Tarea 30.9 — Backup multi-destino (Supabase → Cloudflare R2 free tier)
+
+**Para qué sirve.** FASE 21 ya tiene backup a un sitio. Multi-destino = redundancia. Si pierdes acceso a una cosa, queda la otra.
+
+**Archivos afectados:**
+- `scripts/backup.sh` (extender con upload a R2)
+- `.github/workflows/backup.yml` (cron semanal)
+
+**Implementación:**
+1. Cloudflare R2: 10 GB gratis sin tarjeta (verificado 2026-04).
+2. Script: `pg_dump` Supabase → comprimir → encriptar con `age` → subir a R2 con `wrangler r2 object put`.
+3. Retención: 12 backups (1 año).
+4. Restauración documentada en `OPERACION_DIARIA.md`.
+
+**Aceptación:**
+- [ ] Backup semanal corre en GitHub Actions sin error.
+- [ ] Archivo aparece en R2 dashboard cifrado.
+- [ ] Probar restauración a un Supabase de staging — funciona.
+
+**Si algo falla:**
+- "wrangler pide tarjeta" → no la pide para R2 free. Si te la pide, estás en plan paid por error.
+
+---
+
+### [ ] Tarea 30.10 — Documentación interna `/docs` (procesos repetibles para subcontratistas)
+
+**Para qué sirve.** Cuando contrates a alguien, le pasas un link, no un curso de 1 semana. Procesos = la diferencia entre 1 freelancer y 1 empresa.
+
+**Archivos afectados:**
+- `src/app/docs/page.tsx` (índice protegido por rol)
+- `content/docs/*.mdx` (procesos)
+
+**Implementación:**
+1. Estructura: onboarding-cliente.mdx, responder-lead.mdx, generar-propuesta.mdx, hacer-deploy.mdx, manejar-objeciones.mdx, escalada-incidente.mdx.
+2. Cada doc con: objetivo, prerequisitos, pasos numerados, ejemplos, errores comunes.
+3. Acceso solo `owner` y `assistant`.
+4. Formato MDX permite embeds de video Loom (gratis, screen recording).
+
+**Aceptación:**
+- [ ] ≥ 6 docs escritas.
+- [ ] Cada doc < 5 min de lectura.
+- [ ] Subcontratista nuevo puede ejecutar "responder-lead" sin preguntarle a Omar.
+
+**Si algo falla:**
+- "Toma demasiado escribir" → grabar Loom + transcribir con Whisper local (open source).
 
 ---
 
@@ -2089,7 +3168,7 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 - [ ] Red flag → bot rechaza con dignidad, NO acepta cualquier cosa
 
 ### Operacional
-- [ ] Cero costos: dashboards de Gemini/Supabase/Telegram en $0
+- [ ] Cero costos: dashboards de Groq/Supabase/Telegram en $0
 - [ ] Telegram recibe notificación < 5 segundos tras lead
 - [ ] Follow-up cron probado con lead simulado
 - [ ] README operacional (Tarea 10.4) escrito y claro
@@ -2131,7 +3210,7 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 - [ ] `/admin` protegido, muestra KPIs y leads reales
 - [ ] Export CSV funciona
 - [ ] Backup semanal probado y archivo en repo backups
-- [ ] Alerta de cuota Gemini/Supabase llega a Telegram
+- [ ] Alerta de cuota Groq/Supabase llega a Telegram
 - [ ] `OPERACION_DIARIA.md` impreso/visible para Omar
 - [ ] Resumen diario 8am llega a Telegram
 
@@ -2141,12 +3220,48 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 - [ ] Vercel Analytics activado
 - [ ] `MARKETING_DISTRIBUCION.md` con ≥ 5 ítems "Inmediato" hechos
 
+### Diferenciadores (Fase 28)
+- [ ] Speed-to-lead: notificación push Telegram en ≤ 30s con botones inline
+- [ ] Email follow-up automático llega tras 24h/72h/7d
+- [ ] RAG (pgvector) con ≥ 10 chunks reales; bot cita proyectos verificables
+- [ ] Voz (Web Speech API) funciona en Chrome desktop + Android
+- [ ] Idiomas activos: ES + EN + PT-BR, suite eval ≥ 85% pass por idioma
+- [ ] Cal.com auto-detecta timezone del visitante
+- [ ] A/B testing con ≥ 4 variantes y dashboard de conversión
+- [ ] Calculadora `/calculadora` genera lead + envía PDF en < 60s
+- [ ] Vision: subir screenshot y bot describe + propone proyecto
+- [ ] Notion CRM recibe leads en < 10s
+
+### Motor de tráfico (Fase 29)
+- [ ] Blog con ≥ 4 posts MDX publicados (1 por semana del primer mes)
+- [ ] SEO programático genera ≥ 100 páginas estáticas servicio×ciudad
+- [ ] `sitemap.xml` y `robots.txt` válidos en Search Console
+- [ ] JSON-LD pasa Rich Results Test sin warnings (Person, Service, Article, FAQPage)
+- [ ] OG dinámica probada en LinkedIn + Twitter
+- [ ] ≥ 3 lead magnets PDF descargables operativos
+- [ ] Newsletter: subscribe, confirm, send y unsubscribe end-to-end
+- [ ] Analytics activo (Vercel o Plausible) con eventos custom
+- [ ] `/feed.xml` valida en W3C
+- [ ] GitHub Action de auto-submit corre mensual sin error
+
+### Escalabilidad operacional (Fase 30)
+- [ ] Onboarding `/onboarding/<token>` end-to-end probado con lead real
+- [ ] Tickets: crear/responder/cerrar + notificación Telegram al asignado
+- [ ] Time tracking: start/stop + reporte $/h por cliente
+- [ ] Factura PDF generada automáticamente al confirmar pago
+- [ ] ≥ 5 plantillas de propuesta por nicho
+- [ ] Roles `owner`/`assistant`/`viewer` aplicados en `/admin`
+- [ ] Webhooks: registrar URL externa, recibir evento firmado HMAC
+- [ ] `status.<dominio>` público con monitores activos y alertas Telegram
+- [ ] Backup semanal a Cloudflare R2 cifrado con `age` y restauración probada
+- [ ] `/docs` interno con ≥ 6 procesos documentados
+
 ### Bloqueador de deploy
 > Si CUALQUIER punto de "Comercial" falla, NO desplegar a producción. El costo de un bot que suena mal frente a un cliente real es perder la venta y la reputación. Mejor demorar el deploy 1 día que quemar leads.
 
 ---
 
-## Reglas de oro para el agente (Copilot / Gemini CLI)
+## Reglas de oro para cualquier agente IA (Claude Code, Copilot, Codex, Cursor, Aider, Gemini, etc.)
 
 1. **Seguir SIEMPRE el flujo de 5 pasos** descrito al inicio del documento (Implementar → Auditar → Marcar → Commit en español → Validar build).
 2. **Una tarea = una auditoría = un marcado = un commit en español.** Nunca agrupar.
