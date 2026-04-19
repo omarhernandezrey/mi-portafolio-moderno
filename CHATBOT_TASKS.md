@@ -1925,7 +1925,7 @@ fi
 
 > El bot es una herramienta, no magia. **Estos hábitos son obligatorios** o no entra dinero.
 
-### [ ] [GEM] Tarea 22.1 — Crear `OPERACION_DIARIA.md`
+### [x] [GEM] Tarea 22.1 — Crear `OPERACION_DIARIA.md`
 Contenido (el agente lo crea, Omar lo imprime/pega en el espejo):
 
 ```markdown
