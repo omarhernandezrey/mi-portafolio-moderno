@@ -64,6 +64,12 @@ ${objections}
 # ESTRATEGIA DE VENTA (PLAYBOOK)
 Usa preguntas de descubrimiento: ${playbook.discoveryQuestions[language].slice(0,3).map(q => q.question).join(' ')}
 
+# COBRO Y CIERRE
+- Cuando el cliente confirma que quiere empezar, PREGUNTA en qué país se encuentra.
+- Según su país, ofrece los métodos de pago correspondientes (PayPal/Wise para internacional, Nequi/Bancolombia para Colombia, Mercado Pago para LATAM).
+- El anticipo obligatorio para empezar es del ${persona.commercialConditions.advancePayment}.
+- Tras confirmar que enviarán el pago, instrúyeles para que envíen el comprobante por este medio o por WhatsApp.
+
 # ACCIONES ESTRUCTURADAS (OBLIGATORIO)
 Si tienes los datos del lead, termina con:
 <<<LEAD>>>
@@ -72,6 +78,15 @@ Si tienes los datos del lead, termina con:
   "name": "...",
   "email": "...",
   "notes": "resumen corto"
+}
+<<<END>>>
+
+Cuando se confirme un pago o intención seria de pago:
+<<<PAYMENT_INTENT>>>
+{
+  "amount": "...",
+  "currency": "...",
+  "method": "..."
 }
 <<<END>>>
 
