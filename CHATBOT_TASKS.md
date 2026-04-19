@@ -1925,7 +1925,7 @@ fi
 
 > El bot es una herramienta, no magia. **Estos hábitos son obligatorios** o no entra dinero.
 
-### [x] [GEM] Tarea 22.1 — Crear `OPERACION_DIARIA.md`
+### [x] [GEM] Tarea 22.1 — Crear `01-OPERACION_DIARIA.md`
 Contenido (el agente lo crea, Omar lo imprime/pega en el espejo):
 
 ```markdown
@@ -1982,7 +1982,7 @@ Top servicio consultado: {servicio}
 - **Aceptación:** Lighthouse SEO = 100; Rich Results Test de Google valida JSON-LD.
 
 ### [x] [GEM] Tarea 23.2 — Distribución manual (lista para Omar)
-Crear `MARKETING_DISTRIBUCION.md`:
+Crear `02-MARKETING_DISTRIBUCION.md`:
 
 ```markdown
 # Lugares donde publicar el portafolio (gratis)
@@ -2054,7 +2054,7 @@ Crear `MARKETING_DISTRIBUCION.md`:
 ---
 
 ### [x] [GEM] Tarea 24.1 — Definir tu nicho específico (1 hora)
-Crear `ESTRATEGIA_INGRESOS.md` y llenar:
+Crear `03-ESTRATEGIA_INGRESOS.md` y llenar:
 
 ```markdown
 # Mi nicho específico
@@ -2119,7 +2119,7 @@ Los freelancers que más ganan **no venden horas**, venden **paquetes de resulta
 - **Aceptación:** los 3 paquetes en el catálogo, con descripciones claras y limitaciones explícitas.
 
 ### [x] [GEM] Tarea 24.4 — Plan de ingresos a 12 meses (números honestos)
-Crear sección en `ESTRATEGIA_INGRESOS.md`:
+Crear sección en `03-ESTRATEGIA_INGRESOS.md`:
 
 ```markdown
 # Plan honesto de ingresos
@@ -2154,7 +2154,7 @@ La diferencia NO es el bot. Es la disciplina diaria de FASE 22 + tráfico de FAS
 - **Aceptación:** plan escrito, números revisados.
 
 ### [x] [GEM] Tarea 24.5 — Lista de "NO" (lo que mata freelancers)
-Añadir al `ESTRATEGIA_INGRESOS.md`:
+Añadir al `03-ESTRATEGIA_INGRESOS.md`:
 
 ```markdown
 # Reglas duras (las violas, pierdes)
@@ -2181,7 +2181,7 @@ Añadir al `ESTRATEGIA_INGRESOS.md`:
 - El portafolio + chatbot **NO es excluyente** con buscar trabajo full-time remoto
 - En paralelo, todos los días: 5 aplicaciones a empresas remote-first (Get on Board, RemoteOK, WeWorkRemotely, LinkedIn Jobs filtro Remote)
 - El bot, cuando llegue un reclutador, **prioriza** ese lead (más estable que freelance)
-- **Aceptación:** `MARKETING_DISTRIBUCION.md` (FASE 23.2) tiene checklist diario de aplicaciones a empleos.
+- **Aceptación:** `02-MARKETING_DISTRIBUCION.md` (FASE 23.2) tiene checklist diario de aplicaciones a empleos.
 
 ### [ ] [GEM] Tarea 24.7 — Inversión en habilidades que pagan más
 - Mientras esperas leads, **estudia 1 habilidad de pricing alto** (gratis):
@@ -2190,7 +2190,7 @@ Añadir al `ESTRATEGIA_INGRESOS.md`:
   - Stripe / pasarelas de pago avanzadas (críticas para SaaS)
   - DevOps básico (Docker, GitHub Actions, AWS free tier)
 - Cada nueva habilidad = subir precios o nuevo paquete en `catalog.ts`
-- **Aceptación:** plan de estudio mensual escrito en `ESTRATEGIA_INGRESOS.md`.
+- **Aceptación:** plan de estudio mensual escrito en `03-ESTRATEGIA_INGRESOS.md`.
 
 ---
 
@@ -2325,7 +2325,7 @@ from api_logs group by 1, 2 order by 1 desc;
 - **Opción A (100% gratis):** usar `omar-portafolio.vercel.app` (el subdominio que te da Vercel). Funciona perfecto.
 - **Opción B (~$12 USD/año):** comprar dominio en Namecheap/Porkbun (`omarhernandez.dev`, `omarhr.com`). Más profesional.
 - Si vas opción B: **es el único costo justificable** del proyecto. $1 USD/mes que se recupera con 1 cliente.
-- **Aceptación:** decisión documentada en `OPERACION_DIARIA.md`, dominio configurado.
+- **Aceptación:** decisión documentada en `01-OPERACION_DIARIA.md`, dominio configurado.
 
 ### [ ] [CC] Tarea 25.7 — Alerta de "casi al límite"
 - En `quota-check` (Tarea 25.2): si Groq llega a 80% de límite diario → Telegram avisa
@@ -3484,7 +3484,7 @@ LLM_PROVIDER_CHAIN=
 1. Cloudflare R2: 10 GB gratis sin tarjeta (verificado 2026-04).
 2. Script: `pg_dump` Supabase → comprimir → encriptar con `age` → subir a R2 con `wrangler r2 object put`.
 3. Retención: 12 backups (1 año).
-4. Restauración documentada en `OPERACION_DIARIA.md`.
+4. Restauración documentada en `01-OPERACION_DIARIA.md`.
 
 **Aceptación:**
 - [ ] Backup semanal corre en GitHub Actions sin error.
@@ -3616,14 +3616,14 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 - [ ] Export CSV funciona
 - [ ] Backup semanal probado y archivo en repo backups
 - [ ] Alerta de cuota Groq/Supabase llega a Telegram
-- [ ] `OPERACION_DIARIA.md` impreso/visible para Omar
+- [ ] `01-OPERACION_DIARIA.md` impreso/visible para Omar
 - [ ] Resumen diario 8am llega a Telegram
 
 ### Tráfico (Fase 23)
 - [ ] Lighthouse SEO = 100
 - [ ] OG image dinámica funcionando (probada en LinkedIn)
 - [ ] Vercel Analytics activado
-- [ ] `MARKETING_DISTRIBUCION.md` con ≥ 5 ítems "Inmediato" hechos
+- [ ] `02-MARKETING_DISTRIBUCION.md` con ≥ 5 ítems "Inmediato" hechos
 
 ### Diferenciadores (Fase 28)
 - [ ] Speed-to-lead: notificación push Telegram en ≤ 30s con botones inline
