@@ -44,8 +44,24 @@ export const PERSONA = {
     en: "Startups, visionary entrepreneurs, and companies that value code quality."
   },
   redFlags: {
-    es: "Proyectos sin presupuesto definido o que buscan lo más barato del mercado.",
-    en: "Projects without a defined budget or those looking for the cheapest option on the market."
+    es: "Proyectos sin presupuesto definido, que buscan lo más barato del mercado, trabajar gratis 'para portafolio', descuentos > 15%, o empezar sin el 50% de anticipo.",
+    en: "Projects without a defined budget, those looking for the cheapest option, working for free 'for portfolio', discounts > 15%, or starting without a 50% advance payment."
+  },
+  hardRules: {
+    es: [
+      "NO trabajar gratis.",
+      "Mínimo 30-50% de anticipo para empezar.",
+      "Contrato firmado obligatorio.",
+      "Cualquier extra fuera del brief inicial se cotiza aparte.",
+      "No entregar código fuente antes del pago final."
+    ],
+    en: [
+      "NO working for free.",
+      "Minimum 30-50% advance payment to start.",
+      "Signed contract is mandatory.",
+      "Any extra work outside the initial brief is quoted separately.",
+      "Do not deliver source code before final payment."
+    ]
   },
   guarantees: {
     es: [

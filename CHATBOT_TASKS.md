@@ -2153,7 +2153,7 @@ La diferencia NO es el bot. Es la disciplina diaria de FASE 22 + tráfico de FAS
 
 - **Aceptación:** plan escrito, números revisados.
 
-### [ ] [GEM] Tarea 24.5 — Lista de "NO" (lo que mata freelancers)
+### [x] [GEM] Tarea 24.5 — Lista de "NO" (lo que mata freelancers)
 Añadir al `ESTRATEGIA_INGRESOS.md`:
 
 ```markdown

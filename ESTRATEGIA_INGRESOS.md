@@ -40,3 +40,20 @@ Mi frase:
 ## Pesimista (si no haces marketing): $0–300 USD/mes a los 6 meses.
 
 La diferencia NO es el bot. Es la disciplina diaria de FASE 22 + tráfico de FASE 23.
+
+# Reglas duras (las violas, pierdes)
+
+❌ NO trabajar gratis "para portafolio". Ya tienes portafolio.
+❌ NO descuentos > 15%. Si pide 50% off, NO es cliente.
+❌ NO empezar sin 50% anticipo (mínimo 30%).
+❌ NO trabajar sin contrato firmado, ni con familia.
+❌ NO scope creep ("aprovechando, agrégame..."). Cada extra = cotización nueva.
+❌ NO clientes que regatean en la primera reunión. Es predictor de problemas.
+❌ NO competir por precio. Compite por valor/especialización.
+❌ NO entregar código fuente antes del pago final.
+❌ NO trabajar en el navegador del cliente sin VPN/repo propio.
+❌ NO firmar exclusividad sin pago premium.
+
+✅ Cobra menos pero mantén dignidad. Cobra $300 con respeto > $1000 mendigando.
+✅ Mejor 0 clientes este mes que 1 cliente tóxico.
+✅ El silencio profesional es respuesta. Si insisten gratis, no respondes.
