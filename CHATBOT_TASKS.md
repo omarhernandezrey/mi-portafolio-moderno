@@ -2025,7 +2025,7 @@ Crear `MARKETING_DISTRIBUCION.md`:
 - Cada vez que compartes el portafolio en LinkedIn/Twitter aparece preview profesional
 - **Aceptación:** compartir URL en LinkedIn muestra preview correcto.
 
-### [ ] [GEM] Tarea 23.4 — Vercel Analytics (gratis 2.5k events/mes en Hobby)
+### [x] [GEM] Tarea 23.4 — Vercel Analytics (gratis 2.5k events/mes en Hobby)
 - Activar Vercel Analytics (Web Analytics, no Speed Insights → ese también pero opcional)
 - Permite ver desde dónde llega el tráfico → priorizar canales que funcionan
 - **Aceptación:** dashboard Vercel muestra visitas tras 24h.
