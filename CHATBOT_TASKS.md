@@ -2238,7 +2238,7 @@ Añadir al `03-ESTRATEGIA_INGRESOS.md`:
 
 ---
 
-### [ ] [GEM] Tarea 25.1 — Keep-alive de Supabase (evitar pausa por inactividad)
+### [x] [GEM] Tarea 25.1 — Keep-alive de Supabase (evitar pausa por inactividad)
 - Crear `.github/workflows/supabase-keepalive.yml`:
 ```yaml
 name: Supabase Keep-Alive
