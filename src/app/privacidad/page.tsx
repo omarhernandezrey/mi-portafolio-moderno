@@ -42,7 +42,7 @@ export default function PrivacidadPage() {
         <p>Para la prestación del servicio, sus datos son procesados por:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li><strong>Supabase</strong> (Almacenamiento de base de datos segura).</li>
-          <li><strong>Google Gemini API</strong> (Procesamiento de lenguaje natural para el chat).</li>
+          <li><strong>Groq / Meta Llama</strong> (Procesamiento de lenguaje natural para el chat mediante modelos de código abierto).</li>
         </ul>
         <p>No vendemos ni compartimos sus datos con fines publicitarios de terceros.</p>
 

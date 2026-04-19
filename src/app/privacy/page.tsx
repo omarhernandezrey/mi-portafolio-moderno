@@ -42,7 +42,7 @@ export default function PrivacyPage() {
         <p>To provide the service, your data is processed by:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li><strong>Supabase</strong> (Secure database storage).</li>
-          <li><strong>Google Gemini API</strong> (Natural language processing for chat).</li>
+          <li><strong>Groq / Meta Llama</strong> (Natural language processing for chat via open-source models).</li>
         </ul>
         <p>We do not sell or share your data for third-party advertising purposes.</p>
 
