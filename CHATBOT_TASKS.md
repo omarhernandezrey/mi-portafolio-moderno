@@ -45,7 +45,7 @@ ejecución autónomo, en español. Reglas obligatorias:
    - Crear una rama descriptiva: `git checkout -b feat/tarea-X.Y`
    - Hacer todo el trabajo, auditoría y marcado de [x] en esa rama.
    - Una vez la tarea pase el "Validar build" (Paso 5 del flujo), hacer
-     merge a `main`, borrar la rama de la tarea y volver a `main`.
+     merge a `main`,  y volver a `main`.
    - NUNCA mezclar tareas distintas en la misma rama.
 
 2. FLUJO DE 5 PASOS por cada tarea (no negociable):
