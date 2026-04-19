@@ -13,6 +13,7 @@ interface Message {
   content: string;
   handoffUrl?: string;
   calcomUrl?: string;
+  created_at?: string;
 }
 
 export default function ChatWidget() {
@@ -26,10 +27,44 @@ export default function ChatWidget() {
   const [sessionId, setSessionId] = useState<string>('');
   const [showAttention, setShowAttention] = useState(false);
   const [hasConsented, setHasConsented] = useState(false);
+  const [lastPollTime, setLastPollTime] = useState<string>(new Date().toISOString());
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // Polling para mensajes de Omar (Handoff humano - Tarea 19.3)
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isOpen && sessionId && hasConsented) {
+      interval = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/chat/poll?sessionId=${sessionId}&since=${lastPollTime}`);
+          const data = await response.json();
+
+          if (data.messages && data.messages.length > 0) {
+            setMessages(prev => {
+              // Filtrar mensajes que ya existen para evitar duplicados
+              const newMsgs = data.messages.filter((nm: Message) => 
+                !prev.some(pm => pm.content === nm.content && pm.created_at === nm.created_at)
+              );
+              return [...prev, ...newMsgs];
+            });
+            // Actualizar el timestamp del último poll con el mensaje más reciente recibido
+            const newestMsg = data.messages[data.messages.length - 1];
+            setLastPollTime(newestMsg.created_at);
+          }
+        } catch (e) {
+          console.error('Polling error:', e);
+        }
+      }, 5000); // Cada 5 segundos
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isOpen, sessionId, hasConsented, lastPollTime]);
 
   // Inicializar sessionId y consentimiento desde localStorage
   useEffect(() => {
@@ -340,7 +375,7 @@ export default function ChatWidget() {
                   ref={inputRef}
                   type="text"
                   placeholder={t('chatbot.placeholder')}
-                  className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]/20 text-[var(--text-color)] disabled:opacity-50"
+                  className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]/20 text-slate-900 disabled:opacity-50"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading || !hasConsented}
