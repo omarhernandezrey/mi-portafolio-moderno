@@ -1904,7 +1904,7 @@ fi
   - Notifica a Telegram: "💾 Backup semanal OK ({size} MB)"
 - **Aceptación:** ejecutar manualmente → archivo aparece en repo backups, llega Telegram.
 
-### [ ] [GEM] Tarea 21.2 — Alertas de cuota
+### [x] [GEM] Tarea 21.2 — Alertas de cuota
 - Crear `scripts/check-quotas.ts` que cada 6h:
   - Cuenta requests del día a Groq (tabla `api_logs`)
   - Cuenta tamaño de Supabase (vía API)
