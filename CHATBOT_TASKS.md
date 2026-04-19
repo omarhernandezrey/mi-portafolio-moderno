@@ -2100,7 +2100,7 @@ ___________________________________________
 - **Excepción para Colombia:** si cobras a empresas locales en COP, ajusta pero **mínimo $80.000–120.000 COP/hora**. Mejor enfócate en internacional.
 - **Aceptación:** catálogo actualizado en USD; el bot NUNCA ofrece menos de $250 por un proyecto.
 
-### [ ] [GEM] Tarea 24.3 — Diseñar 3 servicios productizados (no horas, paquetes)
+### [x] [GEM] Tarea 24.3 — Diseñar 3 servicios productizados (no horas, paquetes)
 Los freelancers que más ganan **no venden horas**, venden **paquetes de resultado**. Crear en `catalog.ts`:
 
 **Paquete 1: "Landing de alta conversión"** — $600 USD fijo, 7 días

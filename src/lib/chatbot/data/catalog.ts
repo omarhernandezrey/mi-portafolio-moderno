@@ -134,5 +134,50 @@ export const SERVICES_CATALOG: Service[] = [
       en: ['Daily backups', 'Security updates', 'Priority support', 'Small monthly changes']
     },
     idealFor: { es: 'Negocios que no quieren preocuparse por la técnica.', en: 'Businesses not wanting to worry about tech.' }
+  },
+  {
+    id: 'landing-premium',
+    name: { es: 'Landing de alta conversión', en: 'High-Conversion Landing Page' },
+    description: {
+      es: 'Paquete optimizado para resultados rápidos con diseño y copy persuasivo.',
+      en: 'Package optimized for fast results with persuasive design and copy.'
+    },
+    priceRange: { min: 600, max: 600, currency: 'USD' },
+    deliveryDays: { min: 7, max: 7 },
+    includes: {
+      es: ['Diseño + Copy enfocado a venta', 'Setup de analíticas', '1 mes de mantenimiento incluido', 'Optimización de velocidad'],
+      en: ['Design + Sales-focused copy', 'Analytics setup', '1 month of maintenance included', 'Speed optimization']
+    },
+    idealFor: { es: 'Lanzamientos rápidos de productos o servicios.', en: 'Fast product or service launches.' }
+  },
+  {
+    id: 'mvp-startup-pack',
+    name: { es: 'MVP Startup', en: 'Startup MVP' },
+    description: {
+      es: 'Todo lo necesario para validar tu idea de negocio en el mercado real.',
+      en: 'Everything you need to validate your business idea in the real market.'
+    },
+    priceRange: { min: 2500, max: 2500, currency: 'USD' },
+    deliveryDays: { min: 30, max: 45 },
+    includes: {
+      es: ['Autenticación + Base de Datos', 'CRUD completo de funcionalidades core', 'Dashboard administrativo', 'Despliegue con CI/CD automático'],
+      en: ['Auth + Database', 'Full CRUD of core features', 'Admin dashboard', 'Deployment with automated CI/CD']
+    },
+    idealFor: { es: 'Fundadores que necesitan validar ideas rápido.', en: 'Founders who need to validate ideas fast.' }
+  },
+  {
+    id: 'senior-retainer',
+    name: { es: 'Soporte Senior Retainer', en: 'Senior Retainer Support' },
+    description: {
+      es: 'Socio tecnológico a largo plazo para escalar tu aplicación existente.',
+      en: 'Long-term tech partner to scale your existing application.'
+    },
+    priceRange: { min: 500, max: 500, currency: 'USD/mes' },
+    deliveryDays: { min: 30, max: 30 },
+    includes: {
+      es: ['10h de desarrollo mensual', 'Soporte técnico prioritario', 'Optimización continua', 'Consultoría estratégica'],
+      en: ['10h of monthly development', 'Priority technical support', 'Continuous optimization', 'Strategic consulting']
+    },
+    idealFor: { es: 'Empresas que ya tienen una app y quieren crecer.', en: 'Companies that already have an app and want to grow.' }
   }
 ];
