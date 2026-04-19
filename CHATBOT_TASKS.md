@@ -2118,7 +2118,7 @@ Los freelancers que más ganan **no venden horas**, venden **paquetes de resulta
 
 - **Aceptación:** los 3 paquetes en el catálogo, con descripciones claras y limitaciones explícitas.
 
-### [ ] [GEM] Tarea 24.4 — Plan de ingresos a 12 meses (números honestos)
+### [x] [GEM] Tarea 24.4 — Plan de ingresos a 12 meses (números honestos)
 Crear sección en `ESTRATEGIA_INGRESOS.md`:
 
 ```markdown
