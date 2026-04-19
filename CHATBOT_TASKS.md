@@ -59,6 +59,11 @@ ejecución autónomo, en español. Reglas obligatorias:
    - Usar servicios pagos o que exijan tarjeta de crédito.
    - Tocar archivos fuera del alcance listado en la tarea.
    - Usar `--no-verify` ni saltar hooks de git.
+   - Editar CHATBOT_TASKS.md más allá de marcar [x] (o [!]) en la tarea
+     que acabás de auditar. Reformatear, reescribir, agregar, mover o
+     borrar tareas/reglas/secciones requiere que yo te diga textualmente
+     "autorizo modificar el documento: <qué cambiar>". Si crees que falta
+     algo, anótalo como "Sugerencia para CHATBOT_TASKS.md" y esperá.
 
 4. EMPIEZA con la Tarea 0.1 de la FASE 0:
    - Pégame los pasos numerados literales como aparecen en el documento.
@@ -489,7 +494,20 @@ Espero tu decisión.
 
 **M.3.** **Actualiza `CHATBOT_INTEGRATION_MAP.md`** (FASE 15) cuando una tarea conecte dos sistemas que antes no se conocían.
 
-**M.4.** **Actualiza este documento** solo para: marcar `[x]` y agregar tareas nuevas pre-acordadas con el humano. NO reformatees secciones existentes sin permiso.
+**M.4.** **`CHATBOT_TASKS.md` es INMUTABLE para la IA.** La **única** edición permitida sin pedir autorización es:
+   - Cambiar `[ ]` → `[x]` en una tarea cuya auditoría acaba de pasar (parte del commit de esa tarea).
+   - Cambiar `[ ]` → `[!]` para marcar criterios solo verificables en producción (regla F.2).
+
+**Prohibido sin autorización explícita del humano** (en el chat, por escrito, con la frase "autorizo modificar el documento"):
+   - Reformatear secciones existentes (espacios, headings, orden).
+   - Reescribir o "mejorar" la redacción de tareas existentes.
+   - Reescribir o "mejorar" reglas, índices, mapas o resúmenes.
+   - Añadir, mover, dividir o fusionar tareas, fases o secciones.
+   - Borrar líneas, bullets, ejemplos o bloques de código.
+   - Corregir typos, acentos, gramática o estilo.
+   - Actualizar tablas (índice de fases, checklist final) más allá de marcar checkboxes.
+
+**Si crees que falta o sobra algo en el documento:** anótalo en tu mensaje al humano como `Sugerencia para CHATBOT_TASKS.md: <descripción>` y espera la frase exacta `"autorizo modificar el documento: <qué cambiar>"`. Recién entonces podés editar y solo el alcance autorizado.
 
 **M.5.** **README operacional** (Tarea 10.4) es el único README que debe estar siempre al día con la realidad del repo.
 
@@ -3600,17 +3618,18 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 > Esta lista es un **recordatorio rápido**. La fuente vinculante son las "REGLAS MAESTRAS DE EJECUCIÓN" (sección secciones A–N, después del FLUJO OBLIGATORIO). Si una regla aquí parece chocar con las maestras, **gana la maestra**.
 
 1. **Una tarea = una rama = una auditoría = un commit en español = un build verde.** (D.1, E, F, K) — Nunca agrupar tareas.
-2. **NO marcar `[x]` sin evidencia objetiva** de cada criterio de aceptación. (F.1, F.4)
-3. **NO modificar archivos fuera del alcance** listado en la tarea. Si necesitas otro archivo, **pide permiso**. (A.4)
-4. **NO instalar dependencias** no listadas en una tarea explícita. (G.7)
-5. **NO subir secretos** (`.env.local`, keys, tokens) al repo. (G.1, G.2)
-6. **NO usar `--no-verify`**, force-push a `main`, ni operaciones destructivas (`reset --hard`, `clean -fd`) sin permiso. (D.5, D.7, D.8)
-7. **NO borrar la rama tras merge** — queda como historial trazable. (D.4)
-8. **NO usar servicios pagos** ni que pidan tarjeta de crédito. (H.1, H.2)
-9. **NO acceder a `process.env`** fuera de `src/config/env.ts`. (C.9)
-10. **NO inventes** APIs, métodos, paquetes, columnas, paths. Si dudas, lee el código o la doc real. (N.1, N.5)
-11. **Regla de los 3 intentos:** si fallás 3 veces seguidas, detente y escala con causa raíz + opciones. (J.1)
-12. **Tipos estrictos:** cero `any` salvo justificado; cero `@ts-ignore` salvo `@ts-expect-error` con razón. (C.1)
-13. **Commits en español**, formato Conventional Commits, una tarea por commit. (E.1, E.2, E.3)
-14. **Pre-flight obligatorio** antes de cada tarea: git limpio + en main + build verde + tarea leída entera. (B.1)
-15. **Idioma de comunicación con Omar:** español de Colombia, claro, directo. Reportes ≤ 12 líneas. (I.1, I.8)
+2. **`CHATBOT_TASKS.md` es INMUTABLE.** La única edición permitida sin autorización del humano es marcar `[ ]` → `[x]` (o `[!]`). Cualquier otro cambio (reformato, redacción, agregar/borrar/mover tareas o reglas, corregir typos) requiere la frase exacta `"autorizo modificar el documento: <qué>"` en el chat. (M.4)
+3. **NO marcar `[x]` sin evidencia objetiva** de cada criterio de aceptación. (F.1, F.4)
+4. **NO modificar archivos fuera del alcance** listado en la tarea. Si necesitas otro archivo, **pide permiso**. (A.4)
+5. **NO instalar dependencias** no listadas en una tarea explícita. (G.7)
+6. **NO subir secretos** (`.env.local`, keys, tokens) al repo. (G.1, G.2)
+7. **NO usar `--no-verify`**, force-push a `main`, ni operaciones destructivas (`reset --hard`, `clean -fd`) sin permiso. (D.5, D.7, D.8)
+8. **NO borrar la rama tras merge** — queda como historial trazable. (D.4)
+9. **NO usar servicios pagos** ni que pidan tarjeta de crédito. (H.1, H.2)
+10. **NO acceder a `process.env`** fuera de `src/config/env.ts`. (C.9)
+11. **NO inventes** APIs, métodos, paquetes, columnas, paths. Si dudas, lee el código o la doc real. (N.1, N.5)
+12. **Regla de los 3 intentos:** si fallás 3 veces seguidas, detente y escala con causa raíz + opciones. (J.1)
+13. **Tipos estrictos:** cero `any` salvo justificado; cero `@ts-ignore` salvo `@ts-expect-error` con razón. (C.1)
+14. **Commits en español**, formato Conventional Commits, una tarea por commit. (E.1, E.2, E.3)
+15. **Pre-flight obligatorio** antes de cada tarea: git limpio + en main + build verde + tarea leída entera. (B.1)
+16. **Idioma de comunicación con Omar:** español de Colombia, claro, directo. Reportes ≤ 12 líneas. (I.1, I.8)
