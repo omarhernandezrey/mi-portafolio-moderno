@@ -17,21 +17,25 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: "%s | Omar Hernández Rey",
-    default: "Omar Hernández Rey | Full Stack Developer",
+    default: "Omar Hernández Rey | Full Stack Developer | Desarrollador Full Stack",
   },
   description:
-    "Portafolio profesional de Omar Hernández Rey, Desarrollador Web Full Stack apasionado por crear experiencias digitales innovadoras.",
+    "Professional portfolio of Omar Hernández Rey, a Full Stack Web Developer passionate about creating innovative digital experiences. / Portafolio profesional de Omar Hernández Rey, Desarrollador Web Full Stack apasionado por crear experiencias digitales innovadoras.",
   keywords: [
     "desarrollador full stack",
+    "full stack developer",
     "omar hernandez",
     "omar hernandez rey",
     "desarrollador freelance",
+    "freelance developer",
     "web development",
-    "aplicaciones web",
-    "desarrollo web moderno",
-    "programador react",
-    "programador next.js",
-    "desarrollador colombia"
+    "desarrollo web",
+    "react developer",
+    "next.js developer",
+    "colombia",
+    "bogota",
+    "software engineer",
+    "ingeniero de software"
   ],
   authors: [{ name: "Omar Hernández Rey" }],
   creator: "Omar Hernández Rey",

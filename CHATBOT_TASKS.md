@@ -1975,7 +1975,7 @@ Top servicio consultado: {servicio}
 
 > El bot está. Ahora hay que hacer que la gente llegue al sitio. Todo gratis.
 
-### [ ] [GEM] Tarea 23.1 — Optimizar SEO de la home
+### [x] [GEM] Tarea 23.1 — Optimizar SEO de la home
 - Verificar metadata en `src/app/layout.tsx`: title, description, OG image, keywords (es y en)
 - Schema.org Person + ProfessionalService en `src/app/page.tsx` (JSON-LD)
 - Sitemap incluye todas las rutas
