@@ -1981,7 +1981,7 @@ Top servicio consultado: {servicio}
 - Sitemap incluye todas las rutas
 - **Aceptación:** Lighthouse SEO = 100; Rich Results Test de Google valida JSON-LD.
 
-### [ ] [GEM] Tarea 23.2 — Distribución manual (lista para Omar)
+### [x] [GEM] Tarea 23.2 — Distribución manual (lista para Omar)
 Crear `MARKETING_DISTRIBUCION.md`:
 
 ```markdown
