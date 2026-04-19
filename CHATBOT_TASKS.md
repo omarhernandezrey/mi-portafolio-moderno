@@ -2020,7 +2020,7 @@ Crear `MARKETING_DISTRIBUCION.md`:
 
 - **Aceptación:** archivo creado, Omar marca al menos 5 ítems "Inmediato" como hechos en la primera semana.
 
-### [ ] [GEM] Tarea 23.3 — Open Graph dinámico
+### [x] [GEM] Tarea 23.3 — Open Graph dinámico
 - Generar imagen OG en `src/app/opengraph-image.tsx` usando `next/og` con tu nombre, foto, "Disponible para proyectos"
 - Cada vez que compartes el portafolio en LinkedIn/Twitter aparece preview profesional
 - **Aceptación:** compartir URL en LinkedIn muestra preview correcto.

@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://omarhernandez.dev"),
   title: {
     template: "%s | Omar Hernández Rey",
     default: "Omar Hernández Rey | Full Stack Developer | Desarrollador Full Stack",
