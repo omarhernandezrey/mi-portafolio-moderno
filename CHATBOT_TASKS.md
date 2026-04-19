@@ -2053,7 +2053,7 @@ Crear `MARKETING_DISTRIBUCION.md`:
 
 ---
 
-### [ ] [GEM] Tarea 24.1 — Definir tu nicho específico (1 hora)
+### [x] [GEM] Tarea 24.1 — Definir tu nicho específico (1 hora)
 Crear `ESTRATEGIA_INGRESOS.md` y llenar:
 
 ```markdown
