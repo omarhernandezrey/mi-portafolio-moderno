@@ -2177,7 +2177,7 @@ Añadir al `03-ESTRATEGIA_INGRESOS.md`:
 
 - **Aceptación:** sección presente; el system prompt del bot conoce estas reglas y las aplica al filtrar leads (ICP/red flags de FASE 3.0).
 
-### [ ] [GEM] Tarea 24.6 — Doble vía: freelance + empleo full-time remoto
+### [x] [GEM] Tarea 24.6 — Doble vía: freelance + empleo full-time remoto
 - El portafolio + chatbot **NO es excluyente** con buscar trabajo full-time remoto
 - En paralelo, todos los días: 5 aplicaciones a empresas remote-first (Get on Board, RemoteOK, WeWorkRemotely, LinkedIn Jobs filtro Remote)
 - El bot, cuando llegue un reclutador, **prioriza** ese lead (más estable que freelance)

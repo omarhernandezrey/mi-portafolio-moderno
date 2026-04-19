@@ -25,3 +25,9 @@
 - [ ] Discord: Reactiflux, The Programmer's Hangout, comunidades latam
 - [ ] Slack: comunidades LATAM Devs, Frontend CO, MakerLog
 - [ ] Telegram: grupos colombianos de devs
+
+## Checklist Diario de Empleo Remoto (Doble Vía)
+- [ ] Aplicar a 5 empresas remote-first (Get on Board, RemoteOK, WeWorkRemotely)
+- [ ] Revisar LinkedIn Jobs (filtro Remote) y aplicar a 2 vacantes Senior/Mid
+- [ ] Empresas remote-first: aplicar directo en sus career pages
+- [ ] Actualizar estado en Torre.ai / Get on Board
