@@ -19,7 +19,7 @@
    - `git branch --show-current` → estás en `main`.
    - `npm run build` → exit 0, sin warnings nuevos.
    - Si algo falla, **NO empieces tarea nueva**: creá rama `fix/build-roto-<descripción>`, repará, commiteá, mergeá `--ff-only` a `main`. Recién entonces seguí.
-2. **Buscá la primera tarea con `[ ]`** en orden ascendente (FASE 0 antes que 1; X.1 antes que X.2). Esa es tu próxima tarea.
+2. **Identificá tu tag** (`[CC]` si sos Claude Code, `[GEM]` si sos Gemini — ver sección "📋 ASIGNACIÓN ENTRE IAS" abajo). Buscá la primera tarea con `[ ] [<TU TAG>]` en orden ascendente (FASE 0 antes que 1; X.1 antes que X.2). **Si la siguiente tarea pendiente NO tiene tu tag, saltala** y avanzá hasta la siguiente que sí lo tenga. Si tu IA no está en la asignación o el humano te dice "ignorá los tags", trabajá sobre la primera `[ ]` sin filtrar.
 3. **Anunciale al humano en UN solo mensaje** con este formato exacto:
    ```
    📌 Estado del repo: <git limpio | sucio: ...> · rama: <X> · build: <verde | rojo: ...>
@@ -131,9 +131,30 @@ Eso la fuerza a parar, analizar causa raíz y darte opciones en lugar de seguir 
 
 ### Convenciones visuales
 - `[ ]` = tarea pendiente · `[x]` = tarea verificada y commiteada · `[!]` = criterio solo verificable en producción
+- `[CC]` = asignada a **Claude Code** (terminal) · `[GEM]` = asignada a **Gemini** (CLI / web). Cada IA solo ejecuta tareas con su tag (ver "📋 ASIGNACIÓN ENTRE IAS" abajo). Las tareas ya `[x]` (FASE 0–20) no llevan tag porque ya están hechas.
 - 🟢 = camino feliz · 🟡 = aceptable con compromiso · 🔴 = bloqueador, no avanzar
 - "Para Omar" = acción manual del humano · "Para la IA" = acción automatizable
 - "Aceptación" = lista de checks objetivos; si UNO falla, la tarea NO está completa
+
+### 📋 ASIGNACIÓN ENTRE IAS (FASE 21 → 30)
+
+Las 59 tareas pendientes están repartidas entre **Claude Code (CC)** y **Gemini (GEM)** para trabajar en paralelo sin pisarse. El criterio del reparto fue:
+
+- **CC (22 tareas, complejas):** todo lo que toca código denso, infraestructura, CI/CD, RAG, vision LLM, billing, RBAC, webhooks, backups multi-destino, SEO programático con Next.js dinámico. Es decir: tareas que requieren razonamiento profundo sobre el código existente del repo y validación end-to-end.
+- **GEM (37 tareas, livianas):** documentación, copy, configuración declarativa, scripts de mantenimiento sin lógica de negocio compleja, tareas manuales-asistidas (pricing, nicho, lista de "no"), schemas SEO estáticos, plantillas, status pages, y lead magnets de copy.
+
+**Regla de oro del reparto:** si Gemini se topa con un bloqueador técnico de código durante una tarea `[GEM]`, debe parar, dejar la rama lista, marcar la tarea como `[ ] [GEM→CC]` (cambiar el tag) y avisar al humano para que Claude Code la termine. Lo mismo en sentido inverso: si CC ve que una tarea `[CC]` es trivial y no justifica el costo, puede dejársela a Gemini con `[CC→GEM]`. **Cualquier reasignación requiere autorización del humano** con la frase: `autorizo reasignar X.Y de <CC|GEM> a <CC|GEM>`.
+
+**Lista por IA (referencia rápida — la fuente de verdad sigue siendo el tag inline en cada `### [ ] Tarea`):**
+
+| IA | Tareas | Total |
+|---|---|---|
+| **CC** | 21.1, 21.3, 25.2, 25.3, 25.4, 25.7, 25.8, 28.2, 28.3, 28.7, 28.9, 29.1, 29.2, 29.5, 29.6, 29.7, 30.1, 30.2, 30.4, 30.6, 30.7, 30.9 | 22 |
+| **GEM** | 21.2, 22.1, 22.2, 23.1, 23.2, 23.3, 23.4, 24.1, 24.2, 24.3, 24.4, 24.5, 24.6, 24.7, 25.1, 25.5, 25.6, 26.1, 26.2, 26.3, 26.4, 26.5, 27.7, 28.4, 28.5, 28.6, 28.8, 28.10, 29.3, 29.4, 29.8, 29.9, 29.10, 30.3, 30.5, 30.8, 30.10 | 37 |
+
+**Cómo coordinarse sin chocar:** ambas IAs usan ramas distintas (`feat/tarea-X.Y`) y NO pueden mergear si hay conflicto. Si una IA encuentra que `main` cambió mientras trabajaba, debe rebasar contra `main` antes del merge `--ff-only`. Si el rebase trae conflicto, parar y avisar al humano.
+
+
 
 ## Índice de fases
 | # | Fase | Objetivo |
@@ -1876,14 +1897,14 @@ fi
 
 ## FASE 21 — Backups y monitoreo de costos
 
-### [ ] Tarea 21.1 — Backup semanal automático
+### [ ] [CC] Tarea 21.1 — Backup semanal automático
 - Crear cron (Vercel Cron o GitHub Action) que cada domingo:
   - Hace `pg_dump` de Supabase (vía `supabase db dump` o llamada SQL select-all)
   - Sube el dump a un repo privado de GitHub `omar-portafolio-backups` (gratis ilimitado)
   - Notifica a Telegram: "💾 Backup semanal OK ({size} MB)"
 - **Aceptación:** ejecutar manualmente → archivo aparece en repo backups, llega Telegram.
 
-### [ ] Tarea 21.2 — Alertas de cuota
+### [ ] [GEM] Tarea 21.2 — Alertas de cuota
 - Crear `scripts/check-quotas.ts` que cada 6h:
   - Cuenta requests del día a Groq (tabla `api_logs`)
   - Cuenta tamaño de Supabase (vía API)
@@ -1891,7 +1912,7 @@ fi
   - Si Supabase ≥ 80% de 500MB → Telegram "⚠️ Supabase al 80%, revisar limpiar mensajes viejos"
 - **Aceptación:** simular contadores altos → llega alerta.
 
-### [ ] Tarea 21.3 — Limpieza automática
+### [ ] [CC] Tarea 21.3 — Limpieza automática
 - Cron mensual que borra:
   - Conversaciones sin lead asociado y sin mensajes en > 90 días
   - Mensajes de role='system' duplicados
@@ -1904,7 +1925,7 @@ fi
 
 > El bot es una herramienta, no magia. **Estos hábitos son obligatorios** o no entra dinero.
 
-### [ ] Tarea 22.1 — Crear `OPERACION_DIARIA.md`
+### [ ] [GEM] Tarea 22.1 — Crear `OPERACION_DIARIA.md`
 Contenido (el agente lo crea, Omar lo imprime/pega en el espejo):
 
 ```markdown
@@ -1935,7 +1956,7 @@ Contenido (el agente lo crea, Omar lo imprime/pega en el espejo):
 
 - **Aceptación:** archivo creado en raíz; Omar lo lee y confirma.
 
-### [ ] Tarea 22.2 — Auto-resumen diario en Telegram
+### [ ] [GEM] Tarea 22.2 — Auto-resumen diario en Telegram
 - Cron diario 8am Bogotá → mensaje a Telegram:
 ```
 ☀️ Buenos días Omar
@@ -1954,13 +1975,13 @@ Top servicio consultado: {servicio}
 
 > El bot está. Ahora hay que hacer que la gente llegue al sitio. Todo gratis.
 
-### [ ] Tarea 23.1 — Optimizar SEO de la home
+### [ ] [GEM] Tarea 23.1 — Optimizar SEO de la home
 - Verificar metadata en `src/app/layout.tsx`: title, description, OG image, keywords (es y en)
 - Schema.org Person + ProfessionalService en `src/app/page.tsx` (JSON-LD)
 - Sitemap incluye todas las rutas
 - **Aceptación:** Lighthouse SEO = 100; Rich Results Test de Google valida JSON-LD.
 
-### [ ] Tarea 23.2 — Distribución manual (lista para Omar)
+### [ ] [GEM] Tarea 23.2 — Distribución manual (lista para Omar)
 Crear `MARKETING_DISTRIBUCION.md`:
 
 ```markdown
@@ -1999,12 +2020,12 @@ Crear `MARKETING_DISTRIBUCION.md`:
 
 - **Aceptación:** archivo creado, Omar marca al menos 5 ítems "Inmediato" como hechos en la primera semana.
 
-### [ ] Tarea 23.3 — Open Graph dinámico
+### [ ] [GEM] Tarea 23.3 — Open Graph dinámico
 - Generar imagen OG en `src/app/opengraph-image.tsx` usando `next/og` con tu nombre, foto, "Disponible para proyectos"
 - Cada vez que compartes el portafolio en LinkedIn/Twitter aparece preview profesional
 - **Aceptación:** compartir URL en LinkedIn muestra preview correcto.
 
-### [ ] Tarea 23.4 — Vercel Analytics (gratis 2.5k events/mes en Hobby)
+### [ ] [GEM] Tarea 23.4 — Vercel Analytics (gratis 2.5k events/mes en Hobby)
 - Activar Vercel Analytics (Web Analytics, no Speed Insights → ese también pero opcional)
 - Permite ver desde dónde llega el tráfico → priorizar canales que funcionan
 - **Aceptación:** dashboard Vercel muestra visitas tras 24h.
@@ -2032,7 +2053,7 @@ Crear `MARKETING_DISTRIBUCION.md`:
 
 ---
 
-### [ ] Tarea 24.1 — Definir tu nicho específico (1 hora)
+### [ ] [GEM] Tarea 24.1 — Definir tu nicho específico (1 hora)
 Crear `ESTRATEGIA_INGRESOS.md` y llenar:
 
 ```markdown
@@ -2060,7 +2081,7 @@ ___________________________________________
 - **Aceptación:** frase escrita, NO genérica, con justificación.
 - **Crítico:** sin nicho definido, el chatbot vende "cualquier cosa" → suena a commodity → precios bajos.
 
-### [ ] Tarea 24.2 — Pricing en USD (no en pesos colombianos)
+### [ ] [GEM] Tarea 24.2 — Pricing en USD (no en pesos colombianos)
 - Re-revisar `_omar_inputs.md` y `catalog.ts`: **TODOS los precios en USD**, mínimo de mercado internacional:
 
 | Servicio | Precio mínimo recomendado |
@@ -2079,7 +2100,7 @@ ___________________________________________
 - **Excepción para Colombia:** si cobras a empresas locales en COP, ajusta pero **mínimo $80.000–120.000 COP/hora**. Mejor enfócate en internacional.
 - **Aceptación:** catálogo actualizado en USD; el bot NUNCA ofrece menos de $250 por un proyecto.
 
-### [ ] Tarea 24.3 — Diseñar 3 servicios productizados (no horas, paquetes)
+### [ ] [GEM] Tarea 24.3 — Diseñar 3 servicios productizados (no horas, paquetes)
 Los freelancers que más ganan **no venden horas**, venden **paquetes de resultado**. Crear en `catalog.ts`:
 
 **Paquete 1: "Landing de alta conversión"** — $600 USD fijo, 7 días
@@ -2097,7 +2118,7 @@ Los freelancers que más ganan **no venden horas**, venden **paquetes de resulta
 
 - **Aceptación:** los 3 paquetes en el catálogo, con descripciones claras y limitaciones explícitas.
 
-### [ ] Tarea 24.4 — Plan de ingresos a 12 meses (números honestos)
+### [ ] [GEM] Tarea 24.4 — Plan de ingresos a 12 meses (números honestos)
 Crear sección en `ESTRATEGIA_INGRESOS.md`:
 
 ```markdown
@@ -2132,7 +2153,7 @@ La diferencia NO es el bot. Es la disciplina diaria de FASE 22 + tráfico de FAS
 
 - **Aceptación:** plan escrito, números revisados.
 
-### [ ] Tarea 24.5 — Lista de "NO" (lo que mata freelancers)
+### [ ] [GEM] Tarea 24.5 — Lista de "NO" (lo que mata freelancers)
 Añadir al `ESTRATEGIA_INGRESOS.md`:
 
 ```markdown
@@ -2156,13 +2177,13 @@ Añadir al `ESTRATEGIA_INGRESOS.md`:
 
 - **Aceptación:** sección presente; el system prompt del bot conoce estas reglas y las aplica al filtrar leads (ICP/red flags de FASE 3.0).
 
-### [ ] Tarea 24.6 — Doble vía: freelance + empleo full-time remoto
+### [ ] [GEM] Tarea 24.6 — Doble vía: freelance + empleo full-time remoto
 - El portafolio + chatbot **NO es excluyente** con buscar trabajo full-time remoto
 - En paralelo, todos los días: 5 aplicaciones a empresas remote-first (Get on Board, RemoteOK, WeWorkRemotely, LinkedIn Jobs filtro Remote)
 - El bot, cuando llegue un reclutador, **prioriza** ese lead (más estable que freelance)
 - **Aceptación:** `MARKETING_DISTRIBUCION.md` (FASE 23.2) tiene checklist diario de aplicaciones a empleos.
 
-### [ ] Tarea 24.7 — Inversión en habilidades que pagan más
+### [ ] [GEM] Tarea 24.7 — Inversión en habilidades que pagan más
 - Mientras esperas leads, **estudia 1 habilidad de pricing alto** (gratis):
   - Migración / performance React (clientes pagan $50/h por esto)
   - Integraciones IA / LLM en apps (mercado en explosión 2025)
@@ -2217,7 +2238,7 @@ Añadir al `ESTRATEGIA_INGRESOS.md`:
 
 ---
 
-### [ ] Tarea 25.1 — Keep-alive de Supabase (evitar pausa por inactividad)
+### [ ] [GEM] Tarea 25.1 — Keep-alive de Supabase (evitar pausa por inactividad)
 - Crear `.github/workflows/supabase-keepalive.yml`:
 ```yaml
 name: Supabase Keep-Alive
@@ -2240,7 +2261,7 @@ jobs:
 - Añadir `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` a GitHub Secrets del repo
 - **Aceptación:** workflow corre manualmente sin error; tras 2 semanas el proyecto Supabase sigue activo.
 
-### [ ] Tarea 25.2 — Mover TODOS los crons a GitHub Actions (no Vercel)
+### [ ] [CC] Tarea 25.2 — Mover TODOS los crons a GitHub Actions (no Vercel)
 - Crear `.github/workflows/scheduled-tasks.yml` que dispare:
   - `cleanup-cold-leads` (FASE 12.1) — diario
   - `weekly-backup` (FASE 21.1) — domingos
@@ -2250,7 +2271,7 @@ jobs:
 - Añadir `CRON_SECRET` a `env.ts` y a GitHub Secrets
 - **Aceptación:** los 4 endpoints existen, GitHub Actions los dispara, Vercel solo procesa, sin depender de Vercel Cron.
 
-### [ ] Tarea 25.3 — Frenos automáticos de uso (kill switch)
+### [ ] [CC] Tarea 25.3 — Frenos automáticos de uso (kill switch)
 - Crear `src/lib/chatbot/limits.ts` con límites HARDCODED conservadores:
 ```ts
 export const LIMITS = {
@@ -2269,7 +2290,7 @@ export const LIMITS = {
 - Antes de cada llamada a `llm.ts`: contar uso del día por proveedor (tabla `api_logs`) y si **toda la cadena** excede sus LIMITS → fallback a mensaje "estamos en hora pico, déjanos tu email"
 - **Aceptación:** simular contadores altos en TODOS los proveedores → API responde fallback, NO llama a ningún LLM, NO genera costo.
 
-### [ ] Tarea 25.4 — Tabla `api_logs` para tracking de uso
+### [ ] [CC] Tarea 25.4 — Tabla `api_logs` para tracking de uso
 ```sql
 create table api_logs (
   id uuid primary key default gen_random_uuid(),
@@ -2289,7 +2310,7 @@ from api_logs group by 1, 2 order by 1 desc;
 ```
 - **Aceptación:** tras 10 llamadas al chat, `select * from daily_usage where service in ('groq','openrouter','cerebras','cloudflare','ollama')` suma 10 (distribuido entre los proveedores que respondieron).
 
-### [ ] Tarea 25.5 — Bloqueo manual de upgrades automáticos
+### [ ] [GEM] Tarea 25.5 — Bloqueo manual de upgrades automáticos
 **Pasos para Omar (manual):**
 
 1. **Vercel** → Project Settings → Billing → confirmar que el plan es **Hobby (gratis)**, NO conectar tarjeta.
@@ -2300,18 +2321,18 @@ from api_logs group by 1, 2 order by 1 desc;
 
 **Aceptación:** los 5 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees.
 
-### [ ] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
+### [ ] [GEM] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
 - **Opción A (100% gratis):** usar `omar-portafolio.vercel.app` (el subdominio que te da Vercel). Funciona perfecto.
 - **Opción B (~$12 USD/año):** comprar dominio en Namecheap/Porkbun (`omarhernandez.dev`, `omarhr.com`). Más profesional.
 - Si vas opción B: **es el único costo justificable** del proyecto. $1 USD/mes que se recupera con 1 cliente.
 - **Aceptación:** decisión documentada en `OPERACION_DIARIA.md`, dominio configurado.
 
-### [ ] Tarea 25.7 — Alerta de "casi al límite"
+### [ ] [CC] Tarea 25.7 — Alerta de "casi al límite"
 - En `quota-check` (Tarea 25.2): si Groq llega a 80% de límite diario → Telegram avisa
 - Si llega a 95% → además, cambiar variable `EMERGENCY_FALLBACK=true` en runtime que desvía nuevas conversaciones a "déjanos tu email, te respondemos pronto"
 - **Aceptación:** simular 95% → conversaciones nuevas reciben fallback en lugar de tocar Groq.
 
-### [ ] Tarea 25.8 — Costo total mensual real (verificación)
+### [ ] [CC] Tarea 25.8 — Costo total mensual real (verificación)
 - Ejecutar al final de cada mes:
 ```bash
 echo "=== Costos del mes ==="
@@ -2402,7 +2423,7 @@ TOTAL FIJO:            $0/mes (o $1/mes si dominio propio)
 
 ---
 
-### [ ] Tarea 26.1 — Documento de "Plan B" (qué hacer si algo deja de ser gratis)
+### [ ] [GEM] Tarea 26.1 — Documento de "Plan B" (qué hacer si algo deja de ser gratis)
 Crear `PLAN_B_OPENSOURCE.md`:
 
 ```markdown
@@ -2435,7 +2456,7 @@ Crear `PLAN_B_OPENSOURCE.md`:
 
 - **Aceptación:** archivo creado y referenciado desde el README.
 
-### [ ] Tarea 26.2 — Reglas de oro de ejecución para IAs (Copilot / Groq CLI)
+### [ ] [GEM] Tarea 26.2 — Reglas de oro de ejecución para IAs (Copilot / Groq CLI)
 
 Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan, a veces "creen" que terminaron sin terminar. Para mitigarlo, antes de cada tarea grande, el agente DEBE descomponerla en sub-tareas atómicas máximo de 30 líneas de código cada una.
 
@@ -2454,7 +2475,7 @@ Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan,
 
 **Aceptación:** el agente, antes de empezar una tarea grande, escribe en el chat la lista de sub-tareas que va a ejecutar y espera confirmación del usuario. Solo entonces empieza.
 
-### [ ] Tarea 26.3 — Modo "smoke test" después de cada fase
+### [ ] [GEM] Tarea 26.3 — Modo "smoke test" después de cada fase
 Tras completar TODA una fase (no cada tarea), el agente DEBE:
 
 1. Ejecutar `npm run build` → debe pasar
@@ -2466,7 +2487,7 @@ Tras completar TODA una fase (no cada tarea), el agente DEBE:
 
 **Aceptación:** entre fase y fase hay un commit explícito `chore: cierre fase X — todos los checks pasan`.
 
-### [ ] Tarea 26.4 — Si la IA se queda atascada (protocolo de escalada)
+### [ ] [GEM] Tarea 26.4 — Si la IA se queda atascada (protocolo de escalada)
 
 Las IAs a veces entran en bucles o no entienden el contexto. Si después de **3 intentos** una sub-tarea sigue fallando:
 
@@ -2483,7 +2504,7 @@ Las IAs a veces entran en bucles o no entienden el contexto. Si después de **3 
 
 **Aceptación:** protocolo escrito, el agente lo aplica si se atasca.
 
-### [ ] Tarea 26.5 — Validación final pre-deploy con humano
+### [ ] [GEM] Tarea 26.5 — Validación final pre-deploy con humano
 Antes de hacer el deploy de FASE 10, hacer manualmente con Omar (no la IA):
 
 1. Abrir el sitio en `localhost:3000`
@@ -2592,7 +2613,7 @@ LLM_PROVIDER_CHAIN=
 ```
 - **Aceptación:** `.env.example` commiteado con las nuevas vars vacías.
 
-### [ ] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
+### [ ] [GEM] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
 **Pasos para Omar (todos sin tarjeta):**
 
 1. **OpenRouter** — https://openrouter.ai/keys
@@ -2662,7 +2683,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.2 — Email follow-up automatizado vía Resend (3000 emails/mes gratis)
+### [ ] [CC] Tarea 28.2 — Email follow-up automatizado vía Resend (3000 emails/mes gratis)
 
 **Para qué sirve.** El cron de FASE 12 ya marca leads fríos. Falta enviarles email automático con propuesta personalizada para reactivarlos. Esto solo lo logra automatización; ningún humano da abasto.
 
@@ -2697,7 +2718,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.3 — RAG con pgvector: el bot cita tus proyectos REALES, no inventa
+### [ ] [CC] Tarea 28.3 — RAG con pgvector: el bot cita tus proyectos REALES, no inventa
 
 **Para qué sirve.** Hoy el bot puede inventar tu experiencia. Con RAG, busca semánticamente en tus proyectos/casos de éxito reales antes de responder. Bot deja de mentir → cierra ventas reales.
 
@@ -2740,7 +2761,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.4 — Voz: input por micrófono usando Web Speech API (gratis, navegador)
+### [ ] [GEM] Tarea 28.4 — Voz: input por micrófono usando Web Speech API (gratis, navegador)
 
 **Para qué sirve.** Móvil es el 70% del tráfico. Escribir es lento. Hablarle al chat sube tasa de envío de mensajes 3-4× según UX research.
 
@@ -2769,7 +2790,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.5 — Multi-idioma: añadir português brasileiro (mercado LATAM 215M personas)
+### [ ] [GEM] Tarea 28.5 — Multi-idioma: añadir português brasileiro (mercado LATAM 215M personas)
 
 **Para qué sirve.** Brasil es el mercado tech más grande de LATAM. Cobrar en USD a clientes brasileños vale 5× lo que vale a clientes colombianos. Solo hay que traducir.
 
@@ -2797,7 +2818,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.6 — Cal.com con timezone auto-detectado del visitante
+### [ ] [GEM] Tarea 28.6 — Cal.com con timezone auto-detectado del visitante
 
 **Para qué sirve.** Hoy si un cliente de México ve Cal.com en hora Bogotá, se confunde y NO agenda. Auto-detectar y mostrar en su zona horaria sube conversión de agendado 30%+.
 
@@ -2824,7 +2845,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.7 — A/B testing de aperturas (qué saludo cierra más)
+### [ ] [CC] Tarea 28.7 — A/B testing de aperturas (qué saludo cierra más)
 
 **Para qué sirve.** Saber con datos qué primera frase del bot convierte más leads. Sin medir, optimizas a ciegas.
 
@@ -2852,7 +2873,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.8 — Calculadora interactiva de presupuesto (lead magnet sin chatbot)
+### [ ] [GEM] Tarea 28.8 — Calculadora interactiva de presupuesto (lead magnet sin chatbot)
 
 **Para qué sirve.** Mucha gente no quiere chatear pero sí quiere saber "cuánto me costaría". Calculadora pública = leads sin fricción. Pide email al final para enviar PDF.
 
@@ -2882,7 +2903,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.9 — Análisis de imagen: cliente sube screenshot y bot lo entiende (Llama Vision)
+### [ ] [CC] Tarea 28.9 — Análisis de imagen: cliente sube screenshot y bot lo entiende (Llama Vision)
 
 **Para qué sirve.** "Quiero algo así" + screenshot de competencia es la conversación real de ventas. Hoy el bot no puede ver. Con Llama 3.2 Vision (gratis en Groq) sí.
 
@@ -2911,7 +2932,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.10 — Auto-resumen a Notion (CRM gratis para Omar)
+### [ ] [GEM] Tarea 28.10 — Auto-resumen a Notion (CRM gratis para Omar)
 
 **Para qué sirve.** El admin de FASE 20 es para revisar puntual; Notion es donde Omar trabajará el pipeline diario. Sin un CRM, leads se pierden en el ruido.
 
@@ -2956,7 +2977,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.1 — Blog MDX con generación estática (1 post/semana de SEO long-tail)
+### [ ] [CC] Tarea 29.1 — Blog MDX con generación estática (1 post/semana de SEO long-tail)
 
 **Para qué sirve.** Cada post = 1 página indexada en Google = nuevo punto de entrada de tráfico. 52 posts en 1 año = 52 ventanas para que te encuentren.
 
@@ -2985,7 +3006,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.2 — SEO programático: rutas dinámicas por servicio × ciudad
+### [ ] [CC] Tarea 29.2 — SEO programático: rutas dinámicas por servicio × ciudad
 
 **Para qué sirve.** Generar 50-200 páginas indexables del tipo `/servicios/desarrollo-web/bogota`, `/servicios/chatbot-ia/medellin`. Cada combinación servicio×ciudad atrapa una búsqueda local específica.
 
@@ -3012,7 +3033,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.3 — Sitemap dinámico + robots.txt
+### [ ] [GEM] Tarea 29.3 — Sitemap dinámico + robots.txt
 
 **Para qué sirve.** Sin sitemap, Google indexa solo lo que encuentra; con sitemap, le dices exactamente qué indexar y cuándo.
 
@@ -3038,7 +3059,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.4 — Schema.org JSON-LD (Person, Service, FAQPage, BreadcrumbList)
+### [ ] [GEM] Tarea 29.4 — Schema.org JSON-LD (Person, Service, FAQPage, BreadcrumbList)
 
 **Para qué sirve.** Rich snippets en Google: estrellas, FAQs desplegables, breadcrumbs visuales. Aumenta CTR del resultado 20-30%.
 
@@ -3066,7 +3087,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.5 — Open Graph images dinámicas por ruta (Vercel OG)
+### [ ] [CC] Tarea 29.5 — Open Graph images dinámicas por ruta (Vercel OG)
 
 **Para qué sirve.** Cuando alguien comparte tu post en LinkedIn/Twitter, ve una imagen rica con título y branding. CTR de un share con OG decente vs. genérico: 5×.
 
@@ -3098,7 +3119,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.6 — Lead magnets descargables: PDFs gated por email
+### [ ] [CC] Tarea 29.6 — Lead magnets descargables: PDFs gated por email
 
 **Para qué sirve.** "Guía gratuita: cómo elegir desarrollador en 2026" → email del visitante. Lead frío convertible vía newsletter (29.7).
 
@@ -3127,7 +3148,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.7 — Newsletter (Resend + Supabase, sin servicios pagos)
+### [ ] [CC] Tarea 29.7 — Newsletter (Resend + Supabase, sin servicios pagos)
 
 **Para qué sirve.** Mantener relación con leads fríos por meses hasta que estén listos para comprar. CAC orgánico = $0.
 
@@ -3154,7 +3175,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.8 — Analytics: Vercel Analytics (free) o Plausible self-hosted (open source)
+### [ ] [GEM] Tarea 29.8 — Analytics: Vercel Analytics (free) o Plausible self-hosted (open source)
 
 **Para qué sirve.** Saber qué páginas convierten, qué tráfico viene de dónde, qué CTAs funcionan. Sin esto, optimizas a ciegas.
 
@@ -3182,7 +3203,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.9 — RSS feed (descubrimiento por agregadores y bots)
+### [ ] [GEM] Tarea 29.9 — RSS feed (descubrimiento por agregadores y bots)
 
 **Para qué sirve.** RSS sigue siendo la columna vertebral de descubrimiento de contenido técnico (Feedly, Inoreader, Mastodon). Cada nuevo post llega a tus suscriptores RSS sin que tengan que abrir el sitio.
 
@@ -3205,7 +3226,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 29.10 — Auto-submit a directorios LATAM y Hacker News (GitHub Actions)
+### [ ] [GEM] Tarea 29.10 — Auto-submit a directorios LATAM y Hacker News (GitHub Actions)
 
 **Para qué sirve.** Backlinks de calidad = ranking SEO. Hacerlo a mano es tedioso; automatizar = horas recuperadas.
 
@@ -3252,7 +3273,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.1 — Auto-onboarding del cliente: form → contrato firmado → pago → kickoff
+### [ ] [CC] Tarea 30.1 — Auto-onboarding del cliente: form → contrato firmado → pago → kickoff
 
 **Para qué sirve.** Eliminar el ping-pong manual cliente↔Omar antes de empezar el proyecto. Sistema lleva al cliente solo desde "acepto" hasta "proyecto iniciado".
 
@@ -3279,7 +3300,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.2 — Sistema de tickets en `/admin` (no más WhatsApp infinito)
+### [ ] [CC] Tarea 30.2 — Sistema de tickets en `/admin` (no más WhatsApp infinito)
 
 **Para qué sirve.** Cuando tienes 10 clientes activos, WhatsApp/Telegram se vuelve caos. Tickets = orden + historial + asignable.
 
@@ -3306,7 +3327,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.3 — Time tracking simple integrado (cuánto tiempo invierto por cliente)
+### [ ] [GEM] Tarea 30.3 — Time tracking simple integrado (cuánto tiempo invierto por cliente)
 
 **Para qué sirve.** Saber rentabilidad real por cliente. "Cliente A me paga $500 pero le invierto 40h → $12.5/h, malo." Sin medir, no sabes a quién subir el precio o despedir.
 
@@ -3330,7 +3351,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.4 — Facturación Colombia básica (PDF DIAN-friendly con `pdf-lib`)
+### [ ] [CC] Tarea 30.4 — Facturación Colombia básica (PDF DIAN-friendly con `pdf-lib`)
 
 **Para qué sirve.** Cliente paga → necesitas factura. Manualmente es 10 min/cliente. Automatizado es 0 min.
 
@@ -3355,7 +3376,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.5 — Plantillas de propuesta por nicho (no más copy-paste manual)
+### [ ] [GEM] Tarea 30.5 — Plantillas de propuesta por nicho (no más copy-paste manual)
 
 **Para qué sirve.** Una propuesta para "clínica dental" debe sonar distinta a una para "e-commerce de moda". Plantillas por nicho = 80% del trabajo automatizado.
 
@@ -3379,7 +3400,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.6 — Roles y permisos en `/admin` (Omar admin + asistente futuro)
+### [ ] [CC] Tarea 30.6 — Roles y permisos en `/admin` (Omar admin + asistente futuro)
 
 **Para qué sirve.** Cuando contrates a alguien que responda leads, NO debe ver tus números de facturación. RBAC básico.
 
@@ -3402,7 +3423,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.7 — Sistema de webhooks (eventos para integrar con cualquier herramienta futura)
+### [ ] [CC] Tarea 30.7 — Sistema de webhooks (eventos para integrar con cualquier herramienta futura)
 
 **Para qué sirve.** Que cuando llega un lead, además de Telegram/Notion, puedas dispararse cualquier cosa: Discord, Slack, Make.com, Zapier alternative gratis (n8n self-hosted).
 
@@ -3426,7 +3447,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.8 — Status page público (transparencia + confianza enterprise)
+### [ ] [GEM] Tarea 30.8 — Status page público (transparencia + confianza enterprise)
 
 **Para qué sirve.** Cliente enterprise antes de firmar revisa "¿este servicio se cae?". Status page público = profesionalismo + transparencia.
 
@@ -3451,7 +3472,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.9 — Backup multi-destino (Supabase → Cloudflare R2 free tier)
+### [ ] [CC] Tarea 30.9 — Backup multi-destino (Supabase → Cloudflare R2 free tier)
 
 **Para qué sirve.** FASE 21 ya tiene backup a un sitio. Multi-destino = redundancia. Si pierdes acceso a una cosa, queda la otra.
 
@@ -3475,7 +3496,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 30.10 — Documentación interna `/docs` (procesos repetibles para subcontratistas)
+### [ ] [GEM] Tarea 30.10 — Documentación interna `/docs` (procesos repetibles para subcontratistas)
 
 **Para qué sirve.** Cuando contrates a alguien, le pasas un link, no un curso de 1 semana. Procesos = la diferencia entre 1 freelancer y 1 empresa.
 
