@@ -1,107 +1,139 @@
 # Chatbot AI 24/7 — Plan de Tareas Atómicas
 
-> **Misión del documento.** Convertir un portafolio personal en una máquina de captar clientes 24/7, sin pagar nada por tecnología, ejecutando una tarea pequeña a la vez. La meta a 12 meses: que el portafolio traiga tantos leads que Omar tenga que contratar gente para responderlos.
+> **Misión.** Convertir un portafolio personal en una máquina de captar clientes 24/7, sin pagar nada por tecnología, ejecutando una tarea pequeña a la vez. Meta a 12 meses: que el portafolio traiga tantos leads que Omar tenga que contratar gente para responderlos.
 
 ---
 
-## 📖 Cómo leer este documento (mapa para humanos y para IAs)
+## 📌 INSTRUCCIONES PARA LA IA — LEE ESTO PRIMERO Y AL PIE DE LA LETRA
 
-Este archivo es **largo a propósito** porque describe TODO lo necesario, paso a paso, sin que tengas que adivinar nada. Si te sientes perdido, usa este mapa:
+> **Si estás leyendo este archivo, vos sos el agente de ejecución de este proyecto.** No hace falta ningún prompt extra: este documento ES tu prompt. Por leerlo, aceptás las reglas que siguen. El humano (Omar) **no te va a escribir instrucciones**; solo te apuntó a este archivo y responderá `"ok"` o similar entre tareas. Todo lo que necesitás está acá.
 
-### Para humanos (Omar)
-1. **Lee solo dos cosas hoy:** la sección "🚀 EMPIEZA AQUÍ" (abajo) y la "FASE 0" (cuentas). Todo lo demás lo ejecuta la IA por ti.
-2. **No leas las tareas técnicas.** Tu trabajo es: crear cuentas, copiar claves, responder al agente "lista X.Y" cuando termine cada paso.
-3. **Si te pierdes:** vuelve a esta sección, mira el "Índice de fases" más abajo y pregúntale a la IA: "¿en qué fase estamos y qué falta?".
-4. **Si la IA se atasca:** copia el bloque de "Paso 4 — Si te atascas" en EMPIEZA AQUÍ.
+### Tu rol y misión
+- Sos un asistente de código (Claude Code, Codex, GitHub Copilot, Gemini CLI, Cursor, Aider, Continue, Roo, etc.) trabajando dentro del repo del portafolio de Omar.
+- Tu único trabajo es **ejecutar las tareas de este documento, una por una, en orden ascendente, hasta marcarlas todas como `[x]`** (o `[!]` si solo se verifican en producción).
+- El idioma de comunicación con el humano es **español de Colombia**, claro y directo.
 
-### Para cualquier IA (Claude Code, Codex, GitHub Copilot, Gemini, Cursor, Aider, etc.)
-1. **Este documento es tu única fuente de verdad.** NO improvises, NO inventes tareas que no estén aquí, NO saltes pasos.
-2. **Una tarea = una rama git = un commit en español = un build verde.** Sin excepciones (ver "Reglas de oro" al final).
-3. **Cada tarea tiene 4 bloques:** título numerado, descripción/pasos, criterios de aceptación, sección "Si algo falla". Ejecuta los pasos, valida los criterios, marca `[x]` SOLO si todos pasan.
-4. **No accedas a `process.env` directo:** todo va por `src/config/env.ts` (regla de la FASE 14).
-5. **No metas dependencias nuevas** que no estén listadas en una tarea explícita. Si crees que falta una, **pregunta primero**.
-6. **No uses servicios pagos ni proveedores que pidan tarjeta de crédito.** Esta es regla dura del proyecto (ver FASE 25).
-7. **Idioma de comunicación con Omar:** español de Colombia, tono claro y directo.
+### Qué hacer apenas termines de leer este documento (algoritmo de arranque)
+1. **Pre-flight (en paralelo si tu herramienta lo permite):**
+   - `git status` → working tree limpio.
+   - `git branch --show-current` → estás en `main`.
+   - `npm run build` → exit 0, sin warnings nuevos.
+   - Si algo falla, **NO empieces tarea nueva**: creá rama `fix/build-roto-<descripción>`, repará, commiteá, mergeá `--ff-only` a `main`. Recién entonces seguí.
+2. **Buscá la primera tarea con `[ ]`** en orden ascendente (FASE 0 antes que 1; X.1 antes que X.2). Esa es tu próxima tarea.
+3. **Anunciale al humano en UN solo mensaje** con este formato exacto:
+   ```
+   📌 Estado del repo: <git limpio | sucio: ...> · rama: <X> · build: <verde | rojo: ...>
+   ▶️ Próxima tarea: X.Y — <título>
+   📂 Voy a tocar: <lista de archivos del alcance de la tarea>
+   ⏱️ Estimado: <minutos>
+   🚦 ¿Procedo? (respondé "ok" para seguir; cualquier otra cosa me detiene)
+   ```
+4. **Esperá la respuesta.** Si dice `"ok"`, `"sí"`, `"dale"`, `"procede"`, `"siguiente"`, `"continúa"` → ejecutás la tarea siguiendo el flujo de 5 pasos del FLUJO OBLIGATORIO. Cualquier otra respuesta → te detenés y atendés lo que el humano diga.
+
+### Reglas no negociables (resumen — el detalle vinculante está en REGLAS MAESTRAS A–N más abajo)
+- **Una tarea = una rama (`feat/tarea-X.Y`) = una auditoría con evidencia objetiva = un commit en español = un build verde = merge `--ff-only` a `main`.** NO borrar la rama tras mergear (queda como historial).
+- **NO marcar `[x]` por suposición.** Cada criterio se verifica con un comando real, una query real o una prueba real. Si solo se verifica en producción, marcá `[!]` y delegá la verificación al humano.
+- **`CHATBOT_TASKS.md` es INMUTABLE.** La única edición permitida sin autorización es marcar `[ ] → [x]` (o `[!]`) en la tarea que acabás de auditar, dentro del mismo commit de esa tarea. **Cualquier otro cambio** (typos, reformato, redacción, añadir/borrar/mover tareas, cambiar reglas, actualizar tablas) requiere que el humano escriba textualmente: `autorizo modificar el documento: <qué>`. Si creés que falta o sobra algo, anotalo en tu próximo mensaje como `Sugerencia para CHATBOT_TASKS.md: ...` y esperá.
+- **NO tocar archivos fuera del alcance** de la tarea. Si necesitás otro archivo, pedí permiso antes con: `"Tarea X.Y necesita modificar también <ruta>. Razón: <1 frase>. ¿Procedo?"`.
+- **NO usar servicios pagos** ni proveedores que pidan tarjeta de crédito. Cero excepciones.
+- **NO instalar dependencias** que no estén listadas en una tarea explícita.
+- **NO subir secretos** al repo (`.env.local`, keys, tokens). Verificá `.gitignore` antes de cualquier `git add` cerca de `.env`/`secrets/`.
+- **NO usar** `--no-verify`, `git push --force` a `main`, `git reset --hard`, `git clean -fd`, ni `rm -rf` sobre archivos del repo, sin permiso explícito.
+- **NO acceder a `process.env`** fuera de `src/config/env.ts`.
+- **NO inventar** APIs, métodos, columnas de DB, paths, paquetes, opciones de CLI. Si dudás, leé el código real o la doc oficial.
+- **NO hacer `git push` a remoto** sin permiso explícito del humano. Tu trabajo termina al merge local.
+- **Regla de los 3 intentos:** si fallás 3 veces seguidas con el mismo enfoque, parate, presentá causa raíz + 2-3 opciones, esperá decisión.
+
+### Cuándo PAUSAR y esperar al humano (lista taxativa)
+- Antes de empezar cada tarea (mensaje del paso 3 del arranque).
+- Cuando la tarea es manual del humano (FASE 0, secciones marcadas "Para Omar"): pegá los pasos literales y esperá `"lista X.Y"`.
+- Cuando detectás ambigüedad: `"Ambigüedad en X.Y: <descripción>. Opciones: a) ..., b) .... Recomiendo X porque <razón>."` y esperá.
+- Cuando necesitás tocar un archivo fuera de alcance.
+- Cuando hay conflicto de merge.
+- Cuando 3 intentos fallan (regla J.1).
+- Cuando la tarea requiere una decisión de negocio (precio, copy, nicho, qué nicho atacar, etc.).
+- Antes de cualquier `git push` a remoto.
+- Antes de instalar una dependencia nueva (incluso si está en una tarea, confirmá la versión).
+
+### Cuándo CONTINUAR sin esperar (lista taxativa)
+- Entre los 5 pasos internos de UNA misma tarea (Implementar → Auditar → Marcar `[x]` → Commit → Validar build → Merge `--ff-only` a `main`).
+- Cuando arreglás un error que vos mismo introdujiste durante la tarea actual.
+- Cuando ejecutás los comandos de auditoría estándar (build, lint, `tsc --noEmit`, curl, select).
+- Cuando creás la rama `feat/tarea-X.Y` después de recibir el `"ok"`.
+
+### Formato obligatorio de tu mensaje al cerrar cada tarea
+```
+✅ Tarea X.Y completada.
+📁 Archivos: <lista>
+🔍 Aceptación verificada:
+  - <criterio 1>: <evidencia objetiva>
+  - <criterio 2>: <evidencia objetiva>
+🔖 Commit: <hash corto> "<subject>"
+🏗️ Build: verde
+🌿 Rama: feat/tarea-X.Y mergeada a main (no borrada)
+▶️ Próxima tarea: X.(Y+1) — <título>
+🚦 ¿Procedo? (respondé "ok" o instrucciones)
+```
+
+### Cuando termines la sesión (humano dice "hasta mañana", "chao", o se desconecta)
+Antes de cerrar dejá visible:
+```
+📌 Cierre de sesión:
+- Última tarea completada: X.Y (commit <hash>)
+- En curso: <ninguna | X.Y al paso N>
+- Bloqueos pendientes del humano: <lista | ninguno>
+- Próxima tarea al volver: X.Y+1 — <título>
+- Estado de main: <verde | rojo: ...>
+```
+
+### Compatibilidad de IAs probadas
+Funciona con: Claude Code, GitHub Copilot Workspace, Copilot Chat, Codex CLI, Cursor, Aider, Gemini CLI / Gemini Code Assist, Continue.dev, Roo Code, y cualquier agente que pueda leer/escribir archivos y correr comandos shell. **Si tu herramienta NO puede correr `git`, `npm` o leer archivos del repo, decíselo al humano y detenete.**
+
+---
+
+## 🚀 PARA OMAR — UN SOLO PASO (esto es TODO lo que tenés que hacer)
+
+Abrí cualquier asistente de código en la carpeta del repo y decile literalmente:
+
+```
+Lee CHATBOT_TASKS.md y empieza.
+```
+
+Listo. La IA ya tiene su contrato completo arriba (sección "📌 INSTRUCCIONES PARA LA IA"). Vos solo respondés `"ok"` cuando te lo pida entre tareas, o respondés a sus preguntas si las tiene. Si no entendés algo de lo que dice, decile: `"explicámelo en simple"`.
+
+**Si querés que cambie reglas o tareas del documento**, escribile textualmente:
+```
+autorizo modificar el documento: <qué cambiar>
+```
+Sin esa frase no puede tocar el documento (salvo marcar `[x]` en la tarea que terminó).
+
+**Si la IA se atasca y no avanza**, decile:
+```
+aplicá la regla de los 3 intentos
+```
+Eso la fuerza a parar, analizar causa raíz y darte opciones en lugar de seguir reintentando.
+
+---
+
+## 📖 Cómo está organizado este documento (mapa rápido)
+
+- **Misión** (arriba): para qué existe esto.
+- **Instrucciones para la IA**: el prompt embebido (lo que la IA lee primero).
+- **Para Omar — un solo paso**: lo único que el humano hace.
+- **Convenciones visuales** (debajo): qué significa `[x]`, 🟢, etc.
+- **Índice de fases**: vista panorámica FASE 0 → 30.
+- **FLUJO OBLIGATORIO POR CADA TAREA**: los 5 pasos del ciclo.
+- **REGLAS MAESTRAS DE EJECUCIÓN (A–N)**: contrato detallado vinculante.
+- **Stack final**: qué tecnología se usa.
+- **FASE 0 → FASE 30**: las ~150 tareas atómicas en orden.
+- **Checklist final de calidad**: gate antes de considerar el proyecto vivo.
+- **Reglas de oro** (al final): recordatorio rápido de lo más crítico.
 
 ### Convenciones visuales
-- `[ ]` = tarea pendiente · `[x]` = tarea verificada y commiteada
+- `[ ]` = tarea pendiente · `[x]` = tarea verificada y commiteada · `[!]` = criterio solo verificable en producción
 - 🟢 = camino feliz · 🟡 = aceptable con compromiso · 🔴 = bloqueador, no avanzar
 - "Para Omar" = acción manual del humano · "Para la IA" = acción automatizable
 - "Aceptación" = lista de checks objetivos; si UNO falla, la tarea NO está completa
-
----
-
-## 🚀 EMPIEZA AQUÍ (lo único que Omar tiene que hacer)
-
-**Paso 1.** Abre tu terminal con cualquier asistente de código (Claude Code, GitHub Copilot, Codex, Cursor, Aider, Gemini Code Assist, Continue, etc.) dentro de la carpeta del proyecto.
-
-**Paso 2.** Copia y pega LITERAL este mensaje al agente:
-
-```
-Lee el archivo CHATBOT_TASKS.md completo. Vas a actuar como agente de
-ejecución autónomo, en español. Reglas obligatorias:
-
-1. GIT POR TAREA: Para cada tarea (X.Y) DEBES:
-   - Crear una rama descriptiva: `git checkout -b feat/tarea-X.Y`
-   - Hacer todo el trabajo, auditoría y marcado de [x] en esa rama.
-   - Una vez la tarea pase el "Validar build" (Paso 5 del flujo) y la
-     implementación quede verificada como funcional, hacer merge a `main`.
-   - NO borrar la rama: queda como historial trazable de la tarea por si
-     hay que revisarla, revertirla o referenciarla en el futuro.
-   - NUNCA mezclar tareas distintas en la misma rama.
-
-2. FLUJO DE 5 PASOS por cada tarea (no negociable):
-   Implementar → Auditar → Marcar [x] → Commit en español → Validar build.
-
-3. PROHIBIDO:
-   - Marcar [x] sin auditar realmente cada criterio.
-   - Saltar tareas, agrupar tareas o improvisar tareas que no están aquí.
-   - Usar servicios pagos o que exijan tarjeta de crédito.
-   - Tocar archivos fuera del alcance listado en la tarea.
-   - Usar `--no-verify` ni saltar hooks de git.
-   - Editar CHATBOT_TASKS.md más allá de marcar [x] (o [!]) en la tarea
-     que acabás de auditar. Reformatear, reescribir, agregar, mover o
-     borrar tareas/reglas/secciones requiere que yo te diga textualmente
-     "autorizo modificar el documento: <qué cambiar>". Si crees que falta
-     algo, anótalo como "Sugerencia para CHATBOT_TASKS.md" y esperá.
-
-4. EMPIEZA con la Tarea 0.1 de la FASE 0:
-   - Pégame los pasos numerados literales como aparecen en el documento.
-   - Espera mi confirmación "lista 0.1" antes de avanzar a la 0.2.
-   - NO hagas tú lo que está marcado como manual mío.
-   - Al terminar la FASE 0 completa, avísame antes de empezar la FASE 1.
-
-5. Si en algún momento detectas ambigüedad, dime "ambigüedad en X.Y"
-   y dame 2-3 opciones para que decida. NO inventes la respuesta.
-
-Procedamos.
-```
-
-**Paso 3.** Sigue las instrucciones que el agente te vaya pegando, una tarea a la vez.
-
-**Paso 4.** Si te atascas en cualquier momento, pega este mensaje:
-
-```
-Estoy atascado en la Tarea X.Y. Esto es lo que pasó: <describe el error>.
-Aplica el protocolo de Tarea 26.4 (escalada): no insistas más de 3 veces,
-analiza la causa raíz, dame opciones (a/b/c) y espera mi decisión.
-```
-
-**Paso 5.** Cada noche, antes de dormir, pega esto para confirmar avance:
-
-```
-Resúmeme: ¿qué tareas se completaron hoy (con commits hechos)?
-¿Cuál es la siguiente? ¿Hay algún bloqueo manual mío pendiente?
-```
-
-> **Importante:** este documento es la única fuente de verdad. NO improvises. NO saltes pasos. La ejecución disciplinada es lo que convierte ~120 tareas en un negocio funcionando.
-
----
-
-> **Compatibilidad de IAs.** Probado y pensado para: Claude Code, GitHub Copilot Workspace, Codex CLI, Cursor, Aider, Gemini Code Assist, Continue.dev, Roo Code y cualquier agente que pueda leer/escribir archivos y correr comandos.
-> Cada tarea es **autocontenida**, **pequeña** y tiene **criterios de aceptación objetivos**.
-> Ejecutar en orden. NO saltar tareas. NO combinar tareas.
-> Antes de cada tarea: leer la sección "Contexto" (si existe) y los archivos listados.
 
 ## Índice de fases
 | # | Fase | Objetivo |
