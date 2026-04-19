@@ -104,9 +104,26 @@ export async function POST(req: NextRequest) {
     // 5. Procesar eventos (Lead, Calcom, Handoff)
     const lead = extractLead(rawReply);
     if (lead) {
-      await supabaseServer.from('leads').insert({ conversation_id: conversationId, ...lead });
-      const { notifyTelegram } = await import('@/lib/chatbot/telegram');
-      await notifyTelegram(`🎯 *Nuevo lead*: ${lead.name} (${lead.type})\nServicio: ${lead.service_requested}\nEmail: ${lead.email}`);
+      console.time(`[lead] insert+notify ${conversationId}`);
+      const { data: insertedLead, error: leadErr } = await supabaseServer
+        .from('leads')
+        .insert({ conversation_id: conversationId, ...lead })
+        .select('id')
+        .single();
+
+      if (leadErr) {
+        console.error('Error inserting lead:', leadErr);
+      } else if (insertedLead?.id) {
+        const { notifyLead } = await import('@/lib/chatbot/telegram');
+        await notifyLead({
+          lead,
+          conversationId,
+          leadId: insertedLead.id,
+          siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL,
+          botUsername: serverEnv.TELEGRAM_BOT_USERNAME,
+        });
+      }
+      console.timeEnd(`[lead] insert+notify ${conversationId}`);
     }
 
     const handoff = extractHandoff(rawReply);

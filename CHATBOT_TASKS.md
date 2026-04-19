@@ -2252,7 +2252,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] Tarea 28.1 — Speed-to-lead: notificación Telegram en < 30s con botón de respuesta rápida
+### [x] Tarea 28.1 — Speed-to-lead: notificación Telegram en < 30s con botón de respuesta rápida
 
 **Para qué sirve.** Estudios de InsideSales muestran que responder un lead en < 5 min lo cierra 9× más que responder en 1 hora. Cuando llega un lead, Telegram debe sonarte INMEDIATO con un mensaje accionable.
 

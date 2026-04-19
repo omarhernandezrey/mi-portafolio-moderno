@@ -3,12 +3,49 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { serverEnv } from '@/config/env';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 
+async function answerCallback(callbackId: string, text: string) {
+  try {
+    await fetch(
+      `https://api.telegram.org/bot${serverEnv.TELEGRAM_BOT_TOKEN}/answerCallbackQuery`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ callback_query_id: callbackId, text, show_alert: false }),
+      }
+    );
+  } catch (err) {
+    console.error('answerCallback error:', err);
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    
-    // Telegram envía el update en el cuerpo del request
-    const { message } = body;
+    const { message, callback_query } = body;
+
+    // --- BOTONES INLINE (Tarea 28.1) ---
+    if (callback_query) {
+      const fromId = callback_query.from.id.toString();
+      if (fromId !== serverEnv.TELEGRAM_CHAT_ID) {
+        await answerCallback(callback_query.id, '⛔ No autorizado');
+        return NextResponse.json({ ok: true });
+      }
+      const data: string = callback_query.data ?? '';
+      if (data.startsWith('mark_contacted_')) {
+        const leadId = data.replace('mark_contacted_', '');
+        const { error } = await supabaseServer
+          .from('leads')
+          .update({ status: 'contacted' })
+          .eq('id', leadId);
+        await answerCallback(
+          callback_query.id,
+          error ? `❌ Error: ${error.message}` : '✅ Marcado como contactado'
+        );
+        return NextResponse.json({ ok: true });
+      }
+      await answerCallback(callback_query.id, '⚠️ Acción desconocida');
+      return NextResponse.json({ ok: true });
+    }
 
     // Si no es un mensaje de texto, ignoramos (ej: stickers, fotos)
     if (!message || !message.text) {

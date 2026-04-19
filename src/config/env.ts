@@ -6,6 +6,7 @@ const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   TELEGRAM_BOT_TOKEN: z.string().min(1),
   TELEGRAM_CHAT_ID: z.string().min(1),
+  TELEGRAM_BOT_USERNAME: z.string().optional(),
   ADMIN_PASSWORD: z.string().min(4),
   ADMIN_SECRET: z.string().min(10),
   // FASE 27 — proveedores LLM de respaldo (todos opcionales)
@@ -24,6 +25,7 @@ export const serverEnv = {
   get SUPABASE_SERVICE_ROLE_KEY() { return process.env.SUPABASE_SERVICE_ROLE_KEY || ""; },
   get TELEGRAM_BOT_TOKEN() { return process.env.TELEGRAM_BOT_TOKEN || ""; },
   get TELEGRAM_CHAT_ID() { return process.env.TELEGRAM_CHAT_ID || ""; },
+  get TELEGRAM_BOT_USERNAME() { return process.env.TELEGRAM_BOT_USERNAME || ""; },
   get ADMIN_PASSWORD() { return process.env.ADMIN_PASSWORD || ""; },
   get ADMIN_SECRET() { return process.env.ADMIN_SECRET || ""; },
 
