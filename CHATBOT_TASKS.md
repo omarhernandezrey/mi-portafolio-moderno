@@ -44,8 +44,10 @@ ejecución autónomo, en español. Reglas obligatorias:
 1. GIT POR TAREA: Para cada tarea (X.Y) DEBES:
    - Crear una rama descriptiva: `git checkout -b feat/tarea-X.Y`
    - Hacer todo el trabajo, auditoría y marcado de [x] en esa rama.
-   - Una vez la tarea pase el "Validar build" (Paso 5 del flujo), hacer
-     merge a `main`,  y volver a `main`.
+   - Una vez la tarea pase el "Validar build" (Paso 5 del flujo) y la
+     implementación quede verificada como funcional, hacer merge a `main`.
+   - NO borrar la rama: queda como historial trazable de la tarea por si
+     hay que revisarla, revertirla o referenciarla en el futuro.
    - NUNCA mezclar tareas distintas en la misma rama.
 
 2. FLUJO DE 5 PASOS por cada tarea (no negociable):
