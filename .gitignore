@@ -45,3 +45,6 @@ secrets/
 next-env.d.ts
 .env*.local
 mis-claves-chatbot.txt*
+
+# Claude Code local state (memory + scheduled tasks)
+.claude/
