@@ -70,6 +70,7 @@ export default function Footer() {
     { href: "#projects", label: t("footer.navigation.projects") },
     { href: "#skills", label: t("footer.navigation.skills") },
     { href: "#contact", label: t("footer.navigation.contact") },
+    { href: "/privacidad", label: t("footer.navigation.privacy") },
   ];
 
   return (

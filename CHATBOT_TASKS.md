@@ -2423,7 +2423,7 @@ TOTAL FIJO:            $0/mes (o $1/mes si dominio propio)
 
 ---
 
-### [ ] [GEM] Tarea 26.1 — Documento de "Plan B" (qué hacer si algo deja de ser gratis)
+### [x] [GEM] Tarea 26.1 — Documento de "Plan B" (qué hacer si algo deja de ser gratis)
 Crear `PLAN_B_OPENSOURCE.md`:
 
 ```markdown
@@ -2613,7 +2613,7 @@ LLM_PROVIDER_CHAIN=
 ```
 - **Aceptación:** `.env.example` commiteado con las nuevas vars vacías.
 
-### [ ] [GEM] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
+### [ ] [OMAR] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
 **Pasos para Omar (todos sin tarjeta):**
 
 1. **OpenRouter** — https://openrouter.ai/keys

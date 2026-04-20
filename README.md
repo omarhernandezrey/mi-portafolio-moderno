@@ -201,6 +201,15 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 ⭐ Si este proyecto te ha sido útil, no olvides darle una estrella en GitHub! 
 ---
 
+## 🔐 Operación y Estrategia
+
+Para una gestión profesional del portafolio y el chatbot, consulta estas guías en orden:
+
+1. [**01-OPERACION_DIARIA.md**](./01-OPERACION_DIARIA.md): Hábitos y rutinas para convertir leads.
+2. [**02-MARKETING_DISTRIBUCION.md**](./02-MARKETING_DISTRIBUCION.md): Dónde publicar para atraer tráfico.
+3. [**03-ESTRATEGIA_INGRESOS.md**](./03-ESTRATEGIA_INGRESOS.md): Nicho, pricing USD y plan de crecimiento.
+4. [**04-PLAN_B_OPENSOURCE.md**](./04-PLAN_B_OPENSOURCE.md): Alternativas gratuitas si los servicios actuales fallan.
+
 ## 🔐 Operación y Seguridad (Chatbot AI)
 
 ### Gestión de Leads
