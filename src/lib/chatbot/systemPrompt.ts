@@ -1,18 +1,23 @@
 import { PERSONA, SERVICES_CATALOG, SALES_PLAYBOOK, OBJECTIONS, PORTFOLIO_DATA } from './data';
 
+const pickLang = <T extends { es: T[keyof T]; en: T[keyof T] }>(obj: T, language: 'es' | 'en' | 'pt'): T[keyof T] => {
+  const rec = obj as Record<string, T[keyof T]>;
+  return rec[language] ?? rec.en ?? rec.es;
+};
+
 const serializeCatalog = (language: 'es' | 'en' | 'pt') => {
   return SERVICES_CATALOG.map(s => `- ${s.name[language]}: ${s.priceRange.min}-${s.priceRange.max} ${s.priceRange.currency}.`).join('\n');
 };
 
 const serializeProjects = (language: 'es' | 'en' | 'pt') => {
-  return PORTFOLIO_DATA.projects.slice(0, 5).map(p => `- ${p.title[language]}: ${p.technologies.slice(0,3).join(', ')}`).join('\n');
+  return PORTFOLIO_DATA.projects.slice(0, 5).map(p => `- ${pickLang(p.title, language)}: ${p.technologies.slice(0,3).join(', ')}`).join('\n');
 };
 
 const serializeEducation = (language: 'es' | 'en' | 'pt') => {
   const result: string[] = [];
   PORTFOLIO_DATA.education.slice(0, 2).forEach(cat => {
     cat.items.slice(0, 1).forEach(item => {
-      const title = typeof item.title === 'string' ? item.title : item.title[language];
+      const title = typeof item.title === 'string' ? item.title : pickLang(item.title, language);
       result.push(`- ${title}`);
     });
   });
@@ -20,7 +25,7 @@ const serializeEducation = (language: 'es' | 'en' | 'pt') => {
 };
 
 const serializeSkills = (language: 'es' | 'en' | 'pt') => {
-  return PORTFOLIO_DATA.skills.slice(0, 15).map(s => s.name[language]).join(', ');
+  return PORTFOLIO_DATA.skills.slice(0, 15).map(s => pickLang(s.name, language)).join(', ');
 };
 
 const serializeObjections = (language: 'es' | 'en' | 'pt') => {

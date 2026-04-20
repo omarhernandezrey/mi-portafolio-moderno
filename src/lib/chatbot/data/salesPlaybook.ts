@@ -19,6 +19,16 @@ export const SALES_PLAYBOOK = {
       { category: 'problem', question: "Is your current site slow or difficult to update?" },
       { category: 'implication', question: "Have you noticed if customers leave due to page slowness?" },
       { category: 'need-payoff', question: "How would your daily routine change by having a custom admin panel?" }
+    ],
+    pt: [
+      { category: 'situation', question: "O que você tem hoje funcionando na sua presença digital?" },
+      { category: 'problem', question: "O que mais te frustra na sua solução atual?" },
+      { category: 'implication', question: "Quanto tempo ou dinheiro você acha que está perdendo por não resolver isso?" },
+      { category: 'need-payoff', question: "Qual impacto teria no seu negócio ter isso pronto em 4-6 semanas?" },
+      { category: 'situation', question: "Você já tem um design ou começamos do zero com o Figma?" },
+      { category: 'problem', question: "Seu site atual é lento ou difícil de atualizar?" },
+      { category: 'implication', question: "Você notou se os clientes vão embora por causa da lentidão da página?" },
+      { category: 'need-payoff', question: "Como mudaria o seu dia a dia ter um painel administrativo personalizado?" }
     ]
   },
   qualificationBANT: {
@@ -33,6 +43,12 @@ export const SALES_PLAYBOOK = {
       authority: "Are you the technical decision-maker or is there someone else we should validate the stack with?",
       need: "From what you're telling me, your priority is {need}. Is that correct?",
       timeline: "When do you need to have the first version in production?"
+    },
+    pt: {
+      budget: "Entendo. Para projetos deste tipo, a faixa costuma ficar entre {min} e {max} USD. Este orçamento está alinhado com o que você tinha em mente?",
+      authority: "Você lidera a decisão técnica ou há mais alguém com quem devamos validar a stack?",
+      need: "Pelo que você me diz, sua prioridade é {need}. Está correto?",
+      timeline: "Para quando você precisa ter a primeira versão em produção?"
     }
   },
   closingTechniques: {
@@ -49,6 +65,13 @@ export const SALES_PLAYBOOK = {
       { name: "Inverted Risk", example: "If in the first week of work you are not satisfied with the progress, I'll refund your advance payment, no questions asked." },
       { name: "Sum of Yes", example: "So, we are looking for a fast site, easy to manage, and ready in a month? Let's do it!" },
       { name: "Urgency", example: "If we start this week, we can launch before your deadline." }
+    ],
+    pt: [
+      { name: "Alternativa", example: "Tudo bem se agendarmos a chamada inicial para esta terça-feira ou você prefere na quinta?" },
+      { name: "Escassez", example: "Atualmente tenho vaga para iniciar apenas 2 projetos este mês para garantir a máxima qualidade." },
+      { name: "Risco Invertido", example: "Se na primeira semana de trabalho você não estiver satisfeito com o progresso, eu devolvo o adiantamento sem perguntas." },
+      { name: "Soma de Sim", example: "Então, buscamos um site rápido, fácil de gerenciar e que esteja pronto em um mês? Vamos em frente!" },
+      { name: "Urgência", example: "Se começarmos esta semana, conseguiremos lançar antes do seu prazo final." }
     ]
   },
   nextSteps: {
@@ -61,6 +84,11 @@ export const SALES_PLAYBOOK = {
       { level: 'cold', action: "I'll share this success story similar to what you're looking for.", cta: "See project" },
       { level: 'warm', action: "Should we schedule 15 minutes to pin down the technical details?", cta: "Schedule on Cal.com" },
       { level: 'hot', action: "Great! I just need you to confirm the brief so I can send you the advance payment link and start right away.", cta: "Send Brief" }
+    ],
+    pt: [
+      { level: 'cold', action: "Compartilho com você este caso de sucesso semelhante ao que você procura.", cta: "Ver projeto" },
+      { level: 'warm', action: "Que tal agendarmos 15 min para definir os detalhes técnicos?", cta: "Agendar no Cal.com" },
+      { level: 'hot', action: "Ótimo! Só preciso que você confirme o brief para eu te enviar o link de adiantamento e começarmos agora mesmo.", cta: "Enviar Brief" }
     ]
   }
 };
