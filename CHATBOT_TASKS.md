@@ -141,8 +141,8 @@ Eso la fuerza a parar, analizar causa raíz y darte opciones en lugar de seguir 
 Las tareas FASE 21–30 están repartidas entre **Claude Code (CC)**, **Gemini (GEM)** y **Omar (OMAR)** para trabajar en paralelo sin pisarse. El criterio del reparto fue:
 
 - **CC (22 tareas, complejas):** todo lo que toca código denso, infraestructura, CI/CD, RAG, vision LLM, billing, RBAC, webhooks, backups multi-destino, SEO programático con Next.js dinámico. Tareas que requieren razonamiento profundo sobre el código existente y validación end-to-end.
-- **GEM (36 tareas originales, livianas):** documentación, copy, configuración declarativa, scripts de mantenimiento sin lógica de negocio compleja, schemas SEO estáticos, plantillas, status pages, lead magnets de copy.
-- **OMAR (1 tarea, manual humana):** acciones que requieren login con email/cuenta personal y no pueden delegarse a una IA (regla B.5).
+- **GEM (33 tareas originales, livianas):** documentación, copy, configuración declarativa, scripts de mantenimiento sin lógica de negocio compleja, schemas SEO estáticos, plantillas, status pages, lead magnets de copy.
+- **OMAR (4 tareas, manuales humanas):** acciones que requieren login con email/cuenta personal, decisiones de negocio o validación humana subjetiva. Ninguna IA puede ejecutarlas (regla B.5).
 
 **Regla de oro del reparto:** si Gemini se topa con un bloqueador técnico de código durante una tarea `[GEM]`, debe parar, dejar la rama lista, marcar la tarea como `[ ] [GEM→CC]` y avisar al humano para que Claude Code la termine. Lo mismo en sentido inverso. **Cualquier reasignación requiere autorización del humano** con la frase exacta: `autorizo reasignar X.Y de <CC|GEM|OMAR> a <CC|GEM|OMAR>`.
 
@@ -151,9 +151,9 @@ Las tareas FASE 21–30 están repartidas entre **Claude Code (CC)**, **Gemini (
 | IA | Pendientes | Completadas | Total |
 |---|---|---|---|
 | **CC** | 22 | 0 | 22 |
-| **GEM** | 16 | 20 | 36 |
-| **OMAR** | 1 | 0 | 1 |
-| **Suma** | **39** | **20** | **59** |
+| **GEM** | 12 | 21 | 33 |
+| **OMAR** | 4 | 0 | 4 |
+| **Suma** | **38** | **21** | **59** |
 
 #### 🤖 PARA CLAUDE CODE — TUS 22 TAREAS PENDIENTES
 
@@ -184,17 +184,41 @@ Cuando arranques, escaneá esta lista y andá a la primera `[ ] [CC]` que NO ten
 | 30.7 | Sistema de webhooks (eventos integrables) | 30 |
 | 30.9 | Backup multi-destino (Supabase → Cloudflare R2) | 30 |
 
-#### 👤 PARA OMAR — TU TAREA MANUAL PENDIENTE
+#### 👤 PARA OMAR — TUS 4 TAREAS MANUALES PENDIENTES
 
 | ID | Título | Por qué es tuya |
 |---|---|---|
-| 27.7 | Crear cuentas gratis en cada proveedor (OpenRouter, Cerebras, Cloudflare AI, etc.) | Requiere login con tu email/GitHub y guardar las API keys en `.env`. Ninguna IA puede hacerlo (B.5). Pasos detallados en la propia tarea. |
+| 25.5 | Bloqueo manual de upgrades automáticos en Vercel/Supabase/GCP/GitHub/Cal.com | Requiere login en cada panel y confirmar plan Free sin tarjeta. Ninguna IA tiene tus credenciales (B.5). |
+| 25.6 | Decisión de dominio (subdominio gratis Vercel vs comprar `.dev`/`.com` ~$12/año) | Decisión de negocio + compra con tarjeta tuya. Ninguna IA decide por vos (B.5). |
+| 26.5 | Validación final pre-deploy (probar 10 escenarios de chat, calificar 1-10, firmar `VALIDACION_PREDEPLOY.md`) | Subjetivo: "¿el bot suena como yo?" solo Omar puede juzgarlo. |
+| 27.7 | Crear cuentas gratis en cada proveedor LLM (OpenRouter, Cerebras, Cloudflare AI, etc.) y pegar API keys en `.env.local` | Requiere login con tu email/GitHub. Ninguna IA puede hacerlo (B.5). Pasos detallados en la propia tarea. |
 
-#### 📦 PARA GEMINI — TUS 16 TAREAS PENDIENTES (referencia rápida)
+#### 📦 PARA GEMINI — TUS 12 TAREAS PENDIENTES (referencia rápida)
 
-25.5, 25.6, 26.5, 28.5, 28.6, 28.8, 28.10, 29.3, 29.4, 29.8, 29.9, 29.10, 30.3, 30.5, 30.8, 30.10. Detalle inline con tag `[GEM]`.
+28.6, 28.8, 28.10, 29.3, 29.4, 29.8, 29.9, 29.10, 30.3, 30.5, 30.8, 30.10. Detalle inline con tag `[GEM]`.
 
 **Cómo coordinarse sin chocar:** ambas IAs usan ramas distintas (`feat/tarea-X.Y`) y NO pueden mergear si hay conflicto. Si una IA encuentra que `main` cambió mientras trabajaba, debe rebasar contra `main` antes del merge `--ff-only`. Si el rebase trae conflicto, parar y avisar al humano.
+
+#### 🛡️ REGLAS ANTI-COLISIÓN (obligatorias para CC y GEM en paralelo)
+
+Estas reglas existen porque ya hubo un incidente (commit `f85f8b7`) en el que una IA usó `git add -A`/`git add .` y absorbió WIP no commiteado de la otra IA, dejando el build roto y borrando ~50 cursos de `educationData.ts`. Para que CC y GEM trabajen al mismo tiempo sin destruir el trabajo de la otra:
+
+1. **CHECKEO PRE-TAREA OBLIGATORIO.** Antes de empezar cualquier tarea ejecutá:
+   ```bash
+   git status            # debe mostrar: working tree clean
+   git fetch origin && git status  # debe mostrar: up to date con origin/main
+   ```
+   Si hay archivos modificados que NO son tuyos (no los tocaste en esta sesión), **PARAR** y avisar al humano: `"Working tree sucio con archivos ajenos: <lista>. Pausa hasta confirmación."` NUNCA stashear, descartar ni commitear archivos ajenos.
+
+2. **STAGE EXPLÍCITO — NUNCA `git add -A` NI `git add .`.** Solo `git add <ruta-explícita>` con cada archivo del alcance de tu tarea, uno por uno. Esto evita absorber WIP de la otra IA. Excepción única: si el alcance de tu tarea genera un directorio entero nuevo (ej. una migración) podés usar `git add path/exacto/del/dir/` pero nunca `-A` global.
+
+3. **WORKING TREE LIMPIO ES PRECONDICIÓN PARA `[x]`.** No marcás una tarea como `[x]` si `git status` no muestra "working tree clean" en TU rama. Si quedan archivos sin commitear, o son tuyos (commitealos) o son ajenos (pausá y avisá).
+
+4. **SI ENCONTRÁS DAÑO DE LA OTRA IA**, no lo arregles vos en silencio. Reportá al humano: `"Detecté daño en <archivo>: <descripción concreta>. ¿Restauro desde HEAD o esperan a que lo arregle <CC|GEM>?"` y esperá decisión. Excepción: si el build está rojo y bloquea TU tarea, sí podés restaurar lo mínimo para desbloquear, pero documentás el daño en tu commit.
+
+5. **NUNCA TOCÁS ARCHIVOS DE LA OTRA IA EN TU COMMIT.** Si tu rama va a tocar `src/lib/X` y descubrís que la otra IA está trabajando en `src/lib/X` (mtime reciente, archivos modificados), **PARAR** y avisar. Esto previene merges sucios.
+
+6. **EN CASO DE CONFLICTO DE FOOTPRINT** (las dos IAs necesitan tocar el mismo archivo), la primera que llegó a la rama lo termina; la segunda espera. Coordinación vía el humano: `"Conflicto de footprint con tarea X.Y de la otra IA en <archivo>. Pauso hasta que termine."`
 
 
 
@@ -2352,7 +2376,7 @@ from api_logs group by 1, 2 order by 1 desc;
 ```
 - **Aceptación:** tras 10 llamadas al chat, `select * from daily_usage where service in ('groq','openrouter','cerebras','cloudflare','ollama')` suma 10 (distribuido entre los proveedores que respondieron).
 
-### [ ] [GEM] Tarea 25.5 — Bloqueo manual de upgrades automáticos
+### [ ] [OMAR] Tarea 25.5 — Bloqueo manual de upgrades automáticos
 **Pasos para Omar (manual):**
 
 1. **Vercel** → Project Settings → Billing → confirmar que el plan es **Hobby (gratis)**, NO conectar tarjeta.
@@ -2363,7 +2387,7 @@ from api_logs group by 1, 2 order by 1 desc;
 
 **Aceptación:** los 5 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees.
 
-### [ ] [GEM] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
+### [ ] [OMAR] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
 - **Opción A (100% gratis):** usar `omar-portafolio.vercel.app` (el subdominio que te da Vercel). Funciona perfecto.
 - **Opción B (~$12 USD/año):** comprar dominio en Namecheap/Porkbun (`omarhernandez.dev`, `omarhr.com`). Más profesional.
 - Si vas opción B: **es el único costo justificable** del proyecto. $1 USD/mes que se recupera con 1 cliente.
@@ -2546,7 +2570,7 @@ Las IAs a veces entran en bucles o no entienden el contexto. Si después de **3 
 
 **Aceptación:** protocolo escrito, el agente lo aplica si se atasca.
 
-### [ ] [GEM] Tarea 26.5 — Validación final pre-deploy con humano
+### [ ] [OMAR] Tarea 26.5 — Validación final pre-deploy con humano
 Antes de hacer el deploy de FASE 10, hacer manualmente con Omar (no la IA):
 
 1. Abrir el sitio en `localhost:3000`
