@@ -1,0 +1,244 @@
+{
+  "navigation": {
+    "home": "Início",
+    "about": "Sobre mim",
+    "projects": "Projetos",
+    "services": "Serviços",
+    "skills": "Habilidades",
+    "education": "Educação",
+    "contact": "Contato",
+    "language": "Idioma"
+  },
+  "chatbot": {
+    "title": "Assistente do Omar",
+    "status": "Online agora",
+    "placeholder": "Digite uma mensagem...",
+    "welcome": "Olá 👋 Sou o assistente do Omar. Como posso te ajudar hoje?",
+    "loading": "Digitando...",
+    "error": "Sinto muito, ocorreu um erro. Poderia tentar novamente?",
+    "handoff": "Falar por WhatsApp",
+    "calendar": "Agendar reunião",
+    "ariaOpen": "Abrir chat",
+    "ariaClose": "Fechar chat",
+    "quickActions": {
+      "hire": "Quero contratar um serviço",
+      "recruiter": "Tenho uma oferta de trabalho",
+      "tech": "Pergunta técnica"
+    }
+  },
+  "hero": {
+    "greeting": "Olá, eu sou",
+    "name": "Omar Hernández Rey",
+    "title": "Desenvolvedor Web Full Stack",
+    "description": "Combinando {creativity}, {innovation} e {technology} para criar experiências web {unforgettable}.",
+    "creativity": "criatividade",
+    "innovation": "inovação",
+    "technology": "tecnologia",
+    "unforgettable": "inesquecíveis",
+    "viewProjects": "Ver Projetos",
+    "ariaLabel": "Ver meus projetos"
+  },
+  "about": {
+    "badge": "Conheça-me",
+    "title": "Sobre mim",
+    "description": "Olá! Sou {name}, um {role} com experiência tanto em {frontend} quanto em {backend}. Estou prestes a me formar em {degree} pela {university} e continuo aprendendo com cursos da {platform} sobre tecnologias web, DevOps e muito mais.",
+    "name": "Omar Hernández Rey",
+    "role": "Desenvolvedor Web Full Stack",
+    "frontend": "Front-End",
+    "backend": "Back-End",
+    "degree": "Engenharia de Software",
+    "university": "Politécnico Grancolombiano",
+    "platform": "Platzi",
+    "downloadCV": "Baixar CV",
+    "personalData": {
+      "name": "Nome",
+      "birthDate": "Data de Nascimento",
+      "address": "Endereço",
+      "phone": "Telefone"
+    },
+    "personalInfo": {
+      "fullName": "Omar Hernández Rey",
+      "birth": "14 de fevereiro de 1990",
+      "location": "Carrera 2N #39D-16 Sur, Bogotá",
+      "phoneNumber": "(+57) 3219058278"
+    },
+    "interests": {
+      "badge": "Paixões",
+      "title": "Meus Interesses"
+    }
+  },
+  "projects": {
+    "title": "Projetos",
+    "subtitle": "Alguns dos meus trabalhos recentes",
+    "viewProject": "Ver Projeto",
+    "viewCode": "Ver Código",
+    "technologies": "Tecnologias"
+  },
+  "services": {
+    "badge": "O que Ofereço",
+    "title": "Meus Serviços",
+    "subtitle": "O que posso fazer por você",
+    "description": "Soluções integrais projetadas para dar vida à sua visão digital com tecnologia de ponta e melhores práticas",
+    "cta": "Vamos Trabalhar Juntos",
+    "items": {
+      "frontend": {
+        "title": "Desenvolvimento Frontend",
+        "description": "Criando interfaces de usuário modernas e responsivas usando tecnologias como React e Next.js.",
+        "features": [
+          "React & Next.js",
+          "TypeScript",
+          "Design Responsivo",
+          "Otimização de Performance"
+        ]
+      },
+      "backend": {
+        "title": "Desenvolvimento Backend",
+        "description": "Construindo APIs robustas e escaláveis com Node.js, Express e bancos de dados SQL/NoSQL.",
+        "features": [
+          "Node.js & Express",
+          "Design de Bancos de Dados",
+          "Desenvolvimento de APIs",
+          "Microsserviços"
+        ]
+      },
+      "design": {
+        "title": "Design UI/UX",
+        "description": "Protótipos funcionais e design focado em melhorar a experiência do usuário.",
+        "features": [
+          "Pesquisa de Usuário",
+          "Wireframing",
+          "Prototipagem",
+          "Sistemas de Design"
+        ]
+      },
+      "devops": {
+        "title": "Implementação DevOps",
+        "description": "Automatizando deploys e mantendo infraestrutura na nuvem.",
+        "features": [
+          "Pipelines CI/CD",
+          "Infraestrutura na Nuvem",
+          "Orquestração de Containers",
+          "Monitoramento"
+        ]
+      }
+    }
+  },
+  "skills": {
+    "badge": "Excelência Técnica",
+    "title": "Habilidades Principais",
+    "subtitle": "Tecnologias com as que trabalho",
+    "description": "Dominando o ecossistema de desenvolvimento moderno para criar experiências digitais excepcionais",
+    "viewAll": "Todas as Habilidades",
+    "allSkills": "Todas as Habilidades",
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "database": "Banco de Dados",
+      "tools": "Ferramentas",
+      "mobile": "Móvel",
+      "devops": "DevOps",
+      "design": "Design",
+      "all": "Todas"
+    },
+    "skillDescriptions": {
+      "html5": "Estruturas semânticas e otimizadas para SEO e acessibilidade.",
+      "css3": "Designs responsivos, animações CSS e arquitetura escalável.",
+      "javascript": "ES6+, padrões avançados e otimização de performance.",
+      "typescript": "Tipagem estática para aplicações empresariais escaláveis.",
+      "react": "Aplicações SSR, ISR e estáticas otimizadas.",
+      "nodejs": "APIs REST/GraphQL, microsserviços e autenticação JWT.",
+      "uiux": "Design de interfaces focado na experiência do usuário.",
+      "cloud": "Infraestrutura escalável em AWS, GCP e Azure."
+    }
+  },
+  "education": {
+    "title": "Educação",
+    "subtitle": "Minha formação acadêmica e profissional",
+    "academicTitle": "Minha Trajetória Acadêmica",
+    "badge": "Educação",
+    "headerTitle": "Minha Trajetória Acadêmica",
+    "loadMore": "Carregar Mais",
+    "totalCount": "{count} cursos concluídos",
+    "latestBadge": "Novo",
+    "loading": "Carregando mais...",
+    "highlightsTitle": "Certificações destacadas",
+    "highlightsSubtitle": "Uma seleção de conquistas que resumem meu crescimento profissional.",
+    "carouselPrevious": "Ver certificação anterior",
+    "carouselNext": "Ver certificação seguinte",
+    "goToHighlight": "Ir para a certificação {index}",
+    "viewCertificate": "Ver certificado",
+    "certificate": "Certificado",
+    "shareLinkedIn": "Compartilhar no LinkedIn",
+    "sharing": "Compartilhando...",
+    "copyInfo": "Copiar informações",
+    "copied": "Informação copiada!",
+    "copyError": "Não foi possível copiar a informação.",
+    "close": "Fechar",
+    "closeModal": "Fechar modal",
+    "loadMoreEducation": "Carregar mais educação",
+    "categories": {
+      "university": "Universidade",
+      "technical": "Formação Técnica (SENA)",
+      "talentTech": "Talento Tech Bogotá",
+      "itCertificate": "ITCertificate",
+      "onlineCourses": "Cursos Online (SENA), (Platzi) e mais..."
+    }
+  },
+  "contact": {
+    "badge": "Conecte-se",
+    "title": "Contate-me",
+    "subtitle": "Vamos falar sobre seu próximo projeto",
+    "description": "Pronto para dar vida às suas ideias? Vamos conversar sobre seu próximo projeto de Bogotá, Colômbia",
+    "form": {
+      "name": "Seu Nome",
+      "email": "Seu E-mail",
+      "message": "Conte-me sobre seu projeto...",
+      "send": "Enviar Mensagem",
+      "sending": "Enviando...",
+      "success": "Mensagem enviada com sucesso!",
+      "error": "Erro ao enviar a mensagem. Tente novamente."
+    },
+    "info": {
+      "email": "E-mail",
+      "phone": "Telefone",
+      "location": "Localização"
+    }
+  },
+  "footer": {
+    "rights": "Todos os direitos reservados.",
+    "madeWith": "Feito com",
+    "in": "em",
+    "location": "Bogotá, Colômbia",
+    "name": "Omar Hernández Rey",
+    "description": "Desenvolvedor Web Full Stack apaixonado por criar experiências digitais inovadoras e funcionais.",
+    "navigationTitle": "Navegação",
+    "followTitle": "Siga-me",
+    "findMe": "Encontre-me em Bogotá",
+    "backToTop": "Início",
+    "whatsappMessage": "Olá, tenho interesse nos seus serviços.",
+    "whatsappAria": "Contatar por WhatsApp",
+    "backToTopAria": "Voltar ao início",
+    "mapTitle": "Localização de Omar Hernández Rey em Bogotá, Colômbia",
+    "navigation": {
+      "aboutMe": "Sobre Mim",
+      "projects": "Projetos",
+      "skills": "Habilidades",
+      "contact": "Contato",
+      "privacy": "Privacidade"
+    }
+  },
+  "newsletter": {
+    "title": "Inscreva-se na minha Newsletter",
+    "placeholder": "Seu E-mail",
+    "subscribing": "Inscrevendo...",
+    "subscribe": "Inscrever-se",
+    "success": "Inscrição realizada com sucesso!",
+    "error": "Erro ao se inscrever. Tente novamente."
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "tryAgain": "Tentar novamente",
+    "close": "Fechar"
+  }
+}

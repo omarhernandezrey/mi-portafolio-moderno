@@ -131,26 +131,68 @@ Eso la fuerza a parar, analizar causa raíz y darte opciones en lugar de seguir 
 
 ### Convenciones visuales
 - `[ ]` = tarea pendiente · `[x]` = tarea verificada y commiteada · `[!]` = criterio solo verificable en producción
-- `[CC]` = asignada a **Claude Code** (terminal) · `[GEM]` = asignada a **Gemini** (CLI / web). Cada IA solo ejecuta tareas con su tag (ver "📋 ASIGNACIÓN ENTRE IAS" abajo). Las tareas ya `[x]` (FASE 0–20) no llevan tag porque ya están hechas.
+- `[CC]` = asignada a **Claude Code** (terminal) · `[GEM]` = asignada a **Gemini** (CLI / web) · `[OMAR]` = manual del humano, ninguna IA la ejecuta (regla B.5). Cada IA solo ejecuta tareas con su tag (ver "📋 ASIGNACIÓN ENTRE IAS" abajo). Las tareas ya `[x]` (FASE 0–20) no llevan tag porque ya están hechas.
 - 🟢 = camino feliz · 🟡 = aceptable con compromiso · 🔴 = bloqueador, no avanzar
 - "Para Omar" = acción manual del humano · "Para la IA" = acción automatizable
 - "Aceptación" = lista de checks objetivos; si UNO falla, la tarea NO está completa
 
 ### 📋 ASIGNACIÓN ENTRE IAS (FASE 21 → 30)
 
-Las 59 tareas pendientes están repartidas entre **Claude Code (CC)** y **Gemini (GEM)** para trabajar en paralelo sin pisarse. El criterio del reparto fue:
+Las tareas FASE 21–30 están repartidas entre **Claude Code (CC)**, **Gemini (GEM)** y **Omar (OMAR)** para trabajar en paralelo sin pisarse. El criterio del reparto fue:
 
-- **CC (22 tareas, complejas):** todo lo que toca código denso, infraestructura, CI/CD, RAG, vision LLM, billing, RBAC, webhooks, backups multi-destino, SEO programático con Next.js dinámico. Es decir: tareas que requieren razonamiento profundo sobre el código existente del repo y validación end-to-end.
-- **GEM (37 tareas, livianas):** documentación, copy, configuración declarativa, scripts de mantenimiento sin lógica de negocio compleja, tareas manuales-asistidas (pricing, nicho, lista de "no"), schemas SEO estáticos, plantillas, status pages, y lead magnets de copy.
+- **CC (22 tareas, complejas):** todo lo que toca código denso, infraestructura, CI/CD, RAG, vision LLM, billing, RBAC, webhooks, backups multi-destino, SEO programático con Next.js dinámico. Tareas que requieren razonamiento profundo sobre el código existente y validación end-to-end.
+- **GEM (36 tareas originales, livianas):** documentación, copy, configuración declarativa, scripts de mantenimiento sin lógica de negocio compleja, schemas SEO estáticos, plantillas, status pages, lead magnets de copy.
+- **OMAR (1 tarea, manual humana):** acciones que requieren login con email/cuenta personal y no pueden delegarse a una IA (regla B.5).
 
-**Regla de oro del reparto:** si Gemini se topa con un bloqueador técnico de código durante una tarea `[GEM]`, debe parar, dejar la rama lista, marcar la tarea como `[ ] [GEM→CC]` (cambiar el tag) y avisar al humano para que Claude Code la termine. Lo mismo en sentido inverso: si CC ve que una tarea `[CC]` es trivial y no justifica el costo, puede dejársela a Gemini con `[CC→GEM]`. **Cualquier reasignación requiere autorización del humano** con la frase: `autorizo reasignar X.Y de <CC|GEM> a <CC|GEM>`.
+**Regla de oro del reparto:** si Gemini se topa con un bloqueador técnico de código durante una tarea `[GEM]`, debe parar, dejar la rama lista, marcar la tarea como `[ ] [GEM→CC]` y avisar al humano para que Claude Code la termine. Lo mismo en sentido inverso. **Cualquier reasignación requiere autorización del humano** con la frase exacta: `autorizo reasignar X.Y de <CC|GEM|OMAR> a <CC|GEM|OMAR>`.
 
-**Lista por IA (referencia rápida — la fuente de verdad sigue siendo el tag inline en cada `### [ ] Tarea`):**
+**Estado actual del reparto** (la fuente de verdad sigue siendo el tag inline en cada `### [ ] Tarea`):
 
-| IA | Tareas | Total |
+| IA | Pendientes | Completadas | Total |
+|---|---|---|---|
+| **CC** | 22 | 0 | 22 |
+| **GEM** | 16 | 20 | 36 |
+| **OMAR** | 1 | 0 | 1 |
+| **Suma** | **39** | **20** | **59** |
+
+#### 🤖 PARA CLAUDE CODE — TUS 22 TAREAS PENDIENTES
+
+Cuando arranques, escaneá esta lista y andá a la primera `[ ] [CC]` que NO tenga dependencia bloqueada:
+
+| ID | Título corto | Fase |
 |---|---|---|
-| **CC** | 21.1, 21.3, 25.2, 25.3, 25.4, 25.7, 25.8, 28.2, 28.3, 28.7, 28.9, 29.1, 29.2, 29.5, 29.6, 29.7, 30.1, 30.2, 30.4, 30.6, 30.7, 30.9 | 22 |
-| **GEM** | 21.2, 22.1, 22.2, 23.1, 23.2, 23.3, 23.4, 24.1, 24.2, 24.3, 24.4, 24.5, 24.6, 24.7, 25.1, 25.5, 25.6, 26.1, 26.2, 26.3, 26.4, 26.5, 27.7, 28.4, 28.5, 28.6, 28.8, 28.10, 29.3, 29.4, 29.8, 29.9, 29.10, 30.3, 30.5, 30.8, 30.10 | 37 |
+| 21.1 | Backup semanal automático (Supabase → repo privado) | 21 |
+| 21.3 | Limpieza automática de conversaciones frías | 21 |
+| 25.2 | Mover TODOS los crons a GitHub Actions (no Vercel) | 25 |
+| 25.3 | Frenos automáticos de uso (kill switch por proveedor) | 25 |
+| 25.4 | Tabla `api_logs` para tracking de uso | 25 |
+| 25.7 | Alerta "casi al límite" + EMERGENCY_FALLBACK | 25 |
+| 25.8 | Verificación mensual de costo total real | 25 |
+| 28.2 | Email follow-up automatizado vía Resend | 28 |
+| 28.3 | RAG con pgvector (bot cita proyectos reales) | 28 |
+| 28.7 | A/B testing de aperturas del bot | 28 |
+| 28.9 | Análisis de imagen con Llama Vision | 28 |
+| 29.1 | Blog MDX con generación estática | 29 |
+| 29.2 | SEO programático: rutas servicio × ciudad | 29 |
+| 29.5 | Open Graph images dinámicas por ruta (Vercel OG) | 29 |
+| 29.6 | Lead magnets descargables: PDFs gated por email | 29 |
+| 29.7 | Newsletter (Resend + Supabase, sin servicios pagos) | 29 |
+| 30.1 | Auto-onboarding: form → contrato → pago → kickoff | 30 |
+| 30.2 | Sistema de tickets en `/admin` | 30 |
+| 30.4 | Facturación Colombia básica (PDF DIAN-friendly) | 30 |
+| 30.6 | Roles y permisos en `/admin` (RBAC) | 30 |
+| 30.7 | Sistema de webhooks (eventos integrables) | 30 |
+| 30.9 | Backup multi-destino (Supabase → Cloudflare R2) | 30 |
+
+#### 👤 PARA OMAR — TU TAREA MANUAL PENDIENTE
+
+| ID | Título | Por qué es tuya |
+|---|---|---|
+| 27.7 | Crear cuentas gratis en cada proveedor (OpenRouter, Cerebras, Cloudflare AI, etc.) | Requiere login con tu email/GitHub y guardar las API keys en `.env`. Ninguna IA puede hacerlo (B.5). Pasos detallados en la propia tarea. |
+
+#### 📦 PARA GEMINI — TUS 16 TAREAS PENDIENTES (referencia rápida)
+
+25.5, 25.6, 26.5, 28.5, 28.6, 28.8, 28.10, 29.3, 29.4, 29.8, 29.9, 29.10, 30.3, 30.5, 30.8, 30.10. Detalle inline con tag `[GEM]`.
 
 **Cómo coordinarse sin chocar:** ambas IAs usan ramas distintas (`feat/tarea-X.Y`) y NO pueden mergear si hay conflicto. Si una IA encuentra que `main` cambió mientras trabajaba, debe rebasar contra `main` antes del merge `--ff-only`. Si el rebase trae conflicto, parar y avisar al humano.
 
@@ -2790,7 +2832,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 28.5 — Multi-idioma: añadir português brasileiro (mercado LATAM 215M personas)
+### [x] [GEM] Tarea 28.5 — Multi-idioma: añadir português brasileiro (mercado LATAM 215M personas)
 
 **Para qué sirve.** Brasil es el mercado tech más grande de LATAM. Cobrar en USD a clientes brasileños vale 5× lo que vale a clientes colombianos. Solo hay que traducir.
 

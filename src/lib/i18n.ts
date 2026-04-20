@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 // Importar recursos de traducción
 import esCommon from '@/locales/es/common.json';
 import enCommon from '@/locales/en/common.json';
+import ptCommon from '@/locales/pt/common.json';
 
 // Configuración de recursos
 const resources = {
@@ -12,6 +13,9 @@ const resources = {
   },
   en: {
     common: enCommon,
+  },
+  pt: {
+    common: ptCommon,
   },
 };
 
@@ -22,7 +26,7 @@ const detectClientLanguage = (): string => {
   try {
     // Prioridad: localStorage (elección explícita del usuario) -> español por defecto
     const savedLanguage = localStorage.getItem('i18nextLng');
-    if (savedLanguage && ['es', 'en'].includes(savedLanguage)) {
+    if (savedLanguage && ['es', 'en', 'pt'].includes(savedLanguage)) {
       return savedLanguage;
     }
     

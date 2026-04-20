@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 const chatSchema = z.object({
   sessionId: z.string().min(1),
   message: z.string().min(1).max(2000),
-  language: z.enum(['es', 'en']),
+  language: z.enum(['es', 'en', 'pt']),
   website: z.string().optional(),
   visitorMeta: z.object({
     name: z.string().optional(),
@@ -74,7 +74,12 @@ export async function POST(req: NextRequest) {
       facts = conv.facts || {};
       if (conv.human_takeover) {
         await supabaseServer.from('messages').insert([{ conversation_id: conversationId, role: 'user', content: message }]);
-        return NextResponse.json({ reply: language === 'es' ? "Omar está revisando tu mensaje..." : "Omar is reviewing your message..." });
+        const fallbackMsg = {
+          es: "Omar está revisando tu mensaje...",
+          en: "Omar is reviewing your message...",
+          pt: "Omar está revisando sua mensagem..."
+        };
+        return NextResponse.json({ reply: fallbackMsg[language] || fallbackMsg.es });
       }
     }
 

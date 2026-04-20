@@ -1,14 +1,14 @@
 import { PERSONA, SERVICES_CATALOG, SALES_PLAYBOOK, OBJECTIONS, PORTFOLIO_DATA } from './data';
 
-const serializeCatalog = (language: 'es' | 'en') => {
+const serializeCatalog = (language: 'es' | 'en' | 'pt') => {
   return SERVICES_CATALOG.map(s => `- ${s.name[language]}: ${s.priceRange.min}-${s.priceRange.max} ${s.priceRange.currency}.`).join('\n');
 };
 
-const serializeProjects = (language: 'es' | 'en') => {
+const serializeProjects = (language: 'es' | 'en' | 'pt') => {
   return PORTFOLIO_DATA.projects.slice(0, 5).map(p => `- ${p.title[language]}: ${p.technologies.slice(0,3).join(', ')}`).join('\n');
 };
 
-const serializeEducation = (language: 'es' | 'en') => {
+const serializeEducation = (language: 'es' | 'en' | 'pt') => {
   const result: string[] = [];
   PORTFOLIO_DATA.education.slice(0, 2).forEach(cat => {
     cat.items.slice(0, 1).forEach(item => {
@@ -19,15 +19,15 @@ const serializeEducation = (language: 'es' | 'en') => {
   return result.join('\n');
 };
 
-const serializeSkills = (language: 'es' | 'en') => {
+const serializeSkills = (language: 'es' | 'en' | 'pt') => {
   return PORTFOLIO_DATA.skills.slice(0, 15).map(s => s.name[language]).join(', ');
 };
 
-const serializeObjections = (language: 'es' | 'en') => {
+const serializeObjections = (language: 'es' | 'en' | 'pt') => {
   return OBJECTIONS.slice(0, 8).map(o => `- ${o.id}: ${o.acknowledge[language]}`).join('\n');
 };
 
-export function buildSystemPrompt(language: 'es' | 'en', context?: { visitorName?: string; intent?: string }): string {
+export function buildSystemPrompt(language: 'es' | 'en' | 'pt', context?: { visitorName?: string; intent?: string }): string {
   const persona = PERSONA;
   const catalog = serializeCatalog(language);
   const projects = serializeProjects(language);
@@ -35,6 +35,12 @@ export function buildSystemPrompt(language: 'es' | 'en', context?: { visitorName
   const skills = serializeSkills(language);
   const playbook = SALES_PLAYBOOK;
   const objections = serializeObjections(language);
+
+  const playbookIntro = {
+    es: 'Usa preguntas de descubrimiento:',
+    en: 'Use discovery questions:',
+    pt: 'Use perguntas de descoberta:'
+  };
 
   return `
 # IDENTIDAD
@@ -64,7 +70,7 @@ Usa estos argumentos si el cliente duda:
 ${objections}
 
 # ESTRATEGIA DE VENTA (PLAYBOOK)
-Usa preguntas de descubrimiento: ${playbook.discoveryQuestions[language].slice(0,3).map(q => q.question).join(' ')}
+${playbookIntro[language]} ${playbook.discoveryQuestions[language].slice(0,3).map(q => q.question).join(' ')}
 
 # COBRO Y CIERRE
 - Cuando el cliente confirma que quiere empezar, PREGUNTA en qué país se encuentra.
