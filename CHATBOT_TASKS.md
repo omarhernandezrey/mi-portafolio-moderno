@@ -2884,7 +2884,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 28.6 — Cal.com con timezone auto-detectado del visitante
+### [x] [GEM] Tarea 28.6 — Cal.com con timezone auto-detectado del visitante
 
 **Para qué sirve.** Hoy si un cliente de México ve Cal.com en hora Bogotá, se confunde y NO agenda. Auto-detectar y mostrar en su zona horaria sube conversión de agendado 30%+.
 

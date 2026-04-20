@@ -143,7 +143,12 @@ export async function POST(req: NextRequest) {
       calcomUrl = calcom.type === 'interview' ? clientEnv.NEXT_PUBLIC_CALCOM_INTERVIEW_URL : clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL;
     }
 
-    return NextResponse.json({ reply: cleanText, handoffUrl, calcomUrl });
+    return NextResponse.json({ 
+      reply: cleanText, 
+      handoffUrl, 
+      calcomUrl,
+      visitorMeta: lead ? { name: lead.name, email: lead.email } : undefined
+    });
 
   } catch (error) {
     console.error('API Chat Error:', error);

@@ -2,6 +2,7 @@ export interface ChatResponse {
   reply: string;
   handoffUrl?: string;
   calcomUrl?: string;
+  visitorMeta?: { name?: string; email?: string; phone?: string };
 }
 
 export async function sendChatMessage(

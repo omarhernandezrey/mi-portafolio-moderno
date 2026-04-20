@@ -6,6 +6,7 @@ import { MessageCircle, X, Send, Bot, Phone, Calendar, ShieldCheck, Mic, MicOff 
 import { nanoid } from 'nanoid';
 import { sendChatMessage } from '@/services/chatService';
 import { useTranslation } from 'react-i18next';
+import { buildCalcomUrl } from '@/lib/chatbot/calcom';
 import Link from 'next/link';
 import useSpeechToText from '@/hooks/useSpeechToText';
 
@@ -26,6 +27,7 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
+  const [visitorMeta, setVisitorMeta] = useState<{ name?: string; email?: string }>({});
   const [showAttention, setShowAttention] = useState(false);
   const [hasConsented, setHasConsented] = useState(false);
   const [lastPollTime, setLastPollTime] = useState<string>(new Date().toISOString());
@@ -143,6 +145,12 @@ export default function ChatWidget() {
 
     try {
       const response = await sendChatMessage(sessionId, finalInput, currentLanguage);
+      
+      // Actualizar metadatos del visitante si el bot los extrajo
+      if (response.visitorMeta) {
+        setVisitorMeta(prev => ({ ...prev, ...response.visitorMeta }));
+      }
+
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: response.reply,
@@ -348,7 +356,7 @@ export default function ChatWidget() {
                           )}
                           {msg.calcomUrl && (
                             <a 
-                              href={msg.calcomUrl} 
+                              href={buildCalcomUrl(msg.calcomUrl, visitorMeta)} 
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="flex items-center gap-2 rounded-full bg-[var(--primary-color)] px-4 py-2 text-[10px] font-bold text-white transition-all hover:brightness-110 hover:shadow-md active:scale-95"
