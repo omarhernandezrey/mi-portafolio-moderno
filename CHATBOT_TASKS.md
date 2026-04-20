@@ -2456,7 +2456,7 @@ Crear `PLAN_B_OPENSOURCE.md`:
 
 - **Aceptación:** archivo creado y referenciado desde el README.
 
-### [ ] [GEM] Tarea 26.2 — Reglas de oro de ejecución para IAs (Copilot / Groq CLI)
+### [x] [GEM] Tarea 26.2 — Reglas de oro de ejecución para IAs (Copilot / Groq CLI)
 
 Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan, a veces "creen" que terminaron sin terminar. Para mitigarlo, antes de cada tarea grande, el agente DEBE descomponerla en sub-tareas atómicas máximo de 30 líneas de código cada una.
 
@@ -2475,7 +2475,7 @@ Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan,
 
 **Aceptación:** el agente, antes de empezar una tarea grande, escribe en el chat la lista de sub-tareas que va a ejecutar y espera confirmación del usuario. Solo entonces empieza.
 
-### [ ] [GEM] Tarea 26.3 — Modo "smoke test" después de cada fase
+### [x] [GEM] Tarea 26.3 — Modo "smoke test" después de cada fase
 Tras completar TODA una fase (no cada tarea), el agente DEBE:
 
 1. Ejecutar `npm run build` → debe pasar
@@ -2487,7 +2487,7 @@ Tras completar TODA una fase (no cada tarea), el agente DEBE:
 
 **Aceptación:** entre fase y fase hay un commit explícito `chore: cierre fase X — todos los checks pasan`.
 
-### [ ] [GEM] Tarea 26.4 — Si la IA se queda atascada (protocolo de escalada)
+### [x] [GEM] Tarea 26.4 — Si la IA se queda atascada (protocolo de escalada)
 
 Las IAs a veces entran en bucles o no entienden el contexto. Si después de **3 intentos** una sub-tarea sigue fallando:
 
