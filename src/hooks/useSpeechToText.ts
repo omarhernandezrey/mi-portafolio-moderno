@@ -9,6 +9,27 @@ interface UseSpeechToTextOptions {
   silenceTimeout?: number;
 }
 
+// Interfaces para Web Speech API
+interface SpeechRecognitionResult {
+  readonly [index: number]: SpeechRecognitionAlternative;
+  readonly length: number;
+}
+
+interface SpeechRecognitionAlternative {
+  readonly transcript: string;
+  readonly confidence: number;
+}
+
+interface SpeechRecognitionResultList {
+  readonly [index: number]: SpeechRecognitionResult;
+  readonly length: number;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  readonly resultIndex: number;
+  readonly results: SpeechRecognitionResultList;
+}
+
 export default function useSpeechToText({
   language = 'es-CO',
   onResult,
@@ -18,11 +39,13 @@ export default function useSpeechToText({
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isSupported, setIsSupported] = useState(false);
-  const recognitionRef = useRef<any>(null);
+  // @ts-expect-error: Web Speech API types not standard in all environments
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    // @ts-expect-error: webkit prefix
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       setIsSupported(true);
       recognitionRef.current = new SpeechRecognition();
@@ -47,7 +70,7 @@ export default function useSpeechToText({
       recognitionRef.current.start();
       setIsListening(true);
 
-      recognitionRef.current.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         let currentTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
           currentTranscript += event.results[i][0].transcript;
@@ -62,7 +85,8 @@ export default function useSpeechToText({
         }, silenceTimeout);
       };
 
-      recognitionRef.current.onerror = (event: any) => {
+      recognitionRef.current.onerror = (event: Event) => {
+        // @ts-expect-error: error property exists on SpeechRecognitionErrorEvent
         console.error('Speech recognition error', event.error);
         stopListening();
       };
