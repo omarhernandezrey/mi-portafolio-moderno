@@ -2761,7 +2761,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 28.4 — Voz: input por micrófono usando Web Speech API (gratis, navegador)
+### [x] [GEM] Tarea 28.4 — Voz: input por micrófono usando Web Speech API (gratis, navegador)
 
 **Para qué sirve.** Móvil es el 70% del tráfico. Escribir es lento. Hablarle al chat sube tasa de envío de mensajes 3-4× según UX research.
 

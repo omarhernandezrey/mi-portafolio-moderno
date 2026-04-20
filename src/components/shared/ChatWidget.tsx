@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, Phone, Calendar, ShieldCheck } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, Phone, Calendar, ShieldCheck, Mic, MicOff } from 'lucide-react';
 import { nanoid } from 'nanoid';
 import { sendChatMessage } from '@/services/chatService';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import useSpeechToText from '@/hooks/useSpeechToText';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -32,102 +33,6 @@ export default function ChatWidget() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-
-  // Polling para mensajes de Omar (Handoff humano - Tarea 19.3)
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isOpen && sessionId && hasConsented) {
-      interval = setInterval(async () => {
-        try {
-          const response = await fetch(`/api/chat/poll?sessionId=${sessionId}&since=${lastPollTime}`);
-          const data = await response.json();
-
-          if (data.messages && data.messages.length > 0) {
-            setMessages(prev => {
-              // Filtrar mensajes que ya existen para evitar duplicados
-              const newMsgs = data.messages.filter((nm: Message) => 
-                !prev.some(pm => pm.content === nm.content && pm.created_at === nm.created_at)
-              );
-              return [...prev, ...newMsgs];
-            });
-            // Actualizar el timestamp del último poll con el mensaje más reciente recibido
-            const newestMsg = data.messages[data.messages.length - 1];
-            setLastPollTime(newestMsg.created_at);
-          }
-        } catch (e) {
-          console.error('Polling error:', e);
-        }
-      }, 5000); // Cada 5 segundos
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isOpen, sessionId, hasConsented, lastPollTime]);
-
-  // Inicializar sessionId y consentimiento desde localStorage
-  useEffect(() => {
-    let id = localStorage.getItem('chatbot_session_id');
-    if (!id) {
-      id = nanoid();
-      localStorage.setItem('chatbot_session_id', id);
-    }
-    setSessionId(id);
-    
-    setHasConsented(localStorage.getItem('chatbot_consent') === 'true');
-
-    // Lógica de Re-engagement
-    const checkReengage = async (sid: string) => {
-      try {
-        const r = await fetch(`/api/chat/re-engage?sessionId=${sid}`);
-        const data = await r.json();
-        if (data.reengage) {
-          const reMsg = currentLanguage === 'es' 
-            ? `¡Qué bueno verte de nuevo ${data.name}! 👋 ¿Seguimos donde quedamos sobre tu interés en ${data.intent || 'un proyecto'}?`
-            : `Great to see you again ${data.name}! 👋 Shall we pick up where we left off regarding your interest in ${data.intent || 'a project'}?`;
-          
-          setMessages([{ role: 'assistant', content: reMsg }]);
-          setIsOpen(true); // Abrimos el chat proactivamente
-          setShowAttention(false);
-        }
-      } catch (e) {
-        console.error('Re-engage check failed:', e);
-      }
-    };
-
-    if (id) checkReengage(id);
-
-    // Animación de atención después de 30 segundos si no se ha abierto
-    const timer = setTimeout(() => {
-      if (!localStorage.getItem('chatbot_opened_once')) {
-        setShowAttention(true);
-      }
-    }, 30000);
-
-    return () => clearTimeout(timer);
-  }, [currentLanguage]);
-
-  // Auto-scroll al final
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages, isLoading]);
-
-  // Enfocar input al abrir
-  useEffect(() => {
-    if (isOpen && inputRef.current && hasConsented) {
-      setTimeout(() => inputRef.current?.focus(), 300);
-    }
-  }, [isOpen, hasConsented]);
-
-  const toggleChat = () => setIsOpen(!isOpen);
-
-  const handleConsent = () => {
-    setHasConsented(true);
-    localStorage.setItem('chatbot_consent', 'true');
-  };
 
   const handleSubmit = useCallback(async (e?: React.FormEvent, overrideInput?: string) => {
     if (e) e.preventDefault();
@@ -158,6 +63,25 @@ export default function ChatWidget() {
       setIsLoading(false);
     }
   }, [input, isLoading, sessionId, currentLanguage, t, hasConsented]);
+
+  const { isListening, isSupported, startListening, stopListening } = useSpeechToText({
+    language: currentLanguage === 'es' ? 'es-CO' : 'en-US',
+    onResult: (text) => setInput(text),
+    onEnd: () => {
+      // Si hay texto al terminar por silencio, enviar
+      if (input.trim()) {
+        handleSubmit();
+      }
+    }
+  });
+
+  const toggleMic = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
 
   const handleQuickAction = (actionKey: string) => {
     const message = t(`chatbot.quickActions.${actionKey}`);
@@ -380,6 +304,25 @@ export default function ChatWidget() {
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading || !hasConsented}
                 />
+                
+                {/* Botón Micrófono (Tarea 28.4) */}
+                {isSupported && (
+                  <button
+                    type="button"
+                    onClick={toggleMic}
+                    disabled={isLoading || !hasConsented}
+                    className={`flex h-10 w-10 items-center justify-center rounded-full transition-all shadow-md active:scale-90 ${
+                      isListening 
+                        ? 'bg-red-500 text-white animate-pulse' 
+                        : 'bg-[var(--secondary-background-color)] text-[var(--primary-color)] hover:bg-[var(--muted-color)]/10'
+                    } disabled:opacity-50`}
+                    aria-label={isListening ? 'Stop listening' : 'Start voice input'}
+                    title={isListening ? 'Escuchando...' : 'Hablar'}
+                  >
+                    {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+                  </button>
+                )}
+
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading || !hasConsented}
