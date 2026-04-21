@@ -138,66 +138,72 @@ Eso la fuerza a parar, analizar causa raíz y darte opciones en lugar de seguir 
 
 ### 📋 ASIGNACIÓN ENTRE IAS (FASE 21 → 30)
 
-Las tareas FASE 21–30 están repartidas entre **Claude Code (CC)**, **Gemini (GEM)** y **Omar (OMAR)** para trabajar en paralelo sin pisarse. El criterio del reparto fue:
+> **REASIGNACIÓN 2026-04-21 (autorizada por Omar):** Claude Code (CC) completó su ciclo y Gemini tomó el relevo. Las **22 tareas originalmente `[CC]` pasaron a `[GEM]`** (más las 5 tareas `[GEM]` que Gemini dejó en progreso: 29.9, 29.10, 30.5, 30.8, 30.10). A partir de ahora **Gemini es la única IA ejecutora** de las tareas pendientes; Claude Code ya no tiene tareas asignadas en este documento.
 
-- **CC (22 tareas, complejas):** todo lo que toca código denso, infraestructura, CI/CD, RAG, vision LLM, billing, RBAC, webhooks, backups multi-destino, SEO programático con Next.js dinámico. Tareas que requieren razonamiento profundo sobre el código existente y validación end-to-end.
-- **GEM (33 tareas originales, livianas):** documentación, copy, configuración declarativa, scripts de mantenimiento sin lógica de negocio compleja, schemas SEO estáticos, plantillas, status pages, lead magnets de copy.
-- **OMAR (4 tareas, manuales humanas):** acciones que requieren login con email/cuenta personal, decisiones de negocio o validación humana subjetiva. Ninguna IA puede ejecutarlas (regla B.5).
+Las tareas FASE 21–30 siguen repartidas entre **Gemini (GEM)** y **Omar (OMAR)**:
 
-**Regla de oro del reparto:** si Gemini se topa con un bloqueador técnico de código durante una tarea `[GEM]`, debe parar, dejar la rama lista, marcar la tarea como `[ ] [GEM→CC]` y avisar al humano para que Claude Code la termine. Lo mismo en sentido inverso. **Cualquier reasignación requiere autorización del humano** con la frase exacta: `autorizo reasignar X.Y de <CC|GEM|OMAR> a <CC|GEM|OMAR>`.
+- **GEM (27 tareas pendientes):** todo lo que falta por codear o escribir. Gemini ejecuta una a una, en orden ascendente, siguiendo el FLUJO OBLIGATORIO y las REGLAS MAESTRAS A–N de este mismo documento, sin excepción.
+- **OMAR (4 tareas, manuales humanas):** acciones que requieren login con email/cuenta personal, decisiones de negocio o validación humana subjetiva. Ninguna IA puede ejecutarlas (regla B.5), pero **Gemini actúa como copiloto** de Omar en cada una: dicta los pasos exactos, espera confirmación entre pasos y deja evidencia escrita. Ver bloque "🤖 COPILOTO GEMINI" al comienzo de cada tarea `[OMAR]`.
+
+**Regla de oro del reparto:** si Gemini se topa con un bloqueador técnico durante una tarea `[GEM]`, debe parar, dejar la rama lista, marcar la tarea como `[ ] [GEM-BLOQUEADA]` y avisar al humano con causa raíz + 2-3 opciones (regla J.1). **Cualquier reasignación requiere autorización del humano** con la frase exacta: `autorizo reasignar X.Y de <GEM|OMAR> a <GEM|OMAR>`.
 
 **Estado actual del reparto** (la fuente de verdad sigue siendo el tag inline en cada `### [ ] Tarea`):
 
 | IA | Pendientes | Completadas | Total |
 |---|---|---|---|
-| **CC** | 22 | 0 | 22 |
-| **GEM** | 12 | 21 | 33 |
+| **CC** | 0 | 0 | 0 *(reasignado a GEM el 2026-04-21)* |
+| **GEM** | 27 | 21 | 48 |
 | **OMAR** | 4 | 0 | 4 |
-| **Suma** | **38** | **21** | **59** |
+| **Suma** | **31** | **21** | **52** |
 
-#### 🤖 PARA CLAUDE CODE — TUS 22 TAREAS PENDIENTES
+#### 📦 PARA GEMINI — TUS 27 TAREAS PENDIENTES (orden de ejecución)
 
-Cuando arranques, escaneá esta lista y andá a la primera `[ ] [CC]` que NO tenga dependencia bloqueada:
+Cuando arranques, escaneá esta lista y andá a la primera `[ ] [GEM]` que NO tenga dependencia bloqueada (orden ascendente: 21.x antes que 25.x antes que 28.x, etc.):
 
-| ID | Título corto | Fase |
-|---|---|---|
-| 21.1 | Backup semanal automático (Supabase → repo privado) | 21 |
-| 21.3 | Limpieza automática de conversaciones frías | 21 |
-| 25.2 | Mover TODOS los crons a GitHub Actions (no Vercel) | 25 |
-| 25.3 | Frenos automáticos de uso (kill switch por proveedor) | 25 |
-| 25.4 | Tabla `api_logs` para tracking de uso | 25 |
-| 25.7 | Alerta "casi al límite" + EMERGENCY_FALLBACK | 25 |
-| 25.8 | Verificación mensual de costo total real | 25 |
-| 28.2 | Email follow-up automatizado vía Resend | 28 |
-| 28.3 | RAG con pgvector (bot cita proyectos reales) | 28 |
-| 28.7 | A/B testing de aperturas del bot | 28 |
-| 28.9 | Análisis de imagen con Llama Vision | 28 |
-| 29.1 | Blog MDX con generación estática | 29 |
-| 29.2 | SEO programático: rutas servicio × ciudad | 29 |
-| 29.5 | Open Graph images dinámicas por ruta (Vercel OG) | 29 |
-| 29.6 | Lead magnets descargables: PDFs gated por email | 29 |
-| 29.7 | Newsletter (Resend + Supabase, sin servicios pagos) | 29 |
-| 30.1 | Auto-onboarding: form → contrato → pago → kickoff | 30 |
-| 30.2 | Sistema de tickets en `/admin` | 30 |
-| 30.4 | Facturación Colombia básica (PDF DIAN-friendly) | 30 |
-| 30.6 | Roles y permisos en `/admin` (RBAC) | 30 |
-| 30.7 | Sistema de webhooks (eventos integrables) | 30 |
-| 30.9 | Backup multi-destino (Supabase → Cloudflare R2) | 30 |
+| ID | Título corto | Fase | Origen |
+|---|---|---|---|
+| 21.1 | Backup semanal automático (Supabase → repo privado) | 21 | ex-CC |
+| 21.3 | Limpieza automática de conversaciones frías | 21 | ex-CC |
+| 25.2 | Mover TODOS los crons a GitHub Actions (no Vercel) | 25 | ex-CC |
+| 25.3 | Frenos automáticos de uso (kill switch por proveedor) | 25 | ex-CC |
+| 25.4 | Tabla `api_logs` para tracking de uso | 25 | ex-CC |
+| 25.7 | Alerta "casi al límite" + EMERGENCY_FALLBACK | 25 | ex-CC |
+| 25.8 | Verificación mensual de costo total real | 25 | ex-CC |
+| 28.2 | Email follow-up automatizado vía Resend | 28 | ex-CC |
+| 28.3 | RAG con pgvector (bot cita proyectos reales) | 28 | ex-CC |
+| 28.7 | A/B testing de aperturas del bot | 28 | ex-CC |
+| 28.9 | Análisis de imagen con Llama Vision | 28 | ex-CC |
+| 29.1 | Blog MDX con generación estática | 29 | ex-CC |
+| 29.2 | SEO programático: rutas servicio × ciudad | 29 | ex-CC |
+| 29.5 | Open Graph images dinámicas por ruta (Vercel OG) | 29 | ex-CC |
+| 29.6 | Lead magnets descargables: PDFs gated por email | 29 | ex-CC |
+| 29.7 | Newsletter (Resend + Supabase, sin servicios pagos) | 29 | ex-CC |
+| 29.9 | RSS feed (descubrimiento por agregadores y bots) | 29 | GEM |
+| 29.10 | Auto-submit a directorios LATAM y Hacker News | 29 | GEM |
+| 30.1 | Auto-onboarding: form → contrato → pago → kickoff | 30 | ex-CC |
+| 30.2 | Sistema de tickets en `/admin` | 30 | ex-CC |
+| 30.4 | Facturación Colombia básica (PDF DIAN-friendly) | 30 | ex-CC |
+| 30.5 | Plantillas de propuesta por nicho | 30 | GEM |
+| 30.6 | Roles y permisos en `/admin` (RBAC) | 30 | ex-CC |
+| 30.7 | Sistema de webhooks (eventos integrables) | 30 | ex-CC |
+| 30.8 | Status page público | 30 | GEM |
+| 30.9 | Backup multi-destino (Supabase → Cloudflare R2) | 30 | ex-CC |
+| 30.10 | Documentación interna `/docs` | 30 | GEM |
 
-#### 👤 PARA OMAR — TUS 4 TAREAS MANUALES PENDIENTES
+> **Nota crítica para Gemini sobre las tareas ex-CC:** originalmente se asignaron a Claude Code porque requieren razonamiento profundo sobre código existente (infraestructura, CI/CD, RAG, vision LLM, billing, RBAC, webhooks, SEO programático dinámico). **NO las simplifiques, NO las resumas, NO las hagas parcialmente.** Si una tarea exige `pgvector`, `pdf-lib`, `@vercel/og`, `pg_cron` o GitHub Actions con cron real, se implementa completa con pruebas end-to-end. Si no podés terminarla al 100%, aplicá la regla J.1 (3 intentos) y pedí ayuda, **NO marques `[x]` a medias**. Cada `[x]` exige evidencia objetiva (regla A) — build verde, test corriendo, fila en la DB, request real exitoso.
+
+#### 👤 PARA OMAR — TUS 4 TAREAS MANUALES PENDIENTES (con Gemini de copiloto)
+
+Cada una de estas tareas trae al principio un bloque **"🤖 COPILOTO GEMINI"** con los pasos exactos que Gemini te va a dictar, uno por uno, esperando tu `"lista"` o `"ok paso N"` entre cada uno. Gemini nunca ejecuta estas tareas por vos — te guía, te explica qué vas a ver en cada pantalla y registra la evidencia que le pases.
 
 | ID | Título | Por qué es tuya |
 |---|---|---|
 | 25.5 | Bloqueo manual de upgrades automáticos en Vercel/Supabase/GCP/GitHub/Cal.com | Requiere login en cada panel y confirmar plan Free sin tarjeta. Ninguna IA tiene tus credenciales (B.5). |
 | 25.6 | Decisión de dominio (subdominio gratis Vercel vs comprar `.dev`/`.com` ~$12/año) | Decisión de negocio + compra con tarjeta tuya. Ninguna IA decide por vos (B.5). |
 | 26.5 | Validación final pre-deploy (probar 10 escenarios de chat, calificar 1-10, firmar `VALIDACION_PREDEPLOY.md`) | Subjetivo: "¿el bot suena como yo?" solo Omar puede juzgarlo. |
-| 27.7 | Crear cuentas gratis en cada proveedor LLM (OpenRouter, Cerebras, Cloudflare AI, etc.) y pegar API keys en `.env.local` | Requiere login con tu email/GitHub. Ninguna IA puede hacerlo (B.5). Pasos detallados en la propia tarea. |
+| 27.7 | Crear cuentas gratis en cada proveedor LLM (OpenRouter, Cerebras, Cloudflare AI, etc.) y pegar API keys en `.env.local` | Requiere login con tu email/GitHub. Ninguna IA puede hacerlo (B.5). |
 
-#### 📦 PARA GEMINI — TUS 12 TAREAS PENDIENTES (referencia rápida)
-
-28.6, 28.8, 28.10, 29.3, 29.4, 29.8, 29.9, 29.10, 30.3, 30.5, 30.8, 30.10. Detalle inline con tag `[GEM]`.
-
-**Cómo coordinarse sin chocar:** ambas IAs usan ramas distintas (`feat/tarea-X.Y`) y NO pueden mergear si hay conflicto. Si una IA encuentra que `main` cambió mientras trabajaba, debe rebasar contra `main` antes del merge `--ff-only`. Si el rebase trae conflicto, parar y avisar al humano.
+**Cierre del proyecto:** cuando las 27 tareas `[GEM]` y las 4 `[OMAR]` queden en `[x]` (o `[!]` si son solo verificables en prod), Gemini produce un único mensaje final de cierre con: (a) lista de los 31 commits asociados, (b) resumen de lo que quedó vivo en main, (c) checklist de verificación en producción para Omar, (d) propuesta de próxima misión si la hay.
 
 #### 🛡️ REGLAS ANTI-COLISIÓN (obligatorias para CC y GEM en paralelo)
 
@@ -2097,7 +2103,7 @@ fi
 
 ## FASE 21 — Backups y monitoreo de costos
 
-### [ ] [CC] Tarea 21.1 — Backup semanal automático
+### [ ] [GEM] Tarea 21.1 — Backup semanal automático
 - Crear cron (Vercel Cron o GitHub Action) que cada domingo:
   - Hace `pg_dump` de Supabase (vía `supabase db dump` o llamada SQL select-all)
   - Sube el dump a un repo privado de GitHub `omar-portafolio-backups` (gratis ilimitado)
@@ -2112,7 +2118,7 @@ fi
   - Si Supabase ≥ 80% de 500MB → Telegram "⚠️ Supabase al 80%, revisar limpiar mensajes viejos"
 - **Aceptación:** simular contadores altos → llega alerta.
 
-### [ ] [CC] Tarea 21.3 — Limpieza automática
+### [ ] [GEM] Tarea 21.3 — Limpieza automática
 - Cron mensual que borra:
   - Conversaciones sin lead asociado y sin mensajes en > 90 días
   - Mensajes de role='system' duplicados
@@ -2461,7 +2467,7 @@ jobs:
 - Añadir `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` a GitHub Secrets del repo
 - **Aceptación:** workflow corre manualmente sin error; tras 2 semanas el proyecto Supabase sigue activo.
 
-### [ ] [CC] Tarea 25.2 — Mover TODOS los crons a GitHub Actions (no Vercel)
+### [ ] [GEM] Tarea 25.2 — Mover TODOS los crons a GitHub Actions (no Vercel)
 - Crear `.github/workflows/scheduled-tasks.yml` que dispare:
   - `cleanup-cold-leads` (FASE 12.1) — diario
   - `weekly-backup` (FASE 21.1) — domingos
@@ -2471,7 +2477,7 @@ jobs:
 - Añadir `CRON_SECRET` a `env.ts` y a GitHub Secrets
 - **Aceptación:** los 4 endpoints existen, GitHub Actions los dispara, Vercel solo procesa, sin depender de Vercel Cron.
 
-### [ ] [CC] Tarea 25.3 — Frenos automáticos de uso (kill switch)
+### [ ] [GEM] Tarea 25.3 — Frenos automáticos de uso (kill switch)
 - Crear `src/lib/chatbot/limits.ts` con límites HARDCODED conservadores:
 ```ts
 export const LIMITS = {
@@ -2490,7 +2496,7 @@ export const LIMITS = {
 - Antes de cada llamada a `llm.ts`: contar uso del día por proveedor (tabla `api_logs`) y si **toda la cadena** excede sus LIMITS → fallback a mensaje "estamos en hora pico, déjanos tu email"
 - **Aceptación:** simular contadores altos en TODOS los proveedores → API responde fallback, NO llama a ningún LLM, NO genera costo.
 
-### [ ] [CC] Tarea 25.4 — Tabla `api_logs` para tracking de uso
+### [ ] [GEM] Tarea 25.4 — Tabla `api_logs` para tracking de uso
 ```sql
 create table api_logs (
   id uuid primary key default gen_random_uuid(),
@@ -2511,6 +2517,39 @@ from api_logs group by 1, 2 order by 1 desc;
 - **Aceptación:** tras 10 llamadas al chat, `select * from daily_usage where service in ('groq','openrouter','cerebras','cloudflare','ollama')` suma 10 (distribuido entre los proveedores que respondieron).
 
 ### [ ] [OMAR] Tarea 25.5 — Bloqueo manual de upgrades automáticos
+
+**🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
+
+Gemini NO hace esta tarea. Gemini guía a Omar así:
+
+1. Abrí un único mensaje con este formato:
+   ```
+   Tarea 25.5 — la hacés vos, yo te guío. Son 5 paneles, ~20 min total.
+   Necesito que respondas "lista <N>" entre cada paso (ej: "lista 1").
+   Si algo no se ve como describo, mandame screenshot o pegá el texto que ves.
+   ¿Arrancamos con el paso 1? (respondé "ok" para empezar)
+   ```
+2. Esperá `"ok"`. Recién ahí mandás el paso 1. **Un paso por mensaje**, no todos juntos.
+3. Para cada paso (1 a 5) mandás exactamente este formato:
+   ```
+   PASO <N>/5 — <proveedor>
+   🌐 Link directo: <URL exacta al panel de billing>
+   🔎 Qué tenés que ver: <descripción literal del estado esperado, ej: "cartel 'Current Plan: Hobby (Free)' sin botón 'Add payment method' activo">
+   ⚠️ Qué NO hacer: <lista de clicks prohibidos>
+   📸 Evidencia que quiero de vos: una de estas dos:
+     a) copiá/pegá el texto del cartel que dice el plan
+     b) mandame screenshot del panel
+   Respondé "lista <N>" con la evidencia pegada o la captura. Si algo no coincide con lo que describí, pará y mandame lo que ves.
+   ```
+4. Links exactos que Gemini debe usar (no inventar):
+   - Paso 1 Vercel: `https://vercel.com/<tu-usuario>/<proyecto>/settings/billing` → esperado: plan "Hobby", sin "Payment Method" agregado.
+   - Paso 2 Supabase: `https://supabase.com/dashboard/org/_/billing` → esperado: plan "Free", si aparece "Spend Cap" setearlo en `$0`.
+   - Paso 3 Google AI Studio: `https://aistudio.google.com/app/apikey` → esperado: no redirige a GCP Console. Si aparece "billing account required", parar y avisar a Gemini; NO activar billing.
+   - Paso 4 GitHub: `https://github.com/settings/billing/summary` → esperado: "Free plan", sin tarjeta.
+   - Paso 5 Cal.com: `https://app.cal.com/settings/billing` → esperado: "Free plan".
+5. Al terminar los 5 pasos, Gemini guarda la evidencia en un archivo nuevo `docs/evidencia-tarea-25.5.md` (commiteado en la misma rama `feat/tarea-25.5`) con una fila por paso: proveedor, URL, plan confirmado, fecha, screenshot path si hay.
+6. Solo entonces Gemini marca `[x]` y cierra la tarea.
+
 **Pasos para Omar (manual):**
 
 1. **Vercel** → Project Settings → Billing → confirmar que el plan es **Hobby (gratis)**, NO conectar tarjeta.
@@ -2519,20 +2558,63 @@ from api_logs group by 1, 2 order by 1 desc;
 4. **GitHub** → Settings → Billing → confirmar plan **Free**.
 5. **Cal.com** → Settings → Billing → confirmar plan **Free**.
 
-**Aceptación:** los 5 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees.
+**Aceptación:** los 5 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees. `docs/evidencia-tarea-25.5.md` commiteado con una fila por proveedor.
 
 ### [ ] [OMAR] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
+
+**🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
+
+Gemini NO compra el dominio. Gemini te acompaña en la decisión y en la configuración DNS así:
+
+1. Mensaje 1 — Presentar opciones con contexto del proyecto:
+   ```
+   Tarea 25.6 — decisión de dominio. Esto es tuya, yo te muestro pros/contras.
+   
+   Opción A (gratis): omar-portafolio.vercel.app (o el subdominio actual).
+     + 100% $0, listo hoy.
+     − menos credibilidad frente a enterprise.
+   
+   Opción B (~$12/año): dominio propio .dev o .com.
+     + credibilidad, email profesional futuro, SEO marginalmente mejor.
+     − única línea de gasto del proyecto. Recuperable con 1 cliente.
+   
+   Mi recomendación: si ya tenés un cliente cerrado o en negociación → B. Si estás todavía validando nicho (Fase 24) → A.
+   ¿Qué opción elegís? (respondé "A" o "B")
+   ```
+2. Si responde **"A"**:
+   - Guiarlo a Vercel → Settings → Domains → copiar el subdominio actual.
+   - Crear archivo `docs/decision-dominio.md` con: `Decisión: subdominio Vercel gratis. URL: <url>. Fecha: 2026-MM-DD. Revisar en 3 meses (cuando haya cliente activo).`
+   - Añadir una línea en `01-OPERACION_DIARIA.md` sección "Infra" con la URL activa.
+   - Commit + merge, marcar `[x]`.
+3. Si responde **"B"**:
+   - Preguntar nombre deseado (máx 3 opciones) en orden de preferencia.
+   - Por cada opción, Gemini corre `whois <nombre>` o guía a https://porkbun.com / https://namecheap.com para verificar disponibilidad. **NO compra por Omar**.
+   - Cuando Omar compre, pedirle que pegue el panel DNS. Gemini dicta los records exactos:
+     ```
+     Tipo A     @     76.76.21.21
+     Tipo CNAME www   cname.vercel-dns.com
+     ```
+     (o los que Vercel indique en Settings → Domains → Add Domain del proyecto).
+   - Guiarlo a Vercel → Settings → Domains → "Add" → pegar dominio → esperar "Valid Configuration".
+   - Actualizar `NEXT_PUBLIC_SITE_URL` en Vercel env vars con el dominio nuevo.
+   - Crear `docs/decision-dominio.md` con: registrador, dominio, fecha de compra, fecha de renovación, monto pagado, tarjeta usada (últimos 4), alerta en calendario para renovación.
+   - Actualizar `01-OPERACION_DIARIA.md`.
+   - Commit + merge, marcar `[x]`.
+4. **Regla de freno:** si en cualquier momento Omar dice "mejor más tarde", Gemini marca la tarea como `[ ] [OMAR-DIFERIDA]` con nota de fecha tentativa y cierra limpio sin commit. No reintenta.
+
+**Opciones para Omar:**
+
 - **Opción A (100% gratis):** usar `omar-portafolio.vercel.app` (el subdominio que te da Vercel). Funciona perfecto.
 - **Opción B (~$12 USD/año):** comprar dominio en Namecheap/Porkbun (`omarhernandez.dev`, `omarhr.com`). Más profesional.
 - Si vas opción B: **es el único costo justificable** del proyecto. $1 USD/mes que se recupera con 1 cliente.
-- **Aceptación:** decisión documentada en `01-OPERACION_DIARIA.md`, dominio configurado.
+- **Aceptación:** decisión documentada en `01-OPERACION_DIARIA.md` + `docs/decision-dominio.md`, dominio configurado y verificado en Vercel.
 
-### [ ] [CC] Tarea 25.7 — Alerta de "casi al límite"
+### [ ] [GEM] Tarea 25.7 — Alerta de "casi al límite"
 - En `quota-check` (Tarea 25.2): si Groq llega a 80% de límite diario → Telegram avisa
 - Si llega a 95% → además, cambiar variable `EMERGENCY_FALLBACK=true` en runtime que desvía nuevas conversaciones a "déjanos tu email, te respondemos pronto"
 - **Aceptación:** simular 95% → conversaciones nuevas reciben fallback en lugar de tocar Groq.
 
-### [ ] [CC] Tarea 25.8 — Costo total mensual real (verificación)
+### [ ] [GEM] Tarea 25.8 — Costo total mensual real (verificación)
 - Ejecutar al final de cada mes:
 ```bash
 echo "=== Costos del mes ==="
@@ -2705,6 +2787,38 @@ Las IAs a veces entran en bucles o no entienden el contexto. Si después de **3 
 **Aceptación:** protocolo escrito, el agente lo aplica si se atasca.
 
 ### [ ] [OMAR] Tarea 26.5 — Validación final pre-deploy con humano
+
+**🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
+
+Gemini NO juzga si el bot "suena como Omar" (regla B.5). Gemini prepara el entorno, ejecuta los 10 escenarios contigo y documenta los puntajes:
+
+1. **Pre-flight (lo hace Gemini antes de pedirte nada):**
+   - `npm run dev` en background, confirmar `http://localhost:3000` responde 200.
+   - `cat scripts/eval/scenarios.json` (o la ruta real de Fase 11.1) → extraer los 10 escenarios y su prompt inicial.
+   - Crear archivo `VALIDACION_PREDEPLOY.md` con la tabla vacía lista para rellenar:
+     ```
+     | # | Escenario | Pregunta 1 suena como yo | Pregunta 2 precios reales | Pregunta 3 avanzó venta | Pregunta 4 yo contratarían | Promedio |
+     ```
+2. Mensaje inicial a Omar:
+   ```
+   Tarea 26.5 — validación final. Son 10 escenarios, ~30 min total.
+   localhost:3000 ya corre. Voy a dictarte un escenario a la vez.
+   Por cada uno: abrís el chat, escribís el prompt, leés la respuesta, me dictás 4 notas de 1 a 10.
+   Respondé "listo" cuando tengas el navegador abierto en localhost:3000.
+   ```
+3. Por cada escenario (1 a 10):
+   - Dictar el prompt literal del escenario.
+   - Esperar a que Omar responda con 4 números separados por coma (ej: `8,9,7,8`).
+   - Validar que sean 4 enteros entre 1 y 10. Si no, pedir corrección.
+   - Agregar fila a `VALIDACION_PREDEPLOY.md` con el promedio calculado.
+4. Al terminar los 10:
+   - Calcular promedio general.
+   - Si **≥ 7**: pedir a Omar que escriba al final del archivo `Firmado: Omar Hernandez — 2026-MM-DD — promedio X.X/10`. Commit + merge + marcar `[x]`.
+   - Si **< 7**: NO marcar `[x]`. Generar bloque `⚠️ DEPLOY BLOQUEADO` con las 3 preguntas con peor nota y sugerencias de qué ajustar en FASE 13 (pero no ejecutar el ajuste hasta que Omar lo autorice como nueva tarea). Cerrar mensaje pidiendo instrucción.
+5. **Regla crítica:** Gemini NO puede poner sus propias notas ni "interpretar" las respuestas del bot. Solo Omar califica. Si Omar dice "ponele 8 vos", Gemini responde: `No puedo firmar esta validación por vos (regla B.5). Necesito que me digas los 4 números`.
+
+**Pasos resumidos:**
+
 Antes de hacer el deploy de FASE 10, hacer manualmente con Omar (no la IA):
 
 1. Abrir el sitio en `localhost:3000`
@@ -2814,6 +2928,41 @@ LLM_PROVIDER_CHAIN=
 - **Aceptación:** `.env.example` commiteado con las nuevas vars vacías.
 
 ### [ ] [OMAR] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
+
+**🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
+
+Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía proveedor por proveedor, valida que la key funcione con un curl, y la escribe en `.env.local` por vos:
+
+1. Antes de empezar, Gemini corre `cat src/config/env.ts | grep -E "(OPENROUTER|CEREBRAS|CLOUDFLARE)"` para confirmar los nombres exactos de las variables. Si alguna no existe, **pará** — significa que Tarea 27.3 no está hecha y hay que hacerla primero.
+2. Mensaje inicial:
+   ```
+   Tarea 27.7 — creás 4 cuentas gratis, yo valido cada key antes de pegarla en .env.local.
+   Vamos proveedor por proveedor. NUNCA me pegues la key entera en el chat — pegala como "OPENROUTER_API_KEY=<aquí>" y yo la escribo al .env.local directamente por vos.
+   ¿Arrancamos con OpenRouter? (respondé "ok")
+   ```
+3. Por cada proveedor (OpenRouter, Cerebras, Cloudflare, Ollama), Gemini manda un bloque así:
+   ```
+   PROVEEDOR <N>/4 — <nombre>
+   🌐 URL exacta: <link>
+   🔐 Método de login recomendado: <GitHub | email>
+   🧭 Ruta dentro del panel: <ej: "Dashboard → API Keys → Create Key">
+   ⚠️ Qué NO hacer: <ej: "no elijas modelos sin ':free' al final — esos son pagos">
+   📋 Qué pegarme cuando tengas la key:
+        <NOMBRE_VAR>=<valor>
+   Si te pide tarjeta en algún momento: cerrá el tab, mandame screenshot, vemos si hay forma alternativa antes de seguir.
+   ```
+4. Links y variables exactas:
+   - **OpenRouter:** https://openrouter.ai/keys → var `OPENROUTER_API_KEY=sk-or-v1-...`. Validación: `curl -s https://openrouter.ai/api/v1/auth/key -H "Authorization: Bearer $OPENROUTER_API_KEY"` debe devolver JSON con `data.label`.
+   - **Cerebras:** https://cloud.cerebras.ai → var `CEREBRAS_API_KEY=csk-...`. Validación: `curl -s https://api.cerebras.ai/v1/models -H "Authorization: Bearer $CEREBRAS_API_KEY"` debe devolver lista de modelos.
+   - **Cloudflare Workers AI:** https://dash.cloudflare.com/profile/api-tokens → template "Workers AI" → var `CLOUDFLARE_API_TOKEN=...` + además copiar Account ID del sidebar derecho del dashboard principal → var `CLOUDFLARE_ACCOUNT_ID=...`. Validación: `curl -s https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/models -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"` debe devolver `success: true`.
+   - **Ollama (opcional):** guía los 3 comandos del bloque "Pasos para Omar" de abajo. Validación: `curl -s http://localhost:11434/api/tags` devuelve JSON con `llama3.2:3b` listado.
+5. Cuando Omar pegue `NOMBRE_VAR=valor`, Gemini:
+   - Corre la validación curl correspondiente.
+   - Si responde OK → abre `.env.local`, agrega/actualiza la línea (respetando las demás, sin borrar nada), confirma con `grep <NOMBRE_VAR>= .env.local` que quedó (sin imprimir el valor).
+   - Si falla → muestra el error, sugiere causa (key mal copiada, cuenta sin verificar, billing required) y vuelve al paso.
+6. **Aceptación asistida:** Gemini cuenta cuántas keys quedaron válidas. Si **≥ 2 remotas** (sin contar Ollama) → marca `[x]`, commit en `.env.local` **NO** (está en `.gitignore`), pero sí commit de un nuevo archivo `docs/providers-activos.md` con la lista de proveedores configurados (sin valores) y fecha. Si < 2 → no marca, deja `[ ] [OMAR-PARCIAL]` con lista de lo que falta.
+7. **Regla crítica:** Gemini nunca escribe, loggea ni commitea el valor de las keys. Solo los nombres de las variables y la fecha.
+
 **Pasos para Omar (todos sin tarjeta):**
 
 1. **OpenRouter** — https://openrouter.ai/keys
@@ -2883,7 +3032,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 28.2 — Email follow-up automatizado vía Resend (3000 emails/mes gratis)
+### [ ] [GEM] Tarea 28.2 — Email follow-up automatizado vía Resend (3000 emails/mes gratis)
 
 **Para qué sirve.** El cron de FASE 12 ya marca leads fríos. Falta enviarles email automático con propuesta personalizada para reactivarlos. Esto solo lo logra automatización; ningún humano da abasto.
 
@@ -2918,7 +3067,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 28.3 — RAG con pgvector: el bot cita tus proyectos REALES, no inventa
+### [ ] [GEM] Tarea 28.3 — RAG con pgvector: el bot cita tus proyectos REALES, no inventa
 
 **Para qué sirve.** Hoy el bot puede inventar tu experiencia. Con RAG, busca semánticamente en tus proyectos/casos de éxito reales antes de responder. Bot deja de mentir → cierra ventas reales.
 
@@ -3045,7 +3194,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 28.7 — A/B testing de aperturas (qué saludo cierra más)
+### [ ] [GEM] Tarea 28.7 — A/B testing de aperturas (qué saludo cierra más)
 
 **Para qué sirve.** Saber con datos qué primera frase del bot convierte más leads. Sin medir, optimizas a ciegas.
 
@@ -3103,7 +3252,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 28.9 — Análisis de imagen: cliente sube screenshot y bot lo entiende (Llama Vision)
+### [ ] [GEM] Tarea 28.9 — Análisis de imagen: cliente sube screenshot y bot lo entiende (Llama Vision)
 
 **Para qué sirve.** "Quiero algo así" + screenshot de competencia es la conversación real de ventas. Hoy el bot no puede ver. Con Llama 3.2 Vision (gratis en Groq) sí.
 
@@ -3177,7 +3326,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 29.1 — Blog MDX con generación estática (1 post/semana de SEO long-tail)
+### [ ] [GEM] Tarea 29.1 — Blog MDX con generación estática (1 post/semana de SEO long-tail)
 
 **Para qué sirve.** Cada post = 1 página indexada en Google = nuevo punto de entrada de tráfico. 52 posts en 1 año = 52 ventanas para que te encuentren.
 
@@ -3206,7 +3355,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 29.2 — SEO programático: rutas dinámicas por servicio × ciudad
+### [ ] [GEM] Tarea 29.2 — SEO programático: rutas dinámicas por servicio × ciudad
 
 **Para qué sirve.** Generar 50-200 páginas indexables del tipo `/servicios/desarrollo-web/bogota`, `/servicios/chatbot-ia/medellin`. Cada combinación servicio×ciudad atrapa una búsqueda local específica.
 
@@ -3287,7 +3436,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 29.5 — Open Graph images dinámicas por ruta (Vercel OG)
+### [ ] [GEM] Tarea 29.5 — Open Graph images dinámicas por ruta (Vercel OG)
 
 **Para qué sirve.** Cuando alguien comparte tu post en LinkedIn/Twitter, ve una imagen rica con título y branding. CTR de un share con OG decente vs. genérico: 5×.
 
@@ -3319,7 +3468,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 29.6 — Lead magnets descargables: PDFs gated por email
+### [ ] [GEM] Tarea 29.6 — Lead magnets descargables: PDFs gated por email
 
 **Para qué sirve.** "Guía gratuita: cómo elegir desarrollador en 2026" → email del visitante. Lead frío convertible vía newsletter (29.7).
 
@@ -3348,7 +3497,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 29.7 — Newsletter (Resend + Supabase, sin servicios pagos)
+### [ ] [GEM] Tarea 29.7 — Newsletter (Resend + Supabase, sin servicios pagos)
 
 **Para qué sirve.** Mantener relación con leads fríos por meses hasta que estén listos para comprar. CAC orgánico = $0.
 
@@ -3473,7 +3622,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 30.1 — Auto-onboarding del cliente: form → contrato firmado → pago → kickoff
+### [ ] [GEM] Tarea 30.1 — Auto-onboarding del cliente: form → contrato firmado → pago → kickoff
 
 **Para qué sirve.** Eliminar el ping-pong manual cliente↔Omar antes de empezar el proyecto. Sistema lleva al cliente solo desde "acepto" hasta "proyecto iniciado".
 
@@ -3500,7 +3649,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 30.2 — Sistema de tickets en `/admin` (no más WhatsApp infinito)
+### [ ] [GEM] Tarea 30.2 — Sistema de tickets en `/admin` (no más WhatsApp infinito)
 
 **Para qué sirve.** Cuando tienes 10 clientes activos, WhatsApp/Telegram se vuelve caos. Tickets = orden + historial + asignable.
 
@@ -3551,7 +3700,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 30.4 — Facturación Colombia básica (PDF DIAN-friendly con `pdf-lib`)
+### [ ] [GEM] Tarea 30.4 — Facturación Colombia básica (PDF DIAN-friendly con `pdf-lib`)
 
 **Para qué sirve.** Cliente paga → necesitas factura. Manualmente es 10 min/cliente. Automatizado es 0 min.
 
@@ -3600,7 +3749,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 30.6 — Roles y permisos en `/admin` (Omar admin + asistente futuro)
+### [ ] [GEM] Tarea 30.6 — Roles y permisos en `/admin` (Omar admin + asistente futuro)
 
 **Para qué sirve.** Cuando contrates a alguien que responda leads, NO debe ver tus números de facturación. RBAC básico.
 
@@ -3623,7 +3772,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 30.7 — Sistema de webhooks (eventos para integrar con cualquier herramienta futura)
+### [ ] [GEM] Tarea 30.7 — Sistema de webhooks (eventos para integrar con cualquier herramienta futura)
 
 **Para qué sirve.** Que cuando llega un lead, además de Telegram/Notion, puedas dispararse cualquier cosa: Discord, Slack, Make.com, Zapier alternative gratis (n8n self-hosted).
 
@@ -3672,7 +3821,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [CC] Tarea 30.9 — Backup multi-destino (Supabase → Cloudflare R2 free tier)
+### [ ] [GEM] Tarea 30.9 — Backup multi-destino (Supabase → Cloudflare R2 free tier)
 
 **Para qué sirve.** FASE 21 ya tiene backup a un sitio. Multi-destino = redundancia. Si pierdes acceso a una cosa, queda la otra.
 
