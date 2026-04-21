@@ -143,6 +143,7 @@ export async function generateReply(
   }
 
   console.error('❌ All LLM providers failed:', errors.join(' | '));
-  return '<<<QUOTA_EXCEEDED>>>';
+  await notifyTelegram(`🚨 *EMERGENCIA*: Todos los proveedores LLM fallaron. El chat está mostrando el mensaje de fallback.`);
+  return 'Lo siento, mi cerebro artificial está experimentando una alta demanda en este momento. 🧠⚡\n\nPara no hacerte esperar, puedes hablar directamente con Omar por WhatsApp haciendo clic aquí: <<<HANDOFF>>>{"summary":"Error técnico en el chat (todos los proveedores fallaron)","urgency":"high"}<<<END>>>';
 }
 
