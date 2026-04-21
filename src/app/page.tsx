@@ -16,10 +16,10 @@ export default function Home() {
     "@graph": [
       {
         "@type": "Person",
-        "@id": "https://omarhernandez.dev/#person",
+        "@id": "https://omarhernandezrey.com/#person",
         "name": "Omar Hernández Rey",
-        "url": "https://omarhernandez.dev",
-        "image": "https://omarhernandez.dev/profile.jpg",
+        "url": "https://omarhernandezrey.com",
+        "image": "https://omarhernandezrey.com/profile.jpg",
         "jobTitle": "Full Stack Web Developer",
         "sameAs": [
           "https://linkedin.com/in/omarhernandez",
@@ -30,9 +30,9 @@ export default function Home() {
       {
         "@type": "ProfessionalService",
         "name": "Omar Hernández Rey - Freelance Web Development",
-        "image": "https://omarhernandez.dev/portfolio-preview.jpg",
-        "@id": "https://omarhernandez.dev/#service",
-        "url": "https://omarhernandez.dev",
+        "image": "https://omarhernandezrey.com/portfolio-preview.jpg",
+        "@id": "https://omarhernandezrey.com/#service",
+        "url": "https://omarhernandezrey.com",
         "telephone": "+573219052878",
         "priceRange": "$$$",
         "address": {

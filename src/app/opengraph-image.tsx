@@ -93,7 +93,7 @@ export default async function Image() {
             color: '#a1aab8',
           }}
         >
-          omarhernandez.dev
+          omarhernandezrey.com
         </div>
       </div>
     ),

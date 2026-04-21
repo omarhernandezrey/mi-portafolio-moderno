@@ -9,9 +9,22 @@ export default function ParticlesComponent() {
   const [init, setInit] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [logosReady, setLogosReady] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isLowPowerDevice, setIsLowPowerDevice] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+
+    if (typeof window !== "undefined") {
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      setPrefersReducedMotion(mq.matches);
+
+      const nav = navigator as Navigator & { deviceMemory?: number };
+      const lowCpu = (nav.hardwareConcurrency ?? 8) <= 4;
+      const lowRam = (nav.deviceMemory ?? 8) <= 4;
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      setIsLowPowerDevice(lowCpu || lowRam || isMobile);
+    }
 
     const initParticlesEngine = async (engine: Engine) => {
       try {
@@ -41,57 +54,33 @@ export default function ParticlesComponent() {
     if (!isClient) return [];
 
     const logoList = [
-      "/images/logos/angular.svg",
-      "/images/logos/css.svg",
-      "/images/logos/django.svg",
-      "/images/logos/docker.svg",
-      "/images/logos/express-js.svg",
-      "/images/logos/figma.svg",
-      "/images/logos/firebase.svg",
-      "/images/logos/git.svg",
-      "/images/logos/github.svg",
-      "/images/logos/html.svg",
-      "/images/logos/javascript.svg",
-      "/images/logos/jenkins.svg",
-      "/images/logos/mongodb.svg",
-      "/images/logos/mysql.svg",
-      "/images/logos/next-js.svg",
-      "/images/logos/nodejs.svg",
-      "/images/logos/postgresql.svg",
       "/images/logos/react-js.svg",
-      "/images/logos/svelte.svg",
-      "/images/logos/tailwind-css.svg",
+      "/images/logos/next-js.svg",
       "/images/logos/typescript.svg",
-      "/images/logos/vite.svg",
-      "/images/logos/vue-js.svg",
+      "/images/logos/javascript.svg",
+      "/images/logos/nodejs.svg",
+      "/images/logos/tailwind-css.svg",
+      "/images/logos/postgresql.svg",
+      "/images/logos/docker.svg",
     ];
 
-    // Precargar imágenes y verificar disponibilidad
     let loadedCount = 0;
     const targetCount = logoList.length;
 
     logoList.forEach((src) => {
       const img = new Image();
-      img.onload = () => {
+      const done = () => {
         loadedCount++;
-        if (loadedCount === targetCount) {
-          setLogosReady(true);
-        }
+        if (loadedCount === targetCount) setLogosReady(true);
       };
-      img.onerror = () => {
-        console.warn(`Logo no disponible: ${src}`);
-        loadedCount++;
-        if (loadedCount === targetCount) {
-          setLogosReady(true);
-        }
-      };
+      img.onload = done;
+      img.onerror = done;
       img.src = src;
     });
 
     return logoList;
   }, [isClient]);
 
-  // Obtener colores CSS dinámicamente
   const getThemeColors = useCallback(() => {
     if (typeof window === "undefined")
       return {
@@ -110,13 +99,15 @@ export default function ParticlesComponent() {
     };
   }, []);
 
+  const particleCount = isLowPowerDevice ? 4 : 6;
+
   const manualParticles = useMemo(() => {
     if (!logosReady || logos.length === 0) return [];
 
-    return logos.slice(0, 12).map((logo, index) => ({
+    return logos.slice(0, particleCount).map((logo, index) => ({
       position: {
         x: 15 + (index % 4) * 20 + Math.random() * 10,
-        y: 15 + Math.floor(index / 4) * 25 + Math.random() * 10,
+        y: 20 + Math.floor(index / 4) * 30 + Math.random() * 10,
       },
       options: {
         shape: {
@@ -124,17 +115,15 @@ export default function ParticlesComponent() {
           options: {
             image: {
               src: logo,
-              width: 35,
-              height: 35,
+              width: 32,
+              height: 32,
             },
           },
         },
-        opacity: {
-          value: 0.8,
-        },
+        opacity: { value: 0.75 },
       },
     }));
-  }, [logos, logosReady]);
+  }, [logos, logosReady, particleCount]);
 
   const options: ISourceOptions = useMemo(() => {
     if (!logosReady) return {};
@@ -142,109 +131,53 @@ export default function ParticlesComponent() {
     const colors = getThemeColors();
 
     return {
-      detectRetina: true,
-      fpsLimit: 60, // Reducido para mejor rendimiento
+      detectRetina: false,
+      fpsLimit: isLowPowerDevice ? 24 : 30,
+      pauseOnBlur: true,
+      pauseOnOutsideViewport: true,
       particles: {
         number: { value: 0 },
-        size: {
-          value: { min: 4, max: 8 },
-          animation: {
-            enable: true,
-            speed: 2,
-            minimumValue: 4,
-            sync: false,
-          },
-        },
+        size: { value: 6 },
         move: {
           enable: true,
-          speed: { min: 1, max: 3 },
+          speed: 0.8,
           direction: "none",
-          random: true,
+          random: false,
           straight: false,
-          outModes: {
-            default: "bounce",
-            top: "none",
-            bottom: "destroy",
-          },
+          outModes: { default: "bounce" },
         },
-        collisions: {
-          enable: true,
-          mode: "bounce",
-        },
+        collisions: { enable: false },
         links: {
-          enable: true,
-          distance: 120,
+          enable: !isLowPowerDevice,
+          distance: 110,
           color: colors.text,
-          opacity: 0.4,
+          opacity: 0.3,
           width: 1,
-          triangles: {
-            enable: true,
-            color: colors.primary,
-            opacity: 0.1,
-          },
+          triangles: { enable: false },
         },
         shape: {
           type: "image",
           options: {
-            image: logos.map((src) => ({
+            image: logos.slice(0, particleCount).map((src) => ({
               src,
-              width: 35,
-              height: 35,
+              width: 32,
+              height: 32,
             })),
           },
         },
-        opacity: {
-          value: { min: 0.6, max: 0.9 },
-          animation: {
-            enable: true,
-            speed: 1,
-            minimumValue: 0.4,
-            sync: false,
-          },
-        },
+        opacity: { value: 0.75 },
       },
       interactivity: {
-        detectsOn: "window",
+        detectsOn: "canvas",
         events: {
-          onHover: {
-            enable: true,
-            mode: ["repulse", "bubble"],
-          },
-          onClick: {
-            enable: true,
-            mode: "push",
-          },
-          resize: {
-            enable: true,
-            delay: 0.5,
-          },
-        },
-        modes: {
-          repulse: {
-            distance: 100,
-            duration: 0.4,
-            factor: 3,
-            speed: 2,
-          },
-          bubble: {
-            distance: 150,
-            size: 45,
-            duration: 2,
-            opacity: 1,
-            color: colors.primary,
-          },
-          push: {
-            quantity: 1,
-          },
+          onHover: { enable: false },
+          onClick: { enable: false },
+          resize: { enable: true, delay: 0.5 },
         },
       },
       manualParticles,
-      fullScreen: {
-        enable: false,
-      },
-      background: {
-        opacity: 0,
-      },
+      fullScreen: { enable: false },
+      background: { opacity: 0 },
       style: {
         position: "absolute",
         top: "0px",
@@ -253,34 +186,10 @@ export default function ParticlesComponent() {
         height: "100%",
         zIndex: "-1",
       },
-      responsive: [
-        {
-          maxWidth: 768,
-          options: {
-            particles: {
-              links: {
-                distance: 80,
-                opacity: 0.3,
-              },
-              size: {
-                value: { min: 3, max: 6 },
-              },
-            },
-            interactivity: {
-              modes: {
-                repulse: {
-                  distance: 80,
-                },
-              },
-            },
-          },
-        },
-      ],
     };
-  }, [logos, manualParticles, logosReady, getThemeColors]);
+  }, [logos, manualParticles, logosReady, getThemeColors, isLowPowerDevice, particleCount]);
 
-  // Render condicional mejorado
-  if (!init || !logosReady || !isClient) {
+  if (prefersReducedMotion || !init || !logosReady || !isClient) {
     return (
       <div
         className="absolute inset-0 opacity-20"

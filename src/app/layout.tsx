@@ -10,7 +10,7 @@ const personData = {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Omar Hernández Rey",
-  "url": "https://omarhernandez.dev",
+  "url": "https://omarhernandezrey.com",
   "sameAs": [
     "https://github.com/omarhernandezrey",
     "https://www.linkedin.com/in/omarhernandezrey/",
@@ -35,7 +35,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://omarhernandez.dev"),
+  metadataBase: new URL("https://omarhernandezrey.com"),
   title: {
     template: "%s | Omar Hernández Rey",
     default: "Omar Hernández Rey | Full Stack Developer | Desarrollador Full Stack",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_CO",
-    url: "https://omarhernandez.dev",
+    url: "https://omarhernandezrey.com",
     siteName: "Omar Hernández Rey Portfolio",
     title: "Omar Hernández Rey | Full Stack Developer",
     description: "Desarrollo web moderno con React, Next.js y Node.js",
@@ -100,7 +100,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
-        <link rel="canonical" href="https://omarhernandez.dev" />
+        <link rel="canonical" href="https://omarhernandezrey.com" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
