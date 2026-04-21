@@ -2103,7 +2103,7 @@ fi
 
 ## FASE 21 — Backups y monitoreo de costos
 
-### [ ] [GEM] Tarea 21.1 — Backup semanal automático
+### [x] [GEM] Tarea 21.1 — Backup semanal automático
 - Crear cron (Vercel Cron o GitHub Action) que cada domingo:
   - Hace `pg_dump` de Supabase (vía `supabase db dump` o llamada SQL select-all)
   - Sube el dump a un repo privado de GitHub `omar-portafolio-backups` (gratis ilimitado)

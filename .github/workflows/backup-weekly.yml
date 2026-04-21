@@ -1,0 +1,28 @@
+name: Backup Semanal Supabase
+
+on:
+  schedule:
+    - cron: '0 5 * * 0' # Domingos 05:00 UTC (00:00 Colombia)
+  workflow_dispatch: # Permite ejecución manual desde la pestaña Actions
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repo (para tener el script)
+        uses: actions/checkout@v4
+
+      - name: Instalar postgresql-client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends postgresql-client
+
+      - name: Ejecutar backup
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUPS_REPO: ${{ secrets.BACKUPS_REPO }}
+          BACKUPS_REPO_TOKEN: ${{ secrets.BACKUPS_REPO_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: bash scripts/backup-supabase.sh
