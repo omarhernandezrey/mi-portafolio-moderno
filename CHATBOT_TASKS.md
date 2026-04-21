@@ -3375,7 +3375,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 29.8 — Analytics: Vercel Analytics (free) o Plausible self-hosted (open source)
+### [x] [GEM] Tarea 29.8 — Analytics: Vercel Analytics (free) o Plausible self-hosted (open source)
 
 **Para qué sirve.** Saber qué páginas convierten, qué tráfico viene de dónde, qué CTAs funcionan. Sin esto, optimizas a ciegas.
 

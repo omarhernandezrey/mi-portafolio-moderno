@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { buildCalcomUrl } from '@/lib/chatbot/calcom';
 import Link from 'next/link';
 import useSpeechToText from '@/hooks/useSpeechToText';
+import { track } from '@vercel/analytics';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -125,7 +126,13 @@ export default function ChatWidget() {
     }
   }, [isOpen, hasConsented]);
 
-  const toggleChat = () => setIsOpen(!isOpen);
+  const toggleChat = () => {
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    if (newIsOpen) {
+      track('chatbot_opened');
+    }
+  };
 
   const handleConsent = () => {
     setHasConsented(true);
@@ -148,6 +155,9 @@ export default function ChatWidget() {
       
       // Actualizar metadatos del visitante si el bot los extrajo
       if (response.visitorMeta) {
+        if (!visitorMeta.email && response.visitorMeta.email) {
+          track('lead_created', { source: 'chatbot' });
+        }
         setVisitorMeta(prev => ({ ...prev, ...response.visitorMeta }));
       }
 
@@ -166,7 +176,7 @@ export default function ChatWidget() {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, sessionId, currentLanguage, t, hasConsented]);
+  }, [input, isLoading, sessionId, currentLanguage, t, hasConsented, visitorMeta.email]);
 
   const { isListening, isSupported, startListening, stopListening } = useSpeechToText({
     language: currentLanguage === 'es' ? 'es-CO' : 'en-US',

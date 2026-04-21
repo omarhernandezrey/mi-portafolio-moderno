@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CALCULATOR_STEPS, calculateBudget } from '@/lib/calculator/pricing';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight, ArrowLeft, Check, Download } from 'lucide-react';
+import { track } from '@vercel/analytics';
 
 export default function BudgetCalculator() {
   const { i18n } = useTranslation();
@@ -63,6 +64,7 @@ export default function BudgetCalculator() {
       });
       if (response.ok) {
         setIsSuccess(true);
+        track('lead_created', { source: 'calculator' });
       }
     } catch (error) {
       console.error('Submission failed:', error);
