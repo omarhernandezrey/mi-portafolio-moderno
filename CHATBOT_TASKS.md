@@ -3233,7 +3233,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 29.3 — Sitemap dinámico + robots.txt
+### [x] [GEM] Tarea 29.3 — Sitemap dinámico + robots.txt
 
 **Para qué sirve.** Sin sitemap, Google indexa solo lo que encuentra; con sitemap, le dices exactamente qué indexar y cuándo.
 
