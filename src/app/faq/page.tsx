@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Preguntas Frecuentes (FAQ)',
@@ -50,8 +51,22 @@ const FAQS = [
 ];
 
 export default function FAQPage() {
+  const faqData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": FAQS.map(faq => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  };
+
   return (
     <main className="min-h-screen py-24 px-6 max-w-4xl mx-auto text-[var(--text-color)]">
+      <JsonLd data={faqData} />
       <h1 className="text-4xl font-bold mb-4 text-[var(--primary-color)]">Preguntas Frecuentes</h1>
       <p className="text-[var(--muted-color)] mb-12 italic">Todo lo que necesitas saber antes de empezar a trabajar conmigo.</p>
       

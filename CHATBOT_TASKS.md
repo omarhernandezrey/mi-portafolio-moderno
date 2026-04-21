@@ -3259,7 +3259,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 29.4 — Schema.org JSON-LD (Person, Service, FAQPage, BreadcrumbList)
+### [x] [GEM] Tarea 29.4 — Schema.org JSON-LD (Person, Service, FAQPage, BreadcrumbList)
 
 **Para qué sirve.** Rich snippets en Google: estrellas, FAQs desplegables, breadcrumbs visuales. Aumenta CTR del resultado 20-30%.
 

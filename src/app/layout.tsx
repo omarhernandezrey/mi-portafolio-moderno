@@ -4,6 +4,25 @@ import "./globals.css";
 import NavbarLogic from "../components/ui/NavbarLogic";
 import ClientProvider from "./ClientProvider";
 import { Analytics } from "@vercel/analytics/react";
+import JsonLd from "@/components/seo/JsonLd";
+
+const personData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Omar Hernández Rey",
+  "url": "https://omarhernandez.dev",
+  "sameAs": [
+    "https://github.com/omarhernandezrey",
+    "https://www.linkedin.com/in/omarhernandezrey/",
+    "https://twitter.com/omarhernandezrey"
+  ],
+  "jobTitle": "Full Stack Developer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Freelance"
+  },
+  "description": "Software Engineer specialized in modern web development with React, Next.js and Node.js."
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -86,6 +105,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <JsonLd data={personData} />
         <ClientProvider>
           <NavbarLogic />
           {children}
