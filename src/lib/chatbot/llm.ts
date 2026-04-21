@@ -67,7 +67,8 @@ async function handleProviderError(name: string, err: unknown) {
 export async function generateReply(
   systemPrompt: string,
   history: ChatMessage[],
-  userMessage: string
+  userMessage: string,
+  sessionId?: string
 ): Promise<string> {
   const chain = getChain();
   const errors: string[] = [];
@@ -91,14 +92,27 @@ export async function generateReply(
       continue;
     }
 
+    const startTime = Date.now();
     try {
       const text = await withTimeout(
         (signal) => call({ systemPrompt, history, userMessage, signal }),
         TIMEOUT_MS
       );
+      const latency = Date.now() - startTime;
+
       if (process.env.NODE_ENV !== 'production') {
-        console.log(`✅ LLM provider hit: ${name}`);
+        console.log(`✅ LLM provider hit: ${name} (${latency}ms)`);
       }
+
+      // Log success to DB (fire and forget)
+      import('@/lib/supabaseServer').then(({ supabaseServer }) => {
+        supabaseServer.from('api_logs').insert({
+          provider: name,
+          latency_ms: latency,
+          status: 'success',
+          session_id: sessionId
+        }).then(({ error }) => error && console.error('Error logging success:', error));
+      });
       
       // Si tuvo éxito, podemos resetear gradualmente el contador o dejarlo así para ver ráfagas
       if (errorTracker[name] && errorTracker[name].count > 0) {
@@ -107,8 +121,23 @@ export async function generateReply(
 
       return text;
     } catch (err) {
+      const latency = Date.now() - startTime;
       await handleProviderError(name, err);
       errors.push(`${name}: ${err instanceof Error ? err.message : 'failed'}`);
+
+      // Log failure to DB (fire and forget)
+      import('@/lib/supabaseServer').then(({ supabaseServer }) => {
+        const pe = err as ProviderError;
+        supabaseServer.from('api_logs').insert({
+          provider: name,
+          latency_ms: latency,
+          status: 'error',
+          error_message: pe?.message || 'unknown error',
+          http_status: pe?.status,
+          session_id: sessionId
+        }).then(({ error }) => error && console.error('Error logging failure:', error));
+      });
+
       continue;
     }
   }
