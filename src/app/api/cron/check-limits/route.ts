@@ -57,8 +57,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, usage });
 
-  } catch (error: any) {
-    console.error("❌ Error en check-limits:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+    console.error("❌ Error en check-limits:", errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
