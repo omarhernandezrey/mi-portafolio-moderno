@@ -1945,7 +1945,7 @@ fi
   - Qué datos recopila (nombre, email, tel, empresa, contenido del chat)
   - Para qué (responder consultas, generar propuestas, contacto comercial)
   - Cuánto tiempo (24 meses tras último contacto)
-  - Con quién se comparten (Supabase como encargado del tratamiento, Google Groq)
+  - Con quién se comparten (Supabase como encargado del tratamiento, Groq)
   - Derechos del titular (acceso, rectificación, supresión — escribir a tu email)
   - Base legal: consentimiento explícito al iniciar chat
 - **Aceptación:** dos páginas accesibles en `/privacidad` y `/privacy`, en sitemap.
@@ -2518,7 +2518,7 @@ from api_logs group by 1, 2 order by 1 desc;
 ```
 - **Aceptación:** tras 10 llamadas al chat, `select * from daily_usage where service in ('groq','openrouter','cerebras','cloudflare','ollama')` suma 10 (distribuido entre los proveedores que respondieron).
 
-### [ ] [OMAR] Tarea 25.5 — Bloqueo manual de upgrades automáticos
+### [x] [OMAR] Tarea 25.5 — Bloqueo manual de upgrades automáticos
 
 **🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
 
@@ -2532,9 +2532,9 @@ Gemini NO hace esta tarea. Gemini guía a Omar así:
    ¿Arrancamos con el paso 1? (respondé "ok" para empezar)
    ```
 2. Esperá `"ok"`. Recién ahí mandás el paso 1. **Un paso por mensaje**, no todos juntos.
-3. Para cada paso (1 a 5) mandás exactamente este formato:
+3. Para cada paso (1 a 4) mandás exactamente este formato:
    ```
-   PASO <N>/5 — <proveedor>
+   PASO <N>/4 — <proveedor>
    🌐 Link directo: <URL exacta al panel de billing>
    🔎 Qué tenés que ver: <descripción literal del estado esperado, ej: "cartel 'Current Plan: Hobby (Free)' sin botón 'Add payment method' activo">
    ⚠️ Qué NO hacer: <lista de clicks prohibidos>
@@ -2546,21 +2546,20 @@ Gemini NO hace esta tarea. Gemini guía a Omar así:
 4. Links exactos que Gemini debe usar (no inventar):
    - Paso 1 Vercel: `https://vercel.com/<tu-usuario>/<proyecto>/settings/billing` → esperado: plan "Hobby", sin "Payment Method" agregado.
    - Paso 2 Supabase: `https://supabase.com/dashboard/org/_/billing` → esperado: plan "Free", si aparece "Spend Cap" setearlo en `$0`.
-   - Paso 3 Google AI Studio: `https://aistudio.google.com/app/apikey` → esperado: no redirige a GCP Console. Si aparece "billing account required", parar y avisar a Gemini; NO activar billing.
-   - Paso 4 GitHub: `https://github.com/settings/billing/summary` → esperado: "Free plan", sin tarjeta.
-   - Paso 5 Cal.com: `https://app.cal.com/settings/billing` → esperado: "Free plan".
-5. Al terminar los 5 pasos, Gemini guarda la evidencia en un archivo nuevo `docs/evidencia-tarea-25.5.md` (commiteado en la misma rama `feat/tarea-25.5`) con una fila por paso: proveedor, URL, plan confirmado, fecha, screenshot path si hay.
+   - Paso 3 GitHub: `https://github.com/settings/billing/summary` → esperado: "Free plan", sin tarjeta.
+   - Paso 4 Cal.com: `https://app.cal.com/settings/billing` → esperado: "Free plan".
+5. Al terminar los 4 pasos, Gemini guarda la evidencia en un archivo nuevo `docs/evidencia-tarea-25.5.md` (commiteado en la misma rama `feat/tarea-25.5`) con una fila por paso: proveedor, URL, plan confirmado, fecha, screenshot path si hay.
 6. Solo entonces Gemini marca `[x]` y cierra la tarea.
 
 **Pasos para Omar (manual):**
 
 1. **Vercel** → Project Settings → Billing → confirmar que el plan es **Hobby (gratis)**, NO conectar tarjeta.
 2. **Supabase** → Organization → Billing → confirmar plan **Free**, NO conectar tarjeta. Activar **Spend Cap = $0** si la opción aparece.
-3. **Google Cloud (Groq)** → AI Studio NO pide tarjeta. Si en algún momento te llevan a Vertex AI / GCP Console, **NO actives "billing account"**. Si lo haces por error, desactívalo de inmediato.
-4. **GitHub** → Settings → Billing → confirmar plan **Free**.
+3. **GitHub** → Settings → Billing → confirmar plan **Free**.
 5. **Cal.com** → Settings → Billing → confirmar plan **Free**.
 
-**Aceptación:** los 5 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees. `docs/evidencia-tarea-25.5.md` commiteado con una fila por proveedor.
+**Aceptación:** los 4 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees. `docs/evidencia-tarea-25.5.md` commiteado con una fila por proveedor.
+
 
 ### [ ] [OMAR] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
 
