@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
-import { serverEnv } from '@/config/env';
+import { clientEnv, serverEnv } from '@/config/env';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { Resend } from 'resend';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (conv) {
-      await supabaseServer.from('leads').insert({
+      const { data: insertedLead } = await supabaseServer.from('leads').insert({
         conversation_id: conv.id,
         name: visitorInfo.name,
         email: visitorInfo.email,
@@ -33,7 +33,22 @@ export async function POST(req: NextRequest) {
         service_requested: 'Calculadora de Presupuesto',
         notes: `Selecciones: ${JSON.stringify(selections)}`,
         status: 'new'
-      });
+      }).select('id').single();
+
+      if (insertedLead) {
+        const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
+        pushLeadToNotion({
+          type: 'client',
+          name: visitorInfo.name,
+          email: visitorInfo.email,
+          company: visitorInfo.company,
+          budget: `$${budget} USD`,
+          service_requested: 'Calculadora de Presupuesto',
+          notes: `Selecciones: ${JSON.stringify(selections)}`,
+          timeline: null,
+          phone: null
+        }, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
+      }
     }
 
     // 2. Generar PDF con pdf-lib

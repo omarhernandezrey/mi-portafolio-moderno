@@ -10,6 +10,8 @@ const serverSchema = z.object({
   ADMIN_PASSWORD: z.string().min(4),
   ADMIN_SECRET: z.string().min(10),
   RESEND_API_KEY: z.string().optional(),
+  NOTION_API_KEY: z.string().optional(),
+  NOTION_DATABASE_ID: z.string().optional(),
   // FASE 27 — proveedores LLM de respaldo (todos opcionales)
   OPENROUTER_API_KEY: z.string().optional(),
   CEREBRAS_API_KEY: z.string().optional(),
@@ -30,6 +32,8 @@ export const serverEnv = {
   get ADMIN_PASSWORD() { return process.env.ADMIN_PASSWORD || ""; },
   get ADMIN_SECRET() { return process.env.ADMIN_SECRET || ""; },
   get RESEND_API_KEY() { return process.env.RESEND_API_KEY || ""; },
+  get NOTION_API_KEY() { return process.env.NOTION_API_KEY || ""; },
+  get NOTION_DATABASE_ID() { return process.env.NOTION_DATABASE_ID || ""; },
 
   // FASE 27 — multi-provider failover
   get OPENROUTER_API_KEY() { return process.env.OPENROUTER_API_KEY || ""; },

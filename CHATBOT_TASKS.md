@@ -3132,7 +3132,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 28.10 — Auto-resumen a Notion (CRM gratis para Omar)
+### [x] [GEM] Tarea 28.10 — Auto-resumen a Notion (CRM gratis para Omar)
 
 **Para qué sirve.** El admin de FASE 20 es para revisar puntual; Notion es donde Omar trabajará el pipeline diario. Sin un CRM, leads se pierden en el ruido.
 

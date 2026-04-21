@@ -127,6 +127,10 @@ export async function POST(req: NextRequest) {
           siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL,
           botUsername: serverEnv.TELEGRAM_BOT_USERNAME,
         });
+
+        // 5b. Push a Notion (opcional, no bloqueante)
+        const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
+        pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
       }
       console.timeEnd(`[lead] insert+notify ${conversationId}`);
     }
