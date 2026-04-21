@@ -2561,7 +2561,7 @@ Gemini NO hace esta tarea. Gemini guía a Omar así:
 **Aceptación:** los 4 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees. `docs/evidencia-tarea-25.5.md` commiteado con una fila por proveedor.
 
 
-### [ ] [OMAR] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
+### [x] [OMAR] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
 
 **🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
 

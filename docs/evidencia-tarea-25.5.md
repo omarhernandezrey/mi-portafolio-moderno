@@ -11,3 +11,11 @@ Estado general: ✅ Costo $0 garantizado (Planes Free verificados)
 | Cal.com | https://app.cal.com/settings/billing | Free | Sin suscripciones activas. |
 
 **Certificación:** Se verificó manualmente con el usuario Omar Hernández que ninguno de los proveedores listados tiene una tarjeta de crédito vinculada que permita cargos automáticos.
+
+## Actualización Tarea 25.6 (Dominio)
+- **Dominio elegido:** omarhernandezrey.com
+- **Registrador:** Porkbun
+- **IP (A Record):** 216.198.79.1
+- **CNAME:** d797f6f709973f04.vercel-dns-017.com
+- **Fecha de compra:** 2026-04-21
+- **Estado:** ✅ Configurado y propagándose.
