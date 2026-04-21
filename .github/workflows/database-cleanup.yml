@@ -1,0 +1,36 @@
+name: Database Monthly Cleanup
+
+on:
+  schedule:
+    - cron: '0 0 1 * *' # El 1 de cada mes a las 00:00 UTC
+  workflow_dispatch: # Permite ejecución manual
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Instalar postgresql-client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends postgresql-client
+
+      - name: Ejecutar Backup previo
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUPS_REPO: ${{ secrets.BACKUPS_REPO }}
+          BACKUPS_REPO_TOKEN: ${{ secrets.BACKUPS_REPO_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: bash scripts/backup-supabase.sh
+
+      - name: Trigger Cleanup API
+        run: |
+          curl -X POST "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/cron/database-cleanup" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+          -H "Content-Type: application/json" \
+          -f
+

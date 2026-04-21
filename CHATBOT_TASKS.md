@@ -2118,7 +2118,7 @@ fi
   - Si Supabase ≥ 80% de 500MB → Telegram "⚠️ Supabase al 80%, revisar limpiar mensajes viejos"
 - **Aceptación:** simular contadores altos → llega alerta.
 
-### [ ] [GEM] Tarea 21.3 — Limpieza automática
+### [x] [GEM] Tarea 21.3 — Limpieza automática
 - Cron mensual que borra:
   - Conversaciones sin lead asociado y sin mensajes en > 90 días
   - Mensajes de role='system' duplicados
