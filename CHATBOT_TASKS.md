@@ -139,6 +139,8 @@ Eso la fuerza a parar, analizar causa raíz y darte opciones en lugar de seguir 
 ### 📋 ASIGNACIÓN ENTRE IAS (FASE 21 → 30)
 
 > **REASIGNACIÓN 2026-04-21 (autorizada por Omar):** Claude Code (CC) completó su ciclo y Gemini tomó el relevo. Las **22 tareas originalmente `[CC]` pasaron a `[GEM]`** (más las 5 tareas `[GEM]` que Gemini dejó en progreso: 29.9, 29.10, 30.5, 30.8, 30.10). A partir de ahora **Gemini es la única IA ejecutora** de las tareas pendientes; Claude Code ya no tiene tareas asignadas en este documento.
+>
+> **ADENDA 2026-04-21 (autorizada por Omar):** la auditoría retrospectiva de CC (ver `AUDITORIA_CHATBOT_TASKS.md`) encontró 2 FAIL y 5 PARCIALES en tareas ya marcadas `[x]`. Se añadió **FASE 31 — Correcciones de auditoría retrospectiva** con 6 nuevas tareas (31.1–31.6) para cerrar esos hallazgos. 5 son `[GEM]` y 1 es `[OMAR]` (con copiloto Gemini). Gemini debe ejecutar FASE 31 **antes** de arrancar con las pendientes de FASE 21 en adelante — el orden de ejecución pasa a ser: 31.x → 21.1 → 21.3 → 25.x → 28.x → 29.x → 30.x.
 
 Las tareas FASE 21–30 siguen repartidas entre **Gemini (GEM)** y **Omar (OMAR)**:
 

@@ -1,0 +1,16 @@
+name: Daily Summary Bot
+
+on:
+  schedule:
+    - cron: '0 13 * * *' # 13:00 UTC (08:00 Colombia)
+  workflow_dispatch:
+
+jobs:
+  summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Daily Summary API
+        run: |
+          curl -X GET "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/cron/daily-summary" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+          -f
