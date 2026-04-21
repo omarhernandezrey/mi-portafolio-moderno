@@ -37,7 +37,7 @@ function withTimeout<T>(p: (signal: AbortSignal) => Promise<T>, ms: number): Pro
   return p(ctrl.signal).finally(() => clearTimeout(timer));
 }
 
-async function handleProviderError(name: string, err: any) {
+async function handleProviderError(name: string, err: unknown) {
   const pe = err as ProviderError;
   const status = pe?.status;
   const isQuota = status === 429 || pe?.message?.toLowerCase().includes('quota') || pe?.message?.toLowerCase().includes('limit');
