@@ -3527,7 +3527,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 30.3 — Time tracking simple integrado (cuánto tiempo invierto por cliente)
+### [x] [GEM] Tarea 30.3 — Time tracking simple integrado (cuánto tiempo invierto por cliente)
 
 **Para qué sirve.** Saber rentabilidad real por cliente. "Cliente A me paga $500 pero le invierto 40h → $12.5/h, malo." Sin medir, no sabes a quién subir el precio o despedir.
 
