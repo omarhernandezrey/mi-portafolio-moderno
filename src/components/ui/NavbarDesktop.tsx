@@ -65,20 +65,32 @@ const NavbarDesktop = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLinkClick = (id: string) => {
+  const handleLinkClick = (id: string, isPage?: boolean) => {
+    if (isPage) {
+      window.location.href = id;
+      return;
+    }
     const element = document.querySelector(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
-  const navLinks = [
+  interface NavLink {
+    id: string;
+    label: string;
+    icon: React.ReactNode;
+    isPage?: boolean;
+  }
+
+  const navLinks: NavLink[] = [
     { id: "#hero", label: t("navigation.home"), icon: <FaHome /> },
     { id: "#about", label: t("navigation.about"), icon: <FaUserAlt /> },
     { id: "#education", label: t("navigation.education"), icon: <FaGraduationCap /> },
     { id: "#skills", label: t("navigation.skills"), icon: <FaToolbox /> },
     { id: "#services", label: t("navigation.services"), icon: <FaCode /> },
     { id: "#projects", label: t("navigation.projects"), icon: <FaProjectDiagram /> },
+    { id: "/calculadora", label: t("navigation.calculator"), icon: <FaEnvelope />, isPage: true },
     { id: "#contact", label: t("navigation.contact"), icon: <FaEnvelope /> },
   ];
 
@@ -115,7 +127,7 @@ const NavbarDesktop = () => {
               {navLinks.map((link) => (
                 <button
                   key={link.id}
-                  onClick={() => handleLinkClick(link.id)}
+                  onClick={() => handleLinkClick(link.id, link.isPage)}
                   className={`relative flex items-center px-2 lg:px-3 xl:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 hover:scale-105 ${
                     activeSection === link.id
                       ? "text-[var(--accent-color)] bg-[var(--primary-color)]/10"

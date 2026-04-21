@@ -9,6 +9,7 @@ const serverSchema = z.object({
   TELEGRAM_BOT_USERNAME: z.string().optional(),
   ADMIN_PASSWORD: z.string().min(4),
   ADMIN_SECRET: z.string().min(10),
+  RESEND_API_KEY: z.string().optional(),
   // FASE 27 — proveedores LLM de respaldo (todos opcionales)
   OPENROUTER_API_KEY: z.string().optional(),
   CEREBRAS_API_KEY: z.string().optional(),
@@ -28,6 +29,7 @@ export const serverEnv = {
   get TELEGRAM_BOT_USERNAME() { return process.env.TELEGRAM_BOT_USERNAME || ""; },
   get ADMIN_PASSWORD() { return process.env.ADMIN_PASSWORD || ""; },
   get ADMIN_SECRET() { return process.env.ADMIN_SECRET || ""; },
+  get RESEND_API_KEY() { return process.env.RESEND_API_KEY || ""; },
 
   // FASE 27 — multi-provider failover
   get OPENROUTER_API_KEY() { return process.env.OPENROUTER_API_KEY || ""; },

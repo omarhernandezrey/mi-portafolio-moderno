@@ -50,3 +50,7 @@ mis-claves-chatbot.txt*
 
 # Claude Code local state (memory + scheduled tasks)
 .claude/
+
+# Coordinación entre IAs concurrentes (sección O del documento)
+.claim-lock
+.ia-bitacora.log

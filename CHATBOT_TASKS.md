@@ -349,11 +349,14 @@ NO toques archivos fuera de alcance sin esta confirmación.
 
 ### B. ORDEN, DEPENDENCIAS Y ESTADO
 
-**B.1.** Antes de empezar cualquier tarea, ejecuta este chequeo en este orden:
-   1. `git status` → debe estar limpio en la rama actual (sin cambios sin commitear de tareas previas).
-   2. `git branch --show-current` → debes estar en `main` o en la rama de la tarea inmediatamente anterior.
-   3. `npm run build` → debe pasar verde (build estable es el punto de partida).
-   4. Lee la tarea completa **una vez** antes de tocar nada.
+**B.1.** Antes de empezar cualquier tarea, ejecuta este **pre-flight estricto** (las 6 verificaciones son obligatorias, en este orden). Si CUALQUIERA falla → NO empieces la tarea, reportá al humano qué falló y esperá:
+
+   1. **`git status --porcelain`** → la salida debe estar **completamente vacía** (cero líneas). Si hay UNA sola línea (modified, untracked, staged, lo que sea), el árbol está sucio. NO uses `git status` solo (sin `--porcelain`) porque por defecto NO marca como sucio el árbol cuando hay archivos untracked, y eso fue exactamente la causa raíz del incidente del 2026-04-20.
+   2. **`git branch --show-current`** → debes estar en `main` o en la rama de la tarea inmediatamente anterior. Si estás en una rama ajena (de otra IA), salí: `git checkout main`.
+   3. **`git log -3 --format='%h %an %s'`** → los 3 commits más recientes deben ser de Omar, de una IA documentada (CC/GEM), o un merge `--ff-only` de una rama `feat/tarea-X.Y`. Si aparece un autor desconocido, un subject que no encaja con ninguna tarea del documento, o un commit sospechoso → PARÁ y reportá.
+   4. **`cat .claim-lock 2>/dev/null`** → el archivo no debe existir, O si existe su timestamp debe ser anterior a hace 60 minutos (claim caducado). Si está vivo (< 60 min) significa que **otra IA está trabajando ahora mismo**: PARÁ. Ver sección O para el protocolo completo de claim atómico.
+   5. **`npm run build`** → debe finalizar con exit 0 y sin warnings nuevos respecto a `main` (regla K.2). Si está roto al iniciar, aplicá B.2 (rama `fix/build-roto-...`).
+   6. **Leé la tarea completa una vez antes de tocar nada.** Identificá los archivos del alcance y declaralos en `.claim-lock` (sección O).
 
 **B.2.** Si el build está roto al iniciar (heredado de otra tarea o sesión), **NO empieces la nueva tarea**. Crea una rama `fix/build-roto-<descripción>`, repara, commitea, mergea a `main`, y solo entonces empieza la tarea pendiente.
 
@@ -422,7 +425,15 @@ NO toques archivos fuera de alcance sin esta confirmación.
 
 **D.9.** **Conflicto de merge:** detente y pide ayuda. NO resuelvas conflictos automáticamente salvo que sean trivialmente whitespace.
 
-**D.10.** **`.gitignore`:** `.env.local`, `.claude/`, `node_modules/`, `.next/`, `dist/`, `coverage/`, `*.log`, `secrets/` (sin `.example.age`). Verifica con `git check-ignore` antes de `git add` si tienes dudas.
+**D.10.** **`.gitignore`:** `.env.local`, `.claude/`, `.claim-lock`, `.ia-bitacora.log`, `node_modules/`, `.next/`, `dist/`, `coverage/`, `*.log`, `secrets/` (sin `.example.age`). Verifica con `git check-ignore` antes de `git add` si tienes dudas.
+
+**D.11.** **Nombre de rama es contrato vinculante.** Tu rama de trabajo debe ser exactamente `feat/tarea-<TU-TAREA-ACTUAL>` (o `fix/tarea-X.Y-...`, `docs/...`, `chore/...`). **Antes de cada `git commit` ejecutá `git branch --show-current`** y verificá que el nombre coincide con la tarea que declaraste en `.claim-lock`. Si no coincide, abortá: estás a punto de commitear sobre rama ajena.
+
+**D.12.** **Prohibido commitear sobre rama que NO creaste vos en esta sesión.** Si llegás a una rama `feat/tarea-X.Y` y `.claim-lock` apunta a otra IA, o el reflog muestra que la rama tiene commits de otro autor, NO la uses. Salí (`git checkout main`) y reportá: `"Rama feat/tarea-X.Y ya tiene dueño (otra IA). Pauso."`. **Esto previene el incidente del 2026-04-20** donde una IA usó la rama de otra y la renombró silenciosamente.
+
+**D.13.** **Prohibido renombrar ramas ajenas.** Solo podés renombrar (`git branch -m`) ramas que vos mismo creaste en esta sesión Y cuya `.claim-lock` te pertenece. Renombrar la rama de otra IA = falsificar autoría. Sanción: rollback inmediato.
+
+**D.14.** **Prohibido tocar archivos untracked ajenos.** Si `git status --porcelain` muestra `?? path/que/no/es/tuyo`, NO ejecutés `git add path/...` aunque lo necesites para tu build. Reportá al humano: `"Hay untracked ajeno en <path>. ¿De quién es? ¿Procedo cómo?"` y esperá. Esto previene absorber WIP de otra IA en tu commit (regla anti-colisión del post-mortem 28.5).
 
 ---
 
@@ -645,6 +656,129 @@ Espero tu decisión.
 **N.5.** **Cero confabulación de paths.** Antes de `Read`/`Edit` un archivo cuya existencia no has confirmado en esta sesión, usa `Glob` o `ls`. Inventar un path para "ver si existe" desperdicia turnos.
 
 **N.6.** **Cero "yo creo que esto funciona".** O lo verificas o lo dices: "no verificado, requiere prueba manual".
+
+---
+
+### O. PROTOCOLO DE COORDINACIÓN ENTRE IAS CONCURRENTES (CLAIM ATÓMICO)
+
+> **Por qué existe esta sección.** El 2026-04-20 dos IAs (CC y GEM) trabajaron en paralelo sin coordinación: GEM commiteó la tarea 28.6 sobre la rama `feat/tarea-21.1` que CC acababa de crear, la **renombró** a `feat/tarea-28.6` y la mergeó a `main`, dejando a CC sin rama y a `main` con WIP de una tercera tarea (calculator) sin commitear. El pre-flight original (`git status` simple) NO detectó esos archivos untracked. Esta sección agrega un mecanismo de claim atómico para que dos IAs nunca más crean estar trabajando lo mismo.
+>
+> **Estas reglas SUSTITUYEN y AMPLÍAN** las "REGLAS ANTI-COLISIÓN" originales (que están listadas más arriba como cabecera resumida). Si una regla de allí parece contradecir una de acá, **gana esta sección O**.
+
+#### O.1. Claim atómico vía `.claim-lock`
+
+Antes de crear la rama de una tarea (paso 2 del arranque), la IA debe crear el archivo `.claim-lock` (gitignored) con este formato exacto:
+
+```
+IA: <CC|GEM>
+TAREA: <X.Y>
+INICIO: <ISO-8601 UTC, ej: 2026-04-20T18:54:52Z>
+RAMA: feat/tarea-<X.Y>
+FOOTPRINT_DECLARADO:
+  - <ruta/al/archivo/1>
+  - <ruta/al/archivo/2>
+  - <directorio/3/>
+PID_HOST: <hostname>:<pid si está disponible>
+```
+
+Comando sugerido (la IA adapta a su entorno):
+
+```bash
+test ! -f .claim-lock || { echo "❌ .claim-lock existe — otra IA está activa. Abortando."; exit 1; }
+cat > .claim-lock <<EOF
+IA: CC
+TAREA: 21.1
+INICIO: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+RAMA: feat/tarea-21.1
+FOOTPRINT_DECLARADO:
+  - .github/workflows/backup-weekly.yml
+  - scripts/backup-supabase.sh
+PID_HOST: $(hostname):$$
+EOF
+```
+
+Si `.claim-lock` ya existe:
+- Si su `INICIO` es de hace > 60 minutos → claim caducado, la IA puede sobreescribirlo (pero antes pregunta al humano: `"Encontré .claim-lock caducado de <IA> en <X.Y>. ¿La interrumpieron? ¿Sobreescribo?"`).
+- Si su `INICIO` es de hace ≤ 60 minutos → otra IA está activa. **PARÁ.** Reportá al humano: `"Otra IA (<IA>) está trabajando en tarea <X.Y> desde <hora>. Mi tarea (<Y.Z>) queda en cola."`.
+
+#### O.2. Liberación del claim
+
+Al cerrar la tarea (después del merge `--ff-only` a main, paso final del flujo), la IA debe **borrar `.claim-lock`** y mencionarlo en el mensaje de cierre. Si la IA es interrumpida sin liberar, el archivo queda hasta que caduque (60 min) o el humano lo borre manualmente.
+
+#### O.3. Footprint declarado y validación de no-solapamiento
+
+El campo `FOOTPRINT_DECLARADO` lista los archivos/directorios que la tarea va a crear o modificar. Cualquier archivo modificado FUERA de esa lista en el commit final = violación; la tarea no se puede marcar `[x]`.
+
+Si una IA detecta que su footprint solapa con el de otra tarea pendiente del documento (ej: 28.2 y 30.4 ambas tocan `package.json`), debe:
+1. Reportar al humano: `"Footprint de mi tarea X.Y solapa con tarea Z.W de <CC|GEM> en archivos: <lista>. Recomiendo ejecutar secuencial."`
+2. Esperar decisión.
+
+#### O.4. Bitácora compartida `.ia-bitacora.log`
+
+Archivo append-only (gitignored) donde cada IA escribe su actividad en formato:
+
+```
+[2026-04-20T18:54:52Z] [CC] [INFO] claim adquirido para tarea 21.1
+[2026-04-20T19:02:11Z] [CC] [INFO] commit 1a2b3c4 creado
+[2026-04-20T19:03:00Z] [CC] [INFO] merge --ff-only a main, claim liberado
+```
+
+Sirve para postmortem rápido en caso de colisión y para que la IA siguiente vea qué pasó. Cada IA debe **leer las últimas 20 líneas** de este archivo en su pre-flight (paso 1.6).
+
+#### O.5. Prohibición de "absorción" de WIP ajeno
+
+Si `git status --porcelain` muestra archivos modificados o untracked que NO están en tu `FOOTPRINT_DECLARADO`:
+- **NUNCA** los incluyas en `git add` (ni siquiera con `git add -p`).
+- **NUNCA** uses `git add .` o `git add -A` (ya prohibido por E.6, esta regla lo refuerza).
+- **NUNCA** ejecutés `git stash` con esos cambios (los ocultarías sin que el dueño lo sepa).
+- **NUNCA** ejecutés `git clean`, `git checkout --`, `git reset --hard` sobre ellos.
+- Reportá al humano: `"WIP ajeno detectado en: <lista>. No los toco. ¿Cómo procedo?"`.
+
+#### O.6. Prohibición de renombrar/recrear ramas ajenas
+
+Reforzando D.12 y D.13: si la rama `feat/tarea-X.Y` ya existe y `.claim-lock` no es tuyo, NO podés:
+- Hacer `git checkout feat/tarea-X.Y`
+- Hacer `git branch -m feat/tarea-X.Y feat/tarea-OTRA-COSA`
+- Hacer `git branch -D feat/tarea-X.Y`
+- Commitear sobre ella
+
+La rama de otra IA es **inmutable para vos** hasta que esa IA la mergee y borre su `.claim-lock`.
+
+#### O.7. Validación pre-commit
+
+Antes de cada `git commit`, la IA debe ejecutar:
+
+```bash
+# 1. Confirmar que sigo en mi rama
+[ "$(git branch --show-current)" = "feat/tarea-${TAREA}" ] || { echo "❌ Rama incorrecta"; exit 1; }
+# 2. Confirmar que el claim sigue siendo mío
+grep -q "TAREA: ${TAREA}" .claim-lock || { echo "❌ Claim perdido"; exit 1; }
+# 3. Confirmar que solo estoy commiteando archivos del footprint
+git diff --cached --name-only | while read f; do
+  grep -q "$f" .claim-lock || { echo "❌ Archivo $f no está en FOOTPRINT_DECLARADO"; exit 1; }
+done
+```
+
+Si cualquiera falla → abortar el commit, no usar `--no-verify`, reportar al humano.
+
+#### O.8. Handshake entre IAs vía Telegram (opcional pero recomendado)
+
+Si el proyecto tiene `notifyTelegram` (Tarea 5.x), cada IA puede notificar al iniciar y cerrar tarea:
+
+- Inicio: `🤖 [CC] empezó tarea 21.1 (rama feat/tarea-21.1)`
+- Fin: `✅ [CC] terminó tarea 21.1 (commit 1a2b3c4, mergeado)`
+- Pausa: `⏸️ [CC] pausó tarea 21.1 (razón: <X>)`
+
+Esto da visibilidad asíncrona al humano y a la otra IA si chequea el chat.
+
+#### O.9. Sanciones por violar este protocolo
+
+Si una IA viola O.1–O.7 y causa daño (commit absorbido, rama renombrada ajena, WIP destruido), debe:
+1. **NO intentar arreglar silenciosamente.**
+2. Reportar al humano con: `"Violé regla O.<N>: <descripción del daño>. Acción que tomé: ninguna. Espero instrucciones."`
+3. Esperar decisión de rollback (`git revert`, `git reset` con autorización explícita, restauración manual).
+
+Auto-arreglar un daño causado por violar este protocolo = doble sanción.
 
 ---
 
@@ -2939,7 +3073,7 @@ LLM_PROVIDER_CHAIN=
 
 ---
 
-### [ ] [GEM] Tarea 28.8 — Calculadora interactiva de presupuesto (lead magnet sin chatbot)
+### [x] [GEM] Tarea 28.8 — Calculadora interactiva de presupuesto (lead magnet sin chatbot)
 
 **Para qué sirve.** Mucha gente no quiere chatear pero sí quiere saber "cuánto me costaría". Calculadora pública = leads sin fricción. Pide email al final para enviar PDF.
 

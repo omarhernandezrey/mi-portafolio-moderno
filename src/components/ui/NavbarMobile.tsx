@@ -59,7 +59,12 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
     };
   }, [isOpen, toggleMenu]);
 
-  const handleLinkClick = (id: string) => {
+  const handleLinkClick = (id: string, isPage?: boolean) => {
+    if (isPage) {
+      window.location.href = id;
+      toggleMenu();
+      return;
+    }
     const element = document.querySelector(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -180,18 +185,21 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
           {/* Enlaces de navegación */}
           <div className="flex-1 px-4 py-6">
             <ul className="flex flex-col space-y-4 menu-links">
-              {[
-                { id: "#hero", label: t("navigation.home"), icon: <AiOutlineHome size={20} /> },
-                { id: "#about", label: t("navigation.about"), icon: <AiOutlineUser size={20} /> },
-                { id: "#education", label: t("navigation.education"), icon: <AiOutlineBook size={20} /> },
-                { id: "#skills", label: t("navigation.skills"), icon: <BiBrain size={20} /> },
-                { id: "#services", label: t("navigation.services"), icon: <FaTools size={20} /> },
-                { id: "#projects", label: t("navigation.projects"), icon: <AiOutlineProject size={20} /> },
-                { id: "#contact", label: t("navigation.contact"), icon: <AiOutlineMail size={20} /> },
-              ].map((link) => (
+              {(
+                [
+                  { id: "#hero", label: t("navigation.home"), icon: <AiOutlineHome size={20} /> },
+                  { id: "#about", label: t("navigation.about"), icon: <AiOutlineUser size={20} /> },
+                  { id: "#education", label: t("navigation.education"), icon: <AiOutlineBook size={20} /> },
+                  { id: "#skills", label: t("navigation.skills"), icon: <BiBrain size={20} /> },
+                  { id: "#services", label: t("navigation.services"), icon: <FaTools size={20} /> },
+                  { id: "#projects", label: t("navigation.projects"), icon: <AiOutlineProject size={20} /> },
+                  { id: "/calculadora", label: t("navigation.calculator"), icon: <FaTools size={20} />, isPage: true },
+                  { id: "#contact", label: t("navigation.contact"), icon: <AiOutlineMail size={20} /> },
+                ] as { id: string; label: string; icon: React.ReactNode; isPage?: boolean }[]
+              ).map((link) => (
                 <li key={link.id} className="w-full">
                   <button
-                    onClick={() => handleLinkClick(link.id)}
+                    onClick={() => handleLinkClick(link.id, link.isPage)}
                     className={`flex items-center gap-3 w-full px-3 py-3 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] hover:bg-[var(--background-color)] rounded-lg transition-all duration-300 menu-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] ${
                       activeSection === link.id
                         ? "bg-[var(--background-color)] text-[var(--accent-color)] font-semibold border-l-2 border-[var(--accent-color)]"

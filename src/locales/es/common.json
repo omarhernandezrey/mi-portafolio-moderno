@@ -7,6 +7,7 @@
     "skills": "Habilidades",
     "education": "Educación",
     "contact": "Contacto",
+    "calculator": "Calculadora",
     "language": "Idioma"
   },
   "chatbot": {
@@ -224,6 +225,7 @@
       "projects": "Proyectos",
       "skills": "Habilidades",
       "contact": "Contacto",
+      "calculator": "Calculadora",
       "privacy": "Privacidad"
     }
   },

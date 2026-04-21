@@ -7,6 +7,7 @@
     "skills": "Skills",
     "education": "Education",
     "contact": "Contact",
+    "calculator": "Calculator",
     "language": "Language"
   },
   "chatbot": {
@@ -224,6 +225,7 @@
       "projects": "Projects",
       "skills": "Skills",
       "contact": "Contact",
+      "calculator": "Calculator",
       "privacy": "Privacy"
     }
   },
