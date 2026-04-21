@@ -17,19 +17,6 @@ export async function POST(req: Request) {
   try {
     console.log("▶️ Iniciando limpieza de base de datos...");
 
-    // 2. Backup previo (Invocación simbólica ya que el backup semanal existe, 
-    // pero cumplimos la regla de 'asegurar' backup antes de borrar)
-    // En producción, esto debería disparar el workflow de backup-weekly.yml 
-    // pero aquí lo documentamos como pre-condición.
-
-    // 3. Borrar mensajes de sistema duplicados (mismo contenido en misma conversación)
-    const { data: dupMsgs, error: dupError } = await supabaseServer.rpc("delete_duplicate_system_messages");
-    
-    // Si la RPC no existe, usamos una query directa vía .from().delete() si es posible, 
-    // pero Supabase JS no soporta deletes complejos fácilmente. 
-    // Usaremos una query de SQL crudo vía RPC si el usuario permite, 
-    // o lo hacemos por pasos.
-    
     // Paso a paso para mensajes duplicados:
     const { data: allSystemMsgs, error: fetchError } = await supabaseServer
       .from("messages")
@@ -38,7 +25,7 @@ export async function POST(req: Request) {
 
     if (fetchError) throw fetchError;
 
-    const seen = new Set();
+    const seen = new Set<string>();
     const toDelete: string[] = [];
     
     allSystemMsgs?.forEach((msg) => {
@@ -62,22 +49,13 @@ export async function POST(req: Request) {
     const ninetyDaysAgo = new Date();
     ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
-    // Buscamos conversaciones que NO tengan leads
-    const { data: conversations, error: convError } = await supabaseServer
-      .from("conversations")
-      .select("id")
-      .not("id", "in", (
-        supabaseServer.from("leads").select("conversation_id").filter("conversation_id", "not.is", null)
-      ));
-    
-    // El cliente de Supabase tiene limitaciones para subqueries. 
-    // Lo más seguro es usar un filtro basado en la ausencia de leads.
-    
     // Enfoque manual: traer IDs de leads y luego filtrar conversaciones
-    const { data: leadsWithConv } = await supabaseServer
+    const { data: leadsWithConv, error: leadsFetchError } = await supabaseServer
       .from("leads")
       .select("conversation_id")
       .not("conversation_id", "is", null);
+    
+    if (leadsFetchError) throw leadsFetchError;
     
     const leadConvIds = new Set(leadsWithConv?.map(l => l.conversation_id) || []);
 
@@ -111,9 +89,10 @@ export async function POST(req: Request) {
       conversationsRemoved: deletedCount 
     });
 
-  } catch (error: any) {
-    console.error("❌ Error en database-cleanup:", error);
-    await notifyTelegram(`🚨 *Error en limpieza de DB*: ${error.message}`);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+    console.error("❌ Error en database-cleanup:", errorMessage);
+    await notifyTelegram(`🚨 *Error en limpieza de DB*: ${errorMessage}`);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
