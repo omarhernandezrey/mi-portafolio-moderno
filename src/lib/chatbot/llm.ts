@@ -68,13 +68,17 @@ export async function generateReply(
   systemPrompt: string,
   history: ChatMessage[],
   userMessage: string,
-  sessionId?: string
+  sessionId?: string,
+  imageDataUrl?: string
 ): Promise<string> {
   const chain = getChain();
   const errors: string[] = [];
   const now = Date.now();
 
   for (const name of chain) {
+    // Si hay imagen, forzamos Groq ya que es el único con Vision en nuestro setup free
+    if (imageDataUrl && name !== 'groq') continue;
+
     // Si está desactivado pero pasó el tiempo de cooldown, le damos otra oportunidad
     if (disabledByCircuit.has(name)) {
       if (errorTracker[name] && (now - errorTracker[name].lastError > COOLDOWN_MS)) {
@@ -95,7 +99,7 @@ export async function generateReply(
     const startTime = Date.now();
     try {
       const text = await withTimeout(
-        (signal) => call({ systemPrompt, history, userMessage, signal }),
+        (signal) => call({ systemPrompt, history, userMessage, signal, imageDataUrl }),
         TIMEOUT_MS
       );
       const latency = Date.now() - startTime;
@@ -146,4 +150,3 @@ export async function generateReply(
   await notifyTelegram(`🚨 *EMERGENCIA*: Todos los proveedores LLM fallaron. El chat está mostrando el mensaje de fallback.`);
   return 'Lo siento, mi cerebro artificial está experimentando una alta demanda en este momento. 🧠⚡\n\nPara no hacerte esperar, puedes hablar directamente con Omar por WhatsApp haciendo clic aquí: <<<HANDOFF>>>{"summary":"Error técnico en el chat (todos los proveedores fallaron)","urgency":"high"}<<<END>>>';
 }
-

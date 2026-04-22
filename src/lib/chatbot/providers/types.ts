@@ -9,6 +9,7 @@ export interface ProviderCallArgs {
   systemPrompt: string;
   history: ChatMessage[];
   userMessage: string;
+  imageDataUrl?: string;
   signal?: AbortSignal;
 }
 

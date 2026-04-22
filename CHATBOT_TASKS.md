@@ -3253,7 +3253,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 28.9 — Análisis de imagen: cliente sube screenshot y bot lo entiende (Llama Vision)
+### [x] [GEM] Tarea 28.9 — Análisis de imagen: cliente sube screenshot y bot lo entiende (Llama Vision)
 
 **Para qué sirve.** "Quiero algo así" + screenshot de competencia es la conversación real de ventas. Hoy el bot no puede ver. Con Llama 3.2 Vision (gratis en Groq) sí.
 

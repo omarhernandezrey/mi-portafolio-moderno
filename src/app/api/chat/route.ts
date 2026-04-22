@@ -13,6 +13,7 @@ const chatSchema = z.object({
   message: z.string().min(1).max(2000),
   language: z.enum(['es', 'en', 'pt']),
   website: z.string().optional(),
+  imageDataUrl: z.string().optional(),
   visitorMeta: z.object({
     name: z.string().optional(),
     email: z.string().email().optional(),
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
     }
 
-    const { sessionId, message, language, visitorMeta, website } = result.data;
+    const { sessionId, message, language, visitorMeta, website, imageDataUrl } = result.data;
 
     // Rate Limit para evaluaciones y usuarios
     const ip = req.headers.get('x-forwarded-for') || 'anonymous';
@@ -112,7 +113,7 @@ export async function POST(req: NextRequest) {
     const systemPrompt = buildSystemPrompt(language, { visitorName: conv?.visitor_name || visitorMeta?.name });
     const fullPrompt = `# VARIANT ASIGNADA: ${activeVariant}\n# TU SALUDO INICIAL FUE: "${openingText}"\n# LO QUE SÉ DEL VISITANTE: ${JSON.stringify(facts)}\n${ragContext}\n\n${systemPrompt}`;
 
-    const rawReply = await generateReply(fullPrompt, history, message, sessionId);
+    const rawReply = await generateReply(fullPrompt, history, message, sessionId, imageDataUrl);
     const cleanText = cleanReply(rawReply);
 
     // 4. Guardar mensajes
