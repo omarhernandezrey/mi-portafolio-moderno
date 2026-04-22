@@ -55,23 +55,27 @@ export async function POST(req: NextRequest) {
     // 1. Buscar o crear conversación
     const { data: conv } = await supabaseServer
       .from('conversations')
-      .select('id, visitor_name, facts, human_takeover')
+      .select('id, visitor_name, facts, human_takeover, variant')
       .eq('session_id', sessionId)
       .maybeSingle();
 
     let conversationId: string;
     let facts = {};
+    let activeVariant: string;
 
     if (!conv) {
+      const { getRandomVariant } = await import('@/lib/chatbot/openings');
+      activeVariant = getRandomVariant();
       const { data: newConv } = await supabaseServer
         .from('conversations')
-        .insert({ session_id: sessionId, language, visitor_name: visitorMeta?.name })
+        .insert({ session_id: sessionId, language, visitor_name: visitorMeta?.name, variant: activeVariant })
         .select('id')
         .single();
       conversationId = newConv!.id;
     } else {
       conversationId = conv.id;
       facts = conv.facts || {};
+      activeVariant = conv.variant || 'A';
       if (conv.human_takeover) {
         await supabaseServer.from('messages').insert([{ conversation_id: conversationId, role: 'user', content: message }]);
         const fallbackMsg = {
@@ -95,13 +99,18 @@ export async function POST(req: NextRequest) {
 
     // 3. Generar respuesta
     const { searchProjects } = await import('@/lib/chatbot/rag');
+    const { OPENINGS } = await import('@/lib/chatbot/openings');
+    
+    const openingObj = OPENINGS.find(o => o.id === activeVariant) || OPENINGS[0];
+    const openingText = openingObj.text[language as keyof typeof openingObj.text] || openingObj.text.es;
+
     const relevantProjects = await searchProjects(message);
     const ragContext = relevantProjects.length > 0 
       ? `\n# PROYECTOS REALES DE OMAR RELEVANTES PARA ESTA CONSULTA (úsales como prueba):\n${relevantProjects.map((p: { content: string }) => p.content).join('\n---\n')}`
       : "";
 
     const systemPrompt = buildSystemPrompt(language, { visitorName: conv?.visitor_name || visitorMeta?.name });
-    const fullPrompt = `# LO QUE SÉ DEL VISITANTE: ${JSON.stringify(facts)}\n${ragContext}\n\n${systemPrompt}`;
+    const fullPrompt = `# VARIANT ASIGNADA: ${activeVariant}\n# TU SALUDO INICIAL FUE: "${openingText}"\n# LO QUE SÉ DEL VISITANTE: ${JSON.stringify(facts)}\n${ragContext}\n\n${systemPrompt}`;
 
     const rawReply = await generateReply(fullPrompt, history, message, sessionId);
     const cleanText = cleanReply(rawReply);

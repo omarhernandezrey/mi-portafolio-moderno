@@ -2469,7 +2469,7 @@ jobs:
 - Añadir `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` a GitHub Secrets del repo
 - **Aceptación:** workflow corre manualmente sin error; tras 2 semanas el proyecto Supabase sigue activo.
 
-### [ ] [GEM] Tarea 25.2 — Mover TODOS los crons a GitHub Actions (no Vercel)
+### [x] [GEM] Tarea 25.2 — Mover TODOS los crons a GitHub Actions (no Vercel)
 - Crear `.github/workflows/scheduled-tasks.yml` que dispare:
   - `cleanup-cold-leads` (FASE 12.1) — diario
   - `weekly-backup` (FASE 21.1) — domingos
@@ -2479,7 +2479,7 @@ jobs:
 - Añadir `CRON_SECRET` a `env.ts` y a GitHub Secrets
 - **Aceptación:** los 4 endpoints existen, GitHub Actions los dispara, Vercel solo procesa, sin depender de Vercel Cron.
 
-### [ ] [GEM] Tarea 25.3 — Frenos automáticos de uso (kill switch)
+### [x] [GEM] Tarea 25.3 — Frenos automáticos de uso (kill switch)
 - Crear `src/lib/chatbot/limits.ts` con límites HARDCODED conservadores:
 ```ts
 export const LIMITS = {
@@ -2498,7 +2498,7 @@ export const LIMITS = {
 - Antes de cada llamada a `llm.ts`: contar uso del día por proveedor (tabla `api_logs`) y si **toda la cadena** excede sus LIMITS → fallback a mensaje "estamos en hora pico, déjanos tu email"
 - **Aceptación:** simular contadores altos en TODOS los proveedores → API responde fallback, NO llama a ningún LLM, NO genera costo.
 
-### [ ] [GEM] Tarea 25.4 — Tabla `api_logs` para tracking de uso
+### [x] [GEM] Tarea 25.4 — Tabla `api_logs` para tracking de uso
 ```sql
 create table api_logs (
   id uuid primary key default gen_random_uuid(),
@@ -2610,7 +2610,7 @@ Gemini NO compra el dominio. Gemini te acompaña en la decisión y en la configu
 - Si vas opción B: **es el único costo justificable** del proyecto. $1 USD/mes que se recupera con 1 cliente.
 - **Aceptación:** decisión documentada en `01-OPERACION_DIARIA.md` + `docs/decision-dominio.md`, dominio configurado y verificado en Vercel.
 
-### [ ] [GEM] Tarea 25.7 — Alerta de "casi al límite"
+### [x] [GEM] Tarea 25.7 — Alerta de "casi al límite"
 - En `quota-check` (Tarea 25.2): si Groq llega a 80% de límite diario → Telegram avisa
 - Si llega a 95% → además, cambiar variable `EMERGENCY_FALLBACK=true` en runtime que desvía nuevas conversaciones a "déjanos tu email, te respondemos pronto"
 - **Aceptación:** simular 95% → conversaciones nuevas reciben fallback en lugar de tocar Groq.
@@ -3033,7 +3033,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 28.2 — Email follow-up automatizado vía Resend (3000 emails/mes gratis)
+### [x] [GEM] Tarea 28.2 — Email follow-up automatizado vía Resend (3000 emails/mes gratis)
 
 **Para qué sirve.** El cron de FASE 12 ya marca leads fríos. Falta enviarles email automático con propuesta personalizada para reactivarlos. Esto solo lo logra automatización; ningún humano da abasto.
 
@@ -3068,7 +3068,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 28.3 — RAG con pgvector: el bot cita tus proyectos REALES, no inventa
+### [x] [GEM] Tarea 28.3 — RAG con pgvector: el bot cita tus proyectos REALES, no inventa
 
 **Para qué sirve.** Hoy el bot puede inventar tu experiencia. Con RAG, busca semánticamente en tus proyectos/casos de éxito reales antes de responder. Bot deja de mentir → cierra ventas reales.
 
@@ -3195,7 +3195,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 28.7 — A/B testing de aperturas (qué saludo cierra más)
+### [x] [GEM] Tarea 28.7 — A/B testing de aperturas (qué saludo cierra más)
 
 **Para qué sirve.** Saber con datos qué primera frase del bot convierte más leads. Sin medir, optimizas a ciegas.
 
