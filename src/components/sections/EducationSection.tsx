@@ -27,8 +27,20 @@ interface EducationItem {
   isNew?: boolean;
 }
 
-const INITIAL_VISIBLE_ITEMS = 30;
-const LOAD_MORE_STEP = 8;
+const INITIAL_VISIBLE_ITEMS = 7;
+const LOAD_MORE_STEP = 1;
+
+const prefetchImageCache = new Set<string>();
+
+const prefetchCertificate = (url?: string | null) => {
+  if (!url || typeof window === "undefined") return;
+  if (prefetchImageCache.has(url)) return;
+  prefetchImageCache.add(url);
+  const img = new window.Image();
+  img.decoding = "async";
+  img.loading = "eager";
+  img.src = url;
+};
 
 interface HighlightedCourse {
   id: string;
@@ -1701,6 +1713,9 @@ const EducationSection = () => {
                   className={`timeline-item ${alignment}${isLatest ? ' latest-item' : ''}`}
                   onClick={() => openModal(item)}
                   onKeyPress={(e) => e.key === "Enter" && openModal(item)}
+                  onMouseEnter={() => prefetchCertificate(item.certificate)}
+                  onFocus={() => prefetchCertificate(item.certificate)}
+                  onTouchStart={() => prefetchCertificate(item.certificate)}
                   tabIndex={0}
                   role="button"
                   aria-pressed="false"

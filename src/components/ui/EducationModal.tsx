@@ -278,6 +278,9 @@ const EducationModal: React.FC<EducationModalProps> = ({
                         alt="Certificado"
                         width={800}
                         height={600}
+                        priority
+                        fetchPriority="high"
+                        sizes="(max-width: 768px) 95vw, 700px"
                         className="w-full h-auto rounded-lg object-contain max-h-[30vh] md:max-h-[35vh]"
                       />
                     </a>
