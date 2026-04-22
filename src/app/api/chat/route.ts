@@ -94,10 +94,16 @@ export async function POST(req: NextRequest) {
     const history = (historyData || []).map(m => ({ role: m.role as 'user' | 'assistant' | 'system', content: m.content }));
 
     // 3. Generar respuesta
-    const systemPrompt = buildSystemPrompt(language, { visitorName: conv?.visitor_name || visitorMeta?.name });
-    const fullPrompt = `# LO QUE SÉ DEL VISITANTE: ${JSON.stringify(facts)}\n\n${systemPrompt}`;
+    const { searchProjects } = await import('@/lib/chatbot/rag');
+    const relevantProjects = await searchProjects(message);
+    const ragContext = relevantProjects.length > 0 
+      ? `\n# PROYECTOS REALES DE OMAR RELEVANTES PARA ESTA CONSULTA (úsales como prueba):\n${relevantProjects.map((p: { content: string }) => p.content).join('\n---\n')}`
+      : "";
 
-    const rawReply = await generateReply(fullPrompt, history, message);
+    const systemPrompt = buildSystemPrompt(language, { visitorName: conv?.visitor_name || visitorMeta?.name });
+    const fullPrompt = `# LO QUE SÉ DEL VISITANTE: ${JSON.stringify(facts)}\n${ragContext}\n\n${systemPrompt}`;
+
+    const rawReply = await generateReply(fullPrompt, history, message, sessionId);
     const cleanText = cleanReply(rawReply);
 
     // 4. Guardar mensajes
