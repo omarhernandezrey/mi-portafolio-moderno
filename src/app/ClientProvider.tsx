@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { MotionConfig } from 'framer-motion';
 import { I18nProvider } from '@/contexts/I18nContext';
 import dynamic from 'next/dynamic';
 
@@ -18,6 +19,19 @@ interface ClientProviderProps {
 }
 
 export default function ClientProvider({ children }: ClientProviderProps) {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(max-width: 768px)').matches;
+  });
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 768px)');
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
+  }, []);
+
   useEffect(() => {
     // Asegurar que i18n esté inicializado en el cliente
     import('@/lib/i18n');
@@ -56,8 +70,10 @@ export default function ClientProvider({ children }: ClientProviderProps) {
 
   return (
     <I18nProvider>
-      {children}
-      <ChatWidget />
+      <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
+        {children}
+        <ChatWidget />
+      </MotionConfig>
     </I18nProvider>
   );
 }
