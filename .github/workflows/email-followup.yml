@@ -1,0 +1,16 @@
+name: Email Follow-up Cron
+
+on:
+  schedule:
+    - cron: '0 14 * * *' # Cada día a las 14:00 UTC (09:00 Colombia)
+  workflow_dispatch:
+
+jobs:
+  followup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Email Follow-up API
+        run: |
+          curl -X GET "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/cron/email-followup" \
+          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+          -f
