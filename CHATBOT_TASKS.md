@@ -2615,7 +2615,7 @@ Gemini NO compra el dominio. Gemini te acompaña en la decisión y en la configu
 - Si llega a 95% → además, cambiar variable `EMERGENCY_FALLBACK=true` en runtime que desvía nuevas conversaciones a "déjanos tu email, te respondemos pronto"
 - **Aceptación:** simular 95% → conversaciones nuevas reciben fallback en lugar de tocar Groq.
 
-### [ ] [GEM] Tarea 25.8 — Costo total mensual real (verificación)
+### [x] [GEM] Tarea 25.8 — Costo total mensual real (verificación)
 - Ejecutar al final de cada mes:
 ```bash
 echo "=== Costos del mes ==="
