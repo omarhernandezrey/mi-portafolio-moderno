@@ -121,11 +121,12 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
       `[data-thumb-index="${activeIndex}"]`,
     );
     if (!thumb) return;
-    thumb.scrollIntoView({
-      block: "nearest",
-      inline: "center",
-      behavior: "smooth",
-    });
+    const trackRect = track.getBoundingClientRect();
+    const thumbRect = thumb.getBoundingClientRect();
+    const delta =
+      thumbRect.left + thumbRect.width / 2 - (trackRect.left + trackRect.width / 2);
+    if (Math.abs(delta) < 1) return;
+    track.scrollBy({ left: delta, behavior: "smooth" });
   }, [activeIndex]);
 
   useEffect(() => {
