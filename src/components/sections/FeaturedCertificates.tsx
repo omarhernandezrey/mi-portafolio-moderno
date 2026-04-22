@@ -60,6 +60,16 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
 
   const touchStartXRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
@@ -126,8 +136,8 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
     const delta =
       thumbRect.left + thumbRect.width / 2 - (trackRect.left + trackRect.width / 2);
     if (Math.abs(delta) < 1) return;
-    track.scrollBy({ left: delta, behavior: "smooth" });
-  }, [activeIndex]);
+    track.scrollBy({ left: delta, behavior: isMobile ? "auto" : "smooth" });
+  }, [activeIndex, isMobile]);
 
   useEffect(() => {
     if (count === 0) return;
@@ -237,11 +247,11 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
               key={activeCourse.id}
               className={styles.card}
               custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+              variants={isMobile ? undefined : slideVariants}
+              initial={isMobile ? false : "enter"}
+              animate={isMobile ? undefined : "center"}
+              exit={isMobile ? undefined : "exit"}
+              transition={{ duration: isMobile ? 0 : 0.35, ease: [0.4, 0, 0.2, 1] }}
             >
               {activeCourse.certificate ? (
                 <a

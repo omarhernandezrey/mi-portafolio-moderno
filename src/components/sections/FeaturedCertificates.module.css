@@ -489,3 +489,19 @@
     transition: none;
   }
 }
+
+@media (max-width: 768px) {
+  .media,
+  .cta,
+  .nav,
+  .thumb,
+  .thumbMedia,
+  .mediaHint,
+  .progressFill {
+    transition: none !important;
+  }
+
+  .thumbsTrack {
+    scroll-behavior: auto;
+  }
+}
