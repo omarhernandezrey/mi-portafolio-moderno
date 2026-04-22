@@ -1,0 +1,41 @@
+.track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-left 60s linear infinite;
+}
+
+.trackReverse {
+  animation-name: marquee-right;
+}
+
+.track:hover,
+.trackReverse:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .trackReverse {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+}
