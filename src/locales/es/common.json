@@ -243,6 +243,11 @@
     "viewProject": "Ver Proyecto",
     "viewCode": "Ver Código",
     "technologies": "Tecnologías",
+    "paginationLabel": "Paginación de proyectos",
+    "previousPage": "Página anterior",
+    "nextPage": "Página siguiente",
+    "goToPage": "Ir a la página {page}",
+    "pageStatus": "Página {current} de {total}",
     "categories": {
       "all": "Todos",
       "javascript": "JavaScript",

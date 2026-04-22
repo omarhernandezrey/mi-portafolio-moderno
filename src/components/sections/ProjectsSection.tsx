@@ -106,12 +106,16 @@ const createFloatingElements = (count = 12) =>
 /* ---------------------------------------------------------------------------
    ProjectsSection – componente principal Mobile First
 --------------------------------------------------------------------------- */
+const PROJECTS_PER_PAGE = 4;
+
 const ProjectsSection: React.FC = () => {
   /* ---------------- estados ---------------- */
   const { language, t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const sectionRef = useRef<HTMLElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -142,14 +146,65 @@ const ProjectsSection: React.FC = () => {
   }, [language, t]);
 
   /* ---------------- filtrado dinámico ---------------- */
-  const filteredProjects = localizedProjects.filter((p) => {
-    const byCategory =
-      selectedCategory === t('projects.categories.all') || p.category === selectedCategory;
-    const bySearch = `${p.title} ${p.description} ${p.technologies.join(" ")}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return byCategory && bySearch;
-  });
+  const filteredProjects = useMemo(
+    () =>
+      localizedProjects.filter((p) => {
+        const byCategory =
+          selectedCategory === t('projects.categories.all') ||
+          p.category === selectedCategory;
+        const bySearch = `${p.title} ${p.description} ${p.technologies.join(" ")}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        return byCategory && bySearch;
+      }),
+    [localizedProjects, selectedCategory, searchTerm, t],
+  );
+
+  /* ---------------- paginación ---------------- */
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE),
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchTerm]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedProjects = useMemo(() => {
+    const start = (currentPage - 1) * PROJECTS_PER_PAGE;
+    return filteredProjects.slice(start, start + PROJECTS_PER_PAGE);
+  }, [filteredProjects, currentPage]);
+
+  const goToPage = (page: number) => {
+    const next = Math.min(Math.max(1, page), totalPages);
+    if (next === currentPage) return;
+    setCurrentPage(next);
+    if (typeof window !== "undefined" && gridRef.current) {
+      const rect = gridRef.current.getBoundingClientRect();
+      const top = window.scrollY + rect.top - 96;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
+  const pageNumbers = useMemo(() => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages: (number | "ellipsis")[] = [1];
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    if (start > 2) pages.push("ellipsis");
+    for (let p = start; p <= end; p++) pages.push(p);
+    if (end < totalPages - 1) pages.push("ellipsis");
+    pages.push(totalPages);
+    return pages;
+  }, [totalPages, currentPage]);
 
   const getCount = (c: string) =>
     c === t('projects.categories.all')
@@ -391,11 +446,14 @@ const ProjectsSection: React.FC = () => {
           </motion.div>
 
           {/* grid de proyectos - SOLO 2 COLUMNAS MÁXIMO EN DESKTOP */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 sm:gap-12 md:gap-20 lg:gap-28 xl:gap-32">
+          <div
+            ref={gridRef}
+            className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 sm:gap-12 md:gap-20 lg:gap-28 xl:gap-32"
+          >
             <AnimatePresence>
-              {filteredProjects.map((p, i) => (
+              {paginatedProjects.map((p, i) => (
                 <motion.div
-                  key={`${p.title}-${selectedCategory}`}
+                  key={`${p.title}-${selectedCategory}-${currentPage}`}
                   layout
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -419,6 +477,91 @@ const ProjectsSection: React.FC = () => {
               ))}
             </AnimatePresence>
           </div>
+
+          {/* paginación */}
+          {totalPages > 1 && (
+            <nav
+              className="mt-10 sm:mt-14 flex flex-col items-center gap-3"
+              aria-label={t('projects.paginationLabel')}
+            >
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  aria-label={t('projects.previousPage')}
+                  className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105"
+                  style={{
+                    backgroundColor: 'rgba(40,40,60,0.5)',
+                    borderColor: 'rgba(209,209,224,0.3)',
+                    color: 'var(--muted-color)',
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+
+                {pageNumbers.map((p, idx) =>
+                  p === 'ellipsis' ? (
+                    <span
+                      key={`ellipsis-${idx}`}
+                      className="px-1 text-sm select-none"
+                      style={{ color: 'var(--muted-color)' }}
+                      aria-hidden="true"
+                    >
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => goToPage(p)}
+                      aria-current={p === currentPage ? 'page' : undefined}
+                      aria-label={t('projects.goToPage', { page: p })}
+                      className="min-w-9 sm:min-w-10 h-9 sm:h-10 px-2 rounded-full border text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105"
+                      style={{
+                        backgroundColor:
+                          p === currentPage ? 'var(--primary-color)' : 'rgba(40,40,60,0.5)',
+                        borderColor:
+                          p === currentPage
+                            ? 'var(--primary-color)'
+                            : 'rgba(209,209,224,0.3)',
+                        color:
+                          p === currentPage ? 'var(--white-color)' : 'var(--muted-color)',
+                        boxShadow:
+                          p === currentPage
+                            ? '0 8px 20px rgba(255,111,97,0.3)'
+                            : 'none',
+                      }}
+                    >
+                      {p}
+                    </button>
+                  ),
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  aria-label={t('projects.nextPage')}
+                  className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105"
+                  style={{
+                    backgroundColor: 'rgba(40,40,60,0.5)',
+                    borderColor: 'rgba(209,209,224,0.3)',
+                    color: 'var(--muted-color)',
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="9 6 15 12 9 18" />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-xs sm:text-sm" style={{ color: 'var(--muted-color)' }}>
+                {t('projects.pageStatus', { current: currentPage, total: totalPages })}
+              </p>
+            </nav>
+          )}
 
           {/* mensaje sin resultados */}
           {filteredProjects.length === 0 && (
