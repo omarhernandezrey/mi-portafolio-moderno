@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const DEFAULT_CHAIN = ['groq', 'openrouter', 'cerebras', 'cloudflare', 'ollama'];
-const TIMEOUT_MS = 8000;
+const TIMEOUT_MS = 15000;
 const ERROR_THRESHOLD = 3;
 const COOLDOWN_MS = 60 * 60 * 1000; // 1 hora
 
@@ -64,12 +64,15 @@ async function handleProviderError(name: string, err: unknown) {
   }
 }
 
-export async function generateReply(
-  systemPrompt: string,
-  history: ChatMessage[],
-  userMessage: string,
-  sessionId?: string,
-  imageDataUrl?: string
+async function callProviderChain(
+  args: {
+    systemPrompt: string;
+    history: ChatMessage[];
+    userMessage: string;
+    sessionId?: string;
+    imageDataUrl?: string;
+    isReview?: boolean;
+  }
 ): Promise<string> {
   const chain = getChain();
   const errors: string[] = [];
@@ -77,7 +80,7 @@ export async function generateReply(
 
   for (const name of chain) {
     // Si hay imagen, forzamos Groq ya que es el único con Vision en nuestro setup free
-    if (imageDataUrl && name !== 'groq') continue;
+    if (args.imageDataUrl && name !== 'groq') continue;
 
     // Si está desactivado pero pasó el tiempo de cooldown, le damos otra oportunidad
     if (disabledByCircuit.has(name)) {
@@ -99,24 +102,32 @@ export async function generateReply(
     const startTime = Date.now();
     try {
       const text = await withTimeout(
-        (signal) => call({ systemPrompt, history, userMessage, signal, imageDataUrl }),
+        (signal) => call({ 
+          systemPrompt: args.systemPrompt, 
+          history: args.history, 
+          userMessage: args.userMessage, 
+          signal, 
+          imageDataUrl: args.imageDataUrl 
+        }),
         TIMEOUT_MS
       );
       const latency = Date.now() - startTime;
 
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV !== 'production' && !args.isReview) {
         console.log(`✅ LLM provider hit: ${name} (${latency}ms)`);
       }
 
       // Log success to DB (fire and forget)
-      import('@/lib/supabaseServer').then(({ supabaseServer }) => {
-        supabaseServer.from('api_logs').insert({
-          provider: name,
-          latency_ms: latency,
-          status: 'success',
-          session_id: sessionId
-        }).then(({ error }) => error && console.error('Error logging success:', error));
-      });
+      if (!args.isReview) {
+        import('@/lib/supabaseServer').then(({ supabaseServer }) => {
+          supabaseServer.from('api_logs').insert({
+            provider: name,
+            latency_ms: latency,
+            status: 'success',
+            session_id: args.sessionId
+          }).then(({ error }) => error && console.error('Error logging success:', error));
+        });
+      }
       
       // Si tuvo éxito, podemos resetear gradualmente el contador o dejarlo así para ver ráfagas
       if (errorTracker[name] && errorTracker[name].count > 0) {
@@ -130,23 +141,76 @@ export async function generateReply(
       errors.push(`${name}: ${err instanceof Error ? err.message : 'failed'}`);
 
       // Log failure to DB (fire and forget)
-      import('@/lib/supabaseServer').then(({ supabaseServer }) => {
-        const pe = err as ProviderError;
-        supabaseServer.from('api_logs').insert({
-          provider: name,
-          latency_ms: latency,
-          status: 'error',
-          error_message: pe?.message || 'unknown error',
-          http_status: pe?.status,
-          session_id: sessionId
-        }).then(({ error }) => error && console.error('Error logging failure:', error));
-      });
+      if (!args.isReview) {
+        import('@/lib/supabaseServer').then(({ supabaseServer }) => {
+          const pe = err as ProviderError;
+          supabaseServer.from('api_logs').insert({
+            provider: name,
+            latency_ms: latency,
+            status: 'error',
+            error_message: pe?.message || 'unknown error',
+            http_status: pe?.status,
+            session_id: args.sessionId
+          }).then(({ error }) => error && console.error('Error logging failure:', error));
+        });
+      }
 
       continue;
     }
   }
 
+  if (args.isReview) return "OK"; // Si falla la revisión, asumimos OK para no bloquear
+
   console.error('❌ All LLM providers failed:', errors.join(' | '));
   await notifyTelegram(`🚨 *EMERGENCIA*: Todos los proveedores LLM fallaron. El chat está mostrando el mensaje de fallback.`);
   return 'Lo siento, mi cerebro artificial está experimentando una alta demanda en este momento. 🧠⚡\n\nPara no hacerte esperar, puedes hablar directamente con Omar por WhatsApp haciendo clic aquí: <<<HANDOFF>>>{"summary":"Error técnico en el chat (todos los proveedores fallaron)","urgency":"high"}<<<END>>>';
+}
+
+async function reviewReply(
+  reply: string,
+  systemPrompt: string,
+  sessionId?: string
+): Promise<string> {
+  // Omitimos revisión para mensajes muy cortos (saludos, despedidas, etc.)
+  if (reply.length < 60) return "OK";
+
+  const reviewPrompt = `Revisa esta respuesta del asistente de Omar. ¿Cumple con: voz de Omar, máximo 4 frases, no inventa precios, hace avanzar la venta? Responde solo "OK" o "FIX: <razón>".\n\nRespuesta a revisar:\n"${reply}"`;
+  
+  return callProviderChain({
+    systemPrompt: "Eres un auditor de calidad de respuestas de chatbot. Responde estrictamente solo OK o FIX: <razón>.",
+    history: [],
+    userMessage: reviewPrompt,
+    sessionId,
+    isReview: true
+  });
+}
+
+export async function generateReply(
+  systemPrompt: string,
+  history: ChatMessage[],
+  userMessage: string,
+  sessionId?: string,
+  imageDataUrl?: string
+): Promise<string> {
+  // Primera generación
+  let text = await callProviderChain({ systemPrompt, history, userMessage, sessionId, imageDataUrl });
+
+  // Si es un mensaje de error o fallback, no revisamos
+  if (text.includes('<<<HANDOFF>>>') && text.includes('fallaron')) return text;
+
+  // Auto-revisión
+  const review = await reviewReply(text, systemPrompt, sessionId);
+
+  if (review.startsWith('FIX:')) {
+    const reason = review.replace('FIX:', '').trim();
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`🔍 Auto-revisión detectó problemas: ${reason}. Regenerando...`);
+    }
+
+    // Segunda generación con instrucción correctiva
+    const retryUserMessage = `${userMessage}\n\n[REVISIÓN]: Tu respuesta anterior fue rechazada por: ${reason}. Por favor genera una nueva respuesta corregida siguiendo todas las reglas.`;
+    text = await callProviderChain({ systemPrompt, history, userMessage: retryUserMessage, sessionId, imageDataUrl });
+  }
+
+  return text;
 }

@@ -264,6 +264,7 @@ Estas reglas existen porque ya hubo un incidente (commit `f85f8b7`) en el que un
 | 28 | Diferenciadores de conversión | Funcionalidades únicas que convierten visitantes en leads pagos (RAG, voz, vision, calculadora, A/B, follow-up email, multi-idioma, CRM Notion) |
 | 29 | Motor de tráfico orgánico | SEO programático, blog MDX, lead magnets, newsletter, Plausible Analytics, schema.org, OG dinámicas, distribución LATAM |
 | 30 | Escalabilidad operacional | Para cuando lleguen miles de leads: auto-onboarding, tickets, facturación CO, roles, webhooks, status page, backups, docs internas |
+| 31 | Correcciones de auditoría | Cierre de hallazgos FAIL/PARCIAL de la auditoría retrospectiva (31.1-31.6) |
 
 ---
 
@@ -3899,6 +3900,106 @@ los próximos 180 días. Ningún documento puede hacer eso por ti.
 
 Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 ```
+
+---
+
+---
+
+## FASE 31 — Correcciones de auditoría retrospectiva
+
+> **Motivación.** La auditoría retrospectiva realizada el 2026-04-21 (ver `AUDITORIA_CHATBOT_TASKS.md`) detectó 2 fallos críticos (FAIL) y 5 desviaciones parciales en tareas marcadas como hechas. Esta fase cierra esos hallazgos para asegurar que la base técnica sea 100% sólida antes de continuar con la expansión.
+
+### [x] [GEM] Tarea 31.1 — Implementar auto-revisión del bot en `llm.ts`
+
+**Para qué sirve.** El documento (Tarea 13.2) prometía un mecanismo de auto-revisión (segunda llamada al LLM para validar calidad). La auditoría encontró que NO está implementado.
+
+**Archivos afectados:**
+- `src/lib/chatbot/llm.ts`
+
+**Implementación:**
+1. Crear función `reviewReply(reply, systemPrompt)` que llama al orquestador con el prompt de revisión.
+2. Integrar en `generateReply` (o donde corresponda) para que se dispare en mensajes complejos.
+3. Si la revisión dice "FIX:", regenerar una vez.
+
+**Aceptación:**
+- [ ] Log muestra segunda llamada de revisión.
+- [ ] Si se fuerza una respuesta mala, el revisor detecta y el bot corrige.
+
+---
+
+### [ ] [GEM] Tarea 31.2 — Regenerar `_omar_inputs.md` localmente
+
+**Para qué sirve.** El archivo fuente de verdad se perdió o no se commiteó. Hay que reconstruirlo desde el código actual para que futuras ediciones de Omar sean posibles.
+
+**Archivos afectados:**
+- `src/lib/chatbot/data/_omar_inputs.md`
+
+**Implementación:**
+1. Reconstruir el contenido desde `persona.ts`, `catalog.ts` y `faq`.
+2. Asegurar que cumple con la estructura definida en la Tarea 3.0.
+
+**Aceptación:**
+- [ ] Archivo existe en `src/lib/chatbot/data/_omar_inputs.md`.
+- [ ] No tiene campos vacíos.
+
+---
+
+### [ ] [GEM] Tarea 31.3 — Regenerar `supabase/schema.sql`
+
+**Para qué sirve.** No hay rastro local del esquema de la base de datos. Dificulta la reproducibilidad y el testing.
+
+**Archivos afectados:**
+- `supabase/schema.sql` (nuevo)
+
+**Implementación:**
+1. Ejecutar dump de la base de datos actual (solo esquema, no datos).
+2. Guardar en carpeta `supabase/`.
+
+**Aceptación:**
+- [ ] Archivo `supabase/schema.sql` contiene las tablas `conversations`, `messages`, `leads`, `api_logs`, etc.
+
+---
+
+### [ ] [GEM] Tarea 31.4 — Expandir `salesPlaybook.ts` a >200 líneas
+
+**Para qué sirve.** La tarea 3.3 exigía densidad. Hoy tiene 94 líneas. Hay que añadir más profundidad a las preguntas de descubrimiento y técnicas de cierre.
+
+**Archivos afectados:**
+- `src/lib/chatbot/data/salesPlaybook.ts`
+
+**Implementación:**
+1. Añadir más variaciones de preguntas SPIN y scripts de calificación BANT.
+2. Enriquecer las técnicas de cierre con ejemplos reales.
+
+**Aceptación:**
+- [ ] `wc -l src/lib/chatbot/data/salesPlaybook.ts` muestra > 200.
+
+---
+
+### [ ] [GEM] Tarea 31.5 — Corregir slice de objeciones en `systemPrompt.ts`
+
+**Para qué sirve.** El prompt corta las objeciones a 8 por "espacio", pero tenemos 12 de calidad. Hay que optimizar para que entren las 12 (Tarea 3.5).
+
+**Archivos afectados:**
+- `src/lib/chatbot/systemPrompt.ts`
+
+**Implementación:**
+1. Cambiar `.slice(0, 8)` por las 12 completas.
+2. Si el prompt queda muy largo, condensar el texto de cada objeción sin perder el núcleo.
+
+**Aceptación:**
+- [ ] `buildSystemPrompt()` incluye las 12 objeciones.
+
+---
+
+### [ ] [OMAR] Tarea 31.6 — Validación humana de correcciones
+
+**🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
+
+1. Omar, revisa el archivo `src/lib/chatbot/data/_omar_inputs.md` generado en 31.2. Confirma que la info es correcta.
+2. Prueba el chat y verifica si la "auto-revisión" (Tarea 31.1) mejora las respuestas o las hace más lentas.
+
+**Aceptación:** Omar confirma "lista 31.6".
 
 ---
 
