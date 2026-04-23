@@ -1,4 +1,5 @@
 import { ProviderCall, ProviderError, buildMessages } from './types';
+import { serverEnv, clientEnv } from '@/config/env';
 
 // Lista de modelos gratuitos de mayor a menor capacidad
 const FREE_MODELS = [
@@ -12,8 +13,7 @@ const FREE_MODELS = [
 const ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
 
 export const call: ProviderCall = async (args) => {
-  // Soportar ambas variables por si hay un typo en el env
-  const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPENRAUTER_API_KEY;
+  const apiKey = serverEnv.OPENROUTER_API_KEY;
   if (!apiKey) throw new ProviderError('openrouter', 'OPENROUTER_API_KEY missing', { retryable: false });
 
   let lastError: any = null;
@@ -26,7 +26,7 @@ export const call: ProviderCall = async (args) => {
         headers: {
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+          'HTTP-Referer': clientEnv.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
           'X-Title': 'Portafolio Omar Chatbot',
         },
         body: JSON.stringify({
