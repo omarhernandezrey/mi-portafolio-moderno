@@ -3927,7 +3927,7 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 
 ---
 
-### [ ] [GEM] Tarea 31.2 — Regenerar `_omar_inputs.md` localmente
+### [x] [GEM] Tarea 31.2 — Regenerar `_omar_inputs.md` localmente
 
 **Para qué sirve.** El archivo fuente de verdad se perdió o no se commiteó. Hay que reconstruirlo desde el código actual para que futuras ediciones de Omar sean posibles.
 
