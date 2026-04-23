@@ -3327,7 +3327,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 29.1 — Blog MDX con generación estática (1 post/semana de SEO long-tail)
+### [x] [GEM] Tarea 29.1 — Blog MDX con generación estática (1 post/semana de SEO long-tail)
 
 **Para qué sirve.** Cada post = 1 página indexada en Google = nuevo punto de entrada de tráfico. 52 posts en 1 año = 52 ventanas para que te encuentren.
 
