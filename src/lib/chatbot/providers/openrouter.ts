@@ -3,11 +3,8 @@ import { serverEnv, clientEnv } from '@/config/env';
 
 // Lista de modelos gratuitos de mayor a menor capacidad
 const FREE_MODELS = [
+  'openai/gpt-oss-120b:free',
   'meta-llama/llama-3.3-70b-instruct:free',
-  'nvidia/llama-3.1-nemotron-70b-instruct:free',
-  'mistralai/mistral-nemo:free',
-  'google/gemma-3-12b-it:free',
-  'google/gemma-3-4b-it:free',
   'openrouter/free'
 ];
 
