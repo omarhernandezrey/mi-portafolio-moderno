@@ -4,6 +4,7 @@ import { serverEnv, clientEnv } from '@/config/env';
 // Lista de modelos gratuitos de mayor a menor capacidad
 const FREE_MODELS = [
   'openai/gpt-oss-120b:free',
+  'minimax/minimax-m2.5:free',
   'meta-llama/llama-3.3-70b-instruct:free',
   'openrouter/free'
 ];
