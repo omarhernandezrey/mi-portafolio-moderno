@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, Phone, Calendar, ShieldCheck, Mic, MicOff } from 'lucide-react';
+import { X, Send, Bot, Phone, Calendar, ShieldCheck, Mic, MicOff } from 'lucide-react';
 import { nanoid } from 'nanoid';
 import { sendChatMessage } from '@/services/chatService';
 import { useTranslation } from 'react-i18next';

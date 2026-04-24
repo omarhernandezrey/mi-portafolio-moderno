@@ -15,7 +15,7 @@ export const call: ProviderCall = async (args) => {
   if (!apiKey) throw new ProviderError('huggingface', 'HF_TOKEN missing', { retryable: false });
 
   const hf = new HfInference(apiKey);
-  let lastError: any = null;
+  let lastError: ProviderError | null = null;
 
   for (const model of FREE_MODELS) {
     try {
@@ -41,17 +41,18 @@ export const call: ProviderCall = async (args) => {
       }
       
       return text;
-    } catch (error: any) {
-      const status = error.statusCode || error.status || 500;
+    } catch (error: unknown) {
+      const err = error as { statusCode?: number; status?: number; message?: string };
+      const status = err.statusCode || err.status || 500;
       const isAuth = status === 401 || status === 403;
       
       if (isAuth) {
-        throw new ProviderError('huggingface', `Auth Error: ${error.message}`, { status, retryable: false });
+        throw new ProviderError('huggingface', `Auth Error: ${err.message}`, { status, retryable: false });
       }
       
-      lastError = new ProviderError('huggingface', `Error on ${model}: ${error.message}`, { status, retryable: true });
+      lastError = new ProviderError('huggingface', `Error on ${model}: ${err.message}`, { status, retryable: true });
       if (process.env.NODE_ENV !== 'production') {
-        console.warn(`[HuggingFace] Falló el modelo ${model} (${error.message}), intentando el siguiente...`);
+        console.warn(`[HuggingFace] Falló el modelo ${model} (${err.message}), intentando el siguiente...`);
       }
     }
   }

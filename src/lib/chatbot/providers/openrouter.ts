@@ -15,7 +15,7 @@ export const call: ProviderCall = async (args) => {
   const apiKey = serverEnv.OPENROUTER_API_KEY;
   if (!apiKey) throw new ProviderError('openrouter', 'OPENROUTER_API_KEY missing', { retryable: false });
 
-  let lastError: any = null;
+  let lastError: ProviderError | Error | null = null;
 
   // Intentar con cada modelo en orden (Fallback local para asegurar control)
   for (const model of FREE_MODELS) {
@@ -61,14 +61,15 @@ export const call: ProviderCall = async (args) => {
       }
       
       return text;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof ProviderError && !error.retryable) {
         throw error;
       }
-      if (error.name === 'AbortError') {
+      const err = error as Error;
+      if (err.name === 'AbortError') {
         throw error; // Timeout general respetado
       }
-      lastError = error;
+      lastError = err;
     }
   }
 
