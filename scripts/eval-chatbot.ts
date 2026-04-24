@@ -22,8 +22,8 @@ async function runScenario(scenario: EvalScenario): Promise<EvalResult> {
 
   for (const turn of scenario.turns) {
     try {
-      // Delay para evitar Rate Limit de Groq
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Delay de 12s para evitar Rate Limit de Groq y OpenRouter
+      await new Promise(resolve => setTimeout(resolve, 12000));
 
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -102,6 +102,9 @@ async function main() {
     } else {
       console.log(`❌ FAILED. Faltó: ${result.failedCriterias.join(', ')}`);
     }
+    // Delay largo entre escenarios para recuperar tokens de APIs free
+    console.log('⏳ Pausa de 10s para evitar rate limits...');
+    await new Promise(resolve => setTimeout(resolve, 10000));
   }
 
   const score = (passedCount / allScenarios.length) * 100;

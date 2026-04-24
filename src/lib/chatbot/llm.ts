@@ -7,10 +7,10 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 }
 
-const DEFAULT_CHAIN = ['groq', 'openrouter', 'cerebras', 'cloudflare', 'ollama'];
+const DEFAULT_CHAIN = ['groq', 'openrouter', 'huggingface', 'cerebras', 'cloudflare', 'ollama'];
 const TIMEOUT_MS = 15000;
 const ERROR_THRESHOLD = 3;
-const COOLDOWN_MS = 60 * 60 * 1000; // 1 hora
+const COOLDOWN_MS = 60 * 1000; // 1 minuto (recuperación rápida para Rate Limits)
 
 // Circuit breaker en memoria (warm function)
 const errorTracker: Record<string, { count: number; lastError: number }> = {};
