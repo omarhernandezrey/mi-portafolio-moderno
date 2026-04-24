@@ -17,6 +17,8 @@ const serverSchema = z.object({
   // FASE 27 — proveedores LLM de respaldo (todos opcionales)
   OPENROUTER_API_KEY: z.string().optional(),
   CEREBRAS_API_KEY: z.string().optional(),
+  MISTRAL_API_KEY: z.string().optional(),
+  DEEPSEEK_API_KEY: z.string().optional(),
   CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
   CLOUDFLARE_API_TOKEN: z.string().optional(),
   OLLAMA_BASE_URL: z.string().url().optional(),
@@ -42,6 +44,8 @@ export const serverEnv = {
   // FASE 27 — multi-provider failover
   get OPENROUTER_API_KEY() { return process.env.OPENROUTER_API_KEY || ""; },
   get CEREBRAS_API_KEY() { return process.env.CEREBRAS_API_KEY || ""; },
+  get MISTRAL_API_KEY() { return process.env.MISTRAL_API_KEY || ""; },
+  get DEEPSEEK_API_KEY() { return process.env.DEEPSEEK_API_KEY || ""; },
   get CLOUDFLARE_ACCOUNT_ID() { return process.env.CLOUDFLARE_ACCOUNT_ID || ""; },
   get CLOUDFLARE_API_TOKEN() { return process.env.CLOUDFLARE_API_TOKEN || ""; },
   get OLLAMA_BASE_URL() { return process.env.OLLAMA_BASE_URL || "http://localhost:11434"; },

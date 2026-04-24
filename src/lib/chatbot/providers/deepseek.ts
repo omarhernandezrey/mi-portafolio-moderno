@@ -1,12 +1,12 @@
 import { ProviderCall, ProviderError, buildMessages } from './types';
 import { serverEnv } from '@/config/env';
 
-const MODEL = 'llama3.1-8b';
-const ENDPOINT = 'https://api.cerebras.ai/v1/chat/completions';
+const MODEL = 'deepseek-chat';
+const ENDPOINT = 'https://api.deepseek.com/chat/completions';
 
 export const call: ProviderCall = async (args) => {
-  const apiKey = serverEnv.CEREBRAS_API_KEY;
-  if (!apiKey) throw new ProviderError('cerebras', 'CEREBRAS_API_KEY missing', { retryable: false });
+  const apiKey = serverEnv.DEEPSEEK_API_KEY;
+  if (!apiKey) throw new ProviderError('deepseek', 'DEEPSEEK_API_KEY missing', { retryable: false });
 
   const res = await fetch(ENDPOINT, {
     method: 'POST',
@@ -25,11 +25,12 @@ export const call: ProviderCall = async (args) => {
 
   if (!res.ok) {
     const isAuth = res.status === 401 || res.status === 403;
-    throw new ProviderError('cerebras', `HTTP ${res.status}`, { status: res.status, retryable: !isAuth });
+    const errText = await res.text().catch(() => '');
+    throw new ProviderError('deepseek', `HTTP ${res.status}: ${errText}`, { status: res.status, retryable: !isAuth });
   }
 
   const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
   const text = data.choices?.[0]?.message?.content?.trim() || '';
-  if (!text) throw new ProviderError('cerebras', 'empty response');
+  if (!text) throw new ProviderError('deepseek', 'empty response');
   return text;
 };
