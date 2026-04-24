@@ -220,7 +220,7 @@ export default function ChatWidget() {
             initial={{ opacity: 0, x: 20, scale: 0.8 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 20, scale: 0.8 }}
-            className="mb-2 mr-2 rounded-2xl bg-[var(--white-color)] border border-[var(--primary-color)] px-4 py-2 text-xs font-medium text-[var(--text-color)] shadow-xl"
+            className="mb-2 mr-2 rounded-2xl bg-[var(--secondary-background-color)] border border-[var(--primary-color)] px-4 py-2 text-xs font-medium text-[var(--text-color)] shadow-xl"
           >
             {currentLanguage === 'es' ? '¿Hablamos? 👋' : 'Let\'s talk? 👋'}
           </motion.div>
@@ -344,11 +344,10 @@ export default function ChatWidget() {
                       >
                         <div 
                           className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
-                            msg.role === 'user' 
-                              ? 'bg-[var(--primary-color)] text-white rounded-br-none' 
-                              : 'bg-[var(--white-color)] border border-[var(--muted-color)] text-[var(--text-color)] rounded-bl-none'
-                          }`}
-                        >
+                            msg.role === 'user'
+                              ? 'bg-[var(--primary-color)] text-white rounded-br-none'
+                              : 'bg-[var(--secondary-background-color)] border border-[var(--muted-color)]/30 text-[var(--text-color)] rounded-bl-none'
+                          }`}                        >
                           {msg.content}
                         </div>
                         
@@ -380,7 +379,7 @@ export default function ChatWidget() {
                     ))}
                     {isLoading && (
                       <div className="flex justify-start">
-                        <div className="flex items-center gap-1 rounded-2xl border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-[10px] text-[var(--muted-color)]">
+                        <div className="flex items-center gap-1 rounded-2xl border border-[var(--muted-color)]/30 bg-[var(--secondary-background-color)] px-4 py-2 text-[10px] text-[var(--muted-color)]">
                           <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)]" />
                           <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.2s]" />
                           <div className="h-1 w-1 animate-bounce rounded-full bg-[var(--muted-color)] [animation-delay:0.4s]" />
@@ -413,7 +412,7 @@ export default function ChatWidget() {
                   ref={inputRef}
                   type="text"
                   placeholder={t('chatbot.placeholder')}
-                  className="flex-1 rounded-full border border-[var(--muted-color)] bg-[var(--white-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]/20 text-slate-900 disabled:opacity-50"
+                  className="flex-1 rounded-full border border-[var(--muted-color)]/50 bg-[var(--secondary-background-color)] px-4 py-2 text-sm focus:border-[var(--primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]/20 text-[var(--text-color)] disabled:opacity-50"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading || !hasConsented}
