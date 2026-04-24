@@ -49,9 +49,9 @@ export default function ChatWidget() {
 
           if (data.messages && data.messages.length > 0) {
             setMessages(prev => {
-              // Filtrar mensajes que ya existen para evitar duplicados
+              // Filtrar mensajes que ya existen para evitar duplicados (comparando contenido y rol)
               const newMsgs = data.messages.filter((nm: Message) => 
-                !prev.some(pm => pm.content === nm.content && pm.created_at === nm.created_at)
+                !prev.some(pm => pm.content === nm.content && pm.role === nm.role)
               );
               return [...prev, ...newMsgs];
             });
