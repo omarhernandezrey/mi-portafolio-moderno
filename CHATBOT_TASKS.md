@@ -3944,7 +3944,7 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 
 ---
 
-### [ ] [GEM] Tarea 31.3 — Regenerar `supabase/schema.sql`
+### [x] [GEM] Tarea 31.3 — Regenerar `supabase/schema.sql`
 
 **Para qué sirve.** No hay rastro local del esquema de la base de datos. Dificulta la reproducibilidad y el testing.
 
