@@ -3499,7 +3499,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 29.7 — Newsletter (Resend + Supabase, sin servicios pagos)
+### [x] [GEM] Tarea 29.7 — Newsletter (Resend + Supabase, sin servicios pagos)
 
 **Para qué sirve.** Mantener relación con leads fríos por meses hasta que estén listos para comprar. CAC orgánico = $0.
 

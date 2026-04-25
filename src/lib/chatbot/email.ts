@@ -76,3 +76,66 @@ export async function sendLeadMagnetFollowUp(to: string, source: string) {
     return null;
   }
 }
+
+export async function sendNewsletterConfirmation(to: string, token: string) {
+  if (!serverEnv.RESEND_API_KEY) return null;
+
+  const resend = new Resend(serverEnv.RESEND_API_KEY);
+  const confirmUrl = `${clientEnv.NEXT_PUBLIC_SITE_URL}/api/newsletter/confirm?token=${token}`;
+
+  const html = `
+    <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
+      <h2>¡Solo un paso más!</h2>
+      <p>Gracias por querer suscribirte a mi newsletter sobre tecnología, IA y desarrollo web.</p>
+      <p>Por favor, haz clic en el botón de abajo para confirmar tu suscripción:</p>
+      <a href="${confirmUrl}" style="display: inline-block; background: #00cba9; color: #0d131a; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">Confirmar Suscripción</a>
+      <p>Si no solicitaste esto, puedes ignorar este correo.</p>
+      <br/>
+      <p>—<br/><strong>Omar Hernández Rey</strong></p>
+    </div>
+  `;
+
+  try {
+    const { data } = await resend.emails.send({
+      from: 'Omar Hernández <onboarding@resend.dev>',
+      to: [to],
+      subject: 'Confirma tu suscripción — Omar Hernández',
+      html,
+    });
+    return data;
+  } catch (err) {
+    console.error('Error sending confirmation email:', err);
+    return null;
+  }
+}
+
+export async function sendNewsletterEdition(to: string, subject: string, htmlContent: string, subscriberId: string) {
+  if (!serverEnv.RESEND_API_KEY) return null;
+
+  const resend = new Resend(serverEnv.RESEND_API_KEY);
+  const unsubscribeUrl = `${clientEnv.NEXT_PUBLIC_SITE_URL}/api/newsletter/unsubscribe?id=${subscriberId}`;
+
+  const finalHtml = `
+    <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
+      ${htmlContent}
+      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
+      <p style="font-size: 12px; color: #999; text-align: center;">
+        Recibes este correo porque te suscribiste a la newsletter de Omar Hernández Rey.<br/>
+        <a href="${unsubscribeUrl}" style="color: #999;">Darse de baja</a>
+      </p>
+    </div>
+  `;
+
+  try {
+    const { data } = await resend.emails.send({
+      from: 'Omar Hernández <onboarding@resend.dev>',
+      to: [to],
+      subject,
+      html: finalHtml,
+    });
+    return data;
+  } catch (err) {
+    console.error(`Error sending newsletter to ${to}:`, err);
+    return null;
+  }
+}
