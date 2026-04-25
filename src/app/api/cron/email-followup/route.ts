@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
-import { sendFollowUpEmail } from '@/lib/chatbot/email';
+import { sendFollowUpEmail, sendLeadMagnetFollowUp } from '@/lib/chatbot/email';
 import { serverEnv } from '@/config/env';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 
@@ -13,48 +13,53 @@ export async function GET(req: Request) {
   }
 
   try {
+    const now = new Date();
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+
     // 1. Buscar leads con status 'cold' que tengan email
-    const { data: coldLeads, error: fetchError } = await supabaseServer
+    const { data: coldLeads } = await supabaseServer
       .from('leads')
       .select('id, name, email, service_requested')
       .eq('status', 'cold')
       .not('email', 'is', null);
 
-    if (fetchError) throw fetchError;
-
-    if (!coldLeads || coldLeads.length === 0) {
-      return NextResponse.json({ message: 'No cold leads to follow up.' });
-    }
+    // 2. Buscar subscribers sin followup y con > 24h
+    const { data: subscribers } = await supabaseServer
+      .from('subscribers')
+      .select('*')
+      .is('followup_sent_at', null)
+      .lt('created_at', oneDayAgo);
 
     const results = [];
 
-    for (const lead of coldLeads) {
-      console.log(`Sending follow-up to ${lead.email}...`);
-      const sent = await sendFollowUpEmail(lead.email, lead.name, lead.service_requested || 'tu proyecto');
-
-      if (sent) {
-        // 2. Marcar como 'followed_up'
-        const { error: updateError } = await supabaseServer
-          .from('leads')
-          .update({ status: 'followed_up' })
-          .eq('id', lead.id);
-
-        if (updateError) {
-          console.error(`Error updating lead ${lead.id} status:`, updateError);
+    // Procesar Leads
+    if (coldLeads) {
+      for (const lead of coldLeads) {
+        const sent = await sendFollowUpEmail(lead.email!, lead.name!, lead.service_requested || 'tu proyecto');
+        if (sent) {
+          await supabaseServer.from('leads').update({ status: 'followed_up' }).eq('id', lead.id);
+          results.push({ type: 'lead', id: lead.id, status: 'sent' });
         }
+      }
+    }
 
-        results.push({ id: lead.id, status: 'sent' });
-      } else {
-        results.push({ id: lead.id, status: 'failed' });
+    // Procesar Subscribers
+    if (subscribers) {
+      for (const sub of subscribers) {
+        const sent = await sendLeadMagnetFollowUp(sub.email, sub.source);
+        if (sent) {
+          await supabaseServer.from('subscribers').update({ followup_sent_at: now.toISOString() }).eq('id', sub.id);
+          results.push({ type: 'subscriber', id: sub.id, status: 'sent' });
+        }
       }
     }
 
     const sentCount = results.filter(r => r.status === 'sent').length;
     if (sentCount > 0) {
-      await notifyTelegram(`✉️ *Follow-up enviado* a ${sentCount} leads fríos.`);
+      await notifyTelegram(`✉️ *Follow-up automático* enviado a ${sentCount} contactos (leads + recursos).`);
     }
 
-    return NextResponse.json({ success: true, results });
+    return NextResponse.json({ success: true, processed: results.length, sent: sentCount });
 
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : 'Unknown error';

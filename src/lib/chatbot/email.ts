@@ -43,3 +43,36 @@ export async function sendFollowUpEmail(to: string, name: string, service: strin
     return null;
   }
 }
+
+export async function sendLeadMagnetFollowUp(to: string, source: string) {
+  if (!serverEnv.RESEND_API_KEY) return null;
+
+  const resend = new Resend(serverEnv.RESEND_API_KEY);
+  const subject = `¿Te sirvió el recurso sobre ${source}? — Omar Hernández`;
+
+  const html = `
+    <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
+      <p>Hola de nuevo,</p>
+      <p>Ayer descargaste el recurso: <strong>${source}</strong>.</p>
+      <p>Me paso por aquí solo para saber si pudiste leerlo y si te generó alguna duda que quieras resolver conmigo.</p>
+      <p>Si estás pensando en arrancar un proyecto digital este año, me encantaría escucharte y ver si puedo aportarte valor.</p>
+      <p>Puedes agendar una sesión de 15 minutos aquí: <a href="${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}">${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}</a></p>
+      <br/>
+      <p>¡Seguimos en contacto!</p>
+      <p>—<br/><strong>Omar Hernández Rey</strong><br/>Full Stack Developer</p>
+    </div>
+  `;
+
+  try {
+    const { data } = await resend.emails.send({
+      from: 'Omar Hernández <onboarding@resend.dev>',
+      to: [to],
+      subject,
+      html,
+    });
+    return data;
+  } catch (err) {
+    console.error('Error sending magnet follow-up:', err);
+    return null;
+  }
+}

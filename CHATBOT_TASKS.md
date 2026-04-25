@@ -3470,7 +3470,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 29.6 — Lead magnets descargables: PDFs gated por email
+### [x] [GEM] Tarea 29.6 — Lead magnets descargables: PDFs gated por email
 
 **Para qué sirve.** "Guía gratuita: cómo elegir desarrollador en 2026" → email del visitante. Lead frío convertible vía newsletter (29.7).
 
