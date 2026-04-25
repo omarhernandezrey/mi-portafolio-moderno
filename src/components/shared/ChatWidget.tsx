@@ -31,6 +31,7 @@ export default function ChatWidget() {
   const [visitorMeta, setVisitorMeta] = useState<{ name?: string; email?: string }>({});
   const [showAttention, setShowAttention] = useState(false);
   const [hasConsented, setHasConsented] = useState(false);
+  const [consentAt, setConsentAt] = useState<string | undefined>(undefined);
   const [lastPollTime, setLastPollTime] = useState<string>(new Date().toISOString());
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -80,6 +81,7 @@ export default function ChatWidget() {
     setSessionId(id);
     
     setHasConsented(localStorage.getItem('chatbot_consent') === 'true');
+    setConsentAt(localStorage.getItem('chatbot_consent_at') || undefined);
 
     // Lógica de Re-engagement
     const checkReengage = async (sid: string) => {
@@ -137,8 +139,11 @@ export default function ChatWidget() {
   };
 
   const handleConsent = () => {
+    const ts = new Date().toISOString();
     setHasConsented(true);
+    setConsentAt(ts);
     localStorage.setItem('chatbot_consent', 'true');
+    localStorage.setItem('chatbot_consent_at', ts);
   };
 
   const handleSubmit = useCallback(async (e?: React.FormEvent, overrideInput?: string) => {
@@ -153,7 +158,7 @@ export default function ChatWidget() {
     setIsLoading(true);
 
     try {
-      const response = await sendChatMessage(sessionId, finalInput, currentLanguage);
+      const response = await sendChatMessage(sessionId, finalInput, currentLanguage, visitorMeta, consentAt);
       
       // Actualizar metadatos del visitante si el bot los extrajo
       if (response.visitorMeta) {

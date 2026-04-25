@@ -14,6 +14,7 @@ const chatSchema = z.object({
   language: z.enum(['es', 'en', 'pt']),
   website: z.string().optional(),
   imageDataUrl: z.string().optional(),
+  consentAt: z.string().optional(),
   visitorMeta: z.object({
     name: z.string().optional(),
     email: z.string().email().optional(),
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
     }
 
-    const { sessionId, message, language, visitorMeta, website, imageDataUrl } = result.data;
+    const { sessionId, message, language, visitorMeta, website, imageDataUrl, consentAt } = result.data;
 
     // Rate Limit para evaluaciones y usuarios
     const ip = req.headers.get('x-forwarded-for') || 'anonymous';
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
       activeVariant = getRandomVariant();
       const { data: newConv } = await supabaseServer
         .from('conversations')
-        .insert({ session_id: sessionId, language, visitor_name: visitorMeta?.name, variant: activeVariant })
+        .insert({ session_id: sessionId, language, visitor_name: visitorMeta?.name, variant: activeVariant, consent_at: consentAt })
         .select('id')
         .single();
       conversationId = newConv!.id;

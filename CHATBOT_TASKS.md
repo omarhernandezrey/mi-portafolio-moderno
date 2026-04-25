@@ -4191,7 +4191,7 @@ Así, en cuanto el usuario abre el chat una vez, la burbuja no vuelve a aparecer
 
 ---
 
-### [ ] [GEM] Tarea AUD.3 — Guardar `consent_at` en la tabla `conversations` al iniciar chat
+### [x] [GEM] Tarea AUD.3 — Guardar `consent_at` en la tabla `conversations` al iniciar chat
 
 **Hallazgo.** Tarea 16.2 PARCIAL. El consentimiento se almacena solo en `localStorage` del navegador; la columna `conversations.consent_at` (que sí existe en el schema) nunca se escribe desde el API.
 
