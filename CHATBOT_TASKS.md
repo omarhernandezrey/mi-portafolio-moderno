@@ -4243,7 +4243,7 @@ Así, en cuanto el usuario abre el chat una vez, la burbuja no vuelve a aparecer
 
 ---
 
-### [ ] [GEM] Tarea AUD.5 — Implementar botón de adjuntar imagen en ChatWidget y endpoint de upload (Tarea 28.9)
+### [x] [GEM] Tarea AUD.5 — Implementar botón de adjuntar imagen en ChatWidget y endpoint de upload (Tarea 28.9)
 
 **Hallazgo.** Tarea 28.9 PARCIAL. El backend (`route.ts`) acepta `imageDataUrl` en el payload, pero:
 - No hay botón 📎 en `ChatWidget.tsx` para que el usuario adjunte una imagen.
