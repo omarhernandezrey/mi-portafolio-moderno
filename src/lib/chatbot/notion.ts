@@ -52,3 +52,39 @@ export async function pushLeadToNotion(lead: Lead, leadId: string, siteUrl: stri
     console.error('Error pushing lead to Notion:', error);
   }
 }
+
+/**
+ * Actualiza el estado de un lead en Notion.
+ */
+export async function updateLeadStatusInNotion(email: string, status: string) {
+  const { NOTION_API_KEY, NOTION_DATABASE_ID } = serverEnv;
+  if (!NOTION_API_KEY || !NOTION_DATABASE_ID) return;
+
+  const notion = new Client({ auth: NOTION_API_KEY });
+
+  try {
+    // Buscar la página por email
+    // @ts-expect-error: Notion type mismatch in query method
+    const response = await notion.databases.query({
+      database_id: NOTION_DATABASE_ID,
+      filter: {
+        property: 'Email',
+        email: { equals: email }
+      }
+    });
+
+    if (response.results.length > 0) {
+      const pageId = response.results[0].id;
+      await notion.pages.update({
+        page_id: pageId,
+        properties: {
+          'Estado': {
+            select: { name: status }
+          }
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error updating lead status in Notion:', error);
+  }
+}

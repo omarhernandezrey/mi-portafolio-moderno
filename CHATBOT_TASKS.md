@@ -3624,7 +3624,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.1 — Auto-onboarding del cliente: form → contrato firmado → pago → kickoff
+### [x] [GEM] Tarea 30.1 — Auto-onboarding del cliente: form → contrato firmado → pago → kickoff
 
 **Para qué sirve.** Eliminar el ping-pong manual cliente↔Omar antes de empezar el proyecto. Sistema lleva al cliente solo desde "acepto" hasta "proyecto iniciado".
 
