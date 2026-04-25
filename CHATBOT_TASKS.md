@@ -3577,7 +3577,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 29.10 — Auto-submit a directorios LATAM y Hacker News (GitHub Actions)
+### [x] [GEM] Tarea 29.10 — Auto-submit a directorios LATAM y Hacker News (GitHub Actions)
 
 **Para qué sirve.** Backlinks de calidad = ranking SEO. Hacerlo a mano es tedioso; automatizar = horas recuperadas.
 
