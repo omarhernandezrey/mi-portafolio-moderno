@@ -1,0 +1,39 @@
+name: Health Check Monitor
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Cada hora
+  workflow_dispatch: # Permite ejecutar manualmente
+
+jobs:
+  check-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Health Endpoint
+        id: health_check
+        run: |
+          URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/health"
+          RESPONSE=$(curl -s -w "\n%{http_code}" "$URL")
+          BODY=$(echo "$RESPONSE" | head -n 1)
+          STATUS=$(echo "$RESPONSE" | tail -n 1)
+          
+          echo "Status: $STATUS"
+          echo "Body: $BODY"
+          
+          if [ "$STATUS" -ne 200 ]; then
+            echo "::error::Site health check failed with status $STATUS"
+            exit 1
+          fi
+          
+          OVERALL_STATUS=$(echo "$BODY" | jq -r '.status')
+          if [ "$OVERALL_STATUS" != "operational" ]; then
+            echo "::error::Site operational status is $OVERALL_STATUS"
+            exit 1
+          fi
+
+      - name: Notify Telegram on Failure
+        if: failure()
+        run: |
+          MESSAGE="🚨 *ALERTA DE CAÍDA* 🚨%0AEl portafolio o sus servicios no responden.%0AChequea: ${{ secrets.NEXT_PUBLIC_SITE_URL }}/status"
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=$MESSAGE&parse_mode=Markdown"

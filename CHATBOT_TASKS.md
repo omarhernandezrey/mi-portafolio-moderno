@@ -3798,7 +3798,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.8 — Status page público (transparencia + confianza enterprise)
+### [x] [GEM] Tarea 30.8 — Status page público (transparencia + confianza enterprise)
 
 **Para qué sirve.** Cliente enterprise antes de firmar revisa "¿este servicio se cae?". Status page público = profesionalismo + transparencia.
 

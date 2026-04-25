@@ -290,6 +290,9 @@ export default function Footer() {
               <Link href="/faq" className="text-[10px] text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline decoration-dotted">
                 FAQ
               </Link>
+              <Link href="/status" className="text-[10px] text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline decoration-dotted">
+                Status
+              </Link>
             </div>
             <p className="text-[9px] text-[var(--muted-color)] opacity-60">
               Este sitio utiliza almacenamiento local (localStorage) para la sesión del chat. Sin cookies de terceros.
