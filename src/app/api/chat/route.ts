@@ -102,8 +102,8 @@ export async function POST(req: NextRequest) {
     // Extraer email del historial si no está en conv.facts aún
     const savedFacts = (facts as Record<string, string>);
     let knownEmail = savedFacts.email || '';
-    let knownName = conv?.visitor_name || visitorMeta?.name || savedFacts.name || '';
-    let knownNeed = savedFacts.need || '';
+    const knownName = conv?.visitor_name || visitorMeta?.name || savedFacts.name || '';
+    const knownNeed = savedFacts.need || '';
 
     if (!knownEmail) {
       const emailRegex = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
