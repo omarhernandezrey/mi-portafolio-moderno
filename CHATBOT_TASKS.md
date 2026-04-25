@@ -3976,7 +3976,7 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 
 ---
 
-### [ ] [GEM] Tarea 31.5 — Corregir slice de objeciones en `systemPrompt.ts`
+### [x] [GEM] Tarea 31.5 — Corregir slice de objeciones en `systemPrompt.ts`
 
 **Para qué sirve.** El prompt corta las objeciones a 8 por "espacio", pero tenemos 12 de calidad. Hay que optimizar para que entren las 12 (Tarea 3.5).
 

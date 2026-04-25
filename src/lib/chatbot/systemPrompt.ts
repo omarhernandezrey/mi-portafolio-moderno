@@ -29,7 +29,7 @@ const serializeSkills = (language: 'es' | 'en' | 'pt') => {
 };
 
 const serializeObjections = (language: 'es' | 'en' | 'pt') => {
-  return OBJECTIONS.slice(0, 8).map(o => `- ${o.id}: ${o.acknowledge[language]}`).join('\n');
+  return OBJECTIONS.slice(0, 12).map(o => `- ${o.id}: ${o.acknowledge[language]}`).join('\n');
 };
 
 export function buildSystemPrompt(language: 'es' | 'en' | 'pt', context?: { visitorName?: string; intent?: string }): string {
