@@ -5,11 +5,10 @@ import {
   MessageSquare, 
   TrendingUp, 
   DollarSign, 
-  Clock, 
   ChevronRight,
-  ShieldCheck,
   AlertTriangle,
-  Ticket
+  Ticket,
+  Clock
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -66,25 +65,7 @@ export default async function AdminDashboardPage() {
   const stats = await getStats();
 
   return (
-    <div className="min-h-screen bg-[var(--background-color)] text-[var(--white-color)]">
-      {/* Sidebar / Nav */}
-      <nav className="border-b border-[var(--primary-color)]/10 bg-[var(--card-bg-color)]/50 backdrop-blur-md sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="text-[var(--primary-color)]" size={24} />
-              <span className="font-bold text-xl tracking-tight">Omar Admin</span>
-            </div>
-            <div className="flex gap-4">
-              <Link href="/admin/leads" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Leads</Link>
-              <Link href="/admin/conversations" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Conversaciones</Link>
-              <Link href="/admin/tickets" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Tickets</Link>
-              <Link href="/admin/invoices" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Facturación</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <div className="p-0">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Dashboard</h1>

@@ -1,12 +1,11 @@
 import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
-import { 
-  FileText, 
-  Download, 
-  ArrowLeft,
+import { serverEnv } from '@/config/env';
+import {
+  FileText,
+  Download,
   Calendar
 } from 'lucide-react';
-import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,29 +32,7 @@ export default async function AdminInvoicesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background-color)] text-[var(--white-color)]">
-      <nav className="border-b border-[var(--primary-color)]/10 bg-[var(--card-bg-color)]/50 backdrop-blur-md sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <Link href="/admin" className="text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors">
-                <ArrowLeft size={20} />
-              </Link>
-              <div className="flex items-center gap-2">
-                <FileText className="text-[var(--primary-color)]" size={24} />
-                <span className="font-bold text-xl tracking-tight">Facturación</span>
-              </div>
-            </div>
-            <Link 
-              href="/admin/invoices/new" 
-              className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-xl text-sm font-bold hover:brightness-110 transition-all"
-            >
-              Generar Factura
-            </Link>
-          </div>
-        </div>
-      </nav>
-
+    <div className="p-0">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-[var(--card-bg-color)] p-6 rounded-2xl border border-[var(--primary-color)]/10 shadow-lg">
@@ -121,7 +98,7 @@ export default async function AdminInvoicesPage() {
                     <td className="px-6 py-5 text-right">
                       {inv.pdf_url && (
                         <a 
-                          href={`${process.env.SUPABASE_URL}/storage/v1/object/public/invoices/${inv.pdf_url}`}
+                          href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${inv.pdf_url}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[var(--primary-color)]/10 text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white transition-all shadow-lg"

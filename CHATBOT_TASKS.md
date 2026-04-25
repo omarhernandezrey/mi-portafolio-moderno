@@ -3751,7 +3751,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.6 — Roles y permisos en `/admin` (Omar admin + asistente futuro)
+### [x] [GEM] Tarea 30.6 — Roles y permisos en `/admin` (Omar admin + asistente futuro)
 
 **Para qué sirve.** Cuando contrates a alguien que responda leads, NO debe ver tus números de facturación. RBAC básico.
 

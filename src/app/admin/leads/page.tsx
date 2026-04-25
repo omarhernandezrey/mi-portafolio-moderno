@@ -3,8 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { 
   ChevronRight, 
   Search, 
-  Filter,
-  ArrowLeft
+  Filter
 } from 'lucide-react';
 import Link from 'next/link';
 import ExportLeadsButton from '@/components/admin/ExportLeadsButton';
@@ -25,22 +24,15 @@ export default async function AdminLeadsPage() {
   const leads = await getLeads();
 
   return (
-    <div className="min-h-screen bg-[var(--background-color)] text-[var(--white-color)]">
-      <nav className="border-b border-[var(--primary-color)]/10 bg-[var(--card-bg-color)]/50 backdrop-blur-md sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <Link href="/admin" className="text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors">
-                <ArrowLeft size={20} />
-              </Link>
-              <span className="font-bold text-xl tracking-tight">Gestión de Leads</span>
-            </div>
-            <ExportLeadsButton leads={leads} />
-          </div>
-        </div>
-      </nav>
-
+    <div className="p-0">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">Gestión de Leads</h1>
+            <p className="text-[var(--muted-color)] mt-2">Administra y exporta tus contactos comerciales</p>
+          </div>
+          <ExportLeadsButton leads={leads} />
+        </div>
         {/* Filtros Placeholder */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="relative flex-1">

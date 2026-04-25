@@ -2,7 +2,6 @@ import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { 
   ChevronRight, 
-  ArrowLeft,
   Ticket,
   AlertCircle,
   Clock
@@ -53,30 +52,20 @@ export default async function AdminTicketsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background-color)] text-[var(--white-color)]">
-      <nav className="border-b border-[var(--primary-color)]/10 bg-[var(--card-bg-color)]/50 backdrop-blur-md sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <Link href="/admin" className="text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors">
-                <ArrowLeft size={20} />
-              </Link>
-              <div className="flex items-center gap-2">
-                <Ticket className="text-[var(--primary-color)]" size={24} />
-                <span className="font-bold text-xl tracking-tight">Sistema de Tickets</span>
-              </div>
-            </div>
-            <Link 
-              href="/admin/tickets/new" 
-              className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-xl text-sm font-bold hover:brightness-110 transition-all"
-            >
-              Nuevo Ticket
-            </Link>
-          </div>
-        </div>
-      </nav>
-
+    <div className="p-0">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">Gestión de Tickets</h1>
+            <p className="text-[var(--muted-color)] mt-2">Seguimiento de incidencias y soporte</p>
+          </div>
+          <Link 
+            href="/admin/tickets/new" 
+            className="px-4 py-2 bg-[var(--primary-color)] text-[var(--inner-circle-text-color)] rounded-xl text-sm font-bold hover:brightness-110 transition-all flex items-center gap-2"
+          >
+            Nuevo Ticket
+          </Link>
+        </div>
         {/* Stats summary */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="bg-[var(--card-bg-color)] p-4 rounded-2xl border border-[var(--primary-color)]/10">
