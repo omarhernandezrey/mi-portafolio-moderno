@@ -1,9 +1,9 @@
+import { serverEnv } from '@/config/env';
 import { ProviderCall, ProviderError, buildMessages } from './types';
 
-const MODEL = process.env.OLLAMA_MODEL || 'llama3.2:3b';
-
 export const call: ProviderCall = async (args) => {
-  const baseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+  const MODEL = serverEnv.OLLAMA_MODEL || 'llama3.2:3b';
+  const baseUrl = serverEnv.OLLAMA_BASE_URL || 'http://localhost:11434';
 
   let res: Response;
   try {

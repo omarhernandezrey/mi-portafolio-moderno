@@ -1,12 +1,13 @@
 import Groq from 'groq-sdk';
 import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
+import { serverEnv } from '@/config/env';
 import { ProviderCall, ProviderError, buildMessages } from './types';
 
 const MODEL = 'llama-3.3-70b-versatile';
 const VISION_MODEL = 'llama-3.2-11b-vision-preview';
 
 export const call: ProviderCall = async (args) => {
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = serverEnv.GROQ_API_KEY;
   if (!apiKey) throw new ProviderError('groq', 'GROQ_API_KEY missing', { retryable: false });
 
   const groq = new Groq({ apiKey });

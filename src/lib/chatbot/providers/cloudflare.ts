@@ -1,10 +1,11 @@
+import { serverEnv } from '@/config/env';
 import { ProviderCall, ProviderError, buildMessages } from './types';
 
 const MODEL = '@cf/meta/llama-3.1-8b-instruct';
 
 export const call: ProviderCall = async (args) => {
-  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-  const token = process.env.CLOUDFLARE_API_TOKEN;
+  const accountId = serverEnv.CLOUDFLARE_ACCOUNT_ID;
+  const token = serverEnv.CLOUDFLARE_API_TOKEN;
   if (!accountId || !token) {
     throw new ProviderError('cloudflare', 'CLOUDFLARE_* missing', { retryable: false });
   }

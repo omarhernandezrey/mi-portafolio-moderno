@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { serverEnv } from '@/config/env';
 import { ChatMessage, ProviderCall, ProviderError } from './providers/types';
 import { notifyTelegram } from './telegram';
 
@@ -26,7 +27,7 @@ async function loadProvider(name: string): Promise<ProviderCall | null> {
 }
 
 function getChain(): string[] {
-  const fromEnv = process.env.LLM_PROVIDER_CHAIN?.trim();
+  const fromEnv = serverEnv.LLM_PROVIDER_CHAIN?.trim();
   if (!fromEnv) return DEFAULT_CHAIN;
   return fromEnv.split(',').map((s) => s.trim()).filter(Boolean);
 }
