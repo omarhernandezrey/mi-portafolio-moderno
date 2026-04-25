@@ -3357,7 +3357,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 29.2 — SEO programático: rutas dinámicas por servicio × ciudad
+### [x] [GEM] Tarea 29.2 — SEO programático: rutas dinámicas por servicio × ciudad
 
 **Para qué sirve.** Generar 50-200 páginas indexables del tipo `/servicios/desarrollo-web/bogota`, `/servicios/chatbot-ia/medellin`. Cada combinación servicio×ciudad atrapa una búsqueda local específica.
 

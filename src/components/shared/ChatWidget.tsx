@@ -178,6 +178,23 @@ export default function ChatWidget() {
     }
   }, [input, isLoading, sessionId, currentLanguage, t, hasConsented, visitorMeta.email]);
 
+  // Escuchar evento para abrir el chat con mensaje pre-rellenado (Tarea 29.2)
+  useEffect(() => {
+    const handleOpenChat = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { message } = customEvent.detail || {};
+      setIsOpen(true);
+      if (message) {
+        setInput(message);
+        // Opcional: enviar automáticamente si se desea
+        // handleSubmit(undefined, message);
+      }
+    };
+
+    window.addEventListener('chatbot-open', handleOpenChat as EventListener);
+    return () => window.removeEventListener('chatbot-open', handleOpenChat as EventListener);
+  }, [handleSubmit]);
+
   const { isListening, isSupported, startListening, stopListening } = useSpeechToText({
     language: currentLanguage === 'es' ? 'es-CO' : 'en-US',
     onResult: (text) => setInput(text),
