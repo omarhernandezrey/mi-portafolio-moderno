@@ -49,7 +49,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
-    }
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(servicio.name + ' en ' + ciudad.name)}`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(servicio.name + ' en ' + ciudad.name)}`],
+    },
   };
 }
 

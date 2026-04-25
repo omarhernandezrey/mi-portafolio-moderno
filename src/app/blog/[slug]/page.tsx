@@ -34,9 +34,32 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!post) return { title: 'Post no encontrado' };
 
+  const title = `${post.title} | Blog Omar Hernández`;
+
   return {
-    title: `${post.title} | Blog Omar Hernández`,
+    title,
     description: post.description,
+    openGraph: {
+      title,
+      description: post.description,
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog Post by Omar Hernández`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: post.description,
+      images: [`/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog Post by Omar Hernández`],
+    },
   };
 }
 

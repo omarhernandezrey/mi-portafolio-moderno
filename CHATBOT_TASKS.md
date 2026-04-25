@@ -3438,7 +3438,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 29.5 — Open Graph images dinámicas por ruta (Vercel OG)
+### [x] [GEM] Tarea 29.5 — Open Graph images dinámicas por ruta (Vercel OG)
 
 **Para qué sirve.** Cuando alguien comparte tu post en LinkedIn/Twitter, ve una imagen rica con título y branding. CTR de un share con OG decente vs. genérico: 5×.
 
