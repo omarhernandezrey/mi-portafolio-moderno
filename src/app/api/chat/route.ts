@@ -99,20 +99,40 @@ export async function POST(req: NextRequest) {
 
     const history = (historyData || []).map(m => ({ role: m.role as 'user' | 'assistant' | 'system', content: m.content }));
 
+    // Extraer email del historial si no está en conv.facts aún
+    const savedFacts = (facts as Record<string, string>);
+    let knownEmail = savedFacts.email || '';
+    let knownName = conv?.visitor_name || visitorMeta?.name || savedFacts.name || '';
+    let knownNeed = savedFacts.need || '';
+
+    if (!knownEmail) {
+      const emailRegex = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
+      for (const m of [...history, { role: 'user', content: message }]) {
+        if (m.role === 'user') {
+          const match = m.content.match(emailRegex);
+          if (match) { knownEmail = match[0]; break; }
+        }
+      }
+    }
+
     // 3. Generar respuesta
     const { searchProjects } = await import('@/lib/chatbot/rag');
     const { OPENINGS } = await import('@/lib/chatbot/openings');
-    
+
     const openingObj = OPENINGS.find(o => o.id === activeVariant) || OPENINGS[0];
     const openingText = openingObj.text[language as keyof typeof openingObj.text] || openingObj.text.es;
 
     const relevantProjects = await searchProjects(message);
-    const ragContext = relevantProjects.length > 0 
-      ? `\n# PROYECTOS REALES DE OMAR RELEVANTES PARA ESTA CONSULTA (úsales como prueba):\n${relevantProjects.map((p: { content: string }) => p.content).join('\n---\n')}`
+    const ragContext = relevantProjects.length > 0
+      ? `\n# PROYECTOS REALES DE OMAR RELEVANTES (úsalos como prueba):\n${relevantProjects.map((p: { content: string }) => p.content).join('\n---\n')}`
       : "";
 
-    const systemPrompt = buildSystemPrompt(language, { visitorName: conv?.visitor_name || visitorMeta?.name });
-    const fullPrompt = `# VARIANT ASIGNADA: ${activeVariant}\n# TU SALUDO INICIAL FUE: "${openingText}"\n# LO QUE SÉ DEL VISITANTE: ${JSON.stringify(facts)}\n${ragContext}\n\n${systemPrompt}`;
+    const systemPrompt = buildSystemPrompt(language, {
+      visitorName: knownName,
+      visitorEmail: knownEmail,
+      visitorNeed: knownNeed,
+    });
+    const fullPrompt = `# VARIANT ASIGNADA: ${activeVariant}\n# TU SALUDO INICIAL FUE: "${openingText}"\n${ragContext}\n\n${systemPrompt}`;
 
     const rawReply = await generateReply(fullPrompt, history, message, sessionId, imageDataUrl);
     const cleanText = cleanReply(rawReply);
@@ -127,6 +147,20 @@ export async function POST(req: NextRequest) {
     const lead = extractLead(rawReply);
     if (lead) {
       console.time(`[lead] insert+notify ${conversationId}`);
+
+      // Persistir nombre + email en la conversación para que los mensajes siguientes los recuerden
+      if (lead.name || lead.email || lead.notes) {
+        supabaseServer.from('conversations').update({
+          visitor_name: lead.name || knownName || undefined,
+          facts: {
+            ...savedFacts,
+            name: lead.name || knownName,
+            email: lead.email || knownEmail,
+            need: lead.notes || knownNeed,
+          },
+        }).eq('id', conversationId).then(({ error }) => error && console.error('Error updating conv facts:', error));
+      }
+
       const { data: insertedLead, error: leadErr } = await supabaseServer
         .from('leads')
         .insert({ conversation_id: conversationId, ...lead })
@@ -150,6 +184,12 @@ export async function POST(req: NextRequest) {
         pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
       }
       console.timeEnd(`[lead] insert+notify ${conversationId}`);
+    } else if (knownEmail && !savedFacts.email) {
+      // Email capturado del historial pero aún no persistido → guardar para próximo mensaje
+      supabaseServer.from('conversations').update({
+        facts: { ...savedFacts, email: knownEmail, name: knownName },
+        visitor_name: knownName || undefined,
+      }).eq('id', conversationId).then(({ error }) => error && console.error('Error persisting email:', error));
     }
 
     const handoff = extractHandoff(rawReply);

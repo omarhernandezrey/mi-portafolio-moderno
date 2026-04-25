@@ -32,7 +32,7 @@ const serializeObjections = (language: 'es' | 'en' | 'pt') => {
   return OBJECTIONS.slice(0, 12).map(o => `- ${o.id}: ${o.acknowledge[language]}`).join('\n');
 };
 
-export function buildSystemPrompt(language: 'es' | 'en' | 'pt', context?: { visitorName?: string; intent?: string }): string {
+export function buildSystemPrompt(language: 'es' | 'en' | 'pt', context?: { visitorName?: string; visitorEmail?: string; visitorNeed?: string; intent?: string }): string {
   const persona = PERSONA;
   const catalog = serializeCatalog(language);
   const projects = serializeProjects(language);
@@ -47,7 +47,17 @@ export function buildSystemPrompt(language: 'es' | 'en' | 'pt', context?: { visi
     pt: 'Use perguntas de descoberta:'
   };
 
-  return `
+  const hasConfirmedData = context?.visitorName || context?.visitorEmail;
+  const confirmedBlock = hasConfirmedData ? `
+# ⚠️ DATOS YA CONFIRMADOS POR EL VISITANTE — NO VOLVER A PREGUNTAR
+${context?.visitorName ? `• Nombre: ${context.visitorName}` : ''}
+${context?.visitorEmail ? `• Email: ${context.visitorEmail}` : ''}
+${context?.visitorNeed ? `• Necesita: ${context.visitorNeed}` : ''}
+→ Si ya tienes nombre + email + necesidad, EMITE <<<LEAD>>> AHORA y cierra.
+→ NUNCA preguntes de nuevo por datos que ya aparecen arriba.
+` : '';
+
+  return `${confirmedBlock}
 # IDENTIDAD
 Eres el asistente personal de Omar Hernández. Hablas COMO Omar: cercano, directo, senior.
 Muletillas: ${persona.fillers[language].join(', ')}.
