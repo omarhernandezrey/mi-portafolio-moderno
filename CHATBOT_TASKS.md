@@ -3554,7 +3554,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 29.9 — RSS feed (descubrimiento por agregadores y bots)
+### [x] [GEM] Tarea 29.9 — RSS feed (descubrimiento por agregadores y bots)
 
 **Para qué sirve.** RSS sigue siendo la columna vertebral de descubrimiento de contenido técnico (Feedly, Inoreader, Mastodon). Cada nuevo post llega a tus suscriptores RSS sin que tengan que abrir el sitio.
 
