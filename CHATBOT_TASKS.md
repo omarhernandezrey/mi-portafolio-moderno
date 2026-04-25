@@ -3960,7 +3960,7 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 
 ---
 
-### [ ] [GEM] Tarea 31.4 — Expandir `salesPlaybook.ts` a >200 líneas
+### [x] [GEM] Tarea 31.4 — Expandir `salesPlaybook.ts` a >200 líneas
 
 **Para qué sirve.** La tarea 3.3 exigía densidad. Hoy tiene 94 líneas. Hay que añadir más profundidad a las preguntas de descubrimiento y técnicas de cierre.
 
