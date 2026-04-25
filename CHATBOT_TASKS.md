@@ -4210,7 +4210,7 @@ Así, en cuanto el usuario abre el chat una vez, la burbuja no vuelve a aparecer
 
 ---
 
-### [ ] [GEM] Tarea AUD.4 — Documentar divergencias del RAG vs. especificación (Tarea 28.3)
+### [x] [GEM] Tarea AUD.4 — Documentar divergencias del RAG vs. especificación (Tarea 28.3)
 
 **Hallazgo.** Tarea 28.3 PARCIAL. El RAG funciona, pero la implementación difiere del spec original en 4 puntos:
 - Usa tabla `project_embeddings` (spec pedía `knowledge_chunks` con dimensión 384).
