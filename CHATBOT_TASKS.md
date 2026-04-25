@@ -3702,7 +3702,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.4 — Facturación Colombia básica (PDF DIAN-friendly con `pdf-lib`)
+### [x] [GEM] Tarea 30.4 — Facturación Colombia básica (PDF DIAN-friendly con `pdf-lib`)
 
 **Para qué sirve.** Cliente paga → necesitas factura. Manualmente es 10 min/cliente. Automatizado es 0 min.
 

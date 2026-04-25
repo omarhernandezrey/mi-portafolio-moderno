@@ -79,6 +79,7 @@ export default async function AdminDashboardPage() {
               <Link href="/admin/leads" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Leads</Link>
               <Link href="/admin/conversations" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Conversaciones</Link>
               <Link href="/admin/tickets" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Tickets</Link>
+              <Link href="/admin/invoices" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Facturación</Link>
             </div>
           </div>
         </div>
