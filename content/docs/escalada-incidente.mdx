@@ -1,0 +1,21 @@
+---
+title: "Escalada de Incidentes Técnicos"
+description: "Resolver caídas del sistema en < 15 minutos."
+---
+
+# Proceso: Escalada de Incidentes Técnicos
+
+**Objetivo:** Resolver caídas del sistema en < 15 minutos.
+
+## Prerrequisitos
+- Acceso a Telegram (Alertas de Alerta de Caída).
+
+## Pasos
+1. **Verificar Status:** Entrar a `/status`. ¿Es Supabase o Vercel?
+2. **Revisar Logs:** `vercel logs` o Supabase Dashboard.
+3. **Rollback:** Si el error fue por un despliegue reciente, hacer rollback en Vercel.
+4. **Notificar:** Si Omar es necesario, avisar por Telegram con el tag `#URGENTE`.
+
+## Errores Comunes
+- Intentar arreglar el código en caliente sin hacer rollback primero.
+- No avisar al cliente si hay tickets abiertos.

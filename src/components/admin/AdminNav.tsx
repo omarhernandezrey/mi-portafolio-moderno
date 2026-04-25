@@ -27,6 +27,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
     { label: 'Webhooks', href: '/admin/webhooks', roles: ['owner'] },
     { label: 'Timer', href: '/admin/timer', roles: ['owner', 'assistant'] },
     { label: 'Facturación', href: '/admin/invoices', roles: ['owner'] },
+    { label: 'Docs', href: '/admin/docs', roles: ['owner', 'assistant'] },
   ];
 
   const visibleItems = navItems.filter(item => item.roles.includes(role));

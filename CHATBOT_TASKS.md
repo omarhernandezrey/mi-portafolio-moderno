@@ -3847,7 +3847,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.10 — Documentación interna `/docs` (procesos repetibles para subcontratistas)
+### [x] [GEM] Tarea 30.10 — Documentación interna `/docs` (procesos repetibles para subcontratistas)
 
 **Para qué sirve.** Cuando contrates a alguien, le pasas un link, no un curso de 1 semana. Procesos = la diferencia entre 1 freelancer y 1 empresa.
 

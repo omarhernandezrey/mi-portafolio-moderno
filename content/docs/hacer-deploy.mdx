@@ -1,0 +1,22 @@
+---
+title: "Despliegue a Producción (CI/CD)"
+description: "Subir cambios sin romper el sitio y asegurando calidad."
+---
+
+# Proceso: Despliegue a Producción (CI/CD)
+
+**Objetivo:** Subir cambios sin romper el sitio y asegurando calidad.
+
+## Prerrequisitos
+- Rama feature mergeada a `main`.
+- `npm run build` local exitoso.
+
+## Pasos
+1. **Push a Main:** `git push origin main`.
+2. **Monitorear Vercel:** Entrar al dashboard y esperar que el build sea verde.
+3. **Smoke Test:** Abrir el sitio real y enviar un mensaje al bot.
+4. **Verificar Logs:** Mirar que no haya errores 500 en la consola de Vercel.
+
+## Errores Comunes
+- Hacer push sin correr el build local.
+- Olvidar setear env vars nuevas en Vercel.
