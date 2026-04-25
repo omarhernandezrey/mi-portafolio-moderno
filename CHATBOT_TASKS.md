@@ -3823,7 +3823,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.9 — Backup multi-destino (Supabase → Cloudflare R2 free tier)
+### [x] [GEM] Tarea 30.9 — Backup multi-destino (Supabase → Cloudflare R2 free tier)
 
 **Para qué sirve.** FASE 21 ya tiene backup a un sitio. Multi-destino = redundancia. Si pierdes acceso a una cosa, queda la otra.
 

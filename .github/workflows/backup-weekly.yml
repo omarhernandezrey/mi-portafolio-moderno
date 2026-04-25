@@ -8,21 +8,35 @@ on:
 jobs:
   backup:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - name: Checkout repo (para tener el script)
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Instalar postgresql-client
+      - name: Instalar herramientas
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends postgresql-client
+          sudo apt-get install -y --no-install-recommends postgresql-client age jq
+
+      - name: Configurar Node.js (para wrangler)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Ejecutar backup
         env:
+          # Supabase
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          # GitHub
           BACKUPS_REPO: ${{ secrets.BACKUPS_REPO }}
           BACKUPS_REPO_TOKEN: ${{ secrets.BACKUPS_REPO_TOKEN }}
+          # Telegram
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Cloudflare R2 (Opcional)
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          # Encriptación (Opcional)
+          BACKUP_PUBLIC_KEY: ${{ secrets.BACKUP_PUBLIC_KEY }}
         run: bash scripts/backup-supabase.sh

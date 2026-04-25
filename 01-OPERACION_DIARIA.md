@@ -21,3 +21,11 @@
 - [ ] Si cierre < 10%: revisar grabaciones de conversaciones perdidas
 - [ ] Actualizar precios del catálogo si hay inflación / nueva demanda
 - [ ] Pedir 1 testimonio a clientes recientes para `TestimonialCard`
+
+# 🛠️ Recuperación de Desastres (Backups)
+En caso de pérdida de datos o necesidad de migración:
+1. **Descarga:** Obtén el archivo `.sql.gz` más reciente de GitHub Backups o Cloudflare R2.
+2. **Desencripta (si aplica):** `age -d -i <tu-llave-privada> backup.sql.gz.age > backup.sql.gz`
+3. **Descomprime:** `gunzip backup.sql.gz`
+4. **Restaura:** `psql "postgresql://postgres:<password>@<db-host>:5432/postgres" -f backup.sql`
+   - *Nota:* Se recomienda probar la restauración en una base de datos local o de staging semestralmente.
