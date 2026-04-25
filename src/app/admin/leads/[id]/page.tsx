@@ -1,3 +1,4 @@
+import IndustrySelector from '@/components/admin/IndustrySelector';
 import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { 
@@ -138,14 +139,17 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             {/* Acciones Rápidas */}
-            <div className="bg-[var(--card-bg-color)] rounded-2xl border border-[var(--primary-color)]/10 p-6 shadow-xl">
-              <h3 className="font-bold mb-4">Acciones</h3>
+            <div className="bg-[var(--card-bg-color)] rounded-2xl border border-[var(--primary-color)]/10 p-6 shadow-xl space-y-6">
+              <h3 className="font-bold">Acciones</h3>
+              
+              <IndustrySelector leadId={lead.id} currentIndustry={(lead as { industry?: string }).industry} />
+
               <div className="grid grid-cols-1 gap-3">
                 <ActionButton icon={<CheckCircle2 size={18} />} label="Marcar Contactado" color="hover:bg-emerald-500/10 hover:text-emerald-400" />
                 <ActionButton icon={<XCircle size={18} />} label="Marcar Perdido" color="hover:bg-red-500/10 hover:text-red-400" />
                 <Link href={`/proposal/${lead.id}`} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl border border-[var(--primary-color)]/10 text-sm font-medium hover:bg-[var(--primary-color)]/10 text-[var(--primary-color)] transition-all">
                   <FileText size={18} />
-                  Generar Propuesta
+                  Ver / Generar Propuesta
                 </Link>
               </div>
             </div>

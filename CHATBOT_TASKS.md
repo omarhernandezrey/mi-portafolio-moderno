@@ -3727,7 +3727,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.5 — Plantillas de propuesta por nicho (no más copy-paste manual)
+### [x] [GEM] Tarea 30.5 — Plantillas de propuesta por nicho (no más copy-paste manual)
 
 **Para qué sirve.** Una propuesta para "clínica dental" debe sonar distinta a una para "e-commerce de moda". Plantillas por nicho = 80% del trabajo automatizado.
 
