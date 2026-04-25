@@ -3651,7 +3651,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.2 — Sistema de tickets en `/admin` (no más WhatsApp infinito)
+### [x] [GEM] Tarea 30.2 — Sistema de tickets en `/admin` (no más WhatsApp infinito)
 
 **Para qué sirve.** Cuando tienes 10 clientes activos, WhatsApp/Telegram se vuelve caos. Tickets = orden + historial + asignable.
 

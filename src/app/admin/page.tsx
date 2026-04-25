@@ -8,7 +8,8 @@ import {
   Clock, 
   ChevronRight,
   ShieldCheck,
-  AlertTriangle
+  AlertTriangle,
+  Ticket
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -38,7 +39,13 @@ async function getStats() {
     .select('*', { count: 'exact', head: true })
     .gte('created_at', firstDayOfMonth);
 
-  // 4. Últimos 5 leads
+  // 4. Tickets abiertos
+  const { count: openTickets } = await supabaseServer
+    .from('tickets')
+    .select('*', { count: 'exact', head: true })
+    .neq('status', 'closed');
+
+  // 5. Últimos 5 leads
   const { data: recentLeads } = await supabaseServer
     .from('leads')
     .select('*')
@@ -49,6 +56,7 @@ async function getStats() {
     monthLeads: totalLeads || 0,
     monthPaid: paidLeads || 0,
     monthConvs: totalConvs || 0,
+    openTickets: openTickets || 0,
     conversionRate: totalConvs ? ((totalLeads || 0) / totalConvs * 100).toFixed(1) : 0,
     recentLeads: recentLeads || []
   };
@@ -70,6 +78,7 @@ export default async function AdminDashboardPage() {
             <div className="flex gap-4">
               <Link href="/admin/leads" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Leads</Link>
               <Link href="/admin/conversations" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Conversaciones</Link>
+              <Link href="/admin/tickets" className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors">Tickets</Link>
             </div>
           </div>
         </div>
@@ -96,6 +105,13 @@ export default async function AdminDashboardPage() {
             icon={<MessageSquare size={20} />} 
             trend="+5%" 
             color="text-purple-400"
+          />
+          <StatCard 
+            title="Tickets Pendientes" 
+            value={stats.openTickets.toString()} 
+            icon={<Ticket size={20} />} 
+            trend="Revisar" 
+            color="text-red-400"
           />
           <StatCard 
             title="Tasa Conversión" 
