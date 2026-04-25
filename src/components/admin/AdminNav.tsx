@@ -24,6 +24,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
     { label: 'Dashboard', href: '/admin', roles: ['owner', 'assistant', 'viewer'] },
     { label: 'Leads', href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'] },
     { label: 'Tickets', href: '/admin/tickets', roles: ['owner', 'assistant', 'viewer'] },
+    { label: 'Webhooks', href: '/admin/webhooks', roles: ['owner'] },
     { label: 'Timer', href: '/admin/timer', roles: ['owner', 'assistant'] },
     { label: 'Facturación', href: '/admin/invoices', roles: ['owner'] },
   ];

@@ -3774,7 +3774,7 @@ Gemini NO crea las cuentas (requieren tu email/GitHub real). Gemini te guía pro
 
 ---
 
-### [ ] [GEM] Tarea 30.7 — Sistema de webhooks (eventos para integrar con cualquier herramienta futura)
+### [x] [GEM] Tarea 30.7 — Sistema de webhooks (eventos para integrar con cualquier herramienta futura)
 
 **Para qué sirve.** Que cuando llega un lead, además de Telegram/Notion, puedas dispararse cualquier cosa: Discord, Slack, Make.com, Zapier alternative gratis (n8n self-hosted).
 
