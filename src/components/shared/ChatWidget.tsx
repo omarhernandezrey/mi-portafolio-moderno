@@ -131,6 +131,8 @@ export default function ChatWidget() {
     setIsOpen(newIsOpen);
     if (newIsOpen) {
       track('chatbot_opened');
+      localStorage.setItem('chatbot_opened_once', 'true');
+      setShowAttention(false);
     }
   };
 

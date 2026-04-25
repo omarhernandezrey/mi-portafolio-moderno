@@ -4146,7 +4146,7 @@ Empieza el lunes. No el "lunes que viene". El próximo lunes que llegue.
 
 ---
 
-### [ ] [GEM] Tarea AUD.1 — Corregir burbuja de atención: escribir `chatbot_opened_once` en localStorage
+### [x] [GEM] Tarea AUD.1 — Corregir burbuja de atención: escribir `chatbot_opened_once` en localStorage
 
 **Hallazgo.** Tarea 7.3 PARCIAL. El timer de 30 s lee `localStorage.getItem('chatbot_opened_once')` para decidir si mostrar la burbuja, pero **nunca lo escribe**. Resultado: la burbuja reaparece en cada carga de página, violando "1 vez por sesión".
 
