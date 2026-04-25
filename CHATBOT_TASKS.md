@@ -4168,7 +4168,7 @@ Así, en cuanto el usuario abre el chat una vez, la burbuja no vuelve a aparecer
 
 ---
 
-### [ ] [GEM] Tarea AUD.2 — Centralizar acceso a `process.env` en proveedores LLM y admin
+### [x] [GEM] Tarea AUD.2 — Centralizar acceso a `process.env` en proveedores LLM y admin
 
 **Hallazgo.** Tarea 14.1 PARCIAL. Múltiples archivos leen `process.env` directamente, violando el criterio de aceptación ("grep retorna ocurrencias solo dentro de `src/config/env.ts`").
 

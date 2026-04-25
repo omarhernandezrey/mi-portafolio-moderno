@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
+import { serverEnv } from '@/config/env';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   // Verificación de seguridad simple (puedes mejorarla con un token en el header)
   const authHeader = req.headers.get('authorization');
-  if (process.env.NODE_ENV === 'production' && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (process.env.NODE_ENV === 'production' && authHeader !== `Bearer ${serverEnv.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
