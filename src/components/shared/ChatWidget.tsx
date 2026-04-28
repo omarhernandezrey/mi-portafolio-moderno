@@ -10,6 +10,7 @@ import { buildCalcomUrl } from '@/lib/chatbot/calcom';
 import Link from 'next/link';
 import useSpeechToText from '@/hooks/useSpeechToText';
 import { track } from '@vercel/analytics';
+import { clientEnv } from '@/config/env';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -302,7 +303,7 @@ export default function ChatWidget() {
               </div>
               <div className="flex gap-2">
                 <a
-                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
+                  href={`https://wa.me/${clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--white-color)]/5 text-[var(--white-color)] hover:bg-[var(--primary-color)] hover:text-[var(--inner-circle-text-color)] transition-all active:scale-95"
