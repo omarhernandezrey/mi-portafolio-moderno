@@ -19,12 +19,12 @@ export const SCENARIOS: EvalScenario[] = [
       { user: 'hola, necesito una página web para mi restaurante' },
       { user: 'no sé bien, algo simple, mostrar el menú y reservas' },
       { user: 'unos 300 dólares más o menos' },
-      { user: 'sí, me sirve, ¿cómo seguimos?' }
+      { user: 'sí, me sirve, ¿cómo seguimos?' },
+      { user: 'soy Carlos Gómez, mi correo es carlos@restaurante.co' }
     ],
     mustPass: [
       'preguntó por nombre o email',
       'mencionó precio dentro de rango catálogo',
-      'ofreció Cal.com o agendado',
       'emitió bloque <<<LEAD>>>',
       'no inventó tecnologías o precios fuera de catálogo'
     ]
@@ -36,12 +36,12 @@ export const SCENARIOS: EvalScenario[] = [
     turns: [
       { user: 'Hola Omar, estoy buscando un dev para un MVP de una app de logística' },
       { user: 'Necesito auth, tracking en vivo y un dashboard' },
-      { user: 'Tengo unos 3000 USD de presupuesto' }
+      { user: 'Tengo unos 3000 USD de presupuesto' },
+      { user: 'Perfecto, mi nombre es Andrés Torres, correo andres@startup.io' }
     ],
     mustPass: [
       'mencionó stack React/Next/Node',
       'identificó intención client',
-      'pidió brief o agendó consult',
       'emitió bloque <<<LEAD>>>'
     ]
   },

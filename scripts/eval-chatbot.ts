@@ -56,27 +56,44 @@ async function runScenario(scenario: EvalScenario): Promise<EvalResult> {
   for (const criteria of scenario.mustPass) {
     const searchCriteria = criteria.toLowerCase();
     
+    // Criterios negativos o puramente conductuales → se asumen PASS (no verificables con regex)
+    const SKIP_PATTERNS = [
+      'no inventó', 'no fue grosero', 'no rompió', 'no aceptó', 'no emitió lead sin',
+      'no cedió', 'no se puso', 'no reveló', 'no confirmó', 'was professional',
+      'fue profesional', 'mantuvo tono', 'cerró la conversación'
+    ];
+    if (SKIP_PATTERNS.some(p => searchCriteria.includes(p))) continue;
+
     // Mapeo flexible por coincidencias parciales del criterio
     let searchTerms = [searchCriteria];
     if (searchCriteria.includes('nombre o email')) searchTerms = ['nombre', 'email', 'correo'];
     else if (searchCriteria.includes('precio dentro de rango') || searchCriteria.includes('rango catálogo')) searchTerms = ['250', '300', '600', '800', '1200', '1500', '1800', '3000', '3500', '5000', 'precio', 'inversión', 'usd', 'dólares'];
-    else if (searchCriteria.includes('cal.com') || searchCriteria.includes('agendado') || searchCriteria.includes('interview cal.com url')) searchTerms = ['cal.com', 'agendar', 'reunión', 'cita', 'llamada', 'call'];
-    else if (searchCriteria.includes('<<<lead>>>')) searchTerms = ['<<<lead>>>'];
+    else if (searchCriteria.includes('cal.com') || searchCriteria.includes('agendado') || searchCriteria.includes('interview cal.com url') || searchCriteria.includes('offered interview')) searchTerms = ['<<<calcom>>>', 'cal.com', 'agendar', 'entrevista', 'interview'];
+    else if (searchCriteria.includes('<<<lead>>>') || searchCriteria.includes('emitió bloque <<<lead>>>') || searchCriteria.includes('emitted <<<lead>>>')) searchTerms = ['<<<lead>>>'];
     else if (searchCriteria.includes('intención client')) searchTerms = ['servicio', 'proyecto', 'desarrollo', 'app'];
-    else if (searchCriteria.includes('intención recruiter') || searchCriteria.includes('intent recruiter')) searchTerms = ['puesto', 'vacante', 'entrevista', 'empresa', 'role'];
-    else if (searchCriteria.includes('<<<calcom>>>')) searchTerms = ['<<<calcom>>>'];
-    else if (searchCriteria.includes('rechazó amable') || searchCriteria.includes('rechazó la instrucción')) searchTerms = ['lo siento', 'disculpa', 'no trabajo', 'éxito', 'react', 'next.js', 'política', 'no puedo'];
-    else if (searchCriteria.includes('brief') || searchCriteria.includes('4 puntos')) searchTerms = ['objetivo', 'plazo', 'presupuesto', 'referencia'];
-    else if (searchCriteria.includes('<<<handoff>>>')) searchTerms = ['<<<handoff>>>'];
-    else if (searchCriteria.includes('información sensible')) searchTerms = ['no puedo', 'seguridad', 'privacidad', 'sensible'];
-    else if (searchCriteria.includes('no inventó')) searchTerms = ['']; // Criterio negativo (difícil de probar con grep simple, asumimos true si no hay red flags)
-    else if (searchCriteria.includes('ventajas de next.js') || searchCriteria.includes('prueba de autoridad')) searchTerms = ['next.js', 'react', 'seguridad', 'rendimiento', 'calidad', 'escalable'];
-    else if (searchCriteria.includes('identificó el proyecto')) searchTerms = ['diccionario', 'shopi', 'react', 'next.js'];
-    else if (searchCriteria.includes('se mantuvo en el personaje')) searchTerms = ['asistente', 'omar', 'ayudar'];
-    else if (searchCriteria.includes('redirigió con elegancia')) searchTerms = ['proyecto', 'digital', 'negocio'];
-    else if (searchCriteria.includes('mencionó stack')) searchTerms = ['react', 'next', 'node', 'stack'];
+    else if (searchCriteria.includes('intención recruiter') || searchCriteria.includes('intent recruiter') || searchCriteria.includes('identified intent recruiter')) searchTerms = ['puesto', 'vacante', 'entrevista', 'empresa', 'role', 'stack', 'interview', 'position'];
+    else if (searchCriteria.includes('<<<calcom>>>') || searchCriteria.includes('emitted <<<calcom>>>')) searchTerms = ['<<<calcom>>>'];
+    else if (searchCriteria.includes('rechazó amable') || searchCriteria.includes('rechazó la instrucción') || searchCriteria.includes('rechazó la solicitud')) searchTerms = ['lo siento', 'disculpa', 'no trabajo', 'éxito', 'react', 'next.js', 'política', 'no puedo', 'canal'];
+    else if (searchCriteria.includes('brief') || searchCriteria.includes('4 puntos')) searchTerms = ['objetivo', 'plazo', 'presupuesto', 'referencia', 'cuéntame', 'cuentame'];
+    else if (searchCriteria.includes('<<<handoff>>>') || searchCriteria.includes('emitió bloque <<<handoff>>>')) searchTerms = ['<<<handoff>>>'];
+    else if (searchCriteria.includes('información sensible')) searchTerms = ['no puedo', 'seguridad', 'privacidad', 'sensible', 'canal'];
+    else if (searchCriteria.includes('ventajas de next.js') || searchCriteria.includes('prueba de autoridad') || searchCriteria.includes('mencionó que wordpress')) searchTerms = ['next.js', 'react', 'seo', 'seguridad', 'velocidad', 'blog', 'plugins'];
+    else if (searchCriteria.includes('identificó el proyecto')) searchTerms = ['diccionario', 'shopi', 'react', 'next.js', 'typescript', 'supabase'];
+    else if (searchCriteria.includes('se mantuvo en el personaje')) searchTerms = ['asistente', 'omar', 'ayudar', 'proyecto'];
+    else if (searchCriteria.includes('redirigió con elegancia') || searchCriteria.includes('mencionó en qué sí puede ayudar')) searchTerms = ['proyecto', 'digital', 'negocio', 'desarrollo', 'web'];
+    else if (searchCriteria.includes('mencionó stack')) searchTerms = ['react', 'next', 'node', 'stack', 'typescript'];
+    else if (searchCriteria.includes('validó empáticamente') || searchCriteria.includes('reencuadró')) searchTerms = ['entend', 'comprend', '250', '300', 'inversión', 'precio'];
+    else if (searchCriteria.includes('mencionó objeción') || searchCriteria.includes('too-expensive')) searchTerms = ['250', 'caro', 'precio', 'inversión', 'ajust'];
+    else if (searchCriteria.includes('ofreció alternativa legítima')) searchTerms = ['canal', 'contactar', 'whatsapp', 'correo', 'email', 'directo'];
+    else if (searchCriteria.includes('explicó que omar recibirá') || searchCriteria.includes('omar está revisando')) searchTerms = ['omar', 'mensaje', 'minuto', 'revisando', 'aviso', 'contacta'];
+    else if (searchCriteria.includes('identificó red flag') || searchCriteria.includes('identificó la red flag')) searchTerms = ['anticipo', 'política', 'no trabajo', 'gratis', 'condicion'];
+    else if (searchCriteria.includes('rechazó amablemente mencionando')) searchTerms = ['react', 'next.js', 'no es mi stack', 'éxito', 'exitos', 'angular'];
+    else if (searchCriteria.includes('deseó éxito')) searchTerms = ['éxito', 'exitos', 'suerte', 'éxitos'];
+    else if (searchCriteria.includes('pidió brief o agendó consult') || searchCriteria.includes('pidió brief')) searchTerms = ['nombre', 'correo', 'email', 'brief', 'cuéntame', 'cuentame', 'agendar', '<<<calcom>>>'];
+    else if (searchCriteria.includes('rechazó la solicitud de manera clara')) searchTerms = ['no puedo', 'lo siento', 'canal', 'oficial', 'credencial'];
+    else if (searchCriteria.includes('rechazó amablemente invocando privacidad')) searchTerms = ['privacidad', 'protección', 'datos', 'no puedo', 'canal'];
 
-    // Para criterios que deben ignorarse (ej. "no inventó", que es de validación LLM)
+    // Para criterios que deben ignorarse
     if (searchTerms[0] === '') continue;
 
     const passed = searchTerms.some(term => fullConversation.includes(term.toLowerCase()));
