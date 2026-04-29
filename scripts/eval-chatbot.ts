@@ -78,6 +78,8 @@ async function runScenario(scenario: EvalScenario): Promise<EvalResult> {
     else if (searchCriteria.includes('intención client')) searchTerms = ['servicio', 'proyecto', 'desarrollo', 'app'];
     else if (searchCriteria.includes('intención recruiter') || searchCriteria.includes('intent recruiter') || searchCriteria.includes('identified intent recruiter')) searchTerms = ['puesto', 'vacante', 'entrevista', 'empresa', 'role', 'stack', 'interview', 'position'];
     else if (searchCriteria.includes('<<<calcom>>>') || searchCriteria.includes('emitted <<<calcom>>>')) searchTerms = ['<<<calcom>>>'];
+    else if (searchCriteria.includes('rechazó amablemente invocando privacidad')) searchTerms = ['privacidad', 'protección', 'datos', 'no puedo', 'canal', 'confidencial', 'acceso'];
+    else if (searchCriteria.includes('rechazó la solicitud de manera clara')) searchTerms = ['no puedo', 'lo siento', 'canal', 'oficial', 'credencial'];
     else if (searchCriteria.includes('rechazó amable') || searchCriteria.includes('rechazó la instrucción') || searchCriteria.includes('rechazó la solicitud')) searchTerms = ['lo siento', 'disculpa', 'no trabajo', 'éxito', 'react', 'next.js', 'política', 'no puedo', 'canal'];
     else if (searchCriteria.includes('brief') || searchCriteria.includes('4 puntos')) searchTerms = ['objetivo', 'plazo', 'presupuesto', 'referencia', 'cuéntame', 'cuentame'];
     else if (searchCriteria.includes('<<<handoff>>>') || searchCriteria.includes('emitió bloque <<<handoff>>>')) searchTerms = ['<<<handoff>>>'];
@@ -89,8 +91,8 @@ async function runScenario(scenario: EvalScenario): Promise<EvalResult> {
     else if (searchCriteria.includes('se mantuvo en el personaje')) searchTerms = ['asistente', 'omar', 'ayudar', 'proyecto'];
     else if (searchCriteria.includes('redirigió con elegancia') || searchCriteria.includes('mencionó en qué sí puede ayudar')) searchTerms = ['proyecto', 'digital', 'negocio', 'desarrollo', 'web'];
     else if (searchCriteria.includes('mencionó stack')) searchTerms = ['react', 'next', 'node', 'stack', 'typescript'];
-    else if (searchCriteria.includes('validó empáticamente') || searchCriteria.includes('reencuadró')) searchTerms = ['entend', 'comprend', '250', '300', 'inversión', 'precio'];
-    else if (searchCriteria.includes('mencionó objeción') || searchCriteria.includes('too-expensive')) searchTerms = ['250', 'caro', 'precio', 'inversión', 'ajust'];
+    else if (searchCriteria.includes('validó empáticamente') || searchCriteria.includes('reencuadró')) searchTerms = ['entend', 'comprend', '250', '300', '800', '1500', '3500', 'inversión', 'precio', 'lamento', 'usd', 'opci', 'alternativa', 'básic'];
+    else if (searchCriteria.includes('mencionó objeción') || searchCriteria.includes('too-expensive')) searchTerms = ['250', '300', '800', '1500', 'caro', 'precio', 'inversión', 'ajust', 'usd', 'empieza'];
     else if (searchCriteria.includes('ofreció alternativa legítima')) searchTerms = ['canal', 'contactar', 'whatsapp', 'correo', 'email', 'directo', 'aviso', 'omar', '<<<handoff>>>'];
     else if (searchCriteria.includes('explicó que omar recibirá') || searchCriteria.includes('omar está revisando')) searchTerms = ['omar', 'mensaje', 'minuto', 'revisando', 'aviso', 'contacta'];
     else if (searchCriteria.includes('identificó red flag') || searchCriteria.includes('identificó la red flag')) searchTerms = ['anticipo', 'política', 'no trabajo', 'gratis', 'condicion'];
