@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       .select('role, content')
       .eq('conversation_id', conversationId)
       .order('created_at', { ascending: true })
-      .limit(10);
+      .limit(50);
 
     const history = (historyData || []).map(m => ({ role: m.role as 'user' | 'assistant' | 'system', content: m.content }));
 
