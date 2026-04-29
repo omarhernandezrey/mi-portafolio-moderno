@@ -234,7 +234,7 @@ export default function ChatWidget() {
     <>
       {/* Botón Flotante */}
       <motion.button
-        className="fixed bottom-6 right-6 z-[9999] flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-white/20"
+        className="fixed bottom-6 right-6 z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-white/20 sm:h-16 sm:w-16"
         onClick={toggleChat}
         whileHover={{ scale: 1.1, rotate: 5 }}
         whileTap={{ scale: 0.9 }}
@@ -283,12 +283,15 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 z-[9998] flex h-[600px] w-[400px] flex-col overflow-hidden rounded-3xl bg-[var(--background-color)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-[var(--primary-color)]/20 max-sm:bottom-0 max-sm:right-0 max-sm:h-[100dvh] max-sm:w-full max-sm:rounded-none"
+            className="fixed z-[9998] flex flex-col overflow-hidden bg-[var(--background-color)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-[var(--primary-color)]/20
+              bottom-0 right-0 h-[100dvh] w-full rounded-none
+              sm:bottom-20 sm:right-4 sm:h-[min(78dvh,580px)] sm:w-[clamp(320px,88vw,390px)] sm:rounded-2xl
+              md:bottom-24 md:right-6 md:h-[600px] md:w-[400px] md:rounded-3xl"
             role="dialog"
             aria-modal="true"
           >
             {/* Header Moderno */}
-            <div className="relative flex items-center justify-between bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--accent-color)]/20 p-6 backdrop-blur-xl border-b border-[var(--primary-color)]/10">
+            <div className="relative flex items-center justify-between bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--accent-color)]/20 p-4 pt-[max(1rem,env(safe-area-inset-top))] sm:p-6 sm:pt-6 backdrop-blur-xl border-b border-[var(--primary-color)]/10">
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg">
@@ -313,7 +316,7 @@ export default function ChatWidget() {
                 </a>
                 <button
                   onClick={toggleChat}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--white-color)]/5 text-[var(--white-color)] hover:bg-red-500/20 hover:text-red-400 transition-all active:scale-95 sm:hidden"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--white-color)]/5 text-[var(--white-color)] hover:bg-red-500/20 hover:text-red-400 transition-all active:scale-95"
                   aria-label="Cerrar"
                 >
                   <X size={20} />
@@ -455,7 +458,7 @@ export default function ChatWidget() {
             </div>
 
             {/* Footer Moderno (Input) */}
-            <div className="p-4 max-sm:pb-6 bg-gradient-to-t from-[var(--background-color)] via-[var(--background-color)] to-transparent relative z-10">
+            <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-4 bg-gradient-to-t from-[var(--background-color)] via-[var(--background-color)] to-transparent relative z-10">
               {/* Preview imagen seleccionada */}
               {imageDataUrl && (
                 <div className="mb-2 flex items-center gap-2">

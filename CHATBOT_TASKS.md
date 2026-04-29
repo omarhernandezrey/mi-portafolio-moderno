@@ -4372,3 +4372,23 @@ NVIDIA_SOLAR_API_KEY=nvapi-Jbqgq2...
 **Aceptación:**
 - [ ] Los 10 escenarios completados con puntaje ≥ 8/10 cada uno.
 - [ ] `VALIDACION_PREDEPLOY.md` actualizado con los resultados.
+
+---
+
+### TASK-100-D — Responsividad del ChatWidget en todos los dispositivos ✅
+
+**Objetivo:** El chatbot debe verse y funcionar correctamente en mobile, tablet y desktop. No puede salirse de pantalla ni cortar contenido.
+
+**Problema detectado:** El panel tenía alto fijo `h-[600px]` y ancho fijo `w-[400px]` sin breakpoints intermedios — en tablet landscape el panel sobrepasaba el viewport. Además faltaban safe-area insets para el notch y la barra de home de iOS.
+
+**Cambios implementados en `src/components/shared/ChatWidget.tsx`:**
+- **Mobile (<640px):** pantalla completa `h-[100dvh] w-full rounded-none` con `env(safe-area-inset-top)` en el header y `env(safe-area-inset-bottom)` en el footer.
+- **Tablet (640px–767px):** panel flotante `h-[min(78dvh,580px)] w-[clamp(320px,88vw,390px)] rounded-2xl` posicionado `bottom-20 right-4`.
+- **Desktop (768px+):** panel `h-[600px] w-[400px] rounded-3xl` posicionado `bottom-24 right-6`.
+- Botón flotante reducido a `h-14 w-14` en mobile, `h-16 w-16` en desktop.
+- Botón de cerrar X siempre visible (eliminado `sm:hidden`).
+
+**Aceptación:**
+- [x] Panel visible completo en iPhone SE (375px), iPhone 14 (390px), iPad Mini (768px portrait/landscape), iPad (1024px) y desktop.
+- [x] Safe area correcta — sin contenido oculto por notch ni barra de home en iOS.
+- [x] Botón X de cierre siempre accesible en todos los dispositivos.
