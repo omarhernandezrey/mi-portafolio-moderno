@@ -283,25 +283,25 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed z-[9998] flex flex-col overflow-hidden bg-[var(--background-color)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-[var(--primary-color)]/20
+            className="fixed z-[9998] flex flex-col overflow-hidden bg-[var(--background-color)] shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-[var(--primary-color)]/15
               bottom-0 right-0 h-[100dvh] w-full rounded-none
               sm:bottom-20 sm:right-4 sm:h-[min(78dvh,580px)] sm:w-[clamp(320px,88vw,390px)] sm:rounded-2xl
               md:bottom-24 md:right-6 md:h-[600px] md:w-[400px] md:rounded-3xl"
             role="dialog"
             aria-modal="true"
           >
-            {/* Header Moderno */}
-            <div className="relative flex items-center justify-between bg-gradient-to-r from-[var(--primary-color)]/20 to-[var(--accent-color)]/20 p-4 pt-[max(1rem,env(safe-area-inset-top))] sm:p-6 sm:pt-6 backdrop-blur-xl border-b border-[var(--primary-color)]/10">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg">
-                    <Bot size={24} />
+            {/* Header */}
+            <div className="relative flex items-center justify-between bg-[var(--card-bg-color)] border-b border-[var(--primary-color)]/20 p-4 pt-[max(1rem,env(safe-area-inset-top))] sm:p-5 sm:pt-5">
+              <div className="flex items-center gap-3">
+                <div className="relative shrink-0">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-md">
+                    <Bot size={22} />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[var(--background-color)] bg-emerald-500 shadow-sm animate-pulse"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-[var(--card-bg-color)] bg-emerald-500 shadow-sm animate-pulse"></div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-black tracking-tight text-[var(--white-color)]">Omar Assistant</h3>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--primary-color)] opacity-80">AI Power • 24/7 Online</p>
+                  <h3 className="text-base font-black tracking-tight text-[var(--text-color)]">Omar Assistant</h3>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--primary-color)]">AI • 24/7 Online</p>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -309,17 +309,17 @@ export default function ChatWidget() {
                   href={`https://wa.me/${clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--white-color)]/5 text-[var(--white-color)] hover:bg-[var(--primary-color)] hover:text-[var(--inner-circle-text-color)] transition-all active:scale-95"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary-color)]/10 text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-[var(--inner-circle-text-color)] transition-all active:scale-95"
                   aria-label="WhatsApp"
                 >
-                  <Phone size={18} />
+                  <Phone size={17} />
                 </a>
                 <button
                   onClick={toggleChat}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--white-color)]/5 text-[var(--white-color)] hover:bg-red-500/20 hover:text-red-400 transition-all active:scale-95"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary-color)]/10 text-[var(--text-color)] hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95"
                   aria-label="Cerrar"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
               </div>
             </div>
@@ -327,18 +327,18 @@ export default function ChatWidget() {
             {/* Body / Mensajes */}
             <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth scrollbar-hide"
+              className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 scroll-smooth scrollbar-hide"
             >
               {/* Mensaje de bienvenida inicial */}
               {messages.length === 0 && (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="flex max-w-[85%] flex-col gap-2"
+                    className="flex max-w-[88%] flex-col gap-2"
                   >
-                    <div className="rounded-2xl rounded-tl-none bg-[var(--card-bg-color)] p-4 text-[15px] leading-relaxed text-[var(--text-color)] shadow-sm border border-[var(--primary-color)]/5">
-                      {currentLanguage === 'es' ? '¡Hola! Soy el asistente inteligente de Omar. 👋' : 'Hi! I am Omar\'s intelligent assistant. 👋'}
+                    <div className="rounded-2xl rounded-tl-none bg-[var(--card-bg-color)] p-4 text-sm leading-relaxed text-[var(--text-color)] shadow-sm border border-[var(--primary-color)]/15">
+                      {currentLanguage === 'es' ? '¡Hola! Soy el asistente de Omar. 👋' : 'Hi! I\'m Omar\'s assistant. 👋'}
                       <br /><br />
                       {currentLanguage === 'es' ? '¿En qué puedo ayudarte hoy?' : 'How can I help you today?'}
                     </div>
@@ -347,19 +347,19 @@ export default function ChatWidget() {
                   <div className="grid grid-cols-1 gap-2">
                     <button
                       onClick={() => handleSubmit(undefined, currentLanguage === 'es' ? 'Quiero contratar un servicio' : 'I want to hire a service')}
-                      className="rounded-xl border border-[var(--primary-color)]/20 bg-[var(--primary-color)]/5 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/10 hover:border-[var(--primary-color)]/40 active:scale-[0.98]"
+                      className="rounded-xl border border-[var(--primary-color)]/25 bg-[var(--primary-color)]/8 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/15 hover:border-[var(--primary-color)]/50 active:scale-[0.98]"
                     >
                       🚀 {currentLanguage === 'es' ? 'Quiero contratar un servicio' : 'I want to hire a service'}
                     </button>
                     <button
                       onClick={() => handleSubmit(undefined, currentLanguage === 'es' ? 'Tengo una oferta laboral' : 'I have a job offer')}
-                      className="rounded-xl border border-[var(--primary-color)]/20 bg-[var(--primary-color)]/5 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/10 hover:border-[var(--primary-color)]/40 active:scale-[0.98]"
+                      className="rounded-xl border border-[var(--primary-color)]/25 bg-[var(--primary-color)]/8 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/15 hover:border-[var(--primary-color)]/50 active:scale-[0.98]"
                     >
                       💼 {currentLanguage === 'es' ? 'Tengo una oferta laboral' : 'I have a job offer'}
                     </button>
                     <button
                       onClick={() => handleSubmit(undefined, currentLanguage === 'es' ? 'Tengo una pregunta técnica' : 'I have a technical question')}
-                      className="rounded-xl border border-[var(--primary-color)]/20 bg-[var(--primary-color)]/5 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/10 hover:border-[var(--primary-color)]/40 active:scale-[0.98]"
+                      className="rounded-xl border border-[var(--primary-color)]/25 bg-[var(--primary-color)]/8 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/15 hover:border-[var(--primary-color)]/50 active:scale-[0.98]"
                     >
                       🛠️ {currentLanguage === 'es' ? 'Pregunta técnica' : 'Technical question'}
                     </button>
@@ -368,7 +368,7 @@ export default function ChatWidget() {
               )}
 
               {/* Render de mensajes */}
-              <div className="flex flex-col gap-6 pb-4">
+              <div className="flex flex-col gap-4 pb-2">
                 {messages.map((msg, i) => (
                   <motion.div
                     key={i}
@@ -377,10 +377,10 @@ export default function ChatWidget() {
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
                     <div
-                      className={`max-w-[85%] px-4 py-3 text-[15px] leading-relaxed shadow-sm transition-all ${
+                      className={`max-w-[88%] px-4 py-3 text-sm leading-relaxed shadow-sm transition-all ${
                         msg.role === 'user'
                           ? 'rounded-2xl rounded-tr-none bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)]'
-                          : 'rounded-2xl rounded-tl-none bg-[var(--card-bg-color)] text-[var(--text-color)] border border-[var(--primary-color)]/5'
+                          : 'rounded-2xl rounded-tl-none bg-[var(--card-bg-color)] text-[var(--text-color)] border border-[var(--primary-color)]/20'
                       }`}
                     >
                       {msg.content}
@@ -458,7 +458,7 @@ export default function ChatWidget() {
             </div>
 
             {/* Footer Moderno (Input) */}
-            <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-4 bg-gradient-to-t from-[var(--background-color)] via-[var(--background-color)] to-transparent relative z-10">
+            <div className="p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-4 sm:pb-4 bg-[var(--background-color)] border-t border-[var(--primary-color)]/10 relative z-10">
               {/* Preview imagen seleccionada */}
               {imageDataUrl && (
                 <div className="mb-2 flex items-center gap-2">
@@ -474,7 +474,7 @@ export default function ChatWidget() {
                 </div>
               )}
               <form
-                className="relative flex items-center gap-2 rounded-full border border-[var(--primary-color)]/30 bg-[var(--secondary-background-color)]/80 backdrop-blur-xl p-1.5 shadow-[0_0_20px_rgba(0,0,0,0.2)] transition-all focus-within:border-[var(--primary-color)] focus-within:shadow-[0_0_25px_var(--primary-color)]/20"
+                className="relative flex items-center gap-2 rounded-full border border-[var(--primary-color)]/30 bg-[var(--card-bg-color)] p-1.5 shadow-sm transition-all focus-within:border-[var(--primary-color)]/70 focus-within:shadow-[0_0_0_3px_var(--primary-color)/10]"
                 onSubmit={handleSubmit}
               >
                 {/* Honeypot field */}
