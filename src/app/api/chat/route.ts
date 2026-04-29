@@ -69,7 +69,8 @@ function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean,
 
 // ─── Detección de intención de compra ───────────────────────────────────────
 
-const INTENT_RE = /\b(sí|si\b|me interesa|quiero|me sirve|de acuerdo|cuándo|cuando empezamos|arranc|empezamos|contratar|presupuesto|cotizaci[oó]n|propuesta|interesante|perfecto|listo|ok\b|okay|dale|adelante|procedemos|necesito)\b/i;
+// Solo dispara cuando el cliente CONFIRMA interés — no en el primer mensaje de necesidad
+const INTENT_RE = /\b(sí|si\b|me interesa|me sirve|de acuerdo|arrancamos|empezamos|contratar|perfecto|listo|ok\b|okay|dale|adelante|procedemos|me conviene|me animo|quiero (empezar|arrancar|contratar)|cu[aá]ndo empezamos)\b/i;
 const HANDOFF_RE = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
 const RECRUITER_RE = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
 const ACCEPTED_STACK_RE = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
@@ -266,8 +267,8 @@ export async function POST(req: NextRequest) {
       rawReply = rawReply.replace(/\?$/, '.') + ' ¡Éxitos en tu búsqueda!';
     }
 
-    // INYECTAR solicitud de contacto: intención de compra detectada, faltan datos
-    if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message)) {
+    // INYECTAR solicitud de contacto: cliente confirma interés y ya hubo intercambio previo
+    if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message) && history.length > 0) {
       const replyLower = rawReply.toLowerCase();
       const llmAlreadyAsks = replyLower.includes('correo') || replyLower.includes('email') || replyLower.includes('nombre') || replyLower.includes('whatsapp') || replyLower.includes('teléfono') || replyLower.includes('telefono') || replyLower.includes('name') || replyLower.includes('phone');
 
