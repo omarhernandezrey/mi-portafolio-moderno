@@ -5,8 +5,8 @@ const MODEL = 'moonshotai/kimi-k2-instruct';
 const ENDPOINT = 'https://integrate.api.nvidia.com/v1/chat/completions';
 
 export const call: ProviderCall = async (args) => {
-  const apiKey = serverEnv.NVIDIA_API_KEY;
-  if (!apiKey) throw new ProviderError('nvidia-kimi', 'NVIDIA_API_KEY missing', { retryable: false });
+  const apiKey = serverEnv.NVIDIA_KIMI_API_KEY || serverEnv.NVIDIA_API_KEY;
+  if (!apiKey) throw new ProviderError('nvidia-kimi', 'NVIDIA_KIMI_API_KEY missing', { retryable: false });
 
   const res = await fetch(ENDPOINT, {
     method: 'POST',

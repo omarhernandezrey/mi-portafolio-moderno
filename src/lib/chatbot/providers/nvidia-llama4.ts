@@ -1,12 +1,12 @@
 import { ProviderCall, ProviderError, buildMessages } from './types';
 import { serverEnv } from '@/config/env';
 
-const MODEL = 'nvidia/nemotron-mini-4b-instruct';
+const MODEL = 'meta/llama-4-maverick-17b-128e-instruct';
 const ENDPOINT = 'https://integrate.api.nvidia.com/v1/chat/completions';
 
 export const call: ProviderCall = async (args) => {
-  const apiKey = serverEnv.NVIDIA_NEMOTRON_API_KEY || serverEnv.NVIDIA_API_KEY;
-  if (!apiKey) throw new ProviderError('nvidia-nemotron', 'NVIDIA_NEMOTRON_API_KEY missing', { retryable: false });
+  const apiKey = serverEnv.NVIDIA_LLAMA4_API_KEY || serverEnv.NVIDIA_API_KEY;
+  if (!apiKey) throw new ProviderError('nvidia-llama4', 'NVIDIA_LLAMA4_API_KEY missing', { retryable: false });
 
   const res = await fetch(ENDPOINT, {
     method: 'POST',
@@ -26,11 +26,11 @@ export const call: ProviderCall = async (args) => {
   if (!res.ok) {
     const isAuth = res.status === 401 || res.status === 403;
     const errText = await res.text().catch(() => '');
-    throw new ProviderError('nvidia-nemotron', `HTTP ${res.status}: ${errText}`, { status: res.status, retryable: !isAuth });
+    throw new ProviderError('nvidia-llama4', `HTTP ${res.status}: ${errText}`, { status: res.status, retryable: !isAuth });
   }
 
   const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
   const text = data.choices?.[0]?.message?.content?.trim() || '';
-  if (!text) throw new ProviderError('nvidia-nemotron', 'empty response');
+  if (!text) throw new ProviderError('nvidia-llama4', 'empty response');
   return text;
 };

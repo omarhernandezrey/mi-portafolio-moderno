@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 }
 
-const DEFAULT_CHAIN = ['groq', 'nvidia', 'nvidia-mistral', 'nvidia-kimi', 'deepseek', 'mistral', 'cerebras', 'nvidia-nemotron', 'openrouter', 'huggingface', 'cloudflare', 'ollama'];
+const DEFAULT_CHAIN = ['groq', 'nvidia', 'nvidia-mistral', 'nvidia-kimi', 'nvidia-llama4', 'nvidia-mistral-nemotron', 'nvidia-phi4', 'nvidia-gemma3', 'nvidia-dracarys', 'deepseek', 'mistral', 'cerebras', 'nvidia-nemotron', 'nvidia-solar', 'openrouter', 'huggingface', 'cloudflare', 'ollama'];
 const TIMEOUT_MS = 15000;
 const ERROR_THRESHOLD = 3;
 const COOLDOWN_MS = 60 * 1000; // 1 minuto (recuperación rápida para Rate Limits)
