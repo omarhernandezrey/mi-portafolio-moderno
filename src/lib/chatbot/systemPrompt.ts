@@ -1,4 +1,4 @@
-import { PERSONA, SERVICES_CATALOG, OBJECTIONS, PORTFOLIO_DATA } from './data';
+import { SERVICES_CATALOG, OBJECTIONS, PORTFOLIO_DATA } from './data';
 
 const pickLang = <T extends { es: T[keyof T]; en: T[keyof T] }>(obj: T, language: 'es' | 'en' | 'pt'): T[keyof T] => {
   const rec = obj as Record<string, T[keyof T]>;
