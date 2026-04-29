@@ -147,7 +147,10 @@ export async function POST(req: NextRequest) {
     // Server-side enforcement: inyectar bloques si el LLM no los emitió pero la condición aplica
     const HANDOFF_TRIGGERS = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
     const ACCEPTED_STACK = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
-    const RECRUITER_TRIGGERS = /developer|desarrollador|dev\b|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
+    const REJECTED_STACK = /\bangular\b|\bvue\b|\bphp\b|\bdrupal\b|\bmagento\b/i;
+    const RECRUITER_TRIGGERS = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
+    const LOW_BUDGET = /\b(50|30|20|10|100)\s*(dólares|dollars|usd|\$)/i;
+    const CATALOG_PRICES = /250|300|500|600|800|1[,.]?500|3[,.]?500|5[,.]?000/;
 
     if (HANDOFF_TRIGGERS.test(message) && !rawReply.includes('<<<HANDOFF>>>')) {
       const summary = message.substring(0, 120);
@@ -156,12 +159,24 @@ export async function POST(req: NextRequest) {
       const need = knownNeed || savedFacts.need || message.substring(0, 80);
       rawReply += `\n<<<LEAD>>>{"type":"client","name":"${knownName}","email":"${knownEmail}","notes":"${need}","phone":null,"company":null,"service_requested":null,"budget":null,"timeline":null}<<<END>>>`;
     } else if (
+      REJECTED_STACK.test(message) &&
+      !rawReply.toLowerCase().includes('éxito') &&
+      !rawReply.toLowerCase().includes('suerte')
+    ) {
+      // Asegurar cierre amable con deseo de éxito para stacks rechazados
+      rawReply = rawReply.replace(/\?$/, '.') + ' ¡Éxitos en tu búsqueda!';
+    } else if (
       RECRUITER_TRIGGERS.test(message) &&
       ACCEPTED_STACK.test(message + ' ' + history.map(h => h.content).join(' ')) &&
       !rawReply.includes('<<<CALCOM>>>') &&
       !rawReply.includes('<<<LEAD>>>')
     ) {
       rawReply += `\n<<<CALCOM>>>{"type":"interview"}<<<END>>>`;
+    }
+
+    // Si el cliente menciona presupuesto muy bajo y el bot no cita precios del catálogo → añadir contexto
+    if (LOW_BUDGET.test(message) && !CATALOG_PRICES.test(rawReply)) {
+      rawReply += ' Con $250 arrancas con una landing responsiva, WhatsApp integrado y SEO básico.';
     }
 
     const cleanText = cleanReply(rawReply);
