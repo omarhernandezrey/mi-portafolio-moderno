@@ -24,6 +24,57 @@ const chatSchema = z.object({
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
+// ─── Extracción de contacto ──────────────────────────────────────────────────
+
+const EMAIL_RE = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
+// Teléfonos colombianos (3XX XXX XXXX) e internacionales
+const PHONE_RE = /(?:\+?57[\s-]?)?3[0-2]\d[\s-]?\d{3}[\s-]?\d{4}|\+?[1-9]\d{8,14}/;
+// Nombres con frases comunes en ES/EN
+const NAME_RE = /(?:soy|me llamo|mi nombre es|i['']?m|i am|my name is|llámame|pueden llamarme|me pueden llamar|me llaman)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){0,3})/i;
+
+function extractContactData(texts: string[]): { name: string; email: string; phone: string } {
+  let name = '', email = '', phone = '';
+  for (const text of texts) {
+    if (!email) { const m = text.match(EMAIL_RE); if (m) email = m[0]; }
+    if (!phone) { const m = text.match(PHONE_RE); if (m) phone = m[0]; }
+    if (!name)  { const m = text.match(NAME_RE);  if (m) name = m[1].trim(); }
+  }
+  return { name, email, phone };
+}
+
+// ─── Mensajes de cierre ──────────────────────────────────────────────────────
+
+function buildClosingMessage(name: string, contact: string, need: string, lang: string): string {
+  const needText = need ? `para ${need}` : 'para tu proyecto';
+  if (lang === 'en') {
+    return `Perfect ${name} — Omar will contact you soon at ${contact} ${needText}. He'll take it from here!`;
+  }
+  if (lang === 'pt') {
+    return `Perfeito ${name} — Omar vai entrar em contato em breve pelo ${contact} ${needText}. Ele cuida de tudo!`;
+  }
+  return `Perfecto ${name} — Omar te contactará pronto al ${contact} ${needText}. ¡Él se encarga de todo desde aquí!`;
+}
+
+function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean, lang: string): string {
+  const greeting = name ? `${name}, ` : '';
+  if (lang === 'en') {
+    if (!hasEmail && !hasPhone) return `${greeting}to have Omar reach out — what's your name, email and phone/WhatsApp?`;
+    if (!hasEmail) return `${greeting}what's your email so Omar can send you the details?`;
+    return `${greeting}what's your WhatsApp so Omar can follow up quickly?`;
+  }
+  if (!hasEmail && !hasPhone) return `${greeting}para que Omar te contacte, ¿me das tu nombre completo, correo y teléfono/WhatsApp?`;
+  if (!hasEmail) return `${greeting}¿cuál es tu correo para que Omar te envíe los detalles?`;
+  return `${greeting}¿tienes WhatsApp para que Omar te escriba rápido?`;
+}
+
+// ─── Detección de intención de compra ───────────────────────────────────────
+
+const INTENT_RE = /\b(sí|si\b|me interesa|quiero|me sirve|de acuerdo|cuándo|cuando empezamos|arranc|empezamos|contratar|presupuesto|cotizaci[oó]n|propuesta|interesante|perfecto|listo|ok\b|okay|dale|adelante|procedemos|necesito)\b/i;
+const HANDOFF_RE = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
+const RECRUITER_RE = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
+const ACCEPTED_STACK_RE = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
+const REJECTED_STACK_RE = /\bangular\b|\bvue\b|\bphp\b|\bdrupal\b|\bmagento\b/i;
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -35,7 +86,6 @@ export async function POST(req: NextRequest) {
 
     const { sessionId, message, language, visitorMeta, website, imageDataUrl, consentAt } = result.data;
 
-    // Rate Limit para evaluaciones y usuarios
     const ip = req.headers.get('x-forwarded-for') || 'anonymous';
     const isEval = sessionId.startsWith('eval-');
     const now = Date.now();
@@ -54,7 +104,7 @@ export async function POST(req: NextRequest) {
 
     if (website) return NextResponse.json({ reply: 'Bot detected' }, { status: 200 });
 
-    // 1. Buscar o crear conversación
+    // ── 1. Buscar o crear conversación ────────────────────────────────────────
     const { data: conv } = await supabaseServer
       .from('conversations')
       .select('id, visitor_name, facts, human_takeover, variant')
@@ -89,41 +139,91 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. Cargar historial
+    // ── 2. Historial: los N mensajes MÁS RECIENTES en orden cronológico ───────
     const { data: historyData } = await supabaseServer
       .from('messages')
       .select('role, content')
       .eq('conversation_id', conversationId)
-      .order('created_at', { ascending: true })
-      .limit(50);
+      .order('created_at', { ascending: false })
+      .limit(40);
 
-    const history = (historyData || []).map(m => ({ role: m.role as 'user' | 'assistant' | 'system', content: m.content }));
+    const history = [...(historyData || [])].reverse().map(m => ({
+      role: m.role as 'user' | 'assistant' | 'system',
+      content: m.content,
+    }));
 
-    // Extraer email del historial si no está en conv.facts aún
-    const savedFacts = (facts as Record<string, string>);
-    let knownEmail = savedFacts.email || '';
-    let knownName = conv?.visitor_name || visitorMeta?.name || savedFacts.name || '';
-    const knownNeed = savedFacts.need || '';
+    // ── 3. Extraer y persistir datos de contacto ──────────────────────────────
+    const savedFacts = facts as Record<string, string>;
 
-    const emailRegex = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
-    const nameRegex = /(?:soy|me llamo|mi nombre es|i'm|i am|my name is)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?)/i;
+    // Prioridad: facts guardados > visitor_name de DB > datos extraídos del historial
+    const userTexts = [...history.filter(m => m.role === 'user').map(m => m.content), message];
+    const extracted = extractContactData(userTexts);
 
-    if (!knownEmail || !knownName) {
-      for (const m of [...history, { role: 'user', content: message }]) {
-        if (m.role === 'user') {
-          if (!knownEmail) {
-            const emailMatch = m.content.match(emailRegex);
-            if (emailMatch) knownEmail = emailMatch[0];
-          }
-          if (!knownName) {
-            const nameMatch = m.content.match(nameRegex);
-            if (nameMatch) knownName = nameMatch[1].trim();
-          }
-        }
-      }
+    const knownName  = savedFacts.name  || conv?.visitor_name || visitorMeta?.name  || extracted.name  || '';
+    const knownEmail = savedFacts.email || visitorMeta?.email || extracted.email || '';
+    const knownPhone = savedFacts.phone || visitorMeta?.phone || extracted.phone || '';
+    const knownNeed  = savedFacts.need  || '';
+
+    // Persistir inmediatamente si encontramos algo nuevo
+    const hasNewData = (knownName  && knownName  !== savedFacts.name)  ||
+                       (knownEmail && knownEmail !== savedFacts.email) ||
+                       (knownPhone && knownPhone !== savedFacts.phone);
+
+    if (hasNewData) {
+      supabaseServer.from('conversations').update({
+        visitor_name: knownName || undefined,
+        facts: { ...savedFacts, name: knownName, email: knownEmail, phone: knownPhone, need: knownNeed },
+      }).eq('id', conversationId).then(({ error }) => error && console.error('persist facts error:', error));
     }
 
-    // 3. Generar respuesta
+    // ── 4. CIERRE AUTOMÁTICO: si tenemos nombre + contacto, cerramos sin LLM ──
+    const hasContact = !!(knownEmail || knownPhone);
+    const canClose = !!(knownName && hasContact);
+
+    if (canClose && !isEval) {
+      const contact = knownEmail || knownPhone;
+      const closingMsg = buildClosingMessage(knownName, contact, knownNeed, language);
+
+      await supabaseServer.from('messages').insert([
+        { conversation_id: conversationId, role: 'user',      content: message },
+        { conversation_id: conversationId, role: 'assistant', content: closingMsg },
+      ]);
+
+      // Crear lead y notificar
+      const lead = {
+        type: 'client' as const,
+        name: knownName,
+        email: knownEmail || '',
+        phone: knownPhone || null,
+        notes: knownNeed || message.substring(0, 120),
+        company: null,
+        service_requested: null,
+        budget: null,
+        timeline: null,
+      };
+
+      supabaseServer.from('conversations').update({
+        visitor_name: knownName,
+        facts: { ...savedFacts, name: knownName, email: knownEmail, phone: knownPhone, need: knownNeed || message.substring(0, 120) },
+      }).eq('id', conversationId).then(() => {});
+
+      const { data: insertedLead } = await supabaseServer
+        .from('leads')
+        .insert({ conversation_id: conversationId, ...lead })
+        .select('id')
+        .single();
+
+      if (insertedLead?.id) {
+        const { notifyLead } = await import('@/lib/chatbot/telegram');
+        notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME }).catch(console.error);
+        const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
+        pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
+      }
+
+      return NextResponse.json({ reply: closingMsg });
+    }
+
+    // ── 5. Generar respuesta con el LLM ──────────────────────────────────────
     const { searchProjects } = await import('@/lib/chatbot/rag');
     const { OPENINGS } = await import('@/lib/chatbot/openings');
 
@@ -132,83 +232,66 @@ export async function POST(req: NextRequest) {
 
     const relevantProjects = await searchProjects(message);
     const ragContext = relevantProjects.length > 0
-      ? `\n# PROYECTOS REALES DE OMAR RELEVANTES (úsalos como prueba):\n${relevantProjects.map((p: { content: string }) => p.content).join('\n---\n')}`
+      ? `\n# PROYECTOS REALES DE OMAR RELEVANTES:\n${relevantProjects.map((p: { content: string }) => p.content).join('\n---\n')}`
       : "";
 
     const systemPrompt = buildSystemPrompt(language, {
       visitorName: knownName,
       visitorEmail: knownEmail,
+      visitorPhone: knownPhone,
       visitorNeed: knownNeed,
     });
-    const fullPrompt = `# VARIANT ASIGNADA: ${activeVariant}\n# TU SALUDO INICIAL FUE: "${openingText}"\n${ragContext}\n\n${systemPrompt}`;
+    const fullPrompt = `# VARIANT: ${activeVariant}\n# SALUDO INICIAL: "${openingText}"\n${ragContext}\n\n${systemPrompt}`;
 
     let rawReply = await generateReply(fullPrompt, history, message, sessionId, imageDataUrl);
 
-    // Server-side enforcement: inyectar bloques si el LLM no los emitió pero la condición aplica
-    const HANDOFF_TRIGGERS = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
-    const ACCEPTED_STACK = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
-    const REJECTED_STACK = /\bangular\b|\bvue\b|\bphp\b|\bdrupal\b|\bmagento\b/i;
-    const RECRUITER_TRIGGERS = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
-    const LOW_BUDGET = /\b(50|30|20|10|100)\s*(dólares|dollars|usd|\$)/i;
-    const CATALOG_PRICES = /250|300|500|600|800|1[,.]?500|3[,.]?500|5[,.]?000/;
-    const MVP_TRIGGERS = /\bmvp\b|app\s+de|aplicaci[oó]n|log[ií]stica|dashboard|tracking|auth|e-?commerce|tienda\s+online/i;
-    const STACK_IN_REPLY = /react|next\.?js|node\.?js|typescript/i;
+    // ── 6. Enforcement server-side ────────────────────────────────────────────
 
-    if (HANDOFF_TRIGGERS.test(message) && !rawReply.includes('<<<HANDOFF>>>')) {
-      const summary = message.substring(0, 120);
-      rawReply += `\n<<<HANDOFF>>>{"summary":"${summary}","urgency":"high"}<<<END>>>`;
-    } else if (knownEmail && knownName && !rawReply.includes('<<<LEAD>>>')) {
-      const need = knownNeed || savedFacts.need || message.substring(0, 80);
-      rawReply += `\n<<<LEAD>>>{"type":"client","name":"${knownName}","email":"${knownEmail}","notes":"${need}","phone":null,"company":null,"service_requested":null,"budget":null,"timeline":null}<<<END>>>`;
-    } else if (
-      REJECTED_STACK.test(message) &&
-      !rawReply.toLowerCase().includes('éxito') &&
-      !rawReply.toLowerCase().includes('suerte')
-    ) {
-      // Asegurar cierre amable con deseo de éxito para stacks rechazados
-      rawReply = rawReply.replace(/\?$/, '.') + ' ¡Éxitos en tu búsqueda!';
-    } else if (
-      RECRUITER_TRIGGERS.test(message) &&
-      ACCEPTED_STACK.test(message + ' ' + history.map(h => h.content).join(' ')) &&
-      !rawReply.includes('<<<CALCOM>>>') &&
-      !rawReply.includes('<<<LEAD>>>')
+    // HANDOFF: usuario quiere hablar con Omar directamente
+    if (HANDOFF_RE.test(message) && !rawReply.includes('<<<HANDOFF>>>')) {
+      rawReply += `\n<<<HANDOFF>>>{"summary":"${message.substring(0, 120)}","urgency":"high"}<<<END>>>`;
+    }
+
+    // CALCOM: reclutador con stack aceptado
+    else if (
+      RECRUITER_RE.test(message) &&
+      ACCEPTED_STACK_RE.test(message + ' ' + history.map(h => h.content).join(' ')) &&
+      !rawReply.includes('<<<CALCOM>>>') && !rawReply.includes('<<<LEAD>>>')
     ) {
       rawReply += `\n<<<CALCOM>>>{"type":"interview"}<<<END>>>`;
     }
 
-    // Si el cliente menciona presupuesto muy bajo y el bot no cita precios del catálogo → añadir contexto
-    if (LOW_BUDGET.test(message) && !CATALOG_PRICES.test(rawReply)) {
-      rawReply += ' Con $250 arrancas con una landing responsiva, WhatsApp integrado y SEO básico.';
+    // Stack rechazado: asegurar cierre amable
+    else if (REJECTED_STACK_RE.test(message) && !rawReply.toLowerCase().includes('éxito') && !rawReply.toLowerCase().includes('suerte')) {
+      rawReply = rawReply.replace(/\?$/, '.') + ' ¡Éxitos en tu búsqueda!';
     }
 
-    // Si el mensaje es sobre un MVP/app y el bot no mencionó el stack → añadirlo
-    if (MVP_TRIGGERS.test(message) && !STACK_IN_REPLY.test(rawReply)) {
-      rawReply += ' Stack: React + Next.js + Node.js.';
+    // INYECTAR solicitud de contacto: intención de compra detectada, faltan datos
+    if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message)) {
+      const replyLower = rawReply.toLowerCase();
+      const llmAlreadyAsks = replyLower.includes('correo') || replyLower.includes('email') || replyLower.includes('nombre') || replyLower.includes('whatsapp') || replyLower.includes('teléfono') || replyLower.includes('telefono') || replyLower.includes('name') || replyLower.includes('phone');
+
+      if (!llmAlreadyAsks) {
+        const contactAsk = buildContactRequest(knownName, !!knownEmail, !!knownPhone, language);
+        rawReply = rawReply.trimEnd() + `\n\n${contactAsk}`;
+      }
     }
 
     const cleanText = cleanReply(rawReply);
 
-    // 4. Guardar mensajes
+    // ── 7. Guardar mensajes ───────────────────────────────────────────────────
     await supabaseServer.from('messages').insert([
-      { conversation_id: conversationId, role: 'user', content: message },
-      { conversation_id: conversationId, role: 'assistant', content: rawReply }
+      { conversation_id: conversationId, role: 'user',      content: message },
+      { conversation_id: conversationId, role: 'assistant', content: rawReply },
     ]);
 
-    // 5. Procesar eventos (Lead, Calcom, Handoff)
+    // ── 8. Procesar bloques estructurados del LLM (LEAD, HANDOFF, CALCOM) ────
     const lead = extractLead(rawReply);
     if (lead) {
-      console.time(`[lead] insert+notify ${conversationId}`);
-
-      // Persistir nombre + email en la conversación para que los mensajes siguientes los recuerden
       if (lead.name || lead.email || lead.notes) {
         supabaseServer.from('conversations').update({
           visitor_name: lead.name || knownName || undefined,
-          facts: {
-            ...savedFacts,
-            name: lead.name || knownName,
-            email: lead.email || knownEmail,
-            need: lead.notes || knownNeed,
-          },
+          facts: { ...savedFacts, name: lead.name || knownName, email: lead.email || knownEmail, phone: lead.phone || knownPhone, need: lead.notes || knownNeed },
         }).eq('id', conversationId).then(({ error }) => error && console.error('Error updating conv facts:', error));
       }
 
@@ -218,29 +301,12 @@ export async function POST(req: NextRequest) {
         .select('id')
         .single();
 
-      if (leadErr) {
-        console.error('Error inserting lead:', leadErr);
-      } else if (insertedLead?.id) {
+      if (!leadErr && insertedLead?.id) {
         const { notifyLead } = await import('@/lib/chatbot/telegram');
-        await notifyLead({
-          lead,
-          conversationId,
-          leadId: insertedLead.id,
-          siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL,
-          botUsername: serverEnv.TELEGRAM_BOT_USERNAME,
-        });
-
-        // 5b. Push a Notion (opcional, no bloqueante)
+        await notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME });
         const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
         pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
       }
-      console.timeEnd(`[lead] insert+notify ${conversationId}`);
-    } else if (knownEmail && !savedFacts.email) {
-      // Email capturado del historial pero aún no persistido → guardar para próximo mensaje
-      supabaseServer.from('conversations').update({
-        facts: { ...savedFacts, email: knownEmail, name: knownName },
-        visitor_name: knownName || undefined,
-      }).eq('id', conversationId).then(({ error }) => error && console.error('Error persisting email:', error));
     }
 
     const handoff = extractHandoff(rawReply);
@@ -255,11 +321,11 @@ export async function POST(req: NextRequest) {
       calcomUrl = calcom.type === 'interview' ? clientEnv.NEXT_PUBLIC_CALCOM_INTERVIEW_URL : clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL;
     }
 
-    return NextResponse.json({ 
-      reply: cleanText, 
-      handoffUrl, 
+    return NextResponse.json({
+      reply: cleanText,
+      handoffUrl,
       calcomUrl,
-      visitorMeta: lead ? { name: lead.name, email: lead.email } : undefined
+      visitorMeta: lead ? { name: lead.name, email: lead.email } : undefined,
     });
 
   } catch (error) {
