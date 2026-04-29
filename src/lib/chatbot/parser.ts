@@ -19,18 +19,25 @@ export interface Calcom {
   type: 'consult' | 'interview';
 }
 
-/**
- * Extrae un bloque de texto entre marcadores específicos
- */
-const extractBlock = (text: string, startMarker: string, endMarker: string = '<<<END>>>'): string | null => {
-  const startIdx = text.indexOf(startMarker);
+// Normaliza variaciones de <<<END>>> que los LLMs generan (<<<END>, <<<END>>, <<<END>>>)
+const normalizeEndMarkers = (text: string): string =>
+  text.replace(/<<<END>{1,3}/g, '<<<END>>>');
+
+const extractBlock = (text: string, startMarker: string): string | null => {
+  const normalized = normalizeEndMarkers(text);
+  const startIdx = normalized.indexOf(startMarker);
   if (startIdx === -1) return null;
 
   const contentStart = startIdx + startMarker.length;
-  const endIdx = text.indexOf(endMarker, contentStart);
-  if (endIdx === -1) return null;
+  const endIdx = normalized.indexOf('<<<END>>>', contentStart);
+  if (endIdx === -1) {
+    // Fallback: extraer todo el JSON entre { } después del marcador
+    const afterMarker = normalized.substring(contentStart).trim();
+    const match = afterMarker.match(/^\{[\s\S]*?\}/);
+    return match ? match[0] : null;
+  }
 
-  return text.substring(contentStart, endIdx).trim();
+  return normalized.substring(contentStart, endIdx).trim();
 };
 
 /**
@@ -69,11 +76,9 @@ export const extractCalcom = (text: string): Calcom | null => {
   return parseSafeJSON<Calcom>(extractBlock(text, '<<<CALCOM>>>'));
 };
 
-/**
- * Elimina todos los bloques estructurados de la respuesta para que no sean visibles al usuario
- */
 export const cleanReply = (text: string): string => {
-  return text
+  const normalized = normalizeEndMarkers(text);
+  return normalized
     .replace(/<<<LEAD>>>[\s\S]*?<<<END>>>/g, '')
     .replace(/<<<HANDOFF>>>[\s\S]*?<<<END>>>/g, '')
     .replace(/<<<CALCOM>>>[\s\S]*?<<<END>>>/g, '')
