@@ -151,6 +151,8 @@ export async function POST(req: NextRequest) {
     const RECRUITER_TRIGGERS = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
     const LOW_BUDGET = /\b(50|30|20|10|100)\s*(dólares|dollars|usd|\$)/i;
     const CATALOG_PRICES = /250|300|500|600|800|1[,.]?500|3[,.]?500|5[,.]?000/;
+    const MVP_TRIGGERS = /\bmvp\b|app\s+de|aplicaci[oó]n|log[ií]stica|dashboard|tracking|auth|e-?commerce|tienda\s+online/i;
+    const STACK_IN_REPLY = /react|next\.?js|node\.?js|typescript/i;
 
     if (HANDOFF_TRIGGERS.test(message) && !rawReply.includes('<<<HANDOFF>>>')) {
       const summary = message.substring(0, 120);
@@ -177,6 +179,11 @@ export async function POST(req: NextRequest) {
     // Si el cliente menciona presupuesto muy bajo y el bot no cita precios del catálogo → añadir contexto
     if (LOW_BUDGET.test(message) && !CATALOG_PRICES.test(rawReply)) {
       rawReply += ' Con $250 arrancas con una landing responsiva, WhatsApp integrado y SEO básico.';
+    }
+
+    // Si el mensaje es sobre un MVP/app y el bot no mencionó el stack → añadirlo
+    if (MVP_TRIGGERS.test(message) && !STACK_IN_REPLY.test(rawReply)) {
+      rawReply += ' Stack: React + Next.js + Node.js.';
     }
 
     const cleanText = cleanReply(rawReply);
