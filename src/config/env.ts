@@ -25,6 +25,7 @@ const serverSchema = z.object({
   OLLAMA_BASE_URL: z.string().url().optional(),
   OLLAMA_MODEL: z.string().optional(),
   LLM_PROVIDER_CHAIN: z.string().optional(),
+  NVIDIA_API_KEY: z.string().optional(),
   DEV_TO_API_KEY: z.string().optional(),
   HASHNODE_TOKEN: z.string().optional(),
   HASHNODE_PUBLICATION_ID: z.string().optional(),
@@ -56,6 +57,7 @@ export const serverEnv = {
   get OLLAMA_BASE_URL() { return process.env.OLLAMA_BASE_URL || "http://localhost:11434"; },
   get OLLAMA_MODEL() { return process.env.OLLAMA_MODEL || "llama3.2:3b"; },
   get LLM_PROVIDER_CHAIN() { return process.env.LLM_PROVIDER_CHAIN || ""; },
+  get NVIDIA_API_KEY() { return process.env.NVIDIA_API_KEY || ""; },
 
   // Auto-submit keys
   get DEV_TO_API_KEY() { return process.env.DEV_TO_API_KEY || ""; },

@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
   dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 }
 
-const DEFAULT_CHAIN = ['groq', 'deepseek', 'mistral', 'cerebras', 'openrouter', 'huggingface', 'cloudflare', 'ollama'];
+const DEFAULT_CHAIN = ['groq', 'nvidia', 'deepseek', 'mistral', 'cerebras', 'openrouter', 'huggingface', 'cloudflare', 'ollama'];
 const TIMEOUT_MS = 15000;
 const ERROR_THRESHOLD = 3;
 const COOLDOWN_MS = 60 * 1000; // 1 minuto (recuperación rápida para Rate Limits)
