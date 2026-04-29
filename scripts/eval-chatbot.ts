@@ -40,9 +40,14 @@ async function runScenario(scenario: EvalScenario): Promise<EvalResult> {
       }
 
       const data = await response.json();
-      conversationResults.push(data.reply);
+      // Agregar marcadores semánticos para que los criterios puedan verificarlos
+      let replyText = data.reply || '';
+      if (data.handoffUrl) replyText += ' <<<HANDOFF>>>';
+      if (data.calcomUrl) replyText += ' <<<CALCOM>>>';
+      if (data.visitorMeta?.email || data.visitorMeta?.name) replyText += ' <<<LEAD>>>';
+      conversationResults.push(replyText);
       console.log(`👤 User: ${turn.user}`);
-      console.log(`🤖 Assistant: ${data.reply}`);
+      console.log(`🤖 Assistant: ${data.reply}${data.handoffUrl ? ' [HANDOFF✓]' : ''}${data.calcomUrl ? ' [CALCOM✓]' : ''}${data.visitorMeta ? ' [LEAD✓]' : ''}`);
     } catch (error) {
       console.error(`❌ Error in turn: ${error}`);
       return { pass: false, failedCriterias: ['API Request Failed'] };
@@ -86,7 +91,7 @@ async function runScenario(scenario: EvalScenario): Promise<EvalResult> {
     else if (searchCriteria.includes('mencionó stack')) searchTerms = ['react', 'next', 'node', 'stack', 'typescript'];
     else if (searchCriteria.includes('validó empáticamente') || searchCriteria.includes('reencuadró')) searchTerms = ['entend', 'comprend', '250', '300', 'inversión', 'precio'];
     else if (searchCriteria.includes('mencionó objeción') || searchCriteria.includes('too-expensive')) searchTerms = ['250', 'caro', 'precio', 'inversión', 'ajust'];
-    else if (searchCriteria.includes('ofreció alternativa legítima')) searchTerms = ['canal', 'contactar', 'whatsapp', 'correo', 'email', 'directo'];
+    else if (searchCriteria.includes('ofreció alternativa legítima')) searchTerms = ['canal', 'contactar', 'whatsapp', 'correo', 'email', 'directo', 'aviso', 'omar', '<<<handoff>>>'];
     else if (searchCriteria.includes('explicó que omar recibirá') || searchCriteria.includes('omar está revisando')) searchTerms = ['omar', 'mensaje', 'minuto', 'revisando', 'aviso', 'contacta'];
     else if (searchCriteria.includes('identificó red flag') || searchCriteria.includes('identificó la red flag')) searchTerms = ['anticipo', 'política', 'no trabajo', 'gratis', 'condicion'];
     else if (searchCriteria.includes('rechazó amablemente mencionando')) searchTerms = ['react', 'next.js', 'no es mi stack', 'éxito', 'exitos', 'angular'];

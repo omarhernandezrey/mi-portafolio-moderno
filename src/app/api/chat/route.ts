@@ -102,15 +102,23 @@ export async function POST(req: NextRequest) {
     // Extraer email del historial si no está en conv.facts aún
     const savedFacts = (facts as Record<string, string>);
     let knownEmail = savedFacts.email || '';
-    const knownName = conv?.visitor_name || visitorMeta?.name || savedFacts.name || '';
+    let knownName = conv?.visitor_name || visitorMeta?.name || savedFacts.name || '';
     const knownNeed = savedFacts.need || '';
 
-    if (!knownEmail) {
-      const emailRegex = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
+    const emailRegex = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
+    const nameRegex = /(?:soy|me llamo|mi nombre es|i'm|i am|my name is)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?)/i;
+
+    if (!knownEmail || !knownName) {
       for (const m of [...history, { role: 'user', content: message }]) {
         if (m.role === 'user') {
-          const match = m.content.match(emailRegex);
-          if (match) { knownEmail = match[0]; break; }
+          if (!knownEmail) {
+            const emailMatch = m.content.match(emailRegex);
+            if (emailMatch) knownEmail = emailMatch[0];
+          }
+          if (!knownName) {
+            const nameMatch = m.content.match(nameRegex);
+            if (nameMatch) knownName = nameMatch[1].trim();
+          }
         }
       }
     }
@@ -134,7 +142,28 @@ export async function POST(req: NextRequest) {
     });
     const fullPrompt = `# VARIANT ASIGNADA: ${activeVariant}\n# TU SALUDO INICIAL FUE: "${openingText}"\n${ragContext}\n\n${systemPrompt}`;
 
-    const rawReply = await generateReply(fullPrompt, history, message, sessionId, imageDataUrl);
+    let rawReply = await generateReply(fullPrompt, history, message, sessionId, imageDataUrl);
+
+    // Server-side enforcement: inyectar bloques si el LLM no los emitió pero la condición aplica
+    const HANDOFF_TRIGGERS = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
+    const ACCEPTED_STACK = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
+    const RECRUITER_TRIGGERS = /developer|desarrollador|dev\b|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
+
+    if (HANDOFF_TRIGGERS.test(message) && !rawReply.includes('<<<HANDOFF>>>')) {
+      const summary = message.substring(0, 120);
+      rawReply += `\n<<<HANDOFF>>>{"summary":"${summary}","urgency":"high"}<<<END>>>`;
+    } else if (knownEmail && knownName && !rawReply.includes('<<<LEAD>>>')) {
+      const need = knownNeed || savedFacts.need || message.substring(0, 80);
+      rawReply += `\n<<<LEAD>>>{"type":"client","name":"${knownName}","email":"${knownEmail}","notes":"${need}","phone":null,"company":null,"service_requested":null,"budget":null,"timeline":null}<<<END>>>`;
+    } else if (
+      RECRUITER_TRIGGERS.test(message) &&
+      ACCEPTED_STACK.test(message + ' ' + history.map(h => h.content).join(' ')) &&
+      !rawReply.includes('<<<CALCOM>>>') &&
+      !rawReply.includes('<<<LEAD>>>')
+    ) {
+      rawReply += `\n<<<CALCOM>>>{"type":"interview"}<<<END>>>`;
+    }
+
     const cleanText = cleanReply(rawReply);
 
     // 4. Guardar mensajes
