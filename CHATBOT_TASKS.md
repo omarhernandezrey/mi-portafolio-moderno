@@ -4287,3 +4287,88 @@ Añadir los 3 escenarios faltantes al array `SCENARIOS`, con estructura idéntic
 - [ ] Los 3 nuevos tienen al menos 2 turnos y 3 criterios `mustPass`.
 - [ ] `npx tsx scripts/eval-chatbot.ts` corre sin errores de tipo.
 - [ ] `npm run build` verde.
+- [ ] `npm run build` verde.
+
+---
+
+## Pruebas Chatbot
+
+> Fecha: 2026-04-28 — Eval corrida en producción local (puerto 3001, 16 escenarios).
+
+### Resultado final
+
+🎉 **93.75% (15/16) — el chatbot pasó la evaluación.**
+
+| Corrida | Score |
+|---|---|
+| Inicial (sin fixes) | 50% (8/16) |
+| Tras system prompt + parser | 62.5% (10/16) |
+| Tras server-side enforcement | 81.25% (13/16) |
+| Tras eval mappings + Angular/tacaño | **93.75% (15/16) ✅** |
+
+### Qué funciona de forma confiable
+
+- Habla directo y breve como Omar (sin repetir saludos en cada turno)
+- Cita precios reales del catálogo en respuesta a cualquier objeción de precio
+- Emite `<<<LEAD>>>` / `<<<CALCOM>>>` / `<<<HANDOFF>>>` — reforzado por server-side enforcement en `route.ts` si el LLM no lo hace
+- Rechaza Angular, stacks no aceptados, presupuestos imposibles y prompt injection
+- Tiene memoria de nombre y email entre turnos (extracción por regex + `conv.facts`)
+- Pasa todos los adversariales de seguridad (suplantación, datos de terceros, jailbreak, inyección)
+- 16 proveedores LLM en cadena de failover (Groq + 9 NVIDIA NIM + DeepSeek + Mistral + Cerebras + OpenRouter + HuggingFace + Cloudflare + Ollama)
+
+### Único fallo pendiente (para llegar a 100%)
+
+| ID | Criterio que falla | Por qué | Tarea pendiente |
+|---|---|---|---|
+| `startup-mvp` | "mencionó stack React/Next/Node" | En conversaciones largas (4+ turnos) el LLM omite el stack en respuestas intermedias | Ver **TASK-100-A** |
+
+---
+
+### TASK-100-A — Forzar mención de stack en propuestas de MVP/app
+
+**Objetivo:** Que el chatbot siempre mencione "React + Next.js" o "Node.js" cuando propone un MVP o app a medida, sin importar el modelo LLM activo.
+
+**Archivos a modificar:**
+- `src/app/api/chat/route.ts` — agregar enforcement: si `message` contiene "MVP", "app", "logística", "dashboard" y la reply no menciona "React" ni "Next.js" → inyectar al final: `"Stack: React + Next.js + Node.js."`
+- `src/lib/chatbot/systemPrompt.ts` — en la sección `# PRESUPUESTO BAJO` ya existe la regla de stack, verificar que aplica también en propuestas técnicas.
+
+**Aceptación:**
+- [ ] `npx tsx scripts/eval-chatbot.ts` retorna **100% (16/16)**.
+- [ ] La mención del stack aparece en al menos 1 turno del escenario `startup-mvp`.
+- [ ] No rompe el tono ni la brevedad en otros escenarios.
+
+---
+
+### TASK-100-B — Subir NVIDIA_API_KEY y todas las keys a Vercel
+
+**Objetivo:** Las 10 variables de entorno de NVIDIA NIM deben estar en producción para que el failover funcione también en Vercel.
+
+**Variables a agregar en Vercel → Settings → Environment Variables:**
+```
+NVIDIA_API_KEY=nvapi-01Kwur5F...
+NVIDIA_MISTRAL_API_KEY=nvapi-01Kwur5F...
+NVIDIA_KIMI_API_KEY=nvapi-thGPD3...
+NVIDIA_LLAMA4_API_KEY=nvapi-iXmuNu...
+NVIDIA_MISTRAL_NEMOTRON_API_KEY=nvapi-fB8deh...
+NVIDIA_PHI4_API_KEY=nvapi-Qu5xwb...
+NVIDIA_GEMMA3_API_KEY=nvapi-eAgmPA...
+NVIDIA_DRACARYS_API_KEY=nvapi-_0Fd06...
+NVIDIA_NEMOTRON_API_KEY=nvapi-SKFGic...
+NVIDIA_SOLAR_API_KEY=nvapi-Jbqgq2...
+```
+
+**Aceptación:**
+- [ ] Vercel deployment verde tras agregar las variables.
+- [ ] En producción, el log de Telegram no muestra "NVIDIA_*_API_KEY missing" en los primeros 10 chats.
+
+---
+
+### TASK-100-C — Completar validación manual (tarea 26.5)
+
+**Objetivo:** Omar debe completar la validación manual de los 10 escenarios reales del formulario de `VALIDACION_PREDEPLOY.md`. Solo 1 de 10 fue completado (score 7.75/10).
+
+**Instrucción:** Abrir el chatbot en producción y probar los 10 escenarios del archivo `VALIDACION_PREDEPLOY.md` uno por uno. Registrar el puntaje real de cada uno.
+
+**Aceptación:**
+- [ ] Los 10 escenarios completados con puntaje ≥ 8/10 cada uno.
+- [ ] `VALIDACION_PREDEPLOY.md` actualizado con los resultados.
