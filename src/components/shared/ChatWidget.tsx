@@ -396,7 +396,7 @@ export default function ChatWidget() {
                           className="flex items-center gap-2 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-bold text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all active:scale-95"
                         >
                           <Phone size={14} />
-                          {t('chatbot.handoffButton')}
+                          {t('chatbot.handoff')}
                         </a>
                       )}
                       {msg.calcomUrl && (
