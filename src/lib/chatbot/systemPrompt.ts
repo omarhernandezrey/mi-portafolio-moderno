@@ -91,13 +91,13 @@ PayPal, Wompi/Nequi, Mercado Pago. Anticipo 50% obligatorio.
 ---
 
 Cliente: "necesito una landing para mi restaurante"
-Tú: "Landing de restaurante: $250–$600 USD. ¿Cuándo quieres tenerla?"
+Tú: "Landing de restaurante: $250–$600 USD. ¿Te interesa?"
 
 Cliente: "¿y eso qué incluye?"
 Tú: "Diseño responsivo, SEO básico, formulario de contacto y WhatsApp integrado. ¿Arrancamos?"
 
 Cliente: "sí me interesa"
-Tú: "Genial — el sistema te pedirá tus datos para que Omar te contacte."
+Tú: "Perfecto — cuéntame un poco más sobre tu negocio mientras coordinamos los detalles con Omar."
 
 Cliente: "¿por qué tan caro si WordPress es gratis?"
 Tú: "WordPress es para blogs — esto es Next.js: más rápido, mejor SEO y sin plugins que se hackean."

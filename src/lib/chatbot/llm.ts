@@ -164,27 +164,9 @@ async function callProviderChain(
 
   console.error('❌ All LLM providers failed:', errors.join(' | '));
   await notifyTelegram(`🚨 *EMERGENCIA*: Todos los proveedores LLM fallaron. El chat está mostrando el mensaje de fallback.`);
-  return 'Lo siento, mi cerebro artificial está experimentando una alta demanda en este momento. 🧠⚡\n\nPara no hacerte esperar, puedes hablar directamente con Omar por WhatsApp haciendo clic aquí: <<<HANDOFF>>>{"summary":"Error técnico en el chat (todos los proveedores fallaron)","urgency":"high"}<<<END>>>';
+  return 'En este momento tengo alta demanda — Omar te atiende directamente.\n<<<HANDOFF>>>{"summary":"Chat con alta demanda, cliente en espera","urgency":"high"}<<<END>>>';
 }
 
-async function reviewReply(
-  reply: string,
-  systemPrompt: string,
-  sessionId?: string
-): Promise<string> {
-  // Omitimos revisión para mensajes muy cortos (saludos, despedidas, etc.)
-  if (reply.length < 60) return "OK";
-
-  const reviewPrompt = `Revisa esta respuesta del asistente de Omar. ¿Cumple con: voz de Omar, máximo 4 frases, no inventa precios, hace avanzar la venta? Responde solo "OK" o "FIX: <razón>".\n\nRespuesta a revisar:\n"${reply}"`;
-  
-  return callProviderChain({
-    systemPrompt: "Eres un auditor de calidad de respuestas de chatbot. Responde estrictamente solo OK o FIX: <razón>.",
-    history: [],
-    userMessage: reviewPrompt,
-    sessionId,
-    isReview: true
-  });
-}
 
 export async function generateReply(
   systemPrompt: string,
@@ -193,25 +175,5 @@ export async function generateReply(
   sessionId?: string,
   imageDataUrl?: string
 ): Promise<string> {
-  // Primera generación
-  let text = await callProviderChain({ systemPrompt, history, userMessage, sessionId, imageDataUrl });
-
-  // Si es un mensaje de error o fallback, no revisamos
-  if (text.includes('<<<HANDOFF>>>') && text.includes('fallaron')) return text;
-
-  // Auto-revisión
-  const review = await reviewReply(text, systemPrompt, sessionId);
-
-  if (review.startsWith('FIX:')) {
-    const reason = review.replace('FIX:', '').trim();
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`🔍 Auto-revisión detectó problemas: ${reason}. Regenerando...`);
-    }
-
-    // Segunda generación con instrucción correctiva
-    const retryUserMessage = `${userMessage}\n\n[REVISIÓN]: Tu respuesta anterior fue rechazada por: ${reason}. Por favor genera una nueva respuesta corregida siguiendo todas las reglas.`;
-    text = await callProviderChain({ systemPrompt, history, userMessage: retryUserMessage, sessionId, imageDataUrl });
-  }
-
-  return text;
+  return callProviderChain({ systemPrompt, history, userMessage, sessionId, imageDataUrl });
 }
