@@ -287,10 +287,10 @@ export async function POST(req: NextRequest) {
       rawReply = rawReply.replace(/\?$/, '.') + ' ¡Éxitos en tu búsqueda!';
     }
 
-    // INYECTAR solicitud de contacto: cliente confirma interés y ya hubo intercambio previo
-    if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message) && history.length > 0) {
+    // INYECTAR solicitud de contacto: cliente confirma interés (backup si el LLM no lo hizo)
+    if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message)) {
       const replyLower = rawReply.toLowerCase();
-      const llmAlreadyAsks = replyLower.includes('correo') || replyLower.includes('email') || replyLower.includes('nombre') || replyLower.includes('whatsapp') || replyLower.includes('teléfono') || replyLower.includes('telefono') || replyLower.includes('name') || replyLower.includes('phone');
+      const llmAlreadyAsks = replyLower.includes('correo') || replyLower.includes('email') || replyLower.includes('whatsapp') || replyLower.includes('teléfono') || replyLower.includes('telefono') || replyLower.includes('nombre completo') || replyLower.includes('full name') || replyLower.includes('phone') || replyLower.includes('coordinar');
 
       if (!llmAlreadyAsks) {
         const contactAsk = buildContactRequest(knownName, !!knownEmail, !!knownPhone, language);
