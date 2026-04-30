@@ -18,7 +18,9 @@
     "loading": "Typing...",
     "error": "Sorry, an error occurred. Could you try again?",
     "handoff": "Talk on WhatsApp",
+    "handoffButton": "Talk on WhatsApp",
     "calendar": "Schedule a meeting",
+    "calendarButton": "Schedule a meeting",
     "ariaOpen": "Open chat",
     "ariaClose": "Close chat",
     "quickActions": {

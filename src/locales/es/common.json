@@ -18,7 +18,9 @@
     "loading": "Escribiendo...",
     "error": "Lo siento, ha ocurrido un error. ¿Podrías intentarlo de nuevo?",
     "handoff": "Hablar por WhatsApp",
+    "handoffButton": "Hablar por WhatsApp",
     "calendar": "Agendar reunión",
+    "calendarButton": "Agendar reunión",
     "ariaOpen": "Abrir chat",
     "ariaClose": "Cerrar chat",
     "quickActions": {

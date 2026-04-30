@@ -18,7 +18,9 @@
     "loading": "Digitando...",
     "error": "Sinto muito, ocorreu um erro. Poderia tentar novamente?",
     "handoff": "Falar por WhatsApp",
+    "handoffButton": "Falar por WhatsApp",
     "calendar": "Agendar reunião",
+    "calendarButton": "Agendar reunião",
     "ariaOpen": "Abrir chat",
     "ariaClose": "Fechar chat",
     "quickActions": {
