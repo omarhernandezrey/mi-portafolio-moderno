@@ -50,14 +50,14 @@ function buildClosingMessage(name: string, contact: string, need: string, lang: 
   const project = need ? `tu proyecto de ${need}` : 'tu proyecto';
   if (lang === 'en') {
     const prefix = name ? `All set, ${name}! ` : 'All set! ';
-    return `${prefix}Omar Hernández will contact you right away at ${contact} to kick off ${project}. He'll walk you through every detail!`;
+    return `${prefix}Your info is saved. Omar Hernández will reach out to you at ${contact} right away to kick off ${project}. If you'd like to message him directly, tap the WhatsApp button below!`;
   }
   if (lang === 'pt') {
     const prefix = name ? `Tudo certo, ${name}! ` : 'Tudo certo! ';
-    return `${prefix}Omar Hernández vai entrar em contato agora mesmo pelo ${contact} para iniciar ${project}. Ele cuidará de todos os detalhes!`;
+    return `${prefix}Seus dados foram salvos. Omar Hernández vai entrar em contato pelo ${contact} agora mesmo para iniciar ${project}. Se quiser falar com ele diretamente, use o botão do WhatsApp abaixo!`;
   }
-  const prefix = name ? `¡Todo listo, ${name}! ` : '¡Todo listo! ';
-  return `${prefix}Omar Hernández te contactará inmediatamente al ${contact} para iniciar ${project}. ¡Él te dará todos los detalles y coordinarán juntos cómo quieres tu proyecto!`;
+  const prefix = name ? `¡Perfecto, ${name}! ` : '¡Perfecto! ';
+  return `${prefix}Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al ${contact} para coordinar ${project}. Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.`;
 }
 
 function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean, lang: string): string {
@@ -200,11 +200,11 @@ export async function POST(req: NextRequest) {
       }).eq('id', conversationId).then(({ error }) => error && console.error('persist facts error:', error));
     }
 
-    // ── 4. CIERRE AUTOMÁTICO: si tenemos contacto + (nombre o bot ya pidió datos) ─
+    // ── 4. CIERRE AUTOMÁTICO ──────────────────────────────────────────────────
     const hasContact = !!(knownEmail || knownPhone);
 
-    // Detecta si el bot acaba de pedir datos de contacto (últimos 4 mensajes)
-    const recentHistory = history.slice(-4);
+    // Detecta si el bot acaba de pedir datos de contacto (últimos 6 mensajes)
+    const recentHistory = history.slice(-6);
     const botRecentlyAskedContact = recentHistory.some(m =>
       m.role === 'assistant' && (
         m.content.toLowerCase().includes('correo') ||
@@ -217,11 +217,34 @@ export async function POST(req: NextRequest) {
       )
     );
 
-    const canClose = !!(hasContact && (knownName || botRecentlyAskedContact));
+    // Si el bot pidió "nombre completo" y el mensaje actual parece un nombre, extraerlo
+    const botAskedForName = recentHistory.some(m =>
+      m.role === 'assistant' && (
+        m.content.toLowerCase().includes('nombre completo') ||
+        m.content.toLowerCase().includes('full name') ||
+        m.content.toLowerCase().includes('cómo te llamas') ||
+        m.content.toLowerCase().includes('como te llamas')
+      )
+    );
+    let contextName = '';
+    if (!knownName && botAskedForName) {
+      const plainMatch = message.trim().match(/^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,3})$/i);
+      if (plainMatch) contextName = plainMatch[1].trim();
+    }
+    const effectiveName = knownName || contextName;
+
+    // Extraer necesidad del cliente del historial si no está en facts
+    const needFromHistory = knownNeed || history
+      .filter(m => m.role === 'user')
+      .find(m => /quiero|necesito|busco|página|web|app|tienda|landing|sitio|peluquer|restauran|clínica|clinic|shop|store/i.test(m.content))
+      ?.content?.substring(0, 120) || '';
+
+    // Cerrar si: tenemos contacto Y (nombre conocido O bot estaba pidiendo datos)
+    const canClose = !!(hasContact && (effectiveName || botRecentlyAskedContact));
 
     if (canClose && !isEval) {
       const contact = knownEmail || knownPhone;
-      const closingMsg = buildClosingMessage(knownName, contact, knownNeed, language);
+      const closingMsg = buildClosingMessage(effectiveName, contact, needFromHistory, language);
 
       await supabaseServer.from('messages').insert([
         { conversation_id: conversationId, role: 'user',      content: message },
@@ -231,10 +254,10 @@ export async function POST(req: NextRequest) {
       // Crear lead y notificar
       const lead = {
         type: 'client' as const,
-        name: knownName || '(sin nombre)',
+        name: effectiveName || '(sin nombre)',
         email: knownEmail || '',
         phone: knownPhone || null,
-        notes: knownNeed || message.substring(0, 120),
+        notes: needFromHistory || message.substring(0, 120),
         company: null,
         service_requested: null,
         budget: null,
@@ -242,8 +265,8 @@ export async function POST(req: NextRequest) {
       };
 
       supabaseServer.from('conversations').update({
-        visitor_name: knownName,
-        facts: { ...savedFacts, name: knownName, email: knownEmail, phone: knownPhone, need: knownNeed || message.substring(0, 120) },
+        visitor_name: effectiveName || undefined,
+        facts: { ...savedFacts, name: effectiveName, email: knownEmail, phone: knownPhone, need: needFromHistory },
       }).eq('id', conversationId).then(() => {});
 
       const { data: insertedLead } = await supabaseServer
@@ -259,7 +282,19 @@ export async function POST(req: NextRequest) {
         pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
       }
 
-      return NextResponse.json({ reply: closingMsg });
+      // Incluir botón WhatsApp para que el cliente pueda escribir a Omar directamente
+      const whatsappSummary = encodeURIComponent(
+        `Hola Omar, soy el chatbot de tu portafolio. Nuevo lead: ${effectiveName || 'Sin nombre'} | ${knownEmail || ''} | ${knownPhone || ''} | ${needFromHistory || 'proyecto'}`
+      );
+      const handoffUrl = clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER
+        ? `https://wa.me/${clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${whatsappSummary}`
+        : undefined;
+
+      return NextResponse.json({
+        reply: closingMsg,
+        handoffUrl,
+        visitorMeta: { name: effectiveName, email: knownEmail },
+      });
     }
 
     // ── 5. Generar respuesta con el LLM ──────────────────────────────────────
