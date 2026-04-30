@@ -8,6 +8,7 @@ import { sendChatMessage } from '@/services/chatService';
 import { useTranslation } from 'react-i18next';
 import { buildCalcomUrl } from '@/lib/chatbot/calcom';
 import Link from 'next/link';
+import Image from 'next/image';
 import useSpeechToText from '@/hooks/useSpeechToText';
 import { track } from '@vercel/analytics';
 import { clientEnv } from '@/config/env';
@@ -462,7 +463,7 @@ export default function ChatWidget() {
               {/* Preview imagen seleccionada */}
               {imageDataUrl && (
                 <div className="mb-2 flex items-center gap-2">
-                  <img src={imageDataUrl} alt="preview" className="h-14 w-14 rounded-lg object-cover border border-[var(--primary-color)]/30" />
+                  <Image src={imageDataUrl} alt="preview" width={56} height={56} unoptimized className="h-14 w-14 rounded-lg object-cover border border-[var(--primary-color)]/30" />
                   <button
                     type="button"
                     onClick={() => setImageDataUrl(undefined)}

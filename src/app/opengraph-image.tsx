@@ -1,7 +1,5 @@
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
-
 // Image metadata
 export const alt = 'Omar Hernández Rey | Full Stack Developer';
 export const size = {
