@@ -179,13 +179,21 @@ export async function POST(req: NextRequest) {
     // ── 3. Extraer y persistir datos de contacto ──────────────────────────────
     const savedFacts = facts as Record<string, string>;
 
-    // Prioridad: facts guardados > visitor_name de DB > datos extraídos del historial
+    // Detectar email y teléfono en el mensaje ACTUAL (antes de todo el resto)
+    const EMAIL_IN_CURRENT = EMAIL_RE.test(message);
+    const PHONE_IN_CURRENT = PHONE_RE.test(message);
+
+    // Prioridad: facts guardados > visitor_name de DB > datos extraídos del historial + mensaje actual
     const userTexts = [...history.filter(m => m.role === 'user').map(m => m.content), message];
     const extracted = extractContactData(userTexts);
 
+    // Extraer directamente del mensaje actual como fallback adicional
+    const emailInMsg  = (message.match(EMAIL_RE) || [])[0] || '';
+    const phoneInMsg  = (message.match(PHONE_RE) || [])[0] || '';
+
     const knownName  = savedFacts.name  || conv?.visitor_name || visitorMeta?.name  || extracted.name  || '';
-    const knownEmail = savedFacts.email || visitorMeta?.email || extracted.email || '';
-    const knownPhone = savedFacts.phone || visitorMeta?.phone || extracted.phone || '';
+    const knownEmail = savedFacts.email || visitorMeta?.email || extracted.email || emailInMsg || '';
+    const knownPhone = savedFacts.phone || visitorMeta?.phone || extracted.phone || phoneInMsg || '';
     const knownNeed  = savedFacts.need  || '';
 
     // Persistir inmediatamente si encontramos algo nuevo
@@ -203,8 +211,8 @@ export async function POST(req: NextRequest) {
     // ── 4. CIERRE AUTOMÁTICO ──────────────────────────────────────────────────
     const hasContact = !!(knownEmail || knownPhone);
 
-    // Detecta si el bot acaba de pedir datos de contacto (últimos 6 mensajes)
-    const recentHistory = history.slice(-6);
+    // Detecta si el bot acaba de pedir datos de contacto (últimos 8 mensajes)
+    const recentHistory = history.slice(-8);
     const botRecentlyAskedContact = recentHistory.some(m =>
       m.role === 'assistant' && (
         m.content.toLowerCase().includes('correo') ||
@@ -217,7 +225,10 @@ export async function POST(req: NextRequest) {
       )
     );
 
-    // Si el bot pidió "nombre completo" y el mensaje actual parece un nombre, extraerlo
+    // Extracción de nombre con múltiples estrategias
+    let contextName = '';
+
+    // Estrategia 1: bot pidió "nombre completo" y el mensaje es solo un nombre
     const botAskedForName = recentHistory.some(m =>
       m.role === 'assistant' && (
         m.content.toLowerCase().includes('nombre completo') ||
@@ -226,21 +237,36 @@ export async function POST(req: NextRequest) {
         m.content.toLowerCase().includes('como te llamas')
       )
     );
-    let contextName = '';
     if (!knownName && botAskedForName) {
       const plainMatch = message.trim().match(/^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,3})$/i);
       if (plainMatch) contextName = plainMatch[1].trim();
     }
-    const effectiveName = knownName || contextName;
+
+    // Estrategia 2: mensaje tiene formato "Nombre email teléfono" o "Nombre teléfono"
+    if (!knownName && !contextName && (EMAIL_IN_CURRENT || PHONE_IN_CURRENT)) {
+      const nameBeforeContact = message.match(
+        /^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,4})\s+(?:[\w.+\-]+@|(?:\+?57\s*)?3[0-9])/i
+      );
+      if (nameBeforeContact) contextName = nameBeforeContact[1].trim();
+    }
+
+    let effectiveName = knownName || contextName;
 
     // Extraer necesidad del cliente del historial si no está en facts
     const needFromHistory = knownNeed || history
       .filter(m => m.role === 'user')
-      .find(m => /quiero|necesito|busco|página|web|app|tienda|landing|sitio|peluquer|restauran|clínica|clinic|shop|store/i.test(m.content))
+      .find(m => /quiero|necesito|busco|página|web|app|tienda|landing|sitio|peluquer|restauran|clínica|clinic|shop|store|negocio/i.test(m.content))
       ?.content?.substring(0, 120) || '';
 
-    // Cerrar si: tenemos contacto Y (nombre conocido O bot estaba pidiendo datos)
-    const canClose = !!(hasContact && (effectiveName || botRecentlyAskedContact));
+    // CIERRE: dispara cuando hay datos de contacto Y alguna de estas condiciones:
+    // 1. El mensaje actual tiene email+teléfono juntos (señal 100% inequívoca)
+    // 2. El mensaje tiene cualquier dato de contacto Y el bot acaba de pedir datos
+    // 3. El bot sabe el nombre del cliente Y tenemos contacto
+    const canClose = !!(
+      (EMAIL_IN_CURRENT && PHONE_IN_CURRENT) ||
+      (hasContact && botRecentlyAskedContact) ||
+      (hasContact && effectiveName)
+    );
 
     if (canClose && !isEval) {
       const contact = knownEmail || knownPhone;
