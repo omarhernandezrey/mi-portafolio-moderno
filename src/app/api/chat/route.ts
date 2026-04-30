@@ -310,10 +310,10 @@ export async function POST(req: NextRequest) {
       : "";
 
     const systemPrompt = buildSystemPrompt(language, {
-      visitorName: knownName,
+      visitorName: effectiveName,
       visitorEmail: knownEmail,
       visitorPhone: knownPhone,
-      visitorNeed: knownNeed,
+      visitorNeed: needFromHistory,
     });
     const fullPrompt = `# VARIANT: ${activeVariant}\n# SALUDO INICIAL: "${openingText}"\n${ragContext}\n\n${systemPrompt}`;
 
@@ -340,15 +340,11 @@ export async function POST(req: NextRequest) {
       rawReply = rawReply.replace(/\?$/, '.') + ' ¡Éxitos en tu búsqueda!';
     }
 
-    // INYECTAR solicitud de contacto: cliente confirma interés (backup si el LLM no lo hizo)
+    // SOLICITUD DE CONTACTO: cuando el cliente confirma interés, el servidor genera
+    // la respuesta completa (nombre correcto garantizado — el LLM puede equivocarse)
     if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message)) {
-      const replyLower = rawReply.toLowerCase();
-      const llmAlreadyAsks = replyLower.includes('correo') || replyLower.includes('email') || replyLower.includes('whatsapp') || replyLower.includes('teléfono') || replyLower.includes('telefono') || replyLower.includes('nombre completo') || replyLower.includes('full name') || replyLower.includes('phone') || replyLower.includes('coordinar');
-
-      if (!llmAlreadyAsks) {
-        const contactAsk = buildContactRequest(knownName, !!knownEmail, !!knownPhone, language);
-        rawReply = rawReply.trimEnd() + `\n\n${contactAsk}`;
-      }
+      const contactAsk = buildContactRequest(effectiveName, !!knownEmail, !!knownPhone, language);
+      rawReply = contactAsk; // Reemplaza completamente — no depender del LLM para el nombre
     }
 
     const cleanText = cleanReply(rawReply);
