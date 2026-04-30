@@ -2,26 +2,28 @@ import { InferenceClient } from '@huggingface/inference';
 import { serverEnv } from '@/config/env';
 import { supabaseServer } from '@/lib/supabaseServer';
 
-const hf = new InferenceClient(serverEnv.HF_TOKEN);
-const MODEL = 'sentence-transformers/all-mpnet-base-v2'; // Genera vectores de 768 dimensiones
+const MODEL = 'sentence-transformers/all-mpnet-base-v2';
 
-/**
- * Genera el embedding de un texto usando HuggingFace (Gratis)
- */
-async function generateEmbedding(text: string): Promise<number[]> {
-  const output = await hf.featureExtraction({
-    model: MODEL,
-    inputs: text,
-  });
-  return output as number[];
+async function generateEmbedding(text: string): Promise<number[] | null> {
+  if (!serverEnv.HF_TOKEN) return null;
+  try {
+    const hf = new InferenceClient(serverEnv.HF_TOKEN);
+    const output = await hf.featureExtraction({ model: MODEL, inputs: text });
+    return output as number[];
+  } catch {
+    // HF unavailable — RAG disabled gracefully, chat continues without project context
+    return null;
+  }
 }
 
 /**
- * Busca proyectos similares en la base de datos vectorial
+ * Busca proyectos similares en la base de datos vectorial.
+ * Retorna [] sin lanzar errores si HF o Supabase no están disponibles.
  */
 export async function searchProjects(query: string, limit = 3) {
   try {
     const embedding = await generateEmbedding(query);
+    if (!embedding) return [];
 
     const { data, error } = await supabaseServer.rpc('match_projects', {
       query_embedding: embedding,
@@ -29,7 +31,7 @@ export async function searchProjects(query: string, limit = 3) {
       match_count: limit,
     });
 
-    if (error) throw error;
+    if (error) return [];
     return data || [];
   } catch {
     return [];
