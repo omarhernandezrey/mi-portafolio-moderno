@@ -49,12 +49,15 @@ function extractContactData(texts: string[]): { name: string; email: string; pho
 function buildClosingMessage(name: string, contact: string, need: string, lang: string): string {
   const project = need ? `tu proyecto de ${need}` : 'tu proyecto';
   if (lang === 'en') {
-    return `All set, ${name}! Omar Hernández will contact you right away at ${contact} to kick off ${project}. He'll walk you through every detail!`;
+    const prefix = name ? `All set, ${name}! ` : 'All set! ';
+    return `${prefix}Omar Hernández will contact you right away at ${contact} to kick off ${project}. He'll walk you through every detail!`;
   }
   if (lang === 'pt') {
-    return `Tudo certo, ${name}! Omar Hernández vai entrar em contato agora mesmo pelo ${contact} para iniciar ${project}. Ele cuidará de todos os detalhes!`;
+    const prefix = name ? `Tudo certo, ${name}! ` : 'Tudo certo! ';
+    return `${prefix}Omar Hernández vai entrar em contato agora mesmo pelo ${contact} para iniciar ${project}. Ele cuidará de todos os detalhes!`;
   }
-  return `¡Todo listo, ${name}! Omar Hernández te contactará inmediatamente al ${contact} para iniciar ${project}. ¡Él te dará todos los detalles y coordinarán juntos cómo quieres tu proyecto!`;
+  const prefix = name ? `¡Todo listo, ${name}! ` : '¡Todo listo! ';
+  return `${prefix}Omar Hernández te contactará inmediatamente al ${contact} para iniciar ${project}. ¡Él te dará todos los detalles y coordinarán juntos cómo quieres tu proyecto!`;
 }
 
 function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean, lang: string): string {
@@ -197,9 +200,24 @@ export async function POST(req: NextRequest) {
       }).eq('id', conversationId).then(({ error }) => error && console.error('persist facts error:', error));
     }
 
-    // ── 4. CIERRE AUTOMÁTICO: si tenemos nombre + contacto, cerramos sin LLM ──
+    // ── 4. CIERRE AUTOMÁTICO: si tenemos contacto + (nombre o bot ya pidió datos) ─
     const hasContact = !!(knownEmail || knownPhone);
-    const canClose = !!(knownName && hasContact);
+
+    // Detecta si el bot acaba de pedir datos de contacto (últimos 4 mensajes)
+    const recentHistory = history.slice(-4);
+    const botRecentlyAskedContact = recentHistory.some(m =>
+      m.role === 'assistant' && (
+        m.content.toLowerCase().includes('correo') ||
+        m.content.toLowerCase().includes('whatsapp') ||
+        m.content.toLowerCase().includes('coordinar') ||
+        m.content.toLowerCase().includes('nombre completo') ||
+        m.content.toLowerCase().includes('full name') ||
+        m.content.toLowerCase().includes('email') ||
+        (m.content.toLowerCase().includes('phone') && m.content.includes('?'))
+      )
+    );
+
+    const canClose = !!(hasContact && (knownName || botRecentlyAskedContact));
 
     if (canClose && !isEval) {
       const contact = knownEmail || knownPhone;
@@ -213,7 +231,7 @@ export async function POST(req: NextRequest) {
       // Crear lead y notificar
       const lead = {
         type: 'client' as const,
-        name: knownName,
+        name: knownName || '(sin nombre)',
         email: knownEmail || '',
         phone: knownPhone || null,
         notes: knownNeed || message.substring(0, 120),
