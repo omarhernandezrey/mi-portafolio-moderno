@@ -12,7 +12,7 @@ const serializeProjects = (language: 'es' | 'en' | 'pt') =>
   PORTFOLIO_DATA.projects.slice(0, 5).map(p => `- ${pickLang(p.title, language)}: ${p.technologies.slice(0, 3).join(', ')}`).join('\n');
 
 const serializeObjections = (language: 'es' | 'en' | 'pt') =>
-  OBJECTIONS.slice(0, 8).map(o => `- ${o.acknowledge[language]}`).join('\n');
+  OBJECTIONS.map(o => `- ${o.acknowledge[language]}`).join('\n');
 
 export function buildSystemPrompt(
   language: 'es' | 'en' | 'pt',
