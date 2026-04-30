@@ -1,24 +1,19 @@
-import { HfInference } from '@huggingface/inference';
+import { InferenceClient } from '@huggingface/inference';
 import { serverEnv } from '@/config/env';
 import { supabaseServer } from '@/lib/supabaseServer';
 
-const hf = new HfInference(serverEnv.HF_TOKEN);
+const hf = new InferenceClient(serverEnv.HF_TOKEN);
 const MODEL = 'sentence-transformers/all-mpnet-base-v2'; // Genera vectores de 768 dimensiones
 
 /**
  * Genera el embedding de un texto usando HuggingFace (Gratis)
  */
 async function generateEmbedding(text: string): Promise<number[]> {
-  try {
-    const output = await hf.featureExtraction({
-      model: MODEL,
-      inputs: text,
-    });
-    return output as number[];
-  } catch (error) {
-    console.error('Error generating embedding:', error);
-    throw error;
-  }
+  const output = await hf.featureExtraction({
+    model: MODEL,
+    inputs: text,
+  });
+  return output as number[];
 }
 
 /**
@@ -36,8 +31,7 @@ export async function searchProjects(query: string, limit = 3) {
 
     if (error) throw error;
     return data || [];
-  } catch (error) {
-    console.error('RAG search error:', error);
+  } catch {
     return [];
   }
 }

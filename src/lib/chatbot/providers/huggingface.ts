@@ -1,6 +1,6 @@
 import { ProviderCall, ProviderError, buildMessages } from './types';
 import { serverEnv } from '@/config/env';
-import { HfInference } from '@huggingface/inference';
+import { InferenceClient } from '@huggingface/inference';
 
 // Lista de modelos recomendados en Hugging Face
 const FREE_MODELS = [
@@ -14,7 +14,7 @@ export const call: ProviderCall = async (args) => {
   const apiKey = serverEnv.HF_TOKEN;
   if (!apiKey) throw new ProviderError('huggingface', 'HF_TOKEN missing', { retryable: false });
 
-  const hf = new HfInference(apiKey);
+  const hf = new InferenceClient(apiKey);
   let lastError: ProviderError | null = null;
 
   for (const model of FREE_MODELS) {
