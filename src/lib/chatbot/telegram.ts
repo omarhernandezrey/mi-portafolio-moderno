@@ -31,6 +31,7 @@ export interface NotifyLeadInput {
   lead: {
     name?: string | null;
     email?: string | null;
+    phone?: string | null;
     type?: string | null;
     service_requested?: string | null;
   };
@@ -57,6 +58,7 @@ export async function notifyLead(input: NotifyLeadInput): Promise<void> {
     '',
     `👤 *Nombre:* ${escapeMd2(lead.name || 'Sin nombre')}`,
     `📧 *Email:* ${escapeMd2(lead.email || 'No proporcionado')}`,
+    `📱 *WhatsApp:* ${escapeMd2(lead.phone || 'No proporcionado')}`,
     `🏷️ *Tipo:* ${escapeMd2(lead.type || 'consulta')}`,
     `💼 *Servicio:* ${escapeMd2(lead.service_requested || 'Sin especificar')}`,
     '',

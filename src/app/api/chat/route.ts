@@ -30,7 +30,7 @@ const EMAIL_RE = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
 // Teléfonos colombianos (3XX XXX XXXX) e internacionales
 const PHONE_RE = /(?:\+?57[\s-]?)?3[0-2]\d[\s-]?\d{3}[\s-]?\d{4}|\+?[1-9]\d{8,14}/;
 // Nombres con frases comunes en ES/EN
-const NAME_RE = /(?:soy|me llamo|mi nombre es|i['']?m|i am|my name is|llámame|pueden llamarme|me pueden llamar|me llaman)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){0,3})/i;
+const NAME_RE = /(?:soy|me llamo|mi nombre es|i['']?m|i am|my name is|llámame|pueden llamarme|me pueden llamar|me llaman|habla[s]?\s+con)\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){0,3})/i;
 
 function extractContactData(texts: string[]): { name: string; email: string; phone: string } {
   let name = '', email = '', phone = '';
@@ -45,32 +45,50 @@ function extractContactData(texts: string[]): { name: string; email: string; pho
 // ─── Mensajes de cierre ──────────────────────────────────────────────────────
 
 function buildClosingMessage(name: string, contact: string, need: string, lang: string): string {
-  const needText = need ? `para ${need}` : 'para tu proyecto';
+  const project = need ? `tu proyecto de ${need}` : 'tu proyecto';
   if (lang === 'en') {
-    return `Perfect ${name} — Omar will contact you soon at ${contact} ${needText}. He'll take it from here!`;
+    return `All set, ${name}! Omar Hernández will contact you right away at ${contact} to kick off ${project}. He'll walk you through every detail!`;
   }
   if (lang === 'pt') {
-    return `Perfeito ${name} — Omar vai entrar em contato em breve pelo ${contact} ${needText}. Ele cuida de tudo!`;
+    return `Tudo certo, ${name}! Omar Hernández vai entrar em contato agora mesmo pelo ${contact} para iniciar ${project}. Ele cuidará de todos os detalhes!`;
   }
-  return `Perfecto ${name} — Omar te contactará pronto al ${contact} ${needText}. ¡Él se encarga de todo desde aquí!`;
+  return `¡Todo listo, ${name}! Omar Hernández te contactará inmediatamente al ${contact} para iniciar ${project}. ¡Él te dará todos los detalles y coordinarán juntos cómo quieres tu proyecto!`;
 }
 
 function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean, lang: string): string {
   const greeting = name ? `${name}, ` : '';
+  const hasName = !!name;
   if (lang === 'en') {
-    if (!hasEmail && !hasPhone) return `${greeting}to have Omar reach out — what's your name, email and phone/WhatsApp?`;
-    if (!hasEmail) return `${greeting}what's your email so Omar can send you the details?`;
-    return `${greeting}what's your WhatsApp so Omar can follow up quickly?`;
+    if (!hasEmail && !hasPhone) {
+      return hasName
+        ? `${greeting}to get started with Omar — what's your email and WhatsApp?`
+        : `to have Omar contact you — what's your full name, email and WhatsApp?`;
+    }
+    if (!hasEmail) return `${greeting}what's your email so Omar can send you the proposal?`;
+    return `${greeting}and your WhatsApp so Omar can reach out?`;
   }
-  if (!hasEmail && !hasPhone) return `${greeting}para que Omar te contacte, ¿me das tu nombre completo, correo y teléfono/WhatsApp?`;
+  if (lang === 'pt') {
+    if (!hasEmail && !hasPhone) {
+      return hasName
+        ? `${greeting}para iniciar com Omar — qual é seu email e WhatsApp?`
+        : `para Omar entrar em contato — qual é seu nome completo, email e WhatsApp?`;
+    }
+    if (!hasEmail) return `${greeting}qual é seu email para Omar enviar os detalhes?`;
+    return `${greeting}e seu WhatsApp para Omar entrar em contato?`;
+  }
+  if (!hasEmail && !hasPhone) {
+    return hasName
+      ? `${greeting}para coordinar con Omar — ¿cuál es tu correo y tu WhatsApp?`
+      : `para que Omar te contacte — ¿cuál es tu nombre completo, correo y WhatsApp?`;
+  }
   if (!hasEmail) return `${greeting}¿cuál es tu correo para que Omar te envíe los detalles?`;
-  return `${greeting}¿tienes WhatsApp para que Omar te escriba rápido?`;
+  return `${greeting}¿y tu WhatsApp para que Omar te escriba de inmediato?`;
 }
 
 // ─── Detección de intención de compra ───────────────────────────────────────
 
 // Solo dispara cuando el cliente CONFIRMA interés — no en el primer mensaje de necesidad
-const INTENT_RE = /\b(sí|si\b|me interesa|me sirve|de acuerdo|arrancamos|empezamos|contratar|perfecto|listo|ok\b|okay|dale|adelante|procedemos|me conviene|me animo|quiero (empezar|arrancar|contratar)|cu[aá]ndo empezamos)\b/i;
+const INTENT_RE = /\b(sí|si\b|me interesa|me sirve|de acuerdo|arrancamos|empezamos|contratar|perfecto|listo|ok\b|okay|dale|adelante|procedemos|me conviene|me animo|quiero (empezar|arrancar|contratar|esa|ese)|cu[aá]ndo empezamos|me quedo con esa|esa opci[oó]n|esa misma|quiero la landing|quiero el e-?commerce|quiero el sitio|quiero el mvp|la primera|la segunda)\b/i;
 const HANDOFF_RE = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
 const RECRUITER_RE = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
 const ACCEPTED_STACK_RE = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
