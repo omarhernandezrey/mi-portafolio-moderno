@@ -250,7 +250,7 @@ export async function POST(req: NextRequest) {
       if (nameBeforeContact) contextName = nameBeforeContact[1].trim();
     }
 
-    let effectiveName = knownName || contextName;
+    const effectiveName = knownName || contextName;
 
     // Extraer necesidad del cliente del historial si no está en facts
     const needFromHistory = knownNeed || history
