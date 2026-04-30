@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { clientEnv, serverEnv } from '@/config/env';
+
+export const maxDuration = 30;
 import { supabaseServer } from '@/lib/supabaseServer';
 import { generateReply } from '@/lib/chatbot/llm';
 import { buildSystemPrompt } from '@/lib/chatbot/systemPrompt';

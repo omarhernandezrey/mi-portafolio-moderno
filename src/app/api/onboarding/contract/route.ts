@@ -3,6 +3,8 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { generateContractPDF } from '@/lib/contracts/generate';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 
+export const maxDuration = 30;
+
 export async function POST(req: NextRequest) {
   try {
     const { token } = await req.json();

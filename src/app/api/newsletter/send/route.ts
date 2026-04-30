@@ -3,6 +3,8 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { sendNewsletterEdition } from '@/lib/chatbot/email';
 import { serverEnv } from '@/config/env';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
+
+export const maxDuration = 30;
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';

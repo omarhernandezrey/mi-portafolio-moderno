@@ -3,6 +3,8 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { serverEnv } from '@/config/env';
 
+export const maxDuration = 30;
+
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
