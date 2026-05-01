@@ -46,32 +46,73 @@ function extractContactData(texts: string[]): { name: string; email: string; pho
 
 // ─── Mensajes de cierre ──────────────────────────────────────────────────────
 
-// Extrae el servicio y precio que el bot cotizó en el historial
-function extractServiceAndPrice(history: Array<{ role: string; content: string }>): { service: string; price: string } {
-  // Precio: $X o $X-$Y o $X–$Y, con o sin USD
-  const PRICE_RE = /\$[\d.,]+(?:[-–—]\$?[\d.,]+)?(?:\s*USD)?/i;
-  const SERVICE_PATTERNS: Array<[RegExp, string]> = [
-    [/E-?commerce/i,       'E-commerce'],
-    [/Landing\s+page/i,    'Landing page'],
-    [/Landing/i,           'Landing'],
-    [/Web\s+corporativa/i, 'Web corporativa'],
-    [/App\/MVP/i,          'App/MVP'],
-    [/\bMVP\b/i,           'MVP'],
-  ];
+// Patrones reusables para detección de servicio y precio
+const PRICE_RE = /\$\s*\d[\d.,]*(?:\s*[-–—]\s*\$?\s*\d[\d.,]*)?(?:\s*USD)?/i;
+const SERVICE_PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
+  [/E-?commerce/i,         'E-commerce'],
+  [/Landing\s+page/i,      'Landing page'],
+  [/\bLanding\b/i,         'Landing'],
+  [/Web\s+corporativa/i,   'Web corporativa'],
+  [/App\s*\/\s*MVP/i,      'App/MVP'],
+  [/\bMVP\b/i,             'MVP'],
+];
 
-  for (const msg of [...history].reverse()) {
-    if (msg.role !== 'assistant') continue;
-    // Saltar catálogo (3+ servicios distintos en el mismo mensaje)
-    const svcCount = SERVICE_PATTERNS.filter(([re]) => re.test(msg.content)).length;
-    if (svcCount >= 3) continue;
-    for (const [re, name] of SERVICE_PATTERNS) {
-      if (re.test(msg.content)) {
-        const priceMatch = msg.content.match(PRICE_RE);
-        if (priceMatch) return { service: name, price: priceMatch[0] };
-        break;
-      }
+function findServiceMentions(text: string): string[] {
+  const found = new Set<string>();
+  for (const [re, name] of SERVICE_PATTERNS) {
+    if (re.test(text)) {
+      // Evitar contar variantes del mismo servicio (MVP cuando App/MVP ya entró, etc)
+      if (name === 'MVP' && found.has('App/MVP')) continue;
+      if (name === 'Landing' && found.has('Landing page')) continue;
+      found.add(name);
     }
   }
+  return Array.from(found);
+}
+
+// Extrae servicio y precio con múltiples estrategias en cascada
+function extractServiceAndPrice(messages: Array<{ role: string; content: string }>): { service: string; price: string } {
+  const reversed = [...messages].reverse();
+
+  // Estrategia 1: Mensaje del bot que menciona EXACTAMENTE 1 servicio + precio (cotización específica)
+  for (const msg of reversed) {
+    if (msg.role !== 'assistant') continue;
+    const services = findServiceMentions(msg.content);
+    if (services.length === 1) {
+      const priceMatch = msg.content.match(PRICE_RE);
+      if (priceMatch) return { service: services[0], price: priceMatch[0].trim() };
+    }
+  }
+
+  // Estrategia 2: Mensaje del usuario que menciona 1 servicio + precio (cliente eligió)
+  for (const msg of reversed) {
+    if (msg.role !== 'user') continue;
+    const services = findServiceMentions(msg.content);
+    if (services.length === 1) {
+      const priceMatch = msg.content.match(PRICE_RE);
+      if (priceMatch) return { service: services[0], price: priceMatch[0].trim() };
+    }
+  }
+
+  // Estrategia 3: Encontrar servicio elegido por el cliente y buscar su precio en mensajes del bot
+  let chosenService = '';
+  for (const msg of reversed) {
+    if (msg.role !== 'user') continue;
+    const services = findServiceMentions(msg.content);
+    if (services.length >= 1) { chosenService = services[0]; break; }
+  }
+  if (chosenService) {
+    const svcRe = SERVICE_PATTERNS.find(([, n]) => n === chosenService)![0];
+    for (const msg of reversed) {
+      if (msg.role !== 'assistant') continue;
+      if (svcRe.test(msg.content)) {
+        const priceMatch = msg.content.match(PRICE_RE);
+        if (priceMatch) return { service: chosenService, price: priceMatch[0].trim() };
+      }
+    }
+    return { service: chosenService, price: '' };
+  }
+
   return { service: '', price: '' };
 }
 
@@ -330,10 +371,11 @@ export async function POST(req: NextRequest) {
 
     if (canClose && !isEval) {
       const contact = knownEmail || knownPhone;
-      // Leer de facts primero (guardados durante la conversación); historial como respaldo
-      const { service: histSvc, price: histPrice } = extractServiceAndPrice([...history, { role: 'user', content: message }]);
-      const quotedService = savedFacts.service || histSvc;
-      const quotedPrice   = savedFacts.price   || histPrice;
+      // Derivar SIEMPRE del historial completo (más confiable que savedFacts cuyo update podría no haber commiteado)
+      const fullHistory = [...history, { role: 'user', content: message }];
+      const { service: histSvc, price: histPrice } = extractServiceAndPrice(fullHistory);
+      const quotedService = histSvc || savedFacts.service || '';
+      const quotedPrice   = histPrice || savedFacts.price || '';
       const closingMsg = buildClosingMessage(effectiveName, contact, quotedService, quotedPrice, needFromHistory, language);
 
       await supabaseServer.from('messages').insert([
