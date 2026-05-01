@@ -48,22 +48,22 @@ function extractContactData(texts: string[]): { name: string; email: string; pho
 
 // Extrae el servicio y precio que el bot cotizó en el historial
 function extractServiceAndPrice(history: Array<{ role: string; content: string }>): { service: string; price: string } {
-  const PRICE_RE = /\$[\d.,]+(?:[^\w\n]{0,3}\$?[\d.,]+)?(?:\s*USD)?/i;
+  // Precio: $X o $X-$Y o $X–$Y, con o sin USD
+  const PRICE_RE = /\$[\d.,]+(?:[-–—]\$?[\d.,]+)?(?:\s*USD)?/i;
   const SERVICE_PATTERNS: Array<[RegExp, string]> = [
-    [/E-?commerce/i,         'E-commerce'],
-    [/Landing\s+page/i,      'Landing page'],
-    [/Landing/i,             'Landing'],
-    [/Web\s+corporativa/i,   'Web corporativa'],
-    [/App\/MVP/i,            'App/MVP'],
-    [/\bMVP\b/i,             'MVP'],
+    [/E-?commerce/i,       'E-commerce'],
+    [/Landing\s+page/i,    'Landing page'],
+    [/Landing/i,           'Landing'],
+    [/Web\s+corporativa/i, 'Web corporativa'],
+    [/App\/MVP/i,          'App/MVP'],
+    [/\bMVP\b/i,           'MVP'],
   ];
 
   for (const msg of [...history].reverse()) {
     if (msg.role !== 'assistant') continue;
-    // Saltar mensajes de catálogo (listan 3+ servicios diferentes)
+    // Saltar catálogo (3+ servicios distintos en el mismo mensaje)
     const svcCount = SERVICE_PATTERNS.filter(([re]) => re.test(msg.content)).length;
     if (svcCount >= 3) continue;
-    // Buscar servicio + precio en el mismo mensaje
     for (const [re, name] of SERVICE_PATTERNS) {
       if (re.test(msg.content)) {
         const priceMatch = msg.content.match(PRICE_RE);
@@ -444,16 +444,16 @@ export async function POST(req: NextRequest) {
       { conversation_id: conversationId, role: 'assistant', content: rawReply },
     ]);
 
-    // Persistir servicio/precio en facts tan pronto el bot los cotice
+    // Persistir servicio/precio en facts (await para garantizar que esté antes del próximo request)
     if (!savedFacts.service) {
       const { service: detectedSvc, price: detectedPrice } = extractServiceAndPrice([
         ...history,
         { role: 'assistant', content: rawReply },
       ]);
       if (detectedSvc) {
-        supabaseServer.from('conversations').update({
+        await supabaseServer.from('conversations').update({
           facts: { ...savedFacts, service: detectedSvc, price: detectedPrice, need: needFromHistory || savedFacts.need },
-        }).eq('id', conversationId).then(({ error }) => error && console.error('svc persist error:', error));
+        }).eq('id', conversationId);
       }
     }
 
