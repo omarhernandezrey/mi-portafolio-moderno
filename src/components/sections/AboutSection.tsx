@@ -11,6 +11,7 @@ import {
   FaPhoneAlt,
 } from "react-icons/fa";
 import { useTranslation } from "@/hooks/useTranslation";
+import ProfileCard from "./ProfileCard";
 
 /* ──────────────────────────────────────────────────────────
    Función para crear partículas aleatorias (solo en cliente) */
@@ -231,71 +232,11 @@ const AboutSection: React.FC = () => {
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
             viewport={{ once: true }}
           >
-            {/* Marco animado */}
-            <div className="group relative w-[240px] h-[300px] mb-6">
-              <div
-                className="absolute inset-0 border-2 rounded-lg transform translate-x-4 -translate-y-4 transition-all duration-500 group-hover:translate-x-6 group-hover:-translate-y-6"
-                style={{ borderColor: "var(--accent-color)" }}
-              />
-              <div
-                className="relative w-full h-full overflow-hidden rounded-lg shadow-2xl border-2 transition-all duration-500 group-hover:scale-105 flex items-center justify-center"
-                style={{
-                  borderColor: "var(--accent-color)",
-                  backgroundColor: "var(--primary-color)",
-                }}
-              >
-                <Image
-                  src="/images/profile-SN-fondo.png"
-                  alt="Foto de perfil"
-                  className="object-cover w-full h-full"
-                  width={240}
-                  height={300}
-                  priority
-                />
-              </div>
-            </div>
-
-            {/* Botón de descarga de CV */}
-            <motion.a
-              href={cvDownloadPath}
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              className="relative inline-flex items-center justify-center gap-3 px-8 py-4 mt-6 font-semibold text-lg rounded-full shadow-xl backdrop-blur-lg border-2"
-              style={{
-                background: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-                color: "var(--white-color)",
-                borderColor: "var(--accent-color)",
-                boxShadow: `0 10px 30px color-mix(in srgb, var(--accent-color) 30%, transparent)`,
-              }}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: `0 15px 40px color-mix(in srgb, var(--accent-color) 40%, transparent)`,
-              }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              {/* Icono animado */}
-              <motion.svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                animate={{ y: [0, -3, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v6m0 0l-3-3m3 3l3-3M12 4v8"
-                />
-              </motion.svg>
-{t("about.downloadCV")}
-            </motion.a>
+            <ProfileCard
+              name={t("about.name")}
+              tagline={t("about.role")}
+              cvPath={cvDownloadPath}
+            />
           </motion.div>
 
           {/* Texto "Sobre mí" */}

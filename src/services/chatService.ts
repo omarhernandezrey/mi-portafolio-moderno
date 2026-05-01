@@ -20,8 +20,14 @@ export async function sendChatMessage(
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Chat API error');
+    let errorMsg = 'Chat API error';
+    try {
+      const errorBody = await response.json();
+      errorMsg = errorBody.message || errorMsg;
+    } catch {
+      // response was not JSON (e.g., Next.js 500 HTML page)
+    }
+    throw new Error(errorMsg);
   }
 
   return response.json();
