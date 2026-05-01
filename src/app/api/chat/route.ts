@@ -48,12 +48,29 @@ function extractContactData(texts: string[]): { name: string; email: string; pho
 
 // Extrae el servicio y precio que el bot cotizó en el historial
 function extractServiceAndPrice(history: Array<{ role: string; content: string }>): { service: string; price: string } {
-  // Permite texto opcional entre el nombre del servicio y el precio (ej: "E-commerce con pasarela: $1.500–$3.500 USD")
-  const BOT_QUOTE_RE = /^(Landing(?:\s+(?:page|de\s+[\w\s]+))?|Web\s+corporativa|E-?commerce|App\/MVP|MVP)\b[^$\d\n]{0,50}(\$[\d.,]+(?:[–\-]\$?[\d.,]+)?(?:\s*USD)?)/im;
+  const PRICE_RE = /\$[\d.,]+(?:[^\w\n]{0,3}\$?[\d.,]+)?(?:\s*USD)?/i;
+  const SERVICE_PATTERNS: Array<[RegExp, string]> = [
+    [/E-?commerce/i,         'E-commerce'],
+    [/Landing\s+page/i,      'Landing page'],
+    [/Landing/i,             'Landing'],
+    [/Web\s+corporativa/i,   'Web corporativa'],
+    [/App\/MVP/i,            'App/MVP'],
+    [/\bMVP\b/i,             'MVP'],
+  ];
+
   for (const msg of [...history].reverse()) {
     if (msg.role !== 'assistant') continue;
-    const m = msg.content.match(BOT_QUOTE_RE);
-    if (m) return { service: m[1].trim(), price: m[2].trim() };
+    // Saltar mensajes de catálogo (listan 3+ servicios diferentes)
+    const svcCount = SERVICE_PATTERNS.filter(([re]) => re.test(msg.content)).length;
+    if (svcCount >= 3) continue;
+    // Buscar servicio + precio en el mismo mensaje
+    for (const [re, name] of SERVICE_PATTERNS) {
+      if (re.test(msg.content)) {
+        const priceMatch = msg.content.match(PRICE_RE);
+        if (priceMatch) return { service: name, price: priceMatch[0] };
+        break;
+      }
+    }
   }
   return { service: '', price: '' };
 }
@@ -313,7 +330,10 @@ export async function POST(req: NextRequest) {
 
     if (canClose && !isEval) {
       const contact = knownEmail || knownPhone;
-      const { service: quotedService, price: quotedPrice } = extractServiceAndPrice([...history, { role: 'user', content: message }]);
+      // Leer de facts primero (guardados durante la conversación); historial como respaldo
+      const { service: histSvc, price: histPrice } = extractServiceAndPrice([...history, { role: 'user', content: message }]);
+      const quotedService = savedFacts.service || histSvc;
+      const quotedPrice   = savedFacts.price   || histPrice;
       const closingMsg = buildClosingMessage(effectiveName, contact, quotedService, quotedPrice, needFromHistory, language);
 
       await supabaseServer.from('messages').insert([
@@ -423,6 +443,19 @@ export async function POST(req: NextRequest) {
       { conversation_id: conversationId, role: 'user',      content: message },
       { conversation_id: conversationId, role: 'assistant', content: rawReply },
     ]);
+
+    // Persistir servicio/precio en facts tan pronto el bot los cotice
+    if (!savedFacts.service) {
+      const { service: detectedSvc, price: detectedPrice } = extractServiceAndPrice([
+        ...history,
+        { role: 'assistant', content: rawReply },
+      ]);
+      if (detectedSvc) {
+        supabaseServer.from('conversations').update({
+          facts: { ...savedFacts, service: detectedSvc, price: detectedPrice, need: needFromHistory || savedFacts.need },
+        }).eq('id', conversationId).then(({ error }) => error && console.error('svc persist error:', error));
+      }
+    }
 
     // ── 8. Procesar bloques estructurados del LLM (LEAD, HANDOFF, CALCOM) ────
     const lead = extractLead(rawReply);
