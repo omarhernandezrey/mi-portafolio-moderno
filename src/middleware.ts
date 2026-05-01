@@ -37,6 +37,11 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
+  // Redirigir si ya está autenticado y trata de ir al login
+  if (pathname === '/admin/login' && user) {
+    return NextResponse.redirect(new URL('/admin', request.url))
+  }
+
   // Rutas de administración protegidas
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     if (!user) {
