@@ -15,10 +15,12 @@ import {
   CreditCard,
   Webhook,
   BookOpen,
-  Ticket
+  Ticket,
+  Palette
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePalette } from '@/hooks/usePalette';
 
 interface AdminNavProps {
   role: string;
@@ -29,6 +31,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const supabase = createClient();
+  const { togglePalette } = usePalette();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -99,8 +102,22 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
           ))}
         </nav>
 
-        <div className="p-6 mt-auto border-t border-white/5 bg-background/30">
-          <div className="flex items-center gap-3 mb-6 px-2">
+        <div className="p-6 mt-auto border-t border-white/5 bg-background/30 space-y-4">
+          {/* Palette Toggle */}
+          <button 
+            onClick={togglePalette}
+            className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-text-muted hover:text-primary hover:bg-primary/5 transition-all group"
+            title="Cambiar Paleta de Colores"
+          >
+            <Palette size={18} className="group-hover:rotate-90 transition-transform duration-500" />
+            <span>Tema Visual</span>
+            <div className="ml-auto flex gap-1">
+               <div className="w-2 h-2 rounded-full bg-primary" />
+               <div className="w-2 h-2 rounded-full bg-accent" />
+            </div>
+          </button>
+
+          <div className="flex items-center gap-3 px-2">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs">
               {userEmail?.[0].toUpperCase()}
             </div>
@@ -127,12 +144,20 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
           <span className="font-bold text-white-custom">Admin Suite</span>
         </Link>
         
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 rounded-lg bg-white/5 text-white-custom"
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={togglePalette}
+            className="p-2 rounded-lg bg-white/5 text-primary"
+          >
+            <Palette size={20} />
+          </button>
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 rounded-lg bg-white/5 text-white-custom"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </header>
 
       {/* Mobile Menu Overlay */}
@@ -161,7 +186,15 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
               ))}
             </nav>
 
-            <div className="pt-6 border-t border-white/5">
+            <div className="pt-6 border-t border-white/5 space-y-4">
+              <button 
+                onClick={togglePalette}
+                className="flex w-full items-center justify-center gap-3 p-4 rounded-2xl bg-primary/10 text-primary font-bold"
+              >
+                <Palette size={20} />
+                <span>Cambiar Tema Visual</span>
+              </button>
+
               <button 
                 onClick={handleLogout}
                 className="flex w-full items-center justify-center gap-3 p-4 rounded-2xl bg-red-500/10 text-red-400 font-bold"
