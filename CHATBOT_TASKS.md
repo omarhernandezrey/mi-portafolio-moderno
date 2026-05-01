@@ -4563,3 +4563,154 @@ NVIDIA_SOLAR_API_KEY=nvapi-Jbqgq2...
 - [x] Panel visible completo en iPhone SE (375px), iPhone 14 (390px), iPad Mini (768px portrait/landscape), iPad (1024px) y desktop.
 - [x] Safe area correcta — sin contenido oculto por notch ni barra de home en iOS.
 - [x] Botón X de cierre siempre accesible en todos los dispositivos.
+
+---
+
+## 🛠️ SOLUCIONES IMPLEMENTADAS — CHATBOT (Sesión de correcciones profundas)
+
+> Documentado el 2026-04-30. Todos los cambios están en producción en `omarhernandezrey.com`.
+
+---
+
+### 📋 Resumen de problemas resueltos
+
+| # | Problema | Síntoma | Estado |
+|---|----------|---------|--------|
+| 1 | Bot usaba nombre "Roxana" con clientes que no se llamaban así | El LLM tomaba el nombre de los ejemplos del system prompt | ✅ Resuelto |
+| 2 | `canClose` nunca disparaba — lead no se guardaba | Cliente daba email + teléfono y el bot ignoraba el cierre | ✅ Resuelto |
+| 3 | Sin notificación Telegram al capturar lead | Consecuencia directa del `canClose = false` | ✅ Resuelto |
+| 4 | Sin botón WhatsApp al cerrar conversación | `handoffUrl` no se generaba porque `canClose` no disparaba | ✅ Resuelto |
+| 5 | Mensaje de cierre no incluía servicio ni precio elegido | `buildClosingMessage` usaba texto vago "tu proyecto" | ✅ Resuelto |
+| 6 | Admin dashboard `/admin/login` fallaba con "Failed to fetch" | Variables `NEXT_PUBLIC_SUPABASE_*` faltaban en el bundle del browser | ✅ Resuelto |
+| 7 | Logs `[error]` en Vercel del módulo RAG/HuggingFace | Cliente HF se inicializaba a nivel de módulo, fallaba silenciosamente | ✅ Resuelto |
+| 8 | Build roto por `prefer-const` | `let effectiveName` debía ser `const` | ✅ Resuelto |
+
+---
+
+### 🐛 Detalle técnico: Bug del nombre incorrecto ("Roxana")
+
+| Campo | Detalle |
+|-------|---------|
+| **Causa raíz** | El system prompt tenía ejemplos con `"Hola Roxana!"`. El LLM memorizaba ese nombre del contexto de ejemplos y lo usaba en el paso de solicitud de contacto cuando no conocía el nombre real del cliente. |
+| **Archivo afectado** | `src/lib/chatbot/systemPrompt.ts` |
+| **Archivo afectado** | `src/app/api/chat/route.ts` |
+| **Solución 1 — system prompt** | Se reemplazaron todos los ejemplos con "Roxana" por "Laura" y "Carlos". Se eliminaron ejemplos hardcodeados de solicitud de contacto ("Andrés"/"María") que el LLM podía imitar. |
+| **Solución 2 — server-side enforcement** | Se agregó un bloque que intercepta el mensaje ANTES de enviarlo al LLM cuando detecta `INTENT_RE` (cliente confirma interés). El servidor genera la solicitud de contacto completa con `buildContactRequest(effectiveName, ...)` y reemplaza la respuesta del LLM por completo. El LLM nunca ve ni genera ese paso crítico. |
+| **Función clave** | `buildContactRequest(name, hasEmail, hasPhone, lang)` en `route.ts` |
+| **Garantía** | El nombre en la solicitud de contacto siempre viene de `effectiveName` (extraído del historial real de la conversación), nunca del LLM. |
+
+---
+
+### 🐛 Detalle técnico: `canClose` nunca disparaba
+
+| Campo | Detalle |
+|-------|---------|
+| **Causa raíz** | La condición original dependía de que `facts` (guardados en Supabase) ya tuvieran los datos — pero la persistencia era asíncrona y en el mismo request no estaban disponibles todavía. |
+| **Archivo afectado** | `src/app/api/chat/route.ts` |
+| **Solución** | Se reescribió `canClose` con **3 condiciones independientes**, cualquiera de las cuales es suficiente para cerrar: |
+
+| Condición | Código | Descripción |
+|-----------|--------|-------------|
+| **1 — Datos en mensaje actual** | `EMAIL_IN_CURRENT && PHONE_IN_CURRENT` | Si el mensaje actual contiene email Y teléfono, cierre inmediato. No depende de historial ni facts. |
+| **2 — Bot pidió datos recientemente** | `hasContact && botRecentlyAskedContact` | Si hay algún dato de contacto acumulado Y el bot preguntó por datos en los últimos 8 mensajes. |
+| **3 — Nombre + contacto conocidos** | `hasContact && effectiveName` | Si ya conocemos el nombre del cliente Y tenemos al menos un dato de contacto. |
+
+```typescript
+const canClose = !!(
+  (EMAIL_IN_CURRENT && PHONE_IN_CURRENT) ||
+  (hasContact && botRecentlyAskedContact) ||
+  (hasContact && effectiveName)
+);
+```
+
+| Variable | Fuente | Descripción |
+|----------|--------|-------------|
+| `EMAIL_IN_CURRENT` | `EMAIL_RE.test(message)` | Detecta email en el mensaje actual |
+| `PHONE_IN_CURRENT` | `PHONE_RE.test(message)` | Detecta teléfono colombiano o internacional en el mensaje actual |
+| `hasContact` | `!!(knownEmail \|\| knownPhone)` | Cualquier dato de contacto acumulado en el historial o facts |
+| `botRecentlyAskedContact` | Scan de últimos 8 mensajes del bot | Detecta si el bot pidió correo/WhatsApp/nombre recientemente |
+| `effectiveName` | `knownName \|\| contextName` | Nombre del cliente por cualquier estrategia de extracción |
+
+---
+
+### ✨ Detalle técnico: Extracción de nombre en múltiples estrategias
+
+| Estrategia | Condición de activación | Regex / Lógica |
+|------------|------------------------|----------------|
+| **1 — Del historial con `NAME_RE`** | Siempre (scan de todos los mensajes del usuario) | `/(?:soy\|me llamo\|mi nombre es\|hablas con\|...)([A-ZÁÉÍÓÚÑ][a-z...]{0,3})/i` |
+| **2 — Bot pidió nombre completo** | `botAskedForName = true` y `!knownName` | Mensaje que sea solo un nombre: `/^([A-Z][a-z]+ [A-Z][a-z]+...){1,3}$/i` |
+| **3 — Nombre antes de email/teléfono** | Mensaje con email o teléfono y `!knownName` | `/^([A-Z][a-z]...{1,4})\s+(?:[\w.+\-]+@\|(?:\+?57\s*)?3[0-9])/i` |
+
+---
+
+### ✨ Detalle técnico: Servicio y precio en el mensaje de cierre
+
+| Campo | Detalle |
+|-------|---------|
+| **Problema** | El mensaje de cierre decía "coordinar tu proyecto" sin especificar qué servicio eligió el cliente ni a qué precio. |
+| **Solución** | Se agregó la función `extractServiceAndPrice(history)` que escanea los mensajes del bot en orden inverso buscando el patrón `"Servicio: $X–$Y USD"`. |
+| **Función** | `extractServiceAndPrice` en `route.ts` |
+| **Regex** | `/^(Landing...\|Web corporativa\|E-?commerce\|App\/MVP)\s*[:—–-]\s*(\$[\d.,]+(?:[–\-]\$?[\d.,]+)?(?:\s*USD)?)/im` |
+| **Resultado en mensaje** | "…para coordinar tu **Web corporativa ($800–$1.800 USD)**." |
+| **Resultado en lead** | Campos `service_requested` y `budget` se guardan en Supabase con los valores reales. |
+| **Resultado en WhatsApp** | El resumen del mensaje de WhatsApp a Omar incluye el servicio y precio: `"Web corporativa $800–$1.800 USD"`. |
+
+**Ejemplo de mensaje de cierre resultante:**
+
+```
+¡Perfecto, Ana Graciela Rey Acosta! Tus datos quedaron guardados.
+Omar Hernández te contactará inmediatamente al anagracielareyacosta@gmail.com
+para coordinar tu Web corporativa ($800–$1.800 USD).
+Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.
+```
+
+---
+
+### ✨ Detalle técnico: Admin dashboard — Login con magic link
+
+| Campo | Detalle |
+|-------|---------|
+| **Problema** | La página `/admin/login` lanzaba "Failed to fetch" al intentar enviar el magic link. |
+| **Causa raíz** | El cliente browser de Supabase (`createBrowserClient`) necesita `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`. En Next.js, solo las variables con prefijo `NEXT_PUBLIC_` se incluyen en el bundle del cliente. Las variables `SUPABASE_URL` y `SUPABASE_ANON_KEY` solo están disponibles en el servidor. |
+| **Variables agregadas a Vercel** | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_ANON_KEY` |
+| **Archivos afectados** | `.env.local`, `src/config/env.ts` (ya tenía fallback `process.env.NEXT_PUBLIC_SUPABASE_URL`) |
+| **Flujo correcto** | `signInWithOtp` (browser) → Supabase envía email → Usuario hace clic → `/auth/callback?code=...` → `exchangeCodeForSession` (servidor) → Redirect a `/admin` |
+| **Nota PKCE** | El magic link generado ANTES de agregar las variables no funcionaba porque el PKCE verifier no se almacenó en las cookies del browser. Con las variables correctas y un nuevo link, el flujo completa sin errores. |
+
+---
+
+### ✨ Detalle técnico: RAG/HuggingFace — Logs de error silenciados
+
+| Campo | Detalle |
+|-------|---------|
+| **Problema** | Vercel mostraba `[error]` por el módulo RAG cada vez que HuggingFace no estaba disponible o `HF_TOKEN` no estaba configurado. |
+| **Causa raíz** | `new InferenceClient(token)` se ejecutaba a nivel de módulo (fuera de función). Cualquier fallo tiraba error no capturado. |
+| **Archivo afectado** | `src/lib/chatbot/rag.ts` |
+| **Solución** | El cliente se inicializa dentro de `generateEmbedding()`, envuelto en `try/catch`. Si falla, retorna `null`. `searchProjects` retorna `[]` sin loggear cuando el embedding es `null`. El chat continúa sin contexto RAG — degradación elegante. |
+
+---
+
+### 📁 Mapa de archivos modificados en esta sesión
+
+| Archivo | Cambios |
+|---------|---------|
+| `src/app/api/chat/route.ts` | `canClose` con 3 condiciones · `buildContactRequest` server-side · `extractServiceAndPrice` · `buildClosingMessage` con servicio/precio · lead guarda `service_requested` y `budget` · WhatsApp summary con servicio |
+| `src/lib/chatbot/systemPrompt.ts` | Eliminados "Roxana" de ejemplos · Reemplazados por "Laura"/"Carlos" · Instrucción anti-reinicio de saludo · Paso 4 delega cierre al servidor |
+| `src/lib/chatbot/rag.ts` | Cliente HF dentro de try/catch · `generateEmbedding` retorna `null` silenciosamente · `searchProjects` retorna `[]` sin logs |
+| `.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` agregadas |
+| Vercel (producción) | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_ANON_KEY` agregadas |
+
+---
+
+### ✅ Flujo completo validado en producción
+
+Conversación real con **Ana Graciela Rey Acosta** (2026-04-30, 03:42 AM):
+
+| Turno | Cliente | Bot | Evaluación |
+|-------|---------|-----|------------|
+| 1 | "hola hablas con Ana Graciela Rey Acosta" | "¡Hola Ana Graciela! ¿En qué puedo ayudarte hoy?" | ✅ Nombre correcto extraído con `NAME_RE` |
+| 2 | "quisiera una página web que me traiga clientes vendo palitos de queso" | "Tengo: Landing $250-$600, Web corporativa $800-$1.800, E-commerce $1.500-$3.500, App/MVP $2.500-$5.000 USD. ¿Cuál encaja con tu negocio de palitos de queso?" | ✅ Catálogo + negocio del cliente incluido |
+| 3 | "Web corporativa $800" | "Web corporativa: $800–$1800 USD. ¿Te interesa?" | ✅ Cotización específica |
+| 4 | "si" | "para coordinar con Ana Graciela — ¿cuál es tu correo y tu WhatsApp?" | ✅ Server-side · nombre correcto · sin "Roxana" |
+| 5 | "Ana Graciela Rey Acosta anagracielareyacosta@gmail.com 3219052878" | "¡Perfecto, Ana Graciela Rey Acosta! Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al anagracielareyacosta@gmail.com para coordinar tu Web corporativa ($800–$1.800 USD). Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo." | ✅ `canClose` disparó · Lead en Supabase · Telegram enviado · Botón WhatsApp visible |
+

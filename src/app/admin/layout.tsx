@@ -10,12 +10,6 @@ export default async function AdminLayout({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // No redirigimos aquí si no hay usuario para permitir que la página de login se renderice
-  // Pero el layout se aplica a TODAS las páginas bajo /admin.
-  // Podríamos mover la página de login fuera o manejarlo aquí.
-  // Si estamos en /admin/login, no mostramos el nav.
-  
-  // Para simplificar, obtenemos el rol solo si hay usuario
   let role = 'viewer';
   let email = '';
 
@@ -31,9 +25,11 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background-color)] text-[var(--white-color)]">
+    <div className="min-h-screen bg-background text-white-custom font-main selection:bg-primary/30">
       {user && <AdminNav role={role} userEmail={email} />}
-      {children}
+      <div className={`${user ? 'lg:pl-72 pt-16 lg:pt-0' : ''} transition-all duration-300`}>
+        {children}
+      </div>
     </div>
   );
 }

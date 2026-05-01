@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
-import { Bot, CheckCircle, ArrowRight } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Globe, Target, UserCheck } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 
 interface Props {
@@ -85,108 +85,147 @@ export default async function ServicioCiudadPage({ params }: Props) {
   const initialChatMessage = `Hola Omar, vengo de la página de ${servicio.name} en ${ciudad.name}. Me gustaría saber más sobre este servicio.`;
 
   return (
-    <div className="min-h-screen bg-[var(--background-color)] text-[var(--text-color)]">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent leading-tight">
-              {h1}
+    <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
+      
+      {/* Hero Architecture */}
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5 bg-card-bg/20 backdrop-blur-sm">
+        {/* Visual Matrix */}
+        <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-20">
+          <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
+        </div>
+
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 text-center space-y-12">
+          <div className="space-y-6 max-w-4xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+              Regional Engineering Hub • {ciudad.name}
+            </div>
+            <h1 className="text-5xl md:text-8xl font-black text-white-custom tracking-tighter leading-[0.9] italic">
+              {h1.split(' en ')[0]} <br />
+              <span className="text-primary italic">en {ciudad.name}</span>
             </h1>
-            <p className="text-xl md:text-2xl font-bold text-[var(--muted-color)] mb-8">
+            <h2 className="text-xl md:text-2xl font-bold text-text-muted italic opacity-60 tracking-tight leading-relaxed max-w-2xl mx-auto">
               {h2}
-            </p>
-            <p className="text-lg leading-relaxed mb-10 text-[var(--text-color)]/80">
+            </h2>
+            <p className="text-lg text-text-muted/70 font-medium leading-relaxed max-w-2xl mx-auto italic">
               {description}
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <OpenChatButton 
-                message={initialChatMessage}
-                className="px-8 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black shadow-lg shadow-[var(--primary-color)]/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
-              >
-                Solicitar presupuesto en {ciudad.name}
-                <ArrowRight size={20} />
-              </OpenChatButton>
-            </div>
           </div>
-        </div>
-        
-        {/* Background elements */}
-        <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[var(--primary-color)] rounded-full blur-[100px] animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--accent-color)] rounded-full blur-[120px]"></div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            <OpenChatButton 
+              message={initialChatMessage}
+              className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
+            >
+              Auditar Proyecto en {ciudad.name}
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </OpenChatButton>
+          </div>
         </div>
       </section>
 
-      {/* Why Choose Section */}
-      <section className="py-20 bg-[var(--secondary-background-color)]/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-black mb-12 text-center">
-              ¿Por qué elegir {servicio.name} para tu negocio en {ciudad.name}?
-            </h2>
-            
-            <div className="grid gap-8">
-              <div className="flex gap-4 p-6 rounded-3xl bg-[var(--background-color)] border border-[var(--primary-color)]/10 shadow-xl">
-                <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)]">
-                  <CheckCircle size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Presencia Local Garantizada</h3>
-                  <p className="text-[var(--muted-color)]">
-                    Entendemos el mercado de {ciudad.name} y adaptamos nuestras soluciones tecnológicas para que conecten con tus clientes locales en {ciudad.country}.
-                  </p>
-                </div>
-              </div>
+      {/* Strategic Value Proposition */}
+      <section className="py-32 bg-background relative overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-24">
+          <div className="text-center space-y-4">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Methodology & Performance</h2>
+            <h3 className="text-3xl md:text-5xl font-black text-white-custom tracking-tighter italic">
+              Infraestructura diseñada para <br />
+              <span className="text-primary text-outline-primary">el mercado de {ciudad.name}</span>
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <ValueCard 
+              icon={<Globe size={32} />} 
+              title="Relevancia Geográfica"
+              description={`Optimizamos su arquitectura digital para los protocolos de búsqueda específicos de ${ciudad.name}, asegurando que su entidad tecnológica conecte de forma prioritaria con clientes en ${ciudad.country}.`}
+            />
+            <ValueCard 
+              icon={<Zap size={32} />} 
+              title="Eficiencia de Ejecución"
+              description={`No solo consolidamos código; desplegamos activos financieros. Desde ${servicio.id === 'chatbot-ia' ? 'agentes inteligentes autónomos' : 'sistemas de carga ultra-rápida'} para la competencia local en ${ciudad.name}.`}
+            />
+          </div>
 
-              <div className="flex gap-4 p-6 rounded-3xl bg-[var(--background-color)] border border-[var(--primary-color)]/10 shadow-xl">
-                <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-[var(--primary-color)]/10 flex items-center justify-center text-[var(--primary-color)]">
-                  <Bot size={24} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Tecnología de Vanguardia</h3>
-                  <p className="text-[var(--muted-color)]">
-                    No solo entregamos código; entregamos ventajas competitivas. Desde {servicio.id === 'chatbot-ia' ? 'agentes inteligentes' : 'aplicaciones ultra-rápidas'} hasta optimización extrema para móviles en {ciudad.name}.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-16 text-center">
-              <p className="text-[var(--muted-color)] mb-8 italic">
-                &quot;Mi misión es que las empresas de {ciudad.name} no solo tengan una página web, sino una máquina de ventas automatizada.&quot;
+          <div className="mt-20 p-12 md:p-20 rounded-[60px] bg-card-bg border border-white/5 text-center shadow-2xl relative group overflow-hidden">
+            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[80px]" />
+            <div className="max-w-2xl mx-auto space-y-8 relative z-10">
+              <p className="text-lg md:text-xl text-text-muted font-medium italic opacity-70 leading-relaxed">
+                &ldquo;Nuestra misión operativa es que las organizaciones en {ciudad.name} dejen de tener simples sitios web y comiencen a operar máquinas de conversión automatizadas bajo estándares de clase mundial.&rdquo;
               </p>
-              <OpenChatButton 
-                message={initialChatMessage}
-                className="text-[var(--primary-color)] font-black hover:underline underline-offset-8 decoration-2"
-              >
-                Hablemos sobre tu proyecto en {ciudad.name} &rarr;
-              </OpenChatButton>
+              <div className="flex items-center justify-center gap-4 pt-6">
+                <div className="w-12 h-px bg-primary/30" />
+                <OpenChatButton 
+                  message={initialChatMessage}
+                  className="text-primary font-black text-[11px] uppercase tracking-[0.4em] hover:scale-105 transition-transform italic"
+                >
+                  Consultoría Técnica en {ciudad.name}
+                </OpenChatButton>
+                <div className="w-12 h-px bg-primary/30" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Dynamic SEO Section to avoid duplication penalties */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto prose prose-invert prose-p:text-[var(--text-color)]/80">
-            <h2 className="text-2xl font-bold mb-6">Expertos en {servicio.name} para {ciudad.country}</h2>
+      {/* Corporate Technical Content (SEO Optimized) */}
+      <section className="py-32 border-t border-white/5 bg-background/50">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <div className="prose prose-invert prose-primary max-w-none 
+            prose-h2:text-4xl prose-h2:font-black prose-h2:tracking-tighter prose-h2:italic prose-h2:mb-10
+            prose-p:text-text-muted prose-p:text-lg prose-p:leading-relaxed prose-p:font-medium prose-p:italic prose-p:opacity-70
+            prose-strong:text-white-custom prose-strong:font-black">
+            <h2>Expertos en {servicio.name} para {ciudad.country}</h2>
             <p>
-              En {ciudad.name}, la competencia digital crece día a día. Ya sea que busques {servicio.keywords[0]} o {servicio.keywords[1]}, es fundamental contar con un socio tecnológico que hable tu mismo idioma y entienda tus desafíos en {ciudad.name}.
+              En el ecosistema digital de {ciudad.name}, la ventaja técnica es la única moneda de cambio real. Ya sea que su organización requiera {servicio.keywords[0]} o una integración compleja de {servicio.keywords[1]}, es imperativo contar con un partner de ingeniería que entienda la logística y los desafíos operativos de {ciudad.name}.
             </p>
             <p>
-              Nuestra metodología de trabajo se enfoca en resultados tangibles. Implementamos {servicio.name} pensando en el ROI, asegurando que cada línea de código escrita aporte al crecimiento de tu marca en {ciudad.country}.
+              Nuestra ingeniería se enfoca en el ROI medible. Implementamos <strong>{servicio.name}</strong> analizando cada hito del desarrollo para asegurar que el despliegue final contribuya al crecimiento orgánico y la autoridad de marca en {ciudad.country}.
             </p>
             <p>
-              Desde el centro de {ciudad.name} hasta las zonas comerciales más importantes, apoyamos a emprendedores locales a digitalizarse con éxito. No permitas que tu negocio se quede atrás en la era de la inteligencia artificial.
+              Desde los distritos financieros de {ciudad.name} hasta los centros de innovación más dinámicos, potenciamos a las entidades locales para que lideren su sector a través de la digitalización estratégica. El futuro de su negocio en {ciudad.name} no puede depender de soluciones genéricas; requiere ingeniería de precisión.
             </p>
           </div>
         </div>
       </section>
+
+      {/* Global Trust Protocol */}
+      <div className="flex flex-wrap justify-center gap-12 py-16 opacity-20 border-t border-white/5">
+        <TrustItem icon={<Shield size={14} />} text="Secure Deployment" />
+        <TrustItem icon={<UserCheck size={14} />} text="Verified Consultant" />
+        <TrustItem icon={<Target size={14} />} text="Data Driven Strategy" />
+      </div>
 
       <Footer />
+    </div>
+  );
+}
+
+function ValueCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+  return (
+    <div className="group bg-card-bg rounded-[40px] border border-white/5 p-10 shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden">
+      <div className="absolute -right-4 -top-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
+        {icon}
+      </div>
+      <div className="mb-10 w-20 h-20 rounded-[32px] bg-background/50 border border-white/5 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-500">
+        {icon}
+      </div>
+      <div className="space-y-4">
+        <h4 className="text-2xl font-black text-white-custom italic group-hover:text-primary transition-colors">{title}</h4>
+        <p className="text-sm text-text-muted font-medium italic opacity-60 leading-relaxed">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function TrustItem({ icon, text }: { icon: React.ReactNode, text: string }) {
+  return (
+    <div className="flex items-center gap-2 font-black text-[9px] uppercase tracking-[0.4em] text-text-muted italic">
+      {icon}
+      {text}
     </div>
   );
 }

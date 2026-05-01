@@ -46,18 +46,33 @@ function extractContactData(texts: string[]): { name: string; email: string; pho
 
 // ─── Mensajes de cierre ──────────────────────────────────────────────────────
 
-function buildClosingMessage(name: string, contact: string, need: string, lang: string): string {
-  const project = need ? `tu proyecto de ${need}` : 'tu proyecto';
+// Extrae el servicio y precio que el bot cotizó en el historial
+function extractServiceAndPrice(history: Array<{ role: string; content: string }>): { service: string; price: string } {
+  // Busca mensajes del bot con patrón "Servicio: $X–$Y USD"
+  const BOT_QUOTE_RE = /^(Landing(?:\s+(?:page|de\s+[\w\s]+))?|Web\s+corporativa|E-?commerce|App\/MVP|MVP)\s*[:—–-]\s*(\$[\d.,]+(?:[–\-]\$?[\d.,]+)?(?:\s*USD)?)/im;
+  for (const msg of [...history].reverse()) {
+    if (msg.role !== 'assistant') continue;
+    const m = msg.content.match(BOT_QUOTE_RE);
+    if (m) return { service: m[1].trim(), price: m[2].trim() };
+  }
+  return { service: '', price: '' };
+}
+
+function buildClosingMessage(name: string, contact: string, service: string, price: string, need: string, lang: string): string {
+  const serviceDesc = service
+    ? (price ? `${service} (${price})` : service)
+    : need ? `tu proyecto de ${need.substring(0, 60)}` : 'tu proyecto';
+
   if (lang === 'en') {
     const prefix = name ? `All set, ${name}! ` : 'All set! ';
-    return `${prefix}Your info is saved. Omar Hernández will reach out to you at ${contact} right away to kick off ${project}. If you'd like to message him directly, tap the WhatsApp button below!`;
+    return `${prefix}Your info is saved. Omar Hernández will reach out to you at ${contact} right away to kick off your ${serviceDesc}. If you'd like to message him directly, tap the WhatsApp button below!`;
   }
   if (lang === 'pt') {
     const prefix = name ? `Tudo certo, ${name}! ` : 'Tudo certo! ';
-    return `${prefix}Seus dados foram salvos. Omar Hernández vai entrar em contato pelo ${contact} agora mesmo para iniciar ${project}. Se quiser falar com ele diretamente, use o botão do WhatsApp abaixo!`;
+    return `${prefix}Seus dados foram salvos. Omar Hernández vai entrar em contato pelo ${contact} agora mesmo para iniciar seu ${serviceDesc}. Se quiser falar com ele diretamente, use o botão do WhatsApp abaixo!`;
   }
   const prefix = name ? `¡Perfecto, ${name}! ` : '¡Perfecto! ';
-  return `${prefix}Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al ${contact} para coordinar ${project}. Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.`;
+  return `${prefix}Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al ${contact} para coordinar tu ${serviceDesc}. Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.`;
 }
 
 function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean, lang: string): string {
@@ -270,7 +285,8 @@ export async function POST(req: NextRequest) {
 
     if (canClose && !isEval) {
       const contact = knownEmail || knownPhone;
-      const closingMsg = buildClosingMessage(effectiveName, contact, needFromHistory, language);
+      const { service: quotedService, price: quotedPrice } = extractServiceAndPrice([...history, { role: 'user', content: message }]);
+      const closingMsg = buildClosingMessage(effectiveName, contact, quotedService, quotedPrice, needFromHistory, language);
 
       await supabaseServer.from('messages').insert([
         { conversation_id: conversationId, role: 'user',      content: message },
@@ -285,14 +301,14 @@ export async function POST(req: NextRequest) {
         phone: knownPhone || null,
         notes: needFromHistory || message.substring(0, 120),
         company: null,
-        service_requested: null,
-        budget: null,
+        service_requested: quotedService || null,
+        budget: quotedPrice || null,
         timeline: null,
       };
 
       supabaseServer.from('conversations').update({
         visitor_name: effectiveName || undefined,
-        facts: { ...savedFacts, name: effectiveName, email: knownEmail, phone: knownPhone, need: needFromHistory },
+        facts: { ...savedFacts, name: effectiveName, email: knownEmail, phone: knownPhone, need: needFromHistory, service: quotedService, price: quotedPrice },
       }).eq('id', conversationId).then(() => {});
 
       const { data: insertedLead } = await supabaseServer
@@ -308,9 +324,8 @@ export async function POST(req: NextRequest) {
         pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
       }
 
-      // Incluir botón WhatsApp para que el cliente pueda escribir a Omar directamente
       const whatsappSummary = encodeURIComponent(
-        `Hola Omar, soy el chatbot de tu portafolio. Nuevo lead: ${effectiveName || 'Sin nombre'} | ${knownEmail || ''} | ${knownPhone || ''} | ${needFromHistory || 'proyecto'}`
+        `Hola Omar, chatbot de tu portafolio. Nuevo lead: ${effectiveName || 'Sin nombre'} | ${knownEmail || ''} | ${knownPhone || ''} | ${quotedService ? `${quotedService} ${quotedPrice}` : needFromHistory || 'proyecto'}`
       );
       const handoffUrl = clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER
         ? `https://wa.me/${clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${whatsappSummary}`

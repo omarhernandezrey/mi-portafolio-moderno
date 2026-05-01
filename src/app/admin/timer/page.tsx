@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Play, Square, Clock, User } from 'lucide-react';
+import { Play, Square, Clock, Zap, Layout, ChevronRight, Activity } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface TimerEntry {
   id: string;
@@ -29,98 +30,221 @@ export default function TimerPage() {
   }, []);
 
   const fetchActive = async () => {
-    const r = await fetch('/api/admin/timer');
-    const data = await r.json();
-    setActiveEntries(data);
+    try {
+      const r = await fetch('/api/admin/timer');
+      if (r.ok) {
+        const data = await r.json();
+        setActiveEntries(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const fetchLeads = async () => {
-    const r = await fetch('/api/admin/leads/list'); // Necesito este endpoint o uno similar
-    const data = await r.json();
-    setLeads(data);
+    try {
+      const r = await fetch('/api/admin/leads/list');
+      if (r.ok) {
+        const data = await r.json();
+        setLeads(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleStart = async () => {
     if (!selectedLead) return;
     setIsLoading(true);
-    await fetch('/api/admin/timer', {
-      method: 'POST',
-      body: JSON.stringify({ action: 'start', projectId: selectedLead, description })
-    });
-    setDescription('');
-    fetchActive();
-    setIsLoading(false);
+    try {
+      await fetch('/api/admin/timer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start', projectId: selectedLead, description })
+      });
+      setDescription('');
+      fetchActive();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleStop = async (id: string) => {
     setIsLoading(true);
-    await fetch('/api/admin/timer', {
-      method: 'POST',
-      body: JSON.stringify({ action: 'stop', entryId: id })
-    });
-    fetchActive();
-    setIsLoading(false);
+    try {
+      await fetch('/api/admin/timer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'stop', entryId: id })
+      });
+      fetchActive();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <main className="p-8 max-w-4xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold flex items-center gap-3">
-        <Clock className="text-blue-600" /> Time Tracking
-      </h1>
-
-      {/* Selector de Proyecto */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-        <h2 className="font-bold text-slate-700">Iniciar nueva sesión</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          <select 
-            value={selectedLead}
-            onChange={(e) => setSelectedLead(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 p-3 text-sm focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Seleccionar Cliente/Proyecto</option>
-            {leads.map(l => (
-              <option key={l.id} value={l.id}>{l.name} {l.company ? `(${l.company})` : ''}</option>
-            ))}
-          </select>
-          <input 
-            type="text" 
-            placeholder="¿Qué estás haciendo?"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 p-3 text-sm focus:ring-2 focus:ring-blue-500"
-          />
+    <div className="p-4 md:p-8 lg:p-12 space-y-10 max-w-[1200px] mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 bg-card-bg/40 p-8 rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+          <Clock size={160} className="rotate-12" />
         </div>
-        <button
-          disabled={!selectedLead || isLoading}
-          onClick={handleStart}
-          className="flex items-center justify-center gap-2 w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50 transition-all"
-        >
-          <Play size={18} /> Iniciar Timer
-        </button>
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-3">
+            <span className="w-8 h-px bg-primary/30" />
+            Performance Terminal
+          </div>
+          <h1 className="text-4xl font-black text-white-custom tracking-tight italic">Timer</h1>
+          <p className="text-text-muted text-sm font-medium mt-2">Seguimiento de productividad y gestión de billable hours.</p>
+        </div>
+
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="px-5 py-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-text-muted">Status: Operational</span>
+          </div>
+        </div>
       </div>
 
-      {/* Activos */}
-      <div className="space-y-4">
-        <h2 className="font-bold text-slate-500 uppercase text-xs tracking-widest">En curso</h2>
-        {activeEntries.length === 0 && <p className="text-slate-400 italic text-sm">No hay timers activos.</p>}
-        {activeEntries.map(entry => (
-          <div key={entry.id} className="bg-blue-50 border border-blue-100 p-4 rounded-xl flex items-center justify-between animate-pulse">
-            <div>
-              <div className="font-bold text-blue-900 flex items-center gap-2">
-                <User size={14} /> {entry.leads?.name || 'Cargando...'}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+        {/* Control Panel */}
+        <section className="xl:col-span-5 bg-card-bg rounded-[40px] border border-white/5 p-8 shadow-2xl space-y-8">
+          <div>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-6 flex items-center gap-2">
+              <Zap size={14} />
+              Nueva Sesión
+            </h3>
+            
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase text-text-muted/60 tracking-widest ml-2 italic">Seleccionar Entidad</label>
+                <div className="relative">
+                  <select 
+                    value={selectedLead}
+                    onChange={(e) => setSelectedLead(e.target.value)}
+                    className="w-full rounded-[24px] border border-white/5 bg-background/50 px-6 py-4 text-sm text-white-custom outline-none focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all shadow-inner appearance-none italic"
+                  >
+                    <option value="">Buscar Cliente o Proyecto...</option>
+                    {leads.map(l => (
+                      <option key={l.id} value={l.id}>{l.name} {l.company ? `— ${l.company}` : ''}</option>
+                    ))}
+                  </select>
+                  <ChevronRight size={16} className="absolute right-6 top-1/2 -translate-y-1/2 text-text-muted/30 rotate-90" />
+                </div>
               </div>
-              <p className="text-sm text-blue-700">{entry.description}</p>
-              <p className="text-[10px] text-blue-500 mt-1">Iniciado: {new Date(entry.started_at).toLocaleTimeString()}</p>
+
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase text-text-muted/60 tracking-widest ml-2 italic">Objetivo de la Actividad</label>
+                <input 
+                  type="text" 
+                  placeholder="Ej: Optimización de Performance React..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full rounded-[24px] border border-white/5 bg-background/50 px-6 py-4 text-sm text-white-custom outline-none focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all shadow-inner"
+                />
+              </div>
+
+              <button
+                disabled={!selectedLead || isLoading}
+                onClick={handleStart}
+                className="group relative flex w-full items-center justify-center gap-3 rounded-[24px] bg-primary px-8 py-5 text-xs font-black uppercase tracking-[0.2em] text-background shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] hover:shadow-primary/30 active:scale-[0.98] disabled:opacity-30 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <Play size={16} className="fill-current" />
+                <span className="relative z-10">Activar Cronómetro</span>
+              </button>
             </div>
-            <button
-              onClick={() => handleStop(entry.id)}
-              className="bg-red-600 text-white p-3 rounded-full hover:bg-red-700 shadow-lg active:scale-95 transition-all"
-            >
-              <Square size={20} fill="white" />
-            </button>
           </div>
-        ))}
+
+          <div className="p-6 rounded-[28px] bg-background/50 border border-white/5 border-dashed">
+            <div className="flex items-center gap-3 text-text-muted/40 mb-3 uppercase font-black text-[9px] tracking-widest">
+              <Activity size={12} />
+              Tips de Productividad
+            </div>
+            <p className="text-[11px] text-text-muted leading-relaxed font-medium italic opacity-60">
+              &ldquo;El enfoque profundo de 90 minutos maximiza la calidad del código Next.js.&rdquo;
+            </p>
+          </div>
+        </section>
+
+        {/* Active Timers List */}
+        <section className="xl:col-span-7 space-y-6">
+          <div className="flex items-center justify-between px-6">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/50 flex items-center gap-2">
+              <Layout size={14} />
+              Operaciones en Curso
+            </h3>
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">{activeEntries.length} Activas</span>
+          </div>
+
+          <AnimatePresence mode="popLayout">
+            {activeEntries.length === 0 ? (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="bg-background/20 rounded-[40px] border border-white/5 border-dashed p-20 flex flex-col items-center justify-center text-center space-y-6"
+              >
+                <div className="w-20 h-20 rounded-[32px] bg-white/5 border border-white/10 flex items-center justify-center text-text-muted/10">
+                  <Clock size={40} strokeWidth={1} />
+                </div>
+                <div>
+                  <p className="text-white-custom font-bold tracking-tight">Terminal en Reposo</p>
+                  <p className="text-text-muted text-xs italic opacity-40 mt-1">Inicia una sesión para comenzar el rastreo.</p>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="space-y-4">
+                {activeEntries.map(entry => (
+                  <motion.div 
+                    key={entry.id}
+                    layout
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="bg-card-bg/60 border border-primary/20 p-8 rounded-[32px] flex items-center justify-between shadow-xl backdrop-blur-sm group"
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className="w-16 h-16 rounded-[24px] bg-primary/10 border border-primary/20 flex items-center justify-center relative">
+                        <div className="absolute inset-0 bg-primary/20 rounded-[24px] animate-ping opacity-20" />
+                        <Activity className="text-primary" size={24} />
+                      </div>
+                      <div>
+                        <div className="font-black text-white-custom text-lg tracking-tight flex items-center gap-3">
+                          {entry.leads?.name || 'Procesando...'}
+                          <span className="px-2 py-0.5 rounded-md bg-white/5 text-[9px] text-text-muted uppercase tracking-widest border border-white/10">
+                            {entry.leads?.company || 'Freelance'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-text-muted font-medium italic mt-1">{entry.description || 'Tarea sin descripción técnica'}</p>
+                        <div className="flex items-center gap-4 mt-4 text-[10px] font-black uppercase tracking-[0.15em] text-primary/60">
+                          <span className="flex items-center gap-1.5 bg-primary/5 px-3 py-1 rounded-full border border-primary/10">
+                            <Clock size={12} />
+                            Inicio: {new Date(entry.started_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleStop(entry.id)}
+                      className="w-14 h-14 rounded-full bg-red-500/10 border border-red-500/30 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white-custom hover:scale-110 transition-all shadow-lg active:scale-95"
+                      title="Detener Operación"
+                    >
+                      <Square size={20} fill="currentColor" />
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </AnimatePresence>
+        </section>
       </div>
-    </main>
+    </div>
   );
 }

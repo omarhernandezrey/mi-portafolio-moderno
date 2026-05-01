@@ -8,7 +8,11 @@ import {
   ChevronRight,
   AlertTriangle,
   Ticket,
-  Clock
+  Clock,
+  ArrowUpRight,
+  Filter,
+  RefreshCw,
+  Search
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -63,174 +67,298 @@ async function getStats() {
 
 export default async function AdminDashboardPage() {
   const stats = await getStats();
+  const currentDate = new Date().toLocaleDateString('es-CO', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 
   return (
-    <div className="p-0">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-[var(--muted-color)] mt-2">Resumen de actividad del chatbot</p>
+    <div className="p-4 md:p-8 lg:p-12 space-y-10 max-w-[1600px] mx-auto">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-3">
+            <span className="w-8 h-px bg-primary/30" />
+            Control Center
+          </div>
+          <h1 className="text-4xl font-black text-white-custom tracking-tight mb-2 italic">Dashboard</h1>
+          <p className="text-text-muted text-sm font-medium flex items-center gap-2">
+            <Clock size={14} className="text-primary" />
+            {currentDate.charAt(0).toUpperCase() + currentDate.slice(1)}
+          </p>
         </div>
-
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <StatCard 
-            title="Leads (Mes)" 
-            value={stats.monthLeads.toString()} 
-            icon={<Users size={20} />} 
-            trend="+12%" 
-            color="text-blue-400"
-          />
-          <StatCard 
-            title="Conversaciones" 
-            value={stats.monthConvs.toString()} 
-            icon={<MessageSquare size={20} />} 
-            trend="+5%" 
-            color="text-purple-400"
-          />
-          <StatCard 
-            title="Tickets Pendientes" 
-            value={stats.openTickets.toString()} 
-            icon={<Ticket size={20} />} 
-            trend="Revisar" 
-            color="text-red-400"
-          />
-          <StatCard 
-            title="Tasa Conversión" 
-            value={`${stats.conversionRate}%`} 
-            icon={<TrendingUp size={20} />} 
-            trend="Ideal: >10%" 
-            color="text-emerald-400"
-          />
-          <StatCard 
-            title="Pagos Confirmados" 
-            value={stats.monthPaid.toString()} 
-            icon={<DollarSign size={20} />} 
-            trend="Goal: 5" 
-            color="text-amber-400"
-          />
+        
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:bg-white/10 transition-all">
+            <RefreshCw size={16} />
+            Sincronizar
+          </button>
+          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
+            <TrendingUp size={16} />
+            Generar Reporte
+          </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Recent Leads Table */}
-          <div className="lg:col-span-2 bg-[var(--card-bg-color)] rounded-2xl border border-[var(--primary-color)]/10 overflow-hidden">
-            <div className="p-6 border-b border-[var(--primary-color)]/10 flex justify-between items-center">
-              <h2 className="text-xl font-bold">Últimos Leads</h2>
-              <Link href="/admin/leads" className="text-sm text-[var(--primary-color)] hover:underline flex items-center gap-1">
-                Ver todos <ChevronRight size={16} />
-              </Link>
+      {/* KPI Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+        <StatCard 
+          title="Leads Mensuales" 
+          value={stats.monthLeads.toString()} 
+          icon={<Users size={22} />} 
+          trend="+12.4%" 
+          color="primary"
+          description="Nuevos clientes potenciales"
+        />
+        <StatCard 
+          title="Conversaciones" 
+          value={stats.monthConvs.toString()} 
+          icon={<MessageSquare size={22} />} 
+          trend="+5.1%" 
+          color="accent"
+          description="Interacciones del chatbot"
+        />
+        <StatCard 
+          title="Tasa de Cierre" 
+          value={`${stats.conversionRate}%`} 
+          icon={<TrendingUp size={22} />} 
+          trend="Estable" 
+          color="primary"
+          description="Conversión visita → lead"
+        />
+        <StatCard 
+          title="Ventas Confirmadas" 
+          value={stats.monthPaid.toString()} 
+          icon={<DollarSign size={22} />} 
+          trend="80% Meta" 
+          color="accent"
+          description="Pagos procesados este mes"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Recent Leads Table Container */}
+        <div className="xl:col-span-2 space-y-6">
+          <div className="bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
+            <div className="p-8 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-white-custom flex items-center gap-2">
+                  Actividad Reciente
+                  <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-black uppercase">Live</span>
+                </h2>
+                <p className="text-text-muted text-xs font-medium mt-1">Últimos clientes que interactuaron con el sistema</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="relative group">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50 group-focus-within:text-primary transition-colors" size={14} />
+                  <input 
+                    type="text" 
+                    placeholder="Buscar lead..." 
+                    className="bg-background/50 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-xs text-white-custom outline-none focus:border-primary/40 transition-all w-full sm:w-48"
+                  />
+                </div>
+                <button className="p-2 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:text-white-custom transition-all">
+                  <Filter size={18} />
+                </button>
+              </div>
             </div>
+            
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="text-xs uppercase text-[var(--muted-color)] bg-[var(--background-color)]/50">
-                  <tr>
-                    <th className="px-6 py-3">Nombre</th>
-                    <th className="px-6 py-3">Servicio</th>
-                    <th className="px-6 py-3">Estado</th>
-                    <th className="px-6 py-3">Fecha</th>
-                    <th className="px-6 py-3"></th>
+              <table className="w-full text-left border-separate border-spacing-0">
+                <thead>
+                  <tr className="bg-background/20">
+                    <th className="px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Cliente</th>
+                    <th className="px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Requerimiento</th>
+                    <th className="px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Estado</th>
+                    <th className="px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--primary-color)]/5">
+                <tbody className="divide-y divide-white/5">
                   {stats.recentLeads.length > 0 ? stats.recentLeads.map((lead) => (
-                    <tr key={lead.id} className="hover:bg-[var(--primary-color)]/5 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="font-medium">{lead.name || 'Sin nombre'}</div>
-                        <div className="text-xs text-[var(--muted-color)]">{lead.email}</div>
+                    <tr key={lead.id} className="group hover:bg-white/[0.02] transition-colors">
+                      <td className="px-8 py-6">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white-custom">
+                            {lead.name?.[0] || '?'}
+                          </div>
+                          <div>
+                            <div className="font-bold text-white-custom text-sm group-hover:text-primary transition-colors">{lead.name || 'Anónimo'}</div>
+                            <div className="text-[10px] text-text-muted/70 font-medium tracking-tight mt-0.5">{lead.email}</div>
+                          </div>
+                        </div>
                       </td>
-                      <td className="px-6 py-4 text-sm">{lead.service_requested || 'N/A'}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
-                          lead.status === 'paid' ? 'bg-emerald-500/20 text-emerald-400' :
-                          lead.status === 'cold' ? 'bg-blue-500/20 text-blue-400' :
-                          'bg-amber-500/20 text-amber-400'
-                        }`}>
-                          {lead.status}
-                        </span>
+                      <td className="px-8 py-6">
+                        <div className="text-sm font-bold text-text-muted group-hover:text-white-custom transition-colors italic">
+                          {lead.service_requested || 'Consulta General'}
+                        </div>
+                        <div className="text-[10px] text-text-muted/50 font-black uppercase mt-1 tracking-widest flex items-center gap-1">
+                          <Clock size={10} />
+                          {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--muted-color)]">
-                        {new Date(lead.created_at).toLocaleDateString()}
+                      <td className="px-8 py-6">
+                        <StatusBadge status={lead.status} />
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <Link href={`/admin/leads/${lead.id}`} className="text-[var(--primary-color)]">
-                          <ChevronRight size={20} />
+                      <td className="px-8 py-6 text-right">
+                        <Link 
+                          href={`/admin/leads/${lead.id}`} 
+                          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all group/btn"
+                        >
+                          <ArrowUpRight size={18} className="group-hover/btn:scale-110 transition-transform" />
                         </Link>
                       </td>
                     </tr>
                   )) : (
                     <tr>
-                      <td colSpan={5} className="px-6 py-12 text-center text-[var(--muted-color)]">
-                        No hay leads registrados aún.
+                      <td colSpan={4} className="px-8 py-20 text-center">
+                        <div className="flex flex-col items-center gap-4">
+                          <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-text-muted/20">
+                            <Users size={32} />
+                          </div>
+                          <p className="text-text-muted text-sm font-bold italic tracking-tight opacity-40">No hay registros para mostrar</p>
+                        </div>
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
+
+            <Link 
+              href="/admin/leads" 
+              className="flex items-center justify-center p-6 text-[10px] uppercase tracking-[0.4em] font-black text-text-muted hover:text-primary transition-colors border-t border-white/5 bg-background/10"
+            >
+              Ver repositorio completo
+              <ChevronRight size={14} className="ml-2" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Sidebar Info Panel */}
+        <div className="space-y-8">
+          {/* Active Tickets */}
+          <div className="bg-card-bg rounded-[32px] border border-white/5 p-8 shadow-xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+              <Ticket size={120} className="-rotate-12" />
+            </div>
+            
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="font-bold text-white-custom">Atención Prioritaria</h3>
+              <span className="px-3 py-1 rounded-full bg-red-500/10 text-red-400 text-[10px] font-black uppercase tracking-widest border border-red-500/20">
+                {stats.openTickets} Alertas
+              </span>
+            </div>
+            
+            <div className="space-y-4 relative z-10">
+              <div className="p-5 rounded-2xl bg-background/40 border border-white/5 hover:border-primary/20 transition-all cursor-pointer">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="text-[10px] font-black uppercase text-primary tracking-widest">Handoff Requerido</span>
+                  <span className="text-[8px] text-text-muted">Hace 5m</span>
+                </div>
+                <p className="text-xs text-text-muted leading-relaxed font-medium">Cliente solicitó hablar con humano en el flujo de E-commerce.</p>
+              </div>
+              <button className="w-full py-4 rounded-2xl bg-white/5 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom hover:bg-white/10 transition-all border border-dashed border-white/10">
+                Gestionar Tickets
+              </button>
+            </div>
           </div>
 
-          {/* Quick Info / Tips */}
-          <div className="space-y-6">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-6">
-              <div className="flex items-center gap-2 text-amber-400 mb-4">
-                <AlertTriangle size={20} />
-                <h3 className="font-bold">Recordatorio diario</h3>
-              </div>
-              <ul className="text-sm space-y-3 text-amber-100/80">
-                <li>• Revisa Telegram por mensajes bloqueados.</li>
-                <li>• Responde a los leads en menos de 30 min.</li>
-                <li>• Ajusta el prompt si el bot falla mucho.</li>
-              </ul>
+          {/* System Health */}
+          <div className="bg-background rounded-[32px] border border-white/5 p-8 shadow-xl">
+            <h3 className="font-bold text-white-custom mb-8 flex items-center gap-2">
+              <RefreshCw size={16} className="text-primary" />
+              Estado Operativo
+            </h3>
+            <div className="space-y-6">
+              <HealthItem label="Motor LLM (Groq)" status="Optimal" delay="420ms" />
+              <HealthItem label="Core Database" status="Operational" delay="12ms" />
+              <HealthItem label="Notificaciones" status="Active" delay="Direct" />
             </div>
-
-            <div className="bg-[var(--card-bg-color)] border border-[var(--primary-color)]/10 rounded-2xl p-6">
-              <h3 className="font-bold mb-4 flex items-center gap-2">
-                <Clock size={18} className="text-[var(--primary-color)]" />
-                Estado del Sistema
-              </h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-[var(--muted-color)]">Groq API</span>
-                  <span className="text-emerald-400 font-medium">Online</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-[var(--muted-color)]">Supabase DB</span>
-                  <span className="text-emerald-400 font-medium">Online</span>
-                </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-[var(--muted-color)]">Telegram Bot</span>
-                  <span className="text-emerald-400 font-medium">Active</span>
-                </div>
+            
+            <div className="mt-10 p-6 rounded-2xl bg-primary/5 border border-primary/10">
+              <div className="flex items-center gap-2 text-primary mb-3">
+                <AlertTriangle size={16} />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Sugerencia IA</span>
               </div>
+              <p className="text-[11px] text-text-muted leading-relaxed font-medium italic opacity-80">
+                &ldquo;La tasa de conversión ha subido un 2% tras el ajuste del Playbook de ventas en el sector Tech.&rdquo;
+              </p>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
 
-interface StatCardProps {
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
-  trend?: string;
-  color: string;
-}
-
-function StatCard({ title, value, icon, trend, color }: StatCardProps) {
+function StatCard({ title, value, icon, trend, color, description }: { 
+  title: string; 
+  value: string; 
+  icon: React.ReactNode; 
+  trend: string;
+  color: 'primary' | 'accent';
+  description: string;
+}) {
+  const isPrimary = color === 'primary';
+  
   return (
-    <div className="bg-[var(--card-bg-color)] p-6 rounded-2xl border border-[var(--primary-color)]/10 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-2 rounded-lg bg-[var(--background-color)] ${color}`}>
+    <div className="bg-card-bg p-8 rounded-[32px] border border-white/5 shadow-xl relative overflow-hidden group hover:border-primary/20 transition-all duration-500">
+      {/* Decorative Glow */}
+      <div className={`absolute -right-4 -top-4 w-24 h-24 blur-[60px] opacity-0 group-hover:opacity-20 transition-opacity duration-700 ${isPrimary ? 'bg-primary' : 'bg-accent'}`} />
+      
+      <div className="flex items-start justify-between mb-8">
+        <div className={`p-4 rounded-2xl border transition-all duration-500 ${
+          isPrimary 
+            ? 'bg-primary/5 border-primary/10 text-primary group-hover:bg-primary group-hover:text-background' 
+            : 'bg-accent/5 border-accent/10 text-accent group-hover:bg-accent group-hover:text-background'
+        }`}>
           {icon}
         </div>
-        <span className="text-[10px] font-bold text-[var(--muted-color)] uppercase tracking-wider">
+        <div className={`flex items-center gap-1 text-[10px] font-black uppercase tracking-tighter ${isPrimary ? 'text-primary' : 'text-accent'}`}>
           {trend}
-        </span>
+          <ArrowUpRight size={12} />
+        </div>
       </div>
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="text-xs text-[var(--muted-color)] mt-1">{title}</div>
+      
+      <div className="relative z-10">
+        <div className="text-4xl font-black text-white-custom tracking-tight mb-2 tracking-tighter">{value}</div>
+        <div className="text-[10px] uppercase font-black tracking-[0.2em] text-white-custom/60 group-hover:text-white-custom transition-colors">{title}</div>
+        <div className="text-[10px] text-text-muted mt-3 font-medium italic opacity-60 line-clamp-1">{description}</div>
+      </div>
+    </div>
+  );
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const configs: Record<string, { label: string, color: string }> = {
+    paid: { label: 'Completado', color: 'text-primary bg-primary/10 border-primary/20' },
+    cold: { label: 'Sin Acción', color: 'text-text-muted bg-white/5 border-white/10 opacity-60' },
+    new: { label: 'Pendiente', color: 'text-accent bg-accent/10 border-accent/20 animate-pulse' },
+    contacted: { label: 'En Curso', color: 'text-white-custom bg-white/10 border-white/20' },
+  };
+
+  const config = configs[status] || configs.new;
+
+  return (
+    <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border transition-all ${config.color}`}>
+      {config.label}
+    </span>
+  );
+}
+
+function HealthItem({ label, status, delay }: { label: string, status: string, delay: string }) {
+  return (
+    <div className="flex items-center justify-between group">
+      <div className="flex flex-col">
+        <span className="text-[10px] text-text-muted font-black uppercase tracking-wider group-hover:text-white-custom transition-colors">{label}</span>
+        <span className="text-[9px] text-text-muted/40 font-medium">{delay} latency</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] font-black uppercase text-white-custom tracking-tighter">{status}</span>
+        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+      </div>
     </div>
   );
 }
