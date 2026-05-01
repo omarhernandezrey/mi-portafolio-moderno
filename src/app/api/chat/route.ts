@@ -48,8 +48,8 @@ function extractContactData(texts: string[]): { name: string; email: string; pho
 
 // Extrae el servicio y precio que el bot cotizó en el historial
 function extractServiceAndPrice(history: Array<{ role: string; content: string }>): { service: string; price: string } {
-  // Busca mensajes del bot con patrón "Servicio: $X–$Y USD"
-  const BOT_QUOTE_RE = /^(Landing(?:\s+(?:page|de\s+[\w\s]+))?|Web\s+corporativa|E-?commerce|App\/MVP|MVP)\s*[:—–-]\s*(\$[\d.,]+(?:[–\-]\$?[\d.,]+)?(?:\s*USD)?)/im;
+  // Permite texto opcional entre el nombre del servicio y el precio (ej: "E-commerce con pasarela: $1.500–$3.500 USD")
+  const BOT_QUOTE_RE = /^(Landing(?:\s+(?:page|de\s+[\w\s]+))?|Web\s+corporativa|E-?commerce|App\/MVP|MVP)\b[^$\d\n]{0,50}(\$[\d.,]+(?:[–\-]\$?[\d.,]+)?(?:\s*USD)?)/im;
   for (const msg of [...history].reverse()) {
     if (msg.role !== 'assistant') continue;
     const m = msg.content.match(BOT_QUOTE_RE);
@@ -59,20 +59,21 @@ function extractServiceAndPrice(history: Array<{ role: string; content: string }
 }
 
 function buildClosingMessage(name: string, contact: string, service: string, price: string, need: string, lang: string): string {
-  const serviceDesc = service
-    ? (price ? `${service} (${price})` : service)
-    : need ? `tu proyecto de ${need.substring(0, 60)}` : 'tu proyecto';
+  const serviceTag = service ? (price ? `${service} (${price})` : service) : null;
 
   if (lang === 'en') {
     const prefix = name ? `All set, ${name}! ` : 'All set! ';
-    return `${prefix}Your info is saved. Omar Hernández will reach out to you at ${contact} right away to kick off your ${serviceDesc}. If you'd like to message him directly, tap the WhatsApp button below!`;
+    const proj = serviceTag || (need ? `your project: ${need.substring(0, 60)}` : 'your project');
+    return `${prefix}Your info is saved. Omar Hernández will reach out to you at ${contact} right away to kick off ${proj}. If you'd like to message him directly, tap the WhatsApp button below!`;
   }
   if (lang === 'pt') {
     const prefix = name ? `Tudo certo, ${name}! ` : 'Tudo certo! ';
-    return `${prefix}Seus dados foram salvos. Omar Hernández vai entrar em contato pelo ${contact} agora mesmo para iniciar seu ${serviceDesc}. Se quiser falar com ele diretamente, use o botão do WhatsApp abaixo!`;
+    const proj = serviceTag || (need ? `seu projeto: ${need.substring(0, 60)}` : 'seu projeto');
+    return `${prefix}Seus dados foram salvos. Omar Hernández vai entrar em contato pelo ${contact} agora mesmo para iniciar ${proj}. Se quiser falar com ele diretamente, use o botão do WhatsApp abaixo!`;
   }
   const prefix = name ? `¡Perfecto, ${name}! ` : '¡Perfecto! ';
-  return `${prefix}Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al ${contact} para coordinar tu ${serviceDesc}. Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.`;
+  const proj = serviceTag || (need ? `proyecto: ${need.substring(0, 60)}` : 'proyecto');
+  return `${prefix}Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al ${contact} para coordinar tu ${proj}. Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.`;
 }
 
 function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean, lang: string): string {
@@ -243,17 +244,22 @@ export async function POST(req: NextRequest) {
     // Extracción de nombre con múltiples estrategias
     let contextName = '';
 
-    // Estrategia 1: bot pidió "nombre completo" y el mensaje es solo un nombre
+    const alreadyRequestedName = savedFacts.name_requested === 'true';
+
+    // Estrategia 1: bot pidió "nombre completo" / "tu nombre" y el mensaje es solo un nombre
     const botAskedForName = recentHistory.some(m =>
       m.role === 'assistant' && (
         m.content.toLowerCase().includes('nombre completo') ||
         m.content.toLowerCase().includes('full name') ||
         m.content.toLowerCase().includes('cómo te llamas') ||
-        m.content.toLowerCase().includes('como te llamas')
+        m.content.toLowerCase().includes('como te llamas') ||
+        m.content.toLowerCase().includes('tu nombre para que omar') ||
+        m.content.toLowerCase().includes('your full name so omar')
       )
     );
     if (!knownName && botAskedForName) {
-      const plainMatch = message.trim().match(/^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,3})$/i);
+      // Acepta nombre de una o más palabras (cambio: {1,3} → {0,3})
+      const plainMatch = message.trim().match(/^([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){0,3})$/i);
       if (plainMatch) contextName = plainMatch[1].trim();
     }
 
@@ -273,14 +279,36 @@ export async function POST(req: NextRequest) {
       .find(m => /quiero|necesito|busco|página|web|app|tienda|landing|sitio|peluquer|restauran|clínica|clinic|shop|store|negocio/i.test(m.content))
       ?.content?.substring(0, 120) || '';
 
+    // Si hay contacto pero no nombre y aún no lo hemos pedido por separado → pedir nombre antes de cerrar
+    if (hasContact && botRecentlyAskedContact && !effectiveName && !alreadyRequestedName && !isEval) {
+      const nameAsk = language === 'en'
+        ? `And what's your full name so Omar can reach you personally?`
+        : language === 'pt'
+        ? `E qual é o seu nome completo para Omar entrar em contato com você?`
+        : `¿Y cuál es tu nombre completo para que Omar pueda contactarte?`;
+
+      await supabaseServer.from('messages').insert([
+        { conversation_id: conversationId, role: 'user',      content: message },
+        { conversation_id: conversationId, role: 'assistant', content: nameAsk },
+      ]);
+
+      supabaseServer.from('conversations').update({
+        facts: { ...savedFacts, name_requested: 'true', email: knownEmail, phone: knownPhone },
+      }).eq('id', conversationId).then(({ error }) => error && console.error('name_requested persist error:', error));
+
+      return NextResponse.json({ reply: nameAsk });
+    }
+
     // CIERRE: dispara cuando hay datos de contacto Y alguna de estas condiciones:
     // 1. El mensaje actual tiene email+teléfono juntos (señal 100% inequívoca)
-    // 2. El mensaje tiene cualquier dato de contacto Y el bot acaba de pedir datos
-    // 3. El bot sabe el nombre del cliente Y tenemos contacto
+    // 2. Tenemos contacto + bot pidió datos + ya tenemos nombre
+    // 3. Tenemos contacto + nombre (capturado en cualquier momento)
+    // 4. Tenemos contacto + ya pedimos el nombre por separado (aunque el cliente no lo dé)
     const canClose = !!(
       (EMAIL_IN_CURRENT && PHONE_IN_CURRENT) ||
-      (hasContact && botRecentlyAskedContact) ||
-      (hasContact && effectiveName)
+      (hasContact && botRecentlyAskedContact && effectiveName) ||
+      (hasContact && effectiveName) ||
+      (hasContact && alreadyRequestedName)
     );
 
     if (canClose && !isEval) {
