@@ -144,14 +144,14 @@ export default function Footer() {
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-8 italic">
                 {t("footer.navigationTitle")}
               </h3>
-              <ul className="space-y-4">
+              <ul className="grid grid-cols-2 md:grid-cols-1 gap-4">
                 {navigationLinks.map((link, index) => (
                   <li key={index}>
                     <Link
                       href={link.href}
                       className="text-sm font-bold opacity-60 hover:opacity-100 transition-all hover:text-primary italic flex items-center gap-2 group"
                     >
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary scale-0 group-hover:scale-100 transition-transform" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary scale-0 group-hover:scale-100 transition-transform shrink-0" />
                       {link.label}
                     </Link>
                   </li>
