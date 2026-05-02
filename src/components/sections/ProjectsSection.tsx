@@ -384,7 +384,7 @@ const ProjectsSection: React.FC = () => {
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
                   aria-label={t('projects.previousPage')}
-                  className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105"
+                  className="flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 shrink-0"
                   style={{
                     backgroundColor: 'rgba(40,40,60,0.5)',
                     borderColor: 'rgba(209,209,224,0.3)',
@@ -400,7 +400,7 @@ const ProjectsSection: React.FC = () => {
                   p === 'ellipsis' ? (
                     <span
                       key={`ellipsis-${idx}`}
-                      className="px-1 text-sm select-none"
+                      className="w-10 h-10 flex items-center justify-center text-sm select-none shrink-0"
                       style={{ color: 'var(--muted-color)' }}
                       aria-hidden="true"
                     >
@@ -413,7 +413,7 @@ const ProjectsSection: React.FC = () => {
                       onClick={() => goToPage(p)}
                       aria-current={p === currentPage ? 'page' : undefined}
                       aria-label={t('projects.goToPage', { page: p })}
-                      className="min-w-9 sm:min-w-10 h-9 sm:h-10 px-2 rounded-full border text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105"
+                      className="w-10 h-10 flex items-center justify-center rounded-full border text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105 shrink-0"
                       style={{
                         backgroundColor:
                           p === currentPage ? 'var(--primary-color)' : 'rgba(40,40,60,0.5)',
@@ -439,7 +439,7 @@ const ProjectsSection: React.FC = () => {
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
                   aria-label={t('projects.nextPage')}
-                  className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105"
+                  className="flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 shrink-0"
                   style={{
                     backgroundColor: 'rgba(40,40,60,0.5)',
                     borderColor: 'rgba(209,209,224,0.3)',
