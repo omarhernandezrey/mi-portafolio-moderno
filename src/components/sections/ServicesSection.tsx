@@ -179,12 +179,10 @@ export default function ServicesSection() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-            }}
-          >
-          >
-            {t('services.title')}
-          </h2>
-
+              }}
+              >
+              {t('services.title')}
+              </h2>
           <p
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "var(--muted-color)" }}
