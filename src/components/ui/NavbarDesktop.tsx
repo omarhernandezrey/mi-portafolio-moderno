@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import {
   FaHome,
@@ -17,6 +18,7 @@ import { useTranslation } from "../../hooks/useTranslation";
 import LanguageSelector from "./LanguageSelector";
 
 const NavbarDesktop = () => {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("#hero");
   const { togglePalette } = usePalette();
@@ -70,6 +72,13 @@ const NavbarDesktop = () => {
       window.location.href = id;
       return;
     }
+
+    // Si estamos en otra página y es un link interno, redirigir al home con el ancla
+    if (pathname !== "/" && id.startsWith("#")) {
+      window.location.href = `/${id}`;
+      return;
+    }
+
     const element = document.querySelector(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
