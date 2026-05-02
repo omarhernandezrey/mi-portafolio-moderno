@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   FaGithub,
   FaLinkedin,
@@ -15,8 +16,22 @@ import NewsletterForm from "./NewsletterForm";
 import { useTranslation } from "../../hooks/useTranslation";
 
 export default function Footer() {
+  const pathname = usePathname();
   const [isScrollButtonHovered, setIsScrollButtonHovered] = useState(false);
   const { t } = useTranslation();
+
+  const handleLinkClick = (id: string) => {
+    // Si estamos en otra página y es un link interno, redirigir al home con el ancla
+    if (pathname !== "/" && id.startsWith("#")) {
+      window.location.href = `/${id}`;
+      return;
+    }
+
+    const element = document.querySelector(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -59,9 +74,10 @@ export default function Footer() {
       label: "Twitter",
     },
     {
-      href: "mailto:omarhernandezrey@gmail.com",
+      href: "#contact",
       icon: FaEnvelope,
       label: "Email",
+      isAnchor: true,
     },
   ];
 
@@ -119,9 +135,15 @@ export default function Footer() {
                   <motion.a
                     key={index}
                     href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center border transition-all"
+                    target={social.isAnchor ? "_self" : "_blank"}
+                    rel={social.isAnchor ? "" : "noopener noreferrer"}
+                    onClick={(e) => {
+                      if (social.isAnchor) {
+                        e.preventDefault();
+                        handleLinkClick(social.href);
+                      }
+                    }}
+                    className="w-10 h-10 rounded-full flex items-center justify-center border transition-all cursor-pointer"
                     style={{ 
                       borderColor: 'color-mix(in srgb, var(--muted-color) 20%, transparent)',
                       color: 'var(--muted-color)' 
