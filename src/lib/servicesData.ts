@@ -18,6 +18,11 @@ export interface Service {
     pt: string[];
   };
   gradient: string;
+  priceRange?: {
+    min: number;
+    max: number;
+    currency: string;
+  };
 }
 
 export const servicesData: Service[] = [
@@ -54,6 +59,11 @@ export const servicesData: Service[] = [
       ]
     },
     gradient: "from-blue-500 to-cyan-500",
+    priceRange: {
+      min: 250,
+      max: 1800,
+      currency: "USD"
+    }
   },
   {
     title: {
@@ -88,6 +98,11 @@ export const servicesData: Service[] = [
       ]
     },
     gradient: "from-green-500 to-emerald-500",
+    priceRange: {
+      min: 800,
+      max: 5000,
+      currency: "USD"
+    }
   },
   {
     title: {
@@ -122,6 +137,11 @@ export const servicesData: Service[] = [
       ]
     },
     gradient: "from-purple-500 to-pink-500",
+    priceRange: {
+      min: 300,
+      max: 2000,
+      currency: "USD"
+    }
   },
   {
     title: {
@@ -156,6 +176,11 @@ export const servicesData: Service[] = [
       ]
     },
     gradient: "from-orange-500 to-red-500",
+    priceRange: {
+      min: 500,
+      max: 3000,
+      currency: "USD"
+    }
   },
 ];
 
@@ -169,5 +194,6 @@ export const getLocalizedServicesData = (servicesData: Service[], language: stri
     icon: service.icon,
     features: service.features[lang] || service.features.es,
     gradient: service.gradient,
+    priceRange: service.priceRange,
   }));
 };
