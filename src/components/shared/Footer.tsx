@@ -76,290 +76,160 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative py-20 overflow-hidden"
+      className="relative pt-32 pb-12 overflow-hidden"
       style={{
-        background: `linear-gradient(to bottom, var(--background-color), var(--secondary-background-color))`,
+        background: `var(--background-color)`,
         color: "var(--text-color)",
       }}
     >
-      {/* Wave superior */}
-      <div className="absolute top-0 left-0 w-full rotate-180 overflow-hidden leading-[0] z-0">
+      {/* Wave superior decorativa */}
+      <div className="absolute top-0 left-0 w-full rotate-180 overflow-hidden leading-[0] z-0 pointer-events-none opacity-50">
         <Image
           src="/images/wave-top.svg"
-          alt="Decorative wave"
+          alt=""
           width={1920}
           height={200}
           className="w-full h-auto"
-          priority
         />
       </div>
 
-      {/* Contenido principal */}
-      <div className="relative z-10 container mx-auto px-6 lg:px-20">
-        {/* Información principal */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-12 lg:space-y-0 mb-16">
-          {/* Información personal */}
-          <motion.div
-            className="flex flex-col items-center lg:items-start"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2
-              className="text-3xl font-bold mb-4"
-              style={{
-                background: `linear-gradient(to right, var(--primary-color), var(--accent-color))`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              {t("footer.name")}
-            </h2>
-            <p
-              className="text-center lg:text-left max-w-xs leading-relaxed"
-              style={{ color: "var(--muted-color)" }}
-            >
-              {t("footer.description")}
-            </p>
-          </motion.div>
-
-          {/* Navegación */}
-          <motion.div
-            className="flex flex-col items-center lg:items-start"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <h3
-              className="text-xl font-semibold mb-4"
-              style={{ color: "var(--accent-color)" }}
-            >
-              {t("footer.navigationTitle")}
-            </h3>
-            <ul className="space-y-2">
-              {navigationLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="transition-all duration-300 hover:translate-x-2"
-                    style={{ color: "var(--text-color)" }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "var(--accent-color)";
+      <div className="relative z-10 container mx-auto px-4 sm:px-6">
+        {/* Contenedor Principal Estilo Glassmorphism */}
+        <div 
+          className="backdrop-blur-xl rounded-[40px] border p-8 md:p-16 mb-12 shadow-2xl relative overflow-hidden"
+          style={{
+            backgroundColor: `color-mix(in srgb, var(--secondary-background-color) 40%, transparent)`,
+            borderColor: `color-mix(in srgb, var(--accent-color) 15%, transparent)`,
+            boxShadow: `0 20px 50px -12px color-mix(in srgb, var(--background-color) 50%, black)`,
+          }}
+        >
+          {/* Grid de Información */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            {/* Col 1: Bio & Branding */}
+            <div className="space-y-6">
+              <h2
+                className="text-3xl font-black tracking-tighter italic"
+                style={{
+                  background: `linear-gradient(to right, var(--primary-color), var(--accent-color))`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                {t("footer.name")}
+              </h2>
+              <p className="text-sm leading-relaxed opacity-70 italic font-medium">
+                {t("footer.description")}
+              </p>
+              <div className="flex gap-4">
+                {socialLinks.map((social, index) => (
+                  <motion.a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full flex items-center justify-center border transition-all"
+                    style={{ 
+                      borderColor: 'color-mix(in srgb, var(--muted-color) 20%, transparent)',
+                      color: 'var(--muted-color)' 
                     }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "var(--text-color)";
+                    whileHover={{ 
+                      scale: 1.1, 
+                      backgroundColor: 'var(--primary-color)',
+                      color: 'var(--background-color)',
+                      borderColor: 'var(--primary-color)'
                     }}
                   >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Redes sociales */}
-          <motion.div
-            className="flex flex-col items-center lg:items-start"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h3
-              className="text-xl font-semibold mb-4"
-              style={{ color: "var(--accent-color)" }}
-            >
-              {t("footer.followTitle")}
-            </h3>
-            <div className="flex space-x-6">
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-all duration-300"
-                  style={{ color: "var(--muted-color)" }}
-                  aria-label={social.label}
-                  whileHover={{ scale: 1.2, y: -3 }}
-                  whileTap={{ scale: 0.9 }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "var(--accent-color)";
-                    e.currentTarget.style.filter = `drop-shadow(0 0 8px var(--accent-color))`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "var(--muted-color)";
-                    e.currentTarget.style.filter = "none";
-                  }}
-                >
-                  <social.icon size={24} />
-                </motion.a>
-              ))}
+                    <social.icon size={18} />
+                  </motion.a>
+                ))}
+              </div>
             </div>
-          </motion.div>
+
+            {/* Col 2: Enlaces Rápidos */}
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-8 italic">
+                {t("footer.navigationTitle")}
+              </h3>
+              <ul className="space-y-4">
+                {navigationLinks.map((link, index) => (
+                  <li key={index}>
+                    <Link
+                      href={link.href}
+                      className="text-sm font-bold opacity-60 hover:opacity-100 transition-all hover:text-primary italic flex items-center gap-2 group"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary scale-0 group-hover:scale-100 transition-transform" />
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Col 3: Newsletter (Ocupa 2 columnas en desktop) */}
+            <div className="lg:col-span-2 space-y-8">
+              <div className="p-6 rounded-3xl bg-background/30 border border-white/5 shadow-inner">
+                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-6 italic">
+                  Newsletter
+                </h3>
+                <NewsletterForm />
+              </div>
+              
+              {/* Mini Testimonios compactos */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="p-4 rounded-2xl bg-white/5 border border-white/5 text-[11px] italic">
+                    <p className="opacity-70 mb-2">"{testimonial.quote.substring(0, 80)}..."</p>
+                    <span className="font-bold text-primary">— {testimonial.author}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Footer del Container (Ubicación) */}
+          <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-4 text-xs font-bold opacity-50 italic">
+               <span className="flex items-center gap-2">📍 {t("footer.findMe")}</span>
+               <div className="w-1 h-1 rounded-full bg-white/20" />
+               <span>Remote Worldwide • Bogotá, CO</span>
+            </div>
+            
+            <motion.button
+              onClick={scrollToTop}
+              className="group flex items-center gap-3 px-6 py-3 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all"
+              style={{
+                borderColor: 'var(--primary-color)',
+                color: 'var(--primary-color)'
+              }}
+              whileHover={{ 
+                backgroundColor: 'var(--primary-color)',
+                color: 'var(--background-color)',
+                scale: 1.05
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {t("footer.backToTop")}
+              <FiArrowUp size={14} className="group-hover:-translate-y-1 transition-transform" />
+            </motion.button>
+          </div>
         </div>
 
-        {/* Newsletter */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          <NewsletterForm />
-        </motion.div>
-
-        {/* Testimonios */}
-        <motion.div
-          className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              role={testimonial.role}
-              avatar={testimonial.avatar}
-            />
-          ))}
-        </motion.div>
-
-        {/* Mapa */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <h3
-            className="text-xl font-semibold mb-6"
-            style={{ color: "var(--accent-color)" }}
-          >
-            {t("footer.findMe")}
-          </h3>
-          <div
-            className="w-full h-64 rounded-xl overflow-hidden shadow-lg border transition-all duration-300 hover:shadow-2xl"
-            style={{
-              borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
-              boxShadow: `0 10px 30px color-mix(in srgb, var(--accent-color) 20%, transparent)`,
-            }}
-          >
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d497699.9973439676!2d-74.34209705000001!3d4.6097102!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9bfd2da6cb29%3A0x239d635520a33914!2sBogot%C3%A1%2C%20Bogota%2C%20Colombia!5e0!3m2!1sen!2s!4v1703123456789!5m2!1sen!2s"
-              allowFullScreen
-              loading="lazy"
-              className="w-full h-full border-none"
-              title={t("footer.mapTitle")}
-            />
-          </div>
-        </motion.div>
-
-        {/* Separador */}
-        <div
-          className="h-px mb-8"
-          style={{
-            backgroundColor: `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
-          }}
-        />
-
-        {/* Copyright y botón scroll */}
-        <motion.div
-          className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <div className="text-center md:text-left space-y-2">
-            <p style={{ color: "var(--muted-color)" }}>
-              © {new Date().getFullYear()} {t("footer.name")}. {t("footer.rights")}
-            </p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              <Link href="/privacidad" className="text-[10px] text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline decoration-dotted">
-                Privacidad
-              </Link>
-              <Link href="/faq" className="text-[10px] text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline decoration-dotted">
-                FAQ
-              </Link>
-              <Link href="/status" className="text-[10px] text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline decoration-dotted">
-                Status
-              </Link>
-            </div>
-            <p className="text-[9px] text-[var(--muted-color)] opacity-60">
-              Este sitio utiliza almacenamiento local (localStorage) para la sesión del chat. Sin cookies de terceros.
+        {/* Créditos Finales Fuera del Container */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-[10px] font-medium opacity-40 px-4 space-y-4 md:space-y-0 text-center md:text-left">
+          <div className="space-y-1">
+            <p>© {new Date().getFullYear()} {t("footer.name")}. {t("footer.rights")}</p>
+            <p className="max-w-md italic">
+              Built with precision using Next.js, Framer Motion & Tailwind. Designed for high-performance conversion.
             </p>
           </div>
-
-          <motion.button
-            onClick={scrollToTop}
-            className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300"
-            style={{
-              color: isScrollButtonHovered
-                ? "var(--white-color)"
-                : "var(--muted-color)",
-              backgroundColor: isScrollButtonHovered
-                ? "var(--accent-color)"
-                : "transparent",
-              border: `1px solid ${isScrollButtonHovered ? "var(--accent-color)" : "var(--muted-color)"}`,
-            }}
-            aria-label={t("footer.backToTopAria")}
-            onMouseEnter={() => setIsScrollButtonHovered(true)}
-            onMouseLeave={() => setIsScrollButtonHovered(false)}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.div
-              animate={{ y: isScrollButtonHovered ? [-2, 2, -2] : 0 }}
-              transition={{
-                duration: 1,
-                repeat: isScrollButtonHovered ? Infinity : 0,
-              }}
-            >
-              <FiArrowUp size={20} />
-            </motion.div>
-            <span className="font-medium">{t("footer.backToTop")}</span>
-          </motion.button>
-        </motion.div>
-      </div>
-
-      {/* Wave inferior decorativo */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-0">
-        <svg
-          width="100%"
-          height="150"
-          viewBox="0 0 1440 150"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          className="block"
-        >
-          <defs>
-            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop
-                offset="0%"
-                stopColor="var(--background-color)"
-                stopOpacity="1"
-              />
-              <stop
-                offset="100%"
-                stopColor="var(--secondary-background-color)"
-                stopOpacity="0.8"
-              />
-            </linearGradient>
-          </defs>
-          <path
-            fill="url(#waveGradient)"
-            d="M0,80 C240,120 480,40 720,80 C960,120 1200,40 1440,80 V150 H0 Z"
-          />
-        </svg>
+          
+          <div className="flex gap-6">
+            <Link href="/privacidad" className="hover:text-primary transition-colors">PRIVACY</Link>
+            <Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link>
+            <Link href="/status" className="hover:text-primary transition-colors">STATUS</Link>
+          </div>
+        </div>
       </div>
     </footer>
   );
