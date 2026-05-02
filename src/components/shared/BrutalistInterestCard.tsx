@@ -36,9 +36,11 @@ const BrutalistInterestCard: React.FC<BrutalistInterestCardProps> = ({ title, hr
           <div className="paper-texture" />
           <div className="main-content">
             <div className="title-text">{title}</div>
-            <div className="interest-icon-box">
-              <div className="icon-cell">
-                {technologyIcons[title] || <span className="text-4xl">★</span>}
+            <div className="social-grid">
+              <div className="social-cell">
+                <div className="social-icon">
+                   {technologyIcons[title] || <span>★</span>}
+                </div>
               </div>
             </div>
           </div>
@@ -48,7 +50,7 @@ const BrutalistInterestCard: React.FC<BrutalistInterestCardProps> = ({ title, hr
           <div className="rivet" />
           <div className="rivet" />
         </div>
-        <div className="type-accent">INT//CORE_{index + 1}</div>
+        <div className="type-accent">SYS//INTEREST_{index + 1}</div>
         <div className="corner-bracket bracket-tl" />
         <div className="corner-bracket bracket-tr" />
         <div className="corner-bracket bracket-bl" />
@@ -62,7 +64,7 @@ const StyledWrapper = styled.div`
   .brutalist-container {
     position: relative;
     width: 100%;
-    height: 120px;
+    height: 110px;
     cursor: pointer;
     display: block;
   }
@@ -74,16 +76,17 @@ const StyledWrapper = styled.div`
     width: 100%;
     height: 100%;
     background: #000;
-    border: 4px solid #000;
+    border: 8px solid #000;
     transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     overflow: hidden;
   }
 
   .brutalist-container:hover .concrete-block {
-    transform: translate(-8px, -8px) rotate(-1deg);
+    transform: translate(-12px, -12px) rotate(-2deg);
     box-shadow:
-      8px 8px 0 var(--primary-color),
-      16px 16px 0 var(--accent-color);
+      12px 12px 0 #333,
+      24px 24px 0 #666,
+      36px 36px 0 #999;
   }
 
   .concrete-texture {
@@ -121,15 +124,16 @@ const StyledWrapper = styled.div`
 
   .title-text {
     color: #fff;
-    font-size: 14px;
-    font-weight: 900;
-    letter-spacing: 2px;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 4px;
     text-transform: uppercase;
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     text-shadow:
-      2px 2px 0 #333;
-    padding: 0 10px;
+      2px 2px 0 #333,
+      4px 4px 0 #666;
     text-align: center;
+    padding: 0 15px;
   }
 
   .brutalist-container:hover .title-text {
@@ -138,7 +142,7 @@ const StyledWrapper = styled.div`
     filter: blur(8px);
   }
 
-  .interest-icon-box {
+  .social-grid {
     position: absolute;
     top: 0;
     left: 0;
@@ -147,172 +151,177 @@ const StyledWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 14px;
     opacity: 0;
     transform: translateY(40px) rotateX(-90deg) scale(1.3);
     transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
-  .brutalist-container:hover .interest-icon-box {
+  .brutalist-container:hover .social-grid {
     opacity: 1;
     transform: translateY(0) rotateX(0deg) scale(1);
   }
 
-  .icon-cell {
+  .social-cell {
     position: relative;
     background: #fff;
     border: 4px solid #000;
-    width: 60px;
-    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     overflow: hidden;
-    color: #000;
-    font-size: 32px;
+    width: 60px;
+    height: 60px;
   }
 
-  .brutalist-container:hover .icon-cell {
-    background: var(--primary-color);
+  .social-cell:hover {
+    background: #000;
     transform: scale(1.1) rotate(5deg);
     border-color: #fff;
     z-index: 10;
     box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .social-cell:hover .social-icon {
     color: #fff;
+    transform: scale(1.2) rotate(-5deg);
+  }
+
+  .social-icon {
+    font-size: 28px;
+    color: #000;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Concrete slab backgrounds */
   .slab-bg {
     position: absolute;
-    background: #333;
-    border: 2px solid #000;
+    background: #ddd;
+    border: 4px solid #000;
     z-index: -1;
     transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
   }
 
   .slab-1 {
-    top: 10px;
-    left: 10px;
+    top: 18px;
+    left: 18px;
     width: 100%;
     height: 100%;
   }
 
   .slab-2 {
-    top: 20px;
-    left: 20px;
+    top: 36px;
+    left: 36px;
     width: 100%;
     height: 100%;
-    background: #1a1a1a;
   }
 
   .brutalist-container:hover .slab-1 {
-    transform: translate(10px, 10px) rotate(1deg);
-    background: var(--primary-color);
-    opacity: 0.5;
+    transform: translate(20px, 20px) rotate(1deg);
   }
 
   .brutalist-container:hover .slab-2 {
-    transform: translate(-5px, 15px) rotate(-1deg);
-    background: var(--accent-color);
-    opacity: 0.3;
+    transform: translate(-10px, 30px) rotate(-1deg);
   }
 
   /* Industrial corner brackets */
   .corner-bracket {
     position: absolute;
-    width: 12px;
-    height: 12px;
-    border: 2px solid var(--accent-color);
-    background: transparent;
+    width: 20px;
+    height: 20px;
+    border: 4px solid #000;
+    background: #fff;
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    opacity: 0.5;
   }
 
   .bracket-tl {
-    top: -5px;
-    left: -5px;
+    top: -10px;
+    left: -10px;
     border-right: none;
     border-bottom: none;
   }
 
   .bracket-tr {
-    top: -5px;
-    right: -5px;
+    top: -10px;
+    right: -10px;
     border-left: none;
     border-bottom: none;
   }
 
   .bracket-bl {
-    bottom: -5px;
-    left: -5px;
+    bottom: -10px;
+    left: -10px;
     border-right: none;
     border-top: none;
   }
 
   .bracket-br {
-    bottom: -5px;
-    right: -5px;
+    bottom: -10px;
+    right: -10px;
     border-left: none;
     border-top: none;
   }
 
   .brutalist-container:hover .corner-bracket {
     transform: scale(1.5);
-    background: var(--primary-color);
+    background: #000;
     border-color: #fff;
-    opacity: 1;
   }
 
   /* Typography accent */
   .type-accent {
     position: absolute;
-    top: -20px;
+    top: -30px;
     left: 0;
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 8px;
-    font-weight: 900;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
     letter-spacing: 2px;
-    color: var(--accent-color);
+    color: #000;
     transition: all 0.4s ease;
     opacity: 0;
   }
 
   .brutalist-container:hover .type-accent {
     opacity: 1;
-    transform: translateY(2px);
+    transform: translateY(5px);
   }
 
   /* Industrial rivets */
   .rivet {
     position: absolute;
-    width: 6px;
-    height: 6px;
-    background: #222;
+    width: 8px;
+    height: 8px;
+    background: #000;
     border-radius: 50%;
-    border: 1px solid #444;
+    border: 2px solid #333;
     transition: all 0.3s ease;
   }
 
-  .rivet:nth-child(5) {
-    top: 5px;
-    left: 5px;
+  .rivet:nth-child(1) {
+    top: 10px;
+    left: 10px;
   }
-  .rivet:nth-child(6) {
-    top: 5px;
-    right: 5px;
+  .rivet:nth-child(2) {
+    top: 10px;
+    right: 10px;
   }
-  .rivet:nth-child(7) {
-    bottom: 5px;
-    left: 5px;
+  .rivet:nth-child(3) {
+    bottom: 10px;
+    left: 10px;
   }
-  .rivet:nth-child(8) {
-    bottom: 5px;
-    right: 5px;
+  .rivet:nth-child(4) {
+    bottom: 10px;
+    right: 10px;
   }
 
   .brutalist-container:hover .rivet {
     background: #fff;
-    transform: scale(1.2);
+    transform: scale(1.5);
   }
 
   /* Scan line effect */
@@ -320,11 +329,11 @@ const StyledWrapper = styled.div`
     position: absolute;
     top: 0;
     left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #fff, transparent);
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    opacity: 0.5;
+    opacity: 0.8;
   }
 
   .brutalist-container:hover .scan-effect {
@@ -341,9 +350,21 @@ const StyledWrapper = styled.div`
     background: radial-gradient(
         circle at 20% 50%,
         transparent 20%,
-        rgba(255, 255, 255, 0.02) 21%,
-        rgba(255, 255, 255, 0.02) 34%,
+        rgba(255, 255, 255, 0.3) 21%,
+        rgba(255, 255, 255, 0.3) 34%,
         transparent 35%,
+        transparent
+      ),
+      linear-gradient(
+        0deg,
+        transparent 24%,
+        rgba(255, 255, 255, 0.05) 25%,
+        rgba(255, 255, 255, 0.05) 26%,
+        transparent 27%,
+        transparent 74%,
+        rgba(255, 255, 255, 0.05) 75%,
+        rgba(255, 255, 255, 0.05) 76%,
+        transparent 77%,
         transparent
       );
     pointer-events: none;
