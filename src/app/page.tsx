@@ -62,8 +62,8 @@ export default function Home() {
       <TechMarquee />
       <EducationSection />
       <SkillSection />
-      <ServicesSection />
       <ProjectsSection />
+      <ServicesSection />
       <section className="py-20 bg-[var(--background-color)]">
         <div className="container mx-auto px-4">
           <NewsletterForm />
