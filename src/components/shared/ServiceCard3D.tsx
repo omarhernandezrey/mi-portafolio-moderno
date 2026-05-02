@@ -44,15 +44,15 @@ const StyledWrapper = styled.div`
   .card {
     padding-top: 50px;
     /* border-radius: 10px; */
-    border: 3px solid #141414;
+    border: 3px solid var(--secondary-background-color);
     transform-style: preserve-3d;
-    background: linear-gradient(135deg, #0000 18.75%, #f3f3f3 0 31.25%, #0000 0),
-      repeating-linear-gradient(45deg, #f3f3f3 -6.25% 6.25%, #141414 0 18.75%);
+    background: linear-gradient(135deg, #0000 18.75%, var(--text-color) 0 31.25%, #0000 0),
+      repeating-linear-gradient(45deg, var(--text-color) -6.25% 6.25%, var(--secondary-background-color) 0 18.75%);
     background-size: 60px 60px;
     background-position:
       0 0,
       0 0;
-    background-color: #141414;
+    background-color: var(--secondary-background-color);
     width: 100%;
     height: 100%;
     box-shadow: rgba(142, 142, 142, 0.3) 0px 30px 30px -10px;
@@ -69,7 +69,7 @@ const StyledWrapper = styled.div`
   }
 
   .content-box {
-    background: #8ed500;
+    background: var(--primary-color);
     /* border-radius: 10px 100px 10px 10px; */
     transition: all 0.5s ease-in-out;
     padding: 60px 25px 25px 25px;
@@ -82,7 +82,7 @@ const StyledWrapper = styled.div`
 
   .content-box .card-title {
     display: inline-block;
-    color: #141414;
+    color: var(--background-color);
     font-size: 25px;
     font-weight: 900;
     transition: all 0.5s ease-in-out;
@@ -97,7 +97,7 @@ const StyledWrapper = styled.div`
     margin-top: 10px;
     font-size: 12px;
     font-weight: 700;
-    color: #141414;
+    color: var(--background-color);
     transition: all 0.5s ease-in-out;
     transform: translate3d(0px, 0px, 30px);
   }
@@ -114,9 +114,9 @@ const StyledWrapper = styled.div`
     font-weight: 900;
     font-size: 9px;
     text-transform: uppercase;
-    color: #8ed500;
+    color: var(--primary-color);
     /* border-radius: 5px; */
-    background: #141414;
+    background: var(--background-color);
     padding: 0.5rem 0.7rem;
     transition: all 0.5s ease-in-out;
     transform: translate3d(0px, 0px, 20px);
@@ -132,8 +132,8 @@ const StyledWrapper = styled.div`
     right: 30px;
     height: 60px;
     width: 60px;
-    background: #141414;
-    border: 1px solid #8ed500;
+    background: var(--background-color);
+    border: 1px solid var(--primary-color);
     /* border-radius: 10px; */
     padding: 10px;
     transform: translate3d(0px, 0px, 80px);
@@ -146,7 +146,7 @@ const StyledWrapper = styled.div`
   }
 
   .date-box .month {
-    color: #8ed500;
+    color: var(--primary-color);
     font-size: 9px;
     font-weight: 700;
   }
@@ -154,7 +154,7 @@ const StyledWrapper = styled.div`
   .date-box .date {
     font-size: 20px;
     font-weight: 900;
-    color: #8ed500;
+    color: var(--primary-color);
   }
 `;
 
