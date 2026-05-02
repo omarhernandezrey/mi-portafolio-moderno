@@ -195,7 +195,42 @@ const AboutSection: React.FC = () => {
         className="relative z-10 mx-auto max-w-full sm:max-w-7xl px-2 sm:px-4"
         style={{ opacity }}
       >
+        {/* Header Seccion (Consistente con Educación/Proyectos) */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <motion.span
+            className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+            style={{
+              color: "var(--accent-color)",
+              backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
+              borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
+            }}
+            whileHover={{ scale: 1.05 }}
+          >
+            {t("about.badge")}
+          </motion.span>
+          <h2
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+            style={{
+              background:
+                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            {t("about.title")}
+          </h2>
+        </motion.div>
+
+        {/* Grid principal (foto + texto) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Foto */}
           <motion.div
             className="flex flex-col items-center"
             initial={{ opacity: 0, x: -100 }}
@@ -210,6 +245,7 @@ const AboutSection: React.FC = () => {
             />
           </motion.div>
 
+          {/* Bio + Datos Personales */}
           <motion.div
             className="flex flex-col space-y-10"
             initial={{ opacity: 0, x: 100 }}
@@ -217,81 +253,45 @@ const AboutSection: React.FC = () => {
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
             viewport={{ once: true }}
           >
-            {/* Glassmorphism Card for Content */}
-            <div 
-              className="backdrop-blur-2xl rounded-[40px] border p-8 md:p-12 shadow-2xl relative overflow-hidden"
+            {/* Descripción */}
+            <motion.p
+              className="text-lg leading-relaxed text-justify"
               style={{
-                backgroundColor: `color-mix(in srgb, var(--secondary-background-color) 30%, transparent)`,
-                borderColor: `color-mix(in srgb, var(--accent-color) 15%, transparent)`,
+                color: "var(--muted-color)",
               }}
-            >
-              {/* Brillo dinámico de fondo */}
-              <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full pointer-events-none" />
-              
-              {/* Encabezado */}
-              <div className="relative z-10 mb-10">
-                <motion.span
-                  className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[10px] font-black uppercase tracking-[0.3em] rounded-full border italic"
-                  style={{
-                    color: "var(--accent-color)",
-                    backgroundColor: `color-mix(in srgb, var(--accent-color) 5%, transparent)`,
-                    borderColor: `color-mix(in srgb, var(--accent-color) 20%, transparent)`,
-                  }}
+              dangerouslySetInnerHTML={{
+                __html: t("about.description")
+                  .replace("{name}", `<strong class="font-bold text-[var(--text-color)]">${t("about.name")}</strong>`)
+                  .replace("{role}", `<strong class="font-bold text-[var(--primary-color)]">${t("about.role")}</strong>`)
+                  .replace("{frontend}", `<strong class="font-bold text-[var(--accent-color)]">${t("about.frontend")}</strong>`)
+                  .replace("{backend}", `<strong class="font-bold text-[var(--accent-color)]">${t("about.backend")}</strong>`)
+                  .replace("{degree}", `<strong class="font-bold text-[var(--primary-color)]">${t("about.degree")}</strong>`)
+                  .replace("{university}", `<strong class="font-bold text-[var(--primary-color)]">${t("about.university")}</strong>`)
+                  .replace("{platform}", `<strong class="font-bold text-[var(--accent-color)]">${t("about.platform")}</strong>`),
+              }}
+            />
+
+            {/* Datos personales - Grid Estándar */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {personalData.map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="flex items-start gap-4 group"
+                  whileHover={{ x: 5 }}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                  {t("about.badge")}
-                </motion.span>
-
-                <h2
-                  className="text-5xl md:text-7xl font-black mb-8 italic tracking-tighter leading-none"
-                  style={{
-                    background: `linear-gradient(135deg, var(--white-color) 0%, var(--text-color) 100%)`,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  {t("about.title")}
-                </h2>
-
-                <div className="h-1 w-24 bg-gradient-to-r from-primary to-accent rounded-full mb-10" />
-
-                {/* Descripción */}
-                <motion.p
-                  className="text-lg md:text-xl leading-relaxed text-text-muted font-medium italic opacity-90"
-                  dangerouslySetInnerHTML={{
-                    __html: t("about.description")
-                      .replace("{name}", `<span class="text-white-custom font-black">${t("about.name")}</span>`)
-                      .replace("{role}", `<span class="text-primary font-black uppercase tracking-tight">${t("about.role")}</span>`)
-                      .replace("{frontend}", `<span class="text-accent font-black">UI/UX</span>`)
-                      .replace("{backend}", `<span class="text-accent font-black">Scalability</span>`)
-                      .replace("{degree}", `<span class="text-white-custom font-black border-b-2 border-primary/30">${t("about.degree")}</span>`)
-                      .replace("{university}", `<span class="italic opacity-70">${t("about.university")}</span>`)
-                      .replace("{platform}", `<span class="text-accent font-black italic underline decoration-accent/30 underline-offset-4">${t("about.platform")}</span>`),
-                  }}
-                />
-              </div>
-
-              {/* Datos personales - Grid Profesional */}
-              <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-8 pt-10 border-t border-white/5">
-                {personalData.map((item, index) => (
-                  <div
-                    key={index}
-                    className="group flex flex-col space-y-2"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background transition-all duration-500">
-                        <item.icon size={14} />
-                      </div>
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/60 italic">
-                        {item.label}
-                      </span>
-                    </div>
-                    <p className="text-sm md:text-base font-bold text-white-custom pl-11">
+                  <div className="w-10 h-10 rounded-full bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 flex items-center justify-center text-[var(--primary-color)] shadow-lg">
+                    <item.icon size={16} />
+                  </div>
+                  <div>
+                    <p className="uppercase text-[10px] font-black tracking-widest text-[var(--accent-color)]/70">
+                      {item.label}
+                    </p>
+                    <p className="text-sm font-bold text-[var(--text-color)]">
                       {item.value}
                     </p>
                   </div>
-                ))}
-              </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -304,32 +304,29 @@ const AboutSection: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          {/* Encabezado Profesional */}
-          <div className="text-center mb-20 space-y-4">
+          <div className="text-center mb-16">
             <motion.span
-              className="inline-flex items-center gap-2 px-4 py-1.5 mb-2 text-[10px] font-black uppercase tracking-[0.4em] rounded-full border italic"
+              className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
               style={{
                 color: "var(--accent-color)",
-                backgroundColor: `color-mix(in srgb, var(--accent-color) 5%, transparent)`,
-                borderColor: `color-mix(in srgb, var(--accent-color) 20%, transparent)`,
+                backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
+                borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
               }}
             >
               {t("about.interests.badge")}
             </motion.span>
 
             <h3
-              className="text-4xl md:text-6xl font-black italic tracking-tighter"
+              className="text-4xl md:text-5xl font-bold mb-6"
               style={{
-                background: `linear-gradient(135deg, var(--white-color) 0%, var(--primary-color) 100%)`,
+                background: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               {t("about.interests.title")}
             </h3>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/40 italic">
-              Core Ecosystem & Passion Projects
-            </p>
           </div>
 
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-12">
