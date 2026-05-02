@@ -142,11 +142,7 @@ const StyledWrapper = styled.div`
     font-size: 18px;
     letter-spacing: 2px;
     margin-bottom: 10px;
-    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.25);
-    padding: 8px 12px;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.15);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
   }
 
   .content .text {
