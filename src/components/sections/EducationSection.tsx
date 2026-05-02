@@ -615,7 +615,7 @@ const EducationSection = () => {
           text-transform: uppercase;
           letter-spacing: 0.05em;
           margin-bottom: 0.75rem;
-          background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+          background-image: linear-gradient(to right, var(--primary-color), var(--accent-color));
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -1096,68 +1096,38 @@ const EducationSection = () => {
             height={200}
           />
         </div>
-        {/* Header animado igual que AboutSection */}
-        {isHydrated && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12 md:mb-16"
+        {/* Header Seccion - Consistente y Estable */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-8 sm:mb-12 md:mb-16"
+        >
+          <motion.span
+            className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+            style={{
+              color: "var(--accent-color)",
+              backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
+              borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
+            }}
+            whileHover={{ scale: 1.05 }}
           >
-            <motion.span
-              className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
-              style={{
-                color: "var(--accent-color)",
-                backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
-                borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
-              }}
-              whileHover={{ scale: 1.05 }}
-            >
-              {t('education.badge')}
-            </motion.span>
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              {t('education.headerTitle')}
-            </h2>
-          </motion.div>
-        )}
-        
-        {/* Fallback para SSR */}
-        {!isHydrated && (
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <span
-              className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
-              style={{
-                color: "var(--accent-color)",
-                backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
-                borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
-              }}
-            >
-              Educación
-            </span>
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Mi Trayectoria Académica
-            </h2>
-          </div>
-        )}
+            {isHydrated ? t('education.badge') : 'Educación'}
+          </motion.span>
+          <h2
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+            style={{
+              backgroundImage:
+                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            {isHydrated ? t('education.headerTitle') : 'Mi Trayectoria Académica'}
+          </h2>
+        </motion.div>
 
         <div className="container">
           <div className="title-wrapper">
