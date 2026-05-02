@@ -253,10 +253,16 @@ export default function Footer() {
             </p>
           </div>
           
-          <div className="flex gap-6">
-            <Link href="/privacidad" className="hover:text-primary transition-colors">PRIVACY</Link>
-            <Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link>
-            <Link href="/status" className="hover:text-primary transition-colors">STATUS</Link>
+          <div className="flex flex-wrap justify-center md:justify-end gap-3 sm:gap-6">
+            <Link href="/privacidad" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
+              PRIVACY
+            </Link>
+            <Link href="/faq" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
+              FAQ
+            </Link>
+            <Link href="/status" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
+              STATUS
+            </Link>
           </div>
         </div>
       </div>
