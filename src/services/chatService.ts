@@ -30,5 +30,9 @@ export async function sendChatMessage(
     throw new Error(errorMsg);
   }
 
-  return response.json();
+  try {
+    return await response.json();
+  } catch {
+    throw new Error('Invalid JSON response from Chat API');
+  }
 }
