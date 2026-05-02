@@ -33,7 +33,6 @@ const ServiceCard3D = ({ title, description, badge, number }: ServiceCard3DProps
 const StyledWrapper = styled.div`
   .parent {
     width: 100%;
-    height: 100%;
     padding: 20px;
     perspective: 1000px;
   }
@@ -51,8 +50,6 @@ const StyledWrapper = styled.div`
       0 0;
     background-color: #141414;
     width: 100%;
-    display: flex;
-    flex-direction: column;
     box-shadow: rgba(142, 142, 142, 0.3) 0px 30px 30px -10px;
     transition: all 0.5s ease-in-out;
   }
@@ -70,7 +67,7 @@ const StyledWrapper = styled.div`
     transition: all 0.5s ease-in-out;
     padding: 60px 25px 25px 25px;
     transform-style: preserve-3d;
-    flex: 1;
+    min-height: 220px;
   }
 
   .content-box .card-title {
