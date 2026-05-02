@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, CheckCircle, Loader2, Mail, Shield, BookOpen, Target, Sparkles, ChevronRight, Lock } from 'lucide-react';
 import Link from 'next/link';
-import NavbarLogic from '@/components/ui/NavbarLogic';
 import Footer from '@/components/shared/Footer';
 
 const magnets = [
@@ -67,7 +66,6 @@ export default function RecursosPage() {
 
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
-      <NavbarLogic />
       
       <main className="flex-1 max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-32">
         

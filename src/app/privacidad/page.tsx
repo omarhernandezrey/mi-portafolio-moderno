@@ -2,7 +2,6 @@ import React from 'react';
 import { Metadata } from 'next';
 import { Shield, ArrowLeft, Scale } from 'lucide-react';
 import Link from 'next/link';
-import NavbarLogic from '@/components/ui/NavbarLogic';
 import Footer from '@/components/shared/Footer';
 
 export const metadata: Metadata = {
@@ -13,7 +12,6 @@ export const metadata: Metadata = {
 export default function PrivacidadPage() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
-      <NavbarLogic />
       
       <main className="flex-1 max-w-[900px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-16">
         

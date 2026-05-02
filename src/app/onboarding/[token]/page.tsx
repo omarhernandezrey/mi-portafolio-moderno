@@ -3,7 +3,6 @@
 import React, { useState, useEffect, use } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, FileText, CreditCard, Rocket, Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
-import NavbarLogic from '@/components/ui/NavbarLogic';
 import Footer from '@/components/shared/Footer';
 import Link from 'next/link';
 
@@ -134,7 +133,6 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
 
   return (
     <div className="min-h-screen bg-[var(--background-color)] text-[var(--text-color)] flex flex-col">
-      <NavbarLogic />
       
       <main className="flex-1 container mx-auto px-4 pt-32 pb-20 max-w-4xl">
         {/* Progress Bar */}

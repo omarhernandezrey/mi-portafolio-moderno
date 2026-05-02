@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, AlertCircle, Globe, Database, Cpu, Activity, ShieldCheck, Zap, RefreshCw, BarChart3, Radio } from 'lucide-react';
-import NavbarLogic from '@/components/ui/NavbarLogic';
 import Footer from '@/components/shared/Footer';
 
 interface HealthData {
@@ -43,7 +42,6 @@ export default function StatusPage() {
 
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
-      <NavbarLogic />
       
       <main className="flex-1 max-w-[1000px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-16">
         
