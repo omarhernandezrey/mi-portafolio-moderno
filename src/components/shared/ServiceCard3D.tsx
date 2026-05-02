@@ -32,7 +32,7 @@ const ServiceCard3D = ({ title, description, badge, number }: ServiceCard3DProps
 
 const StyledWrapper = styled.div`
   .parent {
-    width: 300px;
+    width: 100%;
     padding: 20px;
     perspective: 1000px;
   }

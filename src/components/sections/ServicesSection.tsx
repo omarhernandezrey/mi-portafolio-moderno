@@ -193,11 +193,12 @@ export default function ServicesSection() {
           </p>
         </motion.div>
 
-        {/* Grid de servicios */}
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
+        {/* Grid de servicios — móvil: 1 col · tablet: 2 col · desktop: 4 col */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
           {localizedServices.map((service, index) => (
             <motion.div
               key={index}
+              className="w-full"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.15, type: "spring", stiffness: 100 }}
