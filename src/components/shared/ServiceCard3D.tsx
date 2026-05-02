@@ -125,12 +125,12 @@ const StyledWrapper = styled.div`
     inset: 8px;
     border-radius: 30px;
     border-top-right-radius: 100%;
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.6) 100%);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.08) 0%, rgba(255, 255, 255, 0.4) 100%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     transform: translate3d(0px, 0px, 25px);
-    border-left: 1px solid rgba(255, 255, 255, 0.8);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+    border-left: 1px solid rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
     transition: all 0.5s ease-in-out;
   }
 
@@ -143,19 +143,21 @@ const StyledWrapper = styled.div`
 
   .content .title {
     display: block;
-    color: white;
+    color: #ffffff;
     font-weight: 900;
-    font-size: 16px;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
   .content .text {
     display: block;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 13px;
-    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 13.5px;
+    line-height: 1.6;
     margin-bottom: 15px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
   }
 
   .features-list {
@@ -169,8 +171,9 @@ const StyledWrapper = styled.div`
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.95);
     margin-bottom: 6px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
     &:last-child {
       margin-bottom: 0;
@@ -178,15 +181,15 @@ const StyledWrapper = styled.div`
   }
 
   .dot {
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #ffffff;
     flex-shrink: 0;
   }
 
   .feature-text {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .bottom {
@@ -209,16 +212,19 @@ const StyledWrapper = styled.div`
   }
 
   .price-label {
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   .price {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 900;
-    color: white;
+    color: #ffffff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 
   .view-more {
@@ -235,18 +241,19 @@ const StyledWrapper = styled.div`
   .view-more-button {
     background: none;
     border: none;
-    color: white;
+    color: #ffffff;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
     cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .view-more .svg {
     fill: none;
-    stroke: white;
-    stroke-width: 2px;
+    stroke: #ffffff;
+    stroke-width: 2.5px;
     width: 14px;
     height: 14px;
   }
