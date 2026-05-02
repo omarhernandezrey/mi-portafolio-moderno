@@ -270,6 +270,7 @@ const ProjectsSection: React.FC = () => {
                   "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               {t('projects.title')}

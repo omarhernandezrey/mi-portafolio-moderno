@@ -119,7 +119,7 @@ export default function Footer() {
               <h2
                 className="text-3xl font-black tracking-tighter italic"
                 style={{
-                  background: `linear-gradient(to right, var(--primary-color), var(--accent-color))`,
+                  backgroundImage: `linear-gradient(to right, var(--primary-color), var(--accent-color))`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",

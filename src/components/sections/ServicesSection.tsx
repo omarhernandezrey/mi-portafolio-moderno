@@ -173,14 +173,14 @@ export default function ServicesSection() {
           </motion.span>
 
           <h2
-            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
             style={{
-              background:
-                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
+              backgroundImage: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}
+          >
           >
             {t('services.title')}
           </h2>
