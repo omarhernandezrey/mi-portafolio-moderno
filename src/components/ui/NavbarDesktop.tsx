@@ -97,8 +97,8 @@ const NavbarDesktop = () => {
     { id: "#about", label: t("navigation.about"), icon: <FaUserAlt /> },
     { id: "#education", label: t("navigation.education"), icon: <FaGraduationCap /> },
     { id: "#skills", label: t("navigation.skills"), icon: <FaToolbox /> },
-    { id: "#services", label: t("navigation.services"), icon: <FaCode /> },
     { id: "#projects", label: t("navigation.projects"), icon: <FaProjectDiagram /> },
+    { id: "#services", label: t("navigation.services"), icon: <FaCode /> },
     { id: "/calculadora", label: t("navigation.calculator"), icon: <FaEnvelope />, isPage: true },
     { id: "#contact", label: t("navigation.contact"), icon: <FaEnvelope /> },
   ];
