@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------------------
-   ProjectsSection.tsx – sección de proyectos con filtrado premium
+   ProjectsSection.tsx – sección de proyectos con buscador
    Mobile First: optimizado para todos los dispositivos
 --------------------------------------------------------------------------- */
 
@@ -14,71 +14,7 @@ import {
 } from "framer-motion";
 import Card from "../shared/Card";
 import { useTranslation } from "../../hooks/useTranslation";
-import { projectsData, getLocalizedProjectsData, getLocalizedProjectCategories } from "../../lib/projectsData";
-
-/* ---------------------------------------------------------------------------
-   Tipado del proyecto ahora viene de projectsData.ts
---------------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------------
-   Los datos de proyectos ahora vienen de projectsData.ts
---------------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------------
-   Botón de categoría (estilos y badge)
---------------------------------------------------------------------------- */
-type CategoryButtonProps = {
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
-  count: number;
-};
-
-const CategoryButton: React.FC<CategoryButtonProps> = ({
-  label,
-  isActive,
-  onClick,
-  count,
-}) => (
-  <button
-    onClick={onClick}
-    onMouseEnter={(e) => {
-      if (!isActive) {
-        e.currentTarget.style.color = "var(--white-color)";
-        e.currentTarget.style.backgroundColor = "rgba(40,40,60,0.5)";
-        e.currentTarget.style.transform = "scale(1.05)";
-      }
-    }}
-    onMouseLeave={(e) => {
-      if (!isActive) {
-        e.currentTarget.style.color = "var(--muted-color)";
-        e.currentTarget.style.backgroundColor = "transparent";
-        e.currentTarget.style.transform = "scale(1)";
-      }
-    }}
-    className="relative px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm font-medium rounded-lg sm:rounded-xl transition-all duration-300 whitespace-nowrap min-w-max"
-    style={{
-      backgroundColor: isActive ? "var(--primary-color)" : "transparent",
-      color: isActive ? "var(--white-color)" : "var(--muted-color)",
-      boxShadow: isActive ? "0 8px 20px rgba(255,111,97,0.3)" : "none",
-      transform: isActive ? "scale(1.05)" : "scale(1)",
-    }}
-  >
-    <span className="relative z-10">{label}</span>
-    <motion.span
-      className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs font-bold"
-      style={{
-        backgroundColor: "var(--accent-color)",
-        color: "var(--background-color)",
-        fontSize: "10px",
-      }}
-      animate={{ scale: isActive ? 1.1 : 1, opacity: isActive ? 1 : 0.8 }}
-      transition={{ duration: 0.2 }}
-    >
-      {count}
-    </motion.span>
-  </button>
-);
+import { projectsData, getLocalizedProjectsData } from "../../lib/projectsData";
 
 // Tipado para los elementos flotantes
 interface FloatingElement {
@@ -111,7 +47,6 @@ const PROJECTS_PER_PAGE = 4;
 const ProjectsSection: React.FC = () => {
   /* ---------------- estados ---------------- */
   const { language, t } = useTranslation();
-  const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -140,24 +75,16 @@ const ProjectsSection: React.FC = () => {
     [language]
   );
 
-  const localizedCategories = useMemo(() => {
-    const categories = getLocalizedProjectCategories(projectsData, language);
-    return [t('projects.categories.all'), ...categories];
-  }, [language, t]);
-
   /* ---------------- filtrado dinámico ---------------- */
   const filteredProjects = useMemo(
     () =>
       localizedProjects.filter((p) => {
-        const byCategory =
-          selectedCategory === t('projects.categories.all') ||
-          p.category === selectedCategory;
         const bySearch = `${p.title} ${p.description} ${p.technologies.join(" ")}`
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
-        return byCategory && bySearch;
+        return bySearch;
       }),
-    [localizedProjects, selectedCategory, searchTerm, t],
+    [localizedProjects, searchTerm],
   );
 
   /* ---------------- paginación ---------------- */
@@ -168,7 +95,7 @@ const ProjectsSection: React.FC = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedCategory, searchTerm]);
+  }, [searchTerm]);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -205,11 +132,6 @@ const ProjectsSection: React.FC = () => {
     pages.push(totalPages);
     return pages;
   }, [totalPages, currentPage]);
-
-  const getCount = (c: string) =>
-    c === t('projects.categories.all')
-      ? localizedProjects.length
-      : localizedProjects.filter((p) => p.category === c).length;
 
   /* --------------------------------------------------------------------- */
   return (
@@ -367,7 +289,7 @@ const ProjectsSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             viewport={{ once: true }}
-            className="max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-8 sm:mb-10 md:mb-12"
+            className="max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-8 sm:mb-12 md:mb-16"
           >
             <div
               className="relative backdrop-blur-xl border rounded-xl sm:rounded-2xl p-0.5 sm:p-1"
@@ -402,34 +324,6 @@ const ProjectsSection: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* filtros */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex justify-center mb-8 sm:mb-12 md:mb-16"
-          >
-            <div
-              className="flex flex-wrap gap-2 sm:gap-3 p-2 sm:p-3 backdrop-blur-lg rounded-xl sm:rounded-2xl border max-w-full"
-              style={{
-                backgroundColor: "rgba(40,40,60,0.5)",
-                borderColor: "rgba(209,209,224,0.3)",
-              }}
-            >
-              {localizedCategories.map((c) => (
-                <div key={c} style={{ scrollSnapAlign: "start" }}>
-                  <CategoryButton
-                    label={c}
-                    isActive={selectedCategory === c}
-                    count={getCount(c)}
-                    onClick={() => setSelectedCategory(c)}
-                  />
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
           {/* contador */}
           <motion.div
             className="text-center mb-6 sm:mb-8"
@@ -453,7 +347,7 @@ const ProjectsSection: React.FC = () => {
             <AnimatePresence>
               {paginatedProjects.map((p, i) => (
                 <motion.div
-                  key={`${p.title}-${selectedCategory}-${currentPage}`}
+                  key={`${p.title}-${currentPage}`}
                   layout
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -592,7 +486,6 @@ const ProjectsSection: React.FC = () => {
                 <button
                   onClick={() => {
                     setSearchTerm("");
-                    setSelectedCategory(t('projects.categories.all'));
                   }}
                   className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 text-sm sm:text-base font-medium"
                   style={{
