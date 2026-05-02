@@ -217,7 +217,7 @@ const AboutSection: React.FC = () => {
           <h2
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
             style={{
-              background:
+              backgroundImage:
                 "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -319,7 +319,7 @@ const AboutSection: React.FC = () => {
             <h3
               className="text-4xl md:text-5xl font-bold mb-6"
               style={{
-                background: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
+                backgroundImage: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",

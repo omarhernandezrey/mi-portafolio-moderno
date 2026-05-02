@@ -1119,7 +1119,7 @@ const EducationSection = () => {
             <h2
               className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
               style={{
-                background:
+                backgroundImage:
                   "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -1147,7 +1147,7 @@ const EducationSection = () => {
             <h2
               className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
               style={{
-                background:
+                backgroundImage:
                   "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
