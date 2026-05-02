@@ -195,7 +195,7 @@ export default function ServicesSection() {
 
         {/* Grid de servicios */}
         <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
-          {localizedServices.map((_, index) => (
+          {localizedServices.map((service, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 50 }}
@@ -203,7 +203,12 @@ export default function ServicesSection() {
               transition={{ duration: 0.6, delay: index * 0.15, type: "spring", stiffness: 100 }}
               viewport={{ once: true }}
             >
-              <ServiceCard3D />
+              <ServiceCard3D
+                title={service.title}
+                description={service.description}
+                badge={service.badge}
+                number={`0${index + 1}`}
+              />
             </motion.div>
           ))}
         </div>

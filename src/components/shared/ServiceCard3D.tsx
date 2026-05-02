@@ -3,21 +3,26 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Card = () => {
+interface ServiceCard3DProps {
+  title: string;
+  description: string;
+  badge: string;
+  number: string;
+}
+
+const ServiceCard3D = ({ title, description, badge, number }: ServiceCard3DProps) => {
   return (
     <StyledWrapper>
       <div className="parent">
         <div className="card">
           <div className="content-box">
-            <span className="card-title">3D Card</span>
-            <p className="card-content">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </p>
-            <span className="see-more">See More</span>
+            <span className="card-title">{title}</span>
+            <p className="card-content">{description}</p>
+            <span className="see-more">Contratar</span>
           </div>
           <div className="date-box">
-            <span className="month">JUNE</span>
-            <span className="date">29</span>
+            <span className="month">{badge}</span>
+            <span className="date">{number}</span>
           </div>
         </div>
       </div>
@@ -141,4 +146,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default Card;
+export default ServiceCard3D;

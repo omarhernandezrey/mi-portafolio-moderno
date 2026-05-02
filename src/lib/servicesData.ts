@@ -12,6 +12,7 @@ export interface Service {
     pt: string;
   };
   icon: string;
+  badge: string;
   features: {
     es: string[];
     en: string[];
@@ -38,6 +39,7 @@ export const servicesData: Service[] = [
       pt: "Criando interfaces de usuário modernas e responsivas usando tecnologias como React e Next.js."
     },
     icon: "/images/services/frontend.svg",
+    badge: "FE",
     features: {
       es: [
         "React & Next.js",
@@ -77,6 +79,7 @@ export const servicesData: Service[] = [
       pt: "Construindo APIs robustas e escaláveis com Node.js, Express e bancos de dados SQL/NoSQL."
     },
     icon: "/images/services/backend.svg",
+    badge: "BE",
     features: {
       es: [
         "Node.js & Express",
@@ -116,6 +119,7 @@ export const servicesData: Service[] = [
       pt: "Protótipos funcionais e design focado em melhorar a experiência do usuário."
     },
     icon: "/images/services/design.svg",
+    badge: "UX",
     features: {
       es: [
         "Investigación de Usuario",
@@ -155,6 +159,7 @@ export const servicesData: Service[] = [
       pt: "Automatizando deploys e mantendo infraestrutura na nuvem."
     },
     icon: "/images/services/devops.svg",
+    badge: "OPS",
     features: {
       es: [
         "Pipelines CI/CD",
@@ -192,6 +197,7 @@ export const getLocalizedServicesData = (servicesData: Service[], language: stri
     title: service.title[lang] || service.title.es,
     description: service.description[lang] || service.description.es,
     icon: service.icon,
+    badge: service.badge,
     features: service.features[lang] || service.features.es,
     gradient: service.gradient,
     priceRange: service.priceRange,
