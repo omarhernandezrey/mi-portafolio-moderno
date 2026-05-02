@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { useTranslation } from "@/hooks/useTranslation";
 import ProfileCard from "./ProfileCard";
+import BrutalistInterestCard from "../shared/BrutalistInterestCard";
 
 /* ──────────────────────────────────────────────────────────
    Función para crear partículas aleatorias (solo en cliente) */
@@ -388,89 +389,14 @@ const AboutSection: React.FC = () => {
           </div>
 
           {/* Tarjetas de intereses */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 md:gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-12">
             {interests.map((interest, index) => (
-              <motion.a
+              <BrutalistInterestCard
                 key={interest}
+                title={interest}
                 href={interestLinks[interest] || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center text-center p-2 sm:p-4 md:p-6 h-24 sm:h-32 md:h-36 rounded-xl sm:rounded-2xl md:rounded-3xl border backdrop-blur-xl transition-all duration-500"
-                style={{
-                  backgroundColor:
-                    hoveredInterest === interest
-                      ? "var(--card-bg-color)"
-                      : `color-mix(in srgb, var(--secondary-background-color) 40%, transparent)`,
-                  borderColor:
-                    hoveredInterest === interest
-                      ? "var(--accent-color)"
-                      : `color-mix(in srgb, var(--muted-color) 20%, transparent)`,
-                  boxShadow:
-                    hoveredInterest === interest
-                      ? `0 25px 50px color-mix(in srgb, var(--accent-color) 15%, transparent)`
-                      : "none",
-                }}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1,
-                  type: "spring",
-                  stiffness: 100,
-                }}
-                viewport={{ once: true }}
-                onHoverStart={() => setHoveredInterest(interest)}
-                onHoverEnd={() => setHoveredInterest(null)}
-                whileHover={{ scale: 1.05, rotateY: 5 }}
-              >
-                {/* Glow */}
-                <motion.div
-                  className="absolute inset-0 rounded-3xl"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)",
-                    opacity: hoveredInterest === interest ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
-
-                {/* Contenido */}
-                <div className="relative z-10 flex flex-col items-center h-full justify-center">
-                  <motion.div
-                    className="text-xl sm:text-2xl md:text-3xl mb-1 sm:mb-2 md:mb-3"
-                    style={{ color: "var(--primary-color)" }}
-                    animate={{
-                      scale: hoveredInterest === interest ? 1.2 : 1,
-                      rotate: hoveredInterest === interest ? 5 : 0,
-                    }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    {technologyIcons[interest] || <span>★</span>}
-                  </motion.div>
-                  <span
-                    className="text-xs sm:text-sm font-medium transition-colors duration-300"
-                    style={{
-                      color:
-                        hoveredInterest === interest
-                          ? "var(--primary-color)"
-                          : "var(--muted-color)",
-                    }}
-                  >
-                    {interest}
-                  </span>
-                </div>
-
-                {/* Puntero decorativo */}
-                <motion.div
-                  className="absolute top-3 right-3 w-2 h-2 rounded-full"
-                  style={{ backgroundColor: "var(--accent-color)" }}
-                  animate={{
-                    scale: hoveredInterest === interest ? 1.5 : 1,
-                    opacity: hoveredInterest === interest ? 1 : 0.5,
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.a>
+                index={index}
+              />
             ))}
           </div>
         </motion.div>
