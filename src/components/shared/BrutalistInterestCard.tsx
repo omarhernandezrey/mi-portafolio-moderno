@@ -45,10 +45,10 @@ const BrutalistInterestCard: React.FC<BrutalistInterestCardProps> = ({ title, hr
             </div>
           </div>
           <div className="scan-effect" />
-          <div className="rivet" />
-          <div className="rivet" />
-          <div className="rivet" />
-          <div className="rivet" />
+          <div className="rivet rivet-tl" />
+          <div className="rivet rivet-tr" />
+          <div className="rivet rivet-bl" />
+          <div className="rivet rivet-br" />
         </div>
         <div className="type-accent">SYS//INTEREST_{index + 1}</div>
         <div className="corner-bracket bracket-tl" />
@@ -124,14 +124,13 @@ const StyledWrapper = styled.div`
 
   .title-text {
     color: #fff;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     text-shadow:
-      2px 2px 0 #333,
-      4px 4px 0 #666;
+      2px 2px 0 #333;
     text-align: center;
     padding: 0 15px;
   }
@@ -207,17 +206,17 @@ const StyledWrapper = styled.div`
   }
 
   .slab-1 {
-    top: 18px;
-    left: 18px;
-    width: 100%;
-    height: 100%;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
   }
 
   .slab-2 {
-    top: 36px;
-    left: 36px;
-    width: 100%;
-    height: 100%;
+    top: 20px;
+    left: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
   }
 
   .brutalist-container:hover .slab-1 {
@@ -278,7 +277,7 @@ const StyledWrapper = styled.div`
     top: -30px;
     left: 0;
     font-family: "JetBrains Mono", monospace;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 2px;
     color: #000;
@@ -302,22 +301,10 @@ const StyledWrapper = styled.div`
     transition: all 0.3s ease;
   }
 
-  .rivet:nth-child(1) {
-    top: 10px;
-    left: 10px;
-  }
-  .rivet:nth-child(2) {
-    top: 10px;
-    right: 10px;
-  }
-  .rivet:nth-child(3) {
-    bottom: 10px;
-    left: 10px;
-  }
-  .rivet:nth-child(4) {
-    bottom: 10px;
-    right: 10px;
-  }
+  .rivet-tl { top: 10px; left: 10px; }
+  .rivet-tr { top: 10px; right: 10px; }
+  .rivet-bl { bottom: 10px; left: 10px; }
+  .rivet-br { bottom: 10px; right: 10px; }
 
   .brutalist-container:hover .rivet {
     background: #fff;

@@ -3,7 +3,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import technologyIcons from "../../config/technologyIcons";
 import {
   FaUser,
   FaCalendarAlt,
@@ -41,9 +40,6 @@ const AboutSection: React.FC = () => {
     ReturnType<typeof createFloatingElements>
   >([]);
 
-  /* Estado para hover en intereses */
-  const [hoveredInterest, setHoveredInterest] = useState<string | null>(null);
-
   /* Referencia a la sección para animaciones de scroll */
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -51,11 +47,8 @@ const AboutSection: React.FC = () => {
     offset: ["start end", "end start"],
   });
 
-  /* Mapear progreso de scroll a transformaciones */
-  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  /* Parallax para fondo */
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-
-  /* Parallax para varias formas */
   const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
@@ -118,7 +111,6 @@ const AboutSection: React.FC = () => {
     >
       {/* Fondo parallax moderno */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {/* Círculo grande blur */}
         <motion.div
           className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
           style={{
@@ -126,7 +118,6 @@ const AboutSection: React.FC = () => {
             y: y1,
           }}
         />
-        {/* Blob naranja */}
         <motion.div
           className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
           style={{
@@ -135,7 +126,6 @@ const AboutSection: React.FC = () => {
             y: y2,
           }}
         />
-        {/* Círculo degradado inferior */}
         <motion.div
           className="absolute bottom-[-100px] left-[20%] w-[220px] h-[220px] rounded-full opacity-30 blur-2xl"
           style={{
@@ -143,7 +133,6 @@ const AboutSection: React.FC = () => {
             y: y3,
           }}
         />
-        {/* Línea degradada superior */}
         <motion.div
           className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] opacity-40 rotate-[-20deg] blur-md"
           style={{
@@ -151,12 +140,11 @@ const AboutSection: React.FC = () => {
             y: y4,
           }}
         />
-        {/* Círculo blanco inferior */}
         <div className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl" />
       </div>
 
-      {/* ───────── Partículas animadas de fondo ───────── */}
-      <div className="absolute inset-0 opacity-20">
+      {/* Partículas animadas */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
         {floatingElements.map((el) => (
           <motion.div
             key={el.id}
@@ -185,23 +173,7 @@ const AboutSection: React.FC = () => {
         ))}
       </div>
 
-      {/* ───────── Formas parallax ───────── */}
-      <motion.div className="absolute inset-0 opacity-10" style={{ y }}>
-        <div
-          className="absolute top-32 left-20 w-40 h-40 rounded-full"
-          style={{ backgroundColor: "var(--primary-color)" }}
-        />
-        <div
-          className="absolute top-60 right-32 w-28 h-28 rounded-full"
-          style={{ backgroundColor: "var(--accent-color)" }}
-        />
-        <div
-          className="absolute bottom-40 left-1/3 w-48 h-48 rounded-full"
-          style={{ backgroundColor: "var(--primary-color)" }}
-        />
-      </motion.div>
-
-      {/* ───────── Wave superior ───────── */}
+      {/* Wave superior */}
       <motion.div
         className="absolute top-0 left-0 w-full overflow-hidden z-0"
         initial={{ opacity: 0, y: -50 }}
@@ -218,14 +190,12 @@ const AboutSection: React.FC = () => {
         />
       </motion.div>
 
-      {/* ───────── Contenido principal ───────── */}
+      {/* Contenido principal */}
       <motion.div
         className="relative z-10 mx-auto max-w-full sm:max-w-7xl px-2 sm:px-4"
         style={{ opacity }}
       >
-        {/* Grid principal (foto + texto) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Foto + botón CV */}
           <motion.div
             className="flex flex-col items-center"
             initial={{ opacity: 0, x: -100 }}
@@ -240,7 +210,6 @@ const AboutSection: React.FC = () => {
             />
           </motion.div>
 
-          {/* Texto "Sobre mí" */}
           <motion.div
             className="flex flex-col space-y-8"
             initial={{ opacity: 0, x: 100 }}
@@ -248,7 +217,6 @@ const AboutSection: React.FC = () => {
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
             viewport={{ once: true }}
           >
-            {/* Encabezado */}
             <div>
               <motion.span
                 className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
@@ -258,10 +226,6 @@ const AboutSection: React.FC = () => {
                   borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
                 }}
                 whileHover={{ scale: 1.05 }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
               >
                 {t("about.badge")}
               </motion.span>
@@ -279,7 +243,6 @@ const AboutSection: React.FC = () => {
               </h2>
             </div>
 
-            {/* Descripción */}
             <motion.p
               className="text-lg leading-relaxed text-justify"
               style={{
@@ -288,10 +251,6 @@ const AboutSection: React.FC = () => {
                 textJustify: "inter-word",
                 hyphens: "auto",
               }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
               dangerouslySetInnerHTML={{
                 __html: t("about.description")
                   .replace("{name}", `<strong class="font-normal" style="color: var(--text-color)">${t("about.name")}</strong>`)
@@ -304,7 +263,6 @@ const AboutSection: React.FC = () => {
               }}
             />
 
-            {/* Datos personales */}
             <div className="grid grid-cols-2 gap-4 sm:gap-6">
               {personalData.map((item, index) => (
                 <motion.div
@@ -316,23 +274,16 @@ const AboutSection: React.FC = () => {
                   viewport={{ once: true }}
                   whileHover={{ x: 5 }}
                 >
-                  {/* Icono circular */}
                   <motion.span
                     className="w-12 h-12 flex items-center justify-center rounded-full text-white shadow-lg"
                     style={{
                       background: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
                     }}
-                    whileHover={{
-                      scale: 1.1,
-                      rotate: 5,
-                      boxShadow: `0 10px 25px color-mix(in srgb, var(--accent-color) 30%, transparent)`,
-                    }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    whileHover={{ scale: 1.1 }}
                   >
                     <item.icon size={18} />
                   </motion.span>
 
-                  {/* Texto */}
                   <div className="flex-1">
                     <p
                       className="uppercase text-xs font-semibold tracking-wider mb-1"
@@ -353,7 +304,6 @@ const AboutSection: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* ───────── Sección de intereses ───────── */}
         <motion.div
           className="mt-24"
           initial={{ opacity: 0, y: 50 }}
@@ -361,7 +311,6 @@ const AboutSection: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          {/* Encabezado */}
           <div className="text-center mb-16">
             <motion.span
               className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
@@ -370,7 +319,6 @@ const AboutSection: React.FC = () => {
                 backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
                 borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
               }}
-              whileHover={{ scale: 1.05 }}
             >
               {t("about.interests.badge")}
             </motion.span>
@@ -388,7 +336,6 @@ const AboutSection: React.FC = () => {
             </h3>
           </div>
 
-          {/* Tarjetas de intereses */}
           <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-12">
             {interests.map((interest, index) => (
               <BrutalistInterestCard
@@ -402,7 +349,6 @@ const AboutSection: React.FC = () => {
         </motion.div>
       </motion.div>
 
-      {/* Wave inferior */}
       <motion.div
         className="absolute bottom-0 left-0 w-full h-48 overflow-hidden leading-[0] z-0"
         initial={{ opacity: 0, y: 50 }}
@@ -418,7 +364,6 @@ const AboutSection: React.FC = () => {
         />
       </motion.div>
 
-      {/* Línea degradada inferior */}
       <div
         className="absolute bottom-0 left-0 right-0 h-px"
         style={{
