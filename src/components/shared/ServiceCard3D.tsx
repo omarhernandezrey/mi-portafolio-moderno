@@ -8,9 +8,10 @@ interface ServiceCard3DProps {
   description: string;
   badge: string;
   number: string;
+  onHire?: () => void;
 }
 
-const ServiceCard3D = ({ title, description, badge, number }: ServiceCard3DProps) => {
+const ServiceCard3D = ({ title, description, badge, number, onHire }: ServiceCard3DProps) => {
   return (
     <StyledWrapper>
       <div className="parent">
@@ -18,7 +19,7 @@ const ServiceCard3D = ({ title, description, badge, number }: ServiceCard3DProps
           <div className="content-box">
             <span className="card-title">{title}</span>
             <p className="card-content">{description}</p>
-            <span className="see-more">Contratar</span>
+            <span className="see-more" onClick={onHire}>Contratar</span>
           </div>
           <div className="date-box">
             <span className="month">{badge}</span>

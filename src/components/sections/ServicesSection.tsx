@@ -209,6 +209,15 @@ export default function ServicesSection() {
                 description={service.description}
                 badge={service.badge}
                 number={`0${index + 1}`}
+                onHire={() => {
+                  const contactSection = document.querySelector("#contact");
+                  if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: "smooth" });
+                    // Opcional: Podríamos disparar un evento para que el ChatBot o el Formulario
+                    // sepa qué servicio se seleccionó.
+                    console.log(`Interesado en: ${service.title}`);
+                  }
+                }}
               />
             </motion.div>
           ))}
