@@ -67,7 +67,7 @@ const AboutSection: React.FC = () => {
     "Open Source": "https://opensource.org/",
     "AI & ML": "https://ai.google/",
     Coding: "https://www.codecademy.com/",
-    "Tech Conferences": "https://www.techconferences.co/",
+    "Tech Conferences": "https://confs.tech/",
   };
 
   /* Datos personales */
