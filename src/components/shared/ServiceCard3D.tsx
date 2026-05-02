@@ -119,9 +119,9 @@ const StyledWrapper = styled.div`
     inset: 8px;
     border-radius: 30px;
     border-top-right-radius: 100%;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.08) 0%, rgba(255, 255, 255, 0.4) 100%);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0%, rgba(255, 255, 255, 0.3) 100%);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     transform: translate3d(0px, 0px, 25px);
     border-left: 1px solid rgba(255, 255, 255, 0.9);
     border-bottom: 1px solid rgba(255, 255, 255, 0.7);
@@ -139,10 +139,14 @@ const StyledWrapper = styled.div`
     display: block;
     color: #ffffff;
     font-weight: 900;
-    font-size: 17px;
-    letter-spacing: 1.5px;
+    font-size: 18px;
+    letter-spacing: 2px;
     margin-bottom: 10px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.25);
+    padding: 8px 12px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.15);
   }
 
   .content .text {
