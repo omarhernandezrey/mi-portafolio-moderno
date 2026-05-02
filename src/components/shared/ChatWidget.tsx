@@ -333,18 +333,6 @@ export default function ChatWidget() {
               {/* Mensaje de bienvenida inicial */}
               {messages.length === 0 && (
                 <div className="space-y-4">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex max-w-[88%] flex-col gap-2"
-                  >
-                    <div className="rounded-2xl rounded-tl-none bg-[var(--card-bg-color)] p-4 text-sm leading-relaxed text-[var(--text-color)] shadow-sm border border-[var(--primary-color)]/15">
-                      {currentLanguage === 'es' ? '¡Hola! Soy el asistente de Omar. 👋' : 'Hi! I\'m Omar\'s assistant. 👋'}
-                      <br /><br />
-                      {currentLanguage === 'es' ? '¿En qué puedo ayudarte hoy?' : 'How can I help you today?'}
-                    </div>
-                  </motion.div>
-
                   <div className="grid grid-cols-1 gap-2">
                     <button
                       onClick={() => handleSubmit(undefined, currentLanguage === 'es' ? 'Quiero contratar un servicio' : 'I want to hire a service')}
@@ -357,12 +345,6 @@ export default function ChatWidget() {
                       className="rounded-xl border border-[var(--primary-color)]/25 bg-[var(--primary-color)]/8 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/15 hover:border-[var(--primary-color)]/50 active:scale-[0.98]"
                     >
                       💼 {currentLanguage === 'es' ? 'Tengo una oferta laboral' : 'I have a job offer'}
-                    </button>
-                    <button
-                      onClick={() => handleSubmit(undefined, currentLanguage === 'es' ? 'Tengo una pregunta técnica' : 'I have a technical question')}
-                      className="rounded-xl border border-[var(--primary-color)]/25 bg-[var(--primary-color)]/8 p-3 text-left text-sm font-medium text-[var(--text-color)] transition-all hover:bg-[var(--primary-color)]/15 hover:border-[var(--primary-color)]/50 active:scale-[0.98]"
-                    >
-                      🛠️ {currentLanguage === 'es' ? 'Pregunta técnica' : 'Technical question'}
                     </button>
                   </div>
                 </div>
