@@ -70,6 +70,7 @@ const StyledWrapper = styled.div`
     transition: all 0.5s ease-in-out;
     padding: 60px 25px 25px 25px;
     transform-style: preserve-3d;
+    flex: 1;
   }
 
   .content-box .card-title {
