@@ -167,24 +167,60 @@ export default function Footer() {
                 </h3>
                 <NewsletterForm />
               </div>
-              
-              {/* Mini Testimonios compactos */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {testimonials.map((testimonial, index) => (
-                  <div key={index} className="p-4 rounded-2xl bg-white/5 border border-white/5 text-[11px] italic">
-                    <p className="opacity-70 mb-2">"{testimonial.quote.substring(0, 80)}..."</p>
-                    <span className="font-bold text-primary">— {testimonial.author}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
 
-          {/* Footer del Container (Ubicación) */}
+          {/* Testimonios Reinstalados */}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard
+                key={index}
+                quote={testimonial.quote}
+                author={testimonial.author}
+                role={testimonial.role}
+                avatar={testimonial.avatar}
+              />
+            ))}
+          </motion.div>
+
+          {/* Mapa Reinstalado */}
+          <motion.div
+            className="mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <h3
+              className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-6 italic"
+            >
+              {t("footer.findMe")}
+            </h3>
+            <div
+              className="w-full h-64 rounded-[32px] overflow-hidden shadow-2xl border transition-all duration-300"
+              style={{
+                borderColor: `color-mix(in srgb, var(--accent-color) 20%, transparent)`,
+              }}
+            >
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d497699.9973439676!2d-74.34209705000001!3d4.6097102!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9bfd2da6cb29%3A0x239d635520a33914!2sBogot%C3%A1%2C%20Bogota%2C%20Colombia!5e0!3m2!1sen!2s!4v1703123456789!5m2!1sen!2s"
+                allowFullScreen
+                loading="lazy"
+                className="w-full h-full border-none grayscale contrast-125 opacity-70 hover:opacity-100 transition-opacity duration-500"
+                title={t("footer.mapTitle")}
+              />
+            </div>
+          </motion.div>
+
+          {/* Footer del Container */}
           <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-4 text-xs font-bold opacity-50 italic">
-               <span className="flex items-center gap-2">📍 {t("footer.findMe")}</span>
-               <div className="w-1 h-1 rounded-full bg-white/20" />
                <span>Remote Worldwide • Bogotá, CO</span>
             </div>
             
