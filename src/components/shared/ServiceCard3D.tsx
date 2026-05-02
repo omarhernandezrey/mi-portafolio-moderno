@@ -63,21 +63,15 @@ const ServiceCard3D: React.FC<ServiceCard3DProps> = ({
             <span className="title">{title.toUpperCase()}</span>
             <span className="text">{description}</span>
 
-            {/* Características */}
-            <div className="features-list">
-              {features.slice(0, 3).map((feature, idx) => (
-                <motion.div
-                  key={idx}
-                  className="feature-item"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={isHovered ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
-                  transition={{ delay: idx * 0.1 }}
-                >
+            {/* Característica principal */}
+            {features.length > 0 && (
+              <div className="features-list">
+                <div className="feature-item">
                   <span className="dot" />
-                  <span className="feature-text">{feature}</span>
-                </motion.div>
-              ))}
-            </div>
+                  <span className="feature-text">{features[0]}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="bottom">
@@ -161,8 +155,8 @@ const StyledWrapper = styled.div`
   }
 
   .features-list {
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
   }
 
@@ -171,13 +165,8 @@ const StyledWrapper = styled.div`
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.95);
-    margin-bottom: 6px;
+    color: rgba(255, 255, 255, 0.9);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
-    &:last-child {
-      margin-bottom: 0;
-    }
   }
 
   .dot {
