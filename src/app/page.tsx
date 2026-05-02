@@ -8,7 +8,6 @@ import ServicesSection from "../components/sections/ServicesSection";
 import SkillSection from "../components/sections/SkillSection";
 import ProjectsSection from "../components/sections/ProjectsSection";
 import ContactForm from "../components/sections/ContactForm";
-import NewsletterForm from "../components/newsletter/NewsletterForm";
 import Footer from "../components/shared/Footer";
 
 export default function Home() {
@@ -64,11 +63,6 @@ export default function Home() {
       <SkillSection />
       <ProjectsSection />
       <ServicesSection />
-      <section className="py-20 bg-[var(--background-color)]">
-        <div className="container mx-auto px-4">
-          <NewsletterForm />
-        </div>
-      </section>
       <ContactForm />
       <Footer />
     </>
