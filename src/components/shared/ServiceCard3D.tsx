@@ -31,10 +31,14 @@ const ServiceCard3D = ({ title, description, badge, number }: ServiceCard3DProps
 }
 
 const StyledWrapper = styled.div`
+  height: 100%;
+
   .parent {
     width: 100%;
+    height: 100%;
     padding: 20px;
     perspective: 1000px;
+    display: flex;
   }
 
   .card {
@@ -50,8 +54,11 @@ const StyledWrapper = styled.div`
       0 0;
     background-color: #141414;
     width: 100%;
+    height: 100%;
     box-shadow: rgba(142, 142, 142, 0.3) 0px 30px 30px -10px;
     transition: all 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
   }
 
   .card:hover {
@@ -67,7 +74,10 @@ const StyledWrapper = styled.div`
     transition: all 0.5s ease-in-out;
     padding: 60px 25px 25px 25px;
     transform-style: preserve-3d;
-    min-height: 220px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
 
   .content-box .card-title {
@@ -98,7 +108,8 @@ const StyledWrapper = styled.div`
 
   .content-box .see-more {
     cursor: pointer;
-    margin-top: 1rem;
+    margin-top: auto;
+    align-self: flex-start;
     display: inline-block;
     font-weight: 900;
     font-size: 9px;
