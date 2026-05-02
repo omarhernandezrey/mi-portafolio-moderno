@@ -82,6 +82,17 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
     }
   };
 
+  const navLinks = React.useMemo(() => [
+    { id: "#hero", label: t("navigation.home"), icon: <AiOutlineHome size={20} /> },
+    { id: "#about", label: t("navigation.about"), icon: <AiOutlineUser size={20} /> },
+    { id: "#education", label: t("navigation.education"), icon: <AiOutlineBook size={20} /> },
+    { id: "#skills", label: t("navigation.skills"), icon: <BiBrain size={20} /> },
+    { id: "#projects", label: t("navigation.projects"), icon: <AiOutlineProject size={20} /> },
+    { id: "#services", label: t("navigation.services"), icon: <FaTools size={20} /> },
+    { id: "/calculadora", label: t("navigation.calculator"), icon: <FaTools size={20} />, isPage: true },
+    { id: "#contact", label: t("navigation.contact"), icon: <AiOutlineMail size={20} /> },
+  ], [t]);
+
   // Cerrar con tecla Escape
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -100,8 +111,8 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
       "#about",
       "#education",
       "#skills",
-      "#services",
       "#projects",
+      "#services",
       "#contact",
     ];
 
@@ -195,18 +206,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
           {/* Enlaces de navegación */}
           <div className="flex-1 px-4 py-6">
             <ul className="flex flex-col space-y-4 menu-links">
-              {(
-                [
-                  { id: "#hero", label: t("navigation.home"), icon: <AiOutlineHome size={20} /> },
-                  { id: "#about", label: t("navigation.about"), icon: <AiOutlineUser size={20} /> },
-                  { id: "#education", label: t("navigation.education"), icon: <AiOutlineBook size={20} /> },
-                  { id: "#skills", label: t("navigation.skills"), icon: <BiBrain size={20} /> },
-                  { id: "#projects", label: t("navigation.projects"), icon: <AiOutlineProject size={20} /> },
-                  { id: "#services", label: t("navigation.services"), icon: <FaTools size={20} /> },
-                  { id: "/calculadora", label: t("navigation.calculator"), icon: <FaTools size={20} />, isPage: true },
-                  { id: "#contact", label: t("navigation.contact"), icon: <AiOutlineMail size={20} /> },
-                ] as { id: string; label: string; icon: React.ReactNode; isPage?: boolean }[]
-              ).map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.id} className="w-full">
                   <button
                     onClick={() => handleLinkClick(link.id, link.isPage)}
@@ -218,7 +218,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
                     aria-current={activeSection === link.id ? "page" : undefined}
                     ref={link.id === "#hero" ? firstLinkRef : undefined}
                     tabIndex={0}
-                    aria-label={`${t("navigation.go_to", { defaultValue: "Ir a" })} ${link.label}`}
+                    aria-label={`${t("navigation.go_to")} ${link.label}`}
                   >
                     {link.icon}
                     <span className="text-sm font-medium">{link.label}</span>

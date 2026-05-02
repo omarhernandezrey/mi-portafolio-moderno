@@ -19,6 +19,14 @@ export const useTranslation = () => {
     "navigation.skills": "Habilidades",
     "navigation.education": "Educación",
     "navigation.contact": "Contacto",
+    "navigation.calculator": "Calculadora",
+    "navigation.go_to": "Ir a",
+    "navigation.menu": "Menú",
+    "navigation.language": "Idioma",
+
+    // Actions
+    "actions.close": "Cerrar",
+    "actions.change_theme": "Cambiar tema",
 
     // Hero
     "hero.greeting": "¡Hola Soy",
