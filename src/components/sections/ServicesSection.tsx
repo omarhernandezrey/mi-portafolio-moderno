@@ -10,6 +10,7 @@ import { useRef, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
 import { servicesData, getLocalizedServicesData } from "@/lib/servicesData";
+import ServiceCard3D from "@/components/shared/ServiceCard3D";
 
 // Los datos se obtienen ahora del archivo servicesData.ts
 
@@ -32,7 +33,6 @@ export default function ServicesSection() {
   const { t, language } = useTranslation();
   const localizedServices = useMemo(() => getLocalizedServicesData(servicesData, language), [language]);
 
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -194,184 +194,16 @@ export default function ServicesSection() {
         </motion.div>
 
         {/* Grid de servicios */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-          {localizedServices.map((service, index) => (
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
+          {localizedServices.map((_, index) => (
             <motion.div
               key={index}
-              className="relative group cursor-pointer"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.15,
-                type: "spring",
-                stiffness: 100,
-              }}
+              transition={{ duration: 0.6, delay: index * 0.15, type: "spring", stiffness: 100 }}
               viewport={{ once: true }}
-              onHoverStart={() => setHoveredIndex(index)}
-              onHoverEnd={() => setHoveredIndex(null)}
             >
-              {/* Tarjeta de servicio */}
-              <motion.div
-                className="relative h-full p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl border backdrop-blur-xl transition-all duration-500"
-                style={{
-                  backgroundColor:
-                    hoveredIndex === index
-                      ? "var(--card-bg-color)"
-                      : `color-mix(in srgb, var(--secondary-background-color) 40%, transparent)`,
-                  borderColor:
-                    hoveredIndex === index
-                      ? "var(--accent-color)"
-                      : `color-mix(in srgb, var(--muted-color) 20%, transparent)`,
-                  boxShadow:
-                    hoveredIndex === index
-                      ? `0 25px 50px color-mix(in srgb, var(--accent-color) 15%, transparent)`
-                      : "none",
-                }}
-                whileHover={{ scale: 1.05, rotateY: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                {/* Brillo */}
-                <motion.div
-                  className="absolute inset-0 rounded-3xl"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%)",
-                    opacity: hoveredIndex === index ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
-
-                {/* Contenido */}
-                <div className="relative z-10 flex flex-col h-full">
-                  {/* Icono */}
-                  <motion.div
-                    className="flex justify-center mb-6"
-                    animate={{ rotateY: hoveredIndex === index ? 360 : 0 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <div
-                      className="w-20 h-20 rounded-2xl p-4 flex items-center justify-center"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-                        boxShadow:
-                          hoveredIndex === index
-                            ? `0 15px 30px color-mix(in srgb, var(--accent-color) 30%, transparent)`
-                            : "none",
-                      }}
-                    >
-                      <div
-                        className="w-12 h-12"
-                        style={{
-                          maskImage: `url(${service.icon})`,
-                          WebkitMaskImage: `url(${service.icon})`,
-                          maskRepeat: "no-repeat",
-                          WebkitMaskRepeat: "no-repeat",
-                          maskPosition: "center",
-                          WebkitMaskPosition: "center",
-                          maskSize: "contain",
-                          WebkitMaskSize: "contain",
-                          backgroundColor: "var(--white-color)",
-                        }}
-                      />
-                    </div>
-                  </motion.div>
-
-                  <h3
-                    className="text-xl font-bold mb-4 text-center"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }}
-                  >
-                    {service.title}
-                  </h3>
-
-                  <p
-                    className="text-center mb-6 flex-grow text-sm leading-relaxed"
-                    style={{ color: "var(--muted-color)" }}
-                  >
-                    {service.description}
-                  </p>
-
-                  {/* Lista de características (aparece al hover) */}
-                  <motion.div
-                    className="space-y-2"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{
-                      opacity: hoveredIndex === index ? 1 : 0,
-                      height: hoveredIndex === index ? "auto" : 0,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {service.features.map((feature, fi) => (
-                      <motion.div
-                        key={fi}
-                        className="flex items-center space-x-2 text-xs"
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{
-                          x: hoveredIndex === index ? 0 : -20,
-                          opacity: hoveredIndex === index ? 1 : 0,
-                        }}
-                        transition={{ delay: fi * 0.1, duration: 0.3 }}
-                      >
-                        <div
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: "var(--accent-color)" }}
-                        />
-                        <span style={{ color: "var(--text-color)" }}>
-                          {feature}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-
-                  {/* Línea inferior animada */}
-                  <motion.div
-                    className="w-full h-px mt-6"
-                    style={{
-                      background:
-                        "linear-gradient(to right, transparent 0%, var(--accent-color) 50%, transparent 100%)",
-                    }}
-                    animate={{
-                      scaleX: hoveredIndex === index ? 1 : 0,
-                      opacity: hoveredIndex === index ? 1 : 0,
-                    }}
-                    transition={{ duration: 0.4 }}
-                  />
-                </div>
-
-                {/* Acento en esquina */}
-                <motion.div
-                  className="absolute top-4 right-4 w-2 h-2 rounded-full"
-                  style={{ backgroundColor: "var(--accent-color)" }}
-                  animate={{
-                    scale: hoveredIndex === index ? 1.5 : 1,
-                    opacity: hoveredIndex === index ? 1 : 0.5,
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.div>
-
-              {/* Número flotante */}
-              <motion.div
-                className="absolute -top-4 -left-4 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold z-20"
-                style={{
-                  backgroundColor: "var(--accent-color)",
-                  color: "var(--background-color)",
-                }}
-                animate={{
-                  scale: hoveredIndex === index ? 1.2 : 1,
-                  rotate: hoveredIndex === index ? 360 : 0,
-                }}
-                transition={{ duration: 0.5 }}
-              >
-                {index + 1}
-              </motion.div>
+              <ServiceCard3D />
             </motion.div>
           ))}
         </div>
