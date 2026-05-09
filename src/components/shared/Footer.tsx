@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,7 +17,6 @@ import { useTranslation } from "../../hooks/useTranslation";
 
 export default function Footer() {
   const pathname = usePathname();
-  const [isScrollButtonHovered, setIsScrollButtonHovered] = useState(false);
   const { t } = useTranslation();
 
   const handleLinkClick = (id: string) => {
