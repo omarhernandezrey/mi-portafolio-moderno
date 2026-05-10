@@ -4529,8 +4529,8 @@ NVIDIA_SOLAR_API_KEY=nvapi-Jbqgq2...
 ```
 
 **Aceptación:**
-- [ ] Vercel deployment verde tras agregar las variables.
-- [ ] En producción, el log de Telegram no muestra "NVIDIA_*_API_KEY missing" en los primeros 10 chats.
+- [x] Vercel deployment verde tras agregar las variables.
+- [x] En producción, el log de Telegram no muestra "NVIDIA_*_API_KEY missing" en los primeros 10 chats.
 
 ---
 
