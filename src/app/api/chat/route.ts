@@ -167,7 +167,7 @@ function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean,
 // ─── Detección de intención de compra ───────────────────────────────────────
 
 // Solo dispara cuando el cliente CONFIRMA interés — no en el primer mensaje de necesidad
-const INTENT_RE = /\b(sí|si\b|me interesa|me sirve|de acuerdo|arrancamos|empezamos|contratar|perfecto|listo|ok\b|okay|dale|adelante|procedemos|me conviene|me animo|quiero (empezar|arrancar|contratar|esa|ese)|cu[aá]ndo empezamos|me quedo con esa|esa opci[oó]n|esa misma|quiero la landing|quiero el e-?commerce|quiero el sitio|quiero el mvp|la primera|la segunda)\b/i;
+const INTENT_RE = /(?:^|\s)(sí\b|^si\b|si,\s|si\.|me interesa|me sirve|de acuerdo|arrancamos|empezamos|contratar|perfecto|listo|ok\b|okay|dale|adelante|procedemos|me conviene|me animo|quiero (empezar|arrancar|contratar|esa|ese)|cu[aá]ndo empezamos|me quedo con esa|esa opci[oó]n|esa misma|quiero la landing|quiero el e-?commerce|quiero el sitio|quiero el mvp|la primera|la segunda)\b/i;
 const HANDOFF_RE = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
 const RECRUITER_RE = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
 const ACCEPTED_STACK_RE = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
@@ -369,7 +369,7 @@ export async function POST(req: NextRequest) {
       (hasContact && alreadyRequestedName)
     );
 
-    if (canClose && !isEval) {
+    if (canClose) {
       const contact = knownEmail || knownPhone;
       // Derivar SIEMPRE del historial completo (más confiable que savedFacts cuyo update podría no haber commiteado)
       const fullHistory = [...history, { role: 'user', content: message }];
@@ -378,40 +378,42 @@ export async function POST(req: NextRequest) {
       const quotedPrice   = histPrice || savedFacts.price || '';
       const closingMsg = buildClosingMessage(effectiveName, contact, quotedService, quotedPrice, needFromHistory, language);
 
-      await supabaseServer.from('messages').insert([
-        { conversation_id: conversationId, role: 'user',      content: message },
-        { conversation_id: conversationId, role: 'assistant', content: closingMsg },
-      ]);
+      if (!isEval) {
+        await supabaseServer.from('messages').insert([
+          { conversation_id: conversationId, role: 'user',      content: message },
+          { conversation_id: conversationId, role: 'assistant', content: closingMsg },
+        ]);
 
-      // Crear lead y notificar
-      const lead = {
-        type: 'client' as const,
-        name: effectiveName || '(sin nombre)',
-        email: knownEmail || '',
-        phone: knownPhone || null,
-        notes: needFromHistory || message.substring(0, 120),
-        company: null,
-        service_requested: quotedService || null,
-        budget: quotedPrice || null,
-        timeline: null,
-      };
+        // Crear lead y notificar
+        const lead = {
+          type: 'client' as const,
+          name: effectiveName || '(sin nombre)',
+          email: knownEmail || '',
+          phone: knownPhone || null,
+          notes: needFromHistory || message.substring(0, 120),
+          company: null,
+          service_requested: quotedService || null,
+          budget: quotedPrice || null,
+          timeline: null,
+        };
 
-      supabaseServer.from('conversations').update({
-        visitor_name: effectiveName || undefined,
-        facts: { ...savedFacts, name: effectiveName, email: knownEmail, phone: knownPhone, need: needFromHistory, service: quotedService, price: quotedPrice },
-      }).eq('id', conversationId).then(() => {});
+        supabaseServer.from('conversations').update({
+          visitor_name: effectiveName || undefined,
+          facts: { ...savedFacts, name: effectiveName, email: knownEmail, phone: knownPhone, need: needFromHistory, service: quotedService, price: quotedPrice },
+        }).eq('id', conversationId).then(() => {});
 
-      const { data: insertedLead } = await supabaseServer
-        .from('leads')
-        .insert({ conversation_id: conversationId, ...lead })
-        .select('id')
-        .single();
+        const { data: insertedLead } = await supabaseServer
+          .from('leads')
+          .insert({ conversation_id: conversationId, ...lead })
+          .select('id')
+          .single();
 
-      if (insertedLead?.id) {
-        const { notifyLead } = await import('@/lib/chatbot/telegram');
-        notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME }).catch(console.error);
-        const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
-        pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
+        if (insertedLead?.id) {
+          const { notifyLead } = await import('@/lib/chatbot/telegram');
+          notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME }).catch(console.error);
+          const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
+          pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
+        }
       }
 
       const whatsappSummary = encodeURIComponent(
@@ -471,9 +473,19 @@ export async function POST(req: NextRequest) {
       rawReply = rawReply.replace(/\?$/, '.') + ' ¡Éxitos en tu búsqueda!';
     }
 
+    // MVP / App a medida: forzar mención del stack si el LLM lo omitió
+    if (
+      /\b(mvp|app|log[ií]stica|dashboard)\b/i.test(message) &&
+      !/(react|next\.js)/i.test(rawReply) &&
+      !REJECTED_STACK_RE.test(message) &&
+      !RECRUITER_RE.test(message)
+    ) {
+      rawReply = rawReply.trim() + ' Stack: React + Next.js + Node.js.';
+    }
+
     // SOLICITUD DE CONTACTO: cuando el cliente confirma interés, el servidor genera
     // la respuesta completa (nombre correcto garantizado — el LLM puede equivocarse)
-    if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message)) {
+    if (!canClose && INTENT_RE.test(message) && !HANDOFF_RE.test(message) && !/propuesta/i.test(message)) {
       const contactAsk = buildContactRequest(effectiveName, !!knownEmail, !!knownPhone, language);
       rawReply = contactAsk; // Reemplaza completamente — no depender del LLM para el nombre
     }

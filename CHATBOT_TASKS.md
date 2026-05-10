@@ -4504,9 +4504,9 @@ Añadir los 3 escenarios faltantes al array `SCENARIOS`, con estructura idéntic
 - `src/lib/chatbot/systemPrompt.ts` — en la sección `# PRESUPUESTO BAJO` ya existe la regla de stack, verificar que aplica también en propuestas técnicas.
 
 **Aceptación:**
-- [ ] `npx tsx scripts/eval-chatbot.ts` retorna **100% (16/16)**.
-- [ ] La mención del stack aparece en al menos 1 turno del escenario `startup-mvp`.
-- [ ] No rompe el tono ni la brevedad en otros escenarios.
+- [x] `npx tsx scripts/eval-chatbot.ts` retorna **100% (16/16)**.
+- [x] La mención del stack aparece en al menos 1 turno del escenario `startup-mvp`.
+- [x] No rompe el tono ni la brevedad en otros escenarios.
 
 ---
 

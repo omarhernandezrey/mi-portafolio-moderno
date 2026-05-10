@@ -37,7 +37,7 @@ export const SCENARIOS: EvalScenario[] = [
       { user: 'Hola Omar, estoy buscando un dev para un MVP de una app de logística' },
       { user: 'Necesito auth, tracking en vivo y un dashboard' },
       { user: 'Tengo unos 3000 USD de presupuesto' },
-      { user: 'Perfecto, mi nombre es Andrés Torres, correo andres@startup.io' }
+      { user: 'Perfecto, mi nombre es Andrés Torres, correo andres@startup.io y tel 3001234567' }
     ],
     mustPass: [
       'mencionó stack React/Next/Node',
