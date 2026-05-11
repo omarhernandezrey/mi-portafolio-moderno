@@ -237,11 +237,6 @@ const StyledWrapper = styled.div`
     transform: translate(0, 0);
     bottom: 20px;
     right: 20px;
-    color: white;
-  }
-  
-  .card:hover .logo svg {
-  fill: white;
   }
   `;
 
