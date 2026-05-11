@@ -11,7 +11,8 @@ import {
 } from "react-icons/fa";
 import { useTranslation } from "@/hooks/useTranslation";
 import ProfileCard from "./ProfileCard";
-import BrutalistInterestCard from "../shared/BrutalistInterestCard";
+import ModernInterestCard from "../ui/ModernInterestCard";
+import { Code2, BrainCircuit, Rocket, Coffee, Globe } from "lucide-react";
 
 /* ──────────────────────────────────────────────────────────
    Función para crear partículas aleatorias (solo en cliente) */
@@ -54,21 +55,14 @@ const AboutSection: React.FC = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
-  /* Datos de intereses y enlaces */
-  const interests = [
-    "Platzi Learning",
-    "Open Source",
-    "AI & ML",
-    "Coding",
-    "Tech Conferences",
+  /* Datos de intereses y enlaces (Actualizados con nueva librería de UI) */
+  const interestsData = [
+    { title: "Platzi Learning", href: "https://platzi.com/", icon: <Rocket size={40} strokeWidth={1.5} /> },
+    { title: "Open Source", href: "https://opensource.org/", icon: <Globe size={40} strokeWidth={1.5} /> },
+    { title: "AI & ML", href: "https://ai.google/", icon: <BrainCircuit size={40} strokeWidth={1.5} /> },
+    { title: "Clean Code", href: "https://www.codecademy.com/", icon: <Code2 size={40} strokeWidth={1.5} /> },
+    { title: "Tech Coffee", href: "https://confs.tech/", icon: <Coffee size={40} strokeWidth={1.5} /> },
   ];
-  const interestLinks: Record<string, string> = {
-    "Platzi Learning": "https://platzi.com/",
-    "Open Source": "https://opensource.org/",
-    "AI & ML": "https://ai.google/",
-    Coding: "https://www.codecademy.com/",
-    "Tech Conferences": "https://confs.tech/",
-  };
 
   /* Datos personales */
   const personalData = [
@@ -329,13 +323,13 @@ const AboutSection: React.FC = () => {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-12">
-            {interests.map((interest, index) => (
-              <BrutalistInterestCard
-                key={interest}
-                title={interest}
-                href={interestLinks[interest] || "#"}
-                index={index}
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+            {interestsData.map((item) => (
+              <ModernInterestCard
+                key={item.title}
+                title={item.title}
+                href={item.href}
+                icon={item.icon}
               />
             ))}
           </div>
