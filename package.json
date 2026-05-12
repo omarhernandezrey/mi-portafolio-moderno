@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "precommit:secrets": "git diff --cached --name-only | xargs -I{} grep -lE '(AIza[0-9A-Za-z\\\\-_]{35}|AQ\\\\.[0-9A-Za-z\\\\-_]{35,}|sk-[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9_-]{20,}\\\\.eyJ)' {} 2>/dev/null && echo '🚨 Posible secreto en commit detectado. Revisa tus archivos antes de subir.' && exit 1 || exit 0"
+    "precommit:secrets": "git diff --cached --name-only | xargs -I{} grep -lE '(AIza[0-9A-Za-z\\\\-_]{35}|AQ\\\\.[0-9A-Za-z\\\\-_]{35,}|sk-[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9_-]{20,}\\\\.eyJ)' {} 2>/dev/null && echo '🚨 Posible secreto en commit detectado. Revisa tus archivos antes de subir.' && exit 1 || exit 0",
+    "eval:chatbot": "npx tsx scripts/eval-chatbot.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
