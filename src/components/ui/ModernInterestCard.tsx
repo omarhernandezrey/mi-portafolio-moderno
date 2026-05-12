@@ -2,7 +2,8 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Github, Linkedin, Twitter } from 'lucide-react';
+import { Github, Linkedin } from 'lucide-react';
+import { FaXTwitter } from 'react-icons/fa6';
 
 interface ModernInterestCardProps {
   title: string;
@@ -62,7 +63,7 @@ const ModernInterestCard: React.FC<ModernInterestCardProps> = ({ title, href, ic
           rel="noopener noreferrer"
         >
           <span className="icon">
-            <Twitter className="svg" />
+            <FaXTwitter className="svg" />
           </span>
         </a>
         <div className="box box4" />

@@ -1,3 +1,4 @@
+
 # Chatbot AI 24/7 — Plan de Tareas Atómicas
 
 > **Misión.** Convertir un portafolio personal en una máquina de captar clientes 24/7, sin pagar nada por tecnología, ejecutando una tarea pequeña a la vez. Meta a 12 meses: que el portafolio traiga tantos leads que Omar tenga que contratar gente para responderlos.
@@ -1016,8 +1017,6 @@ create index idx_conversations_session on conversations(session_id);
 ```
 - **Aceptación:** tabla visible en Table Editor.
 
----
-
 ### [x] Tarea 1.2 — Crear tabla `messages`
 ```sql
 create table messages (
@@ -1030,8 +1029,6 @@ create table messages (
 create index idx_messages_conversation on messages(conversation_id);
 ```
 - **Aceptación:** tabla creada con FK a `conversations`.
-
----
 
 ### [x] Tarea 1.3 — Crear tabla `leads`
 ```sql
@@ -1053,8 +1050,6 @@ create table leads (
 ```
 - **Aceptación:** tabla creada.
 
----
-
 ### [x] Tarea 1.4 — Habilitar RLS y política service-role only
 ```sql
 alter table conversations enable row level security;
@@ -1075,8 +1070,6 @@ npm install groq-sdk @supabase/supabase-js nanoid
 - **Aceptación:** las 3 deps en `package.json`, `npm install` sin errores.
 
 > 📌 **NOTA 2026-04-18:** los proveedores adicionales de FASE 27 (OpenRouter, Cerebras, Cloudflare, Ollama) usan `fetch` nativo, sin SDK extra a instalar. Solo `groq-sdk` se instala como dependencia.
-
----
 
 ### [x] Tarea 2.2 — Crear cliente Supabase server-only
 - Crear `src/lib/supabaseServer.ts`:
@@ -1155,16 +1148,12 @@ export const supabaseServer = createClient(
 
 - **Aceptación:** archivo `src/lib/chatbot/data/_omar_inputs.md` existe, **sin campos vacíos** (si el usuario no responde uno, el agente DEBE detenerse y pedirlo, no inventar).
 
----
-
 ### [x] Tarea 3.1 — Crear `persona.ts` (voz de Omar)
 - Crear `src/lib/chatbot/data/persona.ts`
 - Exportar constante `PERSONA` con secciones: identidad, voz, muletillas, frases prohibidas, valores, ICP, red flags, garantías, diferenciadores
 - Cargar literalmente desde `_omar_inputs.md` (no parafrasear)
 - En español e inglés (objeto bilingüe `{es, en}`)
 - **Aceptación:** importar `PERSONA` muestra los 5 diferenciadores y las 3 muletillas EXACTAS que escribió el usuario.
-
----
 
 ### [x] Tarea 3.2 — Crear `catalog.ts` (servicios + precios)
 - Crear `src/lib/chatbot/data/catalog.ts`
@@ -1185,8 +1174,6 @@ export const supabaseServer = createClient(
 - Llenar TODOS los servicios listados en `_omar_inputs.md`
 - **Aceptación:** mínimo 8 servicios con precios reales del usuario, sin placeholders `0` ni `TODO`.
 
----
-
 ### [x] Tarea 3.3 — Crear `salesPlaybook.ts` (manual de cierre)
 - Crear `src/lib/chatbot/data/salesPlaybook.ts`
 - Exportar 4 bloques:
@@ -1205,8 +1192,6 @@ export const supabaseServer = createClient(
   4. **NEXT_STEPS** — 3 CTAs por nivel de calor del lead (frío → enviar caso de éxito; tibio → agendar 15min Cal.com; caliente → pedir anticipo + brief)
 - **Aceptación:** archivo > 200 líneas, sin lorem ipsum, en es/en.
 
----
-
 ### [x] Tarea 3.4 — Crear `objections.ts` (manual de objeciones)
 - Crear `src/lib/chatbot/data/objections.ts`
 - Exportar `OBJECTIONS` con mínimo 12 objeciones reales y respuesta argumentada (es/en):
@@ -1224,8 +1209,6 @@ export const supabaseServer = createClient(
   - "Quiero pagar al final, no anticipo"
 - Cada objeción incluye: `trigger` (frases que la activan), `acknowledge` (validación empática), `reframe` (reencuadre), `proof` (evidencia/caso real), `cta` (siguiente paso)
 - **Aceptación:** importar `OBJECTIONS` retorna array ≥ 12, cada uno con los 5 campos llenos.
-
----
 
 ### [x] Tarea 3.5 — Crear builder del system prompt unificado
 - Crear `src/lib/chatbot/systemPrompt.ts`
@@ -1337,8 +1320,6 @@ NO los menciones en el texto visible.
   5. Contiene los marcadores `<<<LEAD>>>`, `<<<HANDOFF>>>`, `<<<CALCOM>>>` exactos
   6. `npx tsc --noEmit` sin errores
 
----
-
 ### [x] Tarea 3.6 — Parser de bloques estructurados
 - Crear `src/lib/chatbot/parser.ts`
 - Exportar:
@@ -1367,8 +1348,6 @@ NO los menciones en el texto visible.
   8. Retornar `{ reply: string, handoffUrl?: string, calcomUrl?: string }`
 - **Aceptación:** `curl -X POST http://localhost:3000/api/chat -d '{"sessionId":"test","message":"hola","language":"es"}'` retorna JSON con `reply`.
 
----
-
 ### [x] Tarea 4.2 — Wrapper Groq
 - Crear `src/lib/chatbot/groq.ts`
 - Exportar `async function generateReply(systemPrompt: string, history: {role, content}[], userMessage: string): Promise<string>`
@@ -1377,12 +1356,8 @@ NO los menciones en el texto visible.
 - Manejar errores: si Groq falla, retornar mensaje fallback en el idioma correcto
 - **Aceptación:** test unitario manual: import y llamar con prompt simple retorna texto.
 
----
-
 > 📌 **NOTA 2026-04-18 — Superseded por FASE 27.**
 > El wrapper Groq sigue activo, pero ahora vive como **un adaptador más** dentro de `src/lib/chatbot/providers/groq.ts`. La lógica de generación pasa por `src/lib/chatbot/llm.ts`, que orquesta Groq + OpenRouter + Cerebras + Cloudflare + Ollama con failover automático. El archivo histórico `src/lib/chatbot/groq.ts` quedó como reexport delgado para no romper imports existentes (Tarea 27.5).
-
----
 
 ### [x] Tarea 4.3 — Rate limiting in-memory por IP
 - En `route.ts` añadir Map<ip, {count, resetAt}>
@@ -1401,8 +1376,6 @@ NO los menciones en el texto visible.
 - Try/catch silencioso (no romper el chat si Telegram falla)
 - **Aceptación:** llamar manualmente envía mensaje al teléfono.
 
----
-
 ### [x] Tarea 5.2 — Plantilla de notificación de lead
 - En `route.ts` cuando se inserte un lead, llamar `notifyTelegram` con:
 ```
@@ -1420,8 +1393,6 @@ Notas: {notes}
 Última msg: "{lastUserMessage}"
 ```
 - **Aceptación:** simular conversación que cualifique → llega notificación al teléfono.
-
----
 
 ### [x] Tarea 5.3 — Plantilla de handoff
 - Cuando se detecte `<<<HANDOFF>>>`, además de generar el `wa.me` link, enviar a Telegram:
@@ -1449,8 +1420,6 @@ El visitante recibió wa.me link.
 - Mensaje inicial del assistant (sin llamar API): saludo + 3 botones rápidos: "Quiero contratar un servicio", "Tengo una oferta laboral", "Pregunta técnica"
 - **Aceptación:** botón visible, panel abre/cierra, se puede escribir.
 
----
-
 ### [x] Tarea 6.2 — Conectar widget al endpoint
 - Crear `src/services/chatService.ts`:
 ```ts
@@ -1469,15 +1438,11 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Si viene `calcomUrl`: render botón "Agendar reunión"
 - **Aceptación:** conversación completa funciona en `npm run dev`.
 
----
-
 ### [x] Tarea 6.3 — Internacionalización del widget
 - Añadir claves a `src/locales/es/common.json` y `src/locales/en/common.json`:
   - `chatbot.title`, `chatbot.placeholder`, `chatbot.send`, `chatbot.welcome`, `chatbot.quickActions.hire`, `chatbot.quickActions.recruiter`, `chatbot.quickActions.tech`, `chatbot.handoffButton`, `chatbot.calendarButton`, `chatbot.error`
 - Usar `useTranslation()` en el widget
 - **Aceptación:** cambiar idioma en navbar → widget cambia textos.
-
----
 
 ### [x] Tarea 6.4 — Estilos responsive y accesibilidad
 - Móvil (`<640px`): panel ocupa 100vw × 80vh, sticky bottom
@@ -1496,13 +1461,9 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Eliminarlo (mantener el ícono de WhatsApp dentro del Footer normal)
 - **Aceptación:** ya no hay botón flotante WhatsApp visible.
 
----
-
 ### [x] Tarea 7.2 — Montar `ChatWidget` global
 - Importar `ChatWidget` en `src/app/layout.tsx` (dentro de `<body>`, después del children)
 - **Aceptación:** widget aparece en todas las páginas (home, certificates, etc.).
-
----
 
 ### [x] Tarea 7.3 — Animación de "atención" cada 30s
 - En el botón flotante, cada 30s sin abrir: hacer un wiggle (framer-motion `animate={{rotate:[0,-10,10,0]}}`)
@@ -1519,13 +1480,9 @@ export async function sendChatMessage(sessionId: string, message: string, langua
 - Cuando intent = `recruiter` y tenga company+role → ofrecer Cal.com interview URL
 - **Aceptación:** simulación reclutador → bot ofrece interview URL.
 
----
-
 ### [x] Tarea 8.2 — Botón "Agendar" inline
 - Cuando API responda con `calcomUrl`, el widget renderiza CTA grande con `target="_blank"`
 - **Aceptación:** click abre Cal.com en nueva pestaña.
-
----
 
 ### [x] Tarea 8.3 — Pre-rellenar `wa.me` con contexto
 - En `route.ts` para handoff: construir
@@ -1542,14 +1499,10 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 - En API: rechazar mensajes > 2000 chars, vacíos, o que parezcan prompt injection (`ignore previous`, `system:`, etc.)
 - **Aceptación:** request con 5000 chars → 400.
 
----
-
 ### [x] Tarea 9.2 — Honeypot en widget
 - Añadir input oculto `name="website"` con `tabIndex={-1}` `aria-hidden`
 - Si llega lleno al API → descartar silenciosamente
 - **Aceptación:** bot llenando el campo → no se procesa.
-
----
 
 ### [x] Tarea 9.3 — Manejo de cuota Groq agotada
 - Si Groq retorna 429 o quota error: responder con mensaje fallback + link directo a WhatsApp
@@ -1568,8 +1521,6 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
 - Añadir las 8 variables del `.env.local` (Production + Preview)
 - **Aceptación:** `vercel env ls` lista las 8.
 
----
-
 ### [x] Tarea 10.2 — Deploy y smoke test
 - `git push` a main → esperar build
 - En la URL de prod: abrir widget → enviar 1 mensaje → verificar:
@@ -1577,8 +1528,6 @@ https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola Omar, vengo del
   - Aparece registro en Supabase tablas `conversations` y `messages`
   - Si cualifica lead → llega Telegram
 - **Aceptación:** los 3 checks anteriores pasan en producción.
-
----
 
 ### [!] Tarea 10.3 — Monitoreo básico
 - En Supabase crear vista:
@@ -1591,8 +1540,6 @@ from messages group by 1 order by 1 desc;
 ```
 - Crear tabla `leads_weekly` view similar
 - **Aceptación:** consultar la vista en SQL Editor retorna filas tras smoke test.
-
----
 
 ### [x] Tarea 10.4 — README de operación
 - Añadir sección al `README.md` principal:
@@ -1644,8 +1591,6 @@ from messages group by 1 order by 1 desc;
   10. Red flag (cliente abusivo / pide pirateo / etc.) → rechazo digno
 - **Aceptación:** archivo creado con 10 escenarios completos, sin TODOs.
 
----
-
 ### [x] Tarea 11.2 — Runner de evaluación
 - Crear `scripts/eval-chatbot.ts`
 - Para cada escenario: hacer requests reales a `/api/chat` (server local), capturar respuestas, evaluar `mustPass` con regex/keyword matching simple
@@ -1653,15 +1598,11 @@ from messages group by 1 order by 1 desc;
 - Score total y exit code 1 si pasa < 90%
 - **Aceptación:** `npx tsx scripts/eval-chatbot.ts` ejecuta y muestra score.
 
----
-
 ### [x] Tarea 11.3 — Iterar hasta score ≥ 90%
 - Si score < 90%: el agente DEBE iterar el system prompt (ajustar persona/playbook/objections), re-correr eval, hasta llegar a ≥ 90%
 - Documentar en `src/lib/chatbot/eval/CHANGELOG.md` cada iteración: qué se cambió y por qué
 - **Aceptación:** salida del runner muestra ≥ 90% de pruebas pasadas.
 - **Crítico:** NO continuar a Fase 10 (deploy) sin pasar esta tarea.
-
----
 
 ### [x] Tarea 11.4 — Pruebas de adversario (red team)
 - Añadir a `SCENARIOS` 5 escenarios adversariales:
@@ -1684,8 +1625,6 @@ from messages group by 1 order by 1 desc;
   - Envíe a Telegram: `🥶 Lead frío sin respuesta: {name} ({service_requested})`
 - **Aceptación:** insertar lead falso con `created_at` antiguo, ejecutar cron manual → cambia status y notifica.
 
----
-
 ### [x] Tarea 12.2 — Re-engagement message
 - Si visitante vuelve al sitio con mismo `sessionId` (localStorage) tras > 24h:
   - Widget muestra mensaje proactivo: "¡Qué bueno verte de nuevo {nombre}! ¿Seguimos donde quedamos sobre {service_requested}?"
@@ -1701,8 +1640,6 @@ from messages group by 1 order by 1 desc;
 - Cada ejemplo: 4-5 turnos donde el bot hace TODO bien
 - **Aceptación:** el prompt incluye sección `# EJEMPLOS` con 3 conversaciones.
 
----
-
 ### [x] Tarea 13.2 — Auto-revisión del bot
 - En `llm.ts` (FASE 27 — sustituye al wrapper antiguo de proveedor único), tras generar respuesta, hacer **segunda llamada** corta al mismo orquestador con prompt:
 ```
@@ -1711,8 +1648,6 @@ Revisa esta respuesta del asistente de Omar. ¿Cumple con: voz de Omar, máximo 
 - Si responde `FIX:`, regenerar UNA vez con instrucción correctiva
 - Cachear: si la primera respuesta es OK, no gastar segunda llamada en mensajes triviales (saludo, despedida)
 - **Aceptación:** logs muestran que en mensajes complejos se hace auto-revisión y a veces corrige.
-
----
 
 ### [x] Tarea 13.3 — Memory de hechos clave del visitante
 - En `conversations` añadir columna JSONB `facts`:
@@ -1776,8 +1711,6 @@ export const clientEnv = clientSchema.parse({
   - `grep -r "process.env" src/ --include="*.ts" --include="*.tsx"` solo retorna ocurrencias dentro de `src/config/env.ts`.
   - Si se borra una variable de `.env.local` y se hace `npm run build` → falla con error claro indicando QUÉ falta.
 
----
-
 ### [x] Tarea 14.2 — `.env.example` versionado y `.env.local` ignorado
 - Crear `.env.example` (SÍ se commitea, sin valores reales) con TODAS las claves y comentarios:
 ```env
@@ -1821,8 +1754,6 @@ src/lib/chatbot/data/_omar_inputs.md
 - Ejecutar `git check-ignore -v .env.local` → debe confirmar que está ignorado.
 - **Aceptación:** `git status` no lista `.env.local` ni `_omar_inputs.md`; `.env.example` SÍ está trackeado.
 
----
-
 ### [x] Tarea 14.3 — Bóveda local cifrada (backup portable de claves)
 - Crear `secrets/` en la raíz (ignorado por git, ver Tarea 14.2).
 - Añadir `secrets/README.md` (este archivo SÍ se commitea):
@@ -1847,8 +1778,6 @@ para no perderlas si formateas la PC.
 ```
 - **Aceptación:** carpeta `secrets/` existe, `secrets/README.md` commiteado, `secrets/*.age` ignorado.
 
----
-
 ### [x] Tarea 14.4 — Configurar variables en Vercel (script reproducible)
 - Crear `scripts/sync-vercel-env.sh` (ejecutable):
 ```bash
@@ -1871,8 +1800,6 @@ echo "✅ Variables sincronizadas con Vercel."
   - `chmod +x scripts/sync-vercel-env.sh` aplicado.
   - Ejecutar el script tras `vercel link` sube las 9 variables.
   - `vercel env ls` lista las 9 en production y preview.
-
----
 
 ### [x] Tarea 14.5 — Plan de portabilidad a Google Cloud (documentado)
 - Añadir `scripts/sync-gcp-env.sh` plantilla (no se ejecuta hoy, queda lista para mañana):
@@ -1897,8 +1824,6 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
 - Documentar en `scripts/README.md` el flujo Vercel→GCP cuando llegue el día.
 - **Aceptación:** scripts existen, `scripts/README.md` explica los dos comandos y cuándo usar cada uno.
 
----
-
 ### [x] Tarea 14.6 — Rotación de claves (procedimiento)
 - Añadir sección a `README.md`:
   - Cómo rotar `GROQ_API_KEY`: revocar en https://console.groq.com/keys, generar nueva, actualizar `.env.local`, correr `sync-vercel-env.sh`, redeploy.
@@ -1906,8 +1831,6 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
   - Igual para Supabase, Telegram, Cal.com.
   - Checklist mensual: revisar quota de Groq + proveedores de FASE 27, Supabase storage, Telegram funcionando.
 - **Aceptación:** sección "Rotación de claves" presente en README.
-
----
 
 ### [x] Tarea 14.7 — Pre-commit hook anti-secretos
 - Añadir a `package.json` script `precommit:secrets`:
@@ -1944,8 +1867,6 @@ echo "✅ Variables sincronizadas con GCP Secret Manager."
 
 - **Aceptación:** archivo creado y referenciado desde el README y desde este documento.
 
----
-
 ### [x] Tarea 15.2 — Reglas anti-hardcoding (validación automática)
 - Añadir script `scripts/check-no-hardcode.sh`:
 ```bash
@@ -1973,8 +1894,6 @@ fi
 ```
 - **Aceptación:** script ejecutable; correr al final de cada fase debe retornar ✅.
 
----
-
 ### [x] Tarea 15.3 — Source of truth única para datos del bot
 - El catálogo de servicios del bot (`src/lib/chatbot/data/catalog.ts`) debe **derivar** de `src/lib/servicesData.ts` cuando haya solapamiento, no duplicarlo.
 - Crear `src/lib/chatbot/data/index.ts` que reexporte:
@@ -1986,29 +1905,21 @@ fi
 - El `systemPrompt` SOLO importa de `src/lib/chatbot/data/index.ts`.
 - **Aceptación:** modificar un proyecto en `projectsData.ts` y ejecutar la suite de eval → el bot menciona el proyecto actualizado sin tocar ningún otro archivo.
 
----
-
 ### [x] Tarea 15.4 — Coherencia visual con el theme
 - El `ChatWidget` usa **EXCLUSIVAMENTE** `var(--primary-color)`, `var(--accent-color)`, `var(--background-color)`, `var(--text-color)`, `var(--muted-color)`, `var(--white-color)`.
 - Se integra con el `PaletteToggle` existente: si el usuario cambia paleta, el widget reacciona sin recargar.
 - **Aceptación:** cambiar paleta con el toggle → widget cambia colores en vivo.
-
----
 
 ### [x] Tarea 15.5 — No romper SEO ni performance
 - El `ChatWidget` se carga con `next/dynamic` con `ssr: false` y `loading: () => null` para NO bloquear el First Contentful Paint.
 - Verificar que Lighthouse Performance sigue ≥ 90 tras añadir el widget.
 - **Aceptación:** Lighthouse antes vs después: caída ≤ 3 puntos; FCP < 1.8s.
 
----
-
 ### [x] Tarea 15.6 — Convivencia con ContactForm (no canibalización)
 - El `ContactForm` existente (`src/components/sections/ContactForm.tsx`) NO se elimina. Es el canal "formal" para quien no quiere chat.
 - En el widget: si el usuario cierra el chat sin completar, NO insistir más de 1 vez por sesión.
 - Si el usuario llega vía form, opcionalmente disparar a Telegram igual (unificar canales) — crear `src/lib/chatbot/contactBridge.ts` que reciba leads del form y los inserte en `leads` con `source='contact_form'`.
 - **Aceptación:** enviar email con el form → aparece fila en `leads` con `source='contact_form'` y notificación en Telegram.
-
----
 
 ### [x] Tarea 15.7 — Auditoría de regresiones
 - Antes de la Fase 10 (deploy), correr este checklist y dejarlo registrado en `CHATBOT_INTEGRATION_MAP.md`:
@@ -2041,15 +1952,11 @@ fi
   - Base legal: consentimiento explícito al iniciar chat
 - **Aceptación:** dos páginas accesibles en `/privacidad` y `/privacy`, en sitemap.
 
----
-
 ### [x] Tarea 16.2 — Consentimiento explícito en el widget
 - Antes del primer mensaje: el widget muestra checkbox "Acepto la [política de privacidad](/privacidad)"
 - Sin marcarlo, el botón enviar está deshabilitado
 - Guardar consentimiento en `conversations.consent_at timestamptz`
 - **Aceptación:** sin marcar checkbox, no se puede enviar; al marcar, se guarda timestamp en DB.
-
----
 
 ### [x] Tarea 16.3 — Derecho al olvido (endpoint)
 - Crear `POST /api/privacy/delete` que recibe `{email, reason}`, busca todas las conversaciones/leads con ese email y los borra
@@ -2057,8 +1964,6 @@ fi
 - Notificar a Telegram: "🗑️ Borrado solicitado: {email}"
 - Documentar el endpoint en la política de privacidad
 - **Aceptación:** llamar el endpoint con email de prueba elimina todas las filas asociadas.
-
----
 
 ### [x] Tarea 16.4 — Banner de cookies (mínimo)
 - Si NO usas analytics aún, basta una nota pequeña: "Este sitio usa almacenamiento local para tu sesión de chat. No usamos cookies de terceros."
@@ -2076,21 +1981,15 @@ fi
 - Secciones: objetivo del proyecto, público objetivo, referencias visuales, funcionalidades must-have / nice-to-have, plazo deseado, presupuesto, dominio/hosting actual, contenido (¿lo tienes?)
 - **Aceptación:** archivo accesible en `https://tudominio.com/docs/brief-template.md`.
 
----
-
 ### [x] Tarea 17.2 — Plantilla de propuesta
 - Crear `public/docs/propuesta-template.md` con secciones: contexto, propuesta de solución, alcance detallado, entregables, fases y plazos, inversión, condiciones, próximo paso
 - El bot, cuando un lead pide propuesta, llena variables (nombre, servicio, precio del catálogo, plazo) y envía link al PDF generado bajo demanda — **fallback gratis:** generar HTML imprimible vía `/api/proposal/[leadId]` y dejar que el cliente lo descargue como PDF desde el navegador (Print to PDF)
 - **Aceptación:** ruta `/api/proposal/[leadId]` retorna HTML imprimible con datos reales del lead.
 
----
-
 ### [x] Tarea 17.3 — Contrato simple de servicios
 - Crear `public/docs/contrato-servicios.md` con cláusulas básicas: partes, objeto, alcance, plazo, valor, anticipo, propiedad intelectual, confidencialidad, terminación, jurisdicción Bogotá Colombia
 - Disclaimer al inicio: "Plantilla base; revisar con abogado para casos particulares"
 - **Aceptación:** archivo accesible y mencionado por el bot cuando se cierre venta.
-
----
 
 ### [x] Tarea 17.4 — FAQ pública
 - Crear `src/app/faq/page.tsx` con 15 preguntas reales (sacadas de `_omar_inputs.md`):
@@ -2125,8 +2024,6 @@ fi
 
 **Aceptación:** mínimo 3 métodos activos, todos los links abren correctamente desde móvil.
 
----
-
 ### [x] Tarea 18.2 — Helper `getPaymentOptions(currency, country)`
 - Crear `src/lib/chatbot/payments.ts`
 - Exportar función que retorna métodos disponibles según contexto:
@@ -2136,16 +2033,12 @@ fi
 - Cada método: `{name, url, instructions, currency, fee}`
 - **Aceptación:** llamar con `('USD', 'US')` retorna ≥ 2 opciones con links válidos.
 
----
-
 ### [x] Tarea 18.3 — System prompt actualizado con cobro
 - Añadir al `systemPrompt.ts` sección `# COBRO`:
   - "Cuando el cliente confirma compra, pregunta país. Según país, ofrece 2-3 métodos de pago de `getPaymentOptions`."
   - "Pide anticipo del {PERSONA.anticipo}% para empezar."
   - "Tras recibir comprobante, emite bloque `<<<PAYMENT_RECEIVED>>>{leadId, amount, method}<<<END>>>` para que se notifique a Omar."
 - **Aceptación:** simular cierre de venta → bot ofrece métodos de pago correctos según país.
-
----
 
 ### [x] Tarea 18.4 — Endpoint para confirmar pago
 - `POST /api/payment/confirm` recibe `{leadId, amount, method, screenshot?}`
@@ -2166,8 +2059,6 @@ fi
 - Solo procesar mensajes que vengan de `TELEGRAM_CHAT_ID` (Omar), ignorar resto
 - **Aceptación:** enviar mensaje al bot desde Telegram → llega POST a Vercel logs.
 
----
-
 ### [x] Tarea 19.2 — Comandos del bot para Omar
 - Implementar comandos:
   - `/leads` → últimos 5 leads
@@ -2176,15 +2067,11 @@ fi
   - `/auto {sessionId}` → desactiva takeover, el bot vuelve a responder
 - **Aceptación:** los 4 comandos funcionan desde Telegram.
 
----
-
 ### [x] Tarea 19.3 — Pull en el widget (sin WebSockets, gratis)
 - En el widget, mientras está abierto, hacer `GET /api/chat/poll?sessionId=X&since=lastMessageTimestamp` cada 5 segundos
 - Si hay mensajes nuevos del assistant (puestos por Omar vía `/reply`), agregarlos a la UI
 - Mostrar indicador "Omar está en línea ahora" cuando `human_takeover=true`
 - **Aceptación:** Omar envía `/reply` desde Telegram → el cliente lo ve en el widget en ≤ 5s.
-
----
 
 ### [x] Tarea 19.4 — Cuando hay takeover, el bot NO responde solo
 - En `/api/chat`: si la conversación tiene `human_takeover=true`, no llamar a Groq; solo guardar mensaje user y notificar a Omar por Telegram para que responda
@@ -2204,16 +2091,12 @@ fi
 - Añadir `ADMIN_PASSWORD` y `ADMIN_SECRET` a `env.ts` y `.env.example`
 - **Aceptación:** sin cookie, `/admin` redirige a `/admin/login`.
 
----
-
 ### [x] Tarea 20.2 — Vistas del dashboard
 - `/admin` (resumen): KPIs del mes (conversaciones, leads, leads pagados, conversion rate, ingresos USD)
 - `/admin/leads` (tabla): filtrable por status, ordenable por fecha, click → detalle
 - `/admin/leads/[id]`: datos del lead + transcripción completa de la conversación + botones "Marcar contactado", "Marcar perdido", "Generar propuesta"
 - `/admin/conversations` (todas las conversaciones, no solo leads)
 - **Aceptación:** las 4 rutas funcionan, datos reales de Supabase, responsive.
-
----
 
 ### [x] Tarea 20.3 — Export CSV
 - Botón "Exportar leads CSV" en `/admin/leads` → genera CSV con todos los campos
@@ -2231,8 +2114,6 @@ fi
   - Notifica a Telegram: "💾 Backup semanal OK ({size} MB)"
 - **Aceptación:** ejecutar manualmente → archivo aparece en repo backups, llega Telegram.
 
----
-
 ### [x] [GEM] Tarea 21.2 — Alertas de cuota
 - Crear `scripts/check-quotas.ts` que cada 6h:
   - Cuenta requests del día a Groq (tabla `api_logs`)
@@ -2240,8 +2121,6 @@ fi
   - Si Groq ≥ 80% de 1500 → Telegram "⚠️ Groq al 80%"
   - Si Supabase ≥ 80% de 500MB → Telegram "⚠️ Supabase al 80%, revisar limpiar mensajes viejos"
 - **Aceptación:** simular contadores altos → llega alerta.
-
----
 
 ### [x] [GEM] Tarea 21.3 — Limpieza automática
 - Cron mensual que borra:
@@ -2287,8 +2166,6 @@ Contenido (el agente lo crea, Omar lo imprime/pega en el espejo):
 
 - **Aceptación:** archivo creado en raíz; Omar lo lee y confirma.
 
----
-
 ### [x] [GEM] Tarea 22.2 — Auto-resumen diario en Telegram
 - Cron diario 8am Bogotá → mensaje a Telegram:
 ```
@@ -2313,8 +2190,6 @@ Top servicio consultado: {servicio}
 - Schema.org Person + ProfessionalService en `src/app/page.tsx` (JSON-LD)
 - Sitemap incluye todas las rutas
 - **Aceptación:** Lighthouse SEO = 100; Rich Results Test de Google valida JSON-LD.
-
----
 
 ### [x] [GEM] Tarea 23.2 — Distribución manual (lista para Omar)
 Crear `02-MARKETING_DISTRIBUCION.md`:
@@ -2355,14 +2230,10 @@ Crear `02-MARKETING_DISTRIBUCION.md`:
 
 - **Aceptación:** archivo creado, Omar marca al menos 5 ítems "Inmediato" como hechos en la primera semana.
 
----
-
 ### [x] [GEM] Tarea 23.3 — Open Graph dinámico
 - Generar imagen OG en `src/app/opengraph-image.tsx` usando `next/og` con tu nombre, foto, "Disponible para proyectos"
 - Cada vez que compartes el portafolio en LinkedIn/Twitter aparece preview profesional
 - **Aceptación:** compartir URL en LinkedIn muestra preview correcto.
-
----
 
 ### [x] [GEM] Tarea 23.4 — Vercel Analytics (gratis 2.5k events/mes en Hobby)
 - Activar Vercel Analytics (Web Analytics, no Speed Insights → ese también pero opcional)
@@ -2420,8 +2291,6 @@ ___________________________________________
 - **Aceptación:** frase escrita, NO genérica, con justificación.
 - **Crítico:** sin nicho definido, el chatbot vende "cualquier cosa" → suena a commodity → precios bajos.
 
----
-
 ### [x] [GEM] Tarea 24.2 — Pricing en USD (no en pesos colombianos)
 - Re-revisar `_omar_inputs.md` y `catalog.ts`: **TODOS los precios en USD**, mínimo de mercado internacional:
 
@@ -2441,8 +2310,6 @@ ___________________________________________
 - **Excepción para Colombia:** si cobras a empresas locales en COP, ajusta pero **mínimo $80.000–120.000 COP/hora**. Mejor enfócate en internacional.
 - **Aceptación:** catálogo actualizado en USD; el bot NUNCA ofrece menos de $250 por un proyecto.
 
----
-
 ### [x] [GEM] Tarea 24.3 — Diseñar 3 servicios productizados (no horas, paquetes)
 Los freelancers que más ganan **no venden horas**, venden **paquetes de resultado**. Crear en `catalog.ts`:
 
@@ -2460,8 +2327,6 @@ Los freelancers que más ganan **no venden horas**, venden **paquetes de resulta
 - INGRESO RECURRENTE = oxígeno para el freelancer
 
 - **Aceptación:** los 3 paquetes en el catálogo, con descripciones claras y limitaciones explícitas.
-
----
 
 ### [x] [GEM] Tarea 24.4 — Plan de ingresos a 12 meses (números honestos)
 Crear sección en `03-ESTRATEGIA_INGRESOS.md`:
@@ -2498,8 +2363,6 @@ La diferencia NO es el bot. Es la disciplina diaria de FASE 22 + tráfico de FAS
 
 - **Aceptación:** plan escrito, números revisados.
 
----
-
 ### [x] [GEM] Tarea 24.5 — Lista de "NO" (lo que mata freelancers)
 Añadir al `03-ESTRATEGIA_INGRESOS.md`:
 
@@ -2524,15 +2387,11 @@ Añadir al `03-ESTRATEGIA_INGRESOS.md`:
 
 - **Aceptación:** sección presente; el system prompt del bot conoce estas reglas y las aplica al filtrar leads (ICP/red flags de FASE 3.0).
 
----
-
 ### [x] [GEM] Tarea 24.6 — Doble vía: freelance + empleo full-time remoto
 - El portafolio + chatbot **NO es excluyente** con buscar trabajo full-time remoto
 - En paralelo, todos los días: 5 aplicaciones a empresas remote-first (Get on Board, RemoteOK, WeWorkRemotely, LinkedIn Jobs filtro Remote)
 - El bot, cuando llegue un reclutador, **prioriza** ese lead (más estable que freelance)
 - **Aceptación:** `02-MARKETING_DISTRIBUCION.md` (FASE 23.2) tiene checklist diario de aplicaciones a empleos.
-
----
 
 ### [x] [GEM] Tarea 24.7 — Inversión en habilidades que pagan más
 - Mientras esperas leads, **estudia 1 habilidad de pricing alto** (gratis):
@@ -2612,8 +2471,6 @@ jobs:
 - Añadir `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` a GitHub Secrets del repo
 - **Aceptación:** workflow corre manualmente sin error; tras 2 semanas el proyecto Supabase sigue activo.
 
----
-
 ### [x] [GEM] Tarea 25.2 — Mover TODOS los crons a GitHub Actions (no Vercel)
 - Crear `.github/workflows/scheduled-tasks.yml` que dispare:
   - `cleanup-cold-leads` (FASE 12.1) — diario
@@ -2623,8 +2480,6 @@ jobs:
 - Cada uno hace `curl` a un endpoint público en tu sitio (`/api/cron/{nombre}`) protegido por header `X-Cron-Secret`
 - Añadir `CRON_SECRET` a `env.ts` y a GitHub Secrets
 - **Aceptación:** los 4 endpoints existen, GitHub Actions los dispara, Vercel solo procesa, sin depender de Vercel Cron.
-
----
 
 ### [x] [GEM] Tarea 25.3 — Frenos automáticos de uso (kill switch)
 - Crear `src/lib/chatbot/limits.ts` con límites HARDCODED conservadores:
@@ -2664,8 +2519,6 @@ select date_trunc('day', created_at) as day, service, sum(cost_units) as total
 from api_logs group by 1, 2 order by 1 desc;
 ```
 - **Aceptación:** tras 10 llamadas al chat, `select * from daily_usage where service in ('groq','openrouter','cerebras','cloudflare','ollama')` suma 10 (distribuido entre los proveedores que respondieron).
-
----
 
 ### [x] [OMAR] Tarea 25.5 — Bloqueo manual de upgrades automáticos
 
@@ -2709,7 +2562,6 @@ Gemini NO hace esta tarea. Gemini guía a Omar así:
 
 **Aceptación:** los 4 servicios sin tarjeta vinculada. Si ves "Upgrade" en algún lado: NO clickees. `docs/evidencia-tarea-25.5.md` commiteado con una fila por proveedor.
 
----
 
 ### [x] [OMAR] Tarea 25.6 — Dominio: usa subdominio gratis o compra barato consciente
 
@@ -2764,8 +2616,6 @@ Gemini NO compra el dominio. Gemini te acompaña en la decisión y en la configu
 - En `quota-check` (Tarea 25.2): si Groq llega a 80% de límite diario → Telegram avisa
 - Si llega a 95% → además, cambiar variable `EMERGENCY_FALLBACK=true` en runtime que desvía nuevas conversaciones a "déjanos tu email, te respondemos pronto"
 - **Aceptación:** simular 95% → conversaciones nuevas reciben fallback en lugar de tocar Groq.
-
----
 
 ### [x] [GEM] Tarea 25.8 — Costo total mensual real (verificación)
 - Ejecutar al final de cada mes:
@@ -2891,8 +2741,6 @@ Crear `PLAN_B_OPENSOURCE.md`:
 
 - **Aceptación:** archivo creado y referenciado desde el README.
 
----
-
 ### [x] [GEM] Tarea 26.2 — Reglas de oro de ejecución para IAs (Copilot / Groq CLI)
 
 Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan, a veces "creen" que terminaron sin terminar. Para mitigarlo, antes de cada tarea grande, el agente DEBE descomponerla en sub-tareas atómicas máximo de 30 líneas de código cada una.
@@ -2912,8 +2760,6 @@ Estas IAs tienen problemas conocidos: hacen cambios pequeños, a veces alucinan,
 
 **Aceptación:** el agente, antes de empezar una tarea grande, escribe en el chat la lista de sub-tareas que va a ejecutar y espera confirmación del usuario. Solo entonces empieza.
 
----
-
 ### [x] [GEM] Tarea 26.3 — Modo "smoke test" después de cada fase
 Tras completar TODA una fase (no cada tarea), el agente DEBE:
 
@@ -2925,8 +2771,6 @@ Tras completar TODA una fase (no cada tarea), el agente DEBE:
 6. Reportar al usuario: "Fase X completada, todos los checks pasan, ¿continuamos con Fase X+1?"
 
 **Aceptación:** entre fase y fase hay un commit explícito `chore: cierre fase X — todos los checks pasan`.
-
----
 
 ### [x] [GEM] Tarea 26.4 — Si la IA se queda atascada (protocolo de escalada)
 
@@ -2944,8 +2788,6 @@ Las IAs a veces entran en bucles o no entienden el contexto. Si después de **3 
 3. **NO seguir avanzando** a la siguiente sub-tarea hasta resolver
 
 **Aceptación:** protocolo escrito, el agente lo aplica si se atasca.
-
----
 
 ### [ ] [OMAR] Tarea 26.5 — Validación final pre-deploy con humano
 
@@ -3030,8 +2872,6 @@ Antes de hacer el deploy de FASE 10, hacer manualmente con Omar (no la IA):
 - Cada adaptador debe **lanzar** una `Error` tipada (`ProviderError`) con `{ status?: number, retryable: boolean }` para que el orquestador decida si saltar.
 - **Aceptación:** los 5 archivos existen, cada uno < 60 líneas, exportan `call` con la misma firma, y `npx tsc --noEmit` pasa.
 
----
-
 ### [x] Tarea 27.2 — Crear orquestador `llm.ts` con failover
 - Crear `src/lib/chatbot/llm.ts`
 - Exportar `generateReply(systemPrompt, history, userMessage)` con la **misma firma** que el viejo `groq.ts`
@@ -3040,8 +2880,6 @@ Antes de hacer el deploy de FASE 10, hacer manualmente con Omar (no la IA):
 - Si toda la cadena falla → retornar `<<<QUOTA_EXCEEDED>>>`
 - Adicional: si un proveedor responde 401/403, agregarlo a un `Set<string>` interno `disabledProviders` para no reintentarlo durante esta lambda/proceso
 - **Aceptación:** test manual `npx tsx -e "import('./src/lib/chatbot/llm').then(m => m.generateReply('eres un bot', [], 'hola').then(console.log))"` retorna texto.
-
----
 
 ### [x] Tarea 27.3 — Actualizar `src/config/env.ts` con keys nuevas (opcionales)
 - Añadir como **opcionales** (no rompen build si faltan):
@@ -3057,8 +2895,6 @@ LLM_PROVIDER_CHAIN: z.string().optional(),  // CSV: "groq,openrouter,..."
 - **Regla:** un proveedor sin su key se saltea silenciosamente en el orquestador (no es error)
 - **Aceptación:** `npm run build` pasa con las nuevas vars vacías; pasa también con vars llenas.
 
----
-
 ### [x] Tarea 27.4 — Migrar `src/app/api/chat/route.ts`
 - Cambiar:
   ```ts
@@ -3071,8 +2907,6 @@ LLM_PROVIDER_CHAIN: z.string().optional(),  // CSV: "groq,openrouter,..."
 - **No tocar nada más** del route.ts. La firma es idéntica.
 - **Aceptación:** `curl -X POST http://localhost:3000/api/chat -d '{"sessionId":"test","message":"hola","language":"es"}'` retorna `reply` no vacío.
 
----
-
 ### [x] Tarea 27.5 — Deprecar `src/lib/chatbot/groq.ts` (mantener export)
 - Convertir el archivo en un reexport delgado para no romper imports antiguos:
   ```ts
@@ -3080,8 +2914,6 @@ LLM_PROVIDER_CHAIN: z.string().optional(),  // CSV: "groq,openrouter,..."
   export { generateReply } from './llm';
   ```
 - **Aceptación:** `grep -r "from.*chatbot/groq" src` sigue funcionando (devuelve la misma función).
-
----
 
 ### [x] Tarea 27.6 — Documentar nuevas variables en `.env.example`
 - Añadir bloque al final, todas comentadas como opcionales:
@@ -3097,8 +2929,6 @@ OLLAMA_BASE_URL=http://localhost:11434
 LLM_PROVIDER_CHAIN=
 ```
 - **Aceptación:** `.env.example` commiteado con las nuevas vars vacías.
-
----
 
 ### [ ] [OMAR] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
 
@@ -4458,259 +4288,3 @@ Añadir los 3 escenarios faltantes al array `SCENARIOS`, con estructura idéntic
 - [ ] Los 3 nuevos tienen al menos 2 turnos y 3 criterios `mustPass`.
 - [ ] `npx tsx scripts/eval-chatbot.ts` corre sin errores de tipo.
 - [ ] `npm run build` verde.
-- [ ] `npm run build` verde.
-
----
-
-## Pruebas Chatbot
-
-> Fecha: 2026-04-28 — Eval corrida en producción local (puerto 3001, 16 escenarios).
-
-### Resultado final
-
-🎉 **93.75% (15/16) — el chatbot pasó la evaluación.**
-
-| Corrida | Score |
-|---|---|
-| Inicial (sin fixes) | 50% (8/16) |
-| Tras system prompt + parser | 62.5% (10/16) |
-| Tras server-side enforcement | 81.25% (13/16) |
-| Tras eval mappings + Angular/tacaño | **93.75% (15/16) ✅** |
-
-### Qué funciona de forma confiable
-
-- Habla directo y breve como Omar (sin repetir saludos en cada turno)
-- Cita precios reales del catálogo en respuesta a cualquier objeción de precio
-- Emite `<<<LEAD>>>` / `<<<CALCOM>>>` / `<<<HANDOFF>>>` — reforzado por server-side enforcement en `route.ts` si el LLM no lo hace
-- Rechaza Angular, stacks no aceptados, presupuestos imposibles y prompt injection
-- Tiene memoria de nombre y email entre turnos (extracción por regex + `conv.facts`)
-- Pasa todos los adversariales de seguridad (suplantación, datos de terceros, jailbreak, inyección)
-- 16 proveedores LLM en cadena de failover (Groq + 9 NVIDIA NIM + DeepSeek + Mistral + Cerebras + OpenRouter + HuggingFace + Cloudflare + Ollama)
-
-### Único fallo pendiente (para llegar a 100%)
-
-| ID | Criterio que falla | Por qué | Tarea pendiente |
-|---|---|---|---|
-| `startup-mvp` | "mencionó stack React/Next/Node" | En conversaciones largas (4+ turnos) el LLM omite el stack en respuestas intermedias | Ver **TASK-100-A** |
-
----
-
-### TASK-100-A — Forzar mención de stack en propuestas de MVP/app
-
-**Objetivo:** Que el chatbot siempre mencione "React + Next.js" o "Node.js" cuando propone un MVP o app a medida, sin importar el modelo LLM activo.
-
-**Archivos a modificar:**
-- `src/app/api/chat/route.ts` — agregar enforcement: si `message` contiene "MVP", "app", "logística", "dashboard" y la reply no menciona "React" ni "Next.js" → inyectar al final: `"Stack: React + Next.js + Node.js."`
-- `src/lib/chatbot/systemPrompt.ts` — en la sección `# PRESUPUESTO BAJO` ya existe la regla de stack, verificar que aplica también en propuestas técnicas.
-
-**Aceptación:**
-- [x] `npx tsx scripts/eval-chatbot.ts` retorna **100% (16/16)**.
-- [x] La mención del stack aparece en al menos 1 turno del escenario `startup-mvp`.
-- [x] No rompe el tono ni la brevedad en otros escenarios.
-
----
-
-### TASK-100-B — Subir NVIDIA_API_KEY y todas las keys a Vercel
-
-**Objetivo:** Las 10 variables de entorno de NVIDIA NIM deben estar en producción para que el failover funcione también en Vercel.
-
-**Variables a agregar en Vercel → Settings → Environment Variables:**
-```
-NVIDIA_API_KEY=nvapi-01Kwur5F...
-NVIDIA_MISTRAL_API_KEY=nvapi-01Kwur5F...
-NVIDIA_KIMI_API_KEY=nvapi-thGPD3...
-NVIDIA_LLAMA4_API_KEY=nvapi-iXmuNu...
-NVIDIA_MISTRAL_NEMOTRON_API_KEY=nvapi-fB8deh...
-NVIDIA_PHI4_API_KEY=nvapi-Qu5xwb...
-NVIDIA_GEMMA3_API_KEY=nvapi-eAgmPA...
-NVIDIA_DRACARYS_API_KEY=nvapi-_0Fd06...
-NVIDIA_NEMOTRON_API_KEY=nvapi-SKFGic...
-NVIDIA_SOLAR_API_KEY=nvapi-Jbqgq2...
-```
-
-**Aceptación:**
-- [x] Vercel deployment verde tras agregar las variables.
-- [x] En producción, el log de Telegram no muestra "NVIDIA_*_API_KEY missing" en los primeros 10 chats.
-
----
-
-### TASK-100-C — Completar validación manual (tarea 26.5)
-
-**Objetivo:** Omar debe completar la validación manual de los 10 escenarios reales del formulario de `VALIDACION_PREDEPLOY.md`. Solo 1 de 10 fue completado (score 7.75/10).
-
-**Instrucción:** Abrir el chatbot en producción y probar los 10 escenarios del archivo `VALIDACION_PREDEPLOY.md` uno por uno. Registrar el puntaje real de cada uno.
-
-**Aceptación:**
-- [ ] Los 10 escenarios completados con puntaje ≥ 8/10 cada uno.
-- [ ] `VALIDACION_PREDEPLOY.md` actualizado con los resultados.
-
----
-
-### TASK-100-D — Responsividad del ChatWidget en todos los dispositivos ✅
-
-**Objetivo:** El chatbot debe verse y funcionar correctamente en mobile, tablet y desktop. No puede salirse de pantalla ni cortar contenido.
-
-**Problema detectado:** El panel tenía alto fijo `h-[600px]` y ancho fijo `w-[400px]` sin breakpoints intermedios — en tablet landscape el panel sobrepasaba el viewport. Además faltaban safe-area insets para el notch y la barra de home de iOS.
-
-**Cambios implementados en `src/components/shared/ChatWidget.tsx`:**
-- **Mobile (<640px):** pantalla completa `h-[100dvh] w-full rounded-none` con `env(safe-area-inset-top)` en el header y `env(safe-area-inset-bottom)` en el footer.
-- **Tablet (640px–767px):** panel flotante `h-[min(78dvh,580px)] w-[clamp(320px,88vw,390px)] rounded-2xl` posicionado `bottom-20 right-4`.
-- **Desktop (768px+):** panel `h-[600px] w-[400px] rounded-3xl` posicionado `bottom-24 right-6`.
-- Botón flotante reducido a `h-14 w-14` en mobile, `h-16 w-16` en desktop.
-- Botón de cerrar X siempre visible (eliminado `sm:hidden`).
-
-**Aceptación:**
-- [x] Panel visible completo en iPhone SE (375px), iPhone 14 (390px), iPad Mini (768px portrait/landscape), iPad (1024px) y desktop.
-- [x] Safe area correcta — sin contenido oculto por notch ni barra de home en iOS.
-- [x] Botón X de cierre siempre accesible en todos los dispositivos.
-
----
-
-## 🛠️ SOLUCIONES IMPLEMENTADAS — CHATBOT (Sesión de correcciones profundas)
-
-> Documentado el 2026-04-30. Todos los cambios están en producción en `omarhernandezrey.com`.
-
----
-
-### 📋 Resumen de problemas resueltos
-
-| # | Problema | Síntoma | Estado |
-|---|----------|---------|--------|
-| 1 | Bot usaba nombre "Roxana" con clientes que no se llamaban así | El LLM tomaba el nombre de los ejemplos del system prompt | ✅ Resuelto |
-| 2 | `canClose` nunca disparaba — lead no se guardaba | Cliente daba email + teléfono y el bot ignoraba el cierre | ✅ Resuelto |
-| 3 | Sin notificación Telegram al capturar lead | Consecuencia directa del `canClose = false` | ✅ Resuelto |
-| 4 | Sin botón WhatsApp al cerrar conversación | `handoffUrl` no se generaba porque `canClose` no disparaba | ✅ Resuelto |
-| 5 | Mensaje de cierre no incluía servicio ni precio elegido | `buildClosingMessage` usaba texto vago "tu proyecto" | ✅ Resuelto |
-| 6 | Admin dashboard `/admin/login` fallaba con "Failed to fetch" | Variables `NEXT_PUBLIC_SUPABASE_*` faltaban en el bundle del browser | ✅ Resuelto |
-| 7 | Logs `[error]` en Vercel del módulo RAG/HuggingFace | Cliente HF se inicializaba a nivel de módulo, fallaba silenciosamente | ✅ Resuelto |
-| 8 | Build roto por `prefer-const` | `let effectiveName` debía ser `const` | ✅ Resuelto |
-
----
-
-### 🐛 Detalle técnico: Bug del nombre incorrecto ("Roxana")
-
-| Campo | Detalle |
-|-------|---------|
-| **Causa raíz** | El system prompt tenía ejemplos con `"Hola Roxana!"`. El LLM memorizaba ese nombre del contexto de ejemplos y lo usaba en el paso de solicitud de contacto cuando no conocía el nombre real del cliente. |
-| **Archivo afectado** | `src/lib/chatbot/systemPrompt.ts` |
-| **Archivo afectado** | `src/app/api/chat/route.ts` |
-| **Solución 1 — system prompt** | Se reemplazaron todos los ejemplos con "Roxana" por "Laura" y "Carlos". Se eliminaron ejemplos hardcodeados de solicitud de contacto ("Andrés"/"María") que el LLM podía imitar. |
-| **Solución 2 — server-side enforcement** | Se agregó un bloque que intercepta el mensaje ANTES de enviarlo al LLM cuando detecta `INTENT_RE` (cliente confirma interés). El servidor genera la solicitud de contacto completa con `buildContactRequest(effectiveName, ...)` y reemplaza la respuesta del LLM por completo. El LLM nunca ve ni genera ese paso crítico. |
-| **Función clave** | `buildContactRequest(name, hasEmail, hasPhone, lang)` en `route.ts` |
-| **Garantía** | El nombre en la solicitud de contacto siempre viene de `effectiveName` (extraído del historial real de la conversación), nunca del LLM. |
-
----
-
-### 🐛 Detalle técnico: `canClose` nunca disparaba
-
-| Campo | Detalle |
-|-------|---------|
-| **Causa raíz** | La condición original dependía de que `facts` (guardados en Supabase) ya tuvieran los datos — pero la persistencia era asíncrona y en el mismo request no estaban disponibles todavía. |
-| **Archivo afectado** | `src/app/api/chat/route.ts` |
-| **Solución** | Se reescribió `canClose` con **3 condiciones independientes**, cualquiera de las cuales es suficiente para cerrar: |
-
-| Condición | Código | Descripción |
-|-----------|--------|-------------|
-| **1 — Datos en mensaje actual** | `EMAIL_IN_CURRENT && PHONE_IN_CURRENT` | Si el mensaje actual contiene email Y teléfono, cierre inmediato. No depende de historial ni facts. |
-| **2 — Bot pidió datos recientemente** | `hasContact && botRecentlyAskedContact` | Si hay algún dato de contacto acumulado Y el bot preguntó por datos en los últimos 8 mensajes. |
-| **3 — Nombre + contacto conocidos** | `hasContact && effectiveName` | Si ya conocemos el nombre del cliente Y tenemos al menos un dato de contacto. |
-
-```typescript
-const canClose = !!(
-  (EMAIL_IN_CURRENT && PHONE_IN_CURRENT) ||
-  (hasContact && botRecentlyAskedContact) ||
-  (hasContact && effectiveName)
-);
-```
-
-| Variable | Fuente | Descripción |
-|----------|--------|-------------|
-| `EMAIL_IN_CURRENT` | `EMAIL_RE.test(message)` | Detecta email en el mensaje actual |
-| `PHONE_IN_CURRENT` | `PHONE_RE.test(message)` | Detecta teléfono colombiano o internacional en el mensaje actual |
-| `hasContact` | `!!(knownEmail \|\| knownPhone)` | Cualquier dato de contacto acumulado en el historial o facts |
-| `botRecentlyAskedContact` | Scan de últimos 8 mensajes del bot | Detecta si el bot pidió correo/WhatsApp/nombre recientemente |
-| `effectiveName` | `knownName \|\| contextName` | Nombre del cliente por cualquier estrategia de extracción |
-
----
-
-### ✨ Detalle técnico: Extracción de nombre en múltiples estrategias
-
-| Estrategia | Condición de activación | Regex / Lógica |
-|------------|------------------------|----------------|
-| **1 — Del historial con `NAME_RE`** | Siempre (scan de todos los mensajes del usuario) | `/(?:soy\|me llamo\|mi nombre es\|hablas con\|...)([A-ZÁÉÍÓÚÑ][a-z...]{0,3})/i` |
-| **2 — Bot pidió nombre completo** | `botAskedForName = true` y `!knownName` | Mensaje que sea solo un nombre: `/^([A-Z][a-z]+ [A-Z][a-z]+...){1,3}$/i` |
-| **3 — Nombre antes de email/teléfono** | Mensaje con email o teléfono y `!knownName` | `/^([A-Z][a-z]...{1,4})\s+(?:[\w.+\-]+@\|(?:\+?57\s*)?3[0-9])/i` |
-
----
-
-### ✨ Detalle técnico: Servicio y precio en el mensaje de cierre
-
-| Campo | Detalle |
-|-------|---------|
-| **Problema** | El mensaje de cierre decía "coordinar tu proyecto" sin especificar qué servicio eligió el cliente ni a qué precio. |
-| **Solución** | Se agregó la función `extractServiceAndPrice(history)` que escanea los mensajes del bot en orden inverso buscando el patrón `"Servicio: $X–$Y USD"`. |
-| **Función** | `extractServiceAndPrice` en `route.ts` |
-| **Regex** | `/^(Landing...\|Web corporativa\|E-?commerce\|App\/MVP)\s*[:—–-]\s*(\$[\d.,]+(?:[–\-]\$?[\d.,]+)?(?:\s*USD)?)/im` |
-| **Resultado en mensaje** | "…para coordinar tu **Web corporativa ($800–$1.800 USD)**." |
-| **Resultado en lead** | Campos `service_requested` y `budget` se guardan en Supabase con los valores reales. |
-| **Resultado en WhatsApp** | El resumen del mensaje de WhatsApp a Omar incluye el servicio y precio: `"Web corporativa $800–$1.800 USD"`. |
-
-**Ejemplo de mensaje de cierre resultante:**
-
-```
-¡Perfecto, Ana Graciela Rey Acosta! Tus datos quedaron guardados.
-Omar Hernández te contactará inmediatamente al anagracielareyacosta@gmail.com
-para coordinar tu Web corporativa ($800–$1.800 USD).
-Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.
-```
-
----
-
-### ✨ Detalle técnico: Admin dashboard — Login con magic link
-
-| Campo | Detalle |
-|-------|---------|
-| **Problema** | La página `/admin/login` lanzaba "Failed to fetch" al intentar enviar el magic link. |
-| **Causa raíz** | El cliente browser de Supabase (`createBrowserClient`) necesita `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`. En Next.js, solo las variables con prefijo `NEXT_PUBLIC_` se incluyen en el bundle del cliente. Las variables `SUPABASE_URL` y `SUPABASE_ANON_KEY` solo están disponibles en el servidor. |
-| **Variables agregadas a Vercel** | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_ANON_KEY` |
-| **Archivos afectados** | `.env.local`, `src/config/env.ts` (ya tenía fallback `process.env.NEXT_PUBLIC_SUPABASE_URL`) |
-| **Flujo correcto** | `signInWithOtp` (browser) → Supabase envía email → Usuario hace clic → `/auth/callback?code=...` → `exchangeCodeForSession` (servidor) → Redirect a `/admin` |
-| **Nota PKCE** | El magic link generado ANTES de agregar las variables no funcionaba porque el PKCE verifier no se almacenó en las cookies del browser. Con las variables correctas y un nuevo link, el flujo completa sin errores. |
-
----
-
-### ✨ Detalle técnico: RAG/HuggingFace — Logs de error silenciados
-
-| Campo | Detalle |
-|-------|---------|
-| **Problema** | Vercel mostraba `[error]` por el módulo RAG cada vez que HuggingFace no estaba disponible o `HF_TOKEN` no estaba configurado. |
-| **Causa raíz** | `new InferenceClient(token)` se ejecutaba a nivel de módulo (fuera de función). Cualquier fallo tiraba error no capturado. |
-| **Archivo afectado** | `src/lib/chatbot/rag.ts` |
-| **Solución** | El cliente se inicializa dentro de `generateEmbedding()`, envuelto en `try/catch`. Si falla, retorna `null`. `searchProjects` retorna `[]` sin loggear cuando el embedding es `null`. El chat continúa sin contexto RAG — degradación elegante. |
-
----
-
-### 📁 Mapa de archivos modificados en esta sesión
-
-| Archivo | Cambios |
-|---------|---------|
-| `src/app/api/chat/route.ts` | `canClose` con 3 condiciones · `buildContactRequest` server-side · `extractServiceAndPrice` · `buildClosingMessage` con servicio/precio · lead guarda `service_requested` y `budget` · WhatsApp summary con servicio |
-| `src/lib/chatbot/systemPrompt.ts` | Eliminados "Roxana" de ejemplos · Reemplazados por "Laura"/"Carlos" · Instrucción anti-reinicio de saludo · Paso 4 delega cierre al servidor |
-| `src/lib/chatbot/rag.ts` | Cliente HF dentro de try/catch · `generateEmbedding` retorna `null` silenciosamente · `searchProjects` retorna `[]` sin logs |
-| `.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` agregadas |
-| Vercel (producción) | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_ANON_KEY` agregadas |
-
----
-
-### ✅ Flujo completo validado en producción
-
-Conversación real con **Ana Graciela Rey Acosta** (2026-04-30, 03:42 AM):
-
-| Turno | Cliente | Bot | Evaluación |
-|-------|---------|-----|------------|
-| 1 | "hola hablas con Ana Graciela Rey Acosta" | "¡Hola Ana Graciela! ¿En qué puedo ayudarte hoy?" | ✅ Nombre correcto extraído con `NAME_RE` |
-| 2 | "quisiera una página web que me traiga clientes vendo palitos de queso" | "Tengo: Landing $250-$600, Web corporativa $800-$1.800, E-commerce $1.500-$3.500, App/MVP $2.500-$5.000 USD. ¿Cuál encaja con tu negocio de palitos de queso?" | ✅ Catálogo + negocio del cliente incluido |
-| 3 | "Web corporativa $800" | "Web corporativa: $800–$1800 USD. ¿Te interesa?" | ✅ Cotización específica |
-| 4 | "si" | "para coordinar con Ana Graciela — ¿cuál es tu correo y tu WhatsApp?" | ✅ Server-side · nombre correcto · sin "Roxana" |
-| 5 | "Ana Graciela Rey Acosta anagracielareyacosta@gmail.com 3219052878" | "¡Perfecto, Ana Graciela Rey Acosta! Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al anagracielareyacosta@gmail.com para coordinar tu Web corporativa ($800–$1.800 USD). Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo." | ✅ `canClose` disparó · Lead en Supabase · Telegram enviado · Botón WhatsApp visible |
-
