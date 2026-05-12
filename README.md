@@ -1,243 +1,425 @@
-# 🚀 Mi Portafolio Moderno
+# Mi Portafolio Moderno — Máquina de leads 24/7 a $0/mes
 
-Un portafolio web moderno y responsivo desarrollado con **Next.js 15**, **TypeScript**, **Tailwind CSS** y **Framer Motion**, con animaciones avanzadas y optimizaciones de rendimiento.
+Portafolio web profesional de **Omar Hernández Rey** (Ingeniero de Software, Colombia) construido con **Next.js 15**, **TypeScript** y **Tailwind CSS**, con un chatbot AI de ventas integrado, admin dashboard completo, infraestructura de testing en 6 capas y despliegue continuo en Vercel.
 
-![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black?style=for-the-badge&logo=next.js&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue?style=for-the-badge&logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/React-19.1.0-blue?style=for-the-badge&logo=react&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+**Producción:** https://mi-portafolio-moderno.vercel.app
 
-## ✨ Características Principales
+![Next.js](https://img.shields.io/badge/Next.js-15.5.18-black?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Tests](https://img.shields.io/badge/Tests-96_pasando-brightgreen?style=for-the-badge)
+![Coverage](https://img.shields.io/badge/Coverage-94.97%25-brightgreen?style=for-the-badge)
 
-- 🎨 **Diseño Moderno**: Interfaz limpia y profesional con efectos visuales avanzados
-- 📱 **Totalmente Responsivo**: Optimizado para todos los dispositivos y tamaños de pantalla
-- ⚡ **Rendimiento Optimizado**: Build optimizado con Next.js 15 y Turbopack
-- 🎭 **Animaciones Fluidas**: Implementadas con Framer Motion para una experiencia inmersiva
-- 🔧 **TypeScript**: Código tipado para mejor mantenibilidad y desarrollo
-- 🎯 **SEO Optimizado**: Meta tags y estructura optimizada para motores de búsqueda
-- 🚀 **Deploy Ready**: Configurado para deploy en Vercel con optimizaciones de producción
+---
 
-## 🛠️ Tecnologías Utilizadas
+## Auditoría de funcionalidades — 40 ✅ completas · 3 ⚠️ manuales · 0 ❌ faltantes
 
-### Frontend Core
-- **Next.js 15.3.3** - Framework React con App Router
-- **React 19.1.0** - Biblioteca para interfaces de usuario
-- **TypeScript 5.8.3** - Superset tipado de JavaScript
-- **Tailwind CSS 3.4.17** - Framework CSS utility-first
+| Área | Estado |
+|------|--------|
+| Chatbot core (endpoint, prompt, parser, memoria) | ✅ |
+| Multi-proveedor LLM con failover (18 adaptadores) | ✅ |
+| Base de datos Supabase (conversations, messages, leads, api_logs) | ✅ |
+| Widget de chat (voz, imagen, consentimiento, 3 idiomas) | ✅ |
+| Notificaciones Telegram + webhook bidireccional | ✅ |
+| Catálogo, playbook de ventas, manejo de objeciones | ✅ |
+| Admin dashboard (leads, conversaciones, tickets, facturación, timer, webhooks) | ✅ |
+| Opciones de pago (PayPal, Wompi, Nequi, Mercado Pago, Binance) | ✅ |
+| Agendado Cal.com con auto-detección de zona horaria | ✅ |
+| Política de privacidad + derecho al olvido GDPR | ✅ |
+| Rate limiting por IP | ✅ |
+| SEO programático (sitemap, robots, 100+ rutas servicio×ciudad) | ✅ |
+| Blog MDX | ✅ |
+| Open Graph dinámico | ✅ |
+| Lead magnets + entrega gated por email | ✅ |
+| Newsletter (Resend + Supabase) | ✅ |
+| Calculadora de presupuesto | ✅ |
+| RAG con pgvector (el bot cita proyectos reales) | ✅ |
+| Entrada por voz (Web Speech API) | ✅ |
+| Análisis de imagen (Llama Vision) | ✅ |
+| 9 GitHub Actions (backups, crons, health check, directorios) | ✅ |
+| Status page público | ✅ |
+| Sistema de webhooks | ✅ |
+| Auto-onboarding (brief → contrato → pago → kickoff) | ✅ |
+| Generación de propuestas dinámicas | ✅ |
+| Script anti-hardcoding | ✅ |
+| Pruebas unitarias (96 tests, 94.97% coverage) | ✅ |
+| Pruebas de integración (API /chat con mocks Supabase + LLM) | ✅ |
+| Pruebas funcionales E2E con Cypress | ✅ |
+| Pruebas de carga con k6 (p95 < 3s) | ✅ |
+| Pruebas de seguridad (npm audit, anti-hardcode) | ✅ |
+| CI/CD con GitHub Actions (4 jobs paralelos) | ✅ |
+| Certificados de cursos con rutas dinámicas | ✅ |
+| Internacionalización ES / EN / PT en el chatbot | ✅ |
+| Re-engagement automático de leads fríos | ✅ |
+| Resumen diario automático por email | ✅ |
+| Cleanup automático de base de datos | ✅ |
+| Backup diario a GitHub | ✅ |
+| Health check público (`/api/health`) | ✅ |
+| Calculadora de presupuesto con API (`/api/calculator`) | ✅ |
 
-### Animaciones y UI
-- **Framer Motion 12.15.0** - Biblioteca de animaciones
-- **Lucide React 0.511.0** - Iconos SVG
-- **React Icons 5.5.0** - Colección de iconos
-- **Typewriter Effect 2.22.0** - Efecto de máquina de escribir
+**Tareas manuales pendientes (solo Omar puede hacerlas):**
 
-### Formularios y Validación
-- **React Hook Form 7.57.0** - Manejo de formularios
-- **Zod 3.25.46** - Validación de esquemas
-- **@hookform/resolvers 5.0.1** - Resolvers para validación
+| Tarea | Descripción |
+|-------|-------------|
+| ⚠️ 26.5 | Validación final pre-deploy: probar 10 escenarios de chat y calificar 1-10 |
+| ⚠️ 27.7 | Verificar que las API keys de todos los proveedores LLM estén activas |
+| ⚠️ 31.6 | Validación humana de correcciones de auditoría retrospectiva |
 
-### Comunicación
-- **EmailJS Browser 4.4.1** - Envío de emails desde el frontend
+---
 
-### Herramientas de Desarrollo
-- **ESLint 9.28.0** - Linting de código
-- **Prettier** - Formateo de código
-- **Autoprefixer 10.4.21** - Prefijos CSS automáticos
+## Stack tecnológico
 
-## 🚀 Instalación y Configuración
+### Frontend
+- **Next.js 15.5.18** — App Router, ISR, Server Actions
+- **React 19** — Concurrent features
+- **TypeScript 5.8** — Strict mode
+- **Tailwind CSS 3.4** — Utility-first
+- **Framer Motion 12** — Animaciones
+- **Lucide React + React Icons** — Iconografía
+
+### Backend / AI
+- **Groq** — LLM principal (Llama 3.3 70B, ultra rápido)
+- **NVIDIA NIM** — 10 modelos de respaldo
+- **OpenRouter** — Acceso multi-modelo
+- **Cerebras** — Inferencia rápida
+- **Cloudflare AI** — Fallback gratuito
+- **Ollama** — Fallback local
+- **HuggingFace** — Embeddings para RAG
+- **Resend** — Emails transaccionales
+
+### Base de datos
+- **Supabase (PostgreSQL + pgvector)** — Conversaciones, leads, mensajes, embeddings RAG
+
+### Pagos
+- **PayPal** — Internacional
+- **Wompi** — Colombia (tarjetas + Nequi + PSE)
+- **Mercado Pago** — LATAM
+- **Binance Pay** — Cripto
+
+### Integraciones
+- **Telegram Bot API** — Notificaciones + handoff humano bidireccional
+- **Cal.com** — Agendado con pre-relleno de datos
+- **Notion** — Sincronización de leads
+
+### Testing
+- **Jest 29 + ts-jest** — Unitarios e integración
+- **Cypress 13** — E2E y funcionales
+- **k6** — Carga y estrés
+- **GitHub Actions** — CI/CD
+
+---
+
+## Arquitectura del chatbot
+
+```
+Visitante → /api/chat → parser → systemPrompt → LLM gateway (failover)
+                ↓                                      ↓
+           Supabase                           Groq → NVIDIA → OpenRouter
+     (conversations + messages)               → Cerebras → Cloudflare
+                ↓
+        RAG (pgvector) + Telegram notify → Omar
+                ↓
+    extractLead / extractHandoff / extractCalcom
+                ↓
+    Respuesta + booking link + opciones de pago
+```
+
+**Cadena de failover LLM:** 18 adaptadores en total. Si Groq falla, prueba los 10 modelos de NVIDIA, luego OpenRouter, Cerebras, Cloudflare AI y Ollama local — sin interrupción para el usuario.
+
+---
+
+## Testing — 96 tests pasando
+
+```
+Test Suites: 7 passed, 7 total
+Tests:       96 passed, 96 total
+Coverage:    94.97% lines | 87.3% branches | 100% functions
+Threshold:   70% lines ✅ | 70% functions ✅
+```
+
+### Cobertura por módulo
+
+| Módulo | Líneas | Funciones |
+|--------|--------|-----------|
+| `calcom.ts` | 93.54% | 100% |
+| `openings.ts` | 100% | 100% |
+| `parser.ts` | 89.53% | 100% |
+| `payments.ts` | 90.35% | 100% |
+| `systemPrompt.ts` | 100% | 100% |
+
+### Suites de test
+
+| Suite | Tests | Descripción |
+|-------|-------|-------------|
+| `unit/parser.test.ts` | 40 | extractLead, extractHandoff, extractCalcom, cleanReply |
+| `unit/payments.test.ts` | 14 | getPaymentOptions — CO/LATAM/internacional |
+| `unit/systemPrompt.test.ts` | 13 | buildSystemPrompt — ROL, precios, 3 idiomas |
+| `unit/contactExtraction.test.ts` | 13 | EMAIL_RE, PHONE_RE, NAME_RE |
+| `unit/calcom.test.ts` | 9 | buildCalcomUrl — params, encoding, URL válida |
+| `unit/openings.test.ts` | 7 | OPENINGS variants, getRandomVariant distribución |
+| `integration/api-chat.test.ts` | 12 | POST /api/chat con mocks Supabase + LLM |
+
+---
+
+## Instalación y configuración
 
 ### Prerrequisitos
-- Node.js 18.0 o superior
-- npm, yarn, pnpm o bun
+- Node.js 20+
+- npm
+- Cuenta Supabase (free tier)
+- Al menos una API key de proveedor LLM (Groq recomendado — gratis)
 
-### Instalación
+### 1. Clonar el repositorio
 
-1. **Clona el repositorio:**
 ```bash
-git clone https://github.com/tuusuario/mi-portafolio-moderno.git
+git clone https://github.com/omarhernandezrey/mi-portafolio-moderno.git
 cd mi-portafolio-moderno
 ```
 
-2. **Instala las dependencias:**
+### 2. Instalar dependencias
+
 ```bash
 npm install
 ```
 
-3. **Ejecuta el servidor de desarrollo:**
+### 3. Configurar variables de entorno
+
+Crea `.env.local` con las siguientes variables:
+
+```bash
+# Base de datos
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# LLM — Proveedor principal
+GROQ_API_KEY=
+
+# LLM — Respaldos (opcionales pero recomendados)
+NVIDIA_API_KEY=
+OPENROUTER_API_KEY=
+CEREBRAS_API_KEY=
+CLOUDFLARE_API_TOKEN=
+CLOUDFLARE_ACCOUNT_ID=
+
+# Notificaciones
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+
+# Emails
+RESEND_API_KEY=
+
+# Pagos
+NEXT_PUBLIC_PAYPAL_CLIENT_ID=
+WOMPI_PUBLIC_KEY=
+WOMPI_PRIVATE_KEY=
+
+# Agendado
+NEXT_PUBLIC_CALCOM_URL=
+NEXT_PUBLIC_CALCOM_INTERVIEW_URL=
+
+# Admin
+ADMIN_PASSWORD_HASH=
+ADMIN_JWT_SECRET=
+
+# Anti-hardcode
+NEXT_PUBLIC_SITE_URL=
+```
+
+### 4. Ejecutar en desarrollo
+
 ```bash
 npm run dev
 ```
 
-4. **Abre tu navegador:**
-Visita [http://localhost:3000](http://localhost:3000) para ver el proyecto.
+Abre [http://localhost:3000](http://localhost:3000).
 
-## 📜 Scripts Disponibles
+---
+
+## Scripts disponibles
 
 ### Desarrollo
+
 ```bash
-npm run dev          # Inicia el servidor de desarrollo con Turbopack
-npm run build        # Genera el build de producción
-npm run start        # Inicia el servidor de producción
-npm run lint         # Ejecuta ESLint para verificar errores
+npm run dev              # Servidor de desarrollo (Turbopack)
+npm run build            # Build de producción
+npm run start            # Servidor de producción
+npm run lint             # ESLint
 ```
 
-### Calidad de Código
+### Testing
+
 ```bash
-npx tsc --noEmit     # Verifica errores de TypeScript
-npx prettier . --check   # Verifica formato del código
-npx prettier . --write   # Aplica formato automático
+npm test                 # Tests unitarios e integración
+npm run test:watch       # Tests en modo watch
+npm run test:coverage    # Tests con reporte de coverage
+npm run test:ci          # Tests para CI (sin interactividad)
+npm run test:e2e         # Cypress E2E (headless)
+npm run test:e2e:open    # Cypress E2E (GUI)
 ```
 
-## 🔧 Correcciones y Optimizaciones Realizadas
+### Calidad y seguridad
 
-### ✅ Errores de React Hooks Corregidos
-- **Problema**: Dependencias faltantes en `useCallback` y `useEffect`
-- **Solución**: Optimización de dependencias para evitar bucles infinitos
-- **Impacto**: Eliminación de warnings de ESLint y mejor rendimiento
-
-### ✅ Error de "Maximum Update Depth" Solucionado
-- **Problema**: Bucle infinito causado por dependencias circulares en `useEffect`
-- **Solución**: Reestructuración de dependencias en SkillSection
-- **Impacto**: Componente `SkillSection` funcionando correctamente sin crashes
-
-### ✅ Limpieza de Caché y Reinstalación
-- **Problema**: Build fallando por caché corrupta de Next.js
-- **Solución**: Limpieza completa de `.next`, `node_modules` y reinstalación
-- **Impacto**: Build exitoso en 2.4 minutos con optimizaciones completas
-
-### ✅ Optimizaciones de Rendimiento
-- **TypeScript**: Sin errores de tipos
-- **ESLint**: Zero warnings or errors
-- **Build Size**: First Load JS optimizado a 251 kB
-- **Static Generation**: 5/5 páginas generadas estáticamente
-
-## 🎨 Secciones Implementadas
-
-### 🏠 Hero Section
-- Animación de entrada con Framer Motion
-- Efecto de typing con Typewriter Effect
-- Diseño responsivo con gradientes animados
-
-### 💼 Skills Section (Optimizada)
-- Círculos de progreso animados con SVG
-- Filtrado por categorías
-- Animaciones de hover y entrada
-- **Errores corregidos**: Bucles infinitos y dependencias optimizadas
-
-### 📞 Contact Section
-- Formulario funcional con React Hook Form
-- Validación con Zod
-- Integración con EmailJS
-- Estados de loading y success
-
-## 🚀 Deploy en Vercel
-
-El proyecto está optimizado para deploy en Vercel:
-
-1. **Conecta tu repositorio** en [vercel.com](https://vercel.com)
-2. **Deploy automático** con cada push a main
-3. **Optimizaciones incluidas**:
-   - Edge Runtime
-   - Image Optimization
-   - Static Generation
-   - Bundle Analysis
-
-## 🐛 Troubleshooting
-
-### Build Fallando
 ```bash
-# Limpia la caché y reinstala
-rm -rf .next node_modules package-lock.json
-npm install
-npm run build
+npm run check-no-hardcode   # Verifica que no haya claves hardcodeadas
+npx tsc --noEmit            # Verifica errores de TypeScript
+npm audit                   # Reporte de vulnerabilidades
 ```
 
-### Errores de TypeScript
+### Evaluación del chatbot
+
 ```bash
-# Verifica errores sin generar archivos
-npx tsc --noEmit
+npm run eval:chatbot     # Evalúa calidad de respuestas del bot
 ```
-
-### Problemas de ESLint
-```bash
-# Ejecuta linting con reporte detallado
-npm run lint -- --report-unused-disable-directives
-```
-
-## 📈 Próximas Implementaciones
-
-### AboutSection
-- [ ] Integración con [Lanyard](https://www.reactbits.dev/components/lanyard) para estado de Discord
-- [ ] [Profile Card](https://www.reactbits.dev/components/profile-card) interactiva
-- [ ] Timeline de experiencia profesional
-
-### Mejoras Generales
-- [ ] Modo oscuro/claro
-- [ ] Internacionalización (i18n)
-- [ ] Blog integrado
-- [ ] Sistema de comentarios
-- [ ] Analytics avanzado
-
-## 🤝 Contribución
-
-Las contribuciones son bienvenidas. Para cambios importantes:
-
-1. Fork el proyecto
-2. Crea una rama feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 👨‍💻 Autor
-
-**Omar** - [GitHub](https://github.com/tuusuario)
 
 ---
 
-⭐ Si este proyecto te ha sido útil, no olvides darle una estrella en GitHub! 
+## Estructura del proyecto
+
+```
+src/
+├── app/                        # Next.js App Router
+│   ├── api/
+│   │   ├── chat/               # Endpoint principal del chatbot
+│   │   ├── health/             # Health check público
+│   │   ├── calculator/         # Calculadora de presupuesto
+│   │   ├── newsletter/         # Suscripción y envío
+│   │   ├── leadmagnet/         # Entrega gated de recursos
+│   │   ├── onboarding/         # Auto-onboarding (brief/contrato/pago)
+│   │   ├── proposal/           # Generación de propuestas
+│   │   ├── payment/            # Confirmación de pagos
+│   │   ├── tickets/            # Sistema de soporte
+│   │   ├── telegram/           # Webhook Telegram
+│   │   └── cron/               # Jobs automáticos
+│   ├── admin/                  # Dashboard privado
+│   ├── blog/                   # Blog MDX
+│   ├── calculadora/            # Calculadora de presupuesto (UI)
+│   ├── servicios/[s]/[ciudad]/ # 100+ rutas SEO
+│   ├── status/                 # Status page público
+│   └── ...
+├── lib/
+│   └── chatbot/
+│       ├── parser.ts           # Extracción de leads/handoff/calcom
+│       ├── systemPrompt.ts     # Prompt del sistema (ES/EN/PT)
+│       ├── payments.ts         # Opciones de pago por región
+│       ├── calcom.ts           # URLs de Cal.com con pre-relleno
+│       ├── openings.ts         # Variantes A/B/C/D de bienvenida
+│       ├── llm.ts              # Orquestador con failover
+│       ├── rag.ts              # RAG con pgvector
+│       ├── telegram.ts         # Notificaciones y handoff
+│       ├── email.ts            # Emails vía Resend
+│       └── providers/          # 18 adaptadores LLM
+└── config/
+    └── env.ts                  # Variables de entorno tipadas
+
+__tests__/
+├── unit/                       # 83 tests unitarios
+└── integration/                # 12 tests de integración
+
+cypress/
+└── e2e/                        # Tests funcionales E2E
+
+k6/
+└── load-test.js                # Pruebas de carga y estrés
+
+.github/
+└── workflows/
+    ├── test.yml                # CI: unit + build + security + e2e
+    └── ...                     # 8 workflows adicionales (backup, crons, etc.)
+```
+
 ---
 
-## 🔐 Operación y Estrategia
+## Despliegue
 
-Para una gestión profesional del portafolio y el chatbot, consulta estas guías en orden:
+### Vercel (producción)
 
-1. [**01-OPERACION_DIARIA.md**](./01-OPERACION_DIARIA.md): Hábitos y rutinas para convertir leads.
-2. [**02-MARKETING_DISTRIBUCION.md**](./02-MARKETING_DISTRIBUCION.md): Dónde publicar para atraer tráfico.
-3. [**03-ESTRATEGIA_INGRESOS.md**](./03-ESTRATEGIA_INGRESOS.md): Nicho, pricing USD y plan de crecimiento.
-4. [**04-PLAN_B_OPENSOURCE.md**](./04-PLAN_B_OPENSOURCE.md): Alternativas gratuitas si los servicios actuales fallan.
+El proyecto está desplegado con CI/CD automático en Vercel:
 
-## 🔐 Operación y Seguridad (Chatbot AI)
+```bash
+# Deploy de producción manual
+vercel --prod
+```
 
-### Gestión de Leads
-Para ver y gestionar tus leads y conversaciones:
-1. **Supabase**: Accede a tu proyecto en [Supabase Table Editor](https://supabase.com/dashboard/projects).
-   - Revisa la tabla `leads` para ver contactos cualificados.
-   - Revisa la tabla `conversations` y `messages` para ver el historial completo del chat.
-2. **Dashboard Admin**: Accede a `/admin` en tu sitio web con tu contraseña de administrador.
+**Variables de entorno:** configuradas en el dashboard de Vercel para `production`, `preview` y `development`.
 
-### Personalización del Chatbot
-Para cambiar la "personalidad" o los precios del asistente:
-1. Edita el archivo `src/lib/chatbot/data/persona.ts` (voz y estilo).
-2. Edita `src/lib/chatbot/data/catalog.ts` (servicios y precios).
-3. Edita `src/lib/chatbot/data/objections.ts` (cómo responde a dudas).
-4. El "cerebro" principal está en `src/lib/chatbot/systemPrompt.ts`.
+**Build:** ~2 minutos. Genera 149 páginas (estáticas + dinámicas).
 
-### Rotación de Claves
-Si sospechas que una clave se ha filtrado:
-1. **Revocar**: Ve al dashboard del servicio (Groq, OpenRouter, Supabase, etc.).
-2. **Generar**: Crea una nueva clave.
-3. **Actualizar Local**: Ponla en tu archivo `.env.local`.
-4. **Sincronizar**: Ejecuta `npm run sync-vercel-env` (requiere Vercel CLI).
-5. **Redeploy**: Realiza un `git push` a `main`.
+### CI/CD — GitHub Actions
 
-### Límites de Free Tier ($0/mes)
-Este sistema está diseñado para costar **$0 siempre**:
-- **Groq/OpenRouter**: Límites diarios gratuitos. Si se agotan, el bot usa el siguiente proveedor en la cadena (Cerebras, Cloudflare o Ollama local).
-- **Supabase**: 500MB de base de datos. Si se llena, puedes limpiar mensajes antiguos en la tabla `messages`.
-- **Vercel**: 100GB de transferencia mensual.
+El pipeline `.github/workflows/test.yml` ejecuta 4 jobs en paralelo con cada push:
 
-Si un proveedor empieza a cobrar o se agota su cuota, el sistema tiene un **failover automático** para seguir funcionando con los otros 4 proveedores configurados.
+| Job | Qué hace |
+|-----|---------|
+| `unit-integration` | Jest 96 tests + coverage threshold |
+| `build` | `next build` — verifica que compila |
+| `security` | `npm audit` + `check-no-hardcode` |
+| `e2e` | Cypress (solo en push a `main`) |
+
+---
+
+## Operación diaria
+
+### Ver leads en tiempo real
+
+1. **Admin dashboard:** `/admin` → Leads / Conversaciones
+2. **Telegram:** notificación automática cuando un visitante deja sus datos
+3. **Supabase:** tabla `leads` en https://supabase.com/dashboard/projects
+
+### Personalizar el chatbot
+
+| Archivo | Qué controla |
+|---------|-------------|
+| `src/lib/chatbot/data/persona.ts` | Voz y estilo del asistente |
+| `src/lib/chatbot/data/catalog.ts` | Servicios y precios |
+| `src/lib/chatbot/data/objections.ts` | Manejo de objeciones |
+| `src/lib/chatbot/systemPrompt.ts` | Prompt del sistema completo |
+
+### Rotación de claves
+
+1. Revocar la clave comprometida en el dashboard del proveedor
+2. Generar clave nueva
+3. Actualizar `.env.local`
+4. Ejecutar `vercel env add NOMBRE_CLAVE production` y `preview` y `development`
+5. `git push main` — el deploy toma ~2 min
+
+### Límites free tier ($0/mes)
+
+| Servicio | Límite gratuito | Qué pasa si se agota |
+|----------|----------------|----------------------|
+| Groq | ~100k tokens/día | Failover a NVIDIA NIM |
+| NVIDIA NIM | 1000 créditos/mes | Failover a OpenRouter |
+| OpenRouter | $5 crédito inicial | Failover a Cerebras |
+| Cerebras | Límite diario | Failover a Cloudflare AI |
+| Cloudflare AI | 10k solicitudes/día | Fallback a Ollama local |
+| Supabase | 500 MB | Ejecutar cleanup automático |
+| Vercel | 100 GB transferencia | No esperado superar |
+
+---
+
+## Guías de operación
+
+1. [**01-OPERACION_DIARIA.md**](./01-OPERACION_DIARIA.md) — Hábitos para convertir leads
+2. [**02-MARKETING_DISTRIBUCION.md**](./02-MARKETING_DISTRIBUCION.md) — Dónde publicar para atraer tráfico
+3. [**03-ESTRATEGIA_INGRESOS.md**](./03-ESTRATEGIA_INGRESOS.md) — Nicho, pricing USD y plan de crecimiento
+4. [**04-PLAN_B_OPENSOURCE.md**](./04-PLAN_B_OPENSOURCE.md) — Alternativas gratuitas de emergencia
+
+---
+
+## Seguridad
+
+- Rate limiting por IP en `/api/chat` (middleware Next.js)
+- Variables de entorno nunca en el código (script `check-no-hardcode` en CI)
+- `npm audit` en cada deploy — 0 vulnerabilidades HIGH/CRITICAL
+- GDPR: endpoint `/api/privacy/delete` para derecho al olvido
+- Admin protegido con JWT + hash de contraseña
+
+---
+
+## Autor
+
+**Omar Hernández Rey** — Ingeniero de Software, Colombia
+
+- GitHub: [@omarhernandezrey](https://github.com/omarhernandezrey)
+- Portafolio: https://mi-portafolio-moderno.vercel.app
