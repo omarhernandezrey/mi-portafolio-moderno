@@ -6,7 +6,9 @@ const createJestConfig = nextJest({ dir: './' });
 const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'node',
-
+  globals: {
+    'ts-jest': { tsconfig: 'tsconfig.jest.json' },
+  },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
