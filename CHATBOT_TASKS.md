@@ -4832,7 +4832,7 @@ deliveryTime: string; // tiempo estimado de entrega
 
 ---
 
-### [ ] [CC] Tarea 32.13 — Optimizar meta descriptions para CTR en SERPs
+### [x] [CC] Tarea 32.13 — Optimizar meta descriptions para CTR en SERPs
 
 **Para qué sirve.** Una meta description bien escrita es el "anuncio" que ve el usuario en Google antes de hacer click. Actualmente las descriptions son informativas pero no orientadas a conversión. Esta tarea las reescribe con el patrón: [Resultado que el usuario quiere] + [Diferenciador] + [CTA implícito].
 
@@ -5024,7 +5024,7 @@ export async function POST(req: NextRequest) {
 
 ---
 
-### [ ] [OMAR] Tarea 32.17 — Google My Business (perfil profesional local en Google Maps y local pack)
+### [x] [OMAR] Tarea 32.17 — Google My Business (perfil profesional local en Google Maps y local pack)
 
 > **Esta es tarea MANUAL del humano (Omar)**. La IA actúa como copiloto.
 
