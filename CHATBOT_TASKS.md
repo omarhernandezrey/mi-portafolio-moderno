@@ -4491,7 +4491,7 @@ export const metadata: Metadata = {
 
 ---
 
-### [ ] [CC] Tarea 32.6 — LocalBusiness + Service schema en páginas servicio×ciudad
+### [x] [CC] Tarea 32.6 — LocalBusiness + Service schema en páginas servicio×ciudad
 
 **Para qué sirve.** Las páginas `/servicios/{servicio}/{ciudad}` son la apuesta principal del SEO programático pero actualmente solo tienen metadata básica. Agregar `LocalBusiness` y `Service` schemas permite a Google entender que se trata de un profesional que ofrece servicios específicos en ciudades concretas, aumentando la probabilidad de aparecer en búsquedas locales como "desarrollador web Bogotá" con rich results.
 
@@ -4541,7 +4541,7 @@ const localBusinessSchema = {
 
 ---
 
-### [ ] [CC] Tarea 32.7 — BreadcrumbList schema en páginas anidadas y blog posts
+### [x] [CC] Tarea 32.7 — BreadcrumbList schema en páginas anidadas y blog posts
 
 **Para qué sirve.** Las migajas de pan (breadcrumbs) aparecen en los resultados de Google mostrando la ruta de navegación. Esto aumenta el CTR porque el usuario ve exactamente dónde está la página dentro del sitio. Ejemplo de cómo se ve en Google: `omarhernandezrey.com › Servicios › Desarrollo Web › Bogotá`.
 

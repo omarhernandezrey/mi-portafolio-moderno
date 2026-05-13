@@ -6,6 +6,7 @@ import { ciudades } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
 import { ArrowRight, Shield, Zap, Globe, Target, UserCheck } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
+import JsonLd from '@/components/seo/JsonLd';
 
 interface Props {
   params: Promise<{
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
       images: [
         {
-          url: `/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(servicio.name + ' en ' + ciudad.name)}`,
+          url: `https://omarhernandezrey.com/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(servicio.name + ' en ' + ciudad.name)}`,
           width: 1200,
           height: 630,
           alt: title,
@@ -62,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title,
       description,
-      images: [`/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(servicio.name + ' en ' + ciudad.name)}`],
+      images: [`https://omarhernandezrey.com/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(servicio.name + ' en ' + ciudad.name)}`],
     },
   };
 }
@@ -84,8 +85,49 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
   const initialChatMessage = `Hola Omar, vengo de la página de ${servicio.name} en ${ciudad.name}. Me gustaría saber más sobre este servicio.`;
 
+  // Schema LocalBusiness + Service
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "ProfessionalService"],
+    "@id": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
+    "name": `Omar Hernández Rey — ${servicio.name} en ${ciudad.name}`,
+    "url": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
+    "telephone": "+573219052878",
+    "priceRange": "$$-$$$",
+    "description": description,
+    "areaServed": {
+      "@type": "City",
+      "name": ciudad.name,
+      "addressCountry": ciudad.country === 'Colombia' ? 'CO' : ciudad.country === 'United States' ? 'US' : ciudad.country
+    },
+    "provider": {
+      "@type": "Person",
+      "@id": "https://omarhernandezrey.com/#person"
+    },
+    "serviceType": servicio.name,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "USD",
+      "priceRange": "500-15000"
+    }
+  };
+
+  // Schema BreadcrumbList
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://omarhernandezrey.com" },
+      { "@type": "ListItem", "position": 2, "name": "Servicios", "item": "https://omarhernandezrey.com/servicios" },
+      { "@type": "ListItem", "position": 3, "name": servicio.name, "item": `https://omarhernandezrey.com/servicios/${servicioId}` },
+      { "@type": "ListItem", "position": 4, "name": ciudad.name, "item": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}` }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
+      <JsonLd data={localBusinessSchema} />
+      <JsonLd data={breadcrumbSchema} />
       
       {/* Hero Architecture */}
       <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5 bg-card-bg/20 backdrop-blur-sm">
