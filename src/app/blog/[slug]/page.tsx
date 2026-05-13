@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
+import JsonLd from '@/components/seo/JsonLd';
 
 // Componentes personalizados para MDX
 const components = {
@@ -39,6 +40,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description: post.description,
+    alternates: {
+      canonical: `https://omarhernandezrey.com/blog/${slug}`,
+    },
     openGraph: {
       title,
       description: post.description,
@@ -47,7 +51,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       authors: [post.author],
       images: [
         {
-          url: `/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog Post by Omar Hernández`,
+          url: `https://omarhernandezrey.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog+Omar+Hernández+Rey`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -58,7 +62,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       card: 'summary_large_image',
       title,
       description: post.description,
-      images: [`/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog Post by Omar Hernández`],
+      images: [`https://omarhernandezrey.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog+Omar+Hernández+Rey`],
     },
   };
 }
@@ -71,8 +75,59 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound();
   }
 
+  // Schema Article
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `https://omarhernandezrey.com/blog/${slug}`,
+    "headline": post.title,
+    "description": post.description,
+    "datePublished": post.date,
+    "dateModified": post.date,
+    "author": {
+      "@type": "Person",
+      "@id": "https://omarhernandezrey.com/#person",
+      "name": post.author || "Omar Hernández Rey"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Omar Hernández Rey",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://omarhernandezrey.com/favicon.png"
+      }
+    },
+    "image": {
+      "@type": "ImageObject",
+      "url": post.image
+        ? `https://omarhernandezrey.com${post.image}`
+        : `https://omarhernandezrey.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog+Omar+Hernández+Rey`,
+      "width": 1200,
+      "height": 630
+    },
+    "url": `https://omarhernandezrey.com/blog/${slug}`,
+    "inLanguage": "es",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://omarhernandezrey.com/blog/${slug}`
+    }
+  };
+
+  // Schema BreadcrumbList
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://omarhernandezrey.com" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omarhernandezrey.com/blog" },
+      { "@type": "ListItem", "position": 3, "name": post.title, "item": `https://omarhernandezrey.com/blog/${slug}` }
+    ]
+  };
+
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
+      <JsonLd data={articleSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <Link href="/blog" className="text-sm text-[var(--primary-color)] hover:underline mb-8 block">
         ← Volver al blog
       </Link>

@@ -4585,7 +4585,7 @@ const breadcrumbSchema = {
 
 ---
 
-### [ ] [CC] Tarea 32.8 — Article schema completo en blog posts (para rich snippets de artículos)
+### [x] [CC] Tarea 32.8 — Article schema completo en blog posts (para rich snippets de artículos)
 
 **Para qué sirve.** El schema `Article` permite que Google muestre rich snippets para artículos de blog: fecha de publicación, autor, imagen destacada. Además, el schema correcto es un factor de ranking para artículos en Search.
 
