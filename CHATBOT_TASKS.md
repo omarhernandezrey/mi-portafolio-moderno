@@ -266,6 +266,7 @@ Estas reglas existen porque ya hubo un incidente (commit `f85f8b7`) en el que un
 | 29 | Motor de tráfico orgánico | SEO programático, blog MDX, lead magnets, newsletter, Plausible Analytics, schema.org, OG dinámicas, distribución LATAM |
 | 30 | Escalabilidad operacional | Para cuando lleguen miles de leads: auto-onboarding, tickets, facturación CO, roles, webhooks, status page, backups, docs internas |
 | 31 | Correcciones de auditoría | Cierre de hallazgos FAIL/PARCIAL de la auditoría retrospectiva (31.1-31.6) |
+| 32 | SEO Profesional CO + USA | 20 tareas $0: bugs críticos, 340+ páginas, blog posts reales, Bing+IndexNow, GMB, internal linking (32.1-32.20) |
 
 ---
 
@@ -4288,3 +4289,908 @@ Añadir los 3 escenarios faltantes al array `SCENARIOS`, con estructura idéntic
 - [ ] Los 3 nuevos tienen al menos 2 turnos y 3 criterios `mustPass`.
 - [ ] `npx tsx scripts/eval-chatbot.ts` corre sin errores de tipo.
 - [ ] `npm run build` verde.
+
+---
+
+## FASE 32 — SEO Profesional Colombia + USA (conseguir clientes reales desde Google)
+
+> **Por qué existe esta fase.** El portafolio tiene cero clientes provenientes de búsqueda orgánica. La FASE 29 implementó la infraestructura básica de SEO pero con bugs críticos (URLs relativas en OG, sitemap incompleto, schemas duplicados) y sin contenido real (blog vacío). Esta fase cierra los bugs, agrega las ciudades del mercado USA, y crea el contenido que Google necesita para rankear el portafolio en las primeras posiciones.
+>
+> **Contexto completo:** Lee `SEO.md` antes de ejecutar cualquier tarea de esta fase. Contiene la estrategia completa, keywords target, plantillas de contenido y la auditoría técnica detallada de lo que está roto.
+>
+> **Orden de ejecución:** 32.1 → 32.2 → 32.3 → 32.4 → 32.10 → 32.11 → 32.12 → 32.5 → 32.6 → 32.7 → 32.8 → 32.9 → 32.13 → 32.15 → 32.14
+>
+> **Regla crítica de contenido:** Cero placeholders en páginas públicas. Todo texto que aparezca en HTML debe ser contenido real, útil y único. Un "Lorem ipsum" o "Contenido aquí" en una página indexada es peor que no tener la página.
+>
+> **Verificación 2026-05-13:** Todas las herramientas son gratis, sin tarjeta, y están dentro del stack existente.
+
+---
+
+### [ ] [CC] Tarea 32.1 — Corregir URLs relativas en OG y Twitter metadata (bug crítico)
+
+**Para qué sirve.** Las URLs de imagen en OG y Twitter son relativas (`/api/og?...`). Los crawlers de Facebook, LinkedIn, WhatsApp y Twitter/X NO pueden resolver URLs relativas — necesitan URLs absolutas con dominio. Sin esto, al compartir el portafolio en cualquier red social no aparece la imagen de preview, destruyendo el CTR y las señales sociales de SEO.
+
+**Archivos afectados:**
+- `src/app/layout.tsx`
+
+**Implementación:**
+1. En `src/app/layout.tsx`, localizar el objeto `openGraph.images[0].url` (actualmente `"/api/og?title=Omar Hernández Rey&subtitle=Full Stack Web Developer"`).
+2. Reemplazar con URL absoluta: `"https://omarhernandezrey.com/api/og?title=Omar%20Hern%C3%A1ndez%20Rey&subtitle=Full%20Stack%20Web%20Developer"`.
+3. En el mismo objeto, añadir la propiedad `secureUrl` con el mismo valor absoluto.
+4. Localizar `twitter.images` (actualmente `["/api/og?..."]`) y reemplazar con la misma URL absoluta.
+5. Verificar que `metadataBase` es `new URL("https://omarhernandezrey.com")` — si Next.js resuelve URLs relativas via metadataBase, verificar que funciona en producción. Como precaución adicional, usar siempre URLs absolutas explícitas en imágenes OG.
+
+**Aceptación:**
+- [ ] `grep "og.*url" src/app/layout.tsx` no muestra ninguna URL que empiece por `/api/` o `/portfolio` sin `https://`.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+- [ ] Validar manualmente: `curl -s https://omarhernandezrey.com | grep "og:image"` muestra URL absoluta (verificable solo en producción — marcar `[!]`).
+- [ ] [!] Facebook Sharing Debugger (`developers.facebook.com/tools/debug/`) muestra imagen al ingresar la URL del portafolio.
+
+---
+
+### [ ] [CC] Tarea 32.2 — Unificar y corregir schemas Person duplicados e inconsistentes
+
+**Para qué sirve.** Hay dos definiciones del schema `Person` con datos contradictorios: `layout.tsx` tiene `github.com/omarhernandezrey` y `linkedin.com/in/omarhernandezrey/`, mientras `page.tsx` tiene `github.com/omarhernandez` y `linkedin.com/in/omarhernandez`. Google Knowledge Graph se confunde con datos incoherentes y puede penalizar la confiabilidad del sitio.
+
+**Archivos afectados:**
+- `src/app/layout.tsx`
+- `src/app/page.tsx`
+
+**Implementación:**
+1. **Decidir la fuente de verdad de los datos Person:** `src/lib/chatbot/data/catalog.ts` o crear `src/data/omarProfile.ts` como fuente única exportable.
+2. Crear `src/data/omarProfile.ts` con este contenido:
+```typescript
+export const OMAR_PROFILE = {
+  name: "Omar Hernández Rey",
+  url: "https://omarhernandezrey.com",
+  image: "https://omarhernandezrey.com/portfolio-preview.jpg",
+  jobTitle: "Full Stack Web Developer",
+  telephone: "+573219052878",
+  addressLocality: "Bogotá",
+  addressCountry: "CO",
+  sameAs: [
+    "https://github.com/omarhernandezrey",
+    "https://www.linkedin.com/in/omarhernandezrey/",
+    "https://twitter.com/omarhernandezrey"
+  ],
+  knowsAbout: ["React", "Next.js", "TypeScript", "Node.js", "PostgreSQL", "Supabase", "Inteligencia Artificial", "Chatbots", "SEO Técnico", "E-commerce", "Automatización"],
+  description: "Desarrollador Full Stack freelance especializado en React, Next.js, Node.js e IA. Proyectos para Colombia y clientes remotos en USA.",
+} as const;
+```
+3. En `src/app/layout.tsx`: importar `OMAR_PROFILE` desde `@/data/omarProfile` y construir el `personData` usando esas constantes. Eliminar los valores hardcodeados del objeto `personData`.
+4. En `src/app/page.tsx`: importar `OMAR_PROFILE` y usar sus valores en el `jsonLd` del `@graph`. Eliminar duplicados de `Person` — la definición canónica va en `layout.tsx`; en `page.tsx` solo el `ProfessionalService` que referencia el `@id`.
+5. Verificar que los `sameAs` apuntan a los perfiles reales de Omar (verificar los 3 URLs existen antes de commitear).
+
+**Aceptación:**
+- [ ] `grep -r "omarhernandez\"" src/app/layout.tsx src/app/page.tsx` no retorna ninguna línea (los URLs sin `/` al final son los incorrectos).
+- [ ] `grep -r "sameAs" src/app/layout.tsx src/app/page.tsx src/data/omarProfile.ts` muestra exactamente 1 sola definición de `sameAs` (en `omarProfile.ts`).
+- [ ] `src/data/omarProfile.ts` existe y exporta `OMAR_PROFILE`.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+- [ ] [!] Google Rich Results Test (`search.google.com/test/rich-results`) valida Person schema sin warnings en producción.
+
+---
+
+### [ ] [CC] Tarea 32.3 — Expandir sitemap.ts con todas las páginas del portafolio
+
+**Para qué sirve.** El sitemap actual solo incluye 11 URLs (homepage + algunas páginas estáticas + anchors). Faltan completamente: las 100+ páginas de servicios×ciudades, las páginas de blog, `/recursos`, `/faq`, `/status`. Sin estar en el sitemap, Google indexa estas páginas lentamente o no las encuentra.
+
+**Archivos afectados:**
+- `src/app/sitemap.ts`
+
+**Implementación:**
+1. Importar `serviciosProgramaticos` desde `@/data/servicios`.
+2. Importar `ciudades` desde `@/data/ciudades`.
+3. Importar `getAllPosts` desde `@/lib/blog`.
+4. Agregar rutas para todas las combinaciones `servicio×ciudad`:
+```typescript
+const serviciosCiudades = serviciosProgramaticos.flatMap(servicio =>
+  ciudades.map(ciudad => ({
+    url: `${baseUrl}/servicios/${servicio.id}/${ciudad.id}`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }))
+);
+```
+5. Agregar rutas de blog (llamar `getAllPosts()` — la función ya existe en `src/lib/blog.ts`):
+```typescript
+const posts = await getAllPosts();
+const blogRoutes = posts.map(post => ({
+  url: `${baseUrl}/blog/${post.slug}`,
+  lastModified: new Date(post.date),
+  changeFrequency: 'monthly' as const,
+  priority: 0.75,
+}));
+```
+6. Agregar las páginas estáticas faltantes: `/blog`, `/recursos`, `/faq`, `/status`.
+7. Convertir la función a `async` si no lo es (necesita `await getAllPosts()`).
+8. El retorno final hace `return [...staticRoutes, ...serviciosCiudades, ...blogRoutes]`.
+9. **NO incluir en el sitemap:** `/admin/**`, `/api/**`, `/onboarding/**`, `/proposal/**`, `/certificates/**` (privadas o dinámicas sin contenido SEO).
+
+**Aceptación:**
+- [ ] `npm run build` → verde (la función sitemap ahora es async, verificar que Next.js 15 lo soporta).
+- [ ] Contar URLs en el sitemap: `curl http://localhost:3000/sitemap.xml | grep -c "<url>"` debe retornar ≥ 115 (100 servicio×ciudad + 15 estáticas + posts del blog si los hay).
+- [ ] Las URLs de servicio×ciudad siguen el patrón `https://omarhernandezrey.com/servicios/{servicio}/{ciudad}`.
+- [ ] El sitemap es XML válido (sin errores de parseo).
+- [ ] [!] Google Search Console acepta el sitemap sin errores al enviarlo.
+
+---
+
+### [ ] [CC] Tarea 32.4 — Agregar ciudades USA a ciudades.ts para capturar mercado norteamericano
+
+**Para qué sirve.** El portafolio actualmente solo genera páginas para ciudades LATAM. El mercado USA es el más rentable (proyectos $2k-$20k USD). Agregar 6 ciudades clave de USA crea 30 páginas nuevas (6×5 servicios) que capturan búsquedas como "freelance web developer Miami", "Next.js developer New York", "hire full stack developer Austin".
+
+**Archivos afectados:**
+- `src/data/ciudades.ts`
+
+**Implementación:**
+1. Agregar al array `ciudades` las siguientes 6 ciudades USA al final:
+```typescript
+{ id: 'miami', name: 'Miami', country: 'United States' },
+{ id: 'new-york', name: 'New York', country: 'United States' },
+{ id: 'los-angeles', name: 'Los Angeles', country: 'United States' },
+{ id: 'houston', name: 'Houston', country: 'United States' },
+{ id: 'chicago', name: 'Chicago', country: 'United States' },
+{ id: 'austin', name: 'Austin', country: 'United States' },
+```
+2. En `src/app/servicios/[servicio]/[ciudad]/page.tsx`, verificar que `generateStaticParams()` ya itera sobre el array completo — no necesita cambios si ya usa `ciudades.map(...)`.
+3. Verificar en el `generateMetadata` que el `description` y `title` manejan correctamente el campo `country` para mostrar "United States" en inglés (ya lo hace via `ciudad.country`).
+4. Opcional: si la página tiene un CTA en español hardcodeado, verificar que para ciudades USA el CTA puede estar en inglés (revisar la implementación de `page.tsx` en las líneas de texto).
+
+**Aceptación:**
+- [ ] `grep -c "{ id:" src/data/ciudades.ts` retorna 26 (20 existentes + 6 nuevas).
+- [ ] `npm run build` → verde y genera ≥ 130 páginas estáticas en `/servicios/**` (26 ciudades × 5 servicios).
+- [ ] `curl http://localhost:3000/servicios/desarrollo-web/miami` retorna 200 con contenido correcto (nombre "Miami" y "United States" en la página).
+- [ ] `curl http://localhost:3000/servicios/chatbot-ia/new-york` retorna 200.
+- [ ] El sitemap (después de tarea 32.3) incluye las 30 nuevas páginas USA.
+
+---
+
+### [ ] [CC] Tarea 32.5 — Agregar FAQPage Schema a la página /faq (rich results Google)
+
+**Para qué sirve.** La página `/faq` tiene contenido de preguntas frecuentes pero sin schema `FAQPage`. Google puede mostrar FAQs directamente en los resultados de búsqueda como acordeones desplegables, aumentando el área visible del resultado y el CTR hasta un 30%.
+
+**Archivos afectados:**
+- `src/app/faq/page.tsx`
+
+**Implementación:**
+1. Leer el archivo `src/app/faq/page.tsx` completamente para extraer las preguntas y respuestas reales que ya están en el componente (en el array `CATEGORIES` y su propiedad `faqs`).
+2. Construir el objeto `FAQPage` JSON-LD usando esas preguntas/respuestas reales (no inventar preguntas):
+```typescript
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": CATEGORIES.flatMap(cat => cat.faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.a
+    }
+  })))
+};
+```
+3. Importar `JsonLd` desde `@/components/seo/JsonLd` y añadir `<JsonLd data={faqSchema} />` dentro del return del componente (como primer elemento).
+4. Agregar `export const metadata` con title y description SEO-optimizados si no existe (revisar si la página ya los tiene):
+```typescript
+export const metadata: Metadata = {
+  title: 'Preguntas Frecuentes | Omar Hernández Rey — Desarrollador Web Freelance',
+  description: 'Respuestas a las dudas más comunes sobre precios, tiempos, pagos y proceso de trabajo. Desarrollador web freelance en Colombia y remoto para USA.',
+  alternates: { canonical: 'https://omarhernandezrey.com/faq' },
+};
+```
+
+**Aceptación:**
+- [ ] `curl http://localhost:3000/faq | grep "FAQPage"` retorna al menos una línea con `"@type":"FAQPage"`.
+- [ ] El JSON-LD contiene al menos 5 preguntas (verificar que `mainEntity` array tiene ≥ 5 items).
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+- [ ] [!] Google Rich Results Test (`search.google.com/test/rich-results`) detecta FAQPage sin errores en producción.
+
+---
+
+### [ ] [CC] Tarea 32.6 — LocalBusiness + Service schema en páginas servicio×ciudad
+
+**Para qué sirve.** Las páginas `/servicios/{servicio}/{ciudad}` son la apuesta principal del SEO programático pero actualmente solo tienen metadata básica. Agregar `LocalBusiness` y `Service` schemas permite a Google entender que se trata de un profesional que ofrece servicios específicos en ciudades concretas, aumentando la probabilidad de aparecer en búsquedas locales como "desarrollador web Bogotá" con rich results.
+
+**Archivos afectados:**
+- `src/app/servicios/[servicio]/[ciudad]/page.tsx`
+- `src/components/seo/JsonLd.tsx` (solo si necesita modificación)
+
+**Implementación:**
+1. Leer el archivo `src/app/servicios/[servicio]/[ciudad]/page.tsx` completo.
+2. En el componente de página (`export default function Page`), construir el schema dinámico:
+```typescript
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": ["LocalBusiness", "ProfessionalService"],
+  "@id": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
+  "name": `Omar Hernández Rey — ${servicio.name} en ${ciudad.name}`,
+  "url": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
+  "telephone": "+573219052878",
+  "priceRange": "$$-$$$",
+  "description": servicio.description.replace('{ciudad}', ciudad.name).replace('{country}', ciudad.country),
+  "areaServed": {
+    "@type": "City",
+    "name": ciudad.name,
+    "addressCountry": ciudad.country === 'Colombia' ? 'CO' : ciudad.country === 'United States' ? 'US' : ciudad.country
+  },
+  "provider": {
+    "@type": "Person",
+    "@id": "https://omarhernandezrey.com/#person"
+  },
+  "serviceType": servicio.name,
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "USD",
+    "priceRange": "500-15000"
+  }
+};
+```
+3. Importar `JsonLd` si no está importado y añadir `<JsonLd data={localBusinessSchema} />` dentro del return del componente de página.
+4. Verificar que `servicio` y `ciudad` están disponibles en el componente (ya lo son por el `notFound()` pattern existente).
+
+**Aceptación:**
+- [ ] `curl "http://localhost:3000/servicios/desarrollo-web/bogota" | grep "LocalBusiness"` retorna resultado.
+- [ ] `curl "http://localhost:3000/servicios/chatbot-ia/miami" | grep "LocalBusiness"` retorna resultado.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde (verificar que generateStaticParams sigue funcionando).
+- [ ] [!] Google Rich Results Test detecta LocalBusiness/ProfessionalService schema válido en al menos 1 página servicio×ciudad en producción.
+
+---
+
+### [ ] [CC] Tarea 32.7 — BreadcrumbList schema en páginas anidadas y blog posts
+
+**Para qué sirve.** Las migajas de pan (breadcrumbs) aparecen en los resultados de Google mostrando la ruta de navegación. Esto aumenta el CTR porque el usuario ve exactamente dónde está la página dentro del sitio. Ejemplo de cómo se ve en Google: `omarhernandezrey.com › Servicios › Desarrollo Web › Bogotá`.
+
+**Archivos afectados:**
+- `src/app/servicios/[servicio]/[ciudad]/page.tsx`
+- `src/app/blog/[slug]/page.tsx`
+
+**Implementación:**
+1. En `src/app/servicios/[servicio]/[ciudad]/page.tsx`, añadir además del LocalBusiness schema (tarea 32.6):
+```typescript
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://omarhernandezrey.com" },
+    { "@type": "ListItem", "position": 2, "name": "Servicios", "item": "https://omarhernandezrey.com/servicios" },
+    { "@type": "ListItem", "position": 3, "name": servicio.name, "item": `https://omarhernandezrey.com/servicios/${servicioId}` },
+    { "@type": "ListItem", "position": 4, "name": ciudad.name, "item": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}` }
+  ]
+};
+```
+2. En `src/app/blog/[slug]/page.tsx`, añadir:
+```typescript
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://omarhernandezrey.com" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://omarhernandezrey.com/blog" },
+    { "@type": "ListItem", "position": 3, "name": post.title, "item": `https://omarhernandezrey.com/blog/${post.slug}` }
+  ]
+};
+```
+3. En ambos archivos, añadir `<JsonLd data={breadcrumbSchema} />` en el return del componente.
+
+**Aceptación:**
+- [ ] `curl "http://localhost:3000/servicios/e-commerce/medellin" | grep "BreadcrumbList"` retorna resultado.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+- [ ] [!] Google Rich Results Test detecta BreadcrumbList en al menos 1 página servicio×ciudad en producción.
+
+---
+
+### [ ] [CC] Tarea 32.8 — Article schema completo en blog posts (para rich snippets de artículos)
+
+**Para qué sirve.** El schema `Article` permite que Google muestre rich snippets para artículos de blog: fecha de publicación, autor, imagen destacada. Además, el schema correcto es un factor de ranking para artículos en Search.
+
+**Archivos afectados:**
+- `src/app/blog/[slug]/page.tsx`
+
+**Implementación:**
+1. Leer el archivo `src/app/blog/[slug]/page.tsx` completo para entender la estructura actual.
+2. En la función `Page` (componente), después de `getPostBySlug(slug)`, construir:
+```typescript
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": `https://omarhernandezrey.com/blog/${post.slug}`,
+  "headline": post.title,
+  "description": post.description,
+  "datePublished": post.date,
+  "dateModified": post.date,
+  "author": {
+    "@type": "Person",
+    "@id": "https://omarhernandezrey.com/#person",
+    "name": post.author || "Omar Hernández Rey"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Omar Hernández Rey",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://omarhernandezrey.com/favicon.png"
+    }
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": post.image
+      ? `https://omarhernandezrey.com${post.image}`
+      : `https://omarhernandezrey.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=Blog+Omar+Hern%C3%A1ndez+Rey`,
+    "width": 1200,
+    "height": 630
+  },
+  "url": `https://omarhernandezrey.com/blog/${post.slug}`,
+  "inLanguage": "es",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://omarhernandezrey.com/blog/${post.slug}`
+  }
+};
+```
+3. Importar `JsonLd` si no está importado y añadir `<JsonLd data={articleSchema} />` en el return.
+4. Actualizar `generateMetadata` para que también tenga `alternates.canonical`:
+```typescript
+alternates: {
+  canonical: `https://omarhernandezrey.com/blog/${slug}`,
+},
+```
+
+**Aceptación:**
+- [ ] Si `content/blog/` tiene al menos un post: `curl http://localhost:3000/blog/<slug> | grep "Article"` retorna resultado. Si blog está vacío (antes de tarea 32.10), verificar que el código compila sin error y es correcto en revisión manual.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+
+---
+
+### [ ] [CC] Tarea 32.9 — Canonical URLs y alternates en páginas principales
+
+**Para qué sirve.** Sin `canonical`, si hay duplicados de una página (por parámetros URL, trailing slash, etc.) Google puede penalizar por contenido duplicado. El canonical le dice a Google cuál es la versión "oficial" de cada página.
+
+**Archivos afectados:**
+- `src/app/layout.tsx`
+- `src/app/calculadora/page.tsx`
+- `src/app/recursos/page.tsx`
+- `src/app/blog/page.tsx`
+- `src/app/privacidad/page.tsx`
+- `src/app/faq/page.tsx`
+
+**Implementación:**
+1. En `src/app/layout.tsx`, dentro del objeto `metadata`, añadir:
+```typescript
+alternates: {
+  canonical: 'https://omarhernandezrey.com',
+  languages: {
+    'es': 'https://omarhernandezrey.com',
+    'en': 'https://omarhernandezrey.com',
+  },
+},
+```
+2. Para cada página de la lista de archivos afectados, agregar dentro de su `export const metadata` (o crear uno si no existe):
+```typescript
+alternates: {
+  canonical: 'https://omarhernandezrey.com/{ruta-de-la-pagina}',
+},
+```
+   - `/calculadora` → `canonical: 'https://omarhernandezrey.com/calculadora'`
+   - `/recursos` → `canonical: 'https://omarhernandezrey.com/recursos'`
+   - `/blog` → `canonical: 'https://omarhernandezrey.com/blog'`
+   - `/privacidad` → `canonical: 'https://omarhernandezrey.com/privacidad'`
+   - `/faq` → ya se agrega en tarea 32.5
+3. En `/src/app/servicios/[servicio]/[ciudad]/page.tsx`, la canonical ya existe en el `generateMetadata` (línea `alternates: { canonical: ... }`). Verificar que usa el dominio correcto `omarhernandezrey.com` (no el viejo vercel.app). Si usa variable de entorno, asegurar que `NEXT_PUBLIC_SITE_URL` está correctamente configurada.
+
+**Aceptación:**
+- [ ] `curl http://localhost:3000 | grep "canonical"` retorna `<link rel="canonical" href="https://omarhernandezrey.com">`.
+- [ ] `curl http://localhost:3000/calculadora | grep "canonical"` retorna canonical correcto.
+- [ ] `curl http://localhost:3000/blog | grep "canonical"` retorna canonical correcto.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+
+---
+
+### [ ] [CC] Tarea 32.10 — Crear 3 posts de blog en español targeting Colombia
+
+**Para qué sirve.** El blog lleva semanas (o meses) sin un solo post. Sin contenido, Google no tiene razón para mostrar el portafolio. Estos 3 posts responden preguntas reales que potenciales clientes colombianos buscan en Google. Cada post = una nueva puerta de entrada al portafolio.
+
+> **REGLA ABSOLUTA:** Todo el contenido de los posts debe ser REAL, ÚTIL y ORIGINAL. Nada de texto genérico. Cero frases como "en el dinámico mundo digital de hoy". Escribir como si Omar lo hubiera escrito para explicarle algo a un cliente real.
+
+**Archivos afectados:**
+- `content/blog/cuanto-cuesta-sitio-web-colombia-2026.mdx` (nuevo)
+- `content/blog/chatbot-ia-negocio-colombia.mdx` (nuevo)
+- `content/blog/landing-page-vs-sitio-web-colombia.mdx` (nuevo)
+
+**Implementación:**
+1. Crear el directorio `content/blog/` si no existe (`mkdir -p content/blog`).
+2. Crear `content/blog/cuanto-cuesta-sitio-web-colombia-2026.mdx` con frontmatter correcto y contenido de al menos 1200 palabras siguiendo la plantilla del `SEO.md` (sección "Post 1 — Colombia"). El artículo DEBE incluir:
+   - Tabla de precios reales (en COP y USD) para: landing page básica, landing con formulario, sitio con blog, app web básica, e-commerce
+   - Comparación freelance vs agencia con pros/cons reales
+   - Al menos 3 factores que aumentan el precio (integraciones de terceros, diseño personalizado, SEO técnico, urgencia)
+   - CTA final apuntando a `/calculadora` con texto específico
+3. Crear `content/blog/chatbot-ia-negocio-colombia.mdx` con al menos 1200 palabras siguiendo la plantilla "Post 2 — Colombia". El artículo DEBE incluir:
+   - Casos de uso reales para negocios colombianos (restaurantes, consultorios, inmobiliarias, e-commerce)
+   - Integración con WhatsApp Business explicada de forma práctica
+   - Precios reales de implementación de chatbot en Colombia
+   - CTA que abra el chatbot del portafolio
+4. Crear `content/blog/landing-page-vs-sitio-web-colombia.mdx` con al menos 1000 palabras. El artículo DEBE incluir:
+   - Criterios claros para decidir entre landing y sitio web
+   - Ejemplos concretos de negocios colombianos para cada caso
+   - Precios y tiempos estimados
+5. Cada archivo .mdx debe tener este frontmatter exacto:
+```yaml
+---
+title: "[título completo]"
+slug: "[slug del nombre del archivo]"
+date: "2026-05-13"
+description: "[descripción de 150-160 chars, orientada a CTR en Google]"
+tags: ["desarrollo web", "colombia", "[tag específico]"]
+author: "Omar Hernández Rey"
+image: "/api/og?title=[título codificado]&subtitle=Blog+Omar+Hernández"
+---
+```
+
+**Aceptación:**
+- [ ] `ls content/blog/*.mdx | wc -l` retorna 3 (o más si ya había otros).
+- [ ] Cada archivo tiene frontmatter con `title`, `slug`, `date`, `description`, `tags`, `author`.
+- [ ] `curl http://localhost:3000/blog` lista los 3 posts (el servidor `npm run dev` está corriendo).
+- [ ] `curl http://localhost:3000/blog/cuanto-cuesta-sitio-web-colombia-2026` retorna 200 y renderiza el post.
+- [ ] Cada post tiene más de 800 palabras reales (contar con `wc -w`): `wc -w content/blog/*.mdx`.
+- [ ] Ningún post contiene texto de placeholder ("Lorem ipsum", "contenido aquí", "por definir", "TODO").
+- [ ] `npm run build` → verde y genera estáticamente los 3 posts.
+
+---
+
+### [ ] [CC] Tarea 32.11 — Crear 3 posts de blog en inglés targeting mercado USA
+
+**Para qué sirve.** El mercado USA paga 3-5× más que Colombia. Para aparecer en búsquedas de clientes norteamericanos (o latinos en USA) que buscan contratar un desarrollador remoto, necesitamos contenido en inglés que responda sus preguntas específicas.
+
+> **REGLA ABSOLUTA:** Mismo estándar que 32.10. Contenido real, útil, con datos concretos. En inglés natural, no en inglés de traductora automática.
+
+**Archivos afectados:**
+- `content/blog/why-hire-colombian-developer-2026.mdx` (nuevo)
+- `content/blog/build-mvp-nextjs-30-days-process.mdx` (nuevo)
+- `content/blog/freelance-developer-vs-agency-web-project.mdx` (nuevo)
+
+**Implementación:**
+1. Crear `content/blog/why-hire-colombian-developer-2026.mdx` con frontmatter en inglés y al menos 1300 palabras siguiendo la plantilla "Post 4 — USA" de `SEO.md`. El artículo DEBE incluir:
+   - Datos reales sobre el ecosistema tech colombiano (Silicon Valley de LATAM, etc.)
+   - Comparación de tarifas: USA developer vs Colombian developer vs Asian developer
+   - Zona horaria: explicar UTC-5 y cuántas horas de overlap hay con EST, PST, CST
+   - Cómo vettear un desarrollador remoto (proceso real)
+   - 3-4 red flags a evitar
+   - CTA: "Book a free call" → Cal.com
+2. Crear `content/blog/build-mvp-nextjs-30-days-process.mdx` con al menos 1500 palabras siguiendo "Post 5 — USA". DEBE incluir:
+   - El proceso real de 30 días: Discovery (días 1-3), Design (4-7), Core Development (8-21), Testing (22-27), Launch (28-30)
+   - Stack tech real: Next.js 15, Supabase, Vercel, Tailwind
+   - Cómo manejar la comunicación con clientes remotos (tools: Loom, Notion, WhatsApp)
+   - CTA: "Got an MVP idea? Get a free estimate →" → calculadora
+3. Crear `content/blog/freelance-developer-vs-agency-web-project.mdx` con al menos 1400 palabras. DEBE incluir:
+   - Tabla comparativa real con criterios: precio, tiempo, comunicación, quality, accountability
+   - Tipos de proyectos que van mejor con freelancer vs agencia
+   - Preguntas para hacerle a cada uno antes de contratar
+   - CTA al portafolio
+4. Frontmatter en inglés:
+```yaml
+---
+title: "[English title]"
+slug: "[slug]"
+date: "2026-05-13"
+description: "[English description, 150-160 chars, CTA-oriented]"
+tags: ["freelance developer", "web development", "[specific tag]"]
+author: "Omar Hernández Rey"
+image: "/api/og?title=[encoded title]&subtitle=Blog+Omar+Hernández+Rey"
+---
+```
+
+**Aceptación:**
+- [ ] `ls content/blog/*.mdx | wc -l` retorna 6 (los 3 de 32.10 + los 3 nuevos).
+- [ ] `curl http://localhost:3000/blog/why-hire-colombian-developer-2026` retorna 200.
+- [ ] `curl http://localhost:3000/blog/build-mvp-nextjs-30-days-process` retorna 200.
+- [ ] Cada post EN tiene más de 900 palabras reales: `wc -w content/blog/why-hire*.mdx content/blog/build-mvp*.mdx content/blog/freelance-*.mdx`.
+- [ ] Ningún post contiene texto de placeholder.
+- [ ] `npm run build` → verde y genera los 6 posts estáticamente.
+
+---
+
+### [ ] [CC] Tarea 32.12 — Enriquecer contenido de páginas servicio×ciudad (anti thin-content)
+
+**Para qué sirve.** Las 100+ páginas de servicios×ciudades tienen actualmente muy poco texto único. Google puede penalizarlas como "thin content" (contenido pobre) y de-indexarlas. Esta tarea añade secciones de contenido diferenciado por ciudad que hacen las páginas genuinamente útiles para el usuario.
+
+**Archivos afectados:**
+- `src/data/servicios.ts`
+- `src/app/servicios/[servicio]/[ciudad]/page.tsx`
+
+**Implementación:**
+1. Leer `src/app/servicios/[servicio]/[ciudad]/page.tsx` completo para entender el template actual.
+2. En `src/data/servicios.ts`, enriquecer cada servicio con más secciones de contenido:
+```typescript
+// Agregar a la interfaz ServicioProgramatico:
+benefits: string[];  // 4-5 beneficios específicos del servicio
+process: string[];   // 3-4 pasos del proceso de trabajo
+faqs: Array<{ q: string; a: string }>;  // 3-4 preguntas frecuentes del servicio
+priceRange: string;  // rango de precio en USD
+deliveryTime: string; // tiempo estimado de entrega
+```
+3. Llenar los datos para cada uno de los 5 servicios existentes con contenido real (no inventar — basarse en el catálogo del chatbot `src/lib/chatbot/data/catalog.ts` para mantener consistencia con los precios).
+4. En `src/app/servicios/[servicio]/[ciudad]/page.tsx`, usar los nuevos campos para renderizar:
+   - Una sección "Beneficios" con los benefits
+   - Una sección "Proceso" con los pasos
+   - Una sección "Preguntas frecuentes" con las FAQs (que también alimentará el FAQPage schema de servicio)
+5. Mantener el CTA al chatbot prominente y con `prompt` pre-rellenado.
+6. Verificar que el texto de cada sección incluye el nombre de la ciudad y el servicio de forma natural (ya lo hace la plantilla con `{ciudad}` replacements).
+
+**Aceptación:**
+- [ ] `grep -c "benefits" src/data/servicios.ts` retorna un resultado indicando que la propiedad existe.
+- [ ] `curl http://localhost:3000/servicios/desarrollo-web/bogota | wc -w` retorna > 400 palabras de contenido real.
+- [ ] `curl http://localhost:3000/servicios/chatbot-ia/miami | wc -w` retorna > 400 palabras.
+- [ ] `npm run build` → verde.
+- [ ] Ninguna sección tiene placeholder text.
+
+---
+
+### [ ] [CC] Tarea 32.13 — Optimizar meta descriptions para CTR en SERPs
+
+**Para qué sirve.** Una meta description bien escrita es el "anuncio" que ve el usuario en Google antes de hacer click. Actualmente las descriptions son informativas pero no orientadas a conversión. Esta tarea las reescribe con el patrón: [Resultado que el usuario quiere] + [Diferenciador] + [CTA implícito].
+
+**Archivos afectados:**
+- `src/app/layout.tsx`
+- `src/app/calculadora/page.tsx`
+- `src/app/blog/page.tsx`
+- `src/app/faq/page.tsx`
+- `src/app/recursos/page.tsx`
+
+**Implementación:**
+1. Reescribir las descriptions siguiendo el patrón del `SEO.md` (sección "Meta descriptions orientadas a conversión"):
+   - `layout.tsx` ES: `"Desarrollador Full Stack freelance en Colombia. Webs, apps y chatbots con React & Next.js. Desde $500 USD. Consulta gratis en 24h."` (≤155 chars)
+   - `layout.tsx` EN (en `openGraph.description`): `"Full Stack developer from Colombia for remote US projects. React, Next.js, AI integrations. From $500 USD. Free 15-min consultation."` (≤155 chars)
+   - `calculadora`: `"Calcula el precio de tu sitio web o app en 2 minutos. Desglose real por funcionalidad. Sin compromiso. Más de 50 proyectos estimados."` (≤155 chars)
+   - `blog`: `"Artículos técnicos sobre desarrollo web, chatbots con IA y estrategia digital para emprendedores en Colombia y LATAM."` (≤155 chars)
+   - `faq`: `"Precios reales, tiempos de entrega y formas de pago para contratar un desarrollador web freelance. Respuestas directas y sin rodeos."` (≤155 chars)
+   - `recursos`: `"Guías gratuitas: cómo contratar un desarrollador, precios reales 2026, checklist de proyecto digital. Descarga sin costo."` (≤155 chars)
+2. En el objeto `keywords` de `layout.tsx`, agregar keywords USA relevantes que no están actualmente: `"hire developer colombia remote"`, `"Next.js developer USA"`, `"freelance web developer affordable"`, `"web development Colombia"`.
+3. Actualizar el `title.default` de layout.tsx para incluir la propuesta de valor: `"Omar Hernández Rey | Desarrollador Full Stack — Colombia & USA Remote"`.
+
+**Aceptación:**
+- [ ] `grep "description" src/app/layout.tsx` muestra la nueva description (≤155 chars verificable con `echo -n "texto" | wc -c`).
+- [ ] Ninguna description excede 160 caracteres (verificar todas las que se modificaron).
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+
+---
+
+### [ ] [OMAR] Tarea 32.14 — Configurar y verificar Google Search Console + enviar sitemap
+
+> **Esta es tarea MANUAL del humano (Omar)**. Ninguna IA puede hacer login en tu cuenta de Google. La IA actúa como copiloto: te dicta los pasos exactos y registra la evidencia que le pases.
+
+**Para qué sirve.** Sin Google Search Console (GSC), estás completamente ciego sobre cómo Google ve tu portafolio: qué páginas están indexadas, qué keywords te traen tráfico, si hay errores de crawling, si hay penalizaciones. Es la herramienta #1 de SEO y es gratis.
+
+**🤖 COPILOTO CC — Pasos para Omar:**
+
+**Paso 1 — Preparar código de verificación (la IA hace esto):**
+La IA añade en `src/app/layout.tsx` dentro de `export const metadata` la propiedad:
+```typescript
+verification: {
+  google: 'PENDIENTE_CODIGO_OMAR',
+},
+```
+Hacer commit de este cambio con mensaje: `chore(seo): agregar placeholder para verificación Google Search Console`. Luego esperar que Omar complete los pasos siguientes.
+
+**Paso 2 — Omar obtiene el código de verificación:**
+1. Ir a: `https://search.google.com/search-console/`
+2. Iniciar sesión con `hernandezreyomar@gmail.com`.
+3. Click en "Agregar propiedad".
+4. Seleccionar "Prefijo de URL".
+5. Ingresar: `https://omarhernandezrey.com`.
+6. Seleccionar método de verificación "Etiqueta HTML".
+7. Copiar el código (solo el valor del `content`, no el tag completo). Ejemplo: `xXxXxXxXxX`.
+8. Decirle a la IA: `"código GSC: xXxXxXxXxX"`.
+
+**Paso 3 — La IA actualiza el código:**
+Reemplazar `PENDIENTE_CODIGO_OMAR` con el código real en `layout.tsx`. Commitear y hacer push a Vercel.
+
+**Paso 4 — Omar verifica en GSC:**
+1. Esperar 2-3 minutos a que Vercel haga el deploy.
+2. Volver a GSC y hacer click en "VERIFICAR".
+3. Si dice "Propiedad verificada" → éxito.
+4. Ir a "Sitemaps" en el menú izquierdo.
+5. Ingresar: `sitemap.xml` → click "ENVIAR".
+6. Si el sitemap aparece como "Éxito" → decirle a la IA: `"lista 32.14"`.
+
+**Aceptación:**
+- [ ] `grep "google:" src/app/layout.tsx` muestra un código real (no "PENDIENTE").
+- [ ] `npm run build` → verde.
+- [ ] [!] GSC muestra "Propiedad verificada" para `https://omarhernandezrey.com`.
+- [ ] [!] GSC → Sitemaps muestra el sitemap con estado "Éxito" y al menos 100 URLs detectadas.
+- [ ] [!] En 48-72 horas, GSC → Cobertura empieza a mostrar páginas indexadas.
+
+---
+
+### [ ] [CC] Tarea 32.15 — Implementar eventos custom en Vercel Analytics para tracking de conversiones SEO
+
+**Para qué sirve.** Vercel Analytics ya está instalado y trackea pageviews. Pero para saber si el tráfico orgánico convierte (abre chatbot, envía formulario, descarga lead magnet), necesitamos eventos custom. Sin esto, no puedes saber si tu SEO está trayendo clientes reales o solo visitantes que rebotan.
+
+**Archivos afectados:**
+- `src/components/shared/ChatWidget.tsx` (o el componente equivalente del chatbot)
+- `src/components/sections/ContactForm.tsx`
+- `src/app/calculadora/page.tsx` (o el componente BudgetCalculator)
+- `src/app/recursos/page.tsx` (o el componente de recursos)
+
+**Implementación:**
+1. Verificar que `@vercel/analytics` está instalado (`grep "@vercel/analytics" package.json`).
+2. En cada archivo afectado, importar la función `track`:
+```typescript
+import { track } from '@vercel/analytics';
+```
+3. Agregar los eventos en los momentos de conversión:
+
+   **ChatWidget** — cuando el usuario abre el chat por primera vez:
+   ```typescript
+   track('chatbot_abierto', { source: window.location.pathname });
+   ```
+
+   **ContactForm** — cuando el formulario se envía exitosamente:
+   ```typescript
+   track('formulario_contacto_enviado', { pagina: window.location.pathname });
+   ```
+
+   **Calculadora** — cuando el usuario completa el cálculo y solicita propuesta:
+   ```typescript
+   track('calculadora_propuesta_solicitada', { presupuesto: estimatedValue });
+   ```
+
+   **Recursos** — cuando el usuario solicita un lead magnet (pone email):
+   ```typescript
+   track('lead_magnet_solicitado', { recurso: magnetId });
+   ```
+4. NO agregar eventos en cada click de botón — solo en los momentos de conversión real.
+5. Verificar que los eventos no se disparan en entorno de desarrollo local (opcional: envolver en `if (process.env.NODE_ENV === 'production')` si se prefiere).
+
+**Aceptación:**
+- [ ] `grep -r "track(" src/components/shared/ChatWidget.tsx src/components/sections/ContactForm.tsx` retorna líneas con los eventos.
+- [ ] `npx tsc --noEmit` → 0 errores (la función `track` tiene tipos correctos).
+- [ ] `npm run build` → verde.
+- [ ] [!] En producción, abrir el chatbot y verificar en Vercel Analytics dashboard que aparece el evento `chatbot_abierto` (puede tardar hasta 24h en aparecer).
+
+---
+
+### [ ] [CC] Tarea 32.16 — Bing Webmaster Tools + protocolo IndexNow (15-20% más tráfico gratis)
+
+**Para qué sirve.** Bing + DuckDuckGo + Yahoo representan el 15-20% de todas las búsquedas. Son completamente ignorados en el plan actual. IndexNow es un protocolo open-source que notifica instantáneamente a Bing, Yandex y Seznam cuando hay páginas nuevas o actualizadas — en lugar de esperar semanas a que el crawler las encuentre solo. **Costo: $0. Sin tarjeta. Sin registro con datos de pago.**
+
+**Archivos afectados:**
+- `public/[api-key].txt` (archivo de verificación Bing — el nombre varía por cuenta, ver implementación)
+- `src/app/layout.tsx` (meta tag de verificación Bing)
+- `src/app/api/indexnow/route.ts` (nuevo — endpoint para trigger manual de IndexNow)
+- `.env.example` (nueva variable INDEXNOW_API_KEY)
+
+**Implementación:**
+
+**Parte A — Verificación Bing Webmaster Tools (requiere acción OMAR, la IA prepara el código):**
+1. La IA agrega en `layout.tsx` dentro de `export const metadata`:
+```typescript
+verification: {
+  google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || '',
+  other: {
+    'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || '',
+  },
+},
+```
+2. Agregar `NEXT_PUBLIC_GSC_VERIFICATION` y `NEXT_PUBLIC_BING_VERIFICATION` a `.env.example` con comentarios explicativos.
+3. La IA crea el endpoint `/src/app/api/indexnow/route.ts`:
+```typescript
+import { NextRequest, NextResponse } from 'next/server';
+
+const SITE_URL = 'https://omarhernandezrey.com';
+const INDEXNOW_KEY = process.env.INDEXNOW_API_KEY || '';
+
+export async function POST(req: NextRequest) {
+  if (!INDEXNOW_KEY) return NextResponse.json({ error: 'No key' }, { status: 500 });
+  const { urls } = await req.json() as { urls: string[] };
+  const body = {
+    host: 'omarhernandezrey.com',
+    key: INDEXNOW_KEY,
+    keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`,
+    urlList: urls.map(u => u.startsWith('http') ? u : `${SITE_URL}${u}`),
+  };
+  const res = await fetch('https://api.indexnow.org/indexnow', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify(body),
+  });
+  return NextResponse.json({ status: res.status });
+}
+```
+4. Agregar `INDEXNOW_API_KEY` a `.env.example`. La clave puede ser cualquier UUID — generarla con `crypto.randomUUID()` y guardarla como variable de entorno.
+5. Crear el archivo de verificación IndexNow: `public/[valor-de-INDEXNOW_API_KEY].txt` con el mismo valor de la clave adentro (solo una línea). **Nota:** el nombre del archivo es el valor de la API key. Crear `public/indexnow-key-example.txt` como placeholder y documentar que Omar debe renombrarlo con su clave real.
+
+**Parte B — Omar completa verificación Bing:**
+1. Ir a `https://www.bing.com/webmasters/`
+2. Iniciar sesión con cuenta Microsoft (gratis).
+3. Agregar sitio: `https://omarhernandezrey.com`.
+4. Método de verificación: "Meta tag" — copiar el código (solo el valor del content).
+5. Decirle a la IA: `"bing verification: [código]"` y la IA lo pone en `.env` y hace deploy.
+
+**Aceptación:**
+- [ ] `src/app/api/indexnow/route.ts` existe y compila sin errores de tipo.
+- [ ] `NEXT_PUBLIC_BING_VERIFICATION` y `INDEXNOW_API_KEY` están documentados en `.env.example`.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+- [ ] [!] Bing Webmaster Tools muestra el sitio verificado tras deploy (Omar confirma).
+- [ ] [!] Llamar al endpoint `POST /api/indexnow` con `{"urls":["/"]}` retorna status 200 o 202 de Bing.
+
+---
+
+### [ ] [OMAR] Tarea 32.17 — Google My Business (perfil profesional local en Google Maps y local pack)
+
+> **Esta es tarea MANUAL del humano (Omar)**. La IA actúa como copiloto.
+
+**Para qué sirve.** Google My Business (GMB) es GRATUITO y hace que aparezcas en el "local pack" — el recuadro con mapa que aparece ARRIBA de los resultados orgánicos cuando alguien busca "desarrollador web bogotá" o "programador freelance colombia". Sin GMB no puedes estar en ese recuadro, aunque tu SEO orgánico sea perfecto. Es posiblemente la acción de más alto impacto para el mercado colombiano.
+
+**🤖 COPILOTO CC — Pasos para Omar:**
+
+1. Ir a `https://business.google.com/`
+2. Iniciar sesión con `hernandezreyomar@gmail.com`.
+3. Click en "Agregar negocio" → "Agregar un negocio solo".
+4. **Nombre del negocio:** `Omar Hernández Rey — Desarrollador Web Freelance`
+5. **Categoría:** buscar y seleccionar "Empresa de desarrollo de software" o "Consultor de tecnología de la información".
+6. **¿Tienes ubicación física?** → NO (seleccionar "No, no atiende clientes en su local").
+7. **Área de servicio:** Colombia, Estados Unidos (o las ciudades específicas).
+8. **Número de teléfono:** `+57 321 905 2878`.
+9. **Sitio web:** `https://omarhernandezrey.com`.
+10. Verificación: Google enviará un código por correo postal (puede tardar 5-14 días) o puede ofrecer verificación por video o por teléfono.
+11. Una vez verificado: completar el perfil al 100%:
+    - Descripción: "Desarrollador Full Stack freelance especializado en React, Next.js y chatbots con IA. Trabajo con empresas en Colombia y clientes remotos en USA. Más de 5 años de experiencia. Consulta gratis."
+    - Horario: Lunes-Viernes 8am-6pm (COT)
+    - Fotos: foto de perfil profesional + capturas de proyectos
+    - Servicios: listar todos los servicios del portafolio
+12. Decirle a la IA: `"lista 32.17"` cuando el perfil esté creado y verificado.
+
+**Aceptación:**
+- [ ] [!] Perfil GMB creado y verificado (Omar confirma).
+- [ ] [!] Al buscar "Omar Hernández Rey desarrollador" en Google aparece el panel de conocimiento en el lado derecho.
+- [ ] [!] En 30 días, al buscar "desarrollador web bogotá" en Google desde Colombia, el portafolio aparece en el local pack.
+
+---
+
+### [ ] [CC] Tarea 32.18 — Expandir de 5 a 10 tipos de servicio (duplica las páginas indexadas)
+
+**Para qué sirve.** Actualmente hay 5 servicios × 26 ciudades = 130 páginas programáticas. Doblar los servicios a 10 crea 260 páginas = 130 puntos de entrada adicionales a Google, sin costo adicional. Cada nuevo tipo de servicio captura keywords diferentes que potenciales clientes buscan.
+
+**Archivos afectados:**
+- `src/data/servicios.ts`
+
+**Implementación:**
+Agregar los siguientes 5 servicios nuevos al array `serviciosProgramaticos`, siguiendo exactamente la misma estructura de los existentes. El contenido debe ser real y representar servicios que Omar ofrece o puede ofrecer:
+
+```typescript
+{
+  id: 'landing-page',
+  name: 'Landing Pages de Alta Conversión',
+  h1: 'Landing Pages Profesionales en {ciudad}',
+  h2: 'Páginas de aterrizaje que convierten visitantes en clientes en {ciudad}',
+  description: 'Diseñamos y desarrollamos landing pages optimizadas para conversión en {ciudad}. Con A/B testing, formularios inteligentes y análisis de comportamiento para maximizar tus ventas en {country}.',
+  keywords: ['landing page {ciudad}', 'página de aterrizaje {ciudad}', 'landing page profesional {ciudad}']
+},
+{
+  id: 'aplicacion-movil',
+  name: 'Aplicaciones Web Progresivas (PWA)',
+  h1: 'Aplicaciones Web Progresivas en {ciudad}',
+  h2: 'Apps que funcionan en móvil y desktop para negocios en {ciudad}',
+  description: 'Desarrollamos Progressive Web Apps (PWA) que funcionan como apps nativas sin pasar por las tiendas de aplicaciones. Solución ideal para negocios en {ciudad} que quieren presencia mobile sin el costo de apps nativas.',
+  keywords: ['app web {ciudad}', 'aplicacion movil {ciudad}', 'pwa {ciudad}']
+},
+{
+  id: 'seo-tecnico',
+  name: 'SEO Técnico y Posicionamiento Web',
+  h1: 'SEO Técnico Profesional en {ciudad}',
+  h2: 'Posicionamiento real en Google para negocios de {ciudad}',
+  description: 'Auditoría y optimización SEO técnica completa para sitios web de {ciudad}. Schema.org, velocidad de carga, Core Web Vitals, sitemap y todas las técnicas que Google realmente premia en {country}.',
+  keywords: ['seo {ciudad}', 'posicionamiento web {ciudad}', 'consultor seo {ciudad}']
+},
+{
+  id: 'integracion-apis',
+  name: 'Integración de APIs y Sistemas',
+  h1: 'Integración de APIs y Sistemas en {ciudad}',
+  h2: 'Conectamos tus herramientas digitales para que trabajen juntas en {ciudad}',
+  description: 'Integramos tu sitio web o sistema con cualquier API externa: pagos (Stripe, PayPal, Wompi), CRMs, ERPs, WhatsApp Business, Google Workspace. Soluciones personalizadas para empresas en {ciudad}.',
+  keywords: ['integracion api {ciudad}', 'conectar sistemas {ciudad}', 'automatizacion api {ciudad}']
+},
+{
+  id: 'mantenimiento-web',
+  name: 'Mantenimiento y Soporte Web',
+  h1: 'Mantenimiento Web Profesional en {ciudad}',
+  h2: 'Tu sitio web siempre actualizado, seguro y funcionando en {ciudad}',
+  description: 'Planes de mantenimiento web mensual para sitios y aplicaciones en {ciudad}. Actualizaciones de seguridad, backups automáticos, optimización de rendimiento y soporte técnico prioritario para negocios en {country}.',
+  keywords: ['mantenimiento web {ciudad}', 'soporte web {ciudad}', 'actualizacion sitio web {ciudad}']
+},
+```
+
+**Aceptación:**
+- [ ] `grep -c "{ id:" src/data/servicios.ts` retorna 10.
+- [ ] `npm run build` genera ≥ 260 páginas en `/servicios/**` (10 servicios × 26 ciudades).
+- [ ] `curl http://localhost:3000/servicios/landing-page/bogota` retorna 200 con contenido correcto.
+- [ ] `curl http://localhost:3000/servicios/seo-tecnico/miami` retorna 200 con contenido correcto.
+- [ ] Ninguna página tiene placeholder text.
+- [ ] `npx tsc --noEmit` → 0 errores.
+
+---
+
+### [ ] [CC] Tarea 32.19 — Expandir ciudades Colombia para máxima cobertura nacional
+
+**Para qué sirve.** Actualmente Colombia tiene 4 ciudades (Bogotá, Medellín, Cali, Barranquilla). Colombia tiene muchas ciudades medianas con demanda de servicios digitales y menos competencia SEO que las grandes urbes. Agregar 8 ciudades más = 80 páginas nuevas de baja competencia para Colombia. Más fácil rankear en "desarrollador web Pereira" que en "desarrollador web Bogotá".
+
+**Archivos afectados:**
+- `src/data/ciudades.ts`
+
+**Implementación:**
+Agregar las siguientes ciudades colombianas al array `ciudades`, después de `Barranquilla` y antes de las ciudades internacionales:
+
+```typescript
+{ id: 'cartagena', name: 'Cartagena', country: 'Colombia' },
+{ id: 'bucaramanga', name: 'Bucaramanga', country: 'Colombia' },
+{ id: 'pereira', name: 'Pereira', country: 'Colombia' },
+{ id: 'manizales', name: 'Manizales', country: 'Colombia' },
+{ id: 'cucuta', name: 'Cúcuta', country: 'Colombia' },
+{ id: 'ibague', name: 'Ibagué', country: 'Colombia' },
+{ id: 'villavicencio', name: 'Villavicencio', country: 'Colombia' },
+{ id: 'santa-marta', name: 'Santa Marta', country: 'Colombia' },
+```
+
+**Aceptación:**
+- [ ] `grep -c "{ id:" src/data/ciudades.ts` retorna 34 (26 existentes + 8 nuevas).
+- [ ] `npm run build` genera ≥ 340 páginas en `/servicios/**` (10 servicios × 34 ciudades, combinado con tarea 32.18).
+- [ ] Si solo se hace 32.19 sin 32.18: genera ≥ 170 páginas (5 servicios × 34 ciudades).
+- [ ] `curl http://localhost:3000/servicios/desarrollo-web/cartagena` retorna 200.
+- [ ] `curl http://localhost:3000/servicios/chatbot-ia/bucaramanga` retorna 200.
+- [ ] `npm run build` → verde.
+
+---
+
+### [ ] [CC] Tarea 32.20 — Internal linking: blog posts → páginas de servicio (distribuye autoridad de dominio)
+
+**Para qué sirve.** El internal linking es uno de los factores de SEO más subestimados y más gratuitos. Cuando un blog post enlaza a una página de servicio, le "pasa" autoridad SEO. Un post bien linkado puede subir el ranking de una página de servicio 2-5 posiciones. Actualmente los posts y las páginas de servicio son "islas" sin conexión entre ellos.
+
+**Archivos afectados:**
+- `content/blog/cuanto-cuesta-sitio-web-colombia-2026.mdx` (si existe desde tarea 32.10)
+- `content/blog/chatbot-ia-negocio-colombia.mdx` (si existe desde tarea 32.10)
+- `content/blog/landing-page-vs-sitio-web-colombia.mdx` (si existe desde tarea 32.10)
+- `content/blog/why-hire-colombian-developer-2026.mdx` (si existe desde tarea 32.11)
+- `src/app/blog/[slug]/page.tsx` (agregar sección "Servicios Relacionados" al final de cada post)
+- `src/app/servicios/[servicio]/[ciudad]/page.tsx` (agregar sección "Recursos Útiles" con links al blog)
+
+**Implementación:**
+1. **En cada post MDX existente**, agregar al final (antes del frontmatter de cierre) una sección de links internos relevantes:
+```mdx
+---
+## Servicios relacionados
+
+Si estás buscando un desarrollador en Colombia, estos recursos te pueden ayudar:
+
+- [Desarrollo Web Profesional en Bogotá](/servicios/desarrollo-web/bogota)
+- [Chatbots con IA en Colombia](/servicios/chatbot-ia/bogota)
+- [Calcula el precio de tu proyecto gratis](/calculadora)
+```
+(Adaptar los links según el tema de cada post — no poner los mismos en todos.)
+
+2. **En `src/app/blog/[slug]/page.tsx`**, añadir al final del componente de página (después del MDX renderizado) una sección "Artículos relacionados" que muestre 2-3 posts del blog más recientes que no sean el actual. Usar `getAllPosts()` y filtrar por `slug !== post.slug`.
+
+3. **En `src/app/servicios/[servicio]/[ciudad]/page.tsx`**, añadir una sección al pie de la página llamada "Recursos útiles para tu proyecto" con links dinámicos al blog:
+```typescript
+const blogLinks = [
+  { href: '/blog/cuanto-cuesta-sitio-web-colombia-2026', text: '¿Cuánto cuesta un sitio web en Colombia?' },
+  { href: '/blog/chatbot-ia-negocio-colombia', text: 'Chatbots con IA para negocios en Colombia' },
+  { href: '/blog/landing-page-vs-sitio-web-colombia', text: 'Landing page vs sitio web: ¿cuál necesitas?' },
+];
+```
+
+**Aceptación:**
+- [ ] `grep -r "servicios/" content/blog/` retorna al menos 3 links internos en los posts de blog.
+- [ ] `curl http://localhost:3000/blog/cuanto-cuesta-sitio-web-colombia-2026 | grep "/servicios/"` retorna al menos 1 link.
+- [ ] `curl http://localhost:3000/servicios/desarrollo-web/bogota | grep "/blog/"` retorna al menos 1 link.
+- [ ] `npx tsc --noEmit` → 0 errores.
+- [ ] `npm run build` → verde.
+- [ ] Ningún link interno apunta a una ruta inexistente (verificar que cada href existe en el sitemap).
