@@ -4372,7 +4372,7 @@ export const OMAR_PROFILE = {
 
 ---
 
-### [ ] [CC] Tarea 32.3 — Expandir sitemap.ts con todas las páginas del portafolio
+### [x] [CC] Tarea 32.3 — Expandir sitemap.ts con todas las páginas del portafolio
 
 **Para qué sirve.** El sitemap actual solo incluye 11 URLs (homepage + algunas páginas estáticas + anchors). Faltan completamente: las 100+ páginas de servicios×ciudades, las páginas de blog, `/recursos`, `/faq`, `/status`. Sin estar en el sitemap, Google indexa estas páginas lentamente o no las encuentra.
 
