@@ -15,18 +15,38 @@ import ExportLeadsButton from '@/components/admin/ExportLeadsButton';
 
 export const dynamic = 'force-dynamic';
 
-async function getLeads() {
-  const { data, error } = await supabaseServer
+async function getLeads(search?: string, status?: string) {
+  let query = supabaseServer
     .from('leads')
     .select('*')
     .order('created_at', { ascending: false });
+
+  if (search) {
+    query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`);
+  }
+
+  if (status && status !== 'all') {
+    const statusMap: Record<string, string> = {
+      'pendiente': 'new',
+      'en-curso': 'contacted',
+      'completado': 'paid',
+      'sin-accion': 'cold'
+    };
+    const dbStatus = statusMap[status] || status;
+    query = query.eq('status', dbStatus);
+  }
+
+  const { data, error } = await query;
 
   if (error) console.error('Error fetching leads:', error);
   return data || [];
 }
 
-export default async function AdminLeadsPage() {
-  const leads = await getLeads();
+export default async function AdminLeadsPage({ searchParams }: { searchParams: Promise<{ q?: string; status?: string }> }) {
+  const params = await searchParams;
+  const search = params.q || '';
+  const statusFilter = params.status || '';
+  const leads = await getLeads(search, statusFilter);
 
   return (
     <div className="p-4 md:p-8 lg:p-12 space-y-10 max-w-[1600px] mx-auto">
@@ -51,29 +71,35 @@ export default async function AdminLeadsPage() {
       </div>
 
       {/* Control Bar */}
-      <div className="flex flex-col xl:flex-row gap-4">
+      <form method="GET" action="/admin/leads" className="flex flex-col xl:flex-row gap-4">
         <div className="relative flex-1 group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
           <input 
             type="text" 
+            name="q"
+            defaultValue={search}
             placeholder="Buscar por nombre, correo o empresa..." 
             className="w-full pl-12 pr-4 py-4 bg-card-bg border border-white/5 rounded-[20px] text-white-custom outline-none focus:border-primary/30 transition-all shadow-xl"
           />
         </div>
         <div className="flex gap-3">
-          <select className="bg-card-bg border border-white/5 rounded-[20px] px-6 py-4 text-xs font-bold text-text-muted outline-none focus:border-primary/30 transition-all shadow-xl appearance-none min-w-[160px]">
-            <option>Todos los Estados</option>
-            <option>Pendiente</option>
-            <option>En Curso</option>
-            <option>Completado</option>
-            <option>Sin Acción</option>
+          <select 
+            name="status"
+            defaultValue={statusFilter}
+            className="bg-card-bg border border-white/5 rounded-[20px] px-6 py-4 text-xs font-bold text-text-muted outline-none focus:border-primary/30 transition-all shadow-xl appearance-none min-w-[160px]"
+          >
+            <option value="">Todos los Estados</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="en-curso">En Curso</option>
+            <option value="completado">Completado</option>
+            <option value="sin-accion">Sin Acción</option>
           </select>
-          <button className="flex items-center gap-2 px-6 py-4 bg-card-bg border border-white/5 rounded-[20px] text-xs font-bold text-text-muted hover:text-white-custom transition-all shadow-xl">
+          <button type="submit" className="flex items-center gap-2 px-6 py-4 bg-card-bg border border-white/5 rounded-[20px] text-xs font-bold text-text-muted hover:text-white-custom transition-all shadow-xl">
             <Filter size={16} />
-            Filtros Avanzados
+            Buscar
           </button>
         </div>
-      </div>
+      </form>
 
       {/* Main Content Table */}
       <div className="bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">

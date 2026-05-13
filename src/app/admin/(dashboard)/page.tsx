@@ -6,7 +6,6 @@ import {
   TrendingUp, 
   DollarSign, 
   ChevronRight,
-  AlertTriangle,
   Ticket,
   Clock,
   ArrowUpRight,
@@ -22,12 +21,21 @@ export const dynamic = 'force-dynamic';
 async function getStats() {
   const now = new Date();
   const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const firstDayOfPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+  const lastDayOfPrevMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59).toISOString();
 
   // 1. Total leads este mes
   const { count: totalLeads } = await supabaseServer
     .from('leads')
     .select('*', { count: 'exact', head: true })
     .gte('created_at', firstDayOfMonth);
+
+  // Leads del mes anterior para calcular trend
+  const { count: prevLeads } = await supabaseServer
+    .from('leads')
+    .select('*', { count: 'exact', head: true })
+    .gte('created_at', firstDayOfPrevMonth)
+    .lte('created_at', lastDayOfPrevMonth);
 
   // 2. Leads pagados (conversion)
   const { count: paidLeads } = await supabaseServer
@@ -42,26 +50,59 @@ async function getStats() {
     .select('*', { count: 'exact', head: true })
     .gte('created_at', firstDayOfMonth);
 
+  const { count: prevConvs } = await supabaseServer
+    .from('conversations')
+    .select('*', { count: 'exact', head: true })
+    .gte('created_at', firstDayOfPrevMonth)
+    .lte('created_at', lastDayOfPrevMonth);
+
   // 4. Tickets abiertos
   const { count: openTickets } = await supabaseServer
     .from('tickets')
     .select('*', { count: 'exact', head: true })
     .neq('status', 'closed');
 
-  // 5. Últimos 5 leads
+  // 5. Ultimos tickets abiertos para el panel lateral
+  const { data: recentTickets } = await supabaseServer
+    .from('tickets')
+    .select('id, title, status, priority, created_at')
+    .neq('status', 'closed')
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  // 6. Ultimos 5 leads
   const { data: recentLeads } = await supabaseServer
     .from('leads')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(5);
 
+  // Calcular tendencias reales
+  const leadsTrend = prevLeads && prevLeads > 0
+    ? `${((totalLeads || 0) - prevLeads) >= 0 ? '+' : ''}${(((totalLeads || 0) - prevLeads) / prevLeads * 100).toFixed(1)}%`
+    : 'Nuevo';
+
+  const convsTrend = prevConvs && prevConvs > 0
+    ? `${((totalConvs || 0) - prevConvs) >= 0 ? '+' : ''}${(((totalConvs || 0) - prevConvs) / prevConvs * 100).toFixed(1)}%`
+    : 'Nuevo';
+
+  const conversionRate = totalConvs && totalConvs > 0 
+    ? ((totalLeads || 0) / totalConvs * 100).toFixed(1) 
+    : '0';
+
+  const paidPercent = 'Meta mensual';
+
   return {
     monthLeads: totalLeads || 0,
     monthPaid: paidLeads || 0,
     monthConvs: totalConvs || 0,
     openTickets: openTickets || 0,
-    conversionRate: totalConvs ? ((totalLeads || 0) / totalConvs * 100).toFixed(1) : 0,
-    recentLeads: recentLeads || []
+    conversionRate,
+    recentLeads: recentLeads || [],
+    recentTickets: recentTickets || [],
+    leadsTrend,
+    convsTrend,
+    paidPercent
   };
 }
 
@@ -104,14 +145,38 @@ export default async function AdminDashboardPage() {
 
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        <StatCard 
-          title="Leads Mensuales" 
-          value={stats.monthLeads.toString()} 
-          icon={<Users size={22} />} 
-          trend="+12.4%" 
-          color="primary"
-          description="Nuevos clientes potenciales"
-        />
+          <StatCard 
+            title="Leads Mensuales" 
+            value={stats.monthLeads.toString()} 
+            icon={<Users size={22} />} 
+            trend={stats.leadsTrend}
+            color="primary"
+            description="Nuevos clientes potenciales vs mes anterior"
+          />
+          <StatCard 
+            title="Conversaciones" 
+            value={stats.monthConvs.toString()} 
+            icon={<MessageSquare size={22} />} 
+            trend={stats.convsTrend}
+            color="accent"
+            description="Interacciones del chatbot vs mes anterior"
+          />
+          <StatCard 
+            title="Tasa de Conversion" 
+            value={`${stats.conversionRate}%`} 
+            icon={<TrendingUp size={22} />} 
+            trend="Leads/Conv"
+            color="primary"
+            description="Proporcion leads sobre conversaciones este mes"
+          />
+          <StatCard 
+            title="Ventas Confirmadas" 
+            value={stats.monthPaid.toString()} 
+            icon={<DollarSign size={22} />} 
+            trend={stats.paidPercent}
+            color="accent"
+            description="Pagos procesados este mes"
+          />
         <StatCard 
           title="Conversaciones" 
           value={stats.monthConvs.toString()} 
@@ -245,46 +310,55 @@ export default async function AdminDashboardPage() {
             </div>
             
             <div className="flex items-center justify-between mb-8">
-              <h3 className="font-bold text-white-custom">Atención Prioritaria</h3>
+              <h3 className="font-bold text-white-custom">Tickets Activos</h3>
               <span className="px-3 py-1 rounded-full bg-red-500/10 text-red-400 text-[10px] font-black uppercase tracking-widest border border-red-500/20">
-                {stats.openTickets} Alertas
+                {stats.openTickets} Pendientes
               </span>
             </div>
             
             <div className="space-y-4 relative z-10">
-              <div className="p-5 rounded-2xl bg-background/40 border border-white/5 hover:border-primary/20 transition-all cursor-pointer">
-                <div className="flex justify-between items-start mb-2">
-                  <span className="text-[10px] font-black uppercase text-primary tracking-widest">Handoff Requerido</span>
-                  <span className="text-[8px] text-text-muted">Hace 5m</span>
+              {stats.recentTickets.length > 0 ? stats.recentTickets.map((ticket: { id: string; title: string; status: string; priority: string; created_at: string }) => {
+                const priorityColor = ticket.priority === 'high' ? 'text-red-400' : ticket.priority === 'medium' ? 'text-amber-400' : 'text-text-muted';
+                const statusLabel = ticket.status === 'open' ? 'Abierto' : ticket.status === 'in_progress' ? 'En curso' : ticket.status;
+                const timeAgo = getTimeAgo(new Date(ticket.created_at));
+                return (
+                  <Link 
+                    key={ticket.id}
+                    href={`/admin/tickets/${ticket.id}`}
+                    className="block p-5 rounded-2xl bg-background/40 border border-white/5 hover:border-primary/20 transition-all cursor-pointer"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <span className={`text-[10px] font-black uppercase tracking-widest ${priorityColor}`}>{ticket.title}</span>
+                      <span className="text-[8px] text-text-muted">{timeAgo}</span>
+                    </div>
+                    <p className="text-xs text-text-muted leading-relaxed font-medium capitalize">{statusLabel}</p>
+                  </Link>
+                );
+              }) : (
+                <div className="p-5 rounded-2xl bg-background/40 border border-white/5 text-center">
+                  <p className="text-xs text-text-muted/50 italic">No hay tickets pendientes</p>
                 </div>
-                <p className="text-xs text-text-muted leading-relaxed font-medium">Cliente solicitó hablar con humano en el flujo de E-commerce.</p>
-              </div>
-              <button className="w-full py-4 rounded-2xl bg-white/5 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom hover:bg-white/10 transition-all border border-dashed border-white/10">
+              )}
+              <Link 
+                href="/admin/tickets"
+                className="block w-full py-4 rounded-2xl bg-white/5 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom hover:bg-white/10 transition-all border border-dashed border-white/10 text-center"
+              >
                 Gestionar Tickets
-              </button>
+              </Link>
             </div>
           </div>
 
-          {/* System Health */}
+          {/* Resumen del Mes */}
           <div className="bg-background rounded-[32px] border border-white/5 p-8 shadow-xl">
             <h3 className="font-bold text-white-custom mb-8 flex items-center gap-2">
               <RefreshCw size={16} className="text-primary" />
-              Estado Operativo
+              Resumen del Mes
             </h3>
             <div className="space-y-6">
-              <HealthItem label="Motor LLM (Groq)" status="Optimal" delay="420ms" />
-              <HealthItem label="Core Database" status="Operational" delay="12ms" />
-              <HealthItem label="Notificaciones" status="Active" delay="Direct" />
-            </div>
-            
-            <div className="mt-10 p-6 rounded-2xl bg-primary/5 border border-primary/10">
-              <div className="flex items-center gap-2 text-primary mb-3">
-                <AlertTriangle size={16} />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Sugerencia IA</span>
-              </div>
-              <p className="text-[11px] text-text-muted leading-relaxed font-medium italic opacity-80">
-                &ldquo;La tasa de conversión ha subido un 2% tras el ajuste del Playbook de ventas en el sector Tech.&rdquo;
-              </p>
+              <MetricItem label="Total Leads" value={stats.monthLeads.toString()} />
+              <MetricItem label="Conversaciones" value={stats.monthConvs.toString()} />
+              <MetricItem label="Tickets Abiertos" value={stats.openTickets.toString()} />
+              <MetricItem label="Ventas" value={stats.monthPaid.toString()} />
             </div>
           </div>
         </div>
@@ -348,17 +422,25 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-function HealthItem({ label, status, delay }: { label: string, status: string, delay: string }) {
+function MetricItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between group">
-      <div className="flex flex-col">
-        <span className="text-[10px] text-text-muted font-black uppercase tracking-wider group-hover:text-white-custom transition-colors">{label}</span>
-        <span className="text-[9px] text-text-muted/40 font-medium">{delay} latency</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] font-black uppercase text-white-custom tracking-tighter">{status}</span>
-        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-      </div>
+      <span className="text-[10px] text-text-muted font-black uppercase tracking-wider group-hover:text-white-custom transition-colors">{label}</span>
+      <span className="text-sm font-black text-white-custom">{value}</span>
     </div>
   );
+}
+
+function getTimeAgo(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHrs = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  
+  if (diffMin < 1) return 'Ahora';
+  if (diffMin < 60) return `Hace ${diffMin}m`;
+  if (diffHrs < 24) return `Hace ${diffHrs}h`;
+  if (diffDays < 7) return `Hace ${diffDays}d`;
+  return date.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' });
 }

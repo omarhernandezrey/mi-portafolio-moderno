@@ -1,4 +1,5 @@
 import IndustrySelector from '@/components/admin/IndustrySelector';
+import LeadActions from '@/components/admin/LeadActions';
 import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { 
@@ -8,8 +9,6 @@ import {
   Building2, 
   Clock, 
   MessageSquare,
-  CheckCircle2,
-  XCircle,
   FileText,
   User,
   BadgeDollarSign,
@@ -85,8 +84,8 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         
         <div className="flex items-center gap-3">
           <button className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-all">
-            Archivar Lead
-          </button>
+              {lead.status === 'archived' ? 'Archivado' : lead.status}
+            </button>
           <Link 
             href={`/proposal/${lead.id}`}
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-background text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20"
@@ -144,10 +143,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
 
               <div className="space-y-4">
                 <h4 className="text-[10px] font-black uppercase tracking-widest text-text-muted/60 ml-2 italic">Control de Pipeline</h4>
-                <div className="grid grid-cols-1 gap-3">
-                  <ActionButton icon={<CheckCircle2 size={18} />} label="Confirmar Contacto" color="text-primary hover:bg-primary/10 border-primary/20" />
-                  <ActionButton icon={<XCircle size={18} />} label="Marcar como Perdido" color="text-red-400 hover:bg-red-500/10 border-red-500/20" />
-                </div>
+                <LeadActions leadId={lead.id} currentStatus={lead.status} />
               </div>
 
               {lead.notes && (
@@ -248,15 +244,6 @@ function InfoItem({ icon, label, value, isLink, href }: { icon: React.ReactNode,
         )}
       </div>
     </div>
-  );
-}
-
-function ActionButton({ icon, label, color }: { icon: React.ReactNode, label: string, color: string }) {
-  return (
-    <button className={`flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act ${color}`}>
-      <span className="group-hover/act:scale-110 transition-transform">{icon}</span>
-      {label}
-    </button>
   );
 }
 
