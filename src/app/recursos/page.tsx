@@ -15,6 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, CheckCircle, Loader2, Mail, Shield, BookOpen, Target, Sparkles, ChevronRight, Lock } from 'lucide-react';
 import Link from 'next/link';
 import Footer from '@/components/shared/Footer';
+import { track } from '@vercel/analytics';
 
 const magnets = [
   {
@@ -66,6 +67,7 @@ export default function RecursosPage() {
       }
 
       setSuccessId(magnetId);
+      track('lead_magnet_downloaded', { resource: magnetId });
       setTimeout(() => setSuccessId(null), 8000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Protocol error during processing');

@@ -4909,7 +4909,7 @@ Reemplazar `PENDIENTE_CODIGO_OMAR` con el código real en `layout.tsx`. Commitea
 
 ---
 
-### [ ] [CC] Tarea 32.15 — Implementar eventos custom en Vercel Analytics para tracking de conversiones SEO
+### [x] [CC] Tarea 32.15 — Implementar eventos custom en Vercel Analytics para tracking de conversiones SEO
 
 **Para qué sirve.** Vercel Analytics ya está instalado y trackea pageviews. Pero para saber si el tráfico orgánico convierte (abre chatbot, envía formulario, descarga lead magnet), necesitamos eventos custom. Sin esto, no puedes saber si tu SEO está trayendo clientes reales o solo visitantes que rebotan.
 

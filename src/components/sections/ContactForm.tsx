@@ -5,6 +5,7 @@ import Image from "next/image";
 import emailjs from "@emailjs/browser";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
+import { track } from "@vercel/analytics";
 
 // --- Lógica de partículas flotantes tipo AboutSection ---
 const createFloatingElements = (count = 12) =>
@@ -75,6 +76,7 @@ export default function ContactForm() {
           }
 
           alert("Mensaje enviado correctamente 🎉");
+          track('contact_form_submitted');
           setIsSending(false);
           form.current?.reset();
         },
