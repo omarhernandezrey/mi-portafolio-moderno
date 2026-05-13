@@ -1,0 +1,347 @@
+---
+title: "Building an MVP with Next.js in 30 Days: My Process as a Freelance Developer"
+slug: "build-mvp-nextjs-30-days-process"
+date: "2026-05-13"
+description: "The exact 30-day framework I use to build MVPs with Next.js for startups. Discovery to launch, with real tech stack and communication tools."
+tags: ["mvp", "nextjs", "startup", "freelance developer"]
+author: "Omar Hernández Rey"
+image: "/api/og?title=Build+MVP+in+30+Days&subtitle=Next.js+Framework"
+---
+
+# Building an MVP with Next.js in 30 Days: My Process as a Freelance Developer
+
+Over the past 5 years, I've built 30+ MVPs for startups using Next.js. Some succeeded, some failed, but the process has been refined to a science. In this article, I'm sharing the exact 30-day framework I use to take a startup idea from concept to launched MVP.
+
+## The 30-day MVP framework
+
+### Week 1: Discovery & Foundation (Days 1-7)
+
+**Day 1-2: Deep dive discovery**
+
+Before writing a single line of code, I need to understand:
+- Who is the target user?
+- What pain point does this solve?
+- What is the core value proposition?
+- What are the must-have features vs nice-to-have?
+- What does success look like in 3 months?
+
+**Deliverable:** Technical specification document (2-3 pages)
+
+**Day 3-4: Architecture decisions**
+
+Choose the tech stack based on project needs:
+- **Next.js 15** (App Router): For SEO, performance, and full-stack capabilities
+- **TypeScript**: Non-negotiable for maintainability
+- **Supabase**: PostgreSQL + Auth + Real-time (replaces Firebase)
+- **Tailwind CSS**: Rapid UI development
+- **Vercel**: Hosting + CI/CD + Analytics
+- **Stripe**: Payments (if needed)
+
+**Deliverable:** Architecture diagram + tech stack document
+
+**Day 5-7: Database schema & API design**
+
+Design the data model before touching UI:
+- User entities and relationships
+- Core business entities
+- API endpoints needed
+- Authentication flows
+
+**Deliverable:** Database schema + API specification
+
+### Week 2: Design & Core Development (Days 8-14)
+
+**Day 8-10: UI/UX Design in Figma**
+
+Not pixel-perfect, but good enough:
+- Landing page design
+- Core user flows (auth, dashboard, main feature)
+- Mobile responsive versions
+- Component library setup
+
+**Tools:** Figma, with real-time collaboration via Loom videos
+
+**Day 11-14: Core feature development**
+
+Build the "hero feature" first:
+- Authentication (Supabase Auth)
+- Database setup and migrations
+- Core API endpoints
+- Main user flow implementation
+
+**Daily communication:** 15-minute standup via WhatsApp or Loom
+
+### Week 3: Feature completion & Testing (Days 15-21)
+
+**Day 15-17: Secondary features**
+
+Add supporting functionality:
+- User settings and profiles
+- Admin dashboard (if needed)
+- Additional user flows
+- Email notifications
+
+**Day 18-19: Integration & polish**
+
+Connect everything:
+- Payment integration (Stripe)
+- Third-party APIs
+- File uploads (if needed)
+- Search functionality
+
+**Day 20-21: Internal testing**
+
+- Manual testing of all flows
+- Mobile responsiveness check
+- Performance optimization
+- Security review
+
+### Week 4: Launch preparation & Deployment (Days 22-30)
+
+**Day 22-24: User acceptance testing**
+
+- Client tests with real scenarios
+- Bug fixes and adjustments
+- Copy refinement
+- Analytics setup
+
+**Day 25-27: Production deployment**
+
+- Environment setup (prod/staging)
+- Domain configuration
+- SSL certificates
+- Monitoring and error tracking
+
+**Day 28-29: Documentation & handoff**
+
+- README with setup instructions
+- API documentation
+- User guide (basic)
+- Video walkthrough (Loom)
+
+**Day 30: Launch**
+
+- Deploy to production
+- Smoke tests
+- Announcement support
+- Post-launch monitoring
+
+## The tech stack I use (and why)
+
+### Next.js 15 with App Router
+
+**Why:**
+- Server-side rendering for SEO
+- API routes in the same codebase
+- React Server Components for performance
+- Edge functions for speed
+
+**When not to use:**
+- If you need a simple static site (use Astro instead)
+- If your team only knows Vue/Angular
+
+### Supabase
+
+**Why:**
+- PostgreSQL (real database, not NoSQL)
+- Built-in authentication
+- Real-time subscriptions
+- Row-level security
+- Generous free tier
+
+**Alternatives considered:**
+- Firebase: Good but NoSQL gets messy
+- AWS RDS: Too complex for MVPs
+- PlanetScale: Great but MySQL
+
+### Tailwind CSS
+
+**Why:**
+- Speed of development
+- Consistent design system
+- No CSS files to manage
+- Great component libraries (shadcn/ui)
+
+### Vercel
+
+**Why:**
+- Zero-config deployment
+- Preview deployments for every PR
+- Analytics included
+- Edge network
+- GitHub integration
+
+## Communication: How I handle remote collaboration
+
+### Daily standups (asynchronous)
+
+I send a Loom video (2-3 minutes) every day covering:
+- What I completed yesterday
+- What I'm working on today
+- Any blockers or questions
+
+**Why Loom:** You see my screen + my face. More context than text.
+
+### Weekly sync (live)
+
+30-minute video call every week:
+- Review progress
+- Demo new features
+- Adjust priorities if needed
+- Plan next week
+
+### Real-time chat (WhatsApp or Slack)
+
+For quick questions:
+- I respond within 2-4 hours during work hours
+- Urgent issues: WhatsApp for faster response
+- General discussion: Slack
+
+### Project management (Notion or Linear)
+
+- Task breakdown with deadlines
+- Feature requests and bug tracking
+- Documentation hub
+- Shared between me and client
+
+## Real examples from my portfolio
+
+### Example 1: Fintech dashboard MVP
+
+**Scope:** Investment tracking dashboard for LATAM market
+**Timeline:** 28 days (2 days early)
+**Features:**
+- User authentication
+- Portfolio tracking
+- Transaction history
+- Basic analytics
+- PDF report generation
+
+**Stack:** Next.js 15, Supabase, Tailwind, Recharts, Vercel
+
+### Example 2: Healthcare appointment app
+
+**Scope:** Telemedicine platform for Colombian clinics
+**Timeline:** 32 days (2 days over due to additional requirements)
+**Features:**
+- Patient registration
+- Appointment booking
+- Video calls (daily.co integration)
+- Payment processing
+- Admin dashboard
+
+**Stack:** Next.js 15, Supabase, Tailwind, Stripe, Daily.co
+
+### Example 3: E-commerce headless Shopify
+
+**Scope:** Custom storefront for fashion brand
+**Timeline:** 30 days
+**Features:**
+- Shopify integration
+- Custom cart
+- User accounts
+- Order tracking
+- CMS for content
+
+**Stack:** Next.js 15, Shopify Storefront API, Tailwind, Vercel
+
+## What can go wrong (and how to prevent it)
+
+### Scope creep
+
+**Problem:** Client adds "just one more feature" every week
+
+**Solution:** 
+- Lock scope at the beginning
+- New features go to "Phase 2" list
+- Charge extra for out-of-scope work
+
+### Communication gaps
+
+**Problem:** Client disappears for days, then expects updates
+
+**Solution:**
+- Scheduled check-ins
+- Clear communication expectations in contract
+- Asynchronous updates so progress continues
+
+### Technical debt
+
+**Problem:** Rushing leads to messy code
+
+**Solution:**
+- 80/20 rule: some corners can be cut, not all
+- Refactoring time built into schedule
+- Code reviews (even solo, review your own code)
+
+### Third-party integration issues
+
+**Problem:** External API breaks or changes
+
+**Solution:**
+- Buffer time in schedule
+- Mock APIs for development
+- Fallback plans for critical integrations
+
+## Pricing for 30-day MVPs
+
+**Standard MVP (20-25 days):** $5,000 - $8,000 USD
+- Core functionality
+- Standard integrations
+- Basic admin panel
+
+**Complex MVP (30-35 days):** $8,000 - $15,000 USD
+- Multiple user types
+- Real-time features
+- Complex integrations
+- Advanced analytics
+
+**What's included:**
+- Development (obviously)
+- UI/UX design
+- Testing and QA
+- Deployment and setup
+- 30-day post-launch support
+
+**What's not included:**
+- Third-party service fees (hosting, APIs)
+- Major scope changes
+- Ongoing maintenance (separate retainer)
+
+## Is a 30-day MVP right for you?
+
+**Good fit if:**
+- You have clear requirements
+- You can make decisions quickly
+- You understand MVP means "minimum"
+- You're technical enough to give good feedback
+
+**Not a good fit if:**
+- You need enterprise-level features
+- You have 50 stakeholders who all need approval
+- You want pixel-perfect design
+- You're not sure what you're building
+
+## Next steps
+
+**If you have an idea and want to discuss:**
+
+[Book a free 15-minute call →](https://cal.com/omarhernandez/15min)
+
+I'll tell you honestly if a 30-day MVP makes sense for your idea or if you need something different.
+
+**Or get an instant budget estimate:**
+
+[Use my project calculator →](/calculadora)
+
+---
+
+**Questions about the MVP process?** 
+
+Open the chat on this page or email me at contact@omarhernandezrey.com. I respond within 24 hours.
+
+**Related resources:**
+
+- [Why Hire a Colombian Developer](/blog/why-hire-colombian-developer-2026)
+- [Freelance vs Agency: Which Should You Choose?](/blog/freelance-developer-vs-agency-web-project)
+- [Calculadora de Presupuesto](/calculadora)

@@ -4693,7 +4693,7 @@ alternates: {
 
 ---
 
-### [ ] [CC] Tarea 32.10 — Crear 3 posts de blog en español targeting Colombia
+### [x] [CC] Tarea 32.10 — Crear 3 posts de blog en español targeting Colombia
 
 **Para qué sirve.** El blog lleva semanas (o meses) sin un solo post. Sin contenido, Google no tiene razón para mostrar el portafolio. Estos 3 posts responden preguntas reales que potenciales clientes colombianos buscan en Google. Cada post = una nueva puerta de entrada al portafolio.
 
@@ -4744,7 +4744,7 @@ image: "/api/og?title=[título codificado]&subtitle=Blog+Omar+Hernández"
 
 ---
 
-### [ ] [CC] Tarea 32.11 — Crear 3 posts de blog en inglés targeting mercado USA
+### [x] [CC] Tarea 32.11 — Crear 3 posts de blog en inglés targeting mercado USA
 
 **Para qué sirve.** El mercado USA paga 3-5× más que Colombia. Para aparecer en búsquedas de clientes norteamericanos (o latinos en USA) que buscan contratar un desarrollador remoto, necesitamos contenido en inglés que responda sus preguntas específicas.
 
