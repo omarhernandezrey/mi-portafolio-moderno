@@ -69,7 +69,8 @@ export const metadata: Metadata = {
     description: "Desarrollo web moderno con React, Next.js y Node.js",
     images: [
       {
-        url: "/api/og?title=Omar Hernández Rey&subtitle=Full Stack Web Developer",
+        url: "https://omarhernandezrey.com/api/og?title=Omar%20Hern%C3%A1ndez%20Rey&subtitle=Full%20Stack%20Web%20Developer",
+        secureUrl: "https://omarhernandezrey.com/api/og?title=Omar%20Hern%C3%A1ndez%20Rey&subtitle=Full%20Stack%20Web%20Developer",
         width: 1200,
         height: 630,
         alt: "Omar Hernández Rey | Full Stack Developer",
@@ -80,7 +81,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Omar Hernández Rey | Full Stack Developer",
     description: "Desarrollador Web Full Stack creando soluciones digitales",
-    images: ["/api/og?title=Omar Hernández Rey&subtitle=Full Stack Web Developer"],
+    images: ["https://omarhernandezrey.com/api/og?title=Omar%20Hern%C3%A1ndez%20Rey&subtitle=Full%20Stack%20Web%20Developer"],
   },
   robots: {
     index: true,

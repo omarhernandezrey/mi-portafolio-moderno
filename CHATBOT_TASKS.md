@@ -4306,7 +4306,7 @@ Añadir los 3 escenarios faltantes al array `SCENARIOS`, con estructura idéntic
 
 ---
 
-### [ ] [CC] Tarea 32.1 — Corregir URLs relativas en OG y Twitter metadata (bug crítico)
+### [x] [CC] Tarea 32.1 — Corregir URLs relativas en OG y Twitter metadata (bug crítico)
 
 **Para qué sirve.** Las URLs de imagen en OG y Twitter son relativas (`/api/og?...`). Los crawlers de Facebook, LinkedIn, WhatsApp y Twitter/X NO pueden resolver URLs relativas — necesitan URLs absolutas con dominio. Sin esto, al compartir el portafolio en cualquier red social no aparece la imagen de preview, destruyendo el CTR y las señales sociales de SEO.
 
