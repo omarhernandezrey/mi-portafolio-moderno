@@ -5056,7 +5056,7 @@ export async function POST(req: NextRequest) {
 
 ---
 
-### [ ] [CC] Tarea 32.18 — Expandir de 5 a 10 tipos de servicio (duplica las páginas indexadas)
+### [x] [CC] Tarea 32.18 — Expandir de 5 a 10 tipos de servicio (duplica las páginas indexadas)
 
 **Para qué sirve.** Actualmente hay 5 servicios × 26 ciudades = 130 páginas programáticas. Doblar los servicios a 10 crea 260 páginas = 130 puntos de entrada adicionales a Google, sin costo adicional. Cada nuevo tipo de servicio captura keywords diferentes que potenciales clientes buscan.
 

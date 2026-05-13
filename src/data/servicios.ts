@@ -152,5 +152,145 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     ],
     priceRange: '$800k - $5M COP ($200 - $1,250 USD)',
     deliveryTime: '3-10 días'
+  },
+  {
+    id: 'landing-page',
+    name: 'Landing Pages de Alta Conversión',
+    h1: 'Landing Pages Profesionales en {ciudad}',
+    h2: 'Páginas de aterrizaje que convierten visitantes en clientes en {ciudad}',
+    description: 'Diseñamos y desarrollamos landing pages optimizadas para conversión en {ciudad}. Con A/B testing, formularios inteligentes y análisis de comportamiento para maximizar tus ventas en {country}.',
+    keywords: ['landing page {ciudad}', 'página de aterrizaje {ciudad}', 'landing page profesional {ciudad}'],
+    benefits: [
+      'Diseño orientado a conversión y resultados',
+      'Carga ultrarrápida para mejor experiencia',
+      'Formularios optimizados para captar leads',
+      'Integración con analytics y tracking',
+      'Diseño responsive para todos los dispositivos'
+    ],
+    process: [
+      'Investigación: Analizamos tu audiencia y competencia',
+      'Copywriting: Redactamos textos persuasivos',
+      'Diseño: Creamos layout optimizado para conversión',
+      'Lanzamiento: Configuramos tracking y publicamos'
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta una landing page?', a: 'Landing pages profesionales desde $1.2M COP. Con A/B testing y optimización avanzada desde $2M COP.' },
+      { q: '¿Landing page o sitio web completo?', a: 'Si tienes un objetivo específico (vender un producto, captar leads), landing page. Si necesitas presencia institucional completa, sitio web.' },
+      { q: '¿Incluye hosting y dominio?', a: 'Incluimos configuración en tu hosting. Si no tienes, te recomendamos las mejores opciones según tu presupuesto.' }
+    ],
+    priceRange: '$1.2M - $3M COP ($300 - $750 USD)',
+    deliveryTime: '3-7 días'
+  },
+  {
+    id: 'aplicacion-movil',
+    name: 'Aplicaciones Web Progresivas (PWA)',
+    h1: 'Aplicaciones Web Progresivas en {ciudad}',
+    h2: 'Apps que funcionan en móvil y desktop para negocios en {ciudad}',
+    description: 'Desarrollamos Progressive Web Apps (PWA) que funcionan como apps nativas sin pasar por las tiendas de aplicaciones. Solución ideal para negocios en {ciudad} que quieren presencia mobile sin el costo de apps nativas.',
+    keywords: ['app web {ciudad}', 'aplicacion movil {ciudad}', 'pwa {ciudad}'],
+    benefits: [
+      'Funciona como app nativa sin instalación obligatoria',
+      'Acceso offline a contenido guardado',
+      'Notificaciones push en móviles',
+      'Un solo código para web y móvil',
+      'Sin comisiones de App Store ni Play Store'
+    ],
+    process: [
+      'Análisis: Definimos funcionalidades core de la app',
+      'Diseño: Creamos interfaz tipo app nativa',
+      'Desarrollo: Construimos con React + PWA features',
+      'Publicación: Configuramos y desplegamos'
+    ],
+    faqs: [
+      { q: '¿Qué es una PWA?', a: 'Es una web app que se comporta como app nativa: ícono en home, acceso offline, notificaciones push, pero sin pasar por tiendas de apps.' },
+      { q: '¿PWA o app nativa?', a: 'PWA es mejor para: presupuestos limitados, lanzamiento rápido, contenido dinámico. App nativa para: juegos, acceso a hardware específico, mercados masivos.' },
+      { q: '¿Funciona en iPhone?', a: 'Sí, aunque con algunas limitaciones vs Android. iOS 16+ soporta PWA cada vez mejor.' }
+    ],
+    priceRange: '$4M - $12M COP ($1,000 - $3,000 USD)',
+    deliveryTime: '3-6 semanas'
+  },
+  {
+    id: 'seo-tecnico',
+    name: 'SEO Técnico y Posicionamiento Web',
+    h1: 'SEO Técnico Profesional en {ciudad}',
+    h2: 'Posicionamiento real en Google para negocios de {ciudad}',
+    description: 'Auditoría y optimización SEO técnica completa para sitios web de {ciudad}. Schema.org, velocidad de carga, Core Web Vitals, sitemap y todas las técnicas que Google realmente premia en {country}.',
+    keywords: ['seo {ciudad}', 'posicionamiento web {ciudad}', 'consultor seo {ciudad}'],
+    benefits: [
+      'Auditoría SEO completa de tu sitio actual',
+      'Optimización Core Web Vitals',
+      'Implementación Schema.org para rich snippets',
+      'Sitemap y robots.txt optimizados',
+      'Informe mensual de posiciones y tráfico'
+    ],
+    process: [
+      'Auditoría: Analizamos tu sitio con herramientas profesionales',
+      'Diagnóstico: Identificamos problemas técnicos críticos',
+      'Implementación: Corregimos errores y optimizamos',
+      'Monitoreo: Seguimiento de mejoras en ranking'
+    ],
+    faqs: [
+      { q: '¿Cuánto tiempo para ver resultados?', a: 'SEO técnico: 2-4 semanas. Para posicionamiento en keywords competitivas: 3-6 meses de trabajo constante.' },
+      { q: '¿Garantizas primera posición en Google?', a: 'No. Nadie puede garantizar eso. Pero sí garantizamos implementar todas las mejores prácticas técnicas.' },
+      { q: '¿Incluye creación de contenido?', a: 'El SEO técnico no incluye contenido. Para content marketing y link building tenemos un servicio separado.' }
+    ],
+    priceRange: '$2M - $8M COP ($500 - $2,000 USD)',
+    deliveryTime: '1-4 semanas'
+  },
+  {
+    id: 'integracion-apis',
+    name: 'Integración de APIs y Sistemas',
+    h1: 'Integración de APIs y Sistemas en {ciudad}',
+    h2: 'Conectamos tus herramientas digitales para que trabajen juntas en {ciudad}',
+    description: 'Integramos tu sitio web o sistema con cualquier API externa: pagos (Stripe, PayPal, Wompi), CRMs, ERPs, WhatsApp Business, Google Workspace. Soluciones personalizadas para empresas en {ciudad}.',
+    keywords: ['integracion api {ciudad}', 'conectar sistemas {ciudad}', 'automatizacion api {ciudad}'],
+    benefits: [
+      'Conexión entre tus sistemas actuales',
+      'Automatización de flujos de datos',
+      'Sincronización en tiempo real',
+      'Manejo seguro de credenciales y tokens',
+      'Documentación técnica completa'
+    ],
+    process: [
+      'Mapeo: Entendemos qué sistemas necesitas conectar',
+      'Análisis: Revisamos APIs y documentación técnica',
+      'Desarrollo: Construimos los conectores necesarios',
+      'Testing: Pruebas exhaustivas antes de producción'
+    ],
+    faqs: [
+      { q: '¿Con qué sistemas pueden integrar?', a: 'Prácticamente cualquier API moderna: Stripe, PayPal, Wompi, Salesforce, HubSpot, Zoho, WhatsApp Business API, y más.' },
+      { q: '¿Qué pasa si falla la API externa?', a: 'Implementamos manejo de errores, reintentos automáticos y notificaciones para que sepas si algo falla.' },
+      { q: '¿Es seguro?', a: 'Sí. Las credenciales se almacenan encriptadas, usamos variables de entorno y seguimos mejores prácticas de seguridad.' }
+    ],
+    priceRange: '$3M - $15M COP ($750 - $3,750 USD)',
+    deliveryTime: '2-6 semanas'
+  },
+  {
+    id: 'mantenimiento-web',
+    name: 'Mantenimiento y Soporte Web',
+    h1: 'Mantenimiento Web Profesional en {ciudad}',
+    h2: 'Tu sitio web siempre actualizado, seguro y funcionando en {ciudad}',
+    description: 'Planes de mantenimiento web mensual para sitios y aplicaciones en {ciudad}. Actualizaciones de seguridad, backups automáticos, optimización de rendimiento y soporte técnico prioritario para negocios en {country}.',
+    keywords: ['mantenimiento web {ciudad}', 'soporte web {ciudad}', 'actualizacion sitio web {ciudad}'],
+    benefits: [
+      'Actualizaciones de seguridad regulares',
+      'Backups automáticos diarios/semanales',
+      'Monitoreo de uptime 24/7',
+      'Soporte técnico prioritario',
+      'Optimización continua de velocidad'
+    ],
+    process: [
+      'Auditoría: Revisamos estado actual de tu sitio',
+      'Setup: Configuramos backups y monitoreo',
+      'Mantenimiento: Actualizaciones mensuales',
+      'Soporte: Respuesta a incidentes y dudas'
+    ],
+    faqs: [
+      { q: '¿Cuánto cuesta el mantenimiento?', a: 'Planes desde $500k COP/mes para sitios pequeños. Sitios complejos o e-commerce desde $1.2M COP/mes.' },
+      { q: '¿Qué incluye el plan básico?', a: 'Backups semanales, actualizaciones de seguridad, monitoreo uptime, soporte por email con respuesta en 24h.' },
+      { q: '¿Pueden mantener un sitio que no desarrollaron ustedes?', a: 'Sí, pero primero hacemos una auditoría para evaluar el estado del código y determinar si podemos asumir el mantenimiento.' }
+    ],
+    priceRange: '$500k - $3M COP/mes ($125 - $750 USD/mes)',
+    deliveryTime: 'Plan continuo'
   }
 ];
