@@ -5,23 +5,28 @@ import NavbarLogic from "../components/ui/NavbarLogic";
 import ClientProvider from "./ClientProvider";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/seo/JsonLd";
+import { OMAR_PROFILE } from "@/data/omarProfile";
 
 const personData = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Omar Hernández Rey",
-  "url": "https://omarhernandezrey.com",
-  "sameAs": [
-    "https://github.com/omarhernandezrey",
-    "https://www.linkedin.com/in/omarhernandezrey/",
-    "https://twitter.com/omarhernandezrey"
-  ],
-  "jobTitle": "Full Stack Developer",
+  "@id": "https://omarhernandezrey.com/#person",
+  "name": OMAR_PROFILE.name,
+  "url": OMAR_PROFILE.url,
+  "image": OMAR_PROFILE.image,
+  "sameAs": OMAR_PROFILE.sameAs,
+  "jobTitle": OMAR_PROFILE.jobTitle,
   "worksFor": {
     "@type": "Organization",
     "name": "Freelance"
   },
-  "description": "Software Engineer specialized in modern web development with React, Next.js and Node.js."
+  "description": OMAR_PROFILE.description,
+  "knowsAbout": OMAR_PROFILE.knowsAbout,
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": OMAR_PROFILE.addressLocality,
+    "addressCountry": OMAR_PROFILE.addressCountry
+  }
 };
 
 const geistSans = Geist({

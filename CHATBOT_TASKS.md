@@ -4329,7 +4329,7 @@ Añadir los 3 escenarios faltantes al array `SCENARIOS`, con estructura idéntic
 
 ---
 
-### [ ] [CC] Tarea 32.2 — Unificar y corregir schemas Person duplicados e inconsistentes
+### [x] [CC] Tarea 32.2 — Unificar y corregir schemas Person duplicados e inconsistentes
 
 **Para qué sirve.** Hay dos definiciones del schema `Person` con datos contradictorios: `layout.tsx` tiene `github.com/omarhernandezrey` y `linkedin.com/in/omarhernandezrey/`, mientras `page.tsx` tiene `github.com/omarhernandez` y `linkedin.com/in/omarhernandez`. Google Knowledge Graph se confunde con datos incoherentes y puede penalizar la confiabilidad del sitio.
 

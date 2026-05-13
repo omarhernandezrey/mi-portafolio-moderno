@@ -9,43 +9,36 @@ import SkillSection from "../components/sections/SkillSection";
 import ProjectsSection from "../components/sections/ProjectsSection";
 import ContactForm from "../components/sections/ContactForm";
 import Footer from "../components/shared/Footer";
+import { OMAR_PROFILE } from "@/data/omarProfile";
 
 export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Person",
-        "@id": "https://omarhernandezrey.com/#person",
-        "name": "Omar Hernández Rey",
-        "url": "https://omarhernandezrey.com",
-        "image": "https://omarhernandezrey.com/profile.jpg",
-        "jobTitle": "Full Stack Web Developer",
-        "sameAs": [
-          "https://linkedin.com/in/omarhernandez",
-          "https://github.com/omarhernandez"
-        ],
-        "description": "Full Stack Developer specialized in React, Next.js and Node.js. / Desarrollador Full Stack especializado en React, Next.js y Node.js."
-      },
-      {
         "@type": "ProfessionalService",
-        "name": "Omar Hernández Rey - Freelance Web Development",
-        "image": "https://omarhernandezrey.com/portfolio-preview.jpg",
+        "name": "Omar Hernández Rey — Desarrollo Web & IA Freelance",
+        "image": OMAR_PROFILE.image,
         "@id": "https://omarhernandezrey.com/#service",
-        "url": "https://omarhernandezrey.com",
-        "telephone": "+573219052878",
-        "priceRange": "$$$",
+        "url": OMAR_PROFILE.url,
+        "telephone": OMAR_PROFILE.telephone,
+        "priceRange": "$$-$$$",
         "address": {
           "@type": "PostalAddress",
-          "addressLocality": "Bogotá",
-          "addressCountry": "CO"
+          "addressLocality": OMAR_PROFILE.addressLocality,
+          "addressCountry": OMAR_PROFILE.addressCountry
         },
         "geo": {
           "@type": "GeoCoordinates",
           "latitude": 4.6097,
           "longitude": -74.0817
         },
-        "description": "Professional web development services including landing pages, web applications, and technical SEO. / Servicios profesionales de desarrollo web incluyendo landing pages, aplicaciones web y SEO técnico."
+        "description": "Desarrollador Full Stack freelance especializado en React, Next.js, Node.js e IA. Disponible para proyectos en Colombia y remotos para USA.",
+        "provider": {
+          "@type": "Person",
+          "@id": "https://omarhernandezrey.com/#person"
+        },
+        "areaServed": ["CO", "US", "MX", "AR", "CL", "PE"]
       }
     ]
   };
