@@ -6,8 +6,9 @@ import Link from 'next/link';
 import Footer from '@/components/shared/Footer';
 
 export const metadata: Metadata = {
-  title: 'Protocolos y Consultas Frecuentes | Omar Hernández',
-  description: 'Respuestas a las dudas más comunes sobre mis servicios de desarrollo web e ingeniería de software.',
+  title: 'Preguntas Frecuentes | Omar Hernández Rey — Desarrollador Web Freelance',
+  description: 'Respuestas a las dudas más comunes sobre precios, tiempos, pagos y proceso de trabajo. Desarrollador web freelance en Colombia y remoto para USA.',
+  alternates: { canonical: 'https://omarhernandezrey.com/faq' },
 };
 
 const CATEGORIES = [

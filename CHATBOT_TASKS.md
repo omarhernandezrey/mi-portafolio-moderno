@@ -4448,7 +4448,7 @@ const blogRoutes = posts.map(post => ({
 
 ---
 
-### [ ] [CC] Tarea 32.5 — Agregar FAQPage Schema a la página /faq (rich results Google)
+### [x] [CC] Tarea 32.5 — Agregar FAQPage Schema a la página /faq (rich results Google)
 
 **Para qué sirve.** La página `/faq` tiene contenido de preguntas frecuentes pero sin schema `FAQPage`. Google puede mostrar FAQs directamente en los resultados de búsqueda como acordeones desplegables, aumentando el área visible del resultado y el CTR hasta un 30%.
 
