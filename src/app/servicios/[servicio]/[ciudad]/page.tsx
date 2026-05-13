@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
@@ -312,18 +313,18 @@ export default async function ServicioCiudadPage({ params }: Props) {
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <a href="/blog/cuanto-cuesta-sitio-web-colombia-2026" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
+            <Link href="/blog/cuanto-cuesta-sitio-web-colombia-2026" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
               <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">¿Cuánto cuesta un sitio web en Colombia?</p>
               <p className="text-xs text-text-muted/60">Guía completa de precios 2026</p>
-            </a>
-            <a href="/blog/chatbot-ia-negocio-colombia" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
+            </Link>
+            <Link href="/blog/chatbot-ia-negocio-colombia" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
               <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">Chatbots con IA para negocios</p>
               <p className="text-xs text-text-muted/60">Todo lo que nadie te dice</p>
-            </a>
-            <a href="/blog/landing-page-vs-sitio-web-colombia" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
+            </Link>
+            <Link href="/blog/landing-page-vs-sitio-web-colombia" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
               <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">Landing page vs sitio web</p>
               <p className="text-xs text-text-muted/60">¿Cuál necesitas?</p>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
