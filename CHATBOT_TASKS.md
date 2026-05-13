@@ -4957,7 +4957,7 @@ import { track } from '@vercel/analytics';
 
 ---
 
-### [ ] [CC] Tarea 32.16 — Bing Webmaster Tools + protocolo IndexNow (15-20% más tráfico gratis)
+### [x] [CC] Tarea 32.16 — Bing Webmaster Tools + protocolo IndexNow (15-20% más tráfico gratis)
 
 **Para qué sirve.** Bing + DuckDuckGo + Yahoo representan el 15-20% de todas las búsquedas. Son completamente ignorados en el plan actual. IndexNow es un protocolo open-source que notifica instantáneamente a Bing, Yandex y Seznam cuando hay páginas nuevas o actualizadas — en lugar de esperar semanas a que el crawler las encuentre solo. **Costo: $0. Sin tarjeta. Sin registro con datos de pago.**
 

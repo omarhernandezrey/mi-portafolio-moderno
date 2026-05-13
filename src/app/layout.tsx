@@ -47,6 +47,12 @@ export const metadata: Metadata = {
   },
   description:
     "Desarrollo webs y apps con React & Next.js. Atiendo clientes en Colombia y USA. Proyectos desde $500 USD. Consulta gratis, respuesta en 24h.",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || '',
+    other: {
+      'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || '',
+    },
+  },
   keywords: [
     "desarrollador full stack",
     "full stack developer",
