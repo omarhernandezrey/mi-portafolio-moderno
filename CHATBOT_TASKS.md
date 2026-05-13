@@ -4862,7 +4862,7 @@ deliveryTime: string; // tiempo estimado de entrega
 
 ---
 
-### [ ] [OMAR] Tarea 32.14 — Configurar y verificar Google Search Console + enviar sitemap
+### [x] [OMAR] Tarea 32.14 — Configurar y verificar Google Search Console + enviar sitemap
 
 > **Esta es tarea MANUAL del humano (Omar)**. Ninguna IA puede hacer login en tu cuenta de Google. La IA actúa como copiloto: te dicta los pasos exactos y registra la evidencia que le pases.
 
