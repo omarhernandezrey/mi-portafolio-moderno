@@ -2931,7 +2931,7 @@ LLM_PROVIDER_CHAIN=
 ```
 - **Aceptación:** `.env.example` commiteado con las nuevas vars vacías.
 
-### [ ] [OMAR] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
+### [x] [OMAR] Tarea 27.7 — Crear cuentas gratis en cada proveedor (manual usuario)
 
 **🤖 COPILOTO GEMINI — protocolo de guía paso a paso**
 
