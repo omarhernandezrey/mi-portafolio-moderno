@@ -5,8 +5,8 @@ import { BookOpen, Calendar, Clock, ArrowRight, Search, Sparkles, ChevronRight }
 import Footer from '@/components/shared/Footer';
 
 export const metadata = {
-  title: 'Intelligence Journal | Omar Hernández Rey',
-  description: 'Exploración profunda sobre ingeniería de software, arquitectura de IA y estrategia digital.',
+  title: 'Blog | Omar Hernández Rey',
+  description: 'Artículos técnicos sobre desarrollo web, chatbots con IA y estrategia digital para emprendedores en Colombia y LATAM.',
   alternates: {
     canonical: 'https://omarhernandezrey.com/blog',
   },

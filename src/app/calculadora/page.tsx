@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Calculadora de Presupuesto | Omar Hernández',
-  description: 'Calcula cuánto cuesta tu sitio web o aplicación en 2 minutos. Gratis, sin compromiso y con entrega de propuesta en PDF.',
+  description: 'Calcula el precio de tu sitio web o app en 2 minutos. Sin compromiso. Estimado real con desglose por funcionalidad. ¡Empieza ahora!',
   alternates: {
     canonical: 'https://omarhernandezrey.com/calculadora',
   },

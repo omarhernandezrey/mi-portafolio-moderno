@@ -43,10 +43,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://omarhernandezrey.com"),
   title: {
     template: "%s | Omar Hernández Rey",
-    default: "Omar Hernández Rey | Full Stack Developer | Desarrollador Full Stack",
+    default: "Omar Hernández Rey | Desarrollador Full Stack — Colombia & USA Remote",
   },
   description:
-    "Professional portfolio of Omar Hernández Rey, a Full Stack Web Developer passionate about creating innovative digital experiences. / Portafolio profesional de Omar Hernández Rey, Desarrollador Web Full Stack apasionado por crear experiencias digitales innovadoras.",
+    "Desarrollo webs y apps con React & Next.js. Atiendo clientes en Colombia y USA. Proyectos desde $500 USD. Consulta gratis, respuesta en 24h.",
   keywords: [
     "desarrollador full stack",
     "full stack developer",
@@ -61,7 +61,11 @@ export const metadata: Metadata = {
     "colombia",
     "bogota",
     "software engineer",
-    "ingeniero de software"
+    "ingeniero de software",
+    "hire developer colombia remote",
+    "Next.js developer USA",
+    "freelance web developer affordable",
+    "web development Colombia"
   ],
   authors: [{ name: "Omar Hernández Rey" }],
   creator: "Omar Hernández Rey",
