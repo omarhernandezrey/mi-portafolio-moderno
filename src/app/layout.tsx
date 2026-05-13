@@ -65,6 +65,13 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Omar Hernández Rey" }],
   creator: "Omar Hernández Rey",
+  alternates: {
+    canonical: 'https://omarhernandezrey.com',
+    languages: {
+      'es': 'https://omarhernandezrey.com',
+      'en': 'https://omarhernandezrey.com',
+    },
+  },
   openGraph: {
     type: "website",
     locale: "es_CO",

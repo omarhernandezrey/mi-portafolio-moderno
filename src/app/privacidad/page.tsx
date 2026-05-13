@@ -7,6 +7,9 @@ import Footer from '@/components/shared/Footer';
 export const metadata: Metadata = {
   title: 'Protocolo de Privacidad y Habeas Data | Omar Hernández',
   robots: { index: false, follow: true },
+  alternates: {
+    canonical: 'https://omarhernandezrey.com/privacidad',
+  },
 };
 
 export default function PrivacidadPage() {

@@ -4648,7 +4648,7 @@ alternates: {
 
 ---
 
-### [ ] [CC] Tarea 32.9 — Canonical URLs y alternates en páginas principales
+### [x] [CC] Tarea 32.9 — Canonical URLs y alternates en páginas principales
 
 **Para qué sirve.** Sin `canonical`, si hay duplicados de una página (por parámetros URL, trailing slash, etc.) Google puede penalizar por contenido duplicado. El canonical le dice a Google cuál es la versión "oficial" de cada página.
 

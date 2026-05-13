@@ -7,6 +7,9 @@ import Footer from '@/components/shared/Footer';
 export const metadata = {
   title: 'Intelligence Journal | Omar Hernández Rey',
   description: 'Exploración profunda sobre ingeniería de software, arquitectura de IA y estrategia digital.',
+  alternates: {
+    canonical: 'https://omarhernandezrey.com/blog',
+  },
 };
 
 export default async function BlogPage() {
