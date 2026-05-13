@@ -29,8 +29,14 @@ jobs:
 
       - name: Trigger Cleanup API
         run: |
-          curl -X POST "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/cron/database-cleanup" \
-          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-          -H "Content-Type: application/json" \
-          -f
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          CRON_SECRET="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::Secrets no configurados. Saltando database-cleanup."
+            exit 0
+          fi
+          curl -X POST "${SITE_URL}/api/cron/database-cleanup" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            -f
 

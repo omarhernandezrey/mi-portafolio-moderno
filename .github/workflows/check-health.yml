@@ -12,7 +12,12 @@ jobs:
       - name: Ping Health Endpoint
         id: health_check
         run: |
-          URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/health"
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          if [ -z "$SITE_URL" ]; then
+            echo "::warning::NEXT_PUBLIC_SITE_URL no configurado en GitHub Secrets. Saltando health check."
+            exit 0
+          fi
+          URL="${SITE_URL}/api/health"
           RESPONSE=$(curl -s -w "\n%{http_code}" "$URL")
           BODY=$(echo "$RESPONSE" | head -n 1)
           STATUS=$(echo "$RESPONSE" | tail -n 1)

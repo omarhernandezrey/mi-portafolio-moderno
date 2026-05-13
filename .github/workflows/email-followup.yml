@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: Trigger Email Follow-up API
         run: |
-          curl -X GET "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/cron/email-followup" \
-          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-          -f
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          CRON_SECRET="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::Secrets no configurados. Saltando email-followup."
+            exit 0
+          fi
+          curl -X GET "${SITE_URL}/api/cron/email-followup" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -f

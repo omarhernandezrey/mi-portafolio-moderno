@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: Trigger Check Limits API
         run: |
-          curl -X POST "${{ secrets.NEXT_PUBLIC_SITE_URL }}/api/cron/check-limits" \
-          -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-          -f
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          CRON_SECRET="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::Secrets no configurados. Saltando check-limits."
+            exit 0
+          fi
+          curl -X POST "${SITE_URL}/api/cron/check-limits" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -f
