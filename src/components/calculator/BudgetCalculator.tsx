@@ -78,7 +78,7 @@ export default function BudgetCalculator() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 space-y-12">
       {/* Header Intelligence */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 bg-card-bg/40 p-10 rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
           <Wallet size={160} className="rotate-12" />
         </div>
@@ -96,11 +96,11 @@ export default function BudgetCalculator() {
           </p>
         </div>
 
-        <div className="text-right relative z-10 bg-background/50 p-6 rounded-[32px] border border-white/5 shadow-inner min-w-[200px] group-hover:border-primary/20 transition-all">
+        <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary opacity-60">
             {lang === 'es' ? 'Presupuesto Base' : lang === 'en' ? 'Estimated Base' : 'Orçamento Base'}
           </span>
-          <div className="text-5xl font-black text-white-custom tracking-tighter mt-1 flex items-baseline justify-end gap-2">
+          <div className="text-4xl sm:text-5xl font-black text-white-custom tracking-tighter mt-1 flex items-baseline justify-end gap-2">
             <span className="text-xl text-primary opacity-40">$</span>
             {currentBudget} 
             <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">USD</span>
@@ -109,7 +109,7 @@ export default function BudgetCalculator() {
       </div>
 
       {/* Progress Architecture */}
-      <div className="px-10">
+      <div className="px-4 sm:px-10">
         <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
           <motion.div 
             initial={{ width: 0 }}
@@ -124,7 +124,7 @@ export default function BudgetCalculator() {
         </div>
       </div>
 
-      <div className="relative min-h-[500px] overflow-hidden rounded-[48px] bg-card-bg p-10 md:p-16 shadow-2xl border border-white/5 backdrop-blur-md">
+      <div className="relative min-h-[300px] sm:min-h-[500px] overflow-hidden rounded-[32px] sm:rounded-[48px] bg-card-bg p-6 sm:p-10 md:p-16 shadow-2xl border border-white/5 backdrop-blur-md">
         <AnimatePresence mode="wait">
           {!showLeadForm ? (
             <motion.div
@@ -134,12 +134,12 @@ export default function BudgetCalculator() {
               exit={{ x: -30, opacity: 0 }}
               className="space-y-10"
             >
-              <div className="flex items-center gap-6">
-                <div className="flex h-14 w-14 items-center justify-center rounded-[20px] bg-primary/10 border border-primary/20 text-xl font-black text-primary italic shadow-inner">
+              <div className="flex items-center gap-4 sm:gap-6">
+                <div className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-[16px] sm:rounded-[20px] bg-primary/10 border border-primary/20 text-xl font-black text-primary italic shadow-inner">
                   0{currentStep + 1}
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black text-white-custom tracking-tight leading-tight italic">
+                  <h2 className="text-xl sm:text-2xl font-black text-white-custom tracking-tight leading-tight italic">
                     {currentStepData.title[lang]}
                   </h2>
                   <p className="text-text-muted text-xs font-medium opacity-50 mt-1 uppercase tracking-widest">Paso obligatorio de calificación</p>
@@ -156,7 +156,7 @@ export default function BudgetCalculator() {
                     <button
                       key={option.id}
                       onClick={() => handleSelect(option.id)}
-                      className={`group relative flex flex-col items-start gap-4 rounded-[32px] border-2 p-8 text-left transition-all duration-300 ${
+                      className={`group relative flex flex-col items-start gap-3 sm:gap-4 rounded-[24px] sm:rounded-[32px] border-2 p-5 sm:p-8 text-left transition-all duration-300 ${
                         isSelected 
                           ? 'border-primary bg-primary/5 shadow-2xl shadow-primary/5' 
                           : 'border-white/5 bg-background/30 hover:border-white/20 hover:bg-background/50'

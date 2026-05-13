@@ -134,7 +134,7 @@ export default function FAQPage() {
           </div>
 
           {/* Global CTA */}
-          <section className="bg-card-bg rounded-[60px] border border-white/5 p-12 md:p-20 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
+          <section className="bg-card-bg rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-20 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent opacity-30" />
             <div className="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
             

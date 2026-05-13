@@ -97,7 +97,7 @@ const AboutSection: React.FC = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="relative min-h-screen py-32 px-2 sm:px-4 overflow-hidden"
+      className="relative min-h-screen py-32 px-4 overflow-hidden"
       style={{
         background:
           "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
@@ -186,7 +186,7 @@ const AboutSection: React.FC = () => {
 
       {/* Contenido principal */}
       <motion.div
-        className="relative z-10 mx-auto max-w-full sm:max-w-7xl px-2 sm:px-4"
+        className="relative z-10 mx-auto max-w-full sm:max-w-7xl px-0 sm:px-4"
         style={{ opacity }}
       >
         {/* Header Seccion (Consistente con Educación/Proyectos) */}

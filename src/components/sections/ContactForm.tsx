@@ -385,7 +385,7 @@ export default function ContactForm() {
                   disabled={isSending}
                   whileHover={{ scale: isSending ? 1 : 1.05 }}
                   whileTap={{ scale: isSending ? 1 : 0.95 }}
-                  className="relative px-12 py-4 rounded-2xl font-bold text-lg overflow-hidden transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="relative w-full sm:w-auto px-8 sm:px-12 py-4 rounded-2xl font-bold text-lg overflow-hidden transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: isSending
                       ? `color-mix(in srgb, var(--accent-color) 50%, transparent)`

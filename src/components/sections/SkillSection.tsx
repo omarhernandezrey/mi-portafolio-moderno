@@ -361,7 +361,7 @@ export default function PremiumSkillsSection() {
           className="flex justify-center mb-16"
         >
           <div
-            className="flex flex-wrap gap-2 p-2 backdrop-blur-lg rounded-2xl border"
+            className="flex flex-nowrap overflow-x-auto gap-2 p-2 backdrop-blur-lg rounded-2xl border scrollbar-hide max-w-full"
             style={{
               backgroundColor: `color-mix(in srgb, var(--secondary-background-color) 50%, transparent)`,
               borderColor: `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
@@ -438,7 +438,7 @@ export default function PremiumSkillsSection() {
 
                     {/* contenido */}
                     <div className="relative z-10 flex flex-col items-center text-center h-full">
-                      <div className="relative w-32 h-32 mb-6">
+                      <div className="relative w-24 h-24 sm:w-32 sm:h-32 mb-4 sm:mb-6">
                         <svg
                           className="w-full h-full transform -rotate-90"
                           viewBox="0 0 80 80"

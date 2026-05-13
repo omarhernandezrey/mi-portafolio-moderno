@@ -81,6 +81,33 @@ const StyledWrapper = styled.div`
     flex: 1;
   }
 
+  @media (max-width: 479px) {
+    .parent {
+      padding: 10px;
+    }
+
+    .content-box {
+      padding: 50px 16px 16px 16px;
+      min-height: 240px;
+    }
+
+    .date-box {
+      top: 12px;
+      right: 12px;
+      height: 48px;
+      width: 48px;
+      padding: 6px;
+    }
+
+    .date-box .date {
+      font-size: 16px;
+    }
+
+    .content-box .card-title {
+      font-size: 20px;
+    }
+  }
+
   .content-box .card-title {
     display: inline-block;
     color: var(--background-color);

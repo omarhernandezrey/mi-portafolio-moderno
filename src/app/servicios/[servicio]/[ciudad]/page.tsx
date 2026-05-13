@@ -100,8 +100,8 @@ export default async function ServicioCiudadPage({ params }: Props) {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
               Regional Engineering Hub • {ciudad.name}
             </div>
-            <h1 className="text-5xl md:text-8xl font-black text-white-custom tracking-tighter leading-[0.9] italic">
-              {h1.split(' en ')[0]} <br />
+            <h1 className="text-4xl sm:text-5xl md:text-8xl font-black text-white-custom tracking-tighter leading-[0.9] italic">
+              {h1.split(' en ')[0]}{' '}
               <span className="text-primary italic">en {ciudad.name}</span>
             </h1>
             <h2 className="text-xl md:text-2xl font-bold text-text-muted italic opacity-60 tracking-tight leading-relaxed max-w-2xl mx-auto">
@@ -148,7 +148,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
             />
           </div>
 
-          <div className="mt-20 p-12 md:p-20 rounded-[60px] bg-card-bg border border-white/5 text-center shadow-2xl relative group overflow-hidden">
+          <div className="mt-12 md:mt-20 p-8 md:p-12 lg:p-20 rounded-[32px] md:rounded-[60px] bg-card-bg border border-white/5 text-center shadow-2xl relative group overflow-hidden">
             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[80px]" />
             <div className="max-w-2xl mx-auto space-y-8 relative z-10">
               <p className="text-lg md:text-xl text-text-muted font-medium italic opacity-70 leading-relaxed">
@@ -204,7 +204,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
 function ValueCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
-    <div className="group bg-card-bg rounded-[40px] border border-white/5 p-10 shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden">
+    <div className="group bg-card-bg rounded-[28px] md:rounded-[40px] border border-white/5 p-6 md:p-10 shadow-2xl hover:border-primary/20 transition-all duration-500 relative overflow-hidden">
       <div className="absolute -right-4 -top-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
         {icon}
       </div>

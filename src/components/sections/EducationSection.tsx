@@ -550,7 +550,7 @@ const EducationSection = () => {
       <style>{`
         .education-section {
           min-height: 100vh;
-          padding: 10rem 0.5rem 3rem 0.5rem;
+          padding: 10rem 1rem 3rem 1rem;
           position: relative;
           overflow: hidden;
           background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%);

@@ -17,7 +17,7 @@ export default async function BlogPage() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
       
-      <main className="flex-1 max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-24">
+      <main className="flex-1 max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-12 md:space-y-24">
         
         {/* Journal Header */}
         <header className="max-w-4xl space-y-8">
@@ -56,7 +56,7 @@ export default async function BlogPage() {
         {featuredPost && (
           <section className="group relative bg-card-bg rounded-[60px] border border-white/5 overflow-hidden shadow-2xl hover:border-primary/20 transition-all duration-700">
             <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
-              <div className="p-10 md:p-20 space-y-10 relative z-10">
+              <div className="p-6 sm:p-10 md:p-20 space-y-6 sm:space-y-10 relative z-10">
                 <div className="flex items-center gap-4">
                   <span className="px-3 py-1 rounded-md bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest italic">Featured</span>
                   <div className="flex items-center gap-2 text-[10px] text-text-muted/40 font-black uppercase tracking-widest">
@@ -103,7 +103,7 @@ export default async function BlogPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-12">
           {regularPosts.length > 0 ? (
             regularPosts.map((post) => (
-              <article key={post.slug} className="group flex flex-col bg-card-bg rounded-[40px] border border-white/5 p-10 shadow-xl hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
+              <article key={post.slug} className="group flex flex-col bg-card-bg rounded-[28px] md:rounded-[40px] border border-white/5 p-6 md:p-10 shadow-xl hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
                 <div className="absolute -right-4 -top-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
                   <Sparkles size={100} className="-rotate-12" />
                 </div>
@@ -154,7 +154,7 @@ export default async function BlogPage() {
         </div>
 
         {/* Global Subscription Protocol */}
-        <section className="bg-background rounded-[60px] border border-white/5 p-12 md:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
+        <section className="bg-background rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[100px]" />
           
           <div className="max-w-2xl mx-auto space-y-12 relative z-10">

@@ -224,7 +224,7 @@ export default function Footer() {
               {t("footer.findMe")}
             </h3>
             <div
-              className="w-full h-64 rounded-[32px] overflow-hidden shadow-2xl border transition-all duration-300"
+              className="w-full h-44 sm:h-64 rounded-[24px] sm:rounded-[32px] overflow-hidden shadow-2xl border transition-all duration-300"
               style={{
                 borderColor: `color-mix(in srgb, var(--accent-color) 20%, transparent)`,
               }}

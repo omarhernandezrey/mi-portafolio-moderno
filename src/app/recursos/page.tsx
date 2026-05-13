@@ -67,7 +67,7 @@ export default function RecursosPage() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
       
-      <main className="flex-1 max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-32">
+      <main className="flex-1 max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-16 md:space-y-32">
         
         {/* Header Architecture */}
         <header className="max-w-4xl mx-auto text-center space-y-8">
@@ -140,7 +140,7 @@ export default function RecursosPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="group relative bg-card-bg rounded-[48px] border border-white/5 p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
+              className="group relative bg-card-bg rounded-[32px] md:rounded-[48px] border border-white/5 p-6 md:p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
             >
               {/* Decorative Index */}
               <div className="absolute top-8 right-8 text-[40px] font-black text-white-custom opacity-[0.03] italic italic-black italic-outline group-hover:opacity-[0.08] transition-opacity">
@@ -190,7 +190,7 @@ export default function RecursosPage() {
         </div>
 
         {/* Global Strategy CTA */}
-        <section className="bg-background rounded-[60px] border border-white/5 p-12 md:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
+        <section className="bg-background rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[100px]" />
           
           <div className="max-w-2xl mx-auto space-y-12 relative z-10">
