@@ -5119,7 +5119,7 @@ Agregar los siguientes 5 servicios nuevos al array `serviciosProgramaticos`, sig
 
 ---
 
-### [ ] [CC] Tarea 32.19 — Expandir ciudades Colombia para máxima cobertura nacional
+### [x] [CC] Tarea 32.19 — Expandir ciudades Colombia para máxima cobertura nacional
 
 **Para qué sirve.** Actualmente Colombia tiene 4 ciudades (Bogotá, Medellín, Cali, Barranquilla). Colombia tiene muchas ciudades medianas con demanda de servicios digitales y menos competencia SEO que las grandes urbes. Agregar 8 ciudades más = 80 páginas nuevas de baja competencia para Colombia. Más fácil rankear en "desarrollador web Pereira" que en "desarrollador web Bogotá".
 
