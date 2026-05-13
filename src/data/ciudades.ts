@@ -25,4 +25,10 @@ export const ciudades: Ciudad[] = [
   { id: 'san-jose', name: 'San José', country: 'Costa Rica' },
   { id: 'asuncion', name: 'Asunción', country: 'Paraguay' },
   { id: 'la-paz', name: 'La Paz', country: 'Bolivia' },
+  { id: 'miami', name: 'Miami', country: 'United States' },
+  { id: 'new-york', name: 'New York', country: 'United States' },
+  { id: 'los-angeles', name: 'Los Angeles', country: 'United States' },
+  { id: 'houston', name: 'Houston', country: 'United States' },
+  { id: 'chicago', name: 'Chicago', country: 'United States' },
+  { id: 'austin', name: 'Austin', country: 'United States' },
 ];

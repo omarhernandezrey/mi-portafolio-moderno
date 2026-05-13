@@ -4418,7 +4418,7 @@ const blogRoutes = posts.map(post => ({
 
 ---
 
-### [ ] [CC] Tarea 32.4 — Agregar ciudades USA a ciudades.ts para capturar mercado norteamericano
+### [x] [CC] Tarea 32.4 — Agregar ciudades USA a ciudades.ts para capturar mercado norteamericano
 
 **Para qué sirve.** El portafolio actualmente solo genera páginas para ciudades LATAM. El mercado USA es el más rentable (proyectos $2k-$20k USD). Agregar 6 ciudades clave de USA crea 30 páginas nuevas (6×5 servicios) que capturan búsquedas como "freelance web developer Miami", "Next.js developer New York", "hire full stack developer Austin".
 
