@@ -8,7 +8,8 @@ import {
   Mail,
   User,
   Calendar,
-  Briefcase
+  Briefcase,
+  ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
 import PageHeader from '@/components/admin/ui/PageHeader';
@@ -52,7 +53,7 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
   const leads = await getLeads(search, statusFilter);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6 sm:space-y-10">
       <PageHeader
         overline="CRM Pipeline"
         title="Leads"
@@ -60,16 +61,17 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
         actions={
           <>
             <ExportLeadsButton leads={leads} />
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
+            <button className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
               <Plus size={16} />
-              Añadir Lead
+              <span className="hidden sm:inline">Añadir Lead</span>
+              <span className="sm:hidden">Añadir</span>
             </button>
           </>
         }
       />
 
       {/* Control Bar */}
-      <form method="GET" action="/admin/leads" className="flex flex-col xl:flex-row gap-4">
+      <form method="GET" action="/admin/leads" className="flex flex-col xl:flex-row gap-3 sm:gap-4">
         <div className="relative flex-1 group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
           <input 
@@ -77,14 +79,14 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
             name="q"
             defaultValue={search}
             placeholder="Buscar por nombre, correo o empresa..." 
-            className="w-full pl-12 pr-4 py-4 bg-card-bg border border-white/5 rounded-[20px] text-white-custom outline-none focus:border-primary/30 transition-all shadow-xl"
+            className="w-full pl-12 pr-4 py-3 sm:py-4 bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] text-white-custom outline-none focus:border-primary/30 transition-all shadow-xl text-sm"
           />
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3">
           <select 
             name="status"
             defaultValue={statusFilter}
-            className="bg-card-bg border border-white/5 rounded-[20px] px-6 py-4 text-xs font-bold text-text-muted outline-none focus:border-primary/30 transition-all shadow-xl appearance-none min-w-[160px]"
+            className="bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] px-4 sm:px-6 py-3 sm:py-4 text-xs font-bold text-text-muted outline-none focus:border-primary/30 transition-all shadow-xl appearance-none flex-1 sm:flex-none"
           >
             <option value="">Todos los Estados</option>
             <option value="pendiente">Pendiente</option>
@@ -92,94 +94,158 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
             <option value="completado">Completado</option>
             <option value="sin-accion">Sin Acción</option>
           </select>
-          <button type="submit" className="flex items-center gap-2 px-6 py-4 bg-card-bg border border-white/5 rounded-[20px] text-xs font-bold text-text-muted hover:text-white-custom transition-all shadow-xl">
+          <button type="submit" className="flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] text-xs font-bold text-text-muted hover:text-white-custom transition-all shadow-xl">
             <Filter size={16} />
-            Buscar
+            <span className="hidden sm:inline">Buscar</span>
           </button>
         </div>
       </form>
 
-      {/* Main Content Table */}
-      <div className="bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-separate border-spacing-0">
-            <thead>
-              <tr className="bg-background/40">
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Identidad</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Contexto</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Requerimiento</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Presupuesto</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-center">Estatus</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">Acción</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {leads.length > 0 ? leads.map((lead) => (
-                <tr key={lead.id} className="group hover:bg-white/[0.02] transition-colors">
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white-custom shadow-inner group-hover:border-primary/20 transition-colors">
-                        <User size={18} className="opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-white-custom text-[15px] tracking-tight group-hover:text-primary transition-colors">{lead.name || 'Sin identificar'}</div>
-                        <div className="flex items-center gap-1 text-[10px] text-text-muted/60 font-medium tracking-tight mt-0.5">
-                          <Mail size={10} />
-                          {lead.email}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="text-sm font-bold text-white-custom/80 italic">{lead.company || 'N/A'}</div>
-                    <div className="text-[10px] text-primary font-black uppercase tracking-widest mt-1 opacity-60 italic">{lead.type}</div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-2 text-sm font-bold text-text-muted group-hover:text-white-custom transition-colors">
-                      <Briefcase size={14} className="text-primary/40" />
-                      {lead.service_requested || 'Consulta Directa'}
-                    </div>
-                    <div className="text-[10px] text-text-muted/40 font-black uppercase mt-1 tracking-[0.15em] flex items-center gap-1">
-                      <Calendar size={10} />
-                      {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="text-sm font-black text-white-custom font-mono bg-white/5 inline-block px-3 py-1 rounded-lg border border-white/5 group-hover:border-primary/20 transition-colors">
-                      {lead.budget || 'N/D'}
-                    </div>
-                  </td>
-                  <td className="px-8 py-6 text-center">
-                    <StatusBadge status={lead.status} />
-                  </td>
-                  <td className="px-8 py-6 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link 
-                        href={`/admin/leads/${lead.id}`} 
-                        className="inline-flex items-center justify-center h-10 px-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all"
-                      >
-                        Perfil
-                      </Link>
-                      <button className="p-2.5 rounded-xl hover:bg-white/5 text-text-muted/40 hover:text-white-custom transition-all">
-                        <MoreVertical size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )) : (
-                <tr>
-                  <td colSpan={6} className="px-8 py-24 text-center">
-                    <EmptyState 
-                      icon={<Search size={40} />}
-                      title="Sin resultados"
-                      description="No se encontraron oportunidades registradas en la base de datos."
-                    />
-                  </td>
-                </tr>
+      {/* Mobile Card View */}
+      <div className="block lg:hidden space-y-3">
+        {leads.length > 0 ? leads.map((lead) => (
+          <div key={lead.id} className="bg-card-bg rounded-2xl border border-white/5 p-4 shadow-xl">
+            {/* Header: Avatar + Name + Status */}
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white-custom shadow-inner shrink-0">
+                <User size={18} className="opacity-60" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-white-custom text-sm truncate">{lead.name || 'Sin identificar'}</div>
+                <div className="flex items-center gap-1 text-[10px] text-text-muted/60 font-medium tracking-tight">
+                  <Mail size={10} />
+                  <span className="truncate">{lead.email}</span>
+                </div>
+              </div>
+              <StatusBadge status={lead.status} />
+            </div>
+            
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {lead.company && (
+                <div className="bg-background/40 rounded-lg p-2">
+                  <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Empresa</div>
+                  <div className="text-xs font-bold text-white-custom/80 truncate">{lead.company}</div>
+                </div>
               )}
-            </tbody>
-          </table>
-        </div>
+              <div className="bg-background/40 rounded-lg p-2">
+                <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Presupuesto</div>
+                <div className="text-xs font-black text-white-custom font-mono">{lead.budget || 'N/D'}</div>
+              </div>
+              <div className="bg-background/40 rounded-lg p-2 col-span-2">
+                <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Servicio</div>
+                <div className="text-xs font-bold text-text-muted flex items-center gap-1">
+                  <Briefcase size={12} className="text-primary/40 shrink-0" />
+                  <span className="truncate">{lead.service_requested || 'Consulta Directa'}</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Footer: Date + Action */}
+            <div className="flex items-center justify-between pt-3 border-t border-white/5">
+              <div className="text-[10px] text-text-muted/40 font-black uppercase tracking-wider flex items-center gap-1">
+                <Calendar size={10} />
+                {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+              </div>
+              <Link 
+                href={`/admin/leads/${lead.id}`} 
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-wider text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all"
+              >
+                Ver Perfil
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+          </div>
+        )) : (
+          <div className="bg-card-bg rounded-2xl border border-white/5 p-8">
+            <EmptyState 
+              icon={<Search size={32} />}
+              title="Sin resultados"
+              description="No se encontraron oportunidades registradas."
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden lg:block bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
+        <table className="w-full text-left border-separate border-spacing-0">
+          <thead>
+            <tr className="bg-background/40">
+              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Identidad</th>
+              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Contexto</th>
+              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Requerimiento</th>
+              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Presupuesto</th>
+              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-center">Estatus</th>
+              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">Acción</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {leads.length > 0 ? leads.map((lead) => (
+              <tr key={lead.id} className="group hover:bg-white/[0.02] transition-colors">
+                <td className="px-8 py-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white-custom shadow-inner group-hover:border-primary/20 transition-colors">
+                      <User size={18} className="opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-white-custom text-[15px] tracking-tight group-hover:text-primary transition-colors">{lead.name || 'Sin identificar'}</div>
+                      <div className="flex items-center gap-1 text-[10px] text-text-muted/60 font-medium tracking-tight mt-0.5">
+                        <Mail size={10} />
+                        {lead.email}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-8 py-6">
+                  <div className="text-sm font-bold text-white-custom/80 italic">{lead.company || 'N/A'}</div>
+                  <div className="text-[10px] text-primary font-black uppercase tracking-widest mt-1 opacity-60 italic">{lead.type}</div>
+                </td>
+                <td className="px-8 py-6">
+                  <div className="flex items-center gap-2 text-sm font-bold text-text-muted group-hover:text-white-custom transition-colors">
+                    <Briefcase size={14} className="text-primary/40" />
+                    {lead.service_requested || 'Consulta Directa'}
+                  </div>
+                  <div className="text-[10px] text-text-muted/40 font-black uppercase mt-1 tracking-[0.15em] flex items-center gap-1">
+                    <Calendar size={10} />
+                    {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </div>
+                </td>
+                <td className="px-8 py-6">
+                  <div className="text-sm font-black text-white-custom font-mono bg-white/5 inline-block px-3 py-1 rounded-lg border border-white/5 group-hover:border-primary/20 transition-colors">
+                    {lead.budget || 'N/D'}
+                  </div>
+                </td>
+                <td className="px-8 py-6 text-center">
+                  <StatusBadge status={lead.status} />
+                </td>
+                <td className="px-8 py-6 text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    <Link 
+                      href={`/admin/leads/${lead.id}`} 
+                      className="inline-flex items-center justify-center h-10 px-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all"
+                    >
+                      Perfil
+                    </Link>
+                    <button className="p-2.5 rounded-xl hover:bg-white/5 text-text-muted/40 hover:text-white-custom transition-all">
+                      <MoreVertical size={18} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan={6} className="px-8 py-24 text-center">
+                  <EmptyState 
+                    icon={<Search size={40} />}
+                    title="Sin resultados"
+                    description="No se encontraron oportunidades registradas en la base de datos."
+                  />
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
         
         {leads.length > 0 && (
           <div className="p-8 border-t border-white/5 bg-background/20 flex items-center justify-between">
