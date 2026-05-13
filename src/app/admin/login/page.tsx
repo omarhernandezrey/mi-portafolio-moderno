@@ -11,7 +11,11 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const supabase = createClient();
+  let supabaseClient: ReturnType<typeof createClient> | null = null;
+  const getSupabase = () => {
+    if (!supabaseClient) supabaseClient = createClient();
+    return supabaseClient;
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +24,7 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await getSupabase().auth.signInWithOtp({
         email,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
