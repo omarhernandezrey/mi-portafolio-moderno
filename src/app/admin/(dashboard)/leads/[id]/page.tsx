@@ -14,11 +14,14 @@ import {
   BadgeDollarSign,
   Shield,
   Zap,
-  Target,
-  ExternalLink
+  Target
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import StatusBadge from '@/components/admin/ui/StatusBadge';
+import InfoItem from '@/components/admin/ui/InfoItem';
+import ChatBubble from '@/components/admin/ui/ChatBubble';
+import EmptyState from '@/components/admin/ui/EmptyState';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +34,6 @@ async function getLeadDetail(id: string) {
 
   if (leadErr || !lead) return null;
 
-  // Obtener mensajes si hay conversación vinculada
   let messages: ChatMessage[] = [];
   if (lead.conversation_id) {
     const { data: msgs } = await supabaseServer
@@ -61,7 +63,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   const { lead, messages } = data;
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 space-y-10 max-w-[1600px] mx-auto">
+    <div className="space-y-10">
       {/* Header / Breadcrumbs */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card-bg/40 p-6 rounded-[32px] border border-white/5 backdrop-blur-xl">
         <div className="flex items-center gap-6">
@@ -84,8 +86,8 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         
         <div className="flex items-center gap-3">
           <button className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-all">
-              {lead.status === 'archived' ? 'Archivado' : lead.status}
-            </button>
+            {lead.status === 'archived' ? 'Archivado' : lead.status}
+          </button>
           <Link 
             href={`/proposal/${lead.id}`}
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-background text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20"
@@ -184,32 +186,20 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             {/* Chat Body */}
             <div className="flex-1 p-8 space-y-10 overflow-y-auto scrollbar-hide">
               {messages.length > 0 ? messages.map((msg) => (
-                <div 
-                  key={msg.id} 
-                  className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} group`}
-                >
-                  <div className="flex items-center gap-2 mb-2 px-1">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted/30 italic">
-                      {msg.role === 'user' ? (lead.name || 'Visitante') : 'Bot Omar v3.1'}
-                    </span>
-                    <span className="text-[8px] text-text-muted/20">•</span>
-                    <span className="text-[9px] text-text-muted/30 font-medium">
-                      {new Date(msg.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-                  
-                  <div className={`max-w-[75%] rounded-[28px] px-6 py-4 text-sm font-medium leading-relaxed transition-all shadow-lg ${
-                    msg.role === 'user' 
-                      ? 'bg-primary text-background rounded-tr-none shadow-primary/10' 
-                      : 'bg-background border border-white/10 text-white-custom rounded-tl-none shadow-black/20 hover:border-white/20'
-                  }`}>
-                    {msg.content}
-                  </div>
-                </div>
+                <ChatBubble
+                  key={msg.id}
+                  role={msg.role}
+                  senderName={msg.role === 'user' ? (lead.name || 'Visitante') : 'Bot Omar v3.1'}
+                  content={msg.content}
+                  timestamp={new Date(msg.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+                />
               )) : (
                 <div className="h-full flex flex-col items-center justify-center text-text-muted/10 py-40">
-                  <MessageSquare size={100} strokeWidth={0.5} className="mb-8" />
-                  <p className="text-lg font-black uppercase tracking-[0.5em] italic">No Logs Found</p>
+                  <EmptyState 
+                    icon={<MessageSquare size={80} strokeWidth={0.5} />}
+                    title="No Logs Found"
+                    className="opacity-20"
+                  />
                 </div>
               )}
             </div>
@@ -225,41 +215,5 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         </div>
       </div>
     </div>
-  );
-}
-
-function InfoItem({ icon, label, value, isLink, href }: { icon: React.ReactNode, label: string, value: string, isLink?: boolean, href?: string }) {
-  return (
-    <div className="flex items-start gap-4 p-4 rounded-2xl border border-transparent hover:border-white/5 hover:bg-white/[0.01] transition-all group/item">
-      <div className="mt-1 text-primary opacity-40 group-hover/item:opacity-100 transition-opacity">{icon}</div>
-      <div className="overflow-hidden">
-        <p className="text-[9px] font-black uppercase text-text-muted/40 tracking-[0.15em] mb-1 italic">{label}</p>
-        {isLink ? (
-          <a href={href} className="text-sm font-bold text-white-custom hover:text-primary transition-colors flex items-center gap-1 group/link truncate">
-            {value}
-            <ExternalLink size={10} className="opacity-0 group-hover/link:opacity-100 transition-opacity" />
-          </a>
-        ) : (
-          <p className="text-sm font-bold text-white-custom truncate">{value}</p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const configs: Record<string, { label: string, color: string }> = {
-    paid: { label: 'Completado', color: 'text-primary bg-primary/10 border-primary/20' },
-    cold: { label: 'Sin Acción', color: 'text-text-muted bg-white/5 border-white/10 opacity-60' },
-    new: { label: 'Pendiente', color: 'text-accent bg-accent/10 border-accent/20' },
-    contacted: { label: 'En Curso', color: 'text-white-custom bg-white/10 border-white/20' },
-  };
-
-  const config = configs[status] || configs.new;
-
-  return (
-    <span className={`px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] border transition-all ${config.color}`}>
-      {config.label}
-    </span>
   );
 }

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Square, Clock, Zap, Layout, ChevronRight, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PageHeader from '@/components/admin/ui/PageHeader';
 
 interface TimerEntry {
   id: string;
@@ -88,29 +89,18 @@ export default function TimerPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 space-y-10 max-w-[1200px] mx-auto">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 bg-card-bg/40 p-8 rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
-          <Clock size={160} className="rotate-12" />
-        </div>
-        
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-3">
-            <span className="w-8 h-px bg-primary/30" />
-            Performance Terminal
-          </div>
-          <h1 className="text-4xl font-black text-white-custom tracking-tight italic">Timer</h1>
-          <p className="text-text-muted text-sm font-medium mt-2">Seguimiento de productividad y gestión de billable hours.</p>
-        </div>
-
-        <div className="flex items-center gap-4 relative z-10">
+    <div className="space-y-10">
+      <PageHeader
+        overline="Performance Terminal"
+        title="Timer"
+        description="Seguimiento de productividad y gestión de billable hours."
+        actions={
           <div className="px-5 py-3 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-widest text-text-muted">Status: Operational</span>
           </div>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
         {/* Control Panel */}
@@ -146,7 +136,7 @@ export default function TimerPage() {
                   placeholder="Ej: Optimización de Performance React..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full rounded-[24px] border border-white/5 bg-background/50 px-6 py-4 text-sm text-white-custom outline-none focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all shadow-inner"
+                  className="w-full rounded-[24px] border border-white/5 bg-background/50 px-6 py-4 text-sm text-white-custom outline-none focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all shadow-inner placeholder:text-text-muted/50"
                 />
               </div>
 

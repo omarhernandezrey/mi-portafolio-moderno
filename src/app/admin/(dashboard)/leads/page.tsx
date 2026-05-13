@@ -11,6 +11,9 @@ import {
   Briefcase
 } from 'lucide-react';
 import Link from 'next/link';
+import PageHeader from '@/components/admin/ui/PageHeader';
+import StatusBadge from '@/components/admin/ui/StatusBadge';
+import EmptyState from '@/components/admin/ui/EmptyState';
 import ExportLeadsButton from '@/components/admin/ExportLeadsButton';
 
 export const dynamic = 'force-dynamic';
@@ -49,26 +52,21 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
   const leads = await getLeads(search, statusFilter);
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 space-y-10 max-w-[1600px] mx-auto">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-3">
-            <span className="w-8 h-px bg-primary/30" />
-            CRM Pipeline
-          </div>
-          <h1 className="text-4xl font-black text-white-custom tracking-tight mb-2 italic">Leads</h1>
-          <p className="text-text-muted text-sm font-medium">Administración y seguimiento de oportunidades comerciales.</p>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <ExportLeadsButton leads={leads} />
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
-            <Plus size={16} />
-            Añadir Lead
-          </button>
-        </div>
-      </div>
+    <div className="space-y-10">
+      <PageHeader
+        overline="CRM Pipeline"
+        title="Leads"
+        description="Administración y seguimiento de oportunidades comerciales."
+        actions={
+          <>
+            <ExportLeadsButton leads={leads} />
+            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
+              <Plus size={16} />
+              Añadir Lead
+            </button>
+          </>
+        }
+      />
 
       {/* Control Bar */}
       <form method="GET" action="/admin/leads" className="flex flex-col xl:flex-row gap-4">
@@ -171,15 +169,11 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
               )) : (
                 <tr>
                   <td colSpan={6} className="px-8 py-24 text-center">
-                    <div className="flex flex-col items-center gap-6">
-                      <div className="w-20 h-20 rounded-[30px] bg-white/5 border border-white/5 flex items-center justify-center text-text-muted/10">
-                        <Search size={40} />
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-white-custom font-bold text-lg tracking-tight">Sin resultados</p>
-                        <p className="text-text-muted text-sm font-medium italic">No se encontraron oportunidades registradas en la base de datos.</p>
-                      </div>
-                    </div>
+                    <EmptyState 
+                      icon={<Search size={40} />}
+                      title="Sin resultados"
+                      description="No se encontraron oportunidades registradas en la base de datos."
+                    />
                   </td>
                 </tr>
               )}
@@ -200,22 +194,5 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
         )}
       </div>
     </div>
-  );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const configs: Record<string, { label: string, color: string }> = {
-    paid: { label: 'Completado', color: 'text-primary bg-primary/10 border-primary/20 shadow-[0_0_15px_rgba(var(--primary-color-rgb),0.1)]' },
-    cold: { label: 'Sin Acción', color: 'text-text-muted bg-white/5 border-white/10 opacity-60' },
-    new: { label: 'Pendiente', color: 'text-accent bg-accent/10 border-accent/20 animate-pulse' },
-    contacted: { label: 'En Curso', color: 'text-white-custom bg-white/10 border-white/20' },
-  };
-
-  const config = configs[status] || configs.new;
-
-  return (
-    <span className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-[0.15em] border transition-all inline-block min-w-[100px] ${config.color}`}>
-      {config.label}
-    </span>
   );
 }

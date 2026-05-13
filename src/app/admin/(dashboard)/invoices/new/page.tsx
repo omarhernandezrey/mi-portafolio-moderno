@@ -11,8 +11,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import NavbarLogic from '@/components/ui/NavbarLogic';
-import Footer from '@/components/shared/Footer';
 
 export default function NewInvoicePage() {
   const router = useRouter();
@@ -94,157 +92,151 @@ export default function NewInvoicePage() {
   const subtotal = formData.items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
 
   return (
-    <div className="min-h-screen bg-[var(--background-color)] text-[var(--text-color)] flex flex-col">
-      <NavbarLogic />
-      
-      <main className="flex-1 container mx-auto px-4 pt-32 pb-20 max-w-4xl">
-        <Link 
-          href="/admin/invoices" 
-          className="inline-flex items-center gap-2 text-[var(--muted-color)] hover:text-[var(--primary-color)] mb-8 transition-colors"
-        >
-          <ArrowLeft size={20} /> Volver a Facturación
-        </Link>
+    <div className="max-w-4xl mx-auto">
+      <Link 
+        href="/admin/invoices" 
+        className="inline-flex items-center gap-2 text-text-muted hover:text-primary mb-8 transition-colors"
+      >
+        <ArrowLeft size={20} /> Volver a Facturación
+      </Link>
 
-        <div className="bg-[var(--card-bg-color)] p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-2xl">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="p-3 bg-[var(--primary-color)]/10 rounded-2xl text-[var(--primary-color)]">
-              <FileText size={32} />
+      <div className="bg-card-bg p-8 rounded-[40px] border border-white/5 shadow-2xl">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="p-3 bg-primary/10 rounded-2xl text-primary">
+            <FileText size={32} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black text-white-custom">Generar Factura</h1>
+            <p className="text-text-muted">Crea un documento de cobro profesional para tu cliente.</p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-bold mb-2 text-white-custom">Cliente / Proyecto</label>
+              <select 
+                required
+                className="w-full bg-background border border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom"
+                value={formData.lead_id}
+                onChange={(e) => setFormData({...formData, lead_id: e.target.value})}
+              >
+                <option value="">Selecciona un cliente...</option>
+                {leads.map(lead => (
+                  <option key={lead.id} value={lead.id}>{lead.name} {lead.company ? `(${lead.company})` : ''}</option>
+                ))}
+              </select>
             </div>
             <div>
-              <h1 className="text-3xl font-black">Generar Factura</h1>
-              <p className="text-[var(--muted-color)]">Crea un documento de cobro profesional para tu cliente.</p>
+              <label className="block text-sm font-bold mb-2 text-white-custom">Fecha Vencimiento</label>
+              <input 
+                type="date"
+                required
+                className="w-full bg-background border border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom"
+                value={formData.due_date}
+                onChange={(e) => setFormData({...formData, due_date: e.target.value})}
+              />
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-bold mb-2">Cliente / Proyecto</label>
-                <select 
-                  required
-                  className="w-full bg-[var(--background-color)] border border-[var(--primary-color)]/20 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
-                  value={formData.lead_id}
-                  onChange={(e) => setFormData({...formData, lead_id: e.target.value})}
-                >
-                  <option value="">Selecciona un cliente...</option>
-                  {leads.map(lead => (
-                    <option key={lead.id} value={lead.id}>{lead.name} {lead.company ? `(${lead.company})` : ''}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-bold mb-2">Fecha Vencimiento</label>
-                <input 
-                  type="date"
-                  required
-                  className="w-full bg-[var(--background-color)] border border-[var(--primary-color)]/20 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
-                  value={formData.due_date}
-                  onChange={(e) => setFormData({...formData, due_date: e.target.value})}
-                />
-              </div>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-lg text-white-custom">Ítems / Servicios</h3>
+              <button 
+                type="button" 
+                onClick={addItem}
+                className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+              >
+                <Plus size={14} /> Añadir Ítem
+              </button>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="font-bold text-lg">Ítems / Servicios</h3>
-                <button 
-                  type="button" 
-                  onClick={addItem}
-                  className="flex items-center gap-1 text-xs font-bold text-[var(--primary-color)] hover:underline"
-                >
-                  <Plus size={14} /> Añadir Ítem
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                {formData.items.map((item, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-3 p-4 bg-[var(--background-color)]/50 rounded-2xl border border-[var(--primary-color)]/5">
-                    <div className="flex-1">
-                      <input 
-                        type="text"
-                        placeholder="Descripción del servicio"
-                        required
-                        className="w-full bg-transparent border-none focus:ring-0 p-0 text-sm font-medium"
-                        value={item.description}
-                        onChange={(e) => updateItem(idx, 'description', e.target.value)}
-                      />
-                    </div>
-                    <div className="flex gap-3">
+            <div className="space-y-3">
+              {formData.items.map((item, idx) => (
+                <div key={idx} className="flex flex-col md:flex-row gap-3 p-4 bg-background/50 rounded-2xl border border-white/5">
+                  <div className="flex-1">
+                    <input 
+                      type="text"
+                      placeholder="Descripción del servicio"
+                      required
+                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-sm font-medium text-white-custom placeholder:text-text-muted/50"
+                      value={item.description}
+                      onChange={(e) => updateItem(idx, 'description', e.target.value)}
+                    />
+                  </div>
+                  <div className="flex gap-3 items-center">
+                    <input 
+                      type="number"
+                      placeholder="Cant"
+                      className="w-16 bg-transparent border-none focus:ring-0 p-0 text-sm text-center text-white-custom"
+                      value={item.quantity}
+                      min="1"
+                      onChange={(e) => updateItem(idx, 'quantity', parseInt(e.target.value) || 1)}
+                    />
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-text-muted">$</span>
                       <input 
                         type="number"
-                        placeholder="Cant"
-                        className="w-16 bg-transparent border-none focus:ring-0 p-0 text-sm text-center"
-                        value={item.quantity}
-                        min="1"
-                        onChange={(e) => updateItem(idx, 'quantity', parseInt(e.target.value) || 1)}
+                        placeholder="Precio"
+                        className="w-24 bg-transparent border-none focus:ring-0 p-0 text-sm text-right font-mono text-white-custom"
+                        value={item.price}
+                        step="0.01"
+                        onChange={(e) => updateItem(idx, 'price', parseFloat(e.target.value) || 0)}
                       />
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-[var(--muted-color)]">$</span>
-                        <input 
-                          type="number"
-                          placeholder="Precio"
-                          className="w-24 bg-transparent border-none focus:ring-0 p-0 text-sm text-right font-mono"
-                          value={item.price}
-                          step="0.01"
-                          onChange={(e) => updateItem(idx, 'price', parseFloat(e.target.value) || 0)}
-                        />
-                      </div>
-                      <div className="w-24 text-right text-sm font-black text-[var(--primary-color)] font-mono">
-                        ${(item.quantity * item.price).toFixed(2)}
-                      </div>
-                      {formData.items.length > 1 && (
-                        <button 
-                          type="button" 
-                          onClick={() => removeItem(idx)}
-                          className="text-red-400 hover:text-red-500 transition-colors"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      )}
                     </div>
+                    <div className="w-24 text-right text-sm font-black text-primary font-mono">
+                      ${(item.quantity * item.price).toFixed(2)}
+                    </div>
+                    {formData.items.length > 1 && (
+                      <button 
+                        type="button" 
+                        onClick={() => removeItem(idx)}
+                        className="text-red-400 hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
                   </div>
-                ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8 pt-8 border-t border-white/5">
+            <div className="flex-1 w-full">
+              <label className="block text-sm font-bold mb-2 text-white-custom">Notas / Instrucciones de pago</label>
+              <textarea 
+                className="w-full bg-background border border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[100px] text-sm text-white-custom placeholder:text-text-muted/50 resize-none"
+                placeholder="Ej: Favor consignar a la cuenta Nequi..."
+                value={formData.notes}
+                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+              />
+            </div>
+            <div className="w-full md:w-64 space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-text-muted">Subtotal</span>
+                <span className="font-mono text-white-custom">${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-text-muted">Impuestos (0%)</span>
+                <span className="font-mono text-white-custom">$0.00</span>
+              </div>
+              <div className="flex justify-between text-xl font-black pt-3 border-t border-white/5">
+                <span className="text-white-custom">TOTAL</span>
+                <span className="text-primary font-mono">${subtotal.toFixed(2)}</span>
               </div>
             </div>
+          </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-start gap-8 pt-8 border-t border-[var(--primary-color)]/10">
-              <div className="flex-1 w-full">
-                <label className="block text-sm font-bold mb-2">Notas / Instrucciones de pago</label>
-                <textarea 
-                  className="w-full bg-[var(--background-color)] border border-[var(--primary-color)]/20 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-[var(--primary-color)] min-h-[100px] text-sm"
-                  placeholder="Ej: Favor consignar a la cuenta Nequi..."
-                  value={formData.notes}
-                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                />
-              </div>
-              <div className="w-full md:w-64 space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-[var(--muted-color)]">Subtotal</span>
-                  <span className="font-mono">${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-[var(--muted-color)]">Impuestos (0%)</span>
-                  <span className="font-mono">$0.00</span>
-                </div>
-                <div className="flex justify-between text-xl font-black pt-3 border-t border-[var(--primary-color)]/10">
-                  <span>TOTAL</span>
-                  <span className="text-[var(--primary-color)] font-mono">${subtotal.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={submitting || subtotal <= 0 || !formData.lead_id}
-              className="w-full py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-xl shadow-[var(--primary-color)]/20"
-            >
-              {submitting ? <Loader2 className="animate-spin" /> : <>Generar y Enviar Factura <Send size={20} /></>}
-            </button>
-          </form>
-        </div>
-      </main>
-
-      <Footer />
+          <button
+            type="submit"
+            disabled={submitting || subtotal <= 0 || !formData.lead_id}
+            className="w-full py-4 bg-primary text-background rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-xl shadow-primary/20"
+          >
+            {submitting ? <Loader2 className="animate-spin" /> : <>Generar y Enviar Factura <Send size={20} /></>}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

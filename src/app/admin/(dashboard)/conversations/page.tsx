@@ -11,6 +11,8 @@ import {
   Target
 } from 'lucide-react';
 import Link from 'next/link';
+import PageHeader from '@/components/admin/ui/PageHeader';
+import EmptyState from '@/components/admin/ui/EmptyState';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,18 +33,12 @@ export default async function AdminConversationsPage() {
   const conversations = await getConversations();
 
   return (
-    <div className="p-4 md:p-8 lg:p-12 space-y-10 max-w-[1600px] mx-auto">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-3">
-            <span className="w-8 h-px bg-primary/30" />
-            interaction logs
-          </div>
-          <h1 className="text-4xl font-black text-white-custom tracking-tight mb-2 italic">Conversaciones</h1>
-          <p className="text-text-muted text-sm font-medium italic opacity-60">Historial completo de interacciones con el asistente inteligente.</p>
-        </div>
-      </div>
+    <div className="space-y-10">
+      <PageHeader
+        overline="interaction logs"
+        title="Conversaciones"
+        description="Historial completo de interacciones con el asistente inteligente."
+      />
 
       {/* Control Bar */}
       <div className="flex flex-col lg:flex-row gap-4">
@@ -126,7 +122,6 @@ export default async function AdminConversationsPage() {
 
             <div className="flex items-center justify-between relative z-10">
               <div className="flex -space-x-2">
-                {/* Visual indicator of "Facts" captured */}
                 {Object.keys(conv.facts || {}).length > 0 && (
                   <div className="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary" title="Datos capturados">
                     <Zap size={10} />
@@ -140,7 +135,7 @@ export default async function AdminConversationsPage() {
               </div>
 
               <Link 
-                href={`/admin/leads/${conv.id}`} // Enlazamos al detalle de lead ya que muestra la conversación
+                href={`/admin/leads/${conv.id}`}
                 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted hover:text-primary transition-all group/btn"
               >
                 Auditar Chat
@@ -150,10 +145,11 @@ export default async function AdminConversationsPage() {
           </div>
         )) : (
           <div className="col-span-full py-40 text-center">
-            <div className="flex flex-col items-center gap-6 opacity-20">
-              <MessageSquare size={80} strokeWidth={1} />
-              <p className="text-xl font-black uppercase tracking-[0.3em] italic">No Logs Found</p>
-            </div>
+            <EmptyState 
+              icon={<MessageSquare size={80} strokeWidth={1} />}
+              title="No Logs Found"
+              description="No hay conversaciones registradas"
+            />
           </div>
         )}
       </div>

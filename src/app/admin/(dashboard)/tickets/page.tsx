@@ -4,9 +4,13 @@ import {
   ChevronRight, 
   Ticket,
   AlertCircle,
-  Clock
+  Clock,
+  Plus
 } from 'lucide-react';
 import Link from 'next/link';
+import PageHeader from '@/components/admin/ui/PageHeader';
+import StatusBadge from '@/components/admin/ui/StatusBadge';
+import EmptyState from '@/components/admin/ui/EmptyState';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,16 +26,6 @@ async function getTickets() {
 
 export default async function AdminTicketsPage() {
   const tickets = await getTickets();
-
-  const getStatusStyle = (status: string) => {
-    switch (status) {
-      case 'open': return 'bg-blue-500/20 text-blue-400';
-      case 'in_progress': return 'bg-amber-500/20 text-amber-400';
-      case 'waiting_client': return 'bg-purple-500/20 text-purple-400';
-      case 'closed': return 'bg-emerald-500/20 text-emerald-400';
-      default: return 'bg-gray-500/20 text-gray-400';
-    }
-  };
 
   const getPriorityStyle = (priority: string) => {
     switch (priority) {
@@ -52,108 +46,108 @@ export default async function AdminTicketsPage() {
   };
 
   return (
-    <div className="p-0">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Gestión de Tickets</h1>
-            <p className="text-[var(--muted-color)] mt-2">Seguimiento de incidencias y soporte</p>
-          </div>
+    <div className="space-y-10">
+      <PageHeader
+        overline="Soporte Técnico"
+        title="Tickets"
+        description="Seguimiento de incidencias y soporte al cliente."
+        actions={
           <Link 
             href="/admin/tickets/new" 
-            className="px-4 py-2 bg-[var(--primary-color)] text-[var(--inner-circle-text-color)] rounded-xl text-sm font-bold hover:brightness-110 transition-all flex items-center gap-2"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
           >
+            <Plus size={16} />
             Nuevo Ticket
           </Link>
-        </div>
-        {/* Stats summary */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-[var(--card-bg-color)] p-4 rounded-2xl border border-[var(--primary-color)]/10">
-            <div className="text-[var(--muted-color)] text-xs uppercase font-bold mb-1">Abiertos</div>
-            <div className="text-2xl font-black text-blue-400">{tickets.filter(t => t.status === 'open').length}</div>
-          </div>
-          <div className="bg-[var(--card-bg-color)] p-4 rounded-2xl border border-[var(--primary-color)]/10">
-            <div className="text-[var(--muted-color)] text-xs uppercase font-bold mb-1">En Proceso</div>
-            <div className="text-2xl font-black text-amber-400">{tickets.filter(t => t.status === 'in_progress').length}</div>
-          </div>
-          <div className="bg-[var(--card-bg-color)] p-4 rounded-2xl border border-[var(--primary-color)]/10">
-            <div className="text-[var(--muted-color)] text-xs uppercase font-bold mb-1">Pendiente Cliente</div>
-            <div className="text-2xl font-black text-purple-400">{tickets.filter(t => t.status === 'waiting_client').length}</div>
-          </div>
-        </div>
+        }
+      />
 
-        <div className="bg-[var(--card-bg-color)] rounded-2xl border border-[var(--primary-color)]/10 overflow-hidden shadow-xl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="text-xs uppercase text-[var(--muted-color)] bg-[var(--background-color)]/50 border-b border-[var(--primary-color)]/10">
-                <tr>
-                  <th className="px-6 py-4">Ticket / Asunto</th>
-                  <th className="px-6 py-4">Cliente</th>
-                  <th className="px-6 py-4">Prioridad</th>
-                  <th className="px-6 py-4">Estado</th>
-                  <th className="px-6 py-4">Última Actividad</th>
-                  <th className="px-6 py-4"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--primary-color)]/5">
-                {tickets.length > 0 ? tickets.map((ticket) => (
-                  <tr key={ticket.id} className="hover:bg-[var(--primary-color)]/5 transition-colors group">
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-3">
-                        {isOverSLA(ticket.updated_at, ticket.status) && (
-                          <AlertCircle size={16} className="text-red-500 animate-pulse" />
-                        )}
-                        <div>
-                          <div className="font-semibold text-[var(--white-color)] group-hover:text-[var(--primary-color)] transition-colors">
-                            {ticket.title}
-                          </div>
-                          <div className="text-[10px] text-[var(--muted-color)] font-mono uppercase tracking-tighter">
-                            ID: {ticket.id.substring(0, 8)}
-                          </div>
+      {/* Stats summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-card-bg p-6 rounded-2xl border border-white/5 shadow-xl">
+          <div className="text-text-muted text-xs uppercase font-black tracking-widest mb-2">Abiertos</div>
+          <div className="text-3xl font-black text-blue-400">{tickets.filter(t => t.status === 'open').length}</div>
+        </div>
+        <div className="bg-card-bg p-6 rounded-2xl border border-white/5 shadow-xl">
+          <div className="text-text-muted text-xs uppercase font-black tracking-widest mb-2">En Proceso</div>
+          <div className="text-3xl font-black text-amber-400">{tickets.filter(t => t.status === 'in_progress').length}</div>
+        </div>
+        <div className="bg-card-bg p-6 rounded-2xl border border-white/5 shadow-xl">
+          <div className="text-text-muted text-xs uppercase font-black tracking-widest mb-2">Pendiente Cliente</div>
+          <div className="text-3xl font-black text-purple-400">{tickets.filter(t => t.status === 'waiting_client').length}</div>
+        </div>
+      </div>
+
+      <div className="bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-separate border-spacing-0">
+            <thead>
+              <tr className="bg-background/40">
+                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Ticket / Asunto</th>
+                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Cliente</th>
+                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Prioridad</th>
+                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Estado</th>
+                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Última Actividad</th>
+                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {tickets.length > 0 ? tickets.map((ticket) => (
+                <tr key={ticket.id} className="group hover:bg-white/[0.02] transition-colors">
+                  <td className="px-8 py-6">
+                    <div className="flex items-center gap-3">
+                      {isOverSLA(ticket.updated_at, ticket.status) && (
+                        <AlertCircle size={16} className="text-red-500 animate-pulse shrink-0" />
+                      )}
+                      <div>
+                        <div className="font-bold text-white-custom text-sm group-hover:text-primary transition-colors">
+                          {ticket.title}
+                        </div>
+                        <div className="text-[10px] text-text-muted/60 font-mono uppercase tracking-tighter">
+                          ID: {ticket.id.substring(0, 8)}
                         </div>
                       </div>
-                    </td>
-                    <td className="px-6 py-5 text-sm text-[var(--muted-color)]">
-                      {ticket.lead?.name || 'N/A'}
-                      <div className="text-[10px]">{ticket.lead?.company || ''}</div>
-                    </td>
-                    <td className="px-6 py-5">
-                      <span className={`text-xs uppercase font-bold tracking-wider ${getPriorityStyle(ticket.priority)}`}>
-                        {ticket.priority}
-                      </span>
-                    </td>
-                    <td className="px-6 py-5">
-                      <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${getStatusStyle(ticket.status)}`}>
-                        {ticket.status.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="px-6 py-5 text-xs text-[var(--muted-color)]">
-                      <div className="flex items-center gap-1">
-                        <Clock size={12} />
-                        {new Date(ticket.updated_at).toLocaleString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 text-right">
-                      <Link href={`/admin/tickets/${ticket.id}`} className="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-[var(--primary-color)]/20 text-[var(--primary-color)] transition-all">
-                        <ChevronRight size={20} />
-                      </Link>
-                    </td>
-                  </tr>
-                )) : (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-20 text-center text-[var(--muted-color)]">
-                      <div className="flex flex-col items-center gap-2">
-                        <Ticket size={40} className="opacity-20" />
-                        <p>No hay tickets activos.</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </td>
+                  <td className="px-8 py-6 text-sm text-text-muted">
+                    <div className="font-medium text-white-custom">{ticket.lead?.name || 'N/A'}</div>
+                    <div className="text-[10px] text-text-muted/60">{ticket.lead?.company || ''}</div>
+                  </td>
+                  <td className="px-8 py-6">
+                    <span className={`text-xs uppercase font-black tracking-wider ${getPriorityStyle(ticket.priority)}`}>
+                      {ticket.priority}
+                    </span>
+                  </td>
+                  <td className="px-8 py-6">
+                    <StatusBadge status={ticket.status} />
+                  </td>
+                  <td className="px-8 py-6 text-xs text-text-muted">
+                    <div className="flex items-center gap-1">
+                      <Clock size={12} />
+                      {new Date(ticket.updated_at).toLocaleString()}
+                    </div>
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <Link href={`/admin/tickets/${ticket.id}`} className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all">
+                      <ChevronRight size={18} />
+                    </Link>
+                  </td>
+                </tr>
+              )) : (
+                <tr>
+                  <td colSpan={6} className="px-8 py-24 text-center">
+                    <EmptyState 
+                      icon={<Ticket size={40} />}
+                      title="No hay tickets activos"
+                      description="Crea un nuevo ticket para comenzar"
+                    />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
