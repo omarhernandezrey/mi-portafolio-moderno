@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
-import { ArrowRight, Shield, Zap, Globe, Target, UserCheck } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Globe, Target, UserCheck, CheckCircle, Clock, DollarSign, HelpCircle } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 
@@ -211,23 +211,119 @@ export default async function ServicioCiudadPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Corporate Technical Content (SEO Optimized) */}
-      <section className="py-32 border-t border-white/5 bg-background/50">
+      {/* Benefits Section */}
+      <section className="py-24 border-t border-white/5 bg-background/50">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Ventajas</h2>
+            <h3 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+              Por qué elegir nuestro servicio de <span className="text-primary">{servicio.name}</span>
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {servicio.benefits.map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-4 bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/20 transition-all">
+                <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-0.5" />
+                <p className="text-sm font-medium text-text-muted italic">{benefit}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section className="py-24 bg-background relative overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Proceso</h2>
+            <h3 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+              Cómo trabajamos en <span className="text-primary">{ciudad.name}</span>
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {servicio.process.map((step, idx) => {
+              const [title, desc] = step.split(': ');
+              return (
+                <div key={idx} className="relative">
+                  <div className="bg-card-bg rounded-2xl p-6 border border-white/5 h-full">
+                    <div className="text-4xl font-black text-primary/20 mb-4">0{idx + 1}</div>
+                    <h4 className="text-lg font-bold text-white-custom italic mb-2">{title}</h4>
+                    <p className="text-sm text-text-muted/70 font-medium italic">{desc}</p>
+                  </div>
+                  {idx < 3 && (
+                    <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/10" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Price & Time Section */}
+      <section className="py-24 border-t border-white/5 bg-card-bg/30">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
-          <div className="prose prose-invert prose-primary max-w-none 
-            prose-h2:text-4xl prose-h2:font-black prose-h2:tracking-tighter prose-h2:italic prose-h2:mb-10
-            prose-p:text-text-muted prose-p:text-lg prose-p:leading-relaxed prose-p:font-medium prose-p:italic prose-p:opacity-70
-            prose-strong:text-white-custom prose-strong:font-black">
-            <h2>Expertos en {servicio.name} para {ciudad.country}</h2>
-            <p>
-              En el ecosistema digital de {ciudad.name}, la ventaja técnica es la única moneda de cambio real. Ya sea que su organización requiera {servicio.keywords[0]} o una integración compleja de {servicio.keywords[1]}, es imperativo contar con un partner de ingeniería que entienda la logística y los desafíos operativos de {ciudad.name}.
-            </p>
-            <p>
-              Nuestra ingeniería se enfoca en el ROI medible. Implementamos <strong>{servicio.name}</strong> analizando cada hito del desarrollo para asegurar que el despliegue final contribuya al crecimiento orgánico y la autoridad de marca en {ciudad.country}.
-            </p>
-            <p>
-              Desde los distritos financieros de {ciudad.name} hasta los centros de innovación más dinámicos, potenciamos a las entidades locales para que lideren su sector a través de la digitalización estratégica. El futuro de su negocio en {ciudad.name} no puede depender de soluciones genéricas; requiere ingeniería de precisión.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center">
+              <DollarSign className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">Inversión</h3>
+              <p className="text-2xl font-black text-white-custom italic">{servicio.priceRange}</p>
+            </div>
+            <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center">
+              <Clock className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">Tiempo de Entrega</h3>
+              <p className="text-2xl font-black text-white-custom italic">{servicio.deliveryTime}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs Section */}
+      <section className="py-24 bg-background">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <div className="text-center space-y-4 mb-16">
+            <HelpCircle className="w-12 h-12 text-primary mx-auto" />
+            <h2 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+              Preguntas frecuentes sobre {servicio.name} en {ciudad.name}
+            </h2>
+          </div>
+          <div className="space-y-6">
+            {servicio.faqs.map((faq, idx) => (
+              <div key={idx} className="bg-card-bg rounded-2xl p-6 border border-white/5">
+                <h3 className="text-lg font-bold text-white-custom italic mb-3">
+                  {faq.q.replace('{ciudad}', ciudad.name)}
+                </h3>
+                <p className="text-sm text-text-muted/70 font-medium leading-relaxed italic">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Recursos Útiles - Internal Linking */}
+      <section className="py-24 bg-card-bg/30 border-t border-white/5">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <div className="text-center space-y-4 mb-12">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Recursos</h2>
+            <h3 className="text-2xl md:text-3xl font-black text-white-custom tracking-tighter italic">
+              Artículos útiles para tu proyecto
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/blog/cuanto-cuesta-sitio-web-colombia-2026" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
+              <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">¿Cuánto cuesta un sitio web en Colombia?</p>
+              <p className="text-xs text-text-muted/60">Guía completa de precios 2026</p>
+            </a>
+            <a href="/blog/chatbot-ia-negocio-colombia" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
+              <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">Chatbots con IA para negocios</p>
+              <p className="text-xs text-text-muted/60">Todo lo que nadie te dice</p>
+            </a>
+            <a href="/blog/landing-page-vs-sitio-web-colombia" className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
+              <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">Landing page vs sitio web</p>
+              <p className="text-xs text-text-muted/60">¿Cuál necesitas?</p>
+            </a>
           </div>
         </div>
       </section>

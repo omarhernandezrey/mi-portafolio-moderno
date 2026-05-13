@@ -4796,7 +4796,7 @@ image: "/api/og?title=[encoded title]&subtitle=Blog+Omar+Hernández+Rey"
 
 ---
 
-### [ ] [CC] Tarea 32.12 — Enriquecer contenido de páginas servicio×ciudad (anti thin-content)
+### [x] [CC] Tarea 32.12 — Enriquecer contenido de páginas servicio×ciudad (anti thin-content)
 
 **Para qué sirve.** Las 100+ páginas de servicios×ciudades tienen actualmente muy poco texto único. Google puede penalizarlas como "thin content" (contenido pobre) y de-indexarlas. Esta tarea añade secciones de contenido diferenciado por ciudad que hacen las páginas genuinamente útiles para el usuario.
 
@@ -5150,7 +5150,7 @@ Agregar las siguientes ciudades colombianas al array `ciudades`, después de `Ba
 
 ---
 
-### [ ] [CC] Tarea 32.20 — Internal linking: blog posts → páginas de servicio (distribuye autoridad de dominio)
+### [x] [CC] Tarea 32.20 — Internal linking: blog posts → páginas de servicio (distribuye autoridad de dominio)
 
 **Para qué sirve.** El internal linking es uno de los factores de SEO más subestimados y más gratuitos. Cuando un blog post enlaza a una página de servicio, le "pasa" autoridad SEO. Un post bien linkado puede subir el ranking de una página de servicio 2-5 posiciones. Actualmente los posts y las páginas de servicio son "islas" sin conexión entre ellos.
 
