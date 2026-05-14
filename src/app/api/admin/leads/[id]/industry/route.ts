@@ -14,16 +14,31 @@ export async function PATCH(
       return NextResponse.json({ error: 'Industria requerida' }, { status: 400 });
     }
 
-    const { error } = await supabaseServer
+    console.log(`Updating lead ${id} with industry: ${industry}`);
+
+    const { data, error } = await supabaseServer
       .from('leads')
       .update({ industry })
-      .eq('id', id);
+      .eq('id', id)
+      .select(); // Añadimos .select() para obtener los datos actualizados
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json(
+        { error: 'Error de base de datos', details: error.message, code: error.code },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ success: true });
+    console.log('Update successful:', data);
+
+    return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error('Lead industry update error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Error interno del servidor';
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: 500 }
+    );
   }
 }

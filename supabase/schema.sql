@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS public.leads (
     service_requested text,
     notes text,
     status text DEFAULT 'new'::text,
+    industry text,
     created_at timestamp with time zone DEFAULT now()
 );
 
