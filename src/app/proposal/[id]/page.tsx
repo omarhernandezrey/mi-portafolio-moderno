@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { clientEnv } from '@/config/env';
 import { generateProposalMarkdown } from '@/lib/proposals/generate';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { FileText, Calendar, Wallet, ShieldCheck, Printer, ArrowRight, Star, Clock, User } from 'lucide-react';
+import { FileText, Calendar, Wallet, ShieldCheck, ArrowRight, Star, Clock, User } from 'lucide-react';
+import PrintButton from '@/components/proposal/PrintButton';
 
 interface ProposalPageProps {
   params: Promise<{ id: string }>;
@@ -64,13 +65,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
           </div>
           
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => typeof window !== 'undefined' && window.print()}
-              className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-all"
-            >
-              <Printer size={14} />
-              Exportar Dossier
-            </button>
+            <PrintButton />
             <Link 
               href={clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL} 
               target="_blank"
