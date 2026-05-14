@@ -9,7 +9,7 @@ import { OMAR_PROFILE } from "@/data/omarProfile";
 import { clientEnv } from "@/config/env";
 
 const personData = {
-  "@context": "https://schema.org",
+  "@context": "https://schema.org",h
   "@type": "Person",
   "@id": "https://omarhernandezrey.com/#person",
   "name": OMAR_PROFILE.name,
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   verification: {
     google: clientEnv.NEXT_PUBLIC_GSC_VERIFICATION,
     other: {
-      'msvalidate.01': clientEnv.NEXT_PUBLIC_BING_VERIFICATION,
+      'msvalidate.01': "9FF4E37C09A3144997A2E471BF6A2723",
     },
   },
   keywords: [
