@@ -9,7 +9,7 @@ import { OMAR_PROFILE } from "@/data/omarProfile";
 import { clientEnv } from "@/config/env";
 // SEO: Bing & Google verification via env vars
 const personData = {
-  "@context": "https://schema.org",h
+  "@context": "https://schema.org",
   "@type": "Person",
   "@id": "https://omarhernandezrey.com/#person",
   "name": OMAR_PROFILE.name,
