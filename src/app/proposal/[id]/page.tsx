@@ -162,18 +162,6 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
           <TrustItem icon={<Star size={16} />} text="Top Rated Service" />
         </div>
       </div>
-
-      {/* Global Print Background Override */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @media print {
-          body { background: white !important; color: black !important; }
-          main { padding: 0 !important; }
-          .bg-card-bg { background: white !important; }
-          .text-white-custom { color: black !important; }
-          .text-text-muted { color: #333 !important; }
-          .text-primary { color: black !important; border-bottom: 2px solid #000; }
-        }
-      `}} />
     </main>
   );
 }
