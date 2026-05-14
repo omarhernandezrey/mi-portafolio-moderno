@@ -191,7 +191,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
                   role={msg.role}
                   senderName={msg.role === 'user' ? (lead.name || 'Visitante') : 'Bot Omar v3.1'}
                   content={msg.content}
-                  timestamp={new Date(msg.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+                  timestamp={new Date(msg.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}
                 />
               )) : (
                 <div className="h-full flex flex-col items-center justify-center text-text-muted/10 py-40">

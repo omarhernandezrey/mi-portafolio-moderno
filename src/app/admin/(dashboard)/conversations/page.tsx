@@ -90,10 +90,18 @@ export default async function AdminConversationsPage() {
               </div>
               <div className="text-right">
                 <div className="text-[10px] font-black text-white-custom/40 uppercase tracking-tighter italic">
-                  {new Date(conv.updated_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(conv.updated_at).toLocaleTimeString('es-CO', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    timeZone: 'America/Bogota'
+                  })}
                 </div>
                 <div className="text-[8px] text-text-muted/30 font-medium">
-                  {new Date(conv.updated_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                  {new Date(conv.updated_at).toLocaleDateString('es-CO', { 
+                    day: '2-digit', 
+                    month: 'short',
+                    timeZone: 'America/Bogota'
+                  })}
                 </div>
               </div>
             </div>

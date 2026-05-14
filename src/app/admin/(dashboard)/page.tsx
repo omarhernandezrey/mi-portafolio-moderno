@@ -109,7 +109,7 @@ function getTimeAgo(date: Date): string {
   if (diffMin < 60) return `Hace ${diffMin}m`;
   if (diffHrs < 24) return `Hace ${diffHrs}h`;
   if (diffDays < 7) return `Hace ${diffDays}d`;
-  return date.toLocaleDateString('es-CO', { day: '2-digit', month: 'short' });
+  return date.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', timeZone: 'America/Bogota' });
 }
 
 export default async function AdminDashboardPage() {
@@ -118,7 +118,8 @@ export default async function AdminDashboardPage() {
     weekday: 'long', 
     year: 'numeric', 
     month: 'long', 
-    day: 'numeric' 
+    day: 'numeric',
+    timeZone: 'America/Bogota'
   });
 
   return (
@@ -239,7 +240,7 @@ export default async function AdminDashboardPage() {
                         </div>
                         <div className="text-[10px] text-text-muted/50 font-black uppercase mt-1 tracking-widest flex items-center gap-1">
                           <Clock size={10} />
-                          {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                          {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', timeZone: 'America/Bogota' })}
                         </div>
                       </td>
                       <td className="px-8 py-6">

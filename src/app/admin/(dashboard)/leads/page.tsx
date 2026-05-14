@@ -145,7 +145,7 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
             <div className="flex items-center justify-between pt-3 border-t border-white/5">
               <div className="text-[10px] text-text-muted/40 font-black uppercase tracking-wider flex items-center gap-1">
                 <Calendar size={10} />
-                {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                {new Date(lead.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', timeZone: 'America/Bogota' })}
               </div>
               <Link 
                 href={`/admin/leads/${lead.id}`} 

@@ -139,7 +139,7 @@ export default async function AdminTicketsPage() {
                 <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Actualizado</div>
                 <div className="text-[10px] text-text-muted flex items-center gap-1">
                   <Clock size={10} />
-                  {new Date(ticket.updated_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                  {new Date(ticket.updated_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}
                 </div>
               </div>
             </div>
