@@ -26,13 +26,11 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
   ];
 
   const handleSave = async () => {
-    // Validación: debe seleccionar una industria
     if (!industry) {
       showToast('⚠️ Debes seleccionar una industria antes de guardar', 'warning');
       return;
     }
 
-    // Validación: no guardar si no hay cambios
     if (industry === currentIndustry) {
       showToast('ℹ️ No hay cambios para guardar', 'info');
       return;
@@ -64,19 +62,16 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
     }
   };
 
-  // Determinar si el botón debe estar deshabilitado
-  const isSaveDisabled = loading;
-
   return (
-    <div className="space-y-4 p-4 bg-card-bg rounded-[20px] border border-white/5 hover:border-primary/20 transition-colors">
+    <div className="space-y-4 p-4 bg-card-bg rounded-[20px] border border-white/5 hover:border-primary/20 transition-colors relative z-10">
       <div className="flex items-center gap-2 text-xs font-bold text-text-muted uppercase tracking-widest">
         <Building2 size={14} className="text-primary" />
         Nicho / Industria
       </div>
       
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-3">
         <select 
-          className="flex-1 bg-background border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary/50 transition-colors text-white-custom"
+          className="flex-1 bg-background border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary/50 transition-colors text-white-custom min-w-0"
           value={industry}
           onChange={(e) => setIndustry(e.target.value)}
         >
@@ -88,21 +83,20 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
         
         <button 
           onClick={handleSave}
-          disabled={isSaveDisabled}
-          className="px-4 py-3 bg-primary text-background rounded-xl disabled:opacity-50 hover:brightness-110 transition-all flex items-center gap-2 text-sm font-bold"
+          disabled={loading}
+          className="px-6 py-3 bg-primary text-background rounded-xl disabled:opacity-50 hover:brightness-110 transition-all flex items-center justify-center gap-2 text-sm font-bold whitespace-nowrap shrink-0"
         >
           {loading ? (
             <Loader2 size={18} className="animate-spin" />
           ) : (
             <>
               <Save size={18} />
-              <span className="hidden sm:inline">Guardar</span>
+              <span>Guardar</span>
             </>
           )}
         </button>
       </div>
       
-      {/* Indicador de estado */}
       <div className="flex items-center gap-2 text-[10px] text-text-muted/60">
         {currentIndustry ? (
           <>
