@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/seo/JsonLd";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { clientEnv } from "@/config/env";
-
+// SEO: Bing & Google verification via env vars
 const personData = {
   "@context": "https://schema.org",h
   "@type": "Person",
