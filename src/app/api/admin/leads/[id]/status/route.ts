@@ -20,17 +20,26 @@ export async function PATCH(
 
     console.log(`Updating lead ${id} status to: ${status}`);
 
+    // Intentar actualizar solo el status (sin updated_at por si no existe)
     const { data, error } = await supabaseServer
       .from('leads')
-      .update({ status, updated_at: new Date().toISOString() })
+      .update({ status })
       .eq('id', id)
       .select();
 
     if (error) {
       console.error('Supabase error:', error);
       return NextResponse.json(
-        { error: 'Error de base de datos', details: error.message },
+        { error: 'Error de base de datos', details: error.message, code: error.code },
         { status: 500 }
+      );
+    }
+
+    // Si no se actualizó ninguna fila, el lead no existe
+    if (!data || data.length === 0) {
+      return NextResponse.json(
+        { error: 'Lead no encontrado', id },
+        { status: 404 }
       );
     }
 

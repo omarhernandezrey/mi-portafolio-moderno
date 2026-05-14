@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS public.leads (
     notes text,
     status text DEFAULT 'new'::text,
     industry text,
-    created_at timestamp with time zone DEFAULT now()
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS public.api_logs (
