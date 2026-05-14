@@ -62,8 +62,6 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
     }
   };
 
-  const selectedName = industries.find(i => i.id === industry)?.name || 'Seleccionar industria...';
-
   return (
     <div className="space-y-4 p-6 bg-card-bg rounded-[24px] border border-white/10 hover:border-primary/30 transition-colors relative z-10 shadow-xl">
       <div className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-widest">
