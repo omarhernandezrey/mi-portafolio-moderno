@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { I18nProvider } from '@/contexts/I18nContext';
+import { ToastProvider } from '@/components/ui/Toast';
 import dynamic from 'next/dynamic';
 
 // Importar i18n para inicializar
@@ -70,10 +71,12 @@ export default function ClientProvider({ children }: ClientProviderProps) {
 
   return (
     <I18nProvider>
-      <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
-        {children}
-        <ChatWidget />
-      </MotionConfig>
+      <ToastProvider>
+        <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
+          {children}
+          <ChatWidget />
+        </MotionConfig>
+      </ToastProvider>
     </I18nProvider>
   );
 }

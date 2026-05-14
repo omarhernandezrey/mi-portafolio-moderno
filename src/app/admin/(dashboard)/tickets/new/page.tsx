@@ -9,9 +9,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/Toast';
 
 export default function NewTicketPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [leads, setLeads] = useState<{ id: string; name: string; company?: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   
@@ -30,14 +32,26 @@ export default function NewTicketPage() {
         setLeads(data);
       } catch (err) {
         console.error('Error fetching leads:', err);
+        showToast('⚠️ Error al cargar la lista de leads', 'warning');
       }
     }
     fetchLeads();
-  }, []);
+  }, [showToast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+
+    // Validaciones
+    if (!formData.title.trim()) {
+      showToast('⚠️ El título es obligatorio', 'warning');
+      return;
+    }
+
+    if (!formData.content.trim()) {
+      showToast('⚠️ La descripción es obligatoria', 'warning');
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -47,13 +61,17 @@ export default function NewTicketPage() {
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) throw new Error('Error al crear ticket');
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Error al crear ticket');
+      }
       
       const ticket = await res.json();
+      showToast('✅ Ticket creado correctamente', 'success');
       router.push(`/admin/tickets/${ticket.id}`);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error al crear ticket');
-    } finally {
+      const message = err instanceof Error ? err.message : 'Error al crear ticket';
+      showToast(`❌ ${message}`, 'error');
       setSubmitting(false);
     }
   };
@@ -94,7 +112,7 @@ export default function NewTicketPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2 text-white-custom">Asunto / Título</label>
+            <label className="block text-sm font-bold mb-2 text-white-custom">Asunto / Título *</label>
             <input 
               type="text"
               required
@@ -126,7 +144,7 @@ export default function NewTicketPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2 text-white-custom">Descripción del problema</label>
+            <label className="block text-sm font-bold mb-2 text-white-custom">Descripción del problema *</label>
             <textarea 
               required
               className="w-full bg-background border border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[150px] text-white-custom placeholder:text-text-muted/50 resize-none"

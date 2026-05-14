@@ -12,6 +12,7 @@ import {
   Paperclip
 } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toast';
 
 interface TicketMessage {
   id: string;
@@ -42,6 +43,7 @@ interface Props {
 
 export default function TicketDetailPage({ params }: Props) {
   const { id } = use(params);
+  const { showToast } = useToast();
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,12 +68,13 @@ export default function TicketDetailPage({ params }: Props) {
         setMessages(msgsData);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
+        showToast('❌ Error al cargar el ticket', 'error');
       } finally {
         setLoading(false);
       }
     }
     fetchData();
-  }, [id]);
+  }, [id, showToast]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,8 +98,10 @@ export default function TicketDetailPage({ params }: Props) {
       setNewMessage('');
       
       if (ticket) setTicket({ ...ticket, status: 'waiting_client' });
+      showToast('✅ Mensaje enviado correctamente', 'success');
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error al enviar mensaje');
+      const message = err instanceof Error ? err.message : 'Error al enviar mensaje';
+      showToast(`❌ ${message}`, 'error');
     } finally {
       setSending(false);
     }
@@ -111,8 +116,12 @@ export default function TicketDetailPage({ params }: Props) {
       });
       if (!res.ok) throw new Error('Error al actualizar estado');
       if (ticket) setTicket({ ...ticket, status });
+      
+      const statusText = status === 'closed' ? 'cerrado' : 'reabierto';
+      showToast(`✅ Ticket ${statusText} correctamente`, 'success');
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error al actualizar estado');
+      const message = err instanceof Error ? err.message : 'Error al actualizar estado';
+      showToast(`❌ ${message}`, 'error');
     }
   };
 
@@ -193,7 +202,7 @@ export default function TicketDetailPage({ params }: Props) {
                   </div>
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                   <div className="mt-2 text-[9px] opacity-40 text-right">
-                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(msg.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}
                   </div>
                 </div>
               </div>
@@ -252,11 +261,11 @@ export default function TicketDetailPage({ params }: Props) {
               </div>
               <div className="flex justify-between">
                 <span className="text-text-muted">Creado</span>
-                <span className="text-white-custom">{new Date(ticket.created_at).toLocaleDateString()}</span>
+                <span className="text-white-custom">{new Date(ticket.created_at).toLocaleDateString('es-CO', { timeZone: 'America/Bogota' })}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-text-muted">Última act.</span>
-                <span className="text-white-custom">{new Date(ticket.updated_at).toLocaleTimeString()}</span>
+                <span className="text-white-custom">{new Date(ticket.updated_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}</span>
               </div>
             </div>
           </div>
