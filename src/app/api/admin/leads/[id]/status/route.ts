@@ -13,21 +13,36 @@ export async function PATCH(
     const validStatuses = ['new', 'contacted', 'paid', 'lost', 'archived'];
     if (!status || !validStatuses.includes(status)) {
       return NextResponse.json(
-        { error: `Estado invalido. Validos: ${validStatuses.join(', ')}` },
+        { error: `Estado inválido. Válidos: ${validStatuses.join(', ')}` },
         { status: 400 }
       );
     }
 
-    const { error } = await supabaseServer
+    console.log(`Updating lead ${id} status to: ${status}`);
+
+    const { data, error } = await supabaseServer
       .from('leads')
       .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', id);
+      .eq('id', id)
+      .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json(
+        { error: 'Error de base de datos', details: error.message },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ success: true, status });
+    console.log('Status update successful:', data);
+
+    return NextResponse.json({ success: true, status, data });
   } catch (error) {
     console.error('Lead status update error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Error interno del servidor';
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: 500 }
+    );
   }
 }

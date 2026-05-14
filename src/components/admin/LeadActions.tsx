@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, XCircle, Archive } from 'lucide-react';
+import { CheckCircle2, XCircle, Archive, Loader2 } from 'lucide-react';
+import { useToast } from '@/components/ui/Toast';
 
 interface LeadActionsProps {
   leadId: string;
@@ -12,6 +13,7 @@ interface LeadActionsProps {
 export default function LeadActions({ leadId, currentStatus }: LeadActionsProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
+  const { showToast } = useToast();
 
   async function updateStatus(status: string) {
     setLoading(status);
@@ -23,13 +25,25 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
       });
       
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || 'Error al actualizar');
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Error al actualizar estado');
       }
 
+      const data = await res.json();
+      
+      // Mostrar toast de éxito según el estado
+      const statusMessages: Record<string, string> = {
+        'contacted': '✅ Lead marcado como contactado',
+        'lost': '⚠️ Lead marcado como perdido',
+        'archived': '📁 Lead archivado correctamente'
+      };
+      
+      showToast(statusMessages[status] || '✅ Estado actualizado', 'success');
       router.refresh();
     } catch (error) {
       console.error('Error updating lead status:', error);
+      const message = error instanceof Error ? error.message : 'Error al actualizar estado';
+      showToast(`❌ ${message}`, 'error');
     } finally {
       setLoading(null);
     }
@@ -44,7 +58,7 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
           className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-primary hover:bg-primary/10 border-primary/20 disabled:opacity-50"
         >
           <span className="group-hover/act:scale-110 transition-transform">
-            <CheckCircle2 size={18} />
+            {loading === 'contacted' ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
           </span>
           {loading === 'contacted' ? 'Procesando...' : 'Confirmar Contacto'}
         </button>
@@ -57,7 +71,7 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
           className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-red-400 hover:bg-red-500/10 border-red-500/20 disabled:opacity-50"
         >
           <span className="group-hover/act:scale-110 transition-transform">
-            <XCircle size={18} />
+            {loading === 'lost' ? <Loader2 size={18} className="animate-spin" /> : <XCircle size={18} />}
           </span>
           {loading === 'lost' ? 'Procesando...' : 'Marcar como Perdido'}
         </button>
@@ -70,7 +84,7 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
           className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-text-muted hover:bg-white/5 border-white/10 disabled:opacity-50"
         >
           <span className="group-hover/act:scale-110 transition-transform">
-            <Archive size={18} />
+            {loading === 'archived' ? <Loader2 size={18} className="animate-spin" /> : <Archive size={18} />}
           </span>
           {loading === 'archived' ? 'Procesando...' : 'Archivar Lead'}
         </button>
