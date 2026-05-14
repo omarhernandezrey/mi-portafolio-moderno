@@ -82,6 +82,9 @@ export const serverEnv = {
   get HASHNODE_TOKEN() { return process.env.HASHNODE_TOKEN || ""; },
   get HASHNODE_PUBLICATION_ID() { return process.env.HASHNODE_PUBLICATION_ID || ""; },
 
+  // SEO verification keys
+  get INDEXNOW_API_KEY() { return process.env.INDEXNOW_API_KEY || ""; },
+
   // Función para validar solo cuando sea necesario
   validate() {
     if (typeof window !== "undefined") return;
@@ -107,4 +110,8 @@ export const clientEnv = {
   get NEXT_PUBLIC_PAYMENT_NEQUI_QR() { return process.env.NEXT_PUBLIC_PAYMENT_NEQUI_QR || ""; },
   get NEXT_PUBLIC_PAYMENT_MP_URL() { return process.env.NEXT_PUBLIC_PAYMENT_MP_URL || ""; },
   get NEXT_PUBLIC_PAYMENT_BINANCE_ID() { return process.env.NEXT_PUBLIC_PAYMENT_BINANCE_ID || ""; },
+
+  // SEO verification (Google Search Console & Bing Webmaster)
+  get NEXT_PUBLIC_GSC_VERIFICATION() { return process.env.NEXT_PUBLIC_GSC_VERIFICATION || ""; },
+  get NEXT_PUBLIC_BING_VERIFICATION() { return process.env.NEXT_PUBLIC_BING_VERIFICATION || ""; },
 };

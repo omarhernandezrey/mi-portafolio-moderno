@@ -6,6 +6,7 @@ import ClientProvider from "./ClientProvider";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/seo/JsonLd";
 import { OMAR_PROFILE } from "@/data/omarProfile";
+import { clientEnv } from "@/config/env";
 
 const personData = {
   "@context": "https://schema.org",
@@ -48,9 +49,9 @@ export const metadata: Metadata = {
   description:
     "Desarrollo webs y apps con React & Next.js. Atiendo clientes en Colombia y USA. Proyectos desde $500 USD. Consulta gratis, respuesta en 24h.",
   verification: {
-    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || '',
+    google: clientEnv.NEXT_PUBLIC_GSC_VERIFICATION,
     other: {
-      'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || '',
+      'msvalidate.01': clientEnv.NEXT_PUBLIC_BING_VERIFICATION,
     },
   },
   keywords: [

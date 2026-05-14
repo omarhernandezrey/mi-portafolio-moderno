@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { serverEnv } from '@/config/env';
 
 const SITE_URL = 'https://omarhernandezrey.com';
-const INDEXNOW_KEY = process.env.INDEXNOW_API_KEY || '';
+const INDEXNOW_KEY = serverEnv.INDEXNOW_API_KEY;
 
 /**
  * Endpoint para enviar URLs a Bing via IndexNow
