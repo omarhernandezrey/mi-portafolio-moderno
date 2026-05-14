@@ -15,40 +15,25 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
   const router = useRouter();
   const { showToast } = useToast();
 
-  // Debug: mostrar en consola los valores recibidos
-  console.log('LeadActions render:', { leadId, currentStatus });
-
   async function updateStatus(status: string) {
-    console.log('updateStatus called:', { status, leadId });
-    
     if (!leadId) {
-      console.error('No leadId provided');
       showToast('❌ Error: ID de lead no válido', 'error');
       return;
     }
 
     setLoading(status);
     try {
-      const url = `/api/admin/leads/${leadId}/status`;
-      console.log('Fetching:', url);
-      
-      const res = await fetch(url, {
+      const res = await fetch(`/api/admin/leads/${leadId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       });
       
-      console.log('Response status:', res.status);
-      
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        console.error('API error:', err);
-        throw new Error(err.error || `Error ${res.status}: ${res.statusText}`);
+        throw new Error(err.error || `Error ${res.status}`);
       }
 
-      const data = await res.json();
-      console.log('API success:', data);
-      
       // Mostrar toast de éxito según el estado
       const statusMessages: Record<string, string> = {
         'contacted': '✅ Lead marcado como contactado',
@@ -76,18 +61,10 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
     );
   }
 
-  // Debug: mostrar estado actual
   const normalizedStatus = currentStatus?.toLowerCase() || 'new';
 
   return (
     <div className="grid grid-cols-1 gap-3">
-      {/* Debug info - visible solo en desarrollo */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="text-[10px] text-text-muted/50 mb-2">
-          Estado: {currentStatus || 'undefined'} | ID: {leadId?.slice(0, 8)}...
-        </div>
-      )}
-
       {normalizedStatus !== 'contacted' && normalizedStatus !== 'paid' && (
         <button 
           onClick={() => updateStatus('contacted')}
@@ -127,7 +104,6 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
         </button>
       )}
 
-      {/* Mensaje si todos los estados están usados */}
       {normalizedStatus === 'archived' && (
         <div className="p-4 bg-white/5 border border-white/10 rounded-[20px] text-text-muted text-xs text-center">
           Lead archivado - No hay acciones disponibles
