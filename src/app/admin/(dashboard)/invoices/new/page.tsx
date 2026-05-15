@@ -97,13 +97,13 @@ export default function NewInvoicePage() {
         href="/admin/invoices" 
         className="inline-flex items-center gap-2 text-xs sm:text-sm text-text-muted hover:text-primary mb-4 sm:mb-8 transition-colors"
       >
-        <ArrowLeft size={16} sm:size={20} /> Volver a Facturación
+        <ArrowLeft size={18} /> Volver a Facturación
       </Link>
 
       <div className="bg-card-bg p-4 sm:p-6 lg:p-8 rounded-[24px] sm:rounded-[40px] border border-white/5 shadow-2xl">
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="p-2 sm:p-3 bg-primary/10 rounded-xl sm:rounded-2xl text-primary">
-            <FileText size={24} sm:size={32} />
+            <FileText size={28} />
           </div>
           <div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white-custom">Generar Factura</h1>
@@ -147,7 +147,7 @@ export default function NewInvoicePage() {
                 onClick={addItem}
                 className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-primary hover:underline"
               >
-                <Plus size={12} sm:size={14} /> Añadir Ítem
+                <Plus size={14} /> Añadir Ítem
               </button>
             </div>
 
@@ -193,7 +193,7 @@ export default function NewInvoicePage() {
                         onClick={() => removeItem(idx)}
                         className="text-red-400 hover:text-red-500 transition-colors ml-auto"
                       >
-                        <Trash2 size={14} sm:size={16} />
+                        <Trash2 size={15} />
                       </button>
                     )}
                   </div>
@@ -233,7 +233,7 @@ export default function NewInvoicePage() {
             disabled={submitting || subtotal <= 0 || !formData.lead_id}
             className="w-full py-3 sm:py-4 bg-primary text-background rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-xl shadow-primary/20 text-sm"
           >
-            {submitting ? <Loader2 className="animate-spin" size={20} /> : <>Generar y Enviar Factura <Send size={18} sm:size={20} /></>}
+            {submitting ? <Loader2 className="animate-spin" size={20} /> : <>Generar y Enviar Factura <Send size={19} /></>}
           </button>
         </form>
       </div>

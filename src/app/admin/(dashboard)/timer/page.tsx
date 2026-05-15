@@ -181,7 +181,7 @@ export default function TimerPage() {
                 className="bg-background/20 rounded-[24px] sm:rounded-[40px] border border-white/5 border-dashed p-10 sm:p-20 flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6"
               >
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[24px] sm:rounded-[32px] bg-white/5 border border-white/10 flex items-center justify-center text-text-muted/10">
-                  <Clock size={32} sm:size={40} strokeWidth={1} />
+                  <Clock size={36} strokeWidth={1} />
                 </div>
                 <div>
                   <p className="text-white-custom font-bold tracking-tight text-sm sm:text-base">Terminal en Reposo</p>
@@ -202,7 +202,7 @@ export default function TimerPage() {
                     <div className="flex items-center gap-4 sm:gap-6">
                       <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-[20px] sm:rounded-[24px] bg-primary/10 border border-primary/20 flex items-center justify-center relative shrink-0">
                         <div className="absolute inset-0 bg-primary/20 rounded-[20px] sm:rounded-[24px] animate-ping opacity-20" />
-                        <Activity className="text-primary" size={20} sm:size={24} />
+                        <Activity className="text-primary" size={22} />
                       </div>
                       <div className="min-w-0">
                         <div className="font-black text-white-custom text-base sm:text-lg tracking-tight flex items-center gap-2 sm:gap-3 flex-wrap">
@@ -214,7 +214,7 @@ export default function TimerPage() {
                         <p className="text-xs sm:text-sm text-text-muted font-medium italic mt-1 truncate">{entry.description || 'Tarea sin descripción técnica'}</p>
                         <div className="flex items-center gap-4 mt-3 sm:mt-4 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] text-primary/60">
                           <span className="flex items-center gap-1.5 bg-primary/5 px-3 py-1 rounded-full border border-primary/10">
-                            <Clock size={10} sm:size={12} />
+                            <Clock size={11} />
                             Inicio: {new Date(entry.started_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>
@@ -226,7 +226,7 @@ export default function TimerPage() {
                       className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-red-500/10 border border-red-500/30 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white-custom hover:scale-110 transition-all shadow-lg active:scale-95 shrink-0 self-end sm:self-auto"
                       title="Detener Operación"
                     >
-                      <Square size={16} sm:size={20} fill="currentColor" />
+                      <Square size={18} fill="currentColor" />
                     </button>
                   </motion.div>
                 ))}

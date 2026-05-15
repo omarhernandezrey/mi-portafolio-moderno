@@ -70,13 +70,13 @@ export default async function AdminConversationsPage() {
           <div key={conv.id} className="bg-card-bg rounded-[24px] sm:rounded-[40px] border border-white/5 p-4 sm:p-6 lg:p-8 shadow-2xl relative overflow-hidden group hover:border-primary/30 transition-all duration-500">
             {/* Background Icon */}
             <div className="absolute -right-4 -top-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-              <MessageSquare size={80} sm:size={120} className="-rotate-12" />
+              <MessageSquare size={100} className="-rotate-12" />
             </div>
 
             <div className="flex items-start justify-between mb-4 sm:mb-8 relative z-10">
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-inner group-hover:bg-primary group-hover:text-background transition-all duration-500 shrink-0">
-                  <User size={16} sm:size={20} />
+                  <User size={18} />
                 </div>
                 <div className="min-w-0">
                   <h3 className="font-bold text-white-custom group-hover:text-primary transition-colors truncate text-sm sm:text-base">
@@ -154,7 +154,7 @@ export default async function AdminConversationsPage() {
         )) : (
           <div className="col-span-full py-20 sm:py-40 text-center">
             <EmptyState 
-              icon={<MessageSquare size={60} sm:size={80} strokeWidth={1} />}
+              icon={<MessageSquare size={70} strokeWidth={1} />}
               title="No Logs Found"
               description="No hay conversaciones registradas"
             />

@@ -82,13 +82,13 @@ export default function NewTicketPage() {
         href="/admin/tickets" 
         className="inline-flex items-center gap-2 text-xs sm:text-sm text-text-muted hover:text-primary mb-4 sm:mb-8 transition-colors"
       >
-        <ArrowLeft size={16} sm:size={20} /> Volver a Tickets
+        <ArrowLeft size={18} /> Volver a Tickets
       </Link>
 
       <div className="bg-card-bg p-4 sm:p-6 lg:p-8 rounded-[24px] sm:rounded-[40px] border border-white/5 shadow-2xl">
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="p-2 sm:p-3 bg-primary/10 rounded-xl sm:rounded-2xl text-primary">
-            <Ticket size={24} sm:size={32} />
+            <Ticket size={28} />
           </div>
           <div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white-custom">Nuevo Ticket</h1>
@@ -159,7 +159,7 @@ export default function NewTicketPage() {
             disabled={submitting}
             className="w-full py-3 sm:py-4 bg-primary text-background rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-lg shadow-primary/20 text-sm"
           >
-            {submitting ? <Loader2 className="animate-spin" size={20} /> : <>Crear Ticket <Send size={18} sm:size={20} /></>}
+            {submitting ? <Loader2 className="animate-spin" size={20} /> : <>Crear Ticket <Send size={19} /></>}
           </button>
         </form>
       </div>

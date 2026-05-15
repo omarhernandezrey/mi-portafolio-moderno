@@ -27,9 +27,9 @@ export default async function AdminDocsPage() {
           >
             <div className="flex justify-between items-start mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
-                <FileText size={20} sm:size={24} />
+                <FileText size={22} />
               </div>
-              <ChevronRight className="text-text-muted group-hover:text-primary transition-colors" size={18} sm:size={20} />
+              <ChevronRight className="text-text-muted group-hover:text-primary transition-colors" size={19} />
             </div>
             <h2 className="text-lg sm:text-xl font-bold mb-2 text-white-custom group-hover:text-primary transition-colors">
               {doc.title}
@@ -44,7 +44,7 @@ export default async function AdminDocsPage() {
       {docs.length === 0 && (
         <div className="text-center py-12 sm:py-20 bg-card-bg rounded-[24px] sm:rounded-[32px] border border-dashed border-white/10">
           <EmptyState 
-            icon={<Book size={48} sm:size={64} />}
+            icon={<Book size={56} />}
             title="Sin documentos"
             description="No se encontraron documentos de procesos"
           />

@@ -44,7 +44,7 @@ export default async function AdminWebhooksPage() {
         description="Envía eventos en tiempo real a tus herramientas externas"
         actions={
           <button className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
-            <Plus size={16} sm:size={18} />
+            <Plus size={17} />
             <span className="hidden sm:inline">Configurar Webhook</span>
             <span className="sm:hidden">Nuevo</span>
           </button>
@@ -65,7 +65,7 @@ export default async function AdminWebhooksPage() {
                   <div className="flex justify-between items-start mb-3 sm:mb-4">
                     <div className="flex items-start sm:items-center gap-3 min-w-0">
                       <div className={`p-2 rounded-lg shrink-0 ${wh.active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-                        <LinkIcon size={18} sm:size={20} />
+                        <LinkIcon size={19} />
                       </div>
                       <div className="min-w-0">
                         <div className="font-bold text-white-custom text-xs sm:text-sm truncate">{wh.url}</div>
@@ -74,7 +74,7 @@ export default async function AdminWebhooksPage() {
                     </div>
                     <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                       <button className="p-2 hover:bg-red-500/10 text-red-400 rounded-lg" title="Eliminar">
-                        <Trash2 size={16} sm:size={18} />
+                        <Trash2 size={17} />
                       </button>
                     </div>
                   </div>
@@ -111,7 +111,7 @@ export default async function AdminWebhooksPage() {
         <div className="space-y-4 sm:space-y-6">
           <div className="bg-card-bg rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
             <div className="p-4 sm:p-6 border-b border-white/5 flex items-center gap-2">
-              <Activity className="text-primary" size={18} sm:size={20} />
+              <Activity className="text-primary" size={19} />
               <h2 className="text-base sm:text-lg font-bold text-white-custom">Últimos Envíos</h2>
             </div>
             <div className="divide-y divide-white/5">

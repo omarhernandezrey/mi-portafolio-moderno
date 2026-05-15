@@ -42,7 +42,7 @@ export default async function AdminDocDetailPage({ params }: { params: Promise<{
         href="/admin/docs" 
         className="flex items-center gap-2 text-xs sm:text-sm text-text-muted hover:text-primary transition-colors mb-4 sm:mb-8 group w-fit"
       >
-        <ArrowLeft size={14} sm:size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <ArrowLeft size={15} className="group-hover:-translate-x-1 transition-transform" />
         Volver a la documentación
       </Link>
       

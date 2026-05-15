@@ -321,7 +321,7 @@ export default async function AdminDashboardPage() {
           {/* Active Tickets */}
           <div className="bg-card-bg rounded-[24px] sm:rounded-[32px] border border-white/5 p-4 sm:p-6 lg:p-8 shadow-xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 sm:p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
-              <Ticket size={80} sm:size={120} className="-rotate-12" />
+              <Ticket size={100} className="-rotate-12" />
             </div>
             
             <div className="flex items-center justify-between mb-4 sm:mb-8">
@@ -366,7 +366,7 @@ export default async function AdminDashboardPage() {
           {/* Resumen del Mes */}
           <div className="bg-background rounded-[24px] sm:rounded-[32px] border border-white/5 p-4 sm:p-6 lg:p-8 shadow-xl">
             <h3 className="font-bold text-white-custom mb-4 sm:mb-8 flex items-center gap-2 text-sm sm:text-base">
-              <RefreshCw size={14} sm:size={16} className="text-primary" />
+              <RefreshCw size={15} className="text-primary" />
               Resumen del Mes
             </h3>
             <div className="space-y-4 sm:space-y-6">
