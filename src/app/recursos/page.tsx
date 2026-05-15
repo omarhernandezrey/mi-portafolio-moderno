@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import RecursosContent from '@/components/recursos/RecursosContent';
 
 export const metadata: Metadata = {
-  title: 'Recursos Gratuitos para tu Proyecto Digital | Omar Hernández Rey',
+  title: 'Recursos Gratuitos para tu Proyecto Digital',
   description: 'Descarga gratis: checklist técnico de auditoría, guía de precios 2026 y plantilla de briefing para proyectos web. Herramientas para emprendedores y empresas en Colombia y USA.',
   alternates: {
     canonical: 'https://omarhernandezrey.com/recursos',
