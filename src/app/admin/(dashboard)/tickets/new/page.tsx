@@ -80,27 +80,27 @@ export default function NewTicketPage() {
     <div className="max-w-2xl mx-auto">
       <Link 
         href="/admin/tickets" 
-        className="inline-flex items-center gap-2 text-text-muted hover:text-primary mb-8 transition-colors"
+        className="inline-flex items-center gap-2 text-xs sm:text-sm text-text-muted hover:text-primary mb-4 sm:mb-8 transition-colors"
       >
-        <ArrowLeft size={20} /> Volver a Tickets
+        <ArrowLeft size={16} sm:size={20} /> Volver a Tickets
       </Link>
 
-      <div className="bg-card-bg p-8 rounded-[40px] border border-white/5 shadow-2xl">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="p-3 bg-primary/10 rounded-2xl text-primary">
-            <Ticket size={32} />
+      <div className="bg-card-bg p-4 sm:p-6 lg:p-8 rounded-[24px] sm:rounded-[40px] border border-white/5 shadow-2xl">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="p-2 sm:p-3 bg-primary/10 rounded-xl sm:rounded-2xl text-primary">
+            <Ticket size={24} sm:size={32} />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-white-custom">Nuevo Ticket</h1>
-            <p className="text-text-muted">Registra un nuevo requerimiento de soporte.</p>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white-custom">Nuevo Ticket</h1>
+            <p className="text-xs sm:text-sm text-text-muted">Registra un nuevo requerimiento de soporte.</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
-            <label className="block text-sm font-bold mb-2 text-white-custom">Cliente / Lead (Opcional)</label>
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Cliente / Lead (Opcional)</label>
             <select 
-              className="w-full bg-background border border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom"
+              className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom text-sm"
               value={formData.lead_id}
               onChange={(e) => setFormData({...formData, lead_id: e.target.value})}
             >
@@ -112,11 +112,11 @@ export default function NewTicketPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2 text-white-custom">Asunto / Título *</label>
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Asunto / Título *</label>
             <input 
               type="text"
               required
-              className="w-full bg-background border border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom placeholder:text-text-muted/50"
+              className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom text-sm placeholder:text-text-muted/50"
               placeholder="Ej: Error en pasarela de pagos"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
@@ -124,30 +124,30 @@ export default function NewTicketPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2 text-white-custom">Prioridad</label>
-            <div className="grid grid-cols-4 gap-2">
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Prioridad</label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {['low', 'medium', 'high', 'urgent'].map((p) => (
                 <button
                   key={p}
                   type="button"
                   onClick={() => setFormData({...formData, priority: p})}
-                  className={`py-3 rounded-xl text-xs font-bold uppercase transition-all border ${
+                  className={`py-2 sm:py-3 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold uppercase transition-all border ${
                     formData.priority === p 
                       ? 'bg-primary text-background border-primary' 
                       : 'bg-transparent text-text-muted border-white/10 hover:border-primary/50'
                   }`}
                 >
-                  {p}
+                  {p === 'low' ? 'Baja' : p === 'medium' ? 'Media' : p === 'high' ? 'Alta' : 'Urgente'}
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2 text-white-custom">Descripción del problema *</label>
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Descripción del problema *</label>
             <textarea 
               required
-              className="w-full bg-background border border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[150px] text-white-custom placeholder:text-text-muted/50 resize-none"
+              className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[120px] sm:min-h-[150px] text-white-custom text-sm placeholder:text-text-muted/50 resize-none"
               placeholder="Describe detalladamente el requerimiento..."
               value={formData.content}
               onChange={(e) => setFormData({...formData, content: e.target.value})}
@@ -157,9 +157,9 @@ export default function NewTicketPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-4 bg-primary text-background rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-lg shadow-primary/20"
+            className="w-full py-3 sm:py-4 bg-primary text-background rounded-xl sm:rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-lg shadow-primary/20 text-sm"
           >
-            {submitting ? <Loader2 className="animate-spin" /> : <>Crear Ticket <Send size={20} /></>}
+            {submitting ? <Loader2 className="animate-spin" size={20} /> : <>Crear Ticket <Send size={18} sm:size={20} /></>}
           </button>
         </form>
       </div>

@@ -44,42 +44,98 @@ export default async function AdminInvoicesPage() {
         }
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-card-bg p-6 rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-xs uppercase font-black tracking-widest mb-2">Total Facturado</div>
-          <div className="text-3xl font-black text-emerald-400">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
+          <div className="text-text-muted text-[10px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Total Facturado</div>
+          <div className="text-2xl sm:text-3xl font-black text-emerald-400 truncate">
             ${invoices.reduce((acc, inv) => acc + Number(inv.total), 0).toFixed(2)}
           </div>
         </div>
-        <div className="bg-card-bg p-6 rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-xs uppercase font-black tracking-widest mb-2">Pendiente de Cobro</div>
-          <div className="text-3xl font-black text-blue-400">
+        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
+          <div className="text-text-muted text-[10px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Pendiente de Cobro</div>
+          <div className="text-2xl sm:text-3xl font-black text-blue-400 truncate">
             ${invoices.filter(i => i.status === 'sent').reduce((acc, inv) => acc + Number(inv.total), 0).toFixed(2)}
           </div>
         </div>
-        <div className="bg-card-bg p-6 rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-xs uppercase font-black tracking-widest mb-2">Facturas Emitidas</div>
-          <div className="text-3xl font-black text-primary">{invoices.length}</div>
+        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
+          <div className="text-text-muted text-[10px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Facturas Emitidas</div>
+          <div className="text-2xl sm:text-3xl font-black text-primary">{invoices.length}</div>
         </div>
       </div>
 
-      <div className="bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
+      {/* Mobile Card View */}
+      <div className="block lg:hidden space-y-3">
+        {invoices.length > 0 ? invoices.map((inv) => (
+          <div key={inv.id} className="bg-card-bg rounded-2xl border border-white/5 p-4 shadow-xl">
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <div className="font-bold text-white-custom text-sm">{inv.number}</div>
+                <div className="text-[10px] text-text-muted/60 font-mono uppercase tracking-tighter">
+                  ID: {inv.id.substring(0, 8)}
+                </div>
+              </div>
+              <StatusBadge status={inv.status} />
+            </div>
+            
+            <div className="space-y-2 mb-3">
+              <div className="text-sm">
+                <div className="font-medium text-white-custom">{inv.lead?.name || 'N/A'}</div>
+                {inv.lead?.company && (
+                  <div className="text-[10px] text-text-muted/60">{inv.lead.company}</div>
+                )}
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1 text-text-muted">
+                  <Calendar size={12} />
+                  {inv.due_date}
+                </div>
+                <div className="font-black text-emerald-400 font-mono text-lg">
+                  {inv.total} {inv.currency}
+                </div>
+              </div>
+            </div>
+
+            {inv.pdf_url && (
+              <a 
+                href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${inv.pdf_url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-background transition-all text-xs font-bold"
+              >
+                <Download size={16} />
+                Descargar PDF
+              </a>
+            )}
+          </div>
+        )) : (
+          <div className="bg-card-bg rounded-2xl border border-white/5 p-8">
+            <EmptyState 
+              icon={<FileText size={32} />}
+              title="Sin facturas"
+              description="No hay facturas generadas aún"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden lg:block bg-card-bg rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-separate border-spacing-0">
+          <table className="w-full text-left border-separate border-spacing-0 min-w-[700px]">
             <thead>
               <tr className="bg-background/40">
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Nro Factura</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Cliente</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Fecha Venc.</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Total</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Estado</th>
-                <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">PDF</th>
+                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Nro Factura</th>
+                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Cliente</th>
+                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Fecha Venc.</th>
+                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Total</th>
+                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Estado</th>
+                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">PDF</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {invoices.length > 0 ? invoices.map((inv) => (
                 <tr key={inv.id} className="group hover:bg-white/[0.02] transition-colors">
-                  <td className="px-8 py-6">
+                  <td className="px-4 xl:px-8 py-5">
                     <div className="font-bold text-white-custom text-sm group-hover:text-primary transition-colors">
                       {inv.number}
                     </div>
@@ -87,23 +143,23 @@ export default async function AdminInvoicesPage() {
                       ID: {inv.id.substring(0, 8)}
                     </div>
                   </td>
-                  <td className="px-8 py-6 text-sm">
+                  <td className="px-4 xl:px-8 py-5 text-sm">
                     <div className="font-medium text-white-custom">{inv.lead?.name || 'N/A'}</div>
                     <div className="text-[10px] text-text-muted/60">{inv.lead?.company || ''}</div>
                   </td>
-                  <td className="px-8 py-6 text-xs text-text-muted">
+                  <td className="px-4 xl:px-8 py-5 text-xs text-text-muted">
                     <div className="flex items-center gap-1">
                       <Calendar size={12} />
                       {inv.due_date}
                     </div>
                   </td>
-                  <td className="px-8 py-6 text-sm font-black text-emerald-400 font-mono text-lg">
+                  <td className="px-4 xl:px-8 py-5 text-sm font-black text-emerald-400 font-mono text-lg">
                     {inv.total} {inv.currency}
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-4 xl:px-8 py-5">
                     <StatusBadge status={inv.status} />
                   </td>
-                  <td className="px-8 py-6 text-right">
+                  <td className="px-4 xl:px-8 py-5 text-right">
                     {inv.pdf_url && (
                       <a 
                         href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${inv.pdf_url}`}

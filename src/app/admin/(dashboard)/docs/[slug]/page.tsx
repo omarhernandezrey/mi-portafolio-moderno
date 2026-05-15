@@ -40,23 +40,23 @@ export default async function AdminDocDetailPage({ params }: { params: Promise<{
     <div className="max-w-4xl mx-auto">
       <Link 
         href="/admin/docs" 
-        className="flex items-center gap-2 text-sm text-text-muted hover:text-primary transition-colors mb-8 group w-fit"
+        className="flex items-center gap-2 text-xs sm:text-sm text-text-muted hover:text-primary transition-colors mb-4 sm:mb-8 group w-fit"
       >
-        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <ArrowLeft size={14} sm:size={16} className="group-hover:-translate-x-1 transition-transform" />
         Volver a la documentación
       </Link>
       
-      <article className="bg-card-bg p-8 sm:p-12 rounded-[32px] border border-white/5 shadow-2xl">
-        <header className="mb-12 border-b border-white/5 pb-8">
-          <h1 className="text-4xl font-black text-white-custom mb-4 tracking-tight">
+      <article className="bg-card-bg p-4 sm:p-8 lg:p-12 rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-2xl">
+        <header className="mb-6 sm:mb-12 border-b border-white/5 pb-4 sm:pb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white-custom mb-2 sm:mb-4 tracking-tight">
             {doc.title}
           </h1>
-          <p className="text-lg text-text-muted leading-relaxed">
+          <p className="text-sm sm:text-lg text-text-muted leading-relaxed">
             {doc.description}
           </p>
         </header>
 
-        <div className="prose prose-invert max-w-none">
+        <div className="prose prose-invert max-w-none prose-sm sm:prose-base">
           <MDXRemote source={doc.content} components={components} />
         </div>
       </article>
