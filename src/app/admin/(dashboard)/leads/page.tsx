@@ -61,11 +61,11 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
         actions={
           <>
             <ExportLeadsButton leads={leads} />
-            <button className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
+            <Link href="/admin/leads/new" className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
               <Plus size={16} />
               <span className="hidden sm:inline">Añadir Lead</span>
               <span className="sm:hidden">Añadir</span>
-            </button>
+            </Link>
           </>
         }
       />

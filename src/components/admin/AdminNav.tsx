@@ -3,20 +3,22 @@
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  ShieldCheck, 
-  LogOut, 
-  LayoutDashboard, 
-  Users, 
-  MessageSquare, 
-  Clock, 
-  Menu, 
+import {
+  ShieldCheck,
+  LogOut,
+  LayoutDashboard,
+  Users,
+  MessageSquare,
+  Clock,
+  Menu,
   X,
   CreditCard,
   Webhook,
   BookOpen,
   Ticket,
-  Palette
+  Palette,
+  Mail,
+  Activity
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,20 +45,24 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
   };
 
   const navItems = [
-    { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, roles: ['owner', 'assistant', 'viewer'] },
-    { label: 'Leads', href: '/admin/leads', icon: Users, roles: ['owner', 'assistant', 'viewer'] },
-    { label: 'Conversaciones', href: '/admin/conversations', icon: MessageSquare, roles: ['owner', 'assistant', 'viewer'] },
-    { label: 'Tickets', href: '/admin/tickets', icon: Ticket, roles: ['owner', 'assistant', 'viewer'] },
-    { label: 'Timer', href: '/admin/timer', icon: Clock, roles: ['owner', 'assistant'] },
-    { label: 'Facturación', href: '/admin/invoices', icon: CreditCard, roles: ['owner'] },
-    { label: 'Webhooks', href: '/admin/webhooks', icon: Webhook, roles: ['owner'] },
-    { label: 'Docs', href: '/admin/docs', icon: BookOpen, roles: ['owner', 'assistant'] },
+    { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
+    { label: 'Leads', href: '/admin/leads', icon: Users, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
+    { label: 'Conversaciones', href: '/admin/conversations', icon: MessageSquare, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
+    { label: 'Tickets', href: '/admin/tickets', icon: Ticket, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
+    { label: 'Timer', href: '/admin/timer', icon: Clock, roles: ['owner', 'assistant'], group: 'ops' },
+    { label: 'Facturación', href: '/admin/invoices', icon: CreditCard, roles: ['owner'], group: 'ops' },
+    { label: 'Suscriptores', href: '/admin/subscribers', icon: Mail, roles: ['owner'], group: 'ops' },
+    { label: 'Webhooks', href: '/admin/webhooks', icon: Webhook, roles: ['owner'], group: 'system' },
+    { label: 'Logs de API', href: '/admin/logs', icon: Activity, roles: ['owner'], group: 'system' },
+    { label: 'Docs', href: '/admin/docs', icon: BookOpen, roles: ['owner', 'assistant'], group: 'system' },
   ];
 
   const visibleItems = navItems.filter(item => item.roles.includes(role));
 
   const NavLink = ({ item, onClick }: { item: typeof navItems[0], onClick?: () => void }) => {
-    const isActive = pathname === item.href;
+    const isActive = item.href === '/admin'
+      ? pathname === '/admin'
+      : pathname.startsWith(item.href);
     const Icon = item.icon;
     
     return (
@@ -97,13 +103,24 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
           </Link>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto scrollbar-hide">
-          <div className="mb-4 px-4 text-[10px] uppercase tracking-widest font-black text-text-muted opacity-40">
-            Navegación
-          </div>
-          {visibleItems.map((item) => (
-            <NavLink key={item.href} item={item} />
-          ))}
+        <nav className="flex-1 px-4 overflow-y-auto scrollbar-hide pb-4">
+          {(['core', 'ops', 'system'] as const).map(group => {
+            const groupItems = visibleItems.filter(i => i.group === group);
+            if (groupItems.length === 0) return null;
+            const groupLabel = group === 'core' ? 'CRM' : group === 'ops' ? 'Operaciones' : 'Sistema';
+            return (
+              <div key={group} className="mb-4">
+                <div className="px-4 py-2 text-[9px] uppercase tracking-[0.25em] font-black text-text-muted/30">
+                  {groupLabel}
+                </div>
+                <div className="space-y-0.5">
+                  {groupItems.map((item) => (
+                    <NavLink key={item.href} item={item} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </nav>
 
         <div className="p-6 mt-auto border-t border-white/5 bg-background/30 space-y-4">

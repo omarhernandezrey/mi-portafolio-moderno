@@ -102,10 +102,10 @@ export async function POST(req: NextRequest) {
 
     if (dbError) throw dbError;
 
-    // 7. Actualizar estado del lead
+    // 7. Actualizar estado del lead a 'contacted' (factura enviada, pendiente de pago)
     await supabaseServer
       .from('leads')
-      .update({ status: 'facturado' })
+      .update({ status: 'contacted' })
       .eq('id', lead_id);
 
     return NextResponse.json(invoice);

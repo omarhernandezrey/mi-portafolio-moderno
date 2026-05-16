@@ -1,17 +1,15 @@
 import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
-import { 
-  Users, 
-  MessageSquare, 
-  TrendingUp, 
-  DollarSign, 
+import {
+  Users,
+  MessageSquare,
+  TrendingUp,
+  DollarSign,
   ChevronRight,
   Ticket,
   Clock,
   ArrowUpRight,
-  Filter,
   RefreshCw,
-  Search
 } from 'lucide-react';
 import Link from 'next/link';
 import PageHeader from '@/components/admin/ui/PageHeader';
@@ -43,6 +41,12 @@ async function getStats() {
     .select('*', { count: 'exact', head: true })
     .eq('status', 'paid')
     .gte('created_at', firstDayOfMonth);
+
+  const { data: invoiceData } = await supabaseServer
+    .from('invoices')
+    .select('total')
+    .gte('created_at', firstDayOfMonth)
+    .eq('status', 'paid');
 
   const { count: totalConvs } = await supabaseServer
     .from('conversations')
@@ -85,6 +89,8 @@ async function getStats() {
     ? ((totalLeads || 0) / totalConvs * 100).toFixed(1) 
     : '0';
 
+  const monthRevenue = (invoiceData || []).reduce((sum, inv) => sum + (inv.total || 0), 0);
+
   return {
     monthLeads: totalLeads || 0,
     monthPaid: paidLeads || 0,
@@ -95,6 +101,7 @@ async function getStats() {
     recentTickets: recentTickets || [],
     leadsTrend,
     convsTrend,
+    monthRevenue,
   };
 }
 
@@ -135,14 +142,16 @@ export default async function AdminDashboardPage() {
         }
         actions={
           <>
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:bg-white/10 transition-all">
-              <RefreshCw size={16} />
-              Sincronizar
-            </button>
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
+            <form action="/admin" method="GET">
+              <button type="submit" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:bg-white/10 transition-all">
+                <RefreshCw size={16} />
+                Actualizar
+              </button>
+            </form>
+            <Link href="/admin/reports/time" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
               <TrendingUp size={16} />
-              Generar Reporte
-            </button>
+              Reporte de Horas
+            </Link>
           </>
         }
       />
@@ -173,13 +182,13 @@ export default async function AdminDashboardPage() {
           color="primary"
           description="Proporción leads sobre conversaciones este mes"
         />
-        <StatCard 
-          title="Ventas Confirmadas" 
-          value={stats.monthPaid.toString()} 
-          icon={<DollarSign size={22} />} 
-          trend="Meta mensual"
+        <StatCard
+          title="Ingresos del Mes"
+          value={stats.monthRevenue > 0 ? `$${stats.monthRevenue.toLocaleString('es-CO')}` : stats.monthPaid.toString()}
+          icon={<DollarSign size={22} />}
+          trend={stats.monthRevenue > 0 ? 'USD' : 'ventas'}
           color="accent"
-          description="Pagos procesados este mes"
+          description={stats.monthRevenue > 0 ? 'Facturado y cobrado este mes' : 'Ventas confirmadas este mes'}
         />
       </div>
 
@@ -195,19 +204,13 @@ export default async function AdminDashboardPage() {
                 </h2>
                 <p className="text-text-muted text-xs font-medium mt-1">Últimos clientes que interactuaron con el sistema</p>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="relative group flex-1 sm:flex-none">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50 group-focus-within:text-primary transition-colors" size={14} />
-                  <input 
-                    type="text" 
-                    placeholder="Buscar lead..." 
-                    className="bg-background/50 border border-white/10 rounded-xl py-2 pl-9 pr-4 text-xs text-white-custom outline-none focus:border-primary/40 transition-all w-full sm:w-48"
-                  />
-                </div>
-                <button className="p-2 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:text-white-custom transition-all">
-                  <Filter size={18} />
-                </button>
-              </div>
+              <Link
+                href="/admin/leads"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-muted hover:text-primary hover:border-primary/20 transition-all"
+              >
+                <ArrowUpRight size={14} />
+                Ver todos
+              </Link>
             </div>
             
             {/* Mobile Card View */}
@@ -373,7 +376,10 @@ export default async function AdminDashboardPage() {
               <MetricItem label="Total Leads" value={stats.monthLeads.toString()} />
               <MetricItem label="Conversaciones" value={stats.monthConvs.toString()} />
               <MetricItem label="Tickets Abiertos" value={stats.openTickets.toString()} />
-              <MetricItem label="Ventas" value={stats.monthPaid.toString()} />
+              <MetricItem label="Ventas Cerradas" value={stats.monthPaid.toString()} />
+              {stats.monthRevenue > 0 && (
+                <MetricItem label="Ingresos (USD)" value={`$${stats.monthRevenue.toLocaleString('es-CO')}`} />
+              )}
             </div>
           </div>
         </div>
