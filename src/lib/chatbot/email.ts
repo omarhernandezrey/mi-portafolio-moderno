@@ -8,7 +8,7 @@ export async function sendContactNotification(name: string, email: string, messa
 
   try {
     await resend.emails.send({
-      from: 'Portafolio <onboarding@resend.dev>',
+      from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: ['hernandezreyomar@gmail.com'],
       replyTo: email,
       subject: `📩 Nuevo mensaje de ${name} — Formulario de contacto`,
@@ -55,7 +55,7 @@ export async function sendFollowUpEmail(to: string, name: string, service: strin
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Omar Hernández <onboarding@resend.dev>', // Usar dominio verificado en prod
+      from: 'Omar Hernández <contacto@omarhernandezrey.com>', // Usar dominio verificado en prod
       to: [to],
       subject,
       html,
@@ -94,7 +94,7 @@ export async function sendLeadMagnetFollowUp(to: string, source: string) {
 
   try {
     const { data } = await resend.emails.send({
-      from: 'Omar Hernández <onboarding@resend.dev>',
+      from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: [to],
       subject,
       html,
@@ -126,7 +126,7 @@ export async function sendNewsletterConfirmation(to: string, token: string) {
 
   try {
     const { data } = await resend.emails.send({
-      from: 'Omar Hernández <onboarding@resend.dev>',
+      from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: [to],
       subject: 'Confirma tu suscripción — Omar Hernández',
       html,
@@ -157,7 +157,7 @@ export async function sendNewsletterEdition(to: string, subject: string, htmlCon
 
   try {
     const { data } = await resend.emails.send({
-      from: 'Omar Hernández <onboarding@resend.dev>',
+      from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: [to],
       subject,
       html: finalHtml,
