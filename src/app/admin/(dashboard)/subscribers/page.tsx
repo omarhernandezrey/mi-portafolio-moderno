@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   Mail, Search, Trash2, CheckCircle, XCircle, Clock,
-  Users, Filter, X, RefreshCw, Download, Hash, MoreVertical,
-  Send, UserMinus
+  Users, X, RefreshCw, Download, Hash, MoreVertical,
+  Send, UserMinus, Filter
 } from 'lucide-react';
 
 interface Subscriber {
