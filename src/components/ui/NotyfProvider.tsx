@@ -27,6 +27,18 @@ export function NotyfProvider({ children }: { children: ReactNode }) {
       ripple: true,
       position: { x: "right", y: "top" },
       dismissible: true,
+      types: [
+        {
+          type: "warning",
+          background: "#f59e0b",
+          icon: { className: "notyf__icon--warning", tagName: "i", text: "⚠" },
+        },
+        {
+          type: "info",
+          background: "#3b82f6",
+          icon: { className: "notyf__icon--info", tagName: "i", text: "ℹ" },
+        },
+      ],
     });
     setNotyf(instance);
     return () => {

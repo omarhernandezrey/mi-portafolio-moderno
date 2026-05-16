@@ -12,6 +12,7 @@ import Image from 'next/image';
 import useSpeechToText from '@/hooks/useSpeechToText';
 import { track } from '@vercel/analytics';
 import { clientEnv } from '@/config/env';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -23,6 +24,7 @@ interface Message {
 
 export default function ChatWidget() {
   const { t, i18n } = useTranslation();
+  const notyf = useNotyf();
   const currentLanguage = i18n.language === 'en' ? 'en' : 'es';
 
   const [isOpen, setIsOpen] = useState(false);
@@ -154,7 +156,7 @@ export default function ChatWidget() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 4 * 1024 * 1024) {
-      alert(currentLanguage === 'es' ? 'La imagen debe pesar menos de 4 MB.' : 'Image must be under 4 MB.');
+      notyf.error(currentLanguage === 'es' ? 'La imagen debe pesar menos de 4 MB.' : 'Image must be under 4 MB.');
       e.target.value = '';
       return;
     }

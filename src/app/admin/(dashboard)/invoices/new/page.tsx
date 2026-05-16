@@ -11,9 +11,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 export default function NewInvoicePage() {
   const router = useRouter();
+  const notyf = useNotyf();
   const [leads, setLeads] = useState<{ id: string; name: string; company?: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   
@@ -81,9 +83,10 @@ export default function NewInvoicePage() {
 
       if (!res.ok) throw new Error('Error al generar factura');
       
+      notyf.success('Factura generada correctamente');
       router.push('/admin/invoices');
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error al generar factura');
+      notyf.error(err instanceof Error ? err.message : 'Error al generar factura');
     } finally {
       setSubmitting(false);
     }

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { track } from "@vercel/analytics";
+import { useNotyf } from "@/components/ui/NotyfProvider";
 
 // --- Lógica de partículas flotantes tipo AboutSection ---
 const createFloatingElements = (count = 12) =>
@@ -25,6 +26,7 @@ export default function ContactForm() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isSending, setIsSending] = useState(false);
   const { t } = useTranslation();
+  const notyf = useNotyf();
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
     [],
@@ -63,12 +65,12 @@ export default function ContactForm() {
 
       if (!response.ok) throw new Error('Error del servidor');
 
-      alert("Mensaje enviado correctamente 🎉");
+      notyf.success("Mensaje enviado correctamente 🎉");
       track('contact_form_submitted');
       form.current?.reset();
     } catch (error) {
       console.error("Error al enviar:", error);
-      alert("Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.");
+      notyf.error("Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.");
     } finally {
       setIsSending(false);
     }

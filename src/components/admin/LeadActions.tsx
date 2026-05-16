@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, XCircle, Archive, Loader2 } from 'lucide-react';
-import { useToast } from '@/components/ui/Toast';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 interface LeadActionsProps {
   leadId: string;
@@ -13,11 +13,11 @@ interface LeadActionsProps {
 export default function LeadActions({ leadId, currentStatus }: LeadActionsProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
-  const { showToast } = useToast();
+  const notyf = useNotyf();
 
   async function updateStatus(status: string) {
     if (!leadId) {
-      showToast('❌ Error: ID de lead no válido', 'error');
+      notyf.error('❌ Error: ID de lead no válido');
       return;
     }
 
@@ -41,12 +41,12 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
         'archived': '📁 Lead archivado correctamente'
       };
       
-      showToast(statusMessages[status] || '✅ Estado actualizado', 'success');
+      notyf.success(statusMessages[status] || '✅ Estado actualizado');
       router.refresh();
     } catch (error) {
       console.error('Error updating lead status:', error);
       const message = error instanceof Error ? error.message : 'Error al actualizar estado';
-      showToast(`❌ ${message}`, 'error');
+      notyf.error(`❌ ${message}`);
     } finally {
       setLoading(null);
     }

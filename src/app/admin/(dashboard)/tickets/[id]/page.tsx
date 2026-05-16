@@ -12,7 +12,7 @@ import {
   Paperclip
 } from 'lucide-react';
 import Link from 'next/link';
-import { useToast } from '@/components/ui/Toast';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 interface TicketMessage {
   id: string;
@@ -43,7 +43,7 @@ interface Props {
 
 export default function TicketDetailPage({ params }: Props) {
   const { id } = use(params);
-  const { showToast } = useToast();
+  const notyf = useNotyf();
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,13 +68,13 @@ export default function TicketDetailPage({ params }: Props) {
         setMessages(msgsData);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
-        showToast('❌ Error al cargar el ticket', 'error');
+        notyf.error('❌ Error al cargar el ticket');
       } finally {
         setLoading(false);
       }
     }
     fetchData();
-  }, [id, showToast]);
+  }, [id, notyf]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,10 +98,10 @@ export default function TicketDetailPage({ params }: Props) {
       setNewMessage('');
       
       if (ticket) setTicket({ ...ticket, status: 'waiting_client' });
-      showToast('✅ Mensaje enviado correctamente', 'success');
+      notyf.success('✅ Mensaje enviado correctamente');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al enviar mensaje';
-      showToast(`❌ ${message}`, 'error');
+      notyf.error(`❌ ${message}`);
     } finally {
       setSending(false);
     }
@@ -118,10 +118,10 @@ export default function TicketDetailPage({ params }: Props) {
       if (ticket) setTicket({ ...ticket, status });
       
       const statusText = status === 'closed' ? 'cerrado' : 'reabierto';
-      showToast(`✅ Ticket ${statusText} correctamente`, 'success');
+      notyf.success(`✅ Ticket ${statusText} correctamente`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al actualizar estado';
-      showToast(`❌ ${message}`, 'error');
+      notyf.error(`❌ ${message}`);
     }
   };
 

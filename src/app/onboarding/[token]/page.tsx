@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, FileText, CreditCard, Rocket, Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import Link from 'next/link';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 interface OnboardingPageProps {
   params: Promise<{ token: string }>;
@@ -26,6 +27,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
   const [lead, setLead] = useState<OnboardingLead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const notyf = useNotyf();
   
   // Step 1: Brief data
   const [brief, setBrief] = useState({
@@ -62,9 +64,10 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
         body: JSON.stringify({ token, brief }),
       });
       if (!res.ok) throw new Error('Error al guardar el brief');
+      notyf.success('Brief guardado correctamente');
       setStep(2);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error al guardar el brief');
+      notyf.error(err instanceof Error ? err.message : 'Error al guardar el brief');
     } finally {
       setLoading(false);
     }
@@ -79,9 +82,10 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
         body: JSON.stringify({ token }),
       });
       if (!res.ok) throw new Error('Error al firmar el contrato');
+      notyf.success('Contrato firmado correctamente');
       setStep(3);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error al firmar el contrato');
+      notyf.error(err instanceof Error ? err.message : 'Error al firmar el contrato');
     } finally {
       setLoading(false);
     }
@@ -96,9 +100,10 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
         body: JSON.stringify({ token }),
       });
       if (!res.ok) throw new Error('Error al procesar el pago');
+      notyf.success('Pago procesado correctamente');
       setStep(4);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error al procesar el pago');
+      notyf.error(err instanceof Error ? err.message : 'Error al procesar el pago');
     } finally {
       setLoading(false);
     }

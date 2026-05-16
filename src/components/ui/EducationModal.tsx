@@ -7,6 +7,7 @@ import { FaTimes, FaCopy, FaCheck } from "react-icons/fa";
 import { Transition } from "@headlessui/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLinkedInCertificateShare } from "@/hooks/useLinkedInShare";
+import { useNotyf } from "@/components/ui/NotyfProvider";
 
 interface EducationModalProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
   certificate,
 }) => {
   const { t } = useTranslation();
+  const notyf = useNotyf();
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
@@ -112,7 +114,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
     if (copied) return;
     const copiedOk = await copyCertificateToClipboard();
     if (!copiedOk) {
-      alert(t('education.copyError'));
+      notyf.error(t('education.copyError'));
       return;
     }
     setCopied(true);

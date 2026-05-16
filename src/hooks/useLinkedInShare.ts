@@ -4,6 +4,7 @@
 // ------------------------------------------------------------------
 
 import { useCallback, useMemo } from 'react';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 const buildAbsoluteUrl = (path: string, base?: string) => {
   if (!path) return base ?? '';
@@ -73,6 +74,7 @@ export const useLinkedInShare = ({
   portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
   authorName = 'Omar Hernández' // Valor por defecto
 }: UseLinkedInShareProps) => {
+  const notyf = useNotyf();
   // ► Mensaje pre-generado y memoizado para evitar re-renderizados
   const linkedInMessage = useMemo(() => {
     return `🚀 ¡Nuevo proyecto en mi portafolio!
@@ -137,17 +139,12 @@ ${authorName ? `Desarrollado por: ${authorName}` : ''}
     if (shareWindow) {
       shareWindow.focus();
       setTimeout(() => {
-        alert(`✅ Ventana de LinkedIn abierta con el proyecto adjunto.
-
-📋 INSTRUCCIONES:
-1. Pega el texto (Ctrl+V) - ya está copiado
-2. Revisa la vista previa y agrega una imagen si lo deseas
-3. Publica para compartir tu disponibilidad laboral`);
+        notyf.success(`✅ Ventana de LinkedIn abierta con el proyecto adjunto. Pega el texto (Ctrl+V) y publica.`);
       }, 1500);
     } else {
       window.location.href = linkedInShareUrl;
     }
-  }, [linkedInMessage, project.demo, project.title, portfolioUrl, authorName]);
+  }, [linkedInMessage, project.demo, project.title, portfolioUrl, authorName, notyf]);
 
   // ► Función alternativa para copiar texto solamente
   const copyToClipboard = useCallback(async () => {
@@ -191,6 +188,7 @@ export const useLinkedInCertificateShare = ({
   portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
   authorName = 'Omar Hernández' // Valor por defecto
 }: UseLinkedInCertificateShareProps) => {
+  const notyf = useNotyf();
   
   // ► Mensaje específico para certificados
   const certificateMessage = useMemo(() => {
@@ -252,17 +250,12 @@ ${authorName ? `\n👨‍💻 ${authorName}` : ''}
     if (newWindow) {
       newWindow.focus();
       setTimeout(() => {
-        alert(`🎓 Ventana de LinkedIn lista con tu certificado.
-
-📋 INSTRUCCIONES:
-1. Pega el texto (Ctrl+V) - ya está copiado
-2. Verifica la vista previa (ya contiene el enlace adjunto)
-3. ¡Publica y destaca tu nueva certificación!`);
+        notyf.success(`🎓 Ventana de LinkedIn lista con tu certificado. Pega el texto (Ctrl+V) y publica.`);
       }, 1200);
     } else {
       window.location.href = certificateShareUrl;
     }
-  }, [certificateMessage, certificateShareUrl]);
+  }, [certificateMessage, certificateShareUrl, notyf]);
 
   // ► Función para copiar solo el mensaje
   const copyCertificateToClipboard = useCallback(async () => {

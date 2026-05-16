@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Building2, Save, Loader2, ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/Toast';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 interface IndustrySelectorProps {
   leadId: string;
@@ -14,7 +14,7 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
   const [industry, setIndustry] = useState(currentIndustry || '');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { showToast } = useToast();
+  const notyf = useNotyf();
 
   const industries = [
     { id: 'startup', name: 'Startup / MVP' },
@@ -27,12 +27,12 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
 
   const handleSave = async () => {
     if (!industry) {
-      showToast('⚠️ Debes seleccionar una industria antes de guardar', 'warning');
+      notyf.open({ type: 'warning', message: '⚠️ Debes seleccionar una industria antes de guardar' });
       return;
     }
 
     if (industry === currentIndustry) {
-      showToast('ℹ️ No hay cambios para guardar', 'info');
+      notyf.open({ type: 'info', message: 'ℹ️ No hay cambios para guardar' });
       return;
     }
 
@@ -49,13 +49,12 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
         throw new Error(errorData.error || 'Error al actualizar industria');
       }
       
-      showToast('✅ Industria guardada correctamente', 'success');
+      notyf.success('✅ Industria guardada correctamente');
       router.refresh();
     } catch (error) {
       console.error(error);
-      showToast(
-        error instanceof Error ? error.message : 'Error al guardar la industria',
-        'error'
+      notyf.error(
+        error instanceof Error ? error.message : 'Error al guardar la industria'
       );
     } finally {
       setLoading(false);

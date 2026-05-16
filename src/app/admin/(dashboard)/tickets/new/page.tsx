@@ -9,11 +9,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/Toast';
+import { useNotyf } from '@/components/ui/NotyfProvider';
 
 export default function NewTicketPage() {
   const router = useRouter();
-  const { showToast } = useToast();
+  const notyf = useNotyf();
   const [leads, setLeads] = useState<{ id: string; name: string; company?: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   
@@ -32,11 +32,11 @@ export default function NewTicketPage() {
         setLeads(data);
       } catch (err) {
         console.error('Error fetching leads:', err);
-        showToast('⚠️ Error al cargar la lista de leads', 'warning');
+        notyf.open({ type: 'warning', message: '⚠️ Error al cargar la lista de leads' });
       }
     }
     fetchLeads();
-  }, [showToast]);
+  }, [notyf]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,12 +44,12 @@ export default function NewTicketPage() {
 
     // Validaciones
     if (!formData.title.trim()) {
-      showToast('⚠️ El título es obligatorio', 'warning');
+      notyf.open({ type: 'warning', message: '⚠️ El título es obligatorio' });
       return;
     }
 
     if (!formData.content.trim()) {
-      showToast('⚠️ La descripción es obligatoria', 'warning');
+      notyf.open({ type: 'warning', message: '⚠️ La descripción es obligatoria' });
       return;
     }
 
@@ -67,11 +67,11 @@ export default function NewTicketPage() {
       }
       
       const ticket = await res.json();
-      showToast('✅ Ticket creado correctamente', 'success');
+      notyf.success('✅ Ticket creado correctamente');
       router.push(`/admin/tickets/${ticket.id}`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error al crear ticket';
-      showToast(`❌ ${message}`, 'error');
+      notyf.error(`❌ ${message}`);
       setSubmitting(false);
     }
   };
