@@ -2,7 +2,6 @@
 
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import emailjs from "@emailjs/browser";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { track } from "@vercel/analytics";
@@ -46,46 +45,33 @@ export default function ContactForm() {
     setFloatingElements(createFloatingElements());
   }, []);
 
-  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSending(true);
 
-    emailjs
-      .sendForm(
-        "service_i3ofsgh", // Tu Service ID
-        "template_3z8v0rn", // Tu Template ID
-        form.current!,
-        "x2atfK6sd3q0ZLUMV", // Tu Public Key
-      )
-      .then(
-        async () => {
-          // Registrar en el bridge del chatbot (Supabase + Telegram)
-          try {
-            const formData = new FormData(form.current!);
-            await fetch('/api/contact/bridge', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                name: formData.get('user_name'),
-                email: formData.get('user_email'),
-                message: formData.get('message'),
-              })
-            });
-          } catch (e) {
-            console.error("Bridge error:", e);
-          }
+    try {
+      const formData = new FormData(form.current!);
+      const response = await fetch('/api/contact/bridge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('user_name'),
+          email: formData.get('user_email'),
+          message: formData.get('message'),
+        }),
+      });
 
-          alert("Mensaje enviado correctamente 🎉");
-          track('contact_form_submitted');
-          setIsSending(false);
-          form.current?.reset();
-        },
-        (error) => {
-          console.error("Error al enviar:", error);
-          alert("Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.");
-          setIsSending(false);
-        },
-      );
+      if (!response.ok) throw new Error('Error del servidor');
+
+      alert("Mensaje enviado correctamente 🎉");
+      track('contact_form_submitted');
+      form.current?.reset();
+    } catch (error) {
+      console.error("Error al enviar:", error);
+      alert("Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (

@@ -1,6 +1,35 @@
 import { Resend } from 'resend';
 import { serverEnv, clientEnv } from '@/config/env';
 
+export async function sendContactNotification(name: string, email: string, message: string) {
+  if (!serverEnv.RESEND_API_KEY) return null;
+
+  const resend = new Resend(serverEnv.RESEND_API_KEY);
+
+  try {
+    await resend.emails.send({
+      from: 'Portafolio <onboarding@resend.dev>',
+      to: ['hernandezreyomar@gmail.com'],
+      replyTo: email,
+      subject: `📩 Nuevo mensaje de ${name} — Formulario de contacto`,
+      html: `
+        <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px;">
+          <h2 style="color: #00cba9;">Nuevo mensaje desde el formulario</h2>
+          <p><strong>Nombre:</strong> ${name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+          <hr style="border:none; border-top:1px solid #eee; margin: 20px 0;" />
+          <p><strong>Mensaje:</strong></p>
+          <blockquote style="border-left: 4px solid #00cba9; padding-left: 16px; margin: 8px 0; color: #555;">
+            ${message.replace(/\n/g, '<br/>')}
+          </blockquote>
+        </div>
+      `,
+    });
+  } catch (err) {
+    console.error('Error sending contact notification:', err);
+  }
+}
+
 export async function sendFollowUpEmail(to: string, name: string, service: string) {
   if (!serverEnv.RESEND_API_KEY) {
     console.warn('⚠️ RESEND_API_KEY not found, skipping email.');

@@ -1,5 +1,6 @@
 import { supabaseServer } from '../supabaseServer';
 import { notifyTelegram } from './telegram';
+import { sendContactNotification } from './email';
 import { Lead } from './parser';
 
 /**
@@ -55,6 +56,9 @@ Mensaje: "${data.message}"
     `.trim();
 
     await notifyTelegram(telegramMsg);
+
+    // 4. Notificar por email (si hay RESEND_API_KEY configurada)
+    await sendContactNotification(data.name, data.email, data.message);
 
     return { success: true };
   } catch (error) {
