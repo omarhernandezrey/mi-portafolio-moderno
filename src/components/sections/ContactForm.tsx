@@ -63,14 +63,18 @@ export default function ContactForm() {
         }),
       });
 
-      if (!response.ok) throw new Error('Error del servidor');
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Error del servidor');
+      }
 
       notyf.success("Mensaje enviado correctamente 🎉");
       track('contact_form_submitted');
       form.current?.reset();
     } catch (error) {
       console.error("Error al enviar:", error);
-      notyf.error("Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.");
+      const msg = error instanceof Error ? error.message : "Ocurrió un error al enviar el mensaje. Inténtalo de nuevo.";
+      notyf.error(msg);
     } finally {
       setIsSending(false);
     }
