@@ -13,7 +13,8 @@ const NotyfContext = createContext<NotyfContextType>({ notyf: null });
 export function useNotyf() {
   const ctx = useContext(NotyfContext);
   if (!ctx.notyf) {
-    throw new Error("useNotyf must be used within NotyfProvider");
+    const noop = () => ({});
+    return { success: noop, error: noop, open: noop, dismissAll: noop } as unknown as Notyf;
   }
   return ctx.notyf;
 }
