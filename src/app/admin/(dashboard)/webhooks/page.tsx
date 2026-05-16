@@ -42,27 +42,14 @@ export default function AdminWebhooksPage() {
 
   const load = async () => {
     setLoading(true);
-    const [wRes, lRes] = await Promise.all([
+    const [wRes, logsRes] = await Promise.all([
       fetch('/api/admin/webhooks'),
-      fetch('/api/admin/webhooks').then(() =>
-        fetch('/api/admin/conversations').then(() =>
-          // Fetch webhook logs from main webhooks endpoint (logs are in Supabase)
-          // We'll fetch them separately
-          fetch('/api/admin/logs?limit=20').then(r => r.json()).catch(() => [])
-        )
-      ),
+      fetch('/api/admin/webhook-logs'),
     ]);
 
-    const [wData] = await Promise.all([wRes.json()]);
+    const [wData, logsData] = await Promise.all([wRes.json(), logsRes.json()]);
     setWebhooks(wData || []);
-
-    // Fetch webhook logs via direct Supabase API
-    const logsRes = await fetch('/api/admin/webhook-logs');
-    if (logsRes.ok) {
-      const logsData = await logsRes.json();
-      setLogs(logsData || []);
-    }
-
+    setLogs(logsData || []);
     setLoading(false);
   };
 
@@ -93,8 +80,6 @@ export default function AdminWebhooksPage() {
     const data = await res.json();
     setTestResults(prev => ({ ...prev, [id]: data }));
     setTesting(null);
-
-    // Reload logs
     const logsRes = await fetch('/api/admin/webhook-logs');
     if (logsRes.ok) setLogs(await logsRes.json());
   };

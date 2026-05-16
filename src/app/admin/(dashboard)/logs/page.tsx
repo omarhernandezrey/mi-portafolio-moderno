@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  Activity, Search, RefreshCw, X, Filter, AlertTriangle,
+  Activity, Search, RefreshCw, X, AlertTriangle,
   CheckCircle, Clock, Zap, Hash, ChevronDown, ChevronUp
 } from 'lucide-react';
 
