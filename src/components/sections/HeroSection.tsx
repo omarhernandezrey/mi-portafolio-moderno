@@ -76,13 +76,17 @@ export default function HeroSection() {
         "
         style={{ color: "var(--white-color)" }}
       >
-        {/* H1 — keyword-rich heading principal visible para Google */}
+        {/* H1 — keyword-rich, siempre visible en SSR (Google lo lee) */}
         <h1
           className="
-            text-2xl sm:text-3xl md:text-4xl font-black mb-5
-            text-center leading-tight
+            text-xs sm:text-sm font-black uppercase tracking-[0.35em] mb-5
+            px-5 py-2 rounded-full border
           "
-          style={{ color: "var(--white-color)" }}
+          style={{
+            color: "var(--accent-color)",
+            borderColor: "color-mix(in srgb, var(--accent-color) 35%, transparent)",
+            backgroundColor: "color-mix(in srgb, var(--accent-color) 10%, transparent)",
+          }}
         >
           {t("hero.h1")}
         </h1>
