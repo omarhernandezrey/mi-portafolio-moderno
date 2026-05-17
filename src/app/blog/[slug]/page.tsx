@@ -35,19 +35,37 @@ const TAG_SERVICE: Record<string, { href: string; label: string }> = {
   'landing page': { href: '/servicios/landing-page/bogota', label: 'Landing Pages de Alto Impacto' },
   'diseño web': { href: '/servicios/landing-page/bogota', label: 'Diseño y Desarrollo Web' },
   'e-commerce': { href: '/servicios/e-commerce/bogota', label: 'E-commerce Profesional' },
+  'ecommerce': { href: '/servicios/e-commerce/bogota', label: 'E-commerce Profesional' },
+  'tienda online': { href: '/servicios/e-commerce/bogota', label: 'Tiendas Online' },
+  'ventas online': { href: '/servicios/e-commerce/bogota', label: 'Ventas Online' },
   'chatbot': { href: '/servicios/chatbot-ia/bogota', label: 'Chatbots con IA' },
   'inteligencia artificial': { href: '/servicios/chatbot-ia/bogota', label: 'Chatbots con IA' },
   'automatización': { href: '/servicios/automatizacion/bogota', label: 'Automatización de Procesos' },
   'seo': { href: '/servicios/seo-tecnico/bogota', label: 'SEO Técnico Profesional' },
+  'seo tecnico': { href: '/servicios/seo-tecnico/bogota', label: 'SEO Técnico Profesional' },
   'mvp': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo de MVP' },
   'nextjs': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo con Next.js' },
+  'react': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo con React' },
+  'wordpress': { href: '/servicios/desarrollo-web/bogota', label: 'Alternativa a WordPress' },
   'startup': { href: '/servicios/consultoria-tech/bogota', label: 'Consultoría Tecnológica' },
   'freelance developer': { href: '/servicios', label: 'Ver todos los Servicios' },
+  'freelance': { href: '/servicios', label: 'Servicios Freelance' },
   'agency': { href: '/servicios', label: 'Servicios de Desarrollo Web' },
   'hiring': { href: '/servicios', label: 'Contratar Desarrollador Web' },
+  'contratar': { href: '/servicios', label: 'Contratar Desarrollador Web' },
   'presupuesto': { href: '/calculadora', label: 'Calculadora de Presupuesto' },
   'precios': { href: '/calculadora', label: 'Calcular mi Presupuesto' },
   'colombia': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo Web en Colombia' },
+  'negocios pequeños': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo para PYMES' },
+  'pymes': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo para PYMES' },
+  'emprendedores': { href: '/servicios/landing-page/bogota', label: 'Landing para Emprendedores' },
+  'conversion': { href: '/servicios/landing-page/bogota', label: 'Landing Pages Conversión' },
+  'conseguir clientes': { href: '/servicios/seo-tecnico/bogota', label: 'Atraer Clientes Online' },
+  'marketing digital': { href: '/servicios/seo-tecnico/bogota', label: 'Marketing Digital Técnico' },
+  'comparativa': { href: '/servicios', label: 'Comparar Servicios' },
+  'empresas': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo Web Empresarial' },
+  'desarrollador web': { href: '/servicios', label: 'Contratar Desarrollador' },
+  'sobre mi': { href: '/sobre-mi', label: 'Conoce más sobre mí' },
 };
 
 function getRelatedServices(tags: string[]): Array<{ href: string; label: string }> {
@@ -90,6 +108,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     authors: [{ name: post.author, url: `${BASE_URL}/#person` }],
     alternates: {
       canonical: `${BASE_URL}/blog/${slug}`,
+      languages: {
+        [isEnglish ? 'en' : 'es']: `${BASE_URL}/blog/${slug}`,
+        'x-default': `${BASE_URL}/blog`,
+      },
     },
     openGraph: {
       title: post.title,
@@ -279,10 +301,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {isEnglish ? 'Get Free Consultation' : 'Consulta Gratuita'}
               </Link>
               <Link
+                href="/calculadora"
+                className="inline-block bg-[var(--primary-color)]/10 text-[var(--primary-color)] px-8 py-3 rounded-full font-bold hover:bg-[var(--primary-color)]/20 transition-all"
+              >
+                {isEnglish ? 'Estimate Your Project' : 'Calcular Presupuesto'}
+              </Link>
+              <Link
                 href="/servicios"
                 className="inline-block border border-[var(--muted-color)]/30 text-[var(--text-color)] px-8 py-3 rounded-full font-bold hover:border-[var(--primary-color)] transition-all"
               >
                 {isEnglish ? 'View All Services' : 'Ver Servicios'}
+              </Link>
+              <Link
+                href="/sobre-mi"
+                className="inline-block border border-[var(--muted-color)]/30 text-[var(--text-color)] px-8 py-3 rounded-full font-bold hover:border-[var(--primary-color)] transition-all"
+              >
+                {isEnglish ? 'About Me' : 'Sobre Mí'}
               </Link>
             </div>
           </footer>

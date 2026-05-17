@@ -52,6 +52,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const serviceName = isUS && servicio.nameEn ? servicio.nameEn : servicio.name;
 
+  // Smart indexing: priority cities indexables (evita thin content, mantiene calidad)
+  const INDEXABLE_CITIES = new Set([
+    // Colombia — principales
+    'bogota', 'medellin', 'cali', 'barranquilla', 'cartagena',
+    'bucaramanga', 'pereira', 'santa-marta',
+    // LATAM — hubs tecnológicos
+    'ciudad-de-mexico', 'monterrey', 'buenos-aires', 'santiago', 'lima',
+    'quito', 'panama', 'santo-domingo', 'montevideo', 'san-jose',
+    // USA — tier 1 tech markets
+    'new-york', 'los-angeles', 'chicago', 'houston', 'miami', 'dallas',
+    'san-francisco', 'seattle', 'boston', 'atlanta', 'washington-dc',
+    'austin', 'denver', 'san-diego', 'phoenix', 'portland',
+    // USA — tier 2 growing markets
+    'orlando', 'tampa', 'charlotte', 'nashville', 'salt-lake-city',
+    'minneapolis', 'san-antonio', 'las-vegas',
+  ]);
+  const isIndexable = INDEXABLE_CITIES.has(ciudadId);
+
   return {
     title,
     description,
@@ -59,6 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
     },
+    robots: isIndexable ? undefined : { index: false, follow: true },
     openGraph: {
       type: 'website',
       locale: isUS ? 'en_US' : 'es_CO',
@@ -172,15 +191,15 @@ export default async function ServicioCiudadPage({ params }: Props) {
     resourcesLabel: 'Recursos',
     resourcesTitle: 'Artículos útiles para tu proyecto',
     chatMsg: `Hola Omar, vengo de la página de ${serviceName} en ${ciudad.name}. Me gustaría saber más sobre este servicio.`,
-    blog1Title: '¿Cuánto cuesta un sitio web en Colombia?',
-    blog1Sub: 'Guía completa de precios 2026',
-    blog1Href: '/blog/cuanto-cuesta-sitio-web-colombia-2026',
-    blog2Title: 'Chatbots con IA para negocios',
-    blog2Sub: 'Todo lo que nadie te dice',
-    blog2Href: '/blog/chatbot-ia-negocio-colombia',
-    blog3Title: 'Landing page vs sitio web',
-    blog3Sub: '¿Cuál necesitas?',
-    blog3Href: '/blog/landing-page-vs-sitio-web-colombia',
+    blog1Title: '¿Por qué contratar desarrollador colombiano?',
+    blog1Sub: 'Calidad, zona horaria y precios 2026',
+    blog1Href: '/blog/why-hire-colombian-developer-2026',
+    blog2Title: '¿Freelance o agencia de desarrollo?',
+    blog2Sub: 'Comparativa real para tu proyecto',
+    blog2Href: '/blog/freelance-developer-vs-agency-web-project',
+    blog3Title: 'Crear un MVP en 30 días con Next.js',
+    blog3Sub: 'Framework y proceso explicado',
+    blog3Href: '/blog/build-mvp-nextjs-30-days-process',
   };
 
   const localBusinessSchema = {
@@ -201,6 +220,9 @@ export default async function ServicioCiudadPage({ params }: Props) {
       "@type": "Person",
       "@id": "https://omarhernandezrey.com/#person",
     },
+    "isPartOf": {
+      "@id": "https://omarhernandezrey.com/#organization",
+    },
     "serviceType": serviceName,
     "offers": {
       "@type": "Offer",
@@ -216,8 +238,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omarhernandezrey.com" },
       { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://omarhernandezrey.com/servicios" },
-      { "@type": "ListItem", "position": 3, "name": serviceName, "item": `https://omarhernandezrey.com/servicios/${servicioId}` },
-      { "@type": "ListItem", "position": 4, "name": ciudad.name, "item": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}` },
+      { "@type": "ListItem", "position": 3, "name": `${serviceName} in ${ciudad.name}`, "item": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}` },
     ],
   };
 

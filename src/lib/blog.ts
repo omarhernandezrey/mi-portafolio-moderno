@@ -46,6 +46,7 @@ export async function getAllPosts(): Promise<PostMetadata[]> {
         slug,
         readingTime: estimateReadingTime(content),
         wordCount: countWords(content),
+        lang: (data as PostMetadata).lang || 'es',
         ...(data as Omit<PostMetadata, 'slug' | 'readingTime' | 'wordCount'>),
       };
     });
@@ -65,20 +66,35 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     content,
     readingTime: estimateReadingTime(content),
     wordCount: countWords(content),
+    lang: (data as PostMetadata).lang || 'es',
     ...(data as Omit<PostMetadata, 'slug' | 'readingTime' | 'wordCount'>),
   };
 }
 
 export function getRelatedPosts(currentSlug: string, currentTags: string[], allPosts: PostMetadata[], limit = 3): PostMetadata[] {
+  const currentLang = allPosts.find(p => p.slug === currentSlug)?.lang;
   const tagsLower = currentTags.map(t => t.toLowerCase());
-  return allPosts
+  
+  const scored = allPosts
     .filter(p => p.slug !== currentSlug)
-    .map(p => ({
-      post: p,
-      score: p.tags.filter(t => tagsLower.includes(t.toLowerCase())).length,
-    }))
+    .map(p => {
+      const tagScore = p.tags.filter(t => tagsLower.includes(t.toLowerCase())).length;
+      const langBonus = (currentLang && p.lang === currentLang) ? 1 : 0;
+      return { post: p, score: tagScore + langBonus };
+    })
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(({ post }) => post);
+
+  if (scored.length < limit) {
+    const existingSlugs = new Set(scored.map(p => p.slug));
+    const fallback = allPosts
+      .filter(p => p.slug !== currentSlug && !existingSlugs.has(p.slug))
+      .sort((a, b) => (a.date < b.date ? 1 : -1))
+      .slice(0, limit - scored.length);
+    return [...scored, ...fallback];
+  }
+
+  return scored;
 }

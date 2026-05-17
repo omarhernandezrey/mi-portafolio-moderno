@@ -11,7 +11,6 @@ import {
 } from "react-icons/fa";
 import { FiArrowUp } from "react-icons/fi";
 import { motion } from "framer-motion";
-import TestimonialCard from "./TestimonialCard";
 import NewsletterForm from "./NewsletterForm";
 import { useTranslation } from "../../hooks/useTranslation";
 
@@ -39,23 +38,6 @@ export default function Footer() {
     });
   };
 
-  const testimonials = [
-    {
-      quote:
-        "Omar es un desarrollador excepcional que aporta creatividad y eficiencia a cada proyecto.",
-      author: "María López",
-      role: "Gerente de Proyectos en TechCorp",
-      avatar: "/images/testimonials/maria.jpg",
-    },
-    {
-      quote:
-        "Trabajar con Omar ha sido una experiencia increíble. Su atención al detalle y habilidades técnicas son insuperables.",
-      author: "Juan Pérez",
-      role: "CEO en Innovatech",
-      avatar: "/images/testimonials/juan.jpg",
-    },
-  ];
-
   const socialLinks = [
     {
       href: "https://github.com/omarhernandezrey",
@@ -81,12 +63,11 @@ export default function Footer() {
   ];
 
   const navigationLinks = [
+    { href: "/sobre-mi", label: "Sobre Mí" },
     { href: "/servicios", label: "Servicios de Desarrollo Web" },
     { href: "/blog", label: "Blog Técnico" },
-    { href: "#about", label: t("footer.navigation.aboutMe") },
-    { href: "#projects", label: t("footer.navigation.projects") },
     { href: "/calculadora", label: t("footer.navigation.calculator") },
-    { href: "#contact", label: t("footer.navigation.contact") },
+    { href: "/faq", label: "Preguntas Frecuentes" },
     { href: "/privacidad", label: t("footer.navigation.privacy") },
   ];
 
@@ -191,25 +172,6 @@ export default function Footer() {
               </div>
             </div>
           </div>
-
-          {/* Testimonios Reinstalados */}
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={index}
-                quote={testimonial.quote}
-                author={testimonial.author}
-                role={testimonial.role}
-                avatar={testimonial.avatar}
-              />
-            ))}
-          </motion.div>
 
           {/* Mapa Reinstalado */}
           <motion.div

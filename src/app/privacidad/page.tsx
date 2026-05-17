@@ -6,7 +6,6 @@ import Footer from '@/components/shared/Footer';
 
 export const metadata: Metadata = {
   title: 'Protocolo de Privacidad y Habeas Data | Omar Hernández',
-  robots: { index: false, follow: true },
   alternates: {
     canonical: 'https://omarhernandezrey.com/privacidad',
   },
@@ -117,13 +116,19 @@ export default function PrivacidadPage() {
         </div>
 
         {/* Global Navigation */}
-        <div className="flex justify-center pt-8">
+        <div className="flex justify-center gap-8 pt-8">
           <Link 
             href="/"
             className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
             Volver al Centro de Control
+          </Link>
+          <Link 
+            href="/privacy"
+            className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
+          >
+            English Version
           </Link>
         </div>
 

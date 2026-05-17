@@ -9,6 +9,11 @@ export const metadata = {
   description: 'Artículos técnicos sobre desarrollo web con React y Next.js, chatbots con IA, SEO y estrategia digital para emprendedores en Colombia y LATAM.',
   alternates: {
     canonical: 'https://omarhernandezrey.com/blog',
+    languages: {
+      'es': 'https://omarhernandezrey.com/blog',
+      'en': 'https://omarhernandezrey.com/blog',
+      'x-default': 'https://omarhernandezrey.com/blog',
+    },
   },
   keywords: [
     'blog desarrollo web colombia',
@@ -61,27 +66,38 @@ export default async function BlogPage() {
             Journal de <br />
             <span className="text-primary text-outline-primary">Ingeniería</span>
           </h1>
-          <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
-            Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.
-          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
+              Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.
+            </p>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 text-primary text-xs font-black italic shrink-0">
+              {posts.length} artículos publicados
+            </span>
+          </div>
         </header>
 
         {/* Blog Infrastructure Control */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 border-b border-white/5 pb-10">
           <nav className="flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/40">
-            <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">Latest Research</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Architecture</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">AI Agents</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Strategy</Link>
+            <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">Todos los artículos</Link>
+            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Desarrollo Web</Link>
+            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Negocios & Precios</Link>
+            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Tecnología</Link>
           </nav>
           
-          <div className="relative group w-full lg:w-72">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted/40 group-focus-within:text-primary transition-colors" size={16} />
-            <input 
-              type="text" 
-              placeholder="Buscar artículo..." 
-              className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold text-white-custom outline-none focus:border-primary/30 transition-all italic"
-            />
+          <div className="flex items-center gap-3 w-full lg:w-auto">
+            <div className="relative group w-full lg:w-72">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted/40 group-focus-within:text-primary transition-colors" size={16} />
+              <input 
+                type="text" 
+                placeholder="Buscar artículo..." 
+                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold text-white-custom outline-none focus:border-primary/30 transition-all italic"
+              />
+            </div>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full text-[9px] font-black uppercase tracking-widest text-primary/70 italic shrink-0">
+              ES
+              <span className="text-text-muted/30">Español</span>
+            </span>
           </div>
         </div>
 

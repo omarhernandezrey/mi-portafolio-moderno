@@ -6,7 +6,14 @@ import Footer from '@/components/shared/Footer';
 
 export const metadata: Metadata = {
   title: 'Privacy Protocol & Data Protection | Omar Hernández',
-  robots: { index: false, follow: true },
+  alternates: {
+    canonical: 'https://omarhernandezrey.com/privacy',
+    languages: {
+      'en': 'https://omarhernandezrey.com/privacy',
+      'es': 'https://omarhernandezrey.com/privacidad',
+      'x-default': 'https://omarhernandezrey.com/privacidad',
+    },
+  },
 };
 
 export default function PrivacyPage() {
@@ -114,13 +121,19 @@ export default function PrivacyPage() {
         </div>
 
         {/* Global Navigation */}
-        <div className="flex justify-center pt-8">
+        <div className="flex justify-center gap-8 pt-8">
           <Link 
             href="/"
             className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
             Back to Control Center
+          </Link>
+          <Link 
+            href="/privacidad"
+            className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
+          >
+            Versión en Español
           </Link>
         </div>
 

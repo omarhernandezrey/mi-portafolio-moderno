@@ -108,11 +108,22 @@ export default function ServiciosPage() {
       '@type': 'Person',
       '@id': 'https://omarhernandezrey.com/#person',
     },
+    'isPartOf': {
+      '@id': 'https://omarhernandezrey.com/#organization',
+    },
+    'mainEntityOfPage': {
+      '@type': 'WebPage',
+      '@id': 'https://omarhernandezrey.com/servicios',
+    },
     'hasOfferCatalog': {
       '@type': 'OfferCatalog',
       'name': 'Servicios de Desarrollo Web',
       'itemListElement': serviciosProgramaticos.map(s => ({
         '@type': 'Offer',
+        'priceCurrency': 'USD',
+        'price': s.priceRangeUsd
+          ? parseInt(s.priceRangeUsd.replace(/[^0-9]/g, '').slice(0, 4)) || undefined
+          : undefined,
         'itemOffered': {
           '@type': 'Service',
           'name': s.name,

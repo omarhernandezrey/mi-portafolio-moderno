@@ -13,10 +13,17 @@ export default function NewsletterForm() {
     setStatus("loading");
 
     try {
-      // Aquí deberías integrar tu servicio de suscripción al newsletter.
-      // Por ejemplo, podrías usar una API de EmailJS, Mailchimp, etc.
-      // Este es un ejemplo simulado:
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Error al suscribirse');
+      }
+
       setStatus("success");
       setEmail("");
     } catch (error) {

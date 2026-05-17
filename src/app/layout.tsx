@@ -19,14 +19,7 @@ const personData = {
       "description": "Servicios de desarrollo web, chatbots con IA, e-commerce y automatización. React, Next.js, Node.js. Colombia y USA remoto.",
       "publisher": { "@id": "https://omarhernandezrey.com/#organization" },
       "inLanguage": ["es", "en"],
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://omarhernandezrey.com/blog?q={search_term_string}",
-        },
-        "query-input": "required name=search_term_string",
-      },
+
     },
     {
       "@type": "Person",
@@ -55,7 +48,9 @@ const personData = {
       "url": "https://omarhernandezrey.com",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://omarhernandezrey.com/favicon.png",
+        "url": "https://omarhernandezrey.com/portfolio-preview.jpg",
+        "width": 1200,
+        "height": 630,
       },
       "founder": {
         "@type": "Person",
@@ -76,12 +71,12 @@ const personData = {
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 export const metadata: Metadata = {
@@ -118,6 +113,11 @@ export const metadata: Metadata = {
   creator: "Omar Hernández Rey",
   alternates: {
     canonical: 'https://omarhernandezrey.com',
+    languages: {
+      'es': 'https://omarhernandezrey.com',
+      'en': 'https://omarhernandezrey.com/?lang=en',
+      'x-default': 'https://omarhernandezrey.com',
+    },
   },
   openGraph: {
     type: "website",
@@ -160,6 +160,8 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://omarhernandezrey.com" />
+        <link rel="dns-prefetch" href="https://api.indexnow.org" />
         <link rel="alternate" type="application/rss+xml" title="Omar Hernández Rey | Blog" href="/feed.xml" />
       </head>
       <body

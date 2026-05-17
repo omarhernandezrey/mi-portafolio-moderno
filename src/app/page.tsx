@@ -86,28 +86,7 @@ export default function Home() {
           "@type": "Person",
           "@id": "https://omarhernandezrey.com/#person"
         },
-        "areaServed": ["CO", "US", "MX", "AR", "CL", "PE"],
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "5",
-          "reviewCount": "12",
-          "bestRating": "5",
-          "worstRating": "1"
-        },
-        "review": [
-          {
-            "@type": "Review",
-            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-            "author": { "@type": "Person", "name": "María López" },
-            "reviewBody": "Omar es un desarrollador excepcional que aporta creatividad y eficiencia a cada proyecto."
-          },
-          {
-            "@type": "Review",
-            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-            "author": { "@type": "Person", "name": "Juan Pérez" },
-            "reviewBody": "Trabajar con Omar ha sido una experiencia increíble. Su atención al detalle y habilidades técnicas son insuperables."
-          }
-        ]
+        "areaServed": ["CO", "US", "MX", "AR", "CL", "PE"]
       }
     ]
   };

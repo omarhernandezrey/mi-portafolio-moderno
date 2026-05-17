@@ -76,17 +76,13 @@ export default function HeroSection() {
         "
         style={{ color: "var(--white-color)" }}
       >
-        {/* H1 — keyword-rich, siempre visible en SSR (Google lo lee) */}
+        {/* H1 — keyword-rich heading principal visible para Google */}
         <h1
           className="
-            text-xs sm:text-sm font-black uppercase tracking-[0.35em] mb-5
-            px-5 py-2 rounded-full border
+            text-2xl sm:text-3xl md:text-4xl font-black mb-5
+            text-center leading-tight
           "
-          style={{
-            color: "var(--accent-color)",
-            borderColor: "color-mix(in srgb, var(--accent-color) 35%, transparent)",
-            backgroundColor: "color-mix(in srgb, var(--accent-color) 10%, transparent)",
-          }}
+          style={{ color: "var(--white-color)" }}
         >
           Desarrollador Web Freelance · Colombia &amp; USA Remote
         </h1>

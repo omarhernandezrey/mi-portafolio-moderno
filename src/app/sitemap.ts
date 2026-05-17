@@ -15,8 +15,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: '/calculadora', priority: 0.9, changeFrequency: 'monthly' as const },
     { url: '/faq', priority: 0.85, changeFrequency: 'monthly' as const },
     { url: '/blog', priority: 0.85, changeFrequency: 'weekly' as const },
+    { url: '/sobre-mi', priority: 0.8, changeFrequency: 'monthly' as const },
     { url: '/recursos', priority: 0.7, changeFrequency: 'monthly' as const },
     { url: '/certificates', priority: 0.6, changeFrequency: 'monthly' as const },
+    { url: '/status', priority: 0.5, changeFrequency: 'daily' as const },
     { url: '/privacidad', priority: 0.4, changeFrequency: 'yearly' as const },
     { url: '/privacy', priority: 0.4, changeFrequency: 'yearly' as const },
   ];
@@ -39,14 +41,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  // Rutas de blog posts
+  // Rutas de blog posts — ES posts targeting Colombia get higher priority
   const posts = await getAllPosts();
-  const blogRoutes = posts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
-    changeFrequency: 'monthly' as const,
-    priority: 0.75,
-  }));
+  const blogRoutes = posts.map((post) => {
+    const isSpanish = post.lang === 'es' || !post.lang;
+    return {
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: 'weekly' as const,
+      priority: isSpanish ? 0.82 : 0.75,
+    };
+  });
 
   // Mapear rutas estáticas
   const staticSitemap = staticRoutes.map((route) => ({
