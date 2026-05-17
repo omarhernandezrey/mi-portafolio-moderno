@@ -6,7 +6,6 @@ import Image from "next/image";
 import {
   FaHome,
   FaUserAlt,
-  FaGraduationCap,
   FaCode,
   FaEnvelope,
   FaProjectDiagram,
