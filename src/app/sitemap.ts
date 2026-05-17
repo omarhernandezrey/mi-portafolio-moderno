@@ -11,23 +11,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Rutas estáticas principales
   const staticRoutes = [
     { url: '', priority: 1.0, changeFrequency: 'weekly' as const },
+    { url: '/servicios', priority: 0.95, changeFrequency: 'weekly' as const },
     { url: '/calculadora', priority: 0.9, changeFrequency: 'monthly' as const },
-    { url: '/faq', priority: 0.8, changeFrequency: 'monthly' as const },
-    { url: '/blog', priority: 0.8, changeFrequency: 'weekly' as const },
+    { url: '/faq', priority: 0.85, changeFrequency: 'monthly' as const },
+    { url: '/blog', priority: 0.85, changeFrequency: 'weekly' as const },
     { url: '/recursos', priority: 0.7, changeFrequency: 'monthly' as const },
-    { url: '/status', priority: 0.6, changeFrequency: 'daily' as const },
     { url: '/certificates', priority: 0.6, changeFrequency: 'monthly' as const },
-    { url: '/privacidad', priority: 0.5, changeFrequency: 'yearly' as const },
-    { url: '/privacy', priority: 0.5, changeFrequency: 'yearly' as const },
+    { url: '/privacidad', priority: 0.4, changeFrequency: 'yearly' as const },
+    { url: '/privacy', priority: 0.4, changeFrequency: 'yearly' as const },
   ];
 
   // Rutas de servicios por ciudad (programáticas)
+  // Las páginas de Bogotá tienen máxima prioridad como hub de cada servicio
   const serviciosCiudades = serviciosProgramaticos.flatMap((servicio) =>
     ciudades.map((ciudad) => ({
       url: `${baseUrl}/servicios/${servicio.id}/${ciudad.id}`,
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
-      priority: 0.8,
+      priority: ciudad.id === 'bogota' ? 0.9 : ciudad.id === 'medellin' || ciudad.id === 'cali' ? 0.85 : 0.75,
     }))
   );
 

@@ -5,10 +5,40 @@ import { BookOpen, Calendar, Clock, ArrowRight, Search, Sparkles, ChevronRight }
 import Footer from '@/components/shared/Footer';
 
 export const metadata = {
-  title: 'Blog | Omar Hernández Rey',
-  description: 'Artículos técnicos sobre desarrollo web, chatbots con IA y estrategia digital para emprendedores en Colombia y LATAM.',
+  title: 'Blog Técnico — Desarrollo Web, IA y Estrategia Digital | Omar Hernández Rey',
+  description: 'Artículos técnicos sobre desarrollo web con React y Next.js, chatbots con IA, SEO y estrategia digital para emprendedores en Colombia y LATAM.',
   alternates: {
     canonical: 'https://omarhernandezrey.com/blog',
+  },
+  keywords: [
+    'blog desarrollo web colombia',
+    'tutorial react next.js',
+    'chatbot ia tutorial',
+    'seo tecnico colombia',
+    'estrategia digital emprendedores',
+    'programacion web colombia',
+  ],
+  openGraph: {
+    type: 'website',
+    locale: 'es_CO',
+    url: 'https://omarhernandezrey.com/blog',
+    siteName: 'Omar Hernández Rey Portfolio',
+    title: 'Blog Técnico — Desarrollo Web, IA y Estrategia Digital',
+    description: 'Artículos técnicos sobre React, Next.js, chatbots con IA y SEO para emprendedores en Colombia y LATAM.',
+    images: [
+      {
+        url: 'https://omarhernandezrey.com/api/og?title=Blog%20T%C3%A9cnico&subtitle=Desarrollo%20Web%2C%20IA%20y%20Estrategia%20Digital',
+        width: 1200,
+        height: 630,
+        alt: 'Blog Técnico — Omar Hernández Rey',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Blog Técnico — Desarrollo Web e IA | Omar Hernández Rey',
+    description: 'Artículos sobre React, Next.js, chatbots IA y estrategia digital para Colombia y LATAM.',
+    images: ['https://omarhernandezrey.com/api/og?title=Blog%20T%C3%A9cnico&subtitle=Desarrollo%20Web%2C%20IA%20y%20Estrategia%20Digital'],
   },
 };
 

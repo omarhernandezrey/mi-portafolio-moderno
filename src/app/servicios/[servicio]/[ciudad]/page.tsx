@@ -41,13 +41,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .replace('{ciudad}', ciudad.name)
     .replace('{country}', ciudad.country);
 
+  const keywords = servicio.keywords.map(k =>
+    k.replace('{ciudad}', ciudad.name).replace('{country}', ciudad.country)
+  );
+
   return {
     title,
     description,
+    keywords,
     alternates: {
       canonical: `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
     },
     openGraph: {
+      type: 'website',
+      locale: ciudad.country === 'United States' ? 'en_US' : 'es_CO',
       title,
       description,
       url: `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
@@ -303,12 +310,51 @@ export default async function ServicioCiudadPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Recursos Útiles - Internal Linking */}
+      {/* Otros Servicios - Internal Linking */}
       <section className="py-24 bg-card-bg/30 border-t border-white/5">
-        <div className="max-w-4xl mx-auto px-4 md:px-8">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <div className="text-center space-y-4 mb-12">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Recursos</h2>
+            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Catálogo</h2>
             <h3 className="text-2xl md:text-3xl font-black text-white-custom tracking-tighter italic">
+              Otros servicios disponibles en <span className="text-primary">{ciudad.name}</span>
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {serviciosProgramaticos
+              .filter(s => s.id !== servicio.id)
+              .slice(0, 6)
+              .map(s => (
+                <Link
+                  key={s.id}
+                  href={`/servicios/${s.id}/${ciudadId}`}
+                  className="group bg-card-bg rounded-2xl p-5 border border-white/5 hover:border-primary/30 transition-all flex items-center justify-between"
+                >
+                  <div>
+                    <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-1">{s.name}</p>
+                    <p className="text-[10px] text-text-muted/50">{s.priceRange.split('(')[0].trim()}</p>
+                  </div>
+                  <ArrowRight size={14} className="text-text-muted/30 group-hover:text-primary transition-colors shrink-0" />
+                </Link>
+              ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/servicios"
+              className="inline-flex items-center gap-2 text-sm font-bold text-text-muted/60 hover:text-primary transition-colors"
+            >
+              Ver todos los servicios
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Recursos Útiles - Blog Internal Linking */}
+      <section className="py-16 bg-background border-t border-white/5">
+        <div className="max-w-4xl mx-auto px-4 md:px-8">
+          <div className="text-center space-y-3 mb-10">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Recursos</h2>
+            <h3 className="text-xl md:text-2xl font-black text-white-custom tracking-tighter italic">
               Artículos útiles para tu proyecto
             </h3>
           </div>

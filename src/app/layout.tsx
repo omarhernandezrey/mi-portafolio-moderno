@@ -10,24 +10,51 @@ import { clientEnv } from "@/config/env";
 // SEO: Bing & Google verification via env vars
 const personData = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  "@id": "https://omarhernandezrey.com/#person",
-  "name": OMAR_PROFILE.name,
-  "url": OMAR_PROFILE.url,
-  "image": OMAR_PROFILE.image,
-  "sameAs": OMAR_PROFILE.sameAs,
-  "jobTitle": OMAR_PROFILE.jobTitle,
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Freelance"
-  },
-  "description": OMAR_PROFILE.description,
-  "knowsAbout": OMAR_PROFILE.knowsAbout,
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": OMAR_PROFILE.addressLocality,
-    "addressCountry": OMAR_PROFILE.addressCountry
-  }
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://omarhernandezrey.com/#person",
+      "name": OMAR_PROFILE.name,
+      "url": OMAR_PROFILE.url,
+      "image": OMAR_PROFILE.image,
+      "sameAs": OMAR_PROFILE.sameAs,
+      "jobTitle": OMAR_PROFILE.jobTitle,
+      "worksFor": {
+        "@type": "Organization",
+        "@id": "https://omarhernandezrey.com/#organization",
+      },
+      "description": OMAR_PROFILE.description,
+      "knowsAbout": OMAR_PROFILE.knowsAbout,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": OMAR_PROFILE.addressLocality,
+        "addressCountry": OMAR_PROFILE.addressCountry,
+      },
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://omarhernandezrey.com/#organization",
+      "name": "Omar Hernández Rey — Desarrollo Web Freelance",
+      "url": "https://omarhernandezrey.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://omarhernandezrey.com/favicon.png",
+      },
+      "founder": {
+        "@type": "Person",
+        "@id": "https://omarhernandezrey.com/#person",
+      },
+      "sameAs": OMAR_PROFILE.sameAs,
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": OMAR_PROFILE.telephone,
+        "contactType": "customer service",
+        "availableLanguage": ["Spanish", "English"],
+      },
+      "description": "Servicios profesionales de desarrollo web, chatbots con IA, e-commerce y automatización para Colombia y LATAM.",
+      "areaServed": ["CO", "US", "MX", "AR", "CL", "PE"],
+    },
+  ],
 };
 
 const geistSans = Geist({
@@ -55,33 +82,25 @@ export const metadata: Metadata = {
     },
   },
   keywords: [
-    "desarrollador full stack",
-    "full stack developer",
-    "omar hernandez",
-    "omar hernandez rey",
-    "desarrollador freelance",
-    "freelance developer",
-    "web development",
-    "desarrollo web",
-    "react developer",
-    "next.js developer",
-    "colombia",
-    "bogota",
-    "software engineer",
-    "ingeniero de software",
+    "desarrollador web freelance colombia",
+    "contratar desarrollador web colombia",
+    "programador freelance colombia",
+    "desarrollador full stack colombia",
+    "full stack developer colombia",
+    "react developer colombia",
+    "next.js developer colombia",
     "hire developer colombia remote",
-    "Next.js developer USA",
-    "freelance web developer affordable",
-    "web development Colombia"
+    "software developer colombia",
+    "ingeniero de software colombia",
+    "desarrollador web bogota",
+    "chatbot ia colombia",
+    "e-commerce colombia",
+    "aplicaciones web colombia",
   ],
   authors: [{ name: "Omar Hernández Rey" }],
   creator: "Omar Hernández Rey",
   alternates: {
     canonical: 'https://omarhernandezrey.com',
-    languages: {
-      'es': 'https://omarhernandezrey.com',
-      'en': 'https://omarhernandezrey.com',
-    },
   },
   openGraph: {
     type: "website",
