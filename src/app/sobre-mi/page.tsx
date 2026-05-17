@@ -8,8 +8,8 @@ import { OMAR_PROFILE } from '@/data/omarProfile';
 // All data is defined inline from real project sources
 
 export const metadata: Metadata = {
-  title: 'Sobre Mí — Omar Hernández Rey | Full Stack Web Developer Colombia',
-  description: 'Desarrollador Full Stack freelance con 5+ años de experiencia. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación. Proyectos para Colombia y clientes remotos en USA.',
+  title: 'Sobre Mí — Omar Hernández Rey | Desarrollador Web Full Stack Colombia',
+  description: 'Desarrollador Full Stack freelance con 5+ años de experiencia. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software. Proyectos para Colombia y clientes remotos en USA.',
   alternates: {
     canonical: 'https://omarhernandezrey.com/sobre-mi',
     languages: {
@@ -20,26 +20,25 @@ export const metadata: Metadata = {
   },
   keywords: [
     'desarrollador full stack colombia',
-    'programador web bogota',
+    'programador web bogotá',
     'ingeniero de software colombia',
     'desarrollador react colombia',
-    'freelance web developer colombia',
-    'full stack developer latam',
-    'next.js developer colombia',
+    'desarrollador web freelance colombia',
+    'desarrollador next.js colombia',
     'desarrollador node.js colombia',
-    'desarrollador web freelance',
-    'desarrollo web colombia remoto usa',
+    'desarrollo web colombia remoto',
+    'programador freelance bogotá',
   ],
   openGraph: {
     type: 'profile',
     locale: 'es_CO',
     url: 'https://omarhernandezrey.com/sobre-mi',
     siteName: 'Omar Hernández Rey Portfolio',
-    title: 'Sobre Mí — Omar Hernández Rey | Full Stack Web Developer',
-    description: 'Desarrollador Full Stack freelance con 5+ años de experiencia. React, Next.js, Node.js, IA. Ingeniero de Software. Colombia y USA remoto.',
+    title: 'Sobre Mí — Omar Hernández Rey | Desarrollador Web Full Stack',
+    description: 'Desarrollador Full Stack freelance con 5+ años de experiencia. React, Next.js, Node.js, IA. Colombia y remoto USA.',
     images: [
       {
-        url: 'https://omarhernandezrey.com/api/og?title=Sobre%20M%C3%AD&subtitle=Full%20Stack%20Web%20Developer%20%E2%80%94%20Colombia',
+        url: 'https://omarhernandezrey.com/api/og?title=Sobre%20M%C3%AD&subtitle=Desarrollador%20Web%20Full%20Stack%20%E2%80%94%20Colombia',
         width: 1200,
         height: 630,
         alt: 'Sobre Mí — Omar Hernández Rey',
@@ -48,9 +47,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sobre Mí — Omar Hernández Rey | Full Stack Web Developer',
+    title: 'Sobre Mí — Omar Hernández Rey | Desarrollador Web Full Stack',
     description: 'Desarrollador Full Stack freelance. 5+ años. React, Next.js, Node.js, IA. Colombia y remoto USA.',
-    images: ['https://omarhernandezrey.com/api/og?title=Sobre%20M%C3%AD&subtitle=Full%20Stack%20Web%20Developer%20%E2%80%94%20Colombia'],
+    images: ['https://omarhernandezrey.com/api/og?title=Sobre%20M%C3%AD&subtitle=Desarrollador%20Web%20Full%20Stack%20%E2%80%94%20Colombia'],
   },
 };
 
@@ -221,7 +220,7 @@ export default function SobreMiPage() {
             <span className="text-primary">Hernández Rey</span>
           </h1>
           <p className="text-2xl md:text-3xl font-bold text-text-main/80 italic">
-            Full Stack Web Developer
+            Desarrollador Web Full Stack
           </p>
           <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
             Desarrollador Full Stack freelance con más de 5 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. 

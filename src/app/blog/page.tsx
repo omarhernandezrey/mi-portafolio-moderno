@@ -49,8 +49,10 @@ export const metadata = {
 
 export default async function BlogPage() {
   const posts = await getAllPosts();
-  const featuredPost = posts[0];
-  const regularPosts = posts.slice(1);
+  const esPosts = posts.filter(p => p.lang === 'es' || !p.lang);
+  const enPosts = posts.filter(p => p.lang === 'en');
+  const featuredPost = esPosts[0] || enPosts[0] || posts[0];
+  const regularPosts = posts.filter(p => p.slug !== featuredPost?.slug);
 
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
@@ -107,7 +109,10 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
               <div className="p-6 sm:p-10 md:p-20 space-y-6 sm:space-y-10 relative z-10">
                 <div className="flex items-center gap-4">
-                  <span className="px-3 py-1 rounded-md bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest italic">Featured</span>
+                  <span className="px-3 py-1 rounded-md bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest italic">Destacado</span>
+                  {featuredPost.lang === 'en' && (
+                    <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[9px] font-black uppercase tracking-widest">EN</span>
+                  )}
                   <div className="flex items-center gap-2 text-[10px] text-text-muted/40 font-black uppercase tracking-widest">
                     <Calendar size={12} />
                     {new Date(featuredPost.date).toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}
@@ -160,10 +165,15 @@ export default async function BlogPage() {
                 <div className="flex items-center justify-between mb-8 relative z-10">
                   <div className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest flex items-center gap-2">
                     <Clock size={12} className="text-primary" />
-                    5 min read
+                    {post.readingTime || 5} min
                   </div>
-                  <div className="text-[10px] font-black text-primary/60 uppercase tracking-tighter italic">
-                    {new Date(post.date).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                  <div className="flex items-center gap-2">
+                    {post.lang === 'en' && (
+                      <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[8px] font-black uppercase tracking-widest">EN</span>
+                    )}
+                    <div className="text-[10px] font-black text-primary/60 uppercase tracking-tighter italic">
+                      {new Date(post.date).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                    </div>
                   </div>
                 </div>
 
