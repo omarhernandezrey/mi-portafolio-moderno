@@ -23,12 +23,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Rutas de servicios por ciudad (programáticas)
   // Las páginas de Bogotá tienen máxima prioridad como hub de cada servicio
+  const US_MAJOR = new Set(['new-york', 'los-angeles', 'chicago', 'houston', 'miami', 'dallas', 'san-francisco', 'seattle', 'boston', 'atlanta', 'washington-dc', 'austin', 'denver', 'san-diego', 'phoenix']);
+  const US_CITIES = new Set(['boston', 'philadelphia', 'washington-dc', 'baltimore', 'newark', 'hartford', 'providence', 'miami', 'atlanta', 'tampa', 'orlando', 'charlotte', 'nashville', 'jacksonville', 'raleigh', 'richmond', 'memphis', 'louisville', 'new-orleans', 'chicago', 'detroit', 'minneapolis', 'columbus', 'indianapolis', 'milwaukee', 'cleveland', 'kansas-city', 'st-louis', 'pittsburgh', 'cincinnati', 'omaha', 'houston', 'dallas', 'san-antonio', 'austin', 'el-paso', 'oklahoma-city', 'phoenix', 'las-vegas', 'denver', 'albuquerque', 'salt-lake-city', 'tucson', 'los-angeles', 'san-francisco', 'seattle', 'portland', 'san-diego', 'sacramento', 'san-jose', 'boise', 'honolulu', 'new-york']);
+
   const serviciosCiudades = serviciosProgramaticos.flatMap((servicio) =>
     ciudades.map((ciudad) => ({
       url: `${baseUrl}/servicios/${servicio.id}/${ciudad.id}`,
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
-      priority: ciudad.id === 'bogota' ? 0.9 : ciudad.id === 'medellin' || ciudad.id === 'cali' ? 0.85 : 0.75,
+      priority: US_MAJOR.has(ciudad.id) ? 0.88
+        : US_CITIES.has(ciudad.id) ? 0.80
+        : ciudad.id === 'bogota' ? 0.90
+        : ciudad.id === 'medellin' || ciudad.id === 'cali' ? 0.85
+        : 0.75,
     }))
   );
 

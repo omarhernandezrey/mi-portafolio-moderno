@@ -10,6 +10,16 @@ export interface ServicioProgramatico {
   faqs: Array<{ q: string; a: string }>;
   priceRange: string;
   deliveryTime: string;
+  nameEn?: string;
+  h1En?: string;
+  h2En?: string;
+  descriptionEn?: string;
+  keywordsEn?: string[];
+  benefitsEn?: string[];
+  processEn?: string[];
+  faqsEn?: Array<{ q: string; a: string }>;
+  priceRangeUsd?: string;
+  deliveryTimeEn?: string;
 }
 
 export const serviciosProgramaticos: ServicioProgramatico[] = [
@@ -39,7 +49,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Incluye diseño o debo tenerlo listo?', a: 'El diseño está incluido. Trabajamos juntos en Figma hasta que estés 100% satisfecho.' }
     ],
     priceRange: '$1.2M - $15M COP ($300 - $3,800 USD)',
-    deliveryTime: '1-6 semanas según complejidad'
+    deliveryTime: '1-6 semanas según complejidad',
+    nameEn: 'Web Development',
+    h1En: 'Professional Web Development in {city}',
+    h2En: 'High-Performance Websites for Businesses in {city}',
+    descriptionEn: 'Custom web development using Next.js and React, optimized for {city}\'s competitive market. We build fast, SEO-ready sites that convert visitors into paying clients — for businesses across {country}.',
+    keywordsEn: ['web development {city}', 'web developer {city}', 'hire web developer {city}', 'website design {city}', 'freelance web developer {city}'],
+    benefitsEn: [
+      'Ultra-fast Next.js & React websites',
+      'Mobile-first responsive design for all devices',
+      'Technical SEO optimization included',
+      'Intuitive admin dashboard',
+      'Hosting & domain fully configured',
+    ],
+    processEn: [
+      'Discovery: We understand your business goals and target audience',
+      'Design: Figma mockups for your approval before coding',
+      'Development: Built with modern, scalable tech stack',
+      'Launch: Deploy, configure, and go live with full handover',
+    ],
+    faqsEn: [
+      { q: 'How much does a website cost in {city}?', a: 'Landing pages start at $300 USD. Corporate websites from $1,000 USD. E-commerce from $1,500 USD. Final price depends on features: payment integrations, advanced forms, admin panel, etc.' },
+      { q: 'How long does it take to build my website?', a: 'Landing pages: 3-7 business days. Corporate sites: 2-4 weeks. E-commerce: 3-6 weeks.' },
+      { q: 'Is design included in the price?', a: 'Yes. We work in Figma until you\'re 100% satisfied before writing a single line of code.' },
+    ],
+    priceRangeUsd: '$300 - $3,800 USD',
+    deliveryTimeEn: '1-6 weeks depending on complexity',
   },
   {
     id: 'chatbot-ia',
@@ -67,7 +102,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Qué tan inteligente es?', a: 'Usamos GPT-4/Claude. Entiende contexto, mantiene conversaciones naturales y aprende de tu información específica.' }
     ],
     priceRange: '$1.5M - $8M COP ($400 - $2,000 USD)',
-    deliveryTime: '1-3 semanas'
+    deliveryTime: '1-3 semanas',
+    nameEn: 'AI Chatbots',
+    h1En: 'AI-Powered Chatbots for Businesses in {city}',
+    h2En: 'Automate Your Sales 24/7 in {city} with Artificial Intelligence',
+    descriptionEn: 'We deploy intelligent AI agents that capture leads and close sales for your business in {city}. GPT-4 and Claude-powered chatbots integrated with WhatsApp Business and your website, serving companies across {country}.',
+    keywordsEn: ['ai chatbot {city}', 'chatbot development {city}', 'whatsapp chatbot {city}', 'ai sales automation {city}', 'conversational ai {city}'],
+    benefitsEn: [
+      '24/7 customer support without interruptions',
+      'Native WhatsApp Business integration',
+      'Automatic lead capture and qualification',
+      'Natural language responses in English and Spanish',
+      'Automatic escalation to human agents when needed',
+    ],
+    processEn: [
+      'Analysis: We identify your most frequent customer queries',
+      'Configuration: We train the bot with your business information',
+      'Integration: Connect with WhatsApp and/or your website',
+      'Testing: Fine-tune responses based on real conversations',
+    ],
+    faqsEn: [
+      { q: 'How much does an AI chatbot cost?', a: 'Basic web chatbot from $400 USD. WhatsApp Business + AI integration from $1,000 USD plus monthly API costs.' },
+      { q: 'Can the chatbot sell through WhatsApp?', a: 'Yes — it qualifies leads, answers FAQs, sends quotes, and escalates sales-ready conversations.' },
+      { q: 'How smart is it?', a: 'We use GPT-4 and Claude. It understands context, maintains natural conversations, and learns from your specific business information.' },
+    ],
+    priceRangeUsd: '$400 - $2,000 USD',
+    deliveryTimeEn: '1-3 weeks',
   },
   {
     id: 'automatizacion',
@@ -95,7 +155,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Con qué herramientas se integra?', a: 'WhatsApp, Notion, Google Sheets, Airtable, Slack, Telegram, correo, y cualquier API moderna.' }
     ],
     priceRange: '$2M - $10M COP ($500 - $2,500 USD)',
-    deliveryTime: '2-4 semanas'
+    deliveryTime: '2-4 semanas',
+    nameEn: 'Process Automation',
+    h1En: 'Business Process Automation in {city}',
+    h2En: 'Eliminate Repetitive Tasks and Scale Your Business in {city}',
+    descriptionEn: 'We connect your favorite tools so your business in {city} runs on autopilot. From Notion integrations to complex cloud workflows, custom-built for companies across {country}.',
+    keywordsEn: ['business automation {city}', 'workflow automation {city}', 'api integration {city}', 'process automation developer {city}', 'no-code automation {city}'],
+    benefitsEn: [
+      'Eliminate time-consuming manual tasks',
+      'Seamless integration between your current tools',
+      'Automatic email, Slack, and Telegram notifications',
+      'Auto-generated reports and dashboards',
+      'Scales as your business grows',
+    ],
+    processEn: [
+      'Audit: We map your current manual workflows and pain points',
+      'Design: We propose optimized automated workflows',
+      'Implementation: We build the integrations and connectors',
+      'Training: We teach you to manage and modify them',
+    ],
+    faqsEn: [
+      { q: 'What processes can you automate?', a: 'Reports, notifications, data sync between apps, automatic replies, CRM updates, invoicing, and much more.' },
+      { q: 'Do I need to know how to code?', a: 'No. We build everything and deliver simple documentation so you can manage it yourself.' },
+      { q: 'What tools do you integrate with?', a: 'WhatsApp, Notion, Google Sheets, Airtable, Slack, Telegram, HubSpot, Salesforce, and any modern API.' },
+    ],
+    priceRangeUsd: '$500 - $2,500 USD',
+    deliveryTimeEn: '2-4 weeks',
   },
   {
     id: 'e-commerce',
@@ -123,7 +208,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Puedo gestionar productos yo mismo?', a: 'Sí, incluimos un panel intuitivo donde puedes agregar, editar y eliminar productos sin saber código.' }
     ],
     priceRange: '$6M - $20M COP ($1,500 - $5,000 USD)',
-    deliveryTime: '3-6 semanas'
+    deliveryTime: '3-6 semanas',
+    nameEn: 'E-Commerce Development',
+    h1En: 'High-Impact E-Commerce Development in {city}',
+    h2En: 'Sell Your Products Online in {city} and Beyond',
+    descriptionEn: 'We build fast, secure online stores for entrepreneurs and businesses in {city}. Payment gateways, inventory management, and conversion optimization — built to sell across {country} and globally.',
+    keywordsEn: ['ecommerce development {city}', 'online store {city}', 'custom ecommerce {city}', 'ecommerce developer {city}', 'shopify alternative {city}'],
+    benefitsEn: [
+      'Professional online store ready to sell from day one',
+      'Integrated payment gateways (Stripe, PayPal)',
+      'Easy inventory and product management',
+      'Conversion-optimized design and UX',
+      'Intuitive admin panel — no coding required',
+    ],
+    processEn: [
+      'Strategy: We define your product catalog and store structure',
+      'Design: We create an attractive, conversion-focused store',
+      'Development: We integrate payments, shipping, and management',
+      'Launch: Full training so you can manage it independently',
+    ],
+    faqsEn: [
+      { q: 'How much does an online store cost?', a: 'Basic e-commerce from $1,500 USD. With advanced features (subscriptions, memberships, multi-vendor) from $2,500 USD.' },
+      { q: 'Which payment gateway should I use?', a: 'For US customers: Stripe or PayPal. For international: both. We handle the full integration.' },
+      { q: 'Can I manage products myself?', a: 'Yes. We provide an intuitive dashboard where you can add, edit, and remove products without any coding knowledge.' },
+    ],
+    priceRangeUsd: '$1,500 - $5,000 USD',
+    deliveryTimeEn: '3-6 weeks',
   },
   {
     id: 'consultoria-tech',
@@ -151,7 +261,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Tengo que tener conocimientos técnicos?', a: 'No. Explicamos todo en lenguaje claro para que tomes decisiones informadas.' }
     ],
     priceRange: '$800k - $5M COP ($200 - $1,250 USD)',
-    deliveryTime: '3-10 días'
+    deliveryTime: '3-10 días',
+    nameEn: 'Tech Consulting',
+    h1En: 'Tech Consulting Services in {city}',
+    h2En: 'Expert Guidance for Digital Projects in {city}',
+    descriptionEn: 'Not sure where to start your digital project in {city}? We help you choose the right tech stack and design a scalable architecture. Independent, expert advice for businesses across {country}.',
+    keywordsEn: ['tech consulting {city}', 'software architect {city}', 'cto as a service {city}', 'technology advisor {city}', 'it consulting {city}'],
+    benefitsEn: [
+      'Right tech stack for your specific needs',
+      'Scalable architecture from day one',
+      'Realistic budget and clear roadmap',
+      'Avoid costly mistakes from the start',
+      'Vendor-agnostic recommendations',
+    ],
+    processEn: [
+      'Diagnosis: We understand your vision, constraints, and goals',
+      'Analysis: We evaluate technology options objectively',
+      'Proposal: We deliver a detailed technical document',
+      'Support: Available for follow-up questions post-delivery',
+    ],
+    faqsEn: [
+      { q: 'How much does tech consulting cost?', a: 'Basic audit from $200 USD. Full consulting with technical documentation from $500 USD.' },
+      { q: 'Do I need to hire you for development afterwards?', a: 'Not required. Our consulting is independent, though many clients prefer us to execute as well.' },
+      { q: 'Do I need technical knowledge?', a: 'No. We explain everything in plain language so you can make informed decisions.' },
+    ],
+    priceRangeUsd: '$200 - $1,250 USD',
+    deliveryTimeEn: '3-10 business days',
   },
   {
     id: 'landing-page',
@@ -179,7 +314,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Incluye hosting y dominio?', a: 'Incluimos configuración en tu hosting. Si no tienes, te recomendamos las mejores opciones según tu presupuesto.' }
     ],
     priceRange: '$1.2M - $3M COP ($300 - $750 USD)',
-    deliveryTime: '3-7 días'
+    deliveryTime: '3-7 días',
+    nameEn: 'High-Converting Landing Pages',
+    h1En: 'High-Converting Landing Pages in {city}',
+    h2En: 'Landing Pages That Turn Visitors Into Customers in {city}',
+    descriptionEn: 'We design and develop conversion-optimized landing pages for businesses in {city}. A/B testing, intelligent forms, and behavior analytics to maximize your sales across {country} and beyond.',
+    keywordsEn: ['landing page {city}', 'landing page designer {city}', 'high converting landing page {city}', 'lead generation page {city}', 'sales page developer {city}'],
+    benefitsEn: [
+      'Conversion-focused design built for measurable results',
+      'Lightning-fast load times for better user experience',
+      'Optimized lead capture forms',
+      'Analytics and conversion tracking integration',
+      'Mobile-first responsive design',
+    ],
+    processEn: [
+      'Research: We analyze your audience and competitors',
+      'Copywriting: We write persuasive, keyword-rich copy',
+      'Design: We create a conversion-optimized layout',
+      'Launch: We set up tracking and publish',
+    ],
+    faqsEn: [
+      { q: 'How much does a landing page cost?', a: 'Professional landing pages from $300 USD. With A/B testing and advanced optimization from $500 USD.' },
+      { q: 'Landing page or full website?', a: 'If you have one specific goal (sell a product, capture leads), go landing page. For full institutional presence, choose a website.' },
+      { q: 'Does it include hosting?', a: 'We include hosting setup on your account. If you don\'t have hosting yet, we recommend the best options for your budget.' },
+    ],
+    priceRangeUsd: '$300 - $750 USD',
+    deliveryTimeEn: '3-7 business days',
   },
   {
     id: 'aplicacion-movil',
@@ -207,7 +367,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Funciona en iPhone?', a: 'Sí, aunque con algunas limitaciones vs Android. iOS 16+ soporta PWA cada vez mejor.' }
     ],
     priceRange: '$4M - $12M COP ($1,000 - $3,000 USD)',
-    deliveryTime: '3-6 semanas'
+    deliveryTime: '3-6 semanas',
+    nameEn: 'Progressive Web Apps (PWA)',
+    h1En: 'Progressive Web App Development in {city}',
+    h2En: 'Apps That Work on Mobile and Desktop for Businesses in {city}',
+    descriptionEn: 'We develop Progressive Web Apps (PWA) that behave like native apps without app store approval. The ideal solution for businesses in {city} that want mobile presence without the cost of native app development in {country}.',
+    keywordsEn: ['pwa development {city}', 'web app developer {city}', 'progressive web app {city}', 'mobile web app {city}', 'app development {city}'],
+    benefitsEn: [
+      'Works like a native app without mandatory installation',
+      'Offline content access for users',
+      'Push notifications on mobile devices',
+      'Single codebase for web and mobile',
+      'No App Store or Play Store commissions',
+    ],
+    processEn: [
+      'Analysis: We define core app features and user flows',
+      'Design: We create a native app-like interface',
+      'Development: Built with React and full PWA feature set',
+      'Publishing: Configured, optimized, and deployed',
+    ],
+    faqsEn: [
+      { q: 'What is a PWA?', a: 'A web app that behaves like a native app: home screen icon, offline access, push notifications — without going through app stores.' },
+      { q: 'PWA or native app?', a: 'PWA is better for: limited budgets, fast launch, dynamic content. Native app for: games, hardware-specific features, mass-market scale.' },
+      { q: 'Does it work on iPhone?', a: 'Yes, with some limitations vs Android. iOS 16+ supports PWAs increasingly well.' },
+    ],
+    priceRangeUsd: '$1,000 - $3,000 USD',
+    deliveryTimeEn: '3-6 weeks',
   },
   {
     id: 'seo-tecnico',
@@ -235,7 +420,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Incluye creación de contenido?', a: 'El SEO técnico no incluye contenido. Para content marketing y link building tenemos un servicio separado.' }
     ],
     priceRange: '$2M - $8M COP ($500 - $2,000 USD)',
-    deliveryTime: '1-4 semanas'
+    deliveryTime: '1-4 semanas',
+    nameEn: 'Technical SEO',
+    h1En: 'Technical SEO Services in {city}',
+    h2En: 'Real Google Rankings for Businesses in {city}',
+    descriptionEn: 'Complete technical SEO audit and optimization for websites in {city}. Schema.org, Core Web Vitals, sitemap optimization, and all techniques Google actually rewards for businesses across {country} and beyond.',
+    keywordsEn: ['technical seo {city}', 'seo consultant {city}', 'seo services {city}', 'local seo {city}', 'google ranking expert {city}'],
+    benefitsEn: [
+      'Complete SEO audit of your current site',
+      'Core Web Vitals optimization',
+      'Schema.org rich snippets implementation',
+      'Sitemap and robots.txt optimization',
+      'Monthly ranking and organic traffic report',
+    ],
+    processEn: [
+      'Audit: We analyze your site with professional-grade tools',
+      'Diagnosis: We identify and prioritize critical technical issues',
+      'Implementation: We fix errors and optimize systematically',
+      'Monitoring: We track ranking improvements over time',
+    ],
+    faqsEn: [
+      { q: 'How long until I see results?', a: 'Technical fixes: 2-4 weeks. Competitive keyword rankings: 3-6 months of consistent work.' },
+      { q: 'Do you guarantee first position on Google?', a: 'No one can guarantee that. We guarantee implementing all technical best practices that give you the best chance to rank.' },
+      { q: 'Does it include content creation?', a: 'Technical SEO does not include content. For content marketing and link building, we offer a separate service.' },
+    ],
+    priceRangeUsd: '$500 - $2,000 USD',
+    deliveryTimeEn: '1-4 weeks',
   },
   {
     id: 'integracion-apis',
@@ -263,7 +473,32 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Es seguro?', a: 'Sí. Las credenciales se almacenan encriptadas, usamos variables de entorno y seguimos mejores prácticas de seguridad.' }
     ],
     priceRange: '$3M - $15M COP ($750 - $3,750 USD)',
-    deliveryTime: '2-6 semanas'
+    deliveryTime: '2-6 semanas',
+    nameEn: 'API & Systems Integration',
+    h1En: 'API & Systems Integration Services in {city}',
+    h2En: 'Connecting Your Digital Tools So They Work Together in {city}',
+    descriptionEn: 'We integrate your website or system with any external API: payments (Stripe, PayPal), CRMs, ERPs, WhatsApp Business, Google Workspace. Custom solutions for businesses in {city}, {country}.',
+    keywordsEn: ['api integration {city}', 'system integration {city}', 'stripe integration developer {city}', 'crm integration {city}', 'saas integration developer {city}'],
+    benefitsEn: [
+      'Seamless connection between your current systems',
+      'Automated data flow and synchronization',
+      'Real-time data sync across platforms',
+      'Secure credential and API token management',
+      'Complete technical documentation delivered',
+    ],
+    processEn: [
+      'Mapping: We understand which systems need to connect',
+      'Analysis: We review APIs and technical documentation',
+      'Development: We build the necessary connectors',
+      'Testing: Thorough end-to-end testing before production',
+    ],
+    faqsEn: [
+      { q: 'What systems can you integrate?', a: 'Virtually any modern API: Stripe, PayPal, Salesforce, HubSpot, Zoho, WhatsApp Business API, Make, and more.' },
+      { q: 'What happens if the external API fails?', a: 'We implement error handling, automatic retries, and notifications so you know immediately if something fails.' },
+      { q: 'Is it secure?', a: 'Yes. Credentials are stored encrypted, we use environment variables, and follow OWASP security best practices.' },
+    ],
+    priceRangeUsd: '$750 - $3,750 USD',
+    deliveryTimeEn: '2-6 weeks',
   },
   {
     id: 'mantenimiento-web',
@@ -291,6 +526,31 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Pueden mantener un sitio que no desarrollaron ustedes?', a: 'Sí, pero primero hacemos una auditoría para evaluar el estado del código y determinar si podemos asumir el mantenimiento.' }
     ],
     priceRange: '$500k - $3M COP/mes ($125 - $750 USD/mes)',
-    deliveryTime: 'Plan continuo'
+    deliveryTime: 'Plan continuo',
+    nameEn: 'Web Maintenance & Support',
+    h1En: 'Professional Web Maintenance & Support in {city}',
+    h2En: 'Your Website Always Updated, Secure, and Running in {city}',
+    descriptionEn: 'Monthly web maintenance plans for sites and applications in {city}. Security updates, automatic backups, performance optimization, and priority technical support for businesses across {country}.',
+    keywordsEn: ['web maintenance {city}', 'website support {city}', 'website management {city}', 'website maintenance service {city}', 'site uptime monitoring {city}'],
+    benefitsEn: [
+      'Regular security patches and updates',
+      'Daily or weekly automatic backups',
+      '24/7 uptime monitoring with alerts',
+      'Priority technical support',
+      'Ongoing performance optimization',
+    ],
+    processEn: [
+      'Audit: We review the current state of your site',
+      'Setup: We configure backups and monitoring tools',
+      'Maintenance: Monthly updates, patches, and improvements',
+      'Support: Fast response to incidents and technical questions',
+    ],
+    faqsEn: [
+      { q: 'How much does web maintenance cost?', a: 'Plans from $100 USD/month for simple sites. Complex sites or e-commerce from $300 USD/month.' },
+      { q: 'What does the basic plan include?', a: 'Weekly backups, security updates, uptime monitoring, email support with 24h response time.' },
+      { q: 'Can you maintain a site you didn\'t build?', a: 'Yes, but we first conduct an audit to evaluate code quality and determine if we can take it on.' },
+    ],
+    priceRangeUsd: '$100 - $750 USD/month',
+    deliveryTimeEn: 'Ongoing monthly plan',
   }
 ];
