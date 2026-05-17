@@ -7,10 +7,27 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/seo/JsonLd";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { clientEnv } from "@/config/env";
-// SEO: Bing & Google verification via env vars
+// SEO: Global schema graph — Person + Organization + WebSite with SearchAction
 const personData = {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://omarhernandezrey.com/#website",
+      "url": "https://omarhernandezrey.com",
+      "name": "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
+      "description": "Servicios de desarrollo web, chatbots con IA, e-commerce y automatización. React, Next.js, Node.js. Colombia y USA remoto.",
+      "publisher": { "@id": "https://omarhernandezrey.com/#organization" },
+      "inLanguage": ["es", "en"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://omarhernandezrey.com/blog?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
     {
       "@type": "Person",
       "@id": "https://omarhernandezrey.com/#person",
@@ -106,24 +123,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_CO",
     url: "https://omarhernandezrey.com",
-    siteName: "Omar Hernández Rey Portfolio",
-    title: "Omar Hernández Rey | Full Stack Developer",
-    description: "Desarrollo web moderno con React, Next.js y Node.js",
+    siteName: "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
+    title: "Desarrollador Web Freelance Colombia | React & Next.js | Omar Hernández Rey",
+    description: "Contratar desarrollador web freelance en Colombia. Webs, apps y chatbots con IA. React, Next.js, Node.js. Desde $500 USD. Consulta gratis.",
     images: [
       {
-        url: "https://omarhernandezrey.com/api/og?title=Omar%20Hern%C3%A1ndez%20Rey&subtitle=Full%20Stack%20Web%20Developer",
-        secureUrl: "https://omarhernandezrey.com/api/og?title=Omar%20Hern%C3%A1ndez%20Rey&subtitle=Full%20Stack%20Web%20Developer",
+        url: "https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%24500%20USD",
+        secureUrl: "https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%24500%20USD",
         width: 1200,
         height: 630,
-        alt: "Omar Hernández Rey | Full Stack Developer",
+        alt: "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Omar Hernández Rey | Full Stack Developer",
-    description: "Desarrollador Web Full Stack creando soluciones digitales",
-    images: ["https://omarhernandezrey.com/api/og?title=Omar%20Hern%C3%A1ndez%20Rey&subtitle=Full%20Stack%20Web%20Developer"],
+    title: "Desarrollador Web Freelance Colombia | Omar Hernández Rey",
+    description: "Contratar desarrollador web en Colombia. React, Next.js, chatbots IA. Desde $500 USD. Consulta gratis.",
+    images: ["https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%24500%20USD"],
   },
   robots: {
     index: true,
@@ -143,7 +160,6 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
-        <link rel="canonical" href="https://omarhernandezrey.com" />
         <link rel="alternate" type="application/rss+xml" title="Omar Hernández Rey | Blog" href="/feed.xml" />
       </head>
       <body
