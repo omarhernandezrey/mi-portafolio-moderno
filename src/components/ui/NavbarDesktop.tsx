@@ -94,7 +94,6 @@ const NavbarDesktop = () => {
   const navLinks = React.useMemo<NavLink[]>(() => [
     { id: "#hero", label: t("navigation.home"), icon: <FaHome /> },
     { id: "#about", label: t("navigation.about"), icon: <FaUserAlt /> },
-    { id: "/sobre-mi", label: t("navigation.sobreMi"), icon: <FaUserAlt />, isPage: true },
     { id: "#skills", label: t("navigation.skills"), icon: <FaToolbox /> },
     { id: "#projects", label: t("navigation.projects"), icon: <FaProjectDiagram /> },
     { id: "#services", label: t("navigation.services"), icon: <FaCode /> },

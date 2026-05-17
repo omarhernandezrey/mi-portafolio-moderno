@@ -63,7 +63,7 @@ export default function Footer() {
   ];
 
   const navigationLinks = [
-    { href: "/sobre-mi", label: t("footer.navigation.aboutMe") },
+    { href: "/#about", label: t("footer.navigation.aboutMe") },
     { href: "/servicios", label: t("footer.navigation.services") },
     { href: "/blog", label: t("footer.navigation.blog") },
     { href: "/calculadora", label: t("footer.navigation.calculator") },

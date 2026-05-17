@@ -65,7 +65,6 @@ const TAG_SERVICE: Record<string, { href: string; label: string }> = {
   'comparativa': { href: '/servicios', label: 'Comparar Servicios' },
   'empresas': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo Web Empresarial' },
   'desarrollador web': { href: '/servicios', label: 'Contratar Desarrollador' },
-  'sobre mi': { href: '/sobre-mi', label: 'Conoce más sobre mí' },
 };
 
 function getRelatedServices(tags: string[]): Array<{ href: string; label: string }> {
@@ -311,12 +310,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 className="inline-block border border-[var(--muted-color)]/30 text-[var(--text-color)] px-8 py-3 rounded-full font-bold hover:border-[var(--primary-color)] transition-all"
               >
                 {isEnglish ? 'View All Services' : 'Ver Servicios'}
-              </Link>
-              <Link
-                href="/sobre-mi"
-                className="inline-block border border-[var(--muted-color)]/30 text-[var(--text-color)] px-8 py-3 rounded-full font-bold hover:border-[var(--primary-color)] transition-all"
-              >
-                {isEnglish ? 'About Me' : 'Sobre Mí'}
               </Link>
             </div>
           </footer>
