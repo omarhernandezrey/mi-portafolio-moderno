@@ -29,6 +29,8 @@ export const useTranslation = () => {
     "actions.change_theme": "Cambiar tema",
 
     // Hero
+    "hero.h1": "Desarrollador Web Freelance · Colombia & USA Remote",
+    "hero.subtitle": "Construyo sitios web, apps y chatbots con IA usando <strong>React y Next.js</strong>. Atiendo empresas en <strong>Colombia</strong> y clientes remotos en <strong>USA y LATAM</strong>. <span>Proyectos desde $500 USD</span> — consulta gratis, respuesta en 24h.",
     "hero.greeting": "¡Hola Soy",
     "hero.name": "Omar Hernández Rey",
     "hero.title": "Desarrollador Web Full Stack",
