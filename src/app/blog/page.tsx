@@ -81,9 +81,9 @@ export default async function BlogPage() {
         {/* Blog Infrastructure Control */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 border-b border-white/5 pb-10">
           <nav className="flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/40">
-            <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">Todos los artículos</Link>
+            <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">Todos</Link>
             <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Desarrollo Web</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Negocios & Precios</Link>
+            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Negocios</Link>
             <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Tecnología</Link>
           </nav>
           
@@ -115,7 +115,7 @@ export default async function BlogPage() {
                   )}
                   <div className="flex items-center gap-2 text-[10px] text-text-muted/40 font-black uppercase tracking-widest">
                     <Calendar size={12} />
-                    {new Date(featuredPost.date).toLocaleDateString('es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    {new Date(featuredPost.date).toLocaleDateString(featuredPost.lang === 'en' ? 'en-US' : 'es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}
                   </div>
                 </div>
                 
@@ -172,7 +172,7 @@ export default async function BlogPage() {
                       <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[8px] font-black uppercase tracking-widest">EN</span>
                     )}
                     <div className="text-[10px] font-black text-primary/60 uppercase tracking-tighter italic">
-                      {new Date(post.date).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
+                      {new Date(post.date).toLocaleDateString(post.lang === 'en' ? 'en-US' : 'es-CO', { day: '2-digit', month: 'short' })}
                     </div>
                   </div>
                 </div>

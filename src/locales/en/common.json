@@ -2,6 +2,8 @@
   "navigation": {
     "home": "Home",
     "about": "About",
+    "sobreMi": "About Me",
+    "blog": "Blog",
     "projects": "Projects",
     "services": "Services",
     "skills": "Skills",
@@ -33,6 +35,8 @@
     "greeting": "Hello I'm",
     "name": "Omar Hernández Rey",
     "title": "Full Stack Web Developer",
+    "h1": "Freelance Web Developer · Colombia & USA Remote",
+    "subtitle": "I build websites, apps & AI chatbots using <strong>React & Next.js</strong>. Serving businesses in <strong>Colombia</strong> and remote clients in the <strong>USA & LATAM</strong>. <span>Projects from $500 USD</span> — free consultation, 24h response.",
     "description": "I combine {creativity}, {innovation} and {technology} to create {unforgettable} web experiences.",
     "creativity": "creativity",
     "innovation": "innovation",
@@ -224,9 +228,9 @@
     "mapTitle": "Omar Hernández Rey's location in Bogotá, Colombia",
     "navigation": {
       "aboutMe": "About Me",
-      "projects": "Projects",
-      "skills": "Skills",
-      "contact": "Contact",
+      "services": "Web Development Services",
+      "blog": "Technical Blog",
+      "faq": "Frequently Asked Questions",
       "calculator": "Calculator",
       "privacy": "Privacy"
     }

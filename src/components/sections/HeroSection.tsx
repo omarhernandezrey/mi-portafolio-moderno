@@ -84,7 +84,7 @@ export default function HeroSection() {
           "
           style={{ color: "var(--white-color)" }}
         >
-          Desarrollador Web Freelance · Colombia &amp; USA Remote
+          {t("hero.h1")}
         </h1>
 
         {/* Título visual animado — decorativo, no el H1 */}
@@ -123,14 +123,8 @@ export default function HeroSection() {
             animate-fadeIn
           "
           style={{ color: "rgba(255, 255, 255, 0.85)" }}
-        >
-          Construyo sitios web, apps y chatbots con IA usando{" "}
-          <strong style={{ color: "var(--accent-color)" }}>React y Next.js</strong>.
-          {" "}Atiendo empresas en <strong>Colombia</strong> y clientes remotos en{" "}
-          <strong>USA y LATAM</strong>.{" "}
-          <span style={{ color: "var(--primary-color)", fontWeight: 700 }}>Proyectos desde $500 USD</span>{" "}
-          — consulta gratis, respuesta en 24h.
-        </p>
+          dangerouslySetInnerHTML={{ __html: t("hero.subtitle") }}
+        />
 
         {/* Botón interactivo mejorado */}
         <button

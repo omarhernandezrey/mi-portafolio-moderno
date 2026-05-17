@@ -63,11 +63,11 @@ export default function Footer() {
   ];
 
   const navigationLinks = [
-    { href: "/sobre-mi", label: "Sobre Mí" },
-    { href: "/servicios", label: "Servicios de Desarrollo Web" },
-    { href: "/blog", label: "Blog Técnico" },
+    { href: "/sobre-mi", label: t("footer.navigation.aboutMe") },
+    { href: "/servicios", label: t("footer.navigation.services") },
+    { href: "/blog", label: t("footer.navigation.blog") },
     { href: "/calculadora", label: t("footer.navigation.calculator") },
-    { href: "/faq", label: "Preguntas Frecuentes" },
+    { href: "/faq", label: t("footer.navigation.faq") },
     { href: "/privacidad", label: t("footer.navigation.privacy") },
   ];
 
@@ -239,7 +239,7 @@ export default function Footer() {
           
           <div className="flex flex-wrap justify-center md:justify-end gap-3 sm:gap-6">
             <Link href="/privacidad" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
-              PRIVACY
+              {t("footer.navigation.privacy").toUpperCase()}
             </Link>
             <Link href="/faq" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
               FAQ

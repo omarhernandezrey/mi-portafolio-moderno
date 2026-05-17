@@ -2,6 +2,8 @@
   "navigation": {
     "home": "Inicio",
     "about": "Sobre mí",
+    "sobreMi": "Sobre Mí",
+    "blog": "Blog",
     "projects": "Proyectos",
     "services": "Servicios",
     "skills": "Habilidades",
@@ -33,6 +35,8 @@
     "greeting": "¡Hola Soy",
     "name": "Omar Hernández Rey",
     "title": "Desarrollador Web Full Stack",
+    "h1": "Desarrollador Web Freelance · Colombia & USA Remote",
+    "subtitle": "Construyo sitios web, apps y chatbots con IA usando <strong>React y Next.js</strong>. Atiendo empresas en <strong>Colombia</strong> y clientes remotos en <strong>USA y LATAM</strong>. <span>Proyectos desde $500 USD</span> — consulta gratis, respuesta en 24h.",
     "description": "Combino {creativity}, {innovation} y {technology} para crear experiencias web {unforgettable}.",
     "creativity": "creatividad",
     "innovation": "innovación",
@@ -224,9 +228,9 @@
     "mapTitle": "Ubicación de Omar Hernández Rey en Bogotá, Colombia",
     "navigation": {
       "aboutMe": "Sobre Mí",
-      "projects": "Proyectos",
-      "skills": "Habilidades",
-      "contact": "Contacto",
+      "services": "Servicios de Desarrollo Web",
+      "blog": "Blog Técnico",
+      "faq": "Preguntas Frecuentes",
       "calculator": "Calculadora",
       "privacy": "Privacidad"
     }

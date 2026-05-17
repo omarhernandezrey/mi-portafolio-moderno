@@ -95,11 +95,11 @@ const NavbarDesktop = () => {
   const navLinks = React.useMemo<NavLink[]>(() => [
     { id: "#hero", label: t("navigation.home"), icon: <FaHome /> },
     { id: "#about", label: t("navigation.about"), icon: <FaUserAlt /> },
-    { id: "/sobre-mi", label: "Sobre Mí", icon: <FaUserAlt />, isPage: true },
+    { id: "/sobre-mi", label: t("navigation.sobreMi"), icon: <FaUserAlt />, isPage: true },
     { id: "#skills", label: t("navigation.skills"), icon: <FaToolbox /> },
     { id: "#projects", label: t("navigation.projects"), icon: <FaProjectDiagram /> },
     { id: "#services", label: t("navigation.services"), icon: <FaCode /> },
-    { id: "/blog", label: "Blog", icon: <FaCode />, isPage: true },
+    { id: "/blog", label: t("navigation.blog"), icon: <FaCode />, isPage: true },
     { id: "/calculadora", label: t("navigation.calculator"), icon: <FaToolbox />, isPage: true },
     { id: "#contact", label: t("navigation.contact"), icon: <FaEnvelope /> },
   ], [t]);
