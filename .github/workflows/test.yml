@@ -107,8 +107,14 @@ jobs:
 
       - name: Verificar secretos en staged files
         run: |
-          git diff --name-only HEAD~1 HEAD | xargs -I{} sh -c \
-          'grep -lE "(gsk_|nvapi-|eyJ[A-Za-z0-9]{20,})" {} 2>/dev/null && echo "⚠️ Posible secreto en {}" || true'
+          git diff --name-only HEAD~1 HEAD | while IFS= read -r file; do
+            [ -f "$file" ] || continue
+            if grep -qE "(gsk_|nvapi-|eyJ[A-Za-z0-9]{20,})" "$file" 2>/dev/null; then
+              echo "⚠️ Posible secreto en: $file"
+              exit 1
+            fi
+          done
+          echo "✅ Sin secretos detectados en archivos modificados"
 
   e2e:
     name: Tests E2E (Cypress)
