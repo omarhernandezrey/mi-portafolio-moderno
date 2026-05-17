@@ -81,9 +81,10 @@ export default function Footer() {
   ];
 
   const navigationLinks = [
+    { href: "/servicios", label: "Servicios de Desarrollo Web" },
+    { href: "/blog", label: "Blog Técnico" },
     { href: "#about", label: t("footer.navigation.aboutMe") },
     { href: "#projects", label: t("footer.navigation.projects") },
-    { href: "#skills", label: t("footer.navigation.skills") },
     { href: "/calculadora", label: t("footer.navigation.calculator") },
     { href: "#contact", label: t("footer.navigation.contact") },
     { href: "/privacidad", label: t("footer.navigation.privacy") },

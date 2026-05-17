@@ -41,9 +41,9 @@ export const useTranslation = () => {
     "hero.ariaLabel": "Ver mis proyectos",
 
     // About
-    "about.badge": "Conóceme",
-    "about.title": "Sobre mí",
-    "about.description": "¡Hola! Soy {name}, un {role} con experiencia tanto en {frontend} como en {backend}. Estoy a punto de graduarme en {degree} del {university} y continuo aprendiendo con cursos de {platform} sobre tecnologías web, DevOps y más.",
+    "about.badge": "Desarrollador Full Stack Freelance",
+    "about.title": "Omar Hernández Rey — Desarrollador Web Colombia",
+    "about.description": "¡Hola! Soy {name}, {role} freelance con experiencia en {frontend} y {backend}. Graduado en {degree} del {university}. He entregado más de 30 proyectos web para clientes en Colombia y USA. Trabajo con React, Next.js, Node.js e Inteligencia Artificial.",
     "about.name": "Omar Hernández Rey",
     "about.role": "Desarrollador Web Full Stack",
     "about.frontend": "Front-End",
@@ -64,11 +64,11 @@ export const useTranslation = () => {
     "about.personalInfo.phoneNumber": "(+57) 3219058278",
 
     // Services
-    "services.badge": "Lo que Ofrezco",
-    "services.title": "Mis Servicios",
-    "services.subtitle": "Lo que puedo hacer por ti",
-    "services.description": "Soluciones integrales diseñadas para dar vida a tu visión digital con tecnología de vanguardia y mejores prácticas",
-    "services.cta": "Trabajemos Juntos",
+    "services.badge": "Servicios Disponibles",
+    "services.title": "Servicios de Desarrollo Web Freelance",
+    "services.subtitle": "Desarrollo web, chatbots IA, e-commerce y automatización para Colombia y USA",
+    "services.description": "Contrata un desarrollador web freelance en Colombia. React, Next.js, Node.js e Inteligencia Artificial. Proyectos desde $500 USD para empresas y emprendedores.",
+    "services.cta": "Contratar Ahora — Consulta Gratis",
 
     // Skills
     "skills.badge": "Excelencia Técnica",
@@ -99,10 +99,10 @@ export const useTranslation = () => {
     "education.close": "Cerrar",
 
     // Contact
-    "contact.badge": "Conectemos",
-    "contact.title": "Contáctame",
-    "contact.subtitle": "Hablemos sobre tu próximo proyecto",
-    "contact.description": "¿Listo para dar vida a tus ideas? Conversemos sobre tu próximo proyecto desde Bogotá, Colombia",
+    "contact.badge": "Contratar Desarrollador Web",
+    "contact.title": "Contáctame para tu Proyecto",
+    "contact.subtitle": "Desarrollador web freelance disponible para proyectos en Colombia y USA remoto",
+    "contact.description": "¿Necesitas contratar un desarrollador web en Colombia? Cuéntame tu proyecto y te respondo en menos de 24h. Consulta inicial gratis sin compromiso.",
     "contact.form.name": "Tu Nombre",
     "contact.form.email": "Tu Correo Electrónico",
     "contact.form.message": "Cuéntame sobre tu proyecto...",
@@ -132,7 +132,7 @@ export const useTranslation = () => {
     "footer.in": "en",
     "footer.location": "Bogotá, Colombia",
     "footer.name": "Omar Hernández Rey",
-    "footer.description": "Desarrollador Web Full Stack apasionado por crear experiencias digitales innovadoras y funcionales.",
+    "footer.description": "Desarrollador web freelance en Colombia. Especialista en React, Next.js y chatbots con IA. Disponible para proyectos en Colombia y USA remoto.",
 
     // Common
     "common.loading": "Cargando...",
