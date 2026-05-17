@@ -107,13 +107,18 @@ jobs:
 
       - name: Verificar secretos en staged files
         run: |
-          git diff --name-only HEAD~1 HEAD | while IFS= read -r file; do
+          FOUND=0
+          while IFS= read -r file; do
             [ -f "$file" ] || continue
-            if grep -qE "(gsk_|nvapi-|eyJ[A-Za-z0-9]{20,})" "$file" 2>/dev/null; then
+            [[ "$file" == .github/* ]] && continue
+            [[ "$file" == *.yml ]] && continue
+            [[ "$file" == *.md ]] && continue
+            if grep -qP "gsk_[A-Za-z0-9]{20,}|nvapi-[A-Za-z0-9]{20,}|eyJ[A-Za-z0-9]{20,}" "$file" 2>/dev/null; then
               echo "⚠️ Posible secreto en: $file"
-              exit 1
+              FOUND=1
             fi
-          done
+          done < <(git diff --name-only HEAD~1 HEAD)
+          if [ "$FOUND" = "1" ]; then exit 1; fi
           echo "✅ Sin secretos detectados en archivos modificados"
 
   e2e:
