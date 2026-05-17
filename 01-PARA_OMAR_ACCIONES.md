@@ -1,8 +1,8 @@
 # 🎯 LO QUE TÚ (OMAR) TIENES QUE HACER — GUÍA ÚNICA DE EJECUCIÓN
 
-**Fecha:** 17 Mayo 2026
+**Fecha:** 17 Mayo 2026 (actualizado)
 **Tu sitio:** https://omarhernandezrey.com
-**Estado actual del SEO:** 78/100 🟢 — corregido, limpio, listo para crecer
+**Estado actual del SEO:** 78/100 🟢 — corregido, i18n funcional, 11 posts, deploy limpio
 
 ---
 
@@ -10,18 +10,20 @@
 
 Esto ya funciona automáticamente. Solo para que sepas lo que el sitio ya tiene:
 
-- ✅ 11 artículos de blog publicados (8 en español, 3 en inglés)
-- ✅ Página "Sobre Mí" con tu trayectoria real
+- ✅ 11 artículos de blog publicados (8 en español, 3 en inglés) — contenido real 2500-7000 palabras c/u
+- ✅ Página "Sobre Mí" con tu trayectoria real (indexable, accesible desde sitemap)
 - ✅ Schemas JSON-LD válidos en todas las páginas (Person, Article, FAQ, Breadcrumb, LocalBusiness)
 - ✅ hreflang configurado (Google sabe qué páginas son español y cuáles inglés)
-- ✅ Sitemap con todas las URLs importantes
-- ✅ Robots.txt optimizado
+- ✅ i18n funcional — Navbar, Footer, Hero, Blog se traducen al cambiar idioma
+- ✅ Sitemap con todas las URLs importantes (870 páginas estáticas)
+- ✅ Robots.txt optimizado con crawl-delay
 - ✅ Metadatos completos en cada página
 - ✅ Links internos entre blog ↔ servicios ↔ calculadora ↔ sobre-mi
 - ✅ Newsletter conectado a API real de Supabase
 - ✅ OG Images dinámicas para compartir en redes
 - ✅ 36 ciudades indexables en páginas de servicio×ciudad
 - ✅ IndexNow configurado para notificar a Bing
+- ✅ Build limpio: 0 errores TypeScript, 870 páginas generadas
 
 ---
 
@@ -719,24 +721,28 @@ Marca con ✅ lo que YA está funcionando automáticamente:
 
 ## 📋 CHECKLIST DE LO QUE TIENES QUE HACER TÚ (OMAR)
 
-Marca uno por uno cuando lo completes:
+✅ = Completado | ⏳ = Pendiente
 
-- [ ] **1. Google Search Console** — verificar dominio + subir sitemap
-- [ ] **2. Bing Webmaster Tools** — verificar dominio + subir sitemap
+- [x] **1. Google Search Console** — YA ESTABA COMPLETO (dominio verificado 13 mayo 2026, sitemap enviado, estado Correcto)
+- [x] **2. Bing Webmaster Tools** — YA ESTABA COMPLETO (sitio registrado, sitemap.xml enviado exitosamente)
 - [ ] **3. Google Business Profile** — crear perfil + verificar + completar datos
 - [ ] **4. GBP: agregar 10 servicios** con precio y descripción
 - [ ] **5. GBP: subir 10 fotos reales** en el orden indicado
 - [ ] **6. GBP: publicar primer post** de bienvenida
 - [ ] **7. GBP: guardar link de reseñas** para usar después
-- [ ] **8. LinkedIn** — actualizar headline + About + Featured links
-- [ ] **9. GitHub** — crear repo `omarhernandezrey` con README optimizado
+- [x] **8. LinkedIn** — COMPLETADO. Headline: "Desarrollador Web Full Stack Freelance | React · Next.js · Node.js | Colombia & USA Remote". Web actualizada a omarhernandezrey.com. Sección Acerca de reemplazada. Experiencia freelance añadida desde enero 2023.
+- [x] **9. GitHub** — COMPLETADO. Repo `omarhernandezrey/omarhernandezrey` con README optimizado: stack, servicios con precios, 3 proyectos destacados, link al blog.
 - [ ] **10. GitHub** — pinear 6 repositorios en perfil
-- [ ] **11. Crear cuenta en dev.to** y publicar primer artículo con canonical
-- [ ] **12. Crear cuenta en Hashnode** (solo registro)
-- [ ] **13. Crear cuenta en Medium** (solo registro)
-- [ ] **14. LinkedIn** — publicar primer post sobre artículo del blog
+- [x] **11. dev.to** — COMPLETADO. Cuenta configurada con Bio, Bogotá, website. Artículo publicado: "Building an MVP with Next.js in 30 Days" con tags y canonical URL.
+- [x] **12. Hashnode** — COMPLETADO. Cuenta ya existía con sesión activa.
+- [ ] **13. Medium** — PENDIENTE. Omar debe hacer login manual con Google (OAuth personal).
+- [x] **14. LinkedIn** — COMPLETADO. Primer post: "¿Cuánto cuesta REALMENTE un sitio web en Colombia en 2026?" con hashtags.
 - [ ] **15. Twitter/X** — publicar sobre el portafolio y blog
 - [ ] **16. Primer reporte mensual** — anotar métricas base
+
+---
+
+**Progreso: 9/16 completados (56%). Quedan 7 pendientes, la mayoría de Google Business Profile.**
 
 ---
 
