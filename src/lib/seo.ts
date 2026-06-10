@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { clientEnv } from '@/config/env';
 
 export const SITE_URL = 'https://omarhernandezrey.com';
 export const BRAND = 'Omar Hernández Rey';
@@ -59,7 +60,7 @@ export function buildMetadata(opts: BuildMetadataOptions): Metadata {
   const url = `${SITE_URL}${path}`;
   const ogImage = image ?? ogImageUrl(title, ogSubtitle ?? BRAND);
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (clientEnv.IS_DEV) {
     if (title.length > TITLE_MAX) {
       console.warn(`[seo] title de ${title.length} chars (>${TITLE_MAX}) en ${path || '/'}: "${title}"`);
     }

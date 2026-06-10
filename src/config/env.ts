@@ -96,6 +96,7 @@ export const serverEnv = {
 };
 
 export const clientEnv = {
+  get IS_DEV() { return process.env.NODE_ENV !== "production"; },
   get NEXT_PUBLIC_SUPABASE_URL() { return process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || ""; },
   get NEXT_PUBLIC_SUPABASE_ANON_KEY() { return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || ""; },
   get NEXT_PUBLIC_CALCOM_INTERVIEW_URL() { return process.env.NEXT_PUBLIC_CALCOM_INTERVIEW_URL || ""; },
