@@ -237,7 +237,7 @@ export default function ChatWidget() {
     <>
       {/* Botón Flotante */}
       <motion.button
-        className={`fixed bottom-6 right-6 z-[9999] h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-white/20 sm:h-16 sm:w-16 sm:flex ${isOpen ? 'hidden sm:flex' : 'flex'}`}
+        className={`fixed bottom-6 right-6 z-[9999] h-14 w-14 flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-[0_8px_30px_rgba(0,0,0,0.3)] border border-white/20 sm:h-16 sm:w-16 ${isOpen ? 'hidden sm:flex' : 'flex'}`}
         onClick={toggleChat}
         whileHover={{ scale: 1.1, rotate: 5 }}
         whileTap={{ scale: 0.9 }}
@@ -287,14 +287,14 @@ export default function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className="fixed z-[9998] flex flex-col overflow-hidden bg-[var(--background-color)] shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-[var(--primary-color)]/15
-              bottom-0 right-0 h-[100dvh] w-full rounded-none
-              sm:bottom-20 sm:right-4 sm:h-[min(78dvh,580px)] sm:w-[clamp(320px,88vw,390px)] sm:rounded-2xl
-              md:bottom-24 md:right-6 md:h-[600px] md:w-[400px] md:rounded-3xl"
+              bottom-0 right-0 h-[calc(100dvh-70px)] w-full rounded-t-2xl
+              sm:bottom-24 sm:right-4 sm:h-[min(70dvh,520px)] sm:w-[clamp(320px,88vw,380px)] sm:rounded-2xl
+              md:bottom-28 md:right-6 md:h-[min(65dvh,560px)] md:w-[380px] md:rounded-3xl"
             role="dialog"
             aria-modal="true"
           >
             {/* Header */}
-            <div className="relative flex items-center justify-between bg-[var(--card-bg-color)] border-b border-[var(--primary-color)]/20 p-4 pt-[max(1rem,env(safe-area-inset-top))] sm:p-5 sm:pt-5">
+            <div className="flex items-center justify-between bg-[var(--card-bg-color)] border-b border-[var(--primary-color)]/20 p-4 sm:p-5">
               <div className="flex items-center gap-3">
                 <div className="relative shrink-0">
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-md">
@@ -330,7 +330,7 @@ export default function ChatWidget() {
             {/* Body / Mensajes */}
             <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 scroll-smooth scrollbar-hide"
+              className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 scroll-smooth scrollbar-hide min-h-0"
             >
               {/* Mensaje de bienvenida inicial */}
               {messages.length === 0 && (
@@ -443,7 +443,7 @@ export default function ChatWidget() {
             </div>
 
             {/* Footer Moderno (Input) */}
-            <div className="p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-4 sm:pb-4 bg-[var(--background-color)] border-t border-[var(--primary-color)]/10 relative z-10">
+            <div className="p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-4 sm:pb-4 bg-[var(--background-color)] border-t border-[var(--primary-color)]/10">
               {/* Preview imagen seleccionada */}
               {imageDataUrl && (
                 <div className="mb-2 flex items-center gap-2">
@@ -459,7 +459,7 @@ export default function ChatWidget() {
                 </div>
               )}
               <form
-                className="relative flex items-center gap-2 rounded-full border border-[var(--primary-color)]/30 bg-[var(--card-bg-color)] p-1.5 shadow-sm transition-all focus-within:border-[var(--primary-color)]/70 focus-within:shadow-[0_0_0_3px_var(--primary-color)/10]"
+                className="flex items-center gap-2 rounded-full border border-[var(--primary-color)]/30 bg-[var(--card-bg-color)] p-1.5 shadow-sm transition-all focus-within:border-[var(--primary-color)]/70 focus-within:shadow-[0_0_0_3px_var(--primary-color)/10]"
                 onSubmit={handleSubmit}
               >
                 {/* Honeypot field */}
@@ -499,7 +499,7 @@ export default function ChatWidget() {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isLoading || !hasConsented}
-                    className={`flex h-10 w-10 items-center justify-center rounded-full transition-all active:scale-90 ${
+                    className={`flex h-11 w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
                       imageDataUrl
                         ? 'text-[var(--primary-color)] bg-[var(--primary-color)]/10'
                         : 'text-[var(--muted-color)] hover:text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10'
@@ -516,7 +516,7 @@ export default function ChatWidget() {
                       type="button"
                       onClick={toggleMic}
                       disabled={isLoading || !hasConsented}
-                      className={`flex h-10 w-10 items-center justify-center rounded-full transition-all active:scale-90 ${
+                      className={`flex h-11 w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
                         isListening
                           ? 'bg-red-500/20 text-red-500 animate-pulse'
                           : 'text-[var(--muted-color)] hover:text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10'
@@ -531,7 +531,7 @@ export default function ChatWidget() {
                   <button
                     type="submit"
                     disabled={isLoading || (!input.trim() && !imageDataUrl) || !hasConsented}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:grayscale disabled:opacity-30"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:grayscale disabled:opacity-30"
                     aria-label="Enviar"
                   >
                     <Send size={18} className="translate-x-0.5" />
