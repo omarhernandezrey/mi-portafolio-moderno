@@ -2,7 +2,10 @@ name: Supabase Keep-Alive
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # Cada lunes a medianoche
+    # Diario: el free tier pausa a los 7 días de inactividad; con el ping
+    # semanal anterior un solo fallo (ej. caída de runners el 9 jun) dejaba
+    # pasar 14 días entre pings exitosos y el proyecto se pausaba.
+    - cron: '0 13 * * *' # Todos los días 13:00 UTC (08:00 Colombia)
   workflow_dispatch: # Permite ejecución manual
 
 jobs:
@@ -11,6 +14,10 @@ jobs:
     steps:
       - name: Ping Supabase
         run: |
-          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/conversations?limit=1" \
-          -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
+          # -f: falla con HTTP >=400 (antes un 540 de proyecto pausado salía en verde)
+          # --retry: tolera fallos transitorios de red
+          curl -sf --retry 3 --retry-delay 10 \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/conversations?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -o /dev/null -w "HTTP %{http_code}\n"
