@@ -1,15 +1,20 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import { Shield, ArrowLeft, Scale } from 'lucide-react';
 import Link from 'next/link';
 import Footer from '@/components/shared/Footer';
 
-export const metadata: Metadata = {
-  title: 'Protocolo de Privacidad y Habeas Data | Omar Hernández',
-  alternates: {
-    canonical: 'https://omarhernandezrey.com/privacidad',
+export const metadata: Metadata = buildMetadata({
+  title: 'Política de Privacidad y Habeas Data | Omar Hernández Rey',
+  description: 'Política de tratamiento de datos personales de omarhernandezrey.com conforme a la Ley 1581 de 2012 de Colombia: derechos, finalidades y contacto.',
+  path: '/privacidad',
+  languages: {
+    'es': 'https://omarhernandezrey.com/privacidad',
+    'en': 'https://omarhernandezrey.com/privacy',
+    'x-default': 'https://omarhernandezrey.com/privacidad',
   },
-};
+});
 
 export default function PrivacidadPage() {
   return (

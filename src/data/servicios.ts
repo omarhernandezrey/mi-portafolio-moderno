@@ -28,7 +28,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Desarrollo Web',
     h1: 'Desarrollo Web Profesional en {ciudad}',
     h2: 'Creamos sitios web de alto rendimiento para negocios en {ciudad}',
-    description: 'Ofrecemos soluciones de desarrollo web a medida utilizando Next.js y React. Potenciamos tu presencia digital en {ciudad} con sitios optimizados para SEO y conversión.',
+    description: 'Desarrollo web a medida con Next.js y React en {ciudad}. Sitios rápidos, optimizados para SEO y conversión, desde $300 USD.',
     keywords: ['desarrollo web {ciudad}', 'programador web {ciudad}', 'diseño web {ciudad}'],
     benefits: [
       'Sitios web ultra-rápidos con Next.js y React',
@@ -53,7 +53,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'Web Development',
     h1En: 'Professional Web Development in {city}',
     h2En: 'High-Performance Websites for Businesses in {city}',
-    descriptionEn: 'Custom web development using Next.js and React, optimized for {city}\'s competitive market. We build fast, SEO-ready sites that convert visitors into paying clients — for businesses across {country}.',
+    descriptionEn: 'Custom web development with Next.js and React in {city}. Fast, SEO-ready sites that turn visitors into paying clients, from $300 USD.',
     keywordsEn: ['web development {city}', 'web developer {city}', 'hire web developer {city}', 'website design {city}', 'freelance web developer {city}'],
     benefitsEn: [
       'Ultra-fast Next.js & React websites',
@@ -81,7 +81,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Chatbots con IA',
     h1: 'Chatbots con Inteligencia Artificial en {ciudad}',
     h2: 'Automatiza tus ventas 24/7 en {ciudad} con IA',
-    description: 'Implementamos agentes de IA inteligentes que captan leads y cierran ventas por ti en {ciudad}. Soluciones innovadoras para empresas que buscan escala en {country}.',
+    description: 'Chatbots con IA que captan leads y venden 24/7 para tu negocio en {ciudad}. Integración con WhatsApp Business y tu web, desde $400 USD.',
     keywords: ['chatbot ia {ciudad}', 'automatización ventas {ciudad}', 'agente ai {ciudad}'],
     benefits: [
       'Atención al cliente 24/7 sin interrupciones',
@@ -106,7 +106,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'AI Chatbots',
     h1En: 'AI-Powered Chatbots for Businesses in {city}',
     h2En: 'Automate Your Sales 24/7 in {city} with Artificial Intelligence',
-    descriptionEn: 'We deploy intelligent AI agents that capture leads and close sales for your business in {city}. GPT-4 and Claude-powered chatbots integrated with WhatsApp Business and your website, serving companies across {country}.',
+    descriptionEn: 'AI chatbots that capture leads and sell 24/7 for your business in {city}. GPT-4 and Claude, WhatsApp Business integration, from $400 USD.',
     keywordsEn: ['ai chatbot {city}', 'chatbot development {city}', 'whatsapp chatbot {city}', 'ai sales automation {city}', 'conversational ai {city}'],
     benefitsEn: [
       '24/7 customer support without interruptions',
@@ -134,7 +134,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Automatización de Procesos',
     h1: 'Automatización de Procesos en {ciudad}',
     h2: 'Elimina tareas repetitivas y escala tu negocio en {ciudad}',
-    description: 'Conectamos tus herramientas favoritas para que tu negocio en {ciudad} funcione solo. Desde integraciones con Notion hasta workflows complejos en la nube.',
+    description: 'Automatización de procesos para que tu negocio en {ciudad} funcione solo: integraciones, workflows en la nube y horas ahorradas cada semana.',
     keywords: ['automatización {ciudad}', 'software a medida {ciudad}', 'integraciones api {ciudad}'],
     benefits: [
       'Elimina tareas manuales repetitivas',
@@ -159,7 +159,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'Process Automation',
     h1En: 'Business Process Automation in {city}',
     h2En: 'Eliminate Repetitive Tasks and Scale Your Business in {city}',
-    descriptionEn: 'We connect your favorite tools so your business in {city} runs on autopilot. From Notion integrations to complex cloud workflows, custom-built for companies across {country}.',
+    descriptionEn: 'Process automation so your business in {city} runs on autopilot: integrations, cloud workflows, and hours saved every week.',
     keywordsEn: ['business automation {city}', 'workflow automation {city}', 'api integration {city}', 'process automation developer {city}', 'no-code automation {city}'],
     benefitsEn: [
       'Eliminate time-consuming manual tasks',
@@ -187,7 +187,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'E-commerce',
     h1: 'Tiendas Online de Alto Impacto en {ciudad}',
     h2: 'Vende tus productos en {ciudad} y todo {country} con facilidad',
-    description: 'Desarrollamos tiendas virtuales rápidas y seguras. Ayudamos a emprendedores de {ciudad} a llevar sus productos al mundo digital con pasarelas de pago integradas.',
+    description: 'Tiendas online rápidas y seguras para emprendedores en {ciudad}. Pasarelas de pago, inventario y optimización de conversión incluidos.',
     keywords: ['tienda online {ciudad}', 'e-commerce {ciudad}', 'vender por internet {ciudad}'],
     benefits: [
       'Tienda online profesional lista para vender',
@@ -212,7 +212,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'E-Commerce Development',
     h1En: 'High-Impact E-Commerce Development in {city}',
     h2En: 'Sell Your Products Online in {city} and Beyond',
-    descriptionEn: 'We build fast, secure online stores for entrepreneurs and businesses in {city}. Payment gateways, inventory management, and conversion optimization — built to sell across {country} and globally.',
+    descriptionEn: 'Fast, secure online stores for businesses in {city}. Payment gateways, inventory management, and conversion optimization included.',
     keywordsEn: ['ecommerce development {city}', 'online store {city}', 'custom ecommerce {city}', 'ecommerce developer {city}', 'shopify alternative {city}'],
     benefitsEn: [
       'Professional online store ready to sell from day one',
@@ -240,7 +240,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Consultoría Tecnológica',
     h1: 'Consultoría Tech en {ciudad}',
     h2: 'Asesoría experta para proyectos digitales en {ciudad}',
-    description: '¿No sabes por dónde empezar tu proyecto en {ciudad}? Te ayudamos a elegir el stack tecnológico correcto y a diseñar una arquitectura escalable.',
+    description: '¿No sabes por dónde empezar tu proyecto en {ciudad}? Te ayudo a elegir el stack correcto y a diseñar una arquitectura escalable.',
     keywords: ['consultor it {ciudad}', 'arquitecto software {ciudad}', 'asesoría tech {ciudad}'],
     benefits: [
       'Stack tecnológico adecuado a tus necesidades',
@@ -265,7 +265,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'Tech Consulting',
     h1En: 'Tech Consulting Services in {city}',
     h2En: 'Expert Guidance for Digital Projects in {city}',
-    descriptionEn: 'Not sure where to start your digital project in {city}? We help you choose the right tech stack and design a scalable architecture. Independent, expert advice for businesses across {country}.',
+    descriptionEn: 'Not sure where to start your project in {city}? Independent expert advice on the right tech stack and a scalable architecture.',
     keywordsEn: ['tech consulting {city}', 'software architect {city}', 'cto as a service {city}', 'technology advisor {city}', 'it consulting {city}'],
     benefitsEn: [
       'Right tech stack for your specific needs',
@@ -293,7 +293,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Landing Pages de Alta Conversión',
     h1: 'Landing Pages Profesionales en {ciudad}',
     h2: 'Páginas de aterrizaje que convierten visitantes en clientes en {ciudad}',
-    description: 'Diseñamos y desarrollamos landing pages optimizadas para conversión en {ciudad}. Con A/B testing, formularios inteligentes y análisis de comportamiento para maximizar tus ventas en {country}.',
+    description: 'Landing pages optimizadas para conversión en {ciudad}: A/B testing, formularios inteligentes y analítica para maximizar tus ventas.',
     keywords: ['landing page {ciudad}', 'página de aterrizaje {ciudad}', 'landing page profesional {ciudad}'],
     benefits: [
       'Diseño orientado a conversión y resultados',
@@ -318,7 +318,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'High-Converting Landing Pages',
     h1En: 'High-Converting Landing Pages in {city}',
     h2En: 'Landing Pages That Turn Visitors Into Customers in {city}',
-    descriptionEn: 'We design and develop conversion-optimized landing pages for businesses in {city}. A/B testing, intelligent forms, and behavior analytics to maximize your sales across {country} and beyond.',
+    descriptionEn: 'Conversion-optimized landing pages in {city}: A/B testing, smart forms, and behavior analytics to maximize your sales.',
     keywordsEn: ['landing page {city}', 'landing page designer {city}', 'high converting landing page {city}', 'lead generation page {city}', 'sales page developer {city}'],
     benefitsEn: [
       'Conversion-focused design built for measurable results',
@@ -346,7 +346,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Aplicaciones Web Progresivas (PWA)',
     h1: 'Aplicaciones Web Progresivas en {ciudad}',
     h2: 'Apps que funcionan en móvil y desktop para negocios en {ciudad}',
-    description: 'Desarrollamos Progressive Web Apps (PWA) que funcionan como apps nativas sin pasar por las tiendas de aplicaciones. Solución ideal para negocios en {ciudad} que quieren presencia mobile sin el costo de apps nativas.',
+    description: 'Progressive Web Apps (PWA) que funcionan como apps nativas sin pasar por las tiendas. Presencia mobile en {ciudad} a menor costo.',
     keywords: ['app web {ciudad}', 'aplicacion movil {ciudad}', 'pwa {ciudad}'],
     benefits: [
       'Funciona como app nativa sin instalación obligatoria',
@@ -371,7 +371,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'Progressive Web Apps (PWA)',
     h1En: 'Progressive Web App Development in {city}',
     h2En: 'Apps That Work on Mobile and Desktop for Businesses in {city}',
-    descriptionEn: 'We develop Progressive Web Apps (PWA) that behave like native apps without app store approval. The ideal solution for businesses in {city} that want mobile presence without the cost of native app development in {country}.',
+    descriptionEn: 'Progressive Web Apps (PWA) that work like native apps without app stores. Mobile presence for businesses in {city} at a lower cost.',
     keywordsEn: ['pwa development {city}', 'web app developer {city}', 'progressive web app {city}', 'mobile web app {city}', 'app development {city}'],
     benefitsEn: [
       'Works like a native app without mandatory installation',
@@ -399,7 +399,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'SEO Técnico y Posicionamiento Web',
     h1: 'SEO Técnico Profesional en {ciudad}',
     h2: 'Posicionamiento real en Google para negocios de {ciudad}',
-    description: 'Auditoría y optimización SEO técnica completa para sitios web de {ciudad}. Schema.org, velocidad de carga, Core Web Vitals, sitemap y todas las técnicas que Google realmente premia en {country}.',
+    description: 'Auditoría y optimización SEO técnica en {ciudad}: Core Web Vitals, schema.org, velocidad y sitemap. Lo que Google realmente premia.',
     keywords: ['seo {ciudad}', 'posicionamiento web {ciudad}', 'consultor seo {ciudad}'],
     benefits: [
       'Auditoría SEO completa de tu sitio actual',
@@ -424,7 +424,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'Technical SEO',
     h1En: 'Technical SEO Services in {city}',
     h2En: 'Real Google Rankings for Businesses in {city}',
-    descriptionEn: 'Complete technical SEO audit and optimization for websites in {city}. Schema.org, Core Web Vitals, sitemap optimization, and all techniques Google actually rewards for businesses across {country} and beyond.',
+    descriptionEn: 'Technical SEO audit and optimization in {city}: Core Web Vitals, schema.org, speed, and sitemaps. What Google actually rewards.',
     keywordsEn: ['technical seo {city}', 'seo consultant {city}', 'seo services {city}', 'local seo {city}', 'google ranking expert {city}'],
     benefitsEn: [
       'Complete SEO audit of your current site',
@@ -452,7 +452,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Integración de APIs y Sistemas',
     h1: 'Integración de APIs y Sistemas en {ciudad}',
     h2: 'Conectamos tus herramientas digitales para que trabajen juntas en {ciudad}',
-    description: 'Integramos tu sitio web o sistema con cualquier API externa: pagos (Stripe, PayPal, Wompi), CRMs, ERPs, WhatsApp Business, Google Workspace. Soluciones personalizadas para empresas en {ciudad}.',
+    description: 'Integro tu web o sistema con cualquier API: pagos (Stripe, PayPal, Wompi), CRMs, WhatsApp Business y más, para empresas en {ciudad}.',
     keywords: ['integracion api {ciudad}', 'conectar sistemas {ciudad}', 'automatizacion api {ciudad}'],
     benefits: [
       'Conexión entre tus sistemas actuales',
@@ -477,7 +477,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'API & Systems Integration',
     h1En: 'API & Systems Integration Services in {city}',
     h2En: 'Connecting Your Digital Tools So They Work Together in {city}',
-    descriptionEn: 'We integrate your website or system with any external API: payments (Stripe, PayPal), CRMs, ERPs, WhatsApp Business, Google Workspace. Custom solutions for businesses in {city}, {country}.',
+    descriptionEn: 'We integrate your system with any API: payments (Stripe, PayPal), CRMs, WhatsApp Business, and more, for businesses in {city}.',
     keywordsEn: ['api integration {city}', 'system integration {city}', 'stripe integration developer {city}', 'crm integration {city}', 'saas integration developer {city}'],
     benefitsEn: [
       'Seamless connection between your current systems',
@@ -505,7 +505,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Mantenimiento y Soporte Web',
     h1: 'Mantenimiento Web Profesional en {ciudad}',
     h2: 'Tu sitio web siempre actualizado, seguro y funcionando en {ciudad}',
-    description: 'Planes de mantenimiento web mensual para sitios y aplicaciones en {ciudad}. Actualizaciones de seguridad, backups automáticos, optimización de rendimiento y soporte técnico prioritario para negocios en {country}.',
+    description: 'Mantenimiento web mensual en {ciudad}: actualizaciones de seguridad, backups automáticos, rendimiento y soporte técnico prioritario.',
     keywords: ['mantenimiento web {ciudad}', 'soporte web {ciudad}', 'actualizacion sitio web {ciudad}'],
     benefits: [
       'Actualizaciones de seguridad regulares',
@@ -530,7 +530,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'Web Maintenance & Support',
     h1En: 'Professional Web Maintenance & Support in {city}',
     h2En: 'Your Website Always Updated, Secure, and Running in {city}',
-    descriptionEn: 'Monthly web maintenance plans for sites and applications in {city}. Security updates, automatic backups, performance optimization, and priority technical support for businesses across {country}.',
+    descriptionEn: 'Monthly web maintenance in {city}: security updates, automatic backups, performance optimization, and priority support.',
     keywordsEn: ['web maintenance {city}', 'website support {city}', 'website management {city}', 'website maintenance service {city}', 'site uptime monitoring {city}'],
     benefitsEn: [
       'Regular security patches and updates',

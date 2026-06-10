@@ -1,20 +1,21 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import { ArrowLeft, Scale, Globe } from 'lucide-react';
 import Link from 'next/link';
 import Footer from '@/components/shared/Footer';
 
-export const metadata: Metadata = {
-  title: 'Privacy Protocol & Data Protection | Omar Hernández',
-  alternates: {
-    canonical: 'https://omarhernandezrey.com/privacy',
-    languages: {
-      'en': 'https://omarhernandezrey.com/privacy',
-      'es': 'https://omarhernandezrey.com/privacidad',
-      'x-default': 'https://omarhernandezrey.com/privacidad',
-    },
+export const metadata: Metadata = buildMetadata({
+  title: 'Privacy Policy & Data Protection | Omar Hernández Rey',
+  description: 'Privacy policy and personal data protection for omarhernandezrey.com: what we collect, why we collect it, and your rights under Colombian Law 1581.',
+  path: '/privacy',
+  locale: 'en_US',
+  languages: {
+    'es': 'https://omarhernandezrey.com/privacidad',
+    'en': 'https://omarhernandezrey.com/privacy',
+    'x-default': 'https://omarhernandezrey.com/privacidad',
   },
-};
+});
 
 export default function PrivacyPage() {
   return (

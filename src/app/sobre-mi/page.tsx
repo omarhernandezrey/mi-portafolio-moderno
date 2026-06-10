@@ -1,4 +1,5 @@
 import React from 'react';
+import { buildMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, GraduationCap, Briefcase, Code2, CheckCircle, Sparkles, MapPin, ExternalLink, BookOpen, Wrench, Bot, ShoppingCart, Zap, Search, Target } from 'lucide-react';
@@ -7,17 +8,11 @@ import JsonLd from '@/components/seo/JsonLd';
 import { OMAR_PROFILE } from '@/data/omarProfile';
 // All data is defined inline from real project sources
 
-export const metadata: Metadata = {
-  title: 'Sobre Mí — Omar Hernández Rey | Desarrollador Web Full Stack Colombia',
-  description: 'Desarrollador Full Stack freelance con 5+ años de experiencia. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software. Proyectos para Colombia y clientes remotos en USA.',
-  alternates: {
-    canonical: 'https://omarhernandezrey.com/sobre-mi',
-    languages: {
-      'es': 'https://omarhernandezrey.com/sobre-mi',
-      'en': 'https://omarhernandezrey.com/about',
-      'x-default': 'https://omarhernandezrey.com/sobre-mi',
-    },
-  },
+export const metadata: Metadata = buildMetadata({
+  title: 'Sobre Mí | Desarrollador Full Stack Colombia',
+  description: 'Desarrollador Full Stack freelance con 5+ años de experiencia en React, Next.js, Node.js e IA. Proyectos en Colombia y remoto para clientes de USA.',
+  path: '/sobre-mi',
+  ogSubtitle: 'Desarrollador Full Stack | Colombia',
   keywords: [
     'desarrollador full stack colombia',
     'programador web bogotá',
@@ -29,29 +24,7 @@ export const metadata: Metadata = {
     'desarrollo web colombia remoto',
     'programador freelance bogotá',
   ],
-  openGraph: {
-    type: 'profile',
-    locale: 'es_CO',
-    url: 'https://omarhernandezrey.com/sobre-mi',
-    siteName: 'Omar Hernández Rey Portfolio',
-    title: 'Sobre Mí — Omar Hernández Rey | Desarrollador Web Full Stack',
-    description: 'Desarrollador Full Stack freelance con 5+ años de experiencia. React, Next.js, Node.js, IA. Colombia y remoto USA.',
-    images: [
-      {
-        url: 'https://omarhernandezrey.com/api/og?title=Sobre%20M%C3%AD&subtitle=Desarrollador%20Web%20Full%20Stack%20%E2%80%94%20Colombia',
-        width: 1200,
-        height: 630,
-        alt: 'Sobre Mí — Omar Hernández Rey',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Sobre Mí — Omar Hernández Rey | Desarrollador Web Full Stack',
-    description: 'Desarrollador Full Stack freelance. 5+ años. React, Next.js, Node.js, IA. Colombia y remoto USA.',
-    images: ['https://omarhernandezrey.com/api/og?title=Sobre%20M%C3%AD&subtitle=Desarrollador%20Web%20Full%20Stack%20%E2%80%94%20Colombia'],
-  },
-};
+});
 
 const educationData = [
   {
@@ -128,12 +101,12 @@ const coreSkills = [
 ];
 
 const services = [
-  { name: 'Desarrollo Web', icon: <Code2 size={20} />, href: '/servicios/desarrollo-web/bogota', description: 'Sitios web profesionales con Next.js y React. Diseño responsive, SEO incluido y panel de administración.' },
-  { name: 'Chatbots con IA', icon: <Bot size={20} />, href: '/servicios/chatbot-ia/bogota', description: 'Agentes de IA inteligentes que captan leads y cierran ventas 24/7. Integración con WhatsApp Business.' },
-  { name: 'E-commerce', icon: <ShoppingCart size={20} />, href: '/servicios/e-commerce/bogota', description: 'Tiendas online completas con pagos integrados, gestión de inventario y panel intuitivo.' },
-  { name: 'Automatización', icon: <Zap size={20} />, href: '/servicios/automatizacion/bogota', description: 'Eliminación de tareas repetitivas integrando tus herramientas favoritas.' },
-  { name: 'SEO Técnico', icon: <Search size={20} />, href: '/servicios/seo-tecnico/bogota', description: 'Auditoría y optimización SEO completa. Core Web Vitals, Schema.org y ranking real en Google.' },
-  { name: 'Landing Pages', icon: <Target size={20} />, href: '/servicios/landing-page/bogota', description: 'Páginas de aterrizaje optimizadas para conversión con A/B testing y análisis de comportamiento.' },
+  { name: 'Desarrollo Web', icon: <Code2 size={20} />, href: '/servicios/desarrollo-web', description: 'Sitios web profesionales con Next.js y React. Diseño responsive, SEO incluido y panel de administración.' },
+  { name: 'Chatbots con IA', icon: <Bot size={20} />, href: '/servicios/chatbot-ia', description: 'Agentes de IA inteligentes que captan leads y cierran ventas 24/7. Integración con WhatsApp Business.' },
+  { name: 'E-commerce', icon: <ShoppingCart size={20} />, href: '/servicios/e-commerce', description: 'Tiendas online completas con pagos integrados, gestión de inventario y panel intuitivo.' },
+  { name: 'Automatización', icon: <Zap size={20} />, href: '/servicios/automatizacion', description: 'Eliminación de tareas repetitivas integrando tus herramientas favoritas.' },
+  { name: 'SEO Técnico', icon: <Search size={20} />, href: '/servicios/seo-tecnico', description: 'Auditoría y optimización SEO completa. Core Web Vitals, Schema.org y ranking real en Google.' },
+  { name: 'Landing Pages', icon: <Target size={20} />, href: '/servicios/landing-page', description: 'Páginas de aterrizaje optimizadas para conversión con A/B testing y análisis de comportamiento.' },
 ];
 
 const timeline = [
@@ -334,7 +307,7 @@ export default function SobreMiPage() {
           <div className="text-center pt-2">
             <p className="text-text-muted/60 text-sm">
               Más de 55 cursos completados en Platzi, SENA y otras plataformas.{' '}
-              <Link href="/certificates" className="text-primary font-bold hover:underline">
+              <Link href="/#education" className="text-primary font-bold hover:underline">
                 Ver todos los certificados
               </Link>
             </p>

@@ -1,13 +1,15 @@
 import { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import RecursosContent from '@/components/recursos/RecursosContent';
 import JsonLd from '@/components/seo/JsonLd';
 
 const BASE_URL = 'https://omarhernandezrey.com';
 
-export const metadata: Metadata = {
-  title: 'Recursos Gratuitos para Proyectos Web — Checklist, Guía de Precios y Plantillas | Colombia',
-  description: 'Descarga gratis: checklist de auditoría técnica para sitios web, guía de precios de desarrollo web en Colombia 2026 y plantilla de briefing. Para emprendedores y empresas en Colombia y USA.',
-  alternates: { canonical: `${BASE_URL}/recursos` },
+export const metadata: Metadata = buildMetadata({
+  title: 'Recursos Gratis: Checklist Web y Guía de Precios 2026',
+  description: 'Descarga gratis: checklist de auditoría técnica web, guía de precios de desarrollo web en Colombia 2026 y plantilla de briefing para tu proyecto.',
+  path: '/recursos',
+  ogSubtitle: 'Herramientas para tu Proyecto Digital',
   keywords: [
     'recursos gratuitos desarrollo web colombia',
     'checklist auditoria web gratis',
@@ -16,26 +18,7 @@ export const metadata: Metadata = {
     'herramientas emprendedores digitales',
     'checklist seo tecnico gratis',
   ],
-  openGraph: {
-    type: 'website',
-    locale: 'es_CO',
-    url: `${BASE_URL}/recursos`,
-    title: 'Recursos Gratuitos — Checklist, Guía de Precios y Plantillas | Omar Hernández Rey',
-    description: 'Descarga: checklist de auditoría web, guía de precios 2026 y plantilla de briefing. Gratis para emprendedores en Colombia y USA.',
-    images: [{
-      url: `${BASE_URL}/api/og?title=Recursos%20Gratuitos&subtitle=Herramientas%20para%20tu%20Proyecto%20Digital`,
-      width: 1200,
-      height: 630,
-      alt: 'Recursos gratuitos para proyectos web — Omar Hernández Rey',
-    }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Recursos Gratuitos — Checklist, Guías y Plantillas | Omar Hernández Rey',
-    description: 'Checklist auditoría web, guía de precios Colombia 2026 y plantilla de briefing. Descarga gratis.',
-    images: [`${BASE_URL}/api/og?title=Recursos%20Gratuitos&subtitle=Herramientas%20para%20tu%20Proyecto%20Digital`],
-  },
-};
+});
 
 export default function RecursosPage() {
   const breadcrumbSchema = {

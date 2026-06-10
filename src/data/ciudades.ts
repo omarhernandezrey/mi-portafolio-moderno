@@ -4,6 +4,20 @@ export interface Ciudad {
   country: string;
 }
 
+// Ciudades con página propia indexable. El resto de `ciudades` se conserva
+// solo para redirigir (301) URLs antiguas hacia la página pilar del servicio.
+// Criterio: búsqueda local real en español (Colombia) + 2 mercados USA con
+// alta demanda nearshore. Ampliar SOLO si la página tendrá contenido local único.
+export const CIUDADES_INDEXABLES = [
+  'bogota',
+  'medellin',
+  'cali',
+  'barranquilla',
+  'bucaramanga',
+  'miami',
+  'new-york',
+] as const;
+
 export const ciudades: Ciudad[] = [
   { id: 'bogota', name: 'Bogotá', country: 'Colombia' },
   { id: 'medellin', name: 'Medellín', country: 'Colombia' },

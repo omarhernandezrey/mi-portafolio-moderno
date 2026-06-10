@@ -1,4 +1,5 @@
 import React from 'react';
+import { buildMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Code2, Bot, Zap, ShoppingCart, LineChart, Target, Smartphone, Search, Link2, Wrench, MapPin, CheckCircle } from 'lucide-react';
@@ -8,12 +9,11 @@ import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
 
-export const metadata: Metadata = {
-  title: 'Servicios de Desarrollo Web y Software | Colombia & Remoto',
-  description: 'Contratar desarrollador web freelance en Colombia. Desarrollo web, chatbots con IA, e-commerce, SEO técnico y automatización. Full Stack con React y Next.js. Proyectos desde $500 USD.',
-  alternates: {
-    canonical: 'https://omarhernandezrey.com/servicios',
-  },
+export const metadata: Metadata = buildMetadata({
+  title: 'Servicios de Desarrollo Web y Software | Colombia',
+  description: 'Desarrollo web, chatbots con IA, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $300 USD para Colombia, USA y LATAM.',
+  path: '/servicios',
+  ogSubtitle: 'Colombia & Remoto — Desde $300 USD',
   keywords: [
     'contratar desarrollador web colombia',
     'programador freelance colombia',
@@ -28,29 +28,7 @@ export const metadata: Metadata = {
     'aplicaciones web colombia',
     'react developer colombia',
   ],
-  openGraph: {
-    type: 'website',
-    locale: 'es_CO',
-    url: 'https://omarhernandezrey.com/servicios',
-    siteName: 'Omar Hernández Rey Portfolio',
-    title: 'Servicios de Desarrollo Web y Software | Omar Hernández Rey',
-    description: 'Desarrollador full stack freelance en Colombia. Web apps, chatbots IA, e-commerce, SEO. Colombia y remoto USA/LATAM. Desde $500 USD.',
-    images: [
-      {
-        url: 'https://omarhernandezrey.com/api/og?title=Servicios%20de%20Desarrollo%20Web&subtitle=Colombia%20%26%20Remoto%20%E2%80%94%20Desde%20%24500%20USD',
-        width: 1200,
-        height: 630,
-        alt: 'Servicios de Desarrollo Web — Omar Hernández Rey',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Servicios de Desarrollo Web | Omar Hernández Rey',
-    description: 'Desarrollador full stack freelance en Colombia. Web, IA, e-commerce y más. Desde $500 USD.',
-    images: ['https://omarhernandezrey.com/api/og?title=Servicios%20de%20Desarrollo%20Web&subtitle=Colombia%20%26%20Remoto%20%E2%80%94%20Desde%20%24500%20USD'],
-  },
-};
+});
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'desarrollo-web': <Code2 size={28} />,
@@ -82,7 +60,7 @@ export default function ServiciosPage() {
       'position': i + 1,
       'name': s.name,
       'description': s.description.replace('{ciudad}', 'Colombia').replace('{country}', 'Colombia'),
-      'url': `https://omarhernandezrey.com/servicios/${s.id}/bogota`,
+      'url': `https://omarhernandezrey.com/servicios/${s.id}`,
     })),
   };
 
@@ -128,7 +106,7 @@ export default function ServiciosPage() {
           '@type': 'Service',
           'name': s.name,
           'description': s.description.replace('{ciudad}', 'Colombia').replace('{country}', 'Colombia'),
-          'url': `https://omarhernandezrey.com/servicios/${s.id}/bogota`,
+          'url': `https://omarhernandezrey.com/servicios/${s.id}`,
         },
       })),
     },
@@ -244,7 +222,7 @@ export default function ServiciosPage() {
                 <div className="pt-5 border-t border-white/5 flex items-center justify-between">
                   <span className="text-xs font-black text-primary/80 italic">{servicio.priceRange.split('(')[0].trim()}</span>
                   <Link
-                    href={`/servicios/${servicio.id}/bogota`}
+                    href={`/servicios/${servicio.id}`}
                     className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-colors"
                   >
                     Ver servicio

@@ -6,7 +6,7 @@ const PRIVATE: string[] = ['/admin/', '/api/', '/onboarding/', '/proposal/', '/a
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: PRIVATE, crawlDelay: 10 },
+      { userAgent: '*', allow: '/', disallow: PRIVATE },
       { userAgent: 'Googlebot', allow: '/', disallow: PRIVATE },
       { userAgent: 'Google-Extended', allow: '/', disallow: PRIVATE },
       { userAgent: 'GPTBot', allow: '/', disallow: PRIVATE },

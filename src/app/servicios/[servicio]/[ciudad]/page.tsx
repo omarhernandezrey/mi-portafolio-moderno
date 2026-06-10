@@ -1,13 +1,14 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Link from 'next/link';
 import { serviciosProgramaticos } from '@/data/servicios';
-import { ciudades } from '@/data/ciudades';
+import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
 import { ArrowRight, Shield, Zap, Globe, Target, UserCheck, CheckCircle, Clock, DollarSign, HelpCircle } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
+import { buildMetadata, withBrand } from '@/lib/seo';
 
 interface Props {
   params: Promise<{
@@ -16,17 +17,24 @@ interface Props {
   }>;
 }
 
+// Solo se generan páginas para ciudades curadas. Las URLs antiguas de las
+// demás ciudades responden 301 hacia la página pilar del servicio (ver abajo),
+// consolidando señales en lugar de repartirlas entre 810 páginas casi idénticas.
 export async function generateStaticParams() {
   const paths = [];
   for (const servicio of serviciosProgramaticos) {
-    for (const ciudad of ciudades) {
+    for (const ciudadId of CIUDADES_INDEXABLES) {
       paths.push({
         servicio: servicio.id,
-        ciudad: ciudad.id,
+        ciudad: ciudadId,
       });
     }
   }
   return paths;
+}
+
+function esCiudadIndexable(ciudadId: string): boolean {
+  return (CIUDADES_INDEXABLES as readonly string[]).includes(ciudadId);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -34,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const servicio = serviciosProgramaticos.find(s => s.id === servicioId);
   const ciudad = ciudades.find(c => c.id === ciudadId);
 
-  if (!servicio || !ciudad) return {};
+  if (!servicio || !ciudad || !esCiudadIndexable(ciudadId)) return {};
 
   const isUS = ciudad.country === 'United States';
 
@@ -52,54 +60,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const serviceName = isUS && servicio.nameEn ? servicio.nameEn : servicio.name;
 
-  // Smart indexing: priority cities indexables (evita thin content, mantiene calidad)
-  const INDEXABLE_CITIES = new Set([
-    // Colombia — principales
-    'bogota', 'medellin', 'cali', 'barranquilla', 'cartagena',
-    'bucaramanga', 'pereira', 'santa-marta',
-    // LATAM — hubs tecnológicos
-    'ciudad-de-mexico', 'monterrey', 'buenos-aires', 'santiago', 'lima',
-    'quito', 'panama', 'santo-domingo', 'montevideo', 'san-jose',
-    // USA — tier 1 tech markets
-    'new-york', 'los-angeles', 'chicago', 'houston', 'miami', 'dallas',
-    'san-francisco', 'seattle', 'boston', 'atlanta', 'washington-dc',
-    'austin', 'denver', 'san-diego', 'phoenix', 'portland',
-    // USA — tier 2 growing markets
-    'orlando', 'tampa', 'charlotte', 'nashville', 'salt-lake-city',
-    'minneapolis', 'san-antonio', 'las-vegas',
-  ]);
-  const isIndexable = INDEXABLE_CITIES.has(ciudadId);
-
-  return {
-    title,
+  return buildMetadata({
+    title: withBrand(title),
     description,
+    path: `/servicios/${servicioId}/${ciudadId}`,
+    ogSubtitle: serviceName + (isUS ? ' in ' : ' en ') + ciudad.name,
     keywords,
-    alternates: {
-      canonical: `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
-    },
-    robots: isIndexable ? undefined : { index: false, follow: true },
-    openGraph: {
-      type: 'website',
-      locale: isUS ? 'en_US' : 'es_CO',
-      title,
-      description,
-      url: `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
-      images: [
-        {
-          url: `https://omarhernandezrey.com/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(serviceName + (isUS ? ' in ' : ' en ') + ciudad.name)}`,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: [`https://omarhernandezrey.com/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(serviceName + (isUS ? ' in ' : ' en ') + ciudad.name)}`],
-    },
-  };
+    locale: isUS ? 'en_US' : 'es_CO',
+  });
 }
 
 export default async function ServicioCiudadPage({ params }: Props) {
@@ -109,6 +77,11 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
   if (!servicio || !ciudad) {
     notFound();
+  }
+
+  // 301: las ciudades retiradas del programa SEO consolidan en la página pilar
+  if (!esCiudadIndexable(ciudadId)) {
+    permanentRedirect(`/servicios/${servicioId}`);
   }
 
   const isUS = ciudad.country === 'United States';
@@ -238,7 +211,8 @@ export default async function ServicioCiudadPage({ params }: Props) {
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omarhernandezrey.com" },
       { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://omarhernandezrey.com/servicios" },
-      { "@type": "ListItem", "position": 3, "name": `${serviceName} in ${ciudad.name}`, "item": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}` },
+      { "@type": "ListItem", "position": 3, "name": serviceName, "item": `https://omarhernandezrey.com/servicios/${servicioId}` },
+      { "@type": "ListItem", "position": 4, "name": `${serviceName} in ${ciudad.name}`, "item": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}` },
     ],
   };
 
@@ -440,7 +414,14 @@ export default async function ServicioCiudadPage({ params }: Props) {
                 </Link>
               ))}
           </div>
-          <div className="text-center mt-8">
+          <div className="text-center mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href={`/servicios/${servicioId}`}
+              className="inline-flex items-center gap-2 text-sm font-bold text-primary/80 hover:text-primary transition-colors"
+            >
+              {isUS ? `${serviceName} — full service page` : `Página completa de ${serviceName}`}
+              <ArrowRight size={14} />
+            </Link>
             <Link
               href="/servicios"
               className="inline-flex items-center gap-2 text-sm font-bold text-text-muted/60 hover:text-primary transition-colors"

@@ -92,25 +92,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return { title: 'Post no encontrado' };
 
   const isEnglish = post.lang === 'en';
-  const siteSuffix = isEnglish
-    ? 'Omar Hernández Rey — Colombian Full Stack Developer'
-    : 'Omar Hernández Rey — Desarrollador Web Colombia';
-  const title = `${post.title} | ${siteSuffix}`;
+  // Título absoluto: los titles de posts ya son largos; añadir sufijos de marca
+  // los llevaba a ~130 chars (y el template del layout sumaba la marca otra vez).
+  const title = post.title;
   const ogImageUrl = post.image?.startsWith('/api/og')
     ? `${BASE_URL}${post.image}`
     : `${BASE_URL}/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent(isEnglish ? 'Omar Hernández Rey · Blog' : 'Blog · Omar Hernández Rey')}`;
 
   return {
-    title,
+    title: { absolute: title },
     description: post.description,
     keywords: post.tags,
     authors: [{ name: post.author, url: `${BASE_URL}/#person` }],
+    // Sin hreflang: cada post existe en un solo idioma, no hay par equivalente
+    // que declarar (y un x-default hacia /blog era una señal inválida).
     alternates: {
       canonical: `${BASE_URL}/blog/${slug}`,
-      languages: {
-        [isEnglish ? 'en' : 'es']: `${BASE_URL}/blog/${slug}`,
-        'x-default': `${BASE_URL}/blog`,
-      },
     },
     openGraph: {
       title: post.title,

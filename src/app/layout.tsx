@@ -83,10 +83,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://omarhernandezrey.com"),
   title: {
     template: "%s | Omar Hernández Rey",
-    default: "Omar Hernández Rey | Desarrollador Full Stack — Colombia & USA Remote",
+    default: "Omar Hernández Rey · Desarrollador Web Freelance Colombia",
   },
   description:
-    "Desarrollo webs y apps con React & Next.js. Atiendo clientes en Colombia y USA. Proyectos desde $500 USD. Consulta gratis, respuesta en 24h.",
+    "Desarrollo webs, apps y chatbots con IA en React y Next.js. Proyectos desde $500 USD para Colombia y USA. Consulta gratis, respuesta en 24h.",
   verification: {
     google: clientEnv.NEXT_PUBLIC_GSC_VERIFICATION,
     other: {
@@ -111,14 +111,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Omar Hernández Rey" }],
   creator: "Omar Hernández Rey",
-  alternates: {
-    canonical: 'https://omarhernandezrey.com',
-    languages: {
-      'es': 'https://omarhernandezrey.com',
-      'en': 'https://omarhernandezrey.com/?lang=en',
-      'x-default': 'https://omarhernandezrey.com',
-    },
-  },
+  // Sin `alternates` global: un canonical en el root layout se hereda en toda
+  // página sin metadata propia y la canonicaliza al home (des-indexándola).
+  // Cada page.tsx declara su propio canonical.
   openGraph: {
     type: "website",
     locale: "es_CO",

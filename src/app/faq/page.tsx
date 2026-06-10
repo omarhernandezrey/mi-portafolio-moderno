@@ -1,4 +1,5 @@
 import React from 'react';
+import { buildMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
 import JsonLd from '@/components/seo/JsonLd';
 import { HelpCircle, MessageCircle, ChevronRight, Zap, Shield, Wallet, Clock, UserCheck, Globe } from 'lucide-react';
@@ -7,10 +8,11 @@ import Footer from '@/components/shared/Footer';
 
 const BASE_URL = 'https://omarhernandezrey.com';
 
-export const metadata: Metadata = {
-  title: 'Preguntas Frecuentes — Desarrollador Web Freelance Colombia | Omar Hernández Rey',
-  description: '¿Cuánto cuesta un sitio web en Colombia? ¿Cuánto tarda? ¿Cómo se paga? Respuestas claras sobre precios, tiempos y proceso de trabajo. Desarrollador freelance disponible para Colombia y USA.',
-  alternates: { canonical: `${BASE_URL}/faq` },
+export const metadata: Metadata = buildMetadata({
+  title: 'Preguntas Frecuentes | Desarrollador Web Colombia',
+  description: '¿Cuánto cuesta un sitio web en Colombia? ¿Cuánto tarda? ¿Cómo se paga? Respuestas claras sobre precios, tiempos y proceso de trabajo freelance.',
+  path: '/faq',
+  ogSubtitle: 'Desarrollador Web Freelance Colombia',
   keywords: [
     'preguntas frecuentes desarrollador web colombia',
     'cuanto cuesta sitio web colombia',
@@ -19,26 +21,7 @@ export const metadata: Metadata = {
     'precios desarrollo web 2026',
     'desarrollador web freelance colombia preguntas',
   ],
-  openGraph: {
-    type: 'website',
-    locale: 'es_CO',
-    url: `${BASE_URL}/faq`,
-    title: 'FAQ — Desarrollador Web Freelance Colombia | Omar Hernández Rey',
-    description: '¿Cuánto cuesta un sitio web? ¿Cómo funciona el proceso? Respuestas directas sin tecnicismos.',
-    images: [{
-      url: `${BASE_URL}/api/og?title=Preguntas%20Frecuentes&subtitle=Desarrollador%20Web%20Freelance%20Colombia`,
-      width: 1200,
-      height: 630,
-      alt: 'Preguntas frecuentes — Omar Hernández Rey',
-    }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'FAQ — Desarrollador Web Colombia | Omar Hernández Rey',
-    description: '¿Cuánto cuesta un sitio web? ¿Cómo funciona el proceso? Respuestas directas.',
-    images: [`${BASE_URL}/api/og?title=Preguntas%20Frecuentes&subtitle=Desarrollador%20Web%20Freelance%20Colombia`],
-  },
-};
+});
 
 const CATEGORIES = [
   {
