@@ -43,7 +43,7 @@ const serverSchema = z.object({
 export const serverEnv = {
   get GROQ_API_KEY() { return process.env.GROQ_API_KEY || ""; },
   get SUPABASE_URL() { return process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || ""; },
-  get SUPABASE_ANON_KEY() { return process.env.SUPABASE_ANON_KEY || ""; },
+  get SUPABASE_ANON_KEY() { return process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""; },
   get SUPABASE_SERVICE_ROLE_KEY() { return process.env.SUPABASE_SERVICE_ROLE_KEY || ""; },
   get TELEGRAM_BOT_TOKEN() { return process.env.TELEGRAM_BOT_TOKEN || ""; },
   get TELEGRAM_CHAT_ID() { return process.env.TELEGRAM_CHAT_ID || ""; },
