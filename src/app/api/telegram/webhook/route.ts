@@ -20,6 +20,13 @@ async function answerCallback(callbackId: string, text: string) {
 
 export async function POST(req: Request) {
   try {
+    // Telegram reenvía el secret_token configurado en setWebhook en este header.
+    // Sin esta validación, cualquiera que conozca la URL podría falsificar updates.
+    const secret = serverEnv.TELEGRAM_WEBHOOK_SECRET;
+    if (secret && req.headers.get('x-telegram-bot-api-secret-token') !== secret) {
+      return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { message, callback_query } = body;
 

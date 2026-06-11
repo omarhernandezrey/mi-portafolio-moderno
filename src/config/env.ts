@@ -48,6 +48,7 @@ export const serverEnv = {
   get TELEGRAM_BOT_TOKEN() { return process.env.TELEGRAM_BOT_TOKEN || ""; },
   get TELEGRAM_CHAT_ID() { return process.env.TELEGRAM_CHAT_ID || ""; },
   get TELEGRAM_BOT_USERNAME() { return process.env.TELEGRAM_BOT_USERNAME || ""; },
+  get TELEGRAM_WEBHOOK_SECRET() { return process.env.TELEGRAM_WEBHOOK_SECRET || ""; },
   get ADMIN_PASSWORD() { return process.env.ADMIN_PASSWORD || ""; },
   get ADMIN_SECRET() { return process.env.ADMIN_SECRET || ""; },
   get CRON_SECRET() { return process.env.CRON_SECRET || ""; },
