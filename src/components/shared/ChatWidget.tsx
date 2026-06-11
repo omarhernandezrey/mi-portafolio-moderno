@@ -244,6 +244,7 @@ export default function ChatWidget() {
         animate={showAttention ? { rotate: [0, -10, 10, 0], scale: [1, 1.1, 1.1, 1] } : {}}
         transition={showAttention ? { repeat: Infinity, duration: 2, repeatDelay: 5 } : {}}
         aria-label="Abrir chat"
+        data-testid="chat-toggle"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -357,6 +358,8 @@ export default function ChatWidget() {
                 {messages.map((msg, i) => (
                   <motion.div
                     key={i}
+                    data-testid="chat-message"
+                    data-role={msg.role}
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
@@ -485,6 +488,7 @@ export default function ChatWidget() {
                   <input
                     ref={inputRef}
                     type="text"
+                    data-testid="chat-input"
                     placeholder={t('chatbot.placeholder')}
                     className="w-full bg-transparent text-[15px] text-[var(--text-color)] placeholder-[var(--muted-color)] focus:outline-none disabled:opacity-50"
                     value={input}
@@ -530,6 +534,7 @@ export default function ChatWidget() {
 
                   <button
                     type="submit"
+                    data-testid="chat-send"
                     disabled={isLoading || (!input.trim() && !imageDataUrl) || !hasConsented}
                     className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:grayscale disabled:opacity-30"
                     aria-label="Enviar"

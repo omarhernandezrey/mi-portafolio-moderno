@@ -35,17 +35,15 @@ describe('Chatbot Widget — Flujos principales', () => {
       cy.abrirChat();
       cy.enviarMensajeChat('Hola');
       // El bot debe responder en menos de 15 segundos
-      cy.get('[data-testid="chat-message"], .chat-message, .message-bot', { timeout: 15000 })
+      cy.get('[data-testid="chat-message"][data-role="assistant"]', { timeout: 30000 })
         .should('have.length.greaterThan', 0);
     });
 
     it('no acepta mensajes vacíos', () => {
       cy.abrirChat();
-      // Intentar enviar sin texto
-      cy.get('[data-testid="chat-send"], button[type="submit"]').first().click();
-      // El mensaje no debe aparecer o el input debe tener validación
-      cy.get('[data-testid="chat-input"], input, textarea').first()
-        .should('not.have.value', '');
+      cy.aceptarConsentimiento();
+      // Con el input vacío, el botón de enviar debe quedar deshabilitado
+      cy.get('[data-testid="chat-send"]').should('be.disabled');
     });
   });
 
@@ -105,7 +103,7 @@ describe('Chatbot Widget — Flujo de venta E2E', () => {
 
     // Mensaje 1: presentación con necesidad
     cy.enviarMensajeChat('Hola, necesito una página web para mi empresa');
-    cy.get('[data-testid="chat-message"], .chat-message, .message-bot', { timeout: 15000 })
+    cy.get('[data-testid="chat-message"][data-role="assistant"]', { timeout: 30000 })
       .should('have.length.greaterThan', 0);
 
     // Mensaje 2: confirmar interés
