@@ -124,7 +124,7 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
 
   drawText('Formas de Pago:', { font: boldFont });
   y -= 15;
-  drawText('PayPal / Binance / Nequi / Transferencia Bancaria');
+  drawText('PayPal / Wompi / Nequi / Transferencia Bancaria');
   y -= 40;
 
   drawText('Esta factura no es una factura electrónica de venta según los términos del Decreto 2242 de 2015.', { size: 8, color: rgb(0.5, 0.5, 0.5) });

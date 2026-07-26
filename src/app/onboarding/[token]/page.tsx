@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect, use } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, FileText, CreditCard, Rocket, Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
+import { CheckCircle, FileText, CreditCard, Rocket, Loader2, ArrowRight, ChevronLeft, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
 import Footer from '@/components/shared/Footer';
 import Link from 'next/link';
 import { useNotyf } from '@/components/ui/NotyfProvider';
+import { getPaymentOptions } from '@/lib/chatbot/payments';
 
 interface OnboardingPageProps {
   params: Promise<{ token: string }>;
@@ -128,6 +130,11 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
   }
 
   if (!lead) return null;
+
+  // Sin dato confiable de país por lead: se muestran todos los métodos configurados
+  // (CO es superset: PayPal internacional + Wompi/Nequi/Bancolombia) y el cliente
+  // elige el que le aplique, igual que en la respuesta del FAQ.
+  const paymentOptions = getPaymentOptions('USD', 'CO');
 
   const steps = [
     { n: 1, label: 'Briefing', icon: <FileText size={20} /> },
@@ -284,7 +291,41 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                 <div className="text-4xl font-black text-[var(--primary-color)] mb-2">
                   ${lead.budget ? (parseFloat(lead.budget.replace(/[^0-9.]/g, '')) / 2).toFixed(2) : '---'} <span className="text-sm font-normal">USD</span>
                 </div>
-                <p className="text-sm text-[var(--muted-color)] uppercase tracking-widest font-bold">Pago Seguro vía PayPal / Stripe</p>
+                <p className="text-sm text-[var(--muted-color)] uppercase tracking-widest font-bold">Elige tu método de pago</p>
+              </div>
+
+              <div className="grid gap-3 mb-8 text-left">
+                {paymentOptions.map((method) => (
+                  <div
+                    key={method.id}
+                    className="p-4 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-4"
+                  >
+                    {method.qrImage && (
+                      <Image
+                        src={method.qrImage}
+                        alt={`QR ${method.name}`}
+                        width={64}
+                        height={64}
+                        className="rounded-lg shrink-0"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="font-bold">{method.name}</p>
+                      <p className="text-sm text-[var(--muted-color)]">{method.instructions.es}</p>
+                    </div>
+                    {method.url && (
+                      <a
+                        href={method.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 p-2 rounded-full hover:bg-white/10 transition-colors"
+                        aria-label={`Ir a ${method.name}`}
+                      >
+                        <ExternalLink size={20} />
+                      </a>
+                    )}
+                  </div>
+                ))}
               </div>
 
               <button
@@ -292,7 +333,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                 disabled={loading}
                 className="w-full py-4 bg-[var(--text-color)] text-[var(--background-color)] rounded-2xl font-black flex items-center justify-center gap-2 hover:scale-[1.02] transition-all disabled:opacity-50"
               >
-                {loading ? <Loader2 className="animate-spin" /> : <>Pagar Anticipo <CreditCard size={20} /></>}
+                {loading ? <Loader2 className="animate-spin" /> : <>Ya pagué el anticipo <CreditCard size={20} /></>}
               </button>
             </motion.div>
           )}

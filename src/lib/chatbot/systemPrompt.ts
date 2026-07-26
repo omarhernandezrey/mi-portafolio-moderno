@@ -97,7 +97,7 @@ ${projects}
 ${objections}
 
 # PAGOS
-PayPal, Wompi/Nequi, Mercado Pago. Anticipo 50% obligatorio.
+PayPal, Wompi/Nequi. Anticipo 50% obligatorio.
 
 # EJEMPLOS EXACTOS
 

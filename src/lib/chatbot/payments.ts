@@ -35,20 +35,6 @@ export function getPaymentOptions(currency: string, countryCode: string): Paymen
     });
   }
 
-  // USDT / Crypto (Binance Pay) — Disponible solo si está configurado el ID
-  if (clientEnv.NEXT_PUBLIC_PAYMENT_BINANCE_ID) {
-    options.push({
-      id: "binance",
-      name: "Binance Pay (USDT)",
-      url: `https://pay.binance.com/en/checkout/${clientEnv.NEXT_PUBLIC_PAYMENT_BINANCE_ID}`,
-      instructions: {
-        es: `Usa mi Binance Pay ID: ${clientEnv.NEXT_PUBLIC_PAYMENT_BINANCE_ID}`,
-        en: `Use my Binance Pay ID: ${clientEnv.NEXT_PUBLIC_PAYMENT_BINANCE_ID}`,
-      },
-      currencies: ["USDT"],
-    });
-  }
-
   // Lógica específica por país
   if (normalizedCountry === "CO") {
     // Wompi — checkout Colombia (acepta tarjeta, PSE, Nequi y Bancolombia)
@@ -67,13 +53,12 @@ export function getPaymentOptions(currency: string, countryCode: string): Paymen
     }
 
     // Nequi — QR Bre-B (sirve para Nequi, Bancolombia, Davivienda y demás apps colombianas)
-    const nequiUrl = clientEnv.NEXT_PUBLIC_PAYMENT_NEQUI_URL || undefined;
     const nequiQr = clientEnv.NEXT_PUBLIC_PAYMENT_NEQUI_QR || undefined;
-    if (nequiUrl || nequiQr) {
+    if (nequiQr) {
       options.push({
         id: "nequi",
         name: "Nequi / QR Bre-B (Colombia)",
-        url: nequiUrl || nequiQr,
+        url: nequiQr,
         qrImage: nequiQr,
         instructions: {
           es: "Escanea el QR Bre-B desde tu app de Nequi, Bancolombia, Davivienda u otras apps colombianas. Comisión $0 entre Nequis.",
@@ -94,20 +79,6 @@ export function getPaymentOptions(currency: string, countryCode: string): Paymen
       },
       currencies: ["COP"],
     });
-  } else if (["AR", "CL", "MX", "PE", "UY"].includes(normalizedCountry)) {
-    // Mercado Pago — opcional, solo si está configurado
-    if (clientEnv.NEXT_PUBLIC_PAYMENT_MP_URL) {
-      options.push({
-        id: "mercadopago",
-        name: "Mercado Pago",
-        url: clientEnv.NEXT_PUBLIC_PAYMENT_MP_URL,
-        instructions: {
-          es: "Usa Mercado Pago para pagar cómodamente en tu moneda local.",
-          en: "Use Mercado Pago to pay easily in your local currency.",
-        },
-        currencies: ["ARS", "CLP", "MXN", "PEN", "UYU"],
-      });
-    }
   }
 
   return options;

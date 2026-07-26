@@ -108,10 +108,7 @@ export const clientEnv = {
   // URLs de Pago
   get NEXT_PUBLIC_PAYMENT_PAYPAL_URL() { return process.env.NEXT_PUBLIC_PAYMENT_PAYPAL_URL || ""; },
   get NEXT_PUBLIC_PAYMENT_WOMPI_URL() { return process.env.NEXT_PUBLIC_PAYMENT_WOMPI_URL || ""; },
-  get NEXT_PUBLIC_PAYMENT_NEQUI_URL() { return process.env.NEXT_PUBLIC_PAYMENT_NEQUI_URL || ""; },
   get NEXT_PUBLIC_PAYMENT_NEQUI_QR() { return process.env.NEXT_PUBLIC_PAYMENT_NEQUI_QR || ""; },
-  get NEXT_PUBLIC_PAYMENT_MP_URL() { return process.env.NEXT_PUBLIC_PAYMENT_MP_URL || ""; },
-  get NEXT_PUBLIC_PAYMENT_BINANCE_ID() { return process.env.NEXT_PUBLIC_PAYMENT_BINANCE_ID || ""; },
 
   // SEO verification (Google Search Console & Bing Webmaster)
   get NEXT_PUBLIC_GSC_VERIFICATION() { return process.env.NEXT_PUBLIC_GSC_VERIFICATION || ""; },

@@ -331,7 +331,7 @@ Crawl Frequency: Daily (due to frequent updates)
 | Notificaciones Telegram | ✅ | Webhook bidireccional |
 | Catálogo + Playbook ventas | ✅ | 11 servicios, 12 objeciones |
 | Admin Dashboard | ✅ | Leads, tickets, facturación |
-| Opciones de pago | ✅ | PayPal, Wompi, MP, Binance |
+| Opciones de pago | ✅ | PayPal, Wompi, Nequi (QR) |
 | Agendado Cal.com | ✅ | Auto-detection timezone |
 | GDPR/Privacidad | ✅ | Derecho al olvido |
 | SEO Programático | ✅ | 356 URLs indexadas |
