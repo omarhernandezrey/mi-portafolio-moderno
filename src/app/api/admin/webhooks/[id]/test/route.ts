@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import crypto from 'crypto';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   const { data: webhook, error } = await supabaseServer

@@ -2,15 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
+import { requireAdmin } from '@/lib/admin/auth';
 
 const ticketSchema = z.object({
   lead_id: z.string().uuid().optional(),
   title: z.string().min(3),
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
-  content: z.string().min(10), // Primer mensaje del ticket
+  content: z.string().min(10),
 });
 
 export async function GET() {
+  const auth = await requireAdmin('viewer');
+  if (!auth.ok) return auth.response;
+
   try {
     const { data: tickets, error } = await supabaseServer
       .from('tickets')
@@ -26,6 +30,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   try {
     const body = await req.json();
     const result = ticketSchema.safeParse(body);
@@ -36,7 +43,6 @@ export async function POST(req: NextRequest) {
 
     const { lead_id, title, priority, content } = result.data;
 
-    // 1. Crear el ticket
     const { data: ticket, error: ticketError } = await supabaseServer
       .from('tickets')
       .insert({ lead_id, title, priority, status: 'open' })
@@ -45,14 +51,12 @@ export async function POST(req: NextRequest) {
 
     if (ticketError) throw ticketError;
 
-    // 2. Crear el primer mensaje
     const { error: msgError } = await supabaseServer
       .from('ticket_messages')
       .insert({ ticket_id: ticket.id, sender: 'client', content });
 
     if (msgError) throw msgError;
 
-    // 3. Notificar a Telegram
     await notifyTelegram(`🎫 *Nuevo Ticket*: ${title}\nPrioridad: ${priority}\nMensaje: ${content.substring(0, 100)}...`);
 
     return NextResponse.json(ticket);

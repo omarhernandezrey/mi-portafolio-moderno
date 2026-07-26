@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
   const body = await req.json();
 
@@ -23,10 +27,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+  return NextResponse.json(sanitizeWebhook(data));
 }
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   const { error } = await supabaseServer

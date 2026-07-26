@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { serverEnv } from '@/config/env'
+import { isAdminRole } from '@/lib/admin/roles'
+import { isEmailAllowed } from '@/lib/admin/access'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -28,10 +30,27 @@ export async function GET(request: Request) {
     )
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user || !isEmailAllowed(user.email, serverEnv.ADMIN_ALLOWED_EMAILS)) {
+        await supabase.auth.signOut()
+        return NextResponse.redirect(`${origin}/admin/login?error=unauthorized`)
+      }
+
+      const { data: userRole } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (!userRole || !isAdminRole(userRole.role)) {
+        await supabase.auth.signOut()
+        return NextResponse.redirect(`${origin}/admin/login?error=unauthorized`)
+      }
+
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
 
-  // Si algo falla, redirigir al login con error
   return NextResponse.redirect(`${origin}/admin/login?error=auth-code-error`)
 }

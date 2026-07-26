@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
+import { requireAdmin } from '@/lib/admin/auth';
 
 const updateSchema = z.object({
   status: z.enum(['open', 'in_progress', 'waiting_client', 'closed']).optional(),
@@ -9,9 +10,12 @@ const updateSchema = z.object({
 });
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin('viewer');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {
@@ -36,6 +40,9 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {

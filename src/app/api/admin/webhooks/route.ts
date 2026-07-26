@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import crypto from 'crypto';
+import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 
 const schema = z.object({
   url: z.string().url('URL inválida'),
@@ -10,16 +11,22 @@ const schema = z.object({
 });
 
 export async function GET() {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   const { data, error } = await supabaseServer
     .from('webhooks')
     .select('*')
     .order('created_at', { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data || []);
+  return NextResponse.json((data || []).map(sanitizeWebhook));
 }
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   const body = await req.json();
   const result = schema.safeParse(body);
 
@@ -37,5 +44,6 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // Se devuelve el secret completo solo en la creación
   return NextResponse.json(data, { status: 201 });
 }

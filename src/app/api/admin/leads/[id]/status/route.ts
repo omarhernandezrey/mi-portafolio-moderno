@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {
@@ -18,9 +22,6 @@ export async function PATCH(
       );
     }
 
-    console.log(`Updating lead ${id} status to: ${status}`);
-
-    // Intentar actualizar solo el status (sin updated_at por si no existe)
     const { data, error } = await supabaseServer
       .from('leads')
       .update({ status })
@@ -35,15 +36,12 @@ export async function PATCH(
       );
     }
 
-    // Si no se actualizó ninguna fila, el lead no existe
     if (!data || data.length === 0) {
       return NextResponse.json(
         { error: 'Lead no encontrado', id },
         { status: 404 }
       );
     }
-
-    console.log('Status update successful:', data);
 
     return NextResponse.json({ success: true, status, data });
   } catch (error) {

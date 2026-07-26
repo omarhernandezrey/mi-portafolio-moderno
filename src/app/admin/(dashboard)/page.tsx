@@ -1,5 +1,6 @@
 import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { createClient } from '@/lib/supabase/server';
 import {
   Users,
   MessageSquare,
@@ -16,6 +17,8 @@ import PageHeader from '@/components/admin/ui/PageHeader';
 import StatCard from '@/components/admin/ui/StatCard';
 import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import { canAccessAdminPath } from '@/lib/admin/permissions';
+import { isAdminRole } from '@/lib/admin/roles';
 
 export const dynamic = 'force-dynamic';
 
@@ -121,6 +124,20 @@ function getTimeAgo(date: Date): string {
 
 export default async function AdminDashboardPage() {
   const stats = await getStats();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  let canSeeReports = false;
+  if (user) {
+    const { data: userRole } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (userRole && isAdminRole(userRole.role)) {
+      canSeeReports = canAccessAdminPath('/admin/reports/time', userRole.role);
+    }
+  }
+
   const currentDate = new Date().toLocaleDateString('es-CO', { 
     weekday: 'long', 
     year: 'numeric', 
@@ -148,10 +165,12 @@ export default async function AdminDashboardPage() {
                 Actualizar
               </button>
             </form>
-            <Link href="/admin/reports/time" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
-              <TrendingUp size={16} />
-              Reporte de Horas
-            </Link>
+            {canSeeReports && (
+              <Link href="/admin/reports/time" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20">
+                <TrendingUp size={16} />
+                Reporte de Horas
+              </Link>
+            )}
           </>
         }
       />

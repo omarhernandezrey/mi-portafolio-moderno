@@ -10,6 +10,7 @@ const serverSchema = z.object({
   TELEGRAM_BOT_USERNAME: z.string().optional(),
   ADMIN_PASSWORD: z.string().min(4),
   ADMIN_SECRET: z.string().min(10),
+  ADMIN_ALLOWED_EMAILS: z.string().optional(),
   CRON_SECRET: z.string().min(10),
   HF_TOKEN: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
@@ -51,6 +52,8 @@ export const serverEnv = {
   get TELEGRAM_WEBHOOK_SECRET() { return process.env.TELEGRAM_WEBHOOK_SECRET || ""; },
   get ADMIN_PASSWORD() { return process.env.ADMIN_PASSWORD || ""; },
   get ADMIN_SECRET() { return process.env.ADMIN_SECRET || ""; },
+  /** Lista opcional separada por comas. Si está vacía, cualquier usuario con rol en user_roles puede entrar. */
+  get ADMIN_ALLOWED_EMAILS() { return process.env.ADMIN_ALLOWED_EMAILS || ""; },
   get CRON_SECRET() { return process.env.CRON_SECRET || ""; },
   get HF_TOKEN() { return process.env.HF_TOKEN || ""; },
   get RESEND_API_KEY() { return process.env.RESEND_API_KEY || ""; },

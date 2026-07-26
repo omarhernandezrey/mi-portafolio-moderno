@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   const { searchParams } = new URL(req.url);
   const provider = searchParams.get('provider');
   const status = searchParams.get('status');

@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {
@@ -14,13 +18,11 @@ export async function PATCH(
       return NextResponse.json({ error: 'Industria requerida' }, { status: 400 });
     }
 
-    console.log(`Updating lead ${id} with industry: ${industry}`);
-
     const { data, error } = await supabaseServer
       .from('leads')
       .update({ industry })
       .eq('id', id)
-      .select(); // Añadimos .select() para obtener los datos actualizados
+      .select();
 
     if (error) {
       console.error('Supabase error:', error);
@@ -29,8 +31,6 @@ export async function PATCH(
         { status: 500 }
       );
     }
-
-    console.log('Update successful:', data);
 
     return NextResponse.json({ success: true, data });
   } catch (error) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
+import { requireAdmin } from '@/lib/admin/auth';
 
 const messageSchema = z.object({
   sender: z.enum(['admin', 'client']),
@@ -10,9 +11,12 @@ const messageSchema = z.object({
 });
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin('viewer');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {
@@ -34,6 +38,9 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {
@@ -46,7 +53,6 @@ export async function POST(
 
     const { sender, content, attachments } = result.data;
 
-    // 1. Insertar el mensaje
     const { data: message, error: msgError } = await supabaseServer
       .from('ticket_messages')
       .insert({ 
@@ -60,7 +66,6 @@ export async function POST(
 
     if (msgError) throw msgError;
 
-    // 2. Actualizar el updated_at del ticket y el status si es admin
     const updateData: { updated_at: string; status?: string } = { updated_at: new Date().toISOString() };
     if (sender === 'admin') {
       updateData.status = 'waiting_client';
@@ -73,7 +78,6 @@ export async function POST(
       .update(updateData)
       .eq('id', id);
 
-    // 3. Notificar a Telegram si el cliente responde
     if (sender === 'client') {
       const { data: ticket } = await supabaseServer.from('tickets').select('title').eq('id', id).single();
       await notifyTelegram(`💬 *Nueva respuesta* en Ticket: ${ticket?.title || 'Sin título'}\n${content.substring(0, 100)}...`);

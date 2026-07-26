@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { generateInvoicePDF, InvoiceData } from '@/lib/invoices/generate';
 import { z } from 'zod';
+import { requireAdmin } from '@/lib/admin/auth';
 
 const schema = z.object({
   lead_id: z.string().uuid(),
@@ -16,6 +17,9 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   try {
     const body = await req.json();
     const result = schema.safeParse(body);
@@ -26,7 +30,6 @@ export async function POST(req: NextRequest) {
 
     const { lead_id, due_date, items, currency, notes } = result.data;
 
-    // 1. Obtener datos del lead
     const { data: lead, error: leadError } = await supabaseServer
       .from('leads')
       .select('*')
@@ -37,22 +40,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Lead no encontrado' }, { status: 404 });
     }
 
-    // 2. Generar número de factura automático (Nro de facturas totales + 1)
     const { count } = await supabaseServer
       .from('invoices')
       .select('*', { count: 'exact', head: true });
     
     const invoiceNumber = `INV-${new Date().getFullYear()}-${( (count || 0) + 1).toString().padStart(3, '0')}`;
 
-    // 3. Calcular totales
     const calculatedItems = items.map(item => ({
       ...item,
       total: item.quantity * item.price
     }));
     const subtotal = calculatedItems.reduce((acc, item) => acc + item.total, 0);
-    const total = subtotal; // Impuestos 0 por ahora
+    const total = subtotal;
 
-    // 4. Generar PDF
     const pdfData: InvoiceData = {
       number: invoiceNumber,
       issueDate: new Date().toISOString().split('T')[0],
@@ -70,7 +70,6 @@ export async function POST(req: NextRequest) {
 
     const pdfBytes = await generateInvoicePDF(pdfData);
 
-    // 5. Subir a Supabase Storage
     const fileName = `factura_${invoiceNumber}_${Date.now()}.pdf`;
     const { data: uploadData } = await supabaseServer
       .storage
@@ -82,7 +81,6 @@ export async function POST(req: NextRequest) {
 
     const pdfUrl = uploadData ? uploadData.path : fileName;
 
-    // 6. Guardar en base de datos
     const { data: invoice, error: dbError } = await supabaseServer
       .from('invoices')
       .insert({
@@ -102,7 +100,6 @@ export async function POST(req: NextRequest) {
 
     if (dbError) throw dbError;
 
-    // 7. Actualizar estado del lead a 'contacted' (factura enviada, pendiente de pago)
     await supabaseServer
       .from('leads')
       .update({ status: 'contacted' })

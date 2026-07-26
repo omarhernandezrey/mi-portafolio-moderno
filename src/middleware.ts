@@ -1,6 +1,9 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { serverEnv } from './config/env'
+import { canAccessAdminPath, minRoleForApiPath } from './lib/admin/permissions'
+import { isAdminRole } from './lib/admin/roles'
+import { isEmailAllowed } from './lib/admin/access'
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -32,58 +35,67 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Refrescar sesión si existe
   const { data: { user } } = await supabase.auth.getUser()
-
   const { pathname } = request.nextUrl
+  const isApi = pathname.startsWith('/api/')
 
-  // Redirigir si ya está autenticado y trata de ir al login
+  const unauthorized = (status: number, message: string) => {
+    if (isApi) {
+      return NextResponse.json({ error: message }, { status })
+    }
+    const loginUrl = new URL('/admin/login', request.url)
+    if (status === 403) loginUrl.searchParams.set('error', 'unauthorized')
+    return NextResponse.redirect(loginUrl)
+  }
+
   if (pathname === '/admin/login' && user) {
     return NextResponse.redirect(new URL('/admin', request.url))
   }
 
-  // Rutas de administración protegidas
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    if (!user) {
-      return NextResponse.redirect(new URL('/admin/login', request.url))
+  const isProtectedAdminPage = pathname.startsWith('/admin') && pathname !== '/admin/login'
+  const isProtectedAdminApi =
+    pathname.startsWith('/api/admin') || pathname.startsWith('/api/tickets')
+
+  if (!isProtectedAdminPage && !isProtectedAdminApi) {
+    return response
+  }
+
+  if (!user) {
+    return unauthorized(401, 'No autenticado')
+  }
+
+  if (!isEmailAllowed(user.email, serverEnv.ADMIN_ALLOWED_EMAILS)) {
+    return unauthorized(403, 'Acceso no autorizado')
+  }
+
+  const { data: userRole } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  if (!userRole || !isAdminRole(userRole.role)) {
+    return unauthorized(403, 'Sin rol de administración')
+  }
+
+  const role = userRole.role
+
+  if (isProtectedAdminApi) {
+    const minRole = minRoleForApiPath(pathname)
+    const rank = { viewer: 1, assistant: 2, owner: 3 } as const
+    if (rank[role] < rank[minRole]) {
+      return unauthorized(403, 'Permisos insuficientes')
     }
+    return response
+  }
 
-    // Obtener el rol del usuario desde la tabla user_roles
-    // Usamos el cliente con service_role para asegurar que podemos leer el rol incluso si RLS es estricto
-    // Pero aquí usamos el cliente anon del middleware que tiene la sesión del usuario.
-    // La política "Users can view own role" permite que el usuario lea su propio rol.
-    const { data: userRole } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    const role = userRole?.role || 'viewer'
-
-    // Reglas de acceso granulares
-    if (role === 'assistant') {
-      // El asistente no puede ver facturas ni reportes de tiempo/financieros
-      const forbiddenPaths = ['/admin/invoices', '/admin/reports'];
-      if (forbiddenPaths.some(p => pathname.startsWith(p))) {
-        return NextResponse.redirect(new URL('/admin', request.url))
-      }
-    } else if (role === 'viewer') {
-      // El observador solo puede ver el dashboard principal
-      if (pathname !== '/admin' && !pathname.startsWith('/admin/leads') && !pathname.startsWith('/admin/tickets')) {
-         // Permitimos ver listas pero quizás no acciones de escritura (esto se valida en el componente o API)
-         // Por ahora redirigimos al admin principal si intenta entrar a zonas restringidas
-         const restrictedPaths = ['/admin/invoices', '/admin/reports', '/admin/timer'];
-         if (restrictedPaths.some(p => pathname.startsWith(p))) {
-           return NextResponse.redirect(new URL('/admin', request.url))
-         }
-      }
-    }
-    // El owner tiene acceso total (no hacemos nada)
+  if (!canAccessAdminPath(pathname, role)) {
+    return NextResponse.redirect(new URL('/admin', request.url))
   }
 
   return response
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/tickets/:path*'],
 }

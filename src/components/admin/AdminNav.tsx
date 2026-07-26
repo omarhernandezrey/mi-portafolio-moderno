@@ -18,14 +18,30 @@ import {
   Ticket,
   Palette,
   Mail,
-  Activity
+  Activity,
+  type LucideIcon,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePalette } from '@/hooks/usePalette';
+import { NAV_ITEMS } from '@/lib/admin/permissions';
+import type { AdminRole } from '@/lib/admin/roles';
+
+const NAV_ICONS: Record<string, LucideIcon> = {
+  '/admin': LayoutDashboard,
+  '/admin/leads': Users,
+  '/admin/conversations': MessageSquare,
+  '/admin/tickets': Ticket,
+  '/admin/timer': Clock,
+  '/admin/invoices': CreditCard,
+  '/admin/subscribers': Mail,
+  '/admin/webhooks': Webhook,
+  '/admin/logs': Activity,
+  '/admin/docs': BookOpen,
+};
 
 interface AdminNavProps {
-  role: string;
+  role: AdminRole;
   userEmail?: string;
 }
 
@@ -44,18 +60,10 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
     window.location.href = '/admin/login';
   };
 
-  const navItems = [
-    { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-    { label: 'Leads', href: '/admin/leads', icon: Users, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-    { label: 'Conversaciones', href: '/admin/conversations', icon: MessageSquare, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-    { label: 'Tickets', href: '/admin/tickets', icon: Ticket, roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-    { label: 'Timer', href: '/admin/timer', icon: Clock, roles: ['owner', 'assistant'], group: 'ops' },
-    { label: 'Facturación', href: '/admin/invoices', icon: CreditCard, roles: ['owner'], group: 'ops' },
-    { label: 'Suscriptores', href: '/admin/subscribers', icon: Mail, roles: ['owner'], group: 'ops' },
-    { label: 'Webhooks', href: '/admin/webhooks', icon: Webhook, roles: ['owner'], group: 'system' },
-    { label: 'Logs de API', href: '/admin/logs', icon: Activity, roles: ['owner'], group: 'system' },
-    { label: 'Docs', href: '/admin/docs', icon: BookOpen, roles: ['owner', 'assistant'], group: 'system' },
-  ];
+  const navItems = NAV_ITEMS.map((item) => ({
+    ...item,
+    icon: NAV_ICONS[item.href] || LayoutDashboard,
+  }));
 
   const visibleItems = navItems.filter(item => item.roles.includes(role));
 

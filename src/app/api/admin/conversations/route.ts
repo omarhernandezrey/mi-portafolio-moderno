@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  const auth = await requireAdmin('viewer');
+  if (!auth.ok) return auth.response;
+
   const { data: conversations, error } = await supabaseServer
     .from('conversations')
     .select(`

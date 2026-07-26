@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
+import { requireAdmin } from '@/lib/admin/auth';
 
 const schema = z.object({
   name: z.string().min(1, 'Nombre requerido'),
@@ -17,6 +18,9 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   try {
     const body = await req.json();
     const result = schema.safeParse(body);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Send, AlertCircle, CheckCircle, ArrowLeft, Shield } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -11,6 +11,15 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const err = new URLSearchParams(window.location.search).get('error');
+    if (err === 'unauthorized') {
+      setError('No tienes permiso para acceder al panel de administración.');
+    } else if (err === 'auth-code-error') {
+      setError('El enlace de acceso expiró o es inválido. Solicita uno nuevo.');
+    }
+  }, []);
   let supabaseClient: ReturnType<typeof createClient> | null = null;
   const getSupabase = () => {
     if (!supabaseClient) supabaseClient = createClient();

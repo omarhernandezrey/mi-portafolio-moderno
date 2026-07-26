@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   try {
     const { action, entryId, projectId, description } = await req.json();
 
@@ -23,7 +27,6 @@ export async function POST(req: NextRequest) {
     if (action === 'stop') {
       if (!entryId) return NextResponse.json({ error: 'Entry ID required' }, { status: 400 });
 
-      // 1. Obtener la entrada para calcular duración
       const { data: entry, error: fetchError } = await supabaseServer
         .from('time_entries')
         .select('started_at')
@@ -58,6 +61,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  const auth = await requireAdmin('assistant');
+  if (!auth.ok) return auth.response;
+
   try {
     const { data } = await supabaseServer
       .from('time_entries')

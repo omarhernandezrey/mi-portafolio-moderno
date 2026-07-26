@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { requireAdmin } from '@/lib/admin/auth';
 
 export async function GET() {
+  const auth = await requireAdmin('owner');
+  if (!auth.ok) return auth.response;
+
   try {
-    // 1. Obtener suma de segundos agrupada por proyecto (lead)
     const { data: rawReport, error } = await supabaseServer
       .from('time_entries')
       .select('project_id, duration_seconds')
@@ -11,7 +14,6 @@ export async function GET() {
 
     if (error) throw error;
 
-    // 2. Agrupar y obtener datos del lead para cada grupo
     const grouped: Record<string, number> = {};
     rawReport.forEach(row => {
       grouped[row.project_id] = (grouped[row.project_id] || 0) + (row.duration_seconds || 0);
