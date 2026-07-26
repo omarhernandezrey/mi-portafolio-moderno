@@ -85,9 +85,6 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         </div>
         
         <div className="flex items-center gap-3">
-          <button className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-all">
-            {lead.status === 'archived' ? 'Archivado' : lead.status}
-          </button>
           <Link 
             href={`/proposal/${lead.id}`}
             className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-background text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20"

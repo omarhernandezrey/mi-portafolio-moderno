@@ -9,33 +9,13 @@ import {
   ShieldCheck, 
   AlertCircle,
   CheckCircle2,
-  Paperclip
 } from 'lucide-react';
 import Link from 'next/link';
 import { useNotyf } from '@/components/ui/NotyfProvider';
 
-interface TicketMessage {
-  id: string;
-  sender: 'admin' | 'client';
-  content: string;
-  created_at: string;
-}
+import type { Ticket, TicketMessage } from '@/lib/admin/types';
 
-interface TicketDetail {
-  id: string;
-  title: string;
-  status: string;
-  priority: string;
-  created_at: string;
-  updated_at: string;
-  lead?: {
-    id: string;
-    name: string;
-    email: string;
-    company?: string;
-    service_requested?: string;
-  };
-}
+type TicketDetail = Ticket;
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -217,7 +197,7 @@ export default function TicketDetailPage({ params }: Props) {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Escribe tu respuesta..."
-                    className="w-full bg-card-bg border border-white/10 rounded-2xl p-4 pr-12 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none min-h-[60px] max-h-[200px] text-sm resize-none text-white-custom"
+                    className="w-full bg-card-bg border border-white/10 rounded-2xl p-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none min-h-[60px] max-h-[200px] text-sm resize-none text-white-custom"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
@@ -225,9 +205,6 @@ export default function TicketDetailPage({ params }: Props) {
                       }
                     }}
                   />
-                  <button type="button" className="absolute right-4 bottom-4 text-text-muted hover:text-primary transition-colors">
-                    <Paperclip size={18} />
-                  </button>
                 </div>
                 <button
                   type="submit"

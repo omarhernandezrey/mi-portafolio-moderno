@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import EmptyState from '@/components/admin/ui/EmptyState';
+import PageHeader from '@/components/admin/ui/PageHeader';
 
 interface ConversationWithLead {
   id: string;
@@ -31,18 +33,6 @@ interface ConversationWithLead {
   facts: Record<string, string> | null;
   messages: { count: number }[];
   lead_id: string | null;
-}
-
-function EmptyState({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
-      <div className="text-text-muted/20">{icon}</div>
-      <div>
-        <p className="font-bold text-white-custom text-sm">{title}</p>
-        <p className="text-text-muted text-xs mt-1">{description}</p>
-      </div>
-    </div>
-  );
 }
 
 const INTENT_LABELS: Record<string, string> = {
@@ -95,21 +85,18 @@ export default function AdminConversationsPage() {
 
   return (
     <div className="space-y-10">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.3em] font-black text-primary/60 mb-2">Interaction Logs</p>
-          <h1 className="text-3xl sm:text-4xl font-black text-white-custom tracking-tight">Conversaciones</h1>
-          <p className="text-text-muted text-sm font-medium mt-2">
-            Historial completo de interacciones con el asistente inteligente
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-text-muted bg-card-bg border border-white/5 rounded-xl px-4 py-2">
-          <Hash size={12} className="text-primary" />
-          <span className="font-bold">{filtered.length}</span>
-          <span className="opacity-50">de {conversations.length} conversaciones</span>
-        </div>
-      </div>
+      <PageHeader
+        overline="Interaction Logs"
+        title="Conversaciones"
+        description="Historial completo de interacciones con el asistente inteligente"
+        actions={
+          <div className="flex items-center gap-2 text-xs text-text-muted bg-card-bg border border-white/5 rounded-xl px-4 py-2">
+            <Hash size={12} className="text-primary" />
+            <span className="font-bold">{filtered.length}</span>
+            <span className="opacity-50">de {conversations.length} conversaciones</span>
+          </div>
+        }
+      />
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">

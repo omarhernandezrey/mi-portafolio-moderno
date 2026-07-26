@@ -3,20 +3,7 @@
 import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { useNotyf } from '@/components/ui/NotyfProvider';
-
-interface Lead {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  phone?: string | null;
-  company?: string | null;
-  type?: string | null;
-  service_requested?: string | null;
-  budget?: string | null;
-  timeline?: string | null;
-  status?: string | null;
-  created_at: string;
-}
+import type { Lead } from '@/lib/admin/types';
 
 interface ExportLeadsButtonProps {
   leads: Lead[];
