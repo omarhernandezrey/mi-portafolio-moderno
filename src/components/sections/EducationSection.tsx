@@ -603,32 +603,6 @@ const EducationSection = () => {
           margin: 0 auto;
         }
 
-        .title-wrapper {
-          text-align: center;
-          margin-bottom: 2.5rem;
-          padding: 0 1rem;
-        }
-
-        .title {
-          font-size: 1.75rem;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          margin-bottom: 0.75rem;
-          background-image: linear-gradient(to right, var(--primary-color), var(--accent-color));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .title-underline {
-          width: 4rem;
-          height: 0.2rem;
-          background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-          margin: 0 auto;
-          border-radius: 0.25rem;
-        }
-
         .timeline-meta {
           display: flex;
           justify-content: center;
@@ -944,10 +918,6 @@ const EducationSection = () => {
             padding: 10rem 1.5rem 4rem 1.5rem;
           }
 
-          .title {
-            font-size: 2.5rem;
-          }
-
           .timeline-line {
             width: 5px;
           }
@@ -988,9 +958,6 @@ const EducationSection = () => {
         }
 
         @media (min-width: 1024px) {
-          .title {
-            font-size: 3rem;
-          }
 
           .timeline-line {
             width: 6px;
@@ -1105,7 +1072,7 @@ const EducationSection = () => {
           className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <motion.span
-            className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+            className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
               color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
@@ -1113,30 +1080,19 @@ const EducationSection = () => {
             }}
             whileHover={{ scale: 1.05 }}
           >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-color)" }} />
             {isHydrated ? t('education.badge') : 'Educación'}
           </motion.span>
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{
-              backgroundImage:
-                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            id="education-title"
+            className="font-display italic text-4xl md:text-5xl lg:text-6xl font-medium mb-6"
+            style={{ color: "var(--text-color)" }}
           >
             {isHydrated ? t('education.headerTitle') : 'Mi Trayectoria Académica'}
           </h2>
         </motion.div>
 
         <div className="container">
-          <div className="title-wrapper">
-            <h2 id="education-title" className="title">
-              {isHydrated ? t('education.title') : 'Educación'}
-            </h2>
-            <div className="title-underline" />
-          </div>
-
           <div className="timeline-meta">
             <span className="total-count">
               {isHydrated

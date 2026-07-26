@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarLogic from "../components/ui/NavbarLogic";
 import ClientProvider from "./ClientProvider";
@@ -69,13 +69,24 @@ const personData = {
   ],
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Display: serif editorial de carácter fuerte para titulares — contraste
+// deliberado contra el resto de portafolios dev que usan solo sans genéricas.
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz", "SOFT", "WONK"],
+  style: ["normal", "italic"],
+});
+
+// Body: sans-serif geométrica distintiva (evita Inter/Roboto/Arial/system-ui).
+const manrope = Manrope({
+  variable: "--font-body",
   subsets: ["latin", "latin-ext"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Mono: refuerza la identidad "developer" en labels, tags y metadatos.
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin", "latin-ext"],
 });
 
@@ -160,7 +171,7 @@ export default function RootLayout({
         <link rel="alternate" type="application/rss+xml" title="Omar Hernández Rey | Blog" href="/feed.xml" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${fraunces.variable} ${manrope.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <JsonLd data={personData} />
         <ClientProvider>

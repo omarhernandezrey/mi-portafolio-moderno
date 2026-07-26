@@ -108,12 +108,12 @@ export default async function ServicioPilarPage({ params }: Props) {
           <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 text-center space-y-12">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] relative z-10 text-center space-y-12">
           <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               Colombia &amp; Remoto USA · LATAM
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white-custom tracking-tighter leading-[0.95] italic">
+            <h1 className="font-display italic text-4xl sm:text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-[0.95]">
               {h1}
             </h1>
             <h2 className="text-xl md:text-2xl font-bold text-text-muted italic opacity-60 tracking-tight leading-relaxed max-w-2xl mx-auto">
@@ -138,10 +138,10 @@ export default async function ServicioPilarPage({ params }: Props) {
 
       {/* Benefits */}
       <section className="py-24 border-t border-white/5 bg-background/50">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Ventajas</h2>
-            <h3 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">Ventajas</h2>
+            <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               Por qué elegir mi servicio de {servicio.name}
             </h3>
           </div>
@@ -158,10 +158,10 @@ export default async function ServicioPilarPage({ params }: Props) {
 
       {/* Process */}
       <section className="py-24 bg-background relative overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Proceso</h2>
-            <h3 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">Proceso</h2>
+            <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               Cómo trabajamos
             </h3>
           </div>
@@ -208,7 +208,7 @@ export default async function ServicioPilarPage({ params }: Props) {
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <div className="text-center space-y-4 mb-16">
             <HelpCircle className="w-12 h-12 text-primary mx-auto" />
-            <h2 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               Preguntas frecuentes sobre {servicio.name}
             </h2>
           </div>
@@ -225,10 +225,10 @@ export default async function ServicioPilarPage({ params }: Props) {
 
       {/* Cities */}
       <section className="py-24 bg-card-bg/30 border-t border-white/5">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-10">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-10">
           <div className="text-center space-y-4">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Cobertura</h2>
-            <h3 className="text-2xl md:text-3xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">Cobertura</h2>
+            <h3 className="font-display italic text-2xl md:text-3xl font-medium text-white-custom tracking-tight">
               {servicio.name} por ciudad
             </h3>
             <p className="text-sm text-text-muted/60 max-w-xl mx-auto">
@@ -254,10 +254,10 @@ export default async function ServicioPilarPage({ params }: Props) {
 
       {/* Other Services */}
       <section className="py-24 bg-background border-t border-white/5">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="text-center space-y-4 mb-12">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Catálogo</h2>
-            <h3 className="text-2xl md:text-3xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">Catálogo</h2>
+            <h3 className="font-display italic text-2xl md:text-3xl font-medium text-white-custom tracking-tight">
               Otros servicios
             </h3>
           </div>

@@ -39,7 +39,11 @@
     "technology": "tecnologia",
     "unforgettable": "inesquecíveis",
     "viewProjects": "Ver Projetos",
-    "ariaLabel": "Ver meus projetos"
+    "ariaLabel": "Ver meus projetos",
+    "status": "Disponível para novos projetos",
+    "location": "Colômbia · Remoto LATAM e EUA",
+    "responseTime": "Resposta em 24h",
+    "stackLabel": "Stack principal"
   },
   "about": {
     "badge": "Conheça-me",

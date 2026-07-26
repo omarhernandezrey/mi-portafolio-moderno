@@ -180,50 +180,80 @@ export default function SobreMiPage() {
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={personSchema} />
 
-      <main className="flex-1 max-w-[1200px] mx-auto px-4 md:px-8 pt-32 pb-16 space-y-24 md:space-y-32">
+      <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-16 space-y-24 md:space-y-32">
 
-        {/* ===== HERO ===== */}
-        <header className="max-w-4xl space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
-            <MapPin size={12} />
-            Bogotá, Colombia
+        {/* ===== HERO — grid editorial asimétrico ===== */}
+        <header className="grid grid-cols-12 gap-[var(--grid-gutter)]">
+          <div className="col-span-12 lg:col-span-8 space-y-8">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
+              <MapPin size={12} />
+              Bogotá, Colombia
+            </div>
+            <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
+              Omar<br />
+              <span className="text-primary">Hernández Rey</span>
+            </h1>
+            <p className="font-display italic text-2xl md:text-3xl font-medium text-text-main/80">
+              Desarrollador Web Full Stack
+            </p>
+            <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
+              Desarrollador Full Stack freelance con más de 5 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA.
+              Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-2">
+              <Link
+                href="/servicios"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white-custom font-bold rounded-lg hover:opacity-90 transition-opacity text-sm"
+              >
+                Ver Servicios
+                <ArrowRight size={18} />
+              </Link>
+              <Link
+                href="/#projects"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 text-white-custom font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-sm"
+              >
+                Ver Proyectos
+              </Link>
+            </div>
           </div>
-          <h1 className="text-6xl md:text-8xl font-black text-white-custom tracking-tighter leading-[0.9] italic">
-            Omar<br />
-            <span className="text-primary">Hernández Rey</span>
-          </h1>
-          <p className="text-2xl md:text-3xl font-bold text-text-main/80 italic">
-            Desarrollador Web Full Stack
-          </p>
-          <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
-            Desarrollador Full Stack freelance con más de 5 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. 
-            Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.
-          </p>
-          <div className="flex flex-wrap gap-4 pt-2">
-            <Link
-              href="/servicios"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white-custom font-bold rounded-lg hover:opacity-90 transition-opacity text-sm"
-            >
-              Ver Servicios
-              <ArrowRight size={18} />
-            </Link>
-            <Link
-              href="/#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 text-white-custom font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-sm"
-            >
-              Ver Proyectos
-            </Link>
+
+          {/* Panel lateral — datos rápidos, asimetría deliberada */}
+          <div className="hidden lg:block lg:col-span-3 lg:col-start-10">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5 sticky top-32">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                </span>
+                <span className="text-sm font-semibold text-white-custom">Disponible para nuevos proyectos</span>
+              </div>
+              <div className="h-px w-full bg-white/10" />
+              <dl className="space-y-3 text-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="font-mono-label text-[0.6rem] text-text-muted">Experiencia</dt>
+                  <dd className="text-white-custom">5+ años</dd>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="font-mono-label text-[0.6rem] text-text-muted">Educación</dt>
+                  <dd className="text-white-custom text-right">Ing. Software (2026)</dd>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="font-mono-label text-[0.6rem] text-text-muted">Zona</dt>
+                  <dd className="text-white-custom text-right">CO · Remoto USA</dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </header>
 
         {/* ===== PROFESSIONAL EXPERIENCE ===== */}
         <section id="experiencia" className="space-y-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               <Briefcase size={12} />
               5+ Años de Experiencia
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
               Experiencia<br />Profesional
             </h2>
           </div>
@@ -264,11 +294,11 @@ export default function SobreMiPage() {
         {/* ===== EDUCATION ===== */}
         <section id="educacion" className="space-y-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               <GraduationCap size={12} />
               Formación Académica
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
               Educación
             </h2>
           </div>
@@ -317,11 +347,11 @@ export default function SobreMiPage() {
         {/* ===== CORE TECHNOLOGIES ===== */}
         <section id="tecnologias" className="space-y-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               <Code2 size={12} />
               Stack Principal
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
               Tecnologías<br />Principales
             </h2>
           </div>
@@ -363,11 +393,11 @@ export default function SobreMiPage() {
         {/* ===== FEATURED PROJECTS ===== */}
         <section id="proyectos" className="space-y-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               <Sparkles size={12} />
               Proyectos Destacados
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
               Proyectos
             </h2>
           </div>
@@ -426,11 +456,11 @@ export default function SobreMiPage() {
         {/* ===== SERVICES ===== */}
         <section id="servicios" className="space-y-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               <Wrench size={12} />
               Servicios
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
               Lo Que<br />Puedo Hacer<br />Por Ti
             </h2>
           </div>
@@ -473,11 +503,11 @@ export default function SobreMiPage() {
         {/* ===== TIMELINE ===== */}
         <section id="trayectoria" className="space-y-12">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               <BookOpen size={12} />
               Trayectoria
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
               Mi Camino en<br />el Desarrollo
             </h2>
           </div>
@@ -508,7 +538,7 @@ export default function SobreMiPage() {
         <section id="contacto" className="space-y-12">
           <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-3xl p-10 md:p-16 text-center space-y-8">
             <div className="space-y-4">
-              <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter italic">
+              <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
                 ¿Trabajamos<br />Juntos?
               </h2>
               <p className="text-lg text-text-muted max-w-xl mx-auto leading-relaxed">

@@ -252,7 +252,7 @@ const ProjectsSection: React.FC = () => {
             className="text-center mb-8 sm:mb-12 md:mb-16"
           >
             <motion.span
-              className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6 text-xs sm:text-sm font-semibold tracking-wider uppercase rounded-full border"
+              className="font-mono-label inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6 text-[0.6rem] sm:text-[0.65rem] rounded-full border"
               style={{
                 color: "var(--accent-color)",
                 background: "rgba(243, 156, 18, 0.1)",
@@ -260,18 +260,13 @@ const ProjectsSection: React.FC = () => {
               }}
               whileHover={{ scale: 1.05 }}
             >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-color)" }} />
               {t('projects.badge')}
             </motion.span>
 
             <h2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6 uppercase tracking-wider"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
+              className="font-display italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-4 sm:mb-6"
+              style={{ color: "var(--text-color)" }}
             >
               {t('projects.title')}
             </h2>

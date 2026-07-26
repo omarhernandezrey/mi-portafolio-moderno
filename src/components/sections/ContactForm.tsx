@@ -185,7 +185,7 @@ export default function ContactForm() {
           className="text-center mb-16"
         >
           <motion.span
-            className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+            className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
               color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
@@ -193,19 +193,15 @@ export default function ContactForm() {
             }}
             whileHover={{ scale: 1.05 }}
           >
-{t("contact.badge")}
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-color)" }} />
+            {t("contact.badge")}
           </motion.span>
 
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{
-              backgroundImage: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="font-display italic text-4xl md:text-5xl lg:text-6xl font-medium mb-6"
+            style={{ color: "var(--text-color)" }}
           >
-{t("contact.title")}
+            {t("contact.title")}
           </h2>
 
           <p

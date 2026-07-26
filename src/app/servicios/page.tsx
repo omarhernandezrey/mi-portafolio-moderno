@@ -124,12 +124,12 @@ export default function ServiciosPage() {
           <div className="absolute top-[15%] left-[5%] w-80 h-80 bg-primary/8 rounded-full blur-[120px]" />
           <div className="absolute bottom-[10%] right-[5%] w-80 h-80 bg-accent/8 rounded-full blur-[120px]" />
         </div>
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="max-w-4xl space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               Desarrollador Web Freelance · Colombia & Remoto
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white-custom tracking-tighter leading-[0.9] italic">
+            <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-[0.9]">
               Servicios de<br />
               <span className="text-primary">Desarrollo Web</span><br />
               y Software
@@ -180,10 +180,10 @@ export default function ServiciosPage() {
 
       {/* Services Grid */}
       <section id="servicios" className="py-24 md:py-32 bg-background">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-16">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-16">
           <div className="text-center space-y-4">
-            <p className="text-[10px] uppercase tracking-[0.4em] font-black text-primary/60">Catálogo de servicios</p>
-            <h2 className="text-3xl md:text-5xl font-black text-white-custom tracking-tighter italic">
+            <p className="font-mono-label text-[0.65rem] text-primary/60">Catálogo de servicios</p>
+            <h2 className="font-display italic text-3xl md:text-5xl font-medium text-white-custom tracking-tight">
               ¿Qué puedo hacer por tu negocio?
             </h2>
             <p className="text-text-muted max-w-2xl mx-auto leading-relaxed opacity-70">
@@ -237,10 +237,10 @@ export default function ServiciosPage() {
 
       {/* Cities Section */}
       <section className="py-24 border-t border-white/5 bg-card-bg/20">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-12">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-12">
           <div className="text-center space-y-4">
-            <p className="text-[10px] uppercase tracking-[0.4em] font-black text-primary/60">Cobertura</p>
-            <h2 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <p className="font-mono-label text-[0.65rem] text-primary/60">Cobertura</p>
+            <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               Trabajo con clientes en toda Colombia<br />
               <span className="text-primary">y en remoto para USA y LATAM</span>
             </h2>
@@ -273,10 +273,10 @@ export default function ServiciosPage() {
 
       {/* Process */}
       <section className="py-24 bg-background">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-16">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-16">
           <div className="text-center space-y-4">
-            <p className="text-[10px] uppercase tracking-[0.4em] font-black text-primary/60">Cómo trabajo</p>
-            <h2 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <p className="font-mono-label text-[0.65rem] text-primary/60">Cómo trabajo</p>
+            <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               Proceso claro, resultados reales
             </h2>
           </div>
@@ -300,7 +300,7 @@ export default function ServiciosPage() {
       {/* CTA */}
       <section className="py-24 border-t border-white/5 bg-card-bg/30">
         <div className="max-w-3xl mx-auto px-4 md:px-8 text-center space-y-8">
-          <h2 className="text-3xl md:text-5xl font-black text-white-custom tracking-tighter italic">
+          <h2 className="font-display italic text-3xl md:text-5xl font-medium text-white-custom tracking-tight">
             ¿Listo para arrancar<br />
             <span className="text-primary">tu proyecto?</span>
           </h2>

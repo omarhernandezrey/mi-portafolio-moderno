@@ -228,12 +228,12 @@ export default async function ServicioCiudadPage({ params }: Props) {
           <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 text-center space-y-12">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] relative z-10 text-center space-y-12">
           <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               Regional Engineering Hub • {ciudad.name}
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-8xl font-black text-white-custom tracking-tighter leading-[0.9] italic">
+            <h1 className="font-display italic text-4xl sm:text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.9]">
               {h1Parts[0]}{' '}
               <span className="text-primary italic">{cityLabel}</span>
             </h1>
@@ -259,10 +259,10 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
       {/* Value Proposition */}
       <section className="py-32 bg-background relative overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-24">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-24">
           <div className="text-center space-y-4">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">Methodology &amp; Performance</h2>
-            <h3 className="text-3xl md:text-5xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">Methodology &amp; Performance</h2>
+            <h3 className="font-display italic text-3xl md:text-5xl font-medium text-white-custom tracking-tight">
               {ui.infraTitle.split(ciudad.name)[0]}
               <span className="text-primary text-outline-primary">{ciudad.name}</span>
               {ui.infraTitle.split(ciudad.name)[1]}
@@ -297,10 +297,10 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
       {/* Benefits */}
       <section className="py-24 border-t border-white/5 bg-background/50">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">{ui.benefitsLabel}</h2>
-            <h3 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.benefitsLabel}</h2>
+            <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               {ui.benefitsTitle}
             </h3>
           </div>
@@ -317,10 +317,10 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
       {/* Process */}
       <section className="py-24 bg-background relative overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">{ui.processLabel}</h2>
-            <h3 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.processLabel}</h2>
+            <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               {ui.processTitle}
             </h3>
           </div>
@@ -367,7 +367,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <div className="text-center space-y-4 mb-16">
             <HelpCircle className="w-12 h-12 text-primary mx-auto" />
-            <h2 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
               {ui.faqTitle}
             </h2>
           </div>
@@ -384,10 +384,10 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
       {/* Other Services */}
       <section className="py-24 bg-card-bg/30 border-t border-white/5">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="text-center space-y-4 mb-12">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">{ui.catalogLabel}</h2>
-            <h3 className="text-2xl md:text-3xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.catalogLabel}</h2>
+            <h3 className="font-display italic text-2xl md:text-3xl font-medium text-white-custom tracking-tight">
               {ui.otherTitle.split(ciudad.name)[0]}
               <span className="text-primary">{ciudad.name}</span>
             </h3>
@@ -437,8 +437,8 @@ export default async function ServicioCiudadPage({ params }: Props) {
       <section className="py-16 bg-background border-t border-white/5">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <div className="text-center space-y-3 mb-10">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-text-muted opacity-40">{ui.resourcesLabel}</h2>
-            <h3 className="text-xl md:text-2xl font-black text-white-custom tracking-tighter italic">
+            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.resourcesLabel}</h2>
+            <h3 className="font-display italic text-xl md:text-2xl font-medium text-white-custom tracking-tight">
               {ui.resourcesTitle}
             </h3>
           </div>
@@ -490,7 +490,7 @@ function ValueCard({ icon, title, description }: { icon: React.ReactNode, title:
 
 function TrustItem({ icon, text }: { icon: React.ReactNode, text: string }) {
   return (
-    <div className="flex items-center gap-2 font-black text-[9px] uppercase tracking-[0.4em] text-text-muted italic">
+    <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
       {icon}
       {text}
     </div>

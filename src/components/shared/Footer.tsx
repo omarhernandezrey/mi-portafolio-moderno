@@ -98,13 +98,8 @@ export default function Footer() {
             {/* Col 1: Bio & Branding */}
             <div className="space-y-6">
               <h2
-                className="text-3xl font-black tracking-tighter italic"
-                style={{
-                  backgroundImage: `linear-gradient(to right, var(--primary-color), var(--accent-color))`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
+                className="font-display italic text-3xl font-medium tracking-tight"
+                style={{ color: "var(--text-color)" }}
               >
                 {t("footer.name")}
               </h2>
@@ -144,7 +139,7 @@ export default function Footer() {
 
             {/* Col 2: Enlaces Rápidos */}
             <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-8 italic">
+              <h3 className="font-mono-label text-[0.65rem] text-primary mb-8">
                 {t("footer.navigationTitle")}
               </h3>
               <ul className="grid grid-cols-2 md:grid-cols-1 gap-4">
@@ -165,7 +160,7 @@ export default function Footer() {
             {/* Col 3: Newsletter (Ocupa 2 columnas en desktop) */}
             <div className="lg:col-span-2 space-y-8">
               <div className="p-6 rounded-3xl bg-background/30 border border-white/5 shadow-inner">
-                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-6 italic">
+                <h3 className="font-mono-label text-[0.65rem] text-primary mb-6">
                   Newsletter
                 </h3>
                 <NewsletterForm />
@@ -182,7 +177,7 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <h3
-              className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-6 italic"
+              className="font-mono-label text-[0.65rem] text-primary mb-6"
             >
               {t("footer.findMe")}
             </h3>

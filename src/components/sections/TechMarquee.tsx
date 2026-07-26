@@ -163,10 +163,9 @@ const TechMarquee: React.FC = () => {
       </div>
 
       <div className="text-center mb-12 relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-color)] mb-3">
-          <span className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] bg-clip-text text-transparent">
-            Tech Stack
-          </span>
+        <span className="font-mono-label text-[0.65rem] text-[var(--accent-color)]">Stack</span>
+        <h2 className="font-display italic text-3xl md:text-4xl font-medium text-[var(--text-color)] mt-2 mb-3">
+          Tech Stack
         </h2>
         <p className="text-[var(--muted-color)] text-sm md:text-base">
           Tecnologías y herramientas con las que trabajo

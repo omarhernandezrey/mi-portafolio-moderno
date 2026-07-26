@@ -198,7 +198,7 @@ const AboutSection: React.FC = () => {
           className="text-center mb-16"
         >
           <motion.span
-            className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+            className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
               color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
@@ -206,27 +206,22 @@ const AboutSection: React.FC = () => {
             }}
             whileHover={{ scale: 1.05 }}
           >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-color)" }} />
             {t("about.badge")}
           </motion.span>
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{
-              backgroundImage:
-                "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="font-display italic text-4xl md:text-5xl lg:text-6xl font-medium mb-6"
+            style={{ color: "var(--text-color)" }}
           >
             {t("about.title")}
           </h2>
         </motion.div>
 
-        {/* Grid principal (foto + texto) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* Grid principal (foto + texto) — grilla editorial asimétrica 5/7 */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           {/* Foto */}
           <motion.div
-            className="flex flex-col items-center"
+            className="flex flex-col items-center lg:col-span-5"
             initial={{ opacity: 0, x: -100 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
@@ -241,7 +236,7 @@ const AboutSection: React.FC = () => {
 
           {/* Bio + Datos Personales */}
           <motion.div
-            className="flex flex-col space-y-10"
+            className="flex flex-col space-y-10 lg:col-span-7"
             initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
@@ -277,7 +272,7 @@ const AboutSection: React.FC = () => {
                     <item.icon size={16} />
                   </div>
                   <div>
-                    <p className="uppercase text-[10px] font-black tracking-widest text-[var(--accent-color)]/70">
+                    <p className="font-mono-label text-[10px] text-[var(--accent-color)]/70">
                       {item.label}
                     </p>
                     <p className="text-sm font-bold text-[var(--text-color)]">
@@ -300,24 +295,20 @@ const AboutSection: React.FC = () => {
         >
           <div className="text-center mb-16">
             <motion.span
-              className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+              className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
               style={{
                 color: "var(--accent-color)",
                 backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
                 borderColor: `color-mix(in srgb, var(--accent-color) 30%, transparent)`,
               }}
             >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-color)" }} />
               {t("about.interests.badge")}
             </motion.span>
 
             <h3
-              className="text-4xl md:text-5xl font-bold mb-6"
-              style={{
-                backgroundImage: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
+              className="font-display italic text-4xl md:text-5xl font-medium mb-6"
+              style={{ color: "var(--text-color)" }}
             >
               {t("about.interests.title")}
             </h3>

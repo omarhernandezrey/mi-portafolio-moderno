@@ -161,7 +161,7 @@ export default function ServicesSection() {
           viewport={{ once: true }}
         >
           <motion.span
-            className="inline-block px-4 py-2 mb-6 text-sm font-semibold tracking-wider uppercase rounded-full border"
+            className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
               color: "var(--accent-color)",
               backgroundColor: `color-mix(in srgb, var(--accent-color) 10%, transparent)`,
@@ -169,20 +169,16 @@ export default function ServicesSection() {
             }}
             whileHover={{ scale: 1.05 }}
           >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-color)" }} />
             {t('services.badge')}
           </motion.span>
 
           <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{
-              backgroundImage: `linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              }}
-              >
-              {t('services.title')}
-              </h2>
+            className="font-display italic text-4xl md:text-5xl lg:text-6xl font-medium mb-6"
+            style={{ color: "var(--text-color)" }}
+          >
+            {t('services.title')}
+          </h2>
           <p
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
             style={{ color: "var(--muted-color)" }}

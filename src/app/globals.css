@@ -163,8 +163,25 @@ body {
   --loadmore-border-color: #00cba9; /* Borde del botón de carga */
   --loadmore-hover-bg-color: #142029; /* Fondo más oscuro para hover */
 
-  /* Tipografía moderna, neutra */
-  --main-font-family: "Inter", "Segoe UI", arial, sans-serif;
+  /* Tipografía: sans distintiva (Manrope) + serif editorial para titulares */
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif;
+  --heading-font-family: var(--font-display), georgia, serif;
+  --mono-font-family: var(--font-mono), "Courier New", monospace;
+
+  /* Escala de espaciado/grid consistente — base 8px */
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4.5rem;
+  --space-8: 6rem;
+  --space-9: 9rem;
+
+  /* Grid editorial de 12 columnas con gutters consistentes */
+  --grid-gutter: clamp(1rem, 3vw, 2rem);
+  --grid-margin: clamp(1.25rem, 5vw, 4rem);
 }
 
 /* palette2 */
@@ -255,7 +272,9 @@ body {
   --loadmore-hover-bg-color: #ecfef9; /* Hover clarito en la misma gama verde/teal */
 
   /* Tipografía moderna, neutra (igual que palette1) */
-  --main-font-family: "Inter", "Segoe UI", arial, sans-serif;
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif;
+  --heading-font-family: var(--font-display), georgia, serif;
+  --mono-font-family: var(--font-mono), "Courier New", monospace;
 }
 
 /* palette5 */
@@ -468,6 +487,55 @@ body {
 
   /* Tipografía elegante para purple */
   --main-font-family: "Poppins", "Segoe UI", arial, sans-serif;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SISTEMA DE DISEÑO EDITORIAL — fundación compartida por todas las
+   páginas (tipografía, grid de 12 columnas, texturas de fondo).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Titulares: serif editorial distintiva, independiente de la paleta activa */
+.font-display {
+  font-family: var(--heading-font-family, var(--font-display));
+}
+
+/* Mono: labels/kickers/metadatos — refuerza identidad "developer" */
+.font-mono-label {
+  font-family: var(--mono-font-family, var(--font-mono));
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Grid editorial de 12 columnas reutilizable en toda página pública */
+.grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gutter);
+  padding-inline: var(--grid-margin);
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
+/* Textura de grano sutil para dar profundidad sin depender de imágenes */
+.bg-grain {
+  position: relative;
+  isolation: isolate;
+}
+.bg-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Divisor diagonal reutilizable entre secciones */
+.divider-diagonal {
+  clip-path: polygon(0 0, 100% 3%, 100% 100%, 0 97%);
 }
 
 body {
