@@ -3,14 +3,16 @@ import type { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { serverEnv } from '@/config/env';
 import { type AdminRole, hasMinRole, isAdminRole } from './roles';
-import { minRoleForApiPath } from './permissions';
+import { minRoleForApiRequest } from './permissions';
 import { isEmailAllowed, maskSecret, sanitizeWebhook } from './access';
+import type { AuditActor } from './audit';
 
 export type AdminAuthSuccess = {
   ok: true;
   user: User;
   role: AdminRole;
   email: string;
+  actor: AuditActor;
 };
 
 export type AdminAuthFailure = {
@@ -70,10 +72,19 @@ export async function requireAdmin(minRole: AdminRole = 'viewer'): Promise<Admin
     };
   }
 
-  return { ok: true, user, role, email };
+  return {
+    ok: true,
+    user,
+    role,
+    email,
+    actor: { userId: user.id, email, role },
+  };
 }
 
-/** Resuelve rol mínimo según el path de la request y valida. */
-export async function requireAdminForPath(pathname: string): Promise<AdminAuthResult> {
-  return requireAdmin(minRoleForApiPath(pathname));
+/** Resuelve rol mínimo según path + método HTTP y valida. */
+export async function requireAdminForPath(
+  pathname: string,
+  method: string = 'GET'
+): Promise<AdminAuthResult> {
+  return requireAdmin(minRoleForApiRequest(pathname, method));
 }

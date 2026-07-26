@@ -1,8 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { serverEnv } from './config/env'
-import { canAccessAdminPath, minRoleForApiPath } from './lib/admin/permissions'
-import { isAdminRole } from './lib/admin/roles'
+import { canAccessAdminPath, minRoleForApiRequest } from './lib/admin/permissions'
+import { hasMinRole, isAdminRole } from './lib/admin/roles'
 import { isEmailAllowed } from './lib/admin/access'
 
 export async function middleware(request: NextRequest) {
@@ -81,9 +81,8 @@ export async function middleware(request: NextRequest) {
   const role = userRole.role
 
   if (isProtectedAdminApi) {
-    const minRole = minRoleForApiPath(pathname)
-    const rank = { viewer: 1, assistant: 2, owner: 3 } as const
-    if (rank[role] < rank[minRole]) {
+    const minRole = minRoleForApiRequest(pathname, request.method)
+    if (!hasMinRole(role, minRole)) {
       return unauthorized(403, 'Permisos insuficientes')
     }
     return response

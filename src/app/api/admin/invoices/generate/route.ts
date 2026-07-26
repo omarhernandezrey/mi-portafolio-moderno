@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { generateInvoicePDF, InvoiceData } from '@/lib/invoices/generate';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 const schema = z.object({
   lead_id: z.string().uuid(),
@@ -104,6 +105,13 @@ export async function POST(req: NextRequest) {
       .from('leads')
       .update({ status: 'contacted' })
       .eq('id', lead_id);
+
+    await writeAuditLog(auth.actor, {
+      action: 'invoice.generate',
+      resourceType: 'invoice',
+      resourceId: invoice.id,
+      metadata: { number: invoiceNumber, lead_id, total, currency },
+    });
 
     return NextResponse.json(invoice);
 

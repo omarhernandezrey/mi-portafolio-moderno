@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin('owner');
@@ -14,6 +15,13 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .eq('id', id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await writeAuditLog(auth.actor, {
+    action: 'subscriber.delete',
+    resourceType: 'subscriber',
+    resourceId: id,
+  });
+
   return NextResponse.json({ success: true });
 }
 
@@ -32,5 +40,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await writeAuditLog(auth.actor, {
+    action: 'subscriber.update',
+    resourceType: 'subscriber',
+    resourceId: id,
+    metadata: { keys: Object.keys(body) },
+  });
+
   return NextResponse.json(data);
 }

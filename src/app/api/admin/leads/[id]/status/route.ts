@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 export async function PATCH(
   req: NextRequest,
@@ -42,6 +43,13 @@ export async function PATCH(
         { status: 404 }
       );
     }
+
+    await writeAuditLog(auth.actor, {
+      action: 'lead.status_update',
+      resourceType: 'lead',
+      resourceId: id,
+      metadata: { status },
+    });
 
     return NextResponse.json({ success: true, status, data });
   } catch (error) {

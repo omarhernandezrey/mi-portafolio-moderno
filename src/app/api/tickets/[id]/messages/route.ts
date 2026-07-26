@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 const messageSchema = z.object({
   sender: z.enum(['admin', 'client']),
@@ -82,6 +83,13 @@ export async function POST(
       const { data: ticket } = await supabaseServer.from('tickets').select('title').eq('id', id).single();
       await notifyTelegram(`💬 *Nueva respuesta* en Ticket: ${ticket?.title || 'Sin título'}\n${content.substring(0, 100)}...`);
     }
+
+    await writeAuditLog(auth.actor, {
+      action: 'ticket.message',
+      resourceType: 'ticket',
+      resourceId: id,
+      metadata: { sender, messageId: message.id },
+    });
 
     return NextResponse.json(message);
   } catch (error) {

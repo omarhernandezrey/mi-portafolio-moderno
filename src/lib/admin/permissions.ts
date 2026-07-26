@@ -13,6 +13,7 @@ export const ADMIN_PATH_PERMISSIONS: ReadonlyArray<{
   { prefix: '/admin/subscribers', minRole: 'owner' },
   { prefix: '/admin/webhooks', minRole: 'owner' },
   { prefix: '/admin/logs', minRole: 'owner' },
+  { prefix: '/admin/audit', minRole: 'owner' },
   { prefix: '/admin/reports', minRole: 'owner' },
   { prefix: '/admin/timer', minRole: 'assistant' },
   { prefix: '/admin/docs', minRole: 'assistant' },
@@ -22,23 +23,37 @@ export const ADMIN_PATH_PERMISSIONS: ReadonlyArray<{
   { prefix: '/admin', minRole: 'viewer' },
 ];
 
-/** Prefijos de API admin y rol mínimo por recurso */
-export const ADMIN_API_PERMISSIONS: ReadonlyArray<{
+type ApiPermission = {
   prefix: string;
-  minRole: AdminRole;
-}> = [
-  { prefix: '/api/admin/invoices', minRole: 'owner' },
-  { prefix: '/api/admin/subscribers', minRole: 'owner' },
-  { prefix: '/api/admin/webhooks', minRole: 'owner' },
-  { prefix: '/api/admin/webhook-logs', minRole: 'owner' },
-  { prefix: '/api/admin/logs', minRole: 'owner' },
-  { prefix: '/api/admin/timer/report', minRole: 'owner' },
-  { prefix: '/api/admin/timer', minRole: 'assistant' },
-  { prefix: '/api/admin/leads', minRole: 'assistant' },
-  { prefix: '/api/admin/conversations', minRole: 'viewer' },
-  { prefix: '/api/tickets', minRole: 'viewer' },
-  { prefix: '/api/admin', minRole: 'viewer' },
+  /** Rol mínimo para GET/HEAD */
+  read: AdminRole;
+  /** Rol mínimo para POST/PATCH/PUT/DELETE (default = read) */
+  write?: AdminRole;
+};
+
+/** Prefijos de API admin: lectura vs escritura */
+export const ADMIN_API_PERMISSIONS: ReadonlyArray<ApiPermission> = [
+  { prefix: '/api/admin/invoices', read: 'owner', write: 'owner' },
+  { prefix: '/api/admin/subscribers', read: 'owner', write: 'owner' },
+  { prefix: '/api/admin/webhooks', read: 'owner', write: 'owner' },
+  { prefix: '/api/admin/webhook-logs', read: 'owner', write: 'owner' },
+  { prefix: '/api/admin/logs', read: 'owner' },
+  { prefix: '/api/admin/audit', read: 'owner' },
+  { prefix: '/api/admin/timer/report', read: 'owner' },
+  { prefix: '/api/admin/timer', read: 'assistant', write: 'assistant' },
+  { prefix: '/api/admin/leads', read: 'assistant', write: 'assistant' },
+  { prefix: '/api/admin/conversations', read: 'viewer' },
+  { prefix: '/api/tickets', read: 'viewer', write: 'assistant' },
+  { prefix: '/api/admin', read: 'viewer', write: 'assistant' },
 ];
+
+const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+function matchApiPermission(pathname: string): ApiPermission | undefined {
+  return ADMIN_API_PERMISSIONS.find(
+    (p) => pathname === p.prefix || pathname.startsWith(`${p.prefix}/`)
+  );
+}
 
 export function canAccessAdminPath(pathname: string, role: AdminRole): boolean {
   if (pathname === '/admin/login') return true;
@@ -51,11 +66,18 @@ export function canAccessAdminPath(pathname: string, role: AdminRole): boolean {
   return hasMinRole(role, match.minRole);
 }
 
+/** @deprecated Prefer minRoleForApiRequest(pathname, method) */
 export function minRoleForApiPath(pathname: string): AdminRole {
-  const match = ADMIN_API_PERMISSIONS.find(
-    (p) => pathname === p.prefix || pathname.startsWith(`${p.prefix}/`)
-  );
-  return match?.minRole ?? 'viewer';
+  return minRoleForApiRequest(pathname, 'GET');
+}
+
+export function minRoleForApiRequest(pathname: string, method: string): AdminRole {
+  const match = matchApiPermission(pathname);
+  if (!match) return 'viewer';
+
+  const isWrite = WRITE_METHODS.has(method.toUpperCase());
+  if (isWrite) return match.write ?? match.read;
+  return match.read;
 }
 
 export const NAV_ITEMS: ReadonlyArray<{
@@ -73,5 +95,6 @@ export const NAV_ITEMS: ReadonlyArray<{
   { label: 'Suscriptores', href: '/admin/subscribers', roles: ['owner'], group: 'ops' },
   { label: 'Webhooks', href: '/admin/webhooks', roles: ['owner'], group: 'system' },
   { label: 'Logs de API', href: '/admin/logs', roles: ['owner'], group: 'system' },
+  { label: 'Auditoría', href: '/admin/audit', roles: ['owner'], group: 'system' },
   { label: 'Docs', href: '/admin/docs', roles: ['owner', 'assistant'], group: 'system' },
 ];

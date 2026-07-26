@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 const schema = z.object({
   url: z.string().url('URL inválida'),
@@ -44,6 +45,14 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await writeAuditLog(auth.actor, {
+    action: 'webhook.create',
+    resourceType: 'webhook',
+    resourceId: data.id,
+    metadata: { url, events },
+  });
+
   // Se devuelve el secret completo solo en la creación
   return NextResponse.json(data, { status: 201 });
 }

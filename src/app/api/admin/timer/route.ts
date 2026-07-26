@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 export async function POST(req: NextRequest) {
   const auth = await requireAdmin('assistant');
@@ -21,6 +22,14 @@ export async function POST(req: NextRequest) {
         .single();
 
       if (error) throw error;
+
+      await writeAuditLog(auth.actor, {
+        action: 'timer.start',
+        resourceType: 'time_entry',
+        resourceId: data.id,
+        metadata: { projectId, description },
+      });
+
       return NextResponse.json(data);
     }
 
@@ -50,6 +59,14 @@ export async function POST(req: NextRequest) {
         .single();
 
       if (error) throw error;
+
+      await writeAuditLog(auth.actor, {
+        action: 'timer.stop',
+        resourceType: 'time_entry',
+        resourceId: entryId,
+        metadata: { durationSeconds },
+      });
+
       return NextResponse.json(data);
     }
 

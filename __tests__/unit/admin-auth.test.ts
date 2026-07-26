@@ -1,6 +1,7 @@
 import {
   canAccessAdminPath,
   minRoleForApiPath,
+  minRoleForApiRequest,
 } from '@/lib/admin/permissions';
 import { hasMinRole, isAdminRole } from '@/lib/admin/roles';
 import { isEmailAllowed, maskSecret, sanitizeWebhook } from '@/lib/admin/access';
@@ -43,12 +44,27 @@ describe('admin path permissions', () => {
     expect(canAccessAdminPath('/admin/docs', 'viewer')).toBe(false);
   });
 
-  it('resuelve minRole de APIs', () => {
+  it('resuelve minRole de APIs (lectura)', () => {
     expect(minRoleForApiPath('/api/admin/webhooks')).toBe('owner');
     expect(minRoleForApiPath('/api/admin/timer')).toBe('assistant');
     expect(minRoleForApiPath('/api/admin/timer/report')).toBe('owner');
     expect(minRoleForApiPath('/api/admin/conversations')).toBe('viewer');
     expect(minRoleForApiPath('/api/tickets/xyz')).toBe('viewer');
+    expect(minRoleForApiPath('/api/admin/audit')).toBe('owner');
+  });
+
+  it('diferencia lectura vs escritura en tickets', () => {
+    expect(minRoleForApiRequest('/api/tickets', 'GET')).toBe('viewer');
+    expect(minRoleForApiRequest('/api/tickets', 'POST')).toBe('assistant');
+    expect(minRoleForApiRequest('/api/tickets/abc', 'PATCH')).toBe('assistant');
+    expect(minRoleForApiRequest('/api/tickets/abc/messages', 'GET')).toBe('viewer');
+    expect(minRoleForApiRequest('/api/tickets/abc/messages', 'POST')).toBe('assistant');
+  });
+
+  it('bloquea path de auditoría a no-owner', () => {
+    expect(canAccessAdminPath('/admin/audit', 'owner')).toBe(true);
+    expect(canAccessAdminPath('/admin/audit', 'assistant')).toBe(false);
+    expect(canAccessAdminPath('/admin/audit', 'viewer')).toBe(false);
   });
 });
 

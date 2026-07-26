@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 const updateSchema = z.object({
   status: z.enum(['open', 'in_progress', 'waiting_client', 'closed']).optional(),
@@ -59,6 +60,13 @@ export async function PATCH(
       .eq('id', id);
 
     if (error) throw error;
+
+    await writeAuditLog(auth.actor, {
+      action: 'ticket.update',
+      resourceType: 'ticket',
+      resourceId: id,
+      metadata: result.data,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

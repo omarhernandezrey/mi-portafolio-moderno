@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 const schema = z.object({
   name: z.string().min(1, 'Nombre requerido'),
@@ -36,6 +37,14 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (error) throw error;
+
+    await writeAuditLog(auth.actor, {
+      action: 'lead.create',
+      resourceType: 'lead',
+      resourceId: lead.id,
+      metadata: { email: lead.email, name: lead.name },
+    });
+
     return NextResponse.json(lead, { status: 201 });
   } catch (err) {
     console.error('Error creating lead:', err);

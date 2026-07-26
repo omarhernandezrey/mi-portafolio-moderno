@@ -19,6 +19,7 @@ import {
   Palette,
   Mail,
   Activity,
+  ScrollText,
   type LucideIcon,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
@@ -37,6 +38,7 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   '/admin/subscribers': Mail,
   '/admin/webhooks': Webhook,
   '/admin/logs': Activity,
+  '/admin/audit': ScrollText,
   '/admin/docs': BookOpen,
 };
 

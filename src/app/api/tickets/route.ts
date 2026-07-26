@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 const ticketSchema = z.object({
   lead_id: z.string().uuid().optional(),
@@ -58,6 +59,13 @@ export async function POST(req: NextRequest) {
     if (msgError) throw msgError;
 
     await notifyTelegram(`🎫 *Nuevo Ticket*: ${title}\nPrioridad: ${priority}\nMensaje: ${content.substring(0, 100)}...`);
+
+    await writeAuditLog(auth.actor, {
+      action: 'ticket.create',
+      resourceType: 'ticket',
+      resourceId: ticket.id,
+      metadata: { title, priority, lead_id },
+    });
 
     return NextResponse.json(ticket);
   } catch (error) {

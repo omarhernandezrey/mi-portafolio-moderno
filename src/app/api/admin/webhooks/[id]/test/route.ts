@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import crypto from 'crypto';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin('owner');
@@ -65,8 +66,17 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     attempt: 1,
   });
 
+  const success = !errorMsg && responseStatus !== null && responseStatus < 400;
+
+  await writeAuditLog(auth.actor, {
+    action: 'webhook.test',
+    resourceType: 'webhook',
+    resourceId: id,
+    metadata: { success, status: responseStatus, error: errorMsg },
+  });
+
   return NextResponse.json({
-    success: !errorMsg && responseStatus !== null && responseStatus < 400,
+    success,
     status: responseStatus,
     error: errorMsg,
   });
