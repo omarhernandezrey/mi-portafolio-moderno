@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, XCircle, Archive, Loader2 } from 'lucide-react';
-import { useNotyf } from '@/components/ui/NotyfProvider';
+import { useAdminToast } from '@/hooks/useAdminToast';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 interface LeadActionsProps {
   leadId: string;
@@ -13,46 +14,38 @@ interface LeadActionsProps {
 export default function LeadActions({ leadId, currentStatus }: LeadActionsProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
-  const notyf = useNotyf();
+  const toast = useAdminToast();
 
   async function updateStatus(status: string) {
     if (!leadId) {
-      notyf.error('❌ Error: ID de lead no válido');
+      toast.error('ID de lead no válido');
       return;
     }
 
     setLoading(status);
     try {
-      const res = await fetch(`/api/admin/leads/${leadId}/status`, {
+      await adminFetch(`/api/admin/leads/${leadId}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ status }),
       });
-      
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Error ${res.status}`);
-      }
 
-      // Mostrar toast de éxito según el estado
       const statusMessages: Record<string, string> = {
-        'contacted': '✅ Lead marcado como contactado',
-        'lost': '⚠️ Lead marcado como perdido',
-        'archived': '📁 Lead archivado correctamente'
+        contacted: 'Lead marcado como contactado',
+        lost: 'Lead marcado como perdido',
+        archived: 'Lead archivado correctamente',
       };
-      
-      notyf.success(statusMessages[status] || '✅ Estado actualizado');
+
+      toast.success(statusMessages[status] || 'Estado actualizado');
       router.refresh();
     } catch (error) {
       console.error('Error updating lead status:', error);
       const message = error instanceof Error ? error.message : 'Error al actualizar estado';
-      notyf.error(`❌ ${message}`);
+      toast.error(message);
     } finally {
       setLoading(null);
     }
   }
 
-  // Si no hay leadId, mostrar mensaje de error
   if (!leadId) {
     return (
       <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-[20px] text-red-400 text-xs">
@@ -66,7 +59,7 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
   return (
     <div className="grid grid-cols-1 gap-3">
       {normalizedStatus !== 'contacted' && normalizedStatus !== 'paid' && (
-        <button 
+        <button
           onClick={() => updateStatus('contacted')}
           disabled={loading !== null}
           className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-primary hover:bg-primary/10 border-primary/20 disabled:opacity-50 active:scale-[0.98]"
@@ -77,9 +70,9 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
           {loading === 'contacted' ? 'Procesando...' : 'Confirmar Contacto'}
         </button>
       )}
-      
+
       {normalizedStatus !== 'lost' && normalizedStatus !== 'paid' && (
-        <button 
+        <button
           onClick={() => updateStatus('lost')}
           disabled={loading !== null}
           className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-red-400 hover:bg-red-500/10 border-red-500/20 disabled:opacity-50 active:scale-[0.98]"
@@ -92,7 +85,7 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
       )}
 
       {normalizedStatus !== 'archived' && (
-        <button 
+        <button
           onClick={() => updateStatus('archived')}
           disabled={loading !== null}
           className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-text-muted hover:bg-white/5 border-white/10 disabled:opacity-50 active:scale-[0.98]"

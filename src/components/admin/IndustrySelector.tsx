@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { Building2, Save, Loader2, ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useNotyf } from '@/components/ui/NotyfProvider';
+import { useAdminToast } from '@/hooks/useAdminToast';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 interface IndustrySelectorProps {
   leadId: string;
@@ -14,7 +15,7 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
   const [industry, setIndustry] = useState(currentIndustry || '');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const notyf = useNotyf();
+  const toast = useAdminToast();
 
   const industries = [
     { id: 'startup', name: 'Startup / MVP' },
@@ -27,35 +28,27 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
 
   const handleSave = async () => {
     if (!industry) {
-      notyf.open({ type: 'warning', message: '⚠️ Debes seleccionar una industria antes de guardar' });
+      toast.warning('Debes seleccionar una industria antes de guardar');
       return;
     }
 
     if (industry === currentIndustry) {
-      notyf.open({ type: 'info', message: 'ℹ️ No hay cambios para guardar' });
+      toast.info('No hay cambios para guardar');
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/leads/${leadId}/industry`, {
+      await adminFetch(`/api/admin/leads/${leadId}/industry`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ industry }),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Error al actualizar industria');
-      }
-      
-      notyf.success('✅ Industria guardada correctamente');
+      toast.success('Industria guardada correctamente');
       router.refresh();
     } catch (error) {
       console.error(error);
-      notyf.error(
-        error instanceof Error ? error.message : 'Error al guardar la industria'
-      );
+      toast.error(error instanceof Error ? error.message : 'Error al guardar la industria');
     } finally {
       setLoading(false);
     }
@@ -67,25 +60,27 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
         <Building2 size={18} className="text-primary" />
         Nicho / Industria
       </div>
-      
+
       <div className="flex flex-col lg:flex-row gap-4">
-        {/* Select grande y prominente */}
         <div className="relative flex-1 min-w-[280px]">
-          <select 
+          <select
             className="w-full appearance-none bg-background border-2 border-white/30 hover:border-primary/60 focus:border-primary rounded-2xl px-5 py-4 text-base outline-none focus:ring-2 focus:ring-primary/30 transition-all text-white-custom font-bold cursor-pointer shadow-inner"
             value={industry}
             onChange={(e) => setIndustry(e.target.value)}
           >
-            <option value="" className="bg-card-bg text-text-muted font-medium py-3">Seleccionar industria...</option>
+            <option value="" className="bg-card-bg text-text-muted font-medium py-3">
+              Seleccionar industria...
+            </option>
             {industries.map((ind) => (
-              <option key={ind.id} value={ind.id} className="bg-card-bg text-white-custom font-bold py-3">{ind.name}</option>
+              <option key={ind.id} value={ind.id} className="bg-card-bg text-white-custom font-bold py-3">
+                {ind.name}
+              </option>
             ))}
           </select>
           <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none" size={24} />
         </div>
-        
-        {/* Botón Guardar */}
-        <button 
+
+        <button
           onClick={handleSave}
           disabled={loading}
           className="px-8 py-4 bg-primary text-background rounded-2xl disabled:opacity-50 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3 text-base font-black whitespace-nowrap shrink-0 shadow-lg shadow-primary/30 uppercase tracking-wider"
@@ -100,13 +95,14 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
           )}
         </button>
       </div>
-      
-      {/* Estado actual destacado */}
+
       <div className="flex items-center gap-3 text-sm font-bold pt-2">
         {currentIndustry ? (
           <>
             <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
-            <span className="text-emerald-400">Actual: {industries.find(i => i.id === currentIndustry)?.name || currentIndustry}</span>
+            <span className="text-emerald-400">
+              Actual: {industries.find((i) => i.id === currentIndustry)?.name || currentIndustry}
+            </span>
           </>
         ) : (
           <>

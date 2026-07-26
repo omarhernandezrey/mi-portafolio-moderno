@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Download } from 'lucide-react';
-import { useNotyf } from '@/components/ui/NotyfProvider';
+import { useAdminToast } from '@/hooks/useAdminToast';
 import type { Lead } from '@/lib/admin/types';
 
 interface ExportLeadsButtonProps {
@@ -11,13 +11,13 @@ interface ExportLeadsButtonProps {
 
 export default function ExportLeadsButton({ leads }: ExportLeadsButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
-  const notyf = useNotyf();
+  const toast = useAdminToast();
 
   const exportToCSV = () => {
     setIsExporting(true);
     try {
       if (leads.length === 0) {
-        notyf.open({ type: 'warning', message: '⚠️ No hay leads para exportar' });
+        toast.warning('No hay leads para exportar');
         return;
       }
 
@@ -56,11 +56,10 @@ export default function ExportLeadsButton({ leads }: ExportLeadsButtonProps) {
       link.click();
       document.body.removeChild(link);
       
-      notyf.success(`✅ ${leads.length} leads exportados correctamente`);
-      
+      toast.success(`${leads.length} leads exportados correctamente`);
     } catch (error) {
       console.error("Error exporting leads:", error);
-      notyf.error('❌ Error al exportar los leads');
+      toast.error('Error al exportar los leads');
     } finally {
       setIsExporting(false);
     }

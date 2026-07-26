@@ -11,8 +11,8 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useNotyf } from '@/components/ui/NotyfProvider';
-
+import { useAdminToast } from '@/hooks/useAdminToast';
+import { adminFetch } from '@/lib/admin/client-fetch';
 import type { Ticket, TicketMessage } from '@/lib/admin/types';
 
 type TicketDetail = Ticket;
@@ -23,7 +23,7 @@ interface Props {
 
 export default function TicketDetailPage({ params }: Props) {
   const { id } = use(params);
-  const notyf = useNotyf();
+  const toast = useAdminToast();
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,27 +34,22 @@ export default function TicketDetailPage({ params }: Props) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [ticketRes, msgsRes] = await Promise.all([
-          fetch(`/api/tickets/${id}`),
-          fetch(`/api/tickets/${id}/messages`)
+        const [ticketData, msgsData] = await Promise.all([
+          adminFetch<TicketDetail>(`/api/tickets/${id}`),
+          adminFetch<TicketMessage[]>(`/api/tickets/${id}/messages`),
         ]);
-
-        if (!ticketRes.ok || !msgsRes.ok) throw new Error('Error al cargar datos');
-
-        const ticketData = await ticketRes.json();
-        const msgsData = await msgsRes.json();
-
         setTicket(ticketData);
         setMessages(msgsData);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
-        notyf.error('❌ Error al cargar el ticket');
+        toast.error('Error al cargar el ticket');
       } finally {
         setLoading(false);
       }
     }
     fetchData();
-  }, [id, notyf]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- toast is stable enough; avoid refetch loops
+  }, [id]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,26 +57,19 @@ export default function TicketDetailPage({ params }: Props) {
 
     setSending(true);
     try {
-      const res = await fetch(`/api/tickets/${id}/messages`, {
+      const msg = await adminFetch<TicketMessage>(`/api/tickets/${id}/messages`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sender: 'admin',
           content: newMessage,
         }),
       });
-
-      if (!res.ok) throw new Error('Error al enviar mensaje');
-
-      const msg = await res.json();
       setMessages([...messages, msg]);
       setNewMessage('');
-      
       if (ticket) setTicket({ ...ticket, status: 'waiting_client' });
-      notyf.success('✅ Mensaje enviado correctamente');
+      toast.success('Mensaje enviado correctamente');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error al enviar mensaje';
-      notyf.error(`❌ ${message}`);
+      toast.error(err instanceof Error ? err.message : 'Error al enviar mensaje');
     } finally {
       setSending(false);
     }
@@ -89,19 +77,15 @@ export default function TicketDetailPage({ params }: Props) {
 
   const handleUpdateStatus = async (status: string) => {
     try {
-      const res = await fetch(`/api/tickets/${id}`, {
+      await adminFetch(`/api/tickets/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
-      if (!res.ok) throw new Error('Error al actualizar estado');
       if (ticket) setTicket({ ...ticket, status });
-      
       const statusText = status === 'closed' ? 'cerrado' : 'reabierto';
-      notyf.success(`✅ Ticket ${statusText} correctamente`);
+      toast.success(`Ticket ${statusText} correctamente`);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error al actualizar estado';
-      notyf.error(`❌ ${message}`);
+      toast.error(err instanceof Error ? err.message : 'Error al actualizar estado');
     }
   };
 

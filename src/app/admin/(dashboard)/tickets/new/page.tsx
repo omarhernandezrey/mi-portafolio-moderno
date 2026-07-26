@@ -9,11 +9,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useNotyf } from '@/components/ui/NotyfProvider';
+import { useAdminToast } from '@/hooks/useAdminToast';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 export default function NewTicketPage() {
   const router = useRouter();
-  const notyf = useNotyf();
+  const toast = useAdminToast();
   const [leads, setLeads] = useState<{ id: string; name: string; company?: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   
@@ -27,51 +28,43 @@ export default function NewTicketPage() {
   useEffect(() => {
     async function fetchLeads() {
       try {
-        const res = await fetch('/api/admin/leads/list');
-        const data = await res.json();
-        setLeads(data);
+        const data = await adminFetch<{ id: string; name: string; company?: string }[]>(
+          '/api/admin/leads/list'
+        );
+        setLeads(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Error fetching leads:', err);
-        notyf.open({ type: 'warning', message: '⚠️ Error al cargar la lista de leads' });
+        toast.warning('Error al cargar la lista de leads');
       }
     }
     fetchLeads();
-  }, [notyf]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
 
-    // Validaciones
     if (!formData.title.trim()) {
-      notyf.open({ type: 'warning', message: '⚠️ El título es obligatorio' });
+      toast.warning('El título es obligatorio');
       return;
     }
 
     if (!formData.content.trim()) {
-      notyf.open({ type: 'warning', message: '⚠️ La descripción es obligatoria' });
+      toast.warning('La descripción es obligatoria');
       return;
     }
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/tickets', {
+      const ticket = await adminFetch<{ id: string }>('/api/tickets', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Error al crear ticket');
-      }
-      
-      const ticket = await res.json();
-      notyf.success('✅ Ticket creado correctamente');
+      toast.success('Ticket creado correctamente');
       router.push(`/admin/tickets/${ticket.id}`);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error al crear ticket';
-      notyf.error(`❌ ${message}`);
+      toast.error(err instanceof Error ? err.message : 'Error al crear ticket');
       setSubmitting(false);
     }
   };

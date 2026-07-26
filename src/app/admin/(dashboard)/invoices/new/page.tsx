@@ -11,11 +11,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useNotyf } from '@/components/ui/NotyfProvider';
+import { useAdminToast } from '@/hooks/useAdminToast';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 export default function NewInvoicePage() {
   const router = useRouter();
-  const notyf = useNotyf();
+  const toast = useAdminToast();
   const [leads, setLeads] = useState<{ id: string; name: string; company?: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   
@@ -30,14 +31,17 @@ export default function NewInvoicePage() {
   useEffect(() => {
     async function fetchLeads() {
       try {
-        const res = await fetch('/api/admin/leads/list');
-        const data = await res.json();
-        setLeads(data);
+        const data = await adminFetch<{ id: string; name: string; company?: string }[]>(
+          '/api/admin/leads/list'
+        );
+        setLeads(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Error fetching leads:', err);
+        toast.warning('Error al cargar leads');
       }
     }
     fetchLeads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addItem = () => {
@@ -75,18 +79,14 @@ export default function NewInvoicePage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/admin/invoices/generate', {
+      await adminFetch('/api/admin/invoices/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
-      if (!res.ok) throw new Error('Error al generar factura');
-      
-      notyf.success('Factura generada correctamente');
+      toast.success('Factura generada correctamente');
       router.push('/admin/invoices');
     } catch (err: unknown) {
-      notyf.error(err instanceof Error ? err.message : 'Error al generar factura');
+      toast.error(err instanceof Error ? err.message : 'Error al generar factura');
     } finally {
       setSubmitting(false);
     }

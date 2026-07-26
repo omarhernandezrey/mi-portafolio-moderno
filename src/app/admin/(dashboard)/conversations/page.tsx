@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import EmptyState from '@/components/admin/ui/EmptyState';
 import PageHeader from '@/components/admin/ui/PageHeader';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 interface ConversationWithLead {
   id: string;
@@ -58,10 +59,9 @@ export default function AdminConversationsPage() {
   const PAGE_SIZE = 12;
 
   useEffect(() => {
-    fetch('/api/admin/conversations')
-      .then(r => r.json())
-      .then(data => {
-        setConversations(data);
+    adminFetch<ConversationWithLead[]>('/api/admin/conversations')
+      .then((data) => {
+        setConversations(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
