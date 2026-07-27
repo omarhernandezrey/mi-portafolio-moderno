@@ -1,18 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import { serverEnv } from "@/config/env";
+import { requireCronAuth } from "@/lib/cronAuth";
 import { notifyTelegram } from "@/lib/chatbot/telegram";
 
 /**
  * Tarea 21.3 — Limpieza automática mensual de la base de datos
  * Borra conversaciones sin leads y mensajes de sistema duplicados.
  */
-export async function POST(req: Request) {
-  // 1. Verificación de seguridad (CRON_SECRET)
-  const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${serverEnv.CRON_SECRET}`) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+export async function POST(req: NextRequest) {
+  const authError = requireCronAuth(req);
+  if (authError) return authError;
 
   try {
     console.log("▶️ Iniciando limpieza de base de datos...");

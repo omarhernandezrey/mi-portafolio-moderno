@@ -1,5 +1,6 @@
 import IndustrySelector from '@/components/admin/IndustrySelector';
 import LeadActions from '@/components/admin/LeadActions';
+import OnboardingLinkButton from '@/components/admin/OnboardingLinkButton';
 import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { 
@@ -22,6 +23,8 @@ import StatusBadge from '@/components/admin/ui/StatusBadge';
 import InfoItem from '@/components/admin/ui/InfoItem';
 import ChatBubble from '@/components/admin/ui/ChatBubble';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import { getAdminRole } from '@/lib/admin/auth';
+import { hasMinRole } from '@/lib/admin/roles';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,6 +64,8 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   if (!data) notFound();
 
   const { lead, messages } = data;
+  const role = await getAdminRole();
+  const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
 
   return (
     <div className="space-y-10">
@@ -137,13 +142,15 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             <div className="space-y-8">
               <div className="space-y-3">
                 <h4 className="text-[10px] font-black uppercase tracking-widest text-text-muted/60 ml-2">Asignar Industria</h4>
-                <IndustrySelector leadId={lead.id} currentIndustry={(lead as { industry?: string }).industry} />
+                <IndustrySelector leadId={lead.id} currentIndustry={(lead as { industry?: string }).industry} canEdit={canWrite} />
               </div>
 
               <div className="space-y-4">
                 <h4 className="text-[10px] font-black uppercase tracking-widest text-text-muted/60 ml-2 italic">Control de Pipeline</h4>
-                <LeadActions leadId={lead.id} currentStatus={lead.status} />
+                <LeadActions leadId={lead.id} currentStatus={lead.status} canEdit={canWrite} />
               </div>
+
+              {canWrite && <OnboardingLinkButton leadId={lead.id} />}
 
               {lead.notes && (
                 <div className="p-6 rounded-[24px] bg-primary/5 border border-primary/10">

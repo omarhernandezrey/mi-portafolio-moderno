@@ -88,3 +88,29 @@ export async function requireAdminForPath(
 ): Promise<AdminAuthResult> {
   return requireAdmin(minRoleForApiRequest(pathname, method));
 }
+
+/**
+ * Lee el rol del usuario actual sin redirigir ni devolver una respuesta HTTP.
+ * Pensado para páginas/componentes servidor que ya están detrás de
+ * AdminLayout (que valida sesión + rol) y solo necesitan el rol para decidir
+ * qué UI mostrar (ej. ocultar botones de escritura a un `viewer`).
+ * Devuelve null si no hay sesión o rol válido (no debería pasar bajo el layout).
+ */
+export async function getAdminRole(): Promise<AdminRole | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const { data: userRole } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (!userRole || !isAdminRole(userRole.role)) return null;
+
+  return userRole.role;
+}

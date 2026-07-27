@@ -9,9 +9,11 @@ import { adminFetch } from '@/lib/admin/client-fetch';
 interface IndustrySelectorProps {
   leadId: string;
   currentIndustry?: string;
+  /** Si false, se muestra la industria actual sin poder editarla (rol viewer). */
+  canEdit?: boolean;
 }
 
-export default function IndustrySelector({ leadId, currentIndustry }: IndustrySelectorProps) {
+export default function IndustrySelector({ leadId, currentIndustry, canEdit = true }: IndustrySelectorProps) {
   const [industry, setIndustry] = useState(currentIndustry || '');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -53,6 +55,32 @@ export default function IndustrySelector({ leadId, currentIndustry }: IndustrySe
       setLoading(false);
     }
   };
+
+  if (!canEdit) {
+    return (
+      <div className="space-y-4 p-6 bg-card-bg rounded-[24px] border border-white/10 relative z-10 shadow-xl">
+        <div className="flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-widest">
+          <Building2 size={18} className="text-primary" />
+          Nicho / Industria
+        </div>
+        <div className="flex items-center gap-3 text-sm font-bold">
+          {currentIndustry ? (
+            <>
+              <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
+              <span className="text-emerald-400">
+                {industries.find((i) => i.id === currentIndustry)?.name || currentIndustry}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="w-3 h-3 rounded-full bg-amber-500" />
+              <span className="text-amber-400">Sin industria asignada</span>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 p-6 bg-card-bg rounded-[24px] border border-white/10 hover:border-primary/30 transition-colors relative z-10 shadow-xl">

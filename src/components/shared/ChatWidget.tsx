@@ -51,7 +51,9 @@ export default function ChatWidget() {
     if (isOpen && sessionId && hasConsented) {
       interval = setInterval(async () => {
         try {
-          const response = await fetch(`/api/chat/poll?sessionId=${sessionId}&since=${lastPollTime}`);
+          const response = await fetch(
+            `/api/chat/poll?sessionId=${encodeURIComponent(sessionId)}&since=${encodeURIComponent(lastPollTime)}`
+          );
           const data = await response.json();
 
           if (data.messages && data.messages.length > 0) {

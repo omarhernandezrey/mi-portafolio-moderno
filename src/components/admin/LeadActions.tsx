@@ -9,9 +9,11 @@ import { adminFetch } from '@/lib/admin/client-fetch';
 interface LeadActionsProps {
   leadId: string;
   currentStatus: string;
+  /** Si false, se muestran los estados sin controles de escritura (rol viewer). */
+  canEdit?: boolean;
 }
 
-export default function LeadActions({ leadId, currentStatus }: LeadActionsProps) {
+export default function LeadActions({ leadId, currentStatus, canEdit = true }: LeadActionsProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
   const toast = useAdminToast();
@@ -55,6 +57,14 @@ export default function LeadActions({ leadId, currentStatus }: LeadActionsProps)
   }
 
   const normalizedStatus = currentStatus?.toLowerCase() || 'new';
+
+  if (!canEdit) {
+    return (
+      <div className="p-4 bg-white/5 border border-white/10 rounded-[20px] text-text-muted text-xs text-center">
+        Tu rol no tiene permiso para cambiar el estado de este lead
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 gap-3">

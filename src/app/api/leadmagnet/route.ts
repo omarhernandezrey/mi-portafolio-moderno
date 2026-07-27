@@ -3,11 +3,12 @@ import { z } from 'zod';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { Resend } from 'resend';
 import { serverEnv } from '@/config/env';
+import { checkRateLimit, clientIp } from '@/lib/rateLimit';
 import fs from 'fs';
 import path from 'path';
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.string().email().max(254),
   magnetId: z.enum(['checklist', 'guia-precios', 'plantilla-brief']),
 });
 
@@ -31,6 +32,12 @@ const magnets = {
 
 export async function POST(req: NextRequest) {
   try {
+    // Anti email-bombing: 5 recursos / hora / IP
+    const { allowed } = checkRateLimit(`leadmagnet:${clientIp(req.headers)}`, 5, 60 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Demasiadas solicitudes. Intenta más tarde.' }, { status: 429 });
+    }
+
     const body = await req.json();
     const result = schema.safeParse(body);
 
@@ -41,18 +48,13 @@ export async function POST(req: NextRequest) {
     const { email, magnetId } = result.data;
     const magnet = magnets[magnetId];
 
-    // 1. Guardar en Supabase (tabla subscribers)
+    // 1. Guardar en Supabase — NO pisar created_at/consent_at originales
     const { error: dbError } = await supabaseServer
       .from('subscribers')
-      .upsert({ 
-        email, 
-        source: magnetId,
-        created_at: new Date().toISOString()
-      }, { onConflict: 'email' });
+      .upsert({ email, source: magnetId }, { onConflict: 'email', ignoreDuplicates: true });
 
     if (dbError) {
       console.error('Error saving subscriber:', dbError);
-      // Continuamos aunque falle el guardado en DB (para no bloquear al usuario)
     }
 
     // 2. Enviar email con attachment vía Resend
@@ -65,7 +67,7 @@ export async function POST(req: NextRequest) {
     const pdfBuffer = fs.readFileSync(pdfPath);
 
     const { error: emailError } = await resend.emails.send({
-      from: 'Omar Hernández <onboarding@resend.dev>', // Usar dominio verificado en prod
+      from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: [email],
       subject: magnet.subject,
       attachments: [

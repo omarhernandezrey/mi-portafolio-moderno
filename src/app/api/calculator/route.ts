@@ -1,13 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { clientEnv, serverEnv } from '@/config/env';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { Resend } from 'resend';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
+import { checkRateLimit, clientIp } from '@/lib/rateLimit';
+
+const calcSchema = z.object({
+  selections: z.record(z.string(), z.union([z.string(), z.array(z.string())])).default({}),
+  visitorInfo: z.object({
+    name: z.string().min(1).max(100),
+    email: z.string().email().max(254),
+    company: z.string().max(100).optional().default(''),
+  }),
+  budget: z.union([z.number(), z.string()]).transform(v => {
+    const n = typeof v === 'number' ? v : parseFloat(String(v).replace(/[^\d.]/g, ''));
+    if (!Number.isFinite(n) || n < 0 || n > 10_000_000) throw new Error('invalid budget');
+    return Math.round(n);
+  }),
+  language: z.enum(['es', 'en', 'pt']).default('es'),
+});
+
+// drawText falla con caracteres fuera de WinAnsi — sanear para el PDF
+function pdfSafe(text: string): string {
+  return text
+    .replace(/[^\x20-\x7EáéíóúÁÉÍÓÚñÑüÜ¿¡]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .slice(0, 80)
+    .trim();
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const { selections, visitorInfo, budget, language } = await req.json();
+    // Anti email-bombing: 5 estimados / hora / IP
+    const { allowed } = checkRateLimit(`calculator:${clientIp(req.headers)}`, 5, 60 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json({ error: 'Demasiadas solicitudes. Intenta más tarde.' }, { status: 429 });
+    }
+
+    const parsed = calcSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
+    }
+    const { selections, visitorInfo, budget, language } = parsed.data;
 
     // 1. Guardar lead en Supabase
     const { data: conv } = await supabaseServer
@@ -31,7 +67,7 @@ export async function POST(req: NextRequest) {
         company: visitorInfo.company,
         budget: `$${budget} USD`,
         service_requested: 'Calculadora de Presupuesto',
-        notes: `Selecciones: ${JSON.stringify(selections)}`,
+        notes: `Selecciones: ${JSON.stringify(selections).slice(0, 1000)}`,
         status: 'new'
       }).select('id').single();
 
@@ -44,7 +80,7 @@ export async function POST(req: NextRequest) {
           company: visitorInfo.company,
           budget: `$${budget} USD`,
           service_requested: 'Calculadora de Presupuesto',
-          notes: `Selecciones: ${JSON.stringify(selections)}`,
+          notes: `Selecciones: ${JSON.stringify(selections).slice(0, 1000)}`,
           timeline: null,
           phone: null
         }, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
@@ -66,17 +102,17 @@ export async function POST(req: NextRequest) {
       color: rgb(0, 0, 0.5),
     });
 
-    page.drawText(`Para: ${visitorInfo.name}`, { x: 50, y: height - 100, size: 12, font: fontRegular });
-    page.drawText(`Empresa: ${visitorInfo.company || 'N/A'}`, { x: 50, y: height - 120, size: 12, font: fontRegular });
+    page.drawText(`Para: ${pdfSafe(visitorInfo.name)}`, { x: 50, y: height - 100, size: 12, font: fontRegular });
+    page.drawText(`Empresa: ${pdfSafe(visitorInfo.company) || 'N/A'}`, { x: 50, y: height - 120, size: 12, font: fontRegular });
     page.drawText(`Fecha: ${new Date().toLocaleDateString()}`, { x: 50, y: height - 140, size: 12, font: fontRegular });
 
     page.drawText('Desglose del Proyecto:', { x: 50, y: height - 200, size: 14, font });
-    
+
     let yOffset = height - 230;
-    // Simplificado: listar selecciones
-    Object.entries(selections).forEach(([key, value]) => {
+    // Tope de líneas para no salir de la página
+    Object.entries(selections).slice(0, 20).forEach(([key, value]) => {
       const val = Array.isArray(value) ? value.join(', ') : value;
-      page.drawText(`${key}: ${val}`, { x: 50, y: yOffset, size: 10, font: fontRegular });
+      page.drawText(pdfSafe(`${key}: ${val}`), { x: 50, y: yOffset, size: 10, font: fontRegular });
       yOffset -= 20;
     });
 
@@ -99,7 +135,7 @@ export async function POST(req: NextRequest) {
       try {
         const resend = new Resend(serverEnv.RESEND_API_KEY);
         await resend.emails.send({
-          from: 'Omar Hernandez <onboarding@resend.dev>', // Ajustar a dominio verificado en prod
+          from: 'Omar Hernández <contacto@omarhernandezrey.com>',
           to: visitorInfo.email,
           subject: 'Tu Presupuesto Estimado - Omar Hernández',
           text: `Hola ${visitorInfo.name}, adjunto encontrarás el presupuesto estimado para tu proyecto.`,

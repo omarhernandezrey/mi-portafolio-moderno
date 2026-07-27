@@ -23,6 +23,8 @@ import {
   isLeadStatus,
 } from '@/lib/admin/types';
 import { pageRange, parsePage, sanitizeSearchTerm } from '@/lib/admin/query';
+import { getAdminRole } from '@/lib/admin/auth';
+import { hasMinRole } from '@/lib/admin/roles';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,6 +80,8 @@ export default async function AdminLeadsPage({
   const page = parsePage(params.page);
   const result = await getLeads(search, statusFilter, page);
   const { data: leads, total, totalPages, pageSize } = result;
+  const role = await getAdminRole();
+  const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
 
   const queryPreserved = {
     q: search || undefined,
@@ -93,14 +97,16 @@ export default async function AdminLeadsPage({
         actions={
           <>
             <ExportLeadsButton leads={leads} />
-            <Link
-              href="/admin/leads/new"
-              className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
-            >
-              <Plus size={16} />
-              <span className="hidden sm:inline">Añadir Lead</span>
-              <span className="sm:hidden">Añadir</span>
-            </Link>
+            {canWrite && (
+              <Link
+                href="/admin/leads/new"
+                className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
+              >
+                <Plus size={16} />
+                <span className="hidden sm:inline">Añadir Lead</span>
+                <span className="sm:hidden">Añadir</span>
+              </Link>
+            )}
           </>
         }
       />

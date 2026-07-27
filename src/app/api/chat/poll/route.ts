@@ -3,6 +3,11 @@ import { supabaseServer } from '@/lib/supabaseServer';
 
 export const dynamic = 'force-dynamic';
 
+// Defensa extra: nunca exponer bloques de marcadores internos al widget
+function stripInternalMarkers(content: string): string {
+  return content.replace(/<<<(LEAD|HANDOFF|CALCOM)>>>[\s\S]*?(<<<END>>>|$)/g, '').trim();
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -11,6 +16,12 @@ export async function GET(req: NextRequest) {
 
     if (!sessionId || !since) {
       return NextResponse.json({ error: 'Missing required parameters (sessionId, since)' }, { status: 400 });
+    }
+
+    // Validar formato de fecha: un timestamp inválido rompe el filtro PostgREST
+    const sinceDate = new Date(since);
+    if (isNaN(sinceDate.getTime())) {
+      return NextResponse.json({ error: 'Invalid since parameter' }, { status: 400 });
     }
 
     // 1. Encontrar la conversación
@@ -30,7 +41,7 @@ export async function GET(req: NextRequest) {
       .select('role, content, created_at')
       .eq('conversation_id', conv.id)
       .eq('role', 'assistant')
-      .gt('created_at', since)
+      .gt('created_at', sinceDate.toISOString())
       .order('created_at', { ascending: true });
 
     if (msgsErr) {
@@ -39,7 +50,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({
-      messages: msgs || []
+      messages: (msgs || []).map(m => ({ ...m, content: stripInternalMarkers(m.content) }))
     });
 
   } catch (error) {

@@ -4,7 +4,8 @@ import { serverEnv } from '@/config/env';
 import { ProviderCall, ProviderError, buildMessages } from './types';
 
 const MODEL = 'llama-3.3-70b-versatile';
-const VISION_MODEL = 'llama-3.2-11b-vision-preview';
+// Groq decomisionó llama-3.2-*-vision-preview; el modelo multimodal vigente es Llama 4 Scout
+const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
 
 export const call: ProviderCall = async (args) => {
   const apiKey = serverEnv.GROQ_API_KEY;

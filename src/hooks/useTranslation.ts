@@ -20,6 +20,7 @@ export const useTranslation = () => {
     "navigation.education": "Educación",
     "navigation.contact": "Contacto",
     "navigation.calculator": "Calculadora",
+    "navigation.blog": "Blog",
     "navigation.go_to": "Ir a",
     "navigation.menu": "Menú",
     "navigation.language": "Idioma",
@@ -41,6 +42,10 @@ export const useTranslation = () => {
     "hero.unforgettable": "inolvidables",
     "hero.viewProjects": "Ver Proyectos",
     "hero.ariaLabel": "Ver mis proyectos",
+    "hero.status": "Disponible para nuevos proyectos",
+    "hero.location": "Colombia · Remoto LATAM & USA",
+    "hero.responseTime": "Respuesta en 24h",
+    "hero.stackLabel": "Stack principal",
 
     // About
     "about.badge": "Desarrollador Full Stack Freelance",

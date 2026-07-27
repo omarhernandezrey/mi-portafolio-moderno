@@ -41,7 +41,7 @@ export const ADMIN_API_PERMISSIONS: ReadonlyArray<ApiPermission> = [
   { prefix: '/api/admin/audit', read: 'owner' },
   { prefix: '/api/admin/timer/report', read: 'owner' },
   { prefix: '/api/admin/timer', read: 'assistant', write: 'assistant' },
-  { prefix: '/api/admin/leads', read: 'assistant', write: 'assistant' },
+  { prefix: '/api/admin/leads', read: 'viewer', write: 'assistant' },
   { prefix: '/api/admin/conversations', read: 'viewer' },
   { prefix: '/api/tickets', read: 'viewer', write: 'assistant' },
   { prefix: '/api/admin', read: 'viewer', write: 'assistant' },

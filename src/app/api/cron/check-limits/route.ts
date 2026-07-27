@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import { serverEnv } from "@/config/env";
+import { requireCronAuth } from "@/lib/cronAuth";
 import { notifyTelegram } from "@/lib/chatbot/telegram";
 
 /**
@@ -17,11 +17,9 @@ const FREE_LIMITS: Record<string, number> = {
   ollama: 999999      // Local no tiene límite
 };
 
-export async function POST(req: Request) {
-  const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${serverEnv.CRON_SECRET}`) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
+export async function POST(req: NextRequest) {
+  const authError = requireCronAuth(req);
+  if (authError) return authError;
 
   try {
     const today = new Date();

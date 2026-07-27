@@ -6,6 +6,7 @@ import { BookOpen, Calendar, Clock, ArrowRight, Search, Sparkles, ChevronRight }
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { breadcrumbList } from '@/lib/schemas';
+import BlogNewsletterCTA from '@/components/blog/BlogNewsletterCTA';
 
 export const metadata = buildMetadata({
   title: 'Blog de Desarrollo Web, IA y SEO | Omar Hernández Rey',
@@ -33,16 +34,16 @@ export default async function BlogPage() {
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
       <JsonLd data={breadcrumbList([{ name: 'Inicio', path: '' }, { name: 'Blog', path: '/blog' }])} />
 
-      <main className="flex-1 max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-12 md:space-y-24">
-        
+      <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-12 md:space-y-24">
+
         {/* Journal Header */}
         <header className="max-w-4xl space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
-            Knowledge Base & Research
+          <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
+            Knowledge Base &amp; Research
           </div>
-          <h1 className="text-6xl md:text-8xl font-black text-white-custom tracking-tighter leading-[0.9] italic">
+          <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
             Journal de <br />
-            <span className="text-primary text-outline-primary">Ingeniería</span>
+            <span className="text-primary">Ingeniería</span>
           </h1>
           <div className="flex flex-wrap items-center gap-4">
             <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
@@ -95,7 +96,7 @@ export default async function BlogPage() {
                   </div>
                 </div>
                 
-                <h2 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter leading-tight italic group-hover:text-primary transition-colors">
+                <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight leading-tight group-hover:text-primary transition-colors">
                   {featuredPost.title}
                 </h2>
                 
@@ -172,7 +173,7 @@ export default async function BlogPage() {
                     href={`/blog/${post.slug}`}
                     className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted hover:text-white-custom transition-colors"
                   >
-                    View Project
+                    Leer más
                     <ChevronRight size={14} />
                   </Link>
                 </div>
@@ -189,38 +190,7 @@ export default async function BlogPage() {
         </div>
 
         {/* Global Subscription Protocol */}
-        <section className="bg-background rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
-          <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[100px]" />
-          
-          <div className="max-w-2xl mx-auto space-y-12 relative z-10">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic mb-6">
-                Journal Subscription
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white-custom tracking-tighter italic">
-                Reciba Research Técnico <br />
-                <span className="text-primary text-outline-primary">Directamente</span>
-              </h2>
-              <p className="text-lg text-text-muted font-medium italic opacity-70 leading-relaxed max-w-lg mx-auto">
-                Únase al protocolo de actualización para recibir análisis profundos sobre el futuro del desarrollo de software.
-              </p>
-            </div>
-
-            <div className="relative group max-w-md mx-auto">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-[24px] blur-lg opacity-10 group-focus-within:opacity-30 transition duration-500"></div>
-              <div className="relative flex bg-card-bg/40 rounded-[24px] p-2 border border-white/5 backdrop-blur-xl shadow-2xl overflow-hidden group-focus-within:border-primary/20 transition-all">
-                <input
-                  type="email"
-                  placeholder="su-email@compania.com"
-                  className="w-full bg-transparent border-none focus:ring-0 px-6 py-4 text-xs font-bold text-white-custom placeholder:text-text-muted/20 placeholder:italic"
-                />
-                <button className="bg-primary text-background px-8 py-3 rounded-[18px] font-black text-[9px] uppercase tracking-widest hover:scale-105 transition-transform shadow-lg">
-                  Subscribirse
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+        <BlogNewsletterCTA />
 
       </main>
 

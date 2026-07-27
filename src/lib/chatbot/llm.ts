@@ -10,6 +10,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 const DEFAULT_CHAIN = ['groq', 'nvidia', 'nvidia-mistral', 'nvidia-kimi', 'nvidia-llama4', 'nvidia-mistral-nemotron', 'nvidia-phi4', 'nvidia-gemma3', 'nvidia-dracarys', 'deepseek', 'mistral', 'cerebras', 'nvidia-nemotron', 'nvidia-solar', 'openrouter', 'huggingface', 'cloudflare', 'ollama'];
 const TIMEOUT_MS = 15000;
+// Presupuesto global: la función Next.js tiene maxDuration=30s — si la cadena
+// excede este tiempo, saltamos directo al fallback en vez de morir con 500.
+const CHAIN_BUDGET_MS = 22000;
 const ERROR_THRESHOLD = 3;
 const COOLDOWN_MS = 60 * 1000; // 1 minuto (recuperación rápida para Rate Limits)
 
@@ -78,10 +81,18 @@ async function callProviderChain(
   const chain = getChain();
   const errors: string[] = [];
   const now = Date.now();
+  const chainStart = now;
 
   for (const name of chain) {
     // Si hay imagen, forzamos Groq ya que es el único con Vision en nuestro setup free
     if (args.imageDataUrl && name !== 'groq') continue;
+
+    // Presupuesto agotado: mejor fallback controlado que timeout de la función
+    if (Date.now() - chainStart > CHAIN_BUDGET_MS) {
+      errors.push(`${name}: skipped (chain budget exceeded)`);
+      console.warn(`⏱️ Chain budget agotado tras ${chain.indexOf(name)} proveedores`);
+      break;
+    }
 
     // Si está desactivado pero pasó el tiempo de cooldown, le damos otra oportunidad
     if (disabledByCircuit.has(name)) {

@@ -26,6 +26,14 @@ const chatSchema = z.object({
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
+// Evita crecimiento ilimitado del Map en instancias warm
+function evictExpiredRateLimits(now: number) {
+  if (rateLimitMap.size < 500) return;
+  for (const [key, entry] of rateLimitMap) {
+    if (now >= entry.resetAt) rateLimitMap.delete(key);
+  }
+}
+
 // ─── Extracción de contacto ──────────────────────────────────────────────────
 
 const EMAIL_RE = /[\w.+\-]+@[\w.\-]+\.[a-z]{2,}/i;
@@ -166,8 +174,10 @@ function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean,
 
 // ─── Detección de intención de compra ───────────────────────────────────────
 
-// Solo dispara cuando el cliente CONFIRMA interés — no en el primer mensaje de necesidad
-const INTENT_RE = /(?:^|\s)(sí\b|^si\b|si,\s|si\.|me interesa|me sirve|de acuerdo|arrancamos|empezamos|contratar|perfecto|listo|ok\b|okay|dale|adelante|procedemos|me conviene|me animo|quiero (empezar|arrancar|contratar|esa|ese)|cu[aá]ndo empezamos|me quedo con esa|esa opci[oó]n|esa misma|quiero la landing|quiero el e-?commerce|quiero el sitio|quiero el mvp|la primera|la segunda)\b/i;
+// Solo dispara cuando el cliente CONFIRMA interés — no en el primer mensaje de necesidad.
+// IMPORTANTE: NO incluir "contratar" a secas — el quick-reply "Quiero contratar un servicio"
+// del widget lo dispara en el primer turno y rompe el flujo de venta (debe mostrar catálogo).
+const INTENT_RE = /(?:^|\s)(sí\b|^si\b|si,\s|si\.|me interesa|me sirve|de acuerdo|arrancamos|empezamos|perfecto|listo|ok\b|okay|dale|adelante|procedemos|me conviene|me animo|quiero (empezar|arrancar|esa|ese)|cu[aá]ndo empezamos|me quedo con esa|esa opci[oó]n|esa misma|quiero la landing|quiero el e-?commerce|quiero el sitio|quiero el mvp|la primera|la segunda)\b/i;
 const HANDOFF_RE = /hablar con omar|persona real|humano|quiero a omar|real person|human agent|speak with|talk to omar/i;
 const RECRUITER_RE = /developer|desarrollador|stack|salario|salary|sueldo|contrat|hiring|recruit|posici[oó]n|puesto|vacante/i;
 const ACCEPTED_STACK_RE = /react|next\.?js|node\.?js|typescript|python|nestjs|supabase/i;
@@ -190,6 +200,7 @@ export async function POST(req: NextRequest) {
     const limit = isEval ? 1000 : 20;
     const windowMs = 10 * 60 * 1000;
 
+    evictExpiredRateLimits(now);
     const currentLimit = rateLimitMap.get(ip);
     if (currentLimit && now < currentLimit.resetAt) {
       if (currentLimit.count >= limit) {
@@ -216,12 +227,16 @@ export async function POST(req: NextRequest) {
     if (!conv) {
       const { getRandomVariant } = await import('@/lib/chatbot/openings');
       activeVariant = getRandomVariant();
-      const { data: newConv } = await supabaseServer
+      const { data: newConv, error: convInsertError } = await supabaseServer
         .from('conversations')
         .insert({ session_id: sessionId, language, visitor_name: visitorMeta?.name, variant: activeVariant, consent_at: consentAt })
         .select('id')
         .single();
-      conversationId = newConv!.id;
+      if (convInsertError || !newConv) {
+        console.error('Conversation insert failed:', convInsertError);
+        return NextResponse.json({ reply: 'No se pudo iniciar la conversación. Intenta de nuevo.' }, { status: 500 });
+      }
+      conversationId = newConv.id;
     } else {
       conversationId = conv.id;
       facts = conv.facts || {};
@@ -369,7 +384,20 @@ export async function POST(req: NextRequest) {
       (hasContact && alreadyRequestedName)
     );
 
-    if (canClose) {
+    // Anti-duplicados: si esta conversación ya generó un lead (o ya se cerró),
+    // nunca volvemos a insertar ni re-notificar — la conversación continúa con el LLM.
+    let leadAlreadyCreated = savedFacts.lead_created === 'true';
+    if (canClose && !leadAlreadyCreated && !isEval) {
+      const { data: existingLead } = await supabaseServer
+        .from('leads')
+        .select('id')
+        .eq('conversation_id', conversationId)
+        .limit(1)
+        .maybeSingle();
+      leadAlreadyCreated = !!existingLead;
+    }
+
+    if (canClose && !leadAlreadyCreated) {
       const contact = knownEmail || knownPhone;
       // Derivar SIEMPRE del historial completo (más confiable que savedFacts cuyo update podría no haber commiteado)
       const fullHistory = [...history, { role: 'user', content: message }];
@@ -397,22 +425,25 @@ export async function POST(req: NextRequest) {
           timeline: null,
         };
 
-        supabaseServer.from('conversations').update({
-          visitor_name: effectiveName || undefined,
-          facts: { ...savedFacts, name: effectiveName, email: knownEmail, phone: knownPhone, need: needFromHistory, service: quotedService, price: quotedPrice },
-        }).eq('id', conversationId).then(() => {});
-
         const { data: insertedLead } = await supabaseServer
           .from('leads')
           .insert({ conversation_id: conversationId, ...lead })
           .select('id')
           .single();
 
+        // Marcar la conversación como cerrada ANTES de notificar para que
+        // mensajes concurrentes no inserten un segundo lead
+        await supabaseServer.from('conversations').update({
+          visitor_name: effectiveName || undefined,
+          facts: { ...savedFacts, name: effectiveName, email: knownEmail, phone: knownPhone, need: needFromHistory, service: quotedService, price: quotedPrice, lead_created: 'true' },
+        }).eq('id', conversationId);
+
         if (insertedLead?.id) {
+          // Await: en serverless los side effects sin await pueden no completarse
           const { notifyLead } = await import('@/lib/chatbot/telegram');
-          notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME }).catch(console.error);
+          await notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME }).catch(e => console.error('notifyLead error:', e));
           const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
-          pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
+          await pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(e => console.error('pushLeadToNotion error:', e));
         }
       }
 
@@ -493,9 +524,11 @@ export async function POST(req: NextRequest) {
     const cleanText = cleanReply(rawReply);
 
     // ── 7. Guardar mensajes ───────────────────────────────────────────────────
+    // Guardamos el texto LIMPIO (sin bloques <<<...>>>) para que el poll no
+    // muestre marcadores crudos; los bloques se procesan abajo desde rawReply.
     await supabaseServer.from('messages').insert([
       { conversation_id: conversationId, role: 'user',      content: message },
-      { conversation_id: conversationId, role: 'assistant', content: rawReply },
+      { conversation_id: conversationId, role: 'assistant', content: cleanText },
     ]);
 
     // Persistir servicio/precio en facts (await para garantizar que esté antes del próximo request)
@@ -515,29 +548,45 @@ export async function POST(req: NextRequest) {
     const lead = extractLead(rawReply);
     if (lead) {
       if (lead.name || lead.email || lead.notes) {
-        supabaseServer.from('conversations').update({
+        await supabaseServer.from('conversations').update({
           visitor_name: lead.name || knownName || undefined,
           facts: { ...savedFacts, name: lead.name || knownName, email: lead.email || knownEmail, phone: lead.phone || knownPhone, need: lead.notes || knownNeed },
-        }).eq('id', conversationId).then(({ error }) => error && console.error('Error updating conv facts:', error));
+        }).eq('id', conversationId);
       }
 
-      const { data: insertedLead, error: leadErr } = await supabaseServer
-        .from('leads')
-        .insert({ conversation_id: conversationId, ...lead })
-        .select('id')
-        .single();
+      // Anti-duplicados también en el path LLM-LEAD
+      if (!leadAlreadyCreated && savedFacts.lead_created !== 'true') {
+        const { data: existingLead } = await supabaseServer
+          .from('leads')
+          .select('id')
+          .eq('conversation_id', conversationId)
+          .limit(1)
+          .maybeSingle();
 
-      if (!leadErr && insertedLead?.id) {
-        const { notifyLead } = await import('@/lib/chatbot/telegram');
-        await notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME });
-        const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
-        pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
+        if (!existingLead) {
+          const { data: insertedLead, error: leadErr } = await supabaseServer
+            .from('leads')
+            .insert({ conversation_id: conversationId, ...lead })
+            .select('id')
+            .single();
+
+          if (!leadErr && insertedLead?.id) {
+            await supabaseServer.from('conversations').update({
+              facts: { ...savedFacts, name: lead.name || knownName, email: lead.email || knownEmail, phone: lead.phone || knownPhone, need: lead.notes || knownNeed, lead_created: 'true' },
+            }).eq('id', conversationId);
+
+            const { notifyLead } = await import('@/lib/chatbot/telegram');
+            await notifyLead({ lead, conversationId, leadId: insertedLead.id, siteUrl: clientEnv.NEXT_PUBLIC_SITE_URL, botUsername: serverEnv.TELEGRAM_BOT_USERNAME }).catch(e => console.error('notifyLead error:', e));
+            const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
+            await pushLeadToNotion(lead, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(e => console.error('pushLeadToNotion error:', e));
+          }
+        }
       }
     }
 
     const handoff = extractHandoff(rawReply);
     let handoffUrl;
-    if (handoff) {
+    if (handoff && clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER) {
       handoffUrl = `https://wa.me/${clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${encodeURIComponent(handoff.summary)}`;
     }
 

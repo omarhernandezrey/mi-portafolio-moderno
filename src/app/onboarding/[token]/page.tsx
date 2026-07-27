@@ -8,6 +8,7 @@ import Footer from '@/components/shared/Footer';
 import Link from 'next/link';
 import { useNotyf } from '@/components/ui/NotyfProvider';
 import { getPaymentOptions } from '@/lib/chatbot/payments';
+import { parseBudgetAmount } from '@/lib/budget';
 
 interface OnboardingPageProps {
   params: Promise<{ token: string }>;
@@ -285,11 +286,11 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl text-center"
             >
               <h2 className="text-3xl font-black mb-2">Paso 3: Anticipo</h2>
-              <p className="text-[var(--muted-color)] mb-8">Para reservar el cupo y dar inicio al desarrollo, se requiere un anticipo del 50% ({lead.budget ? parseFloat(lead.budget.replace(/[^0-9.]/g, '')) / 2 : '---'} USD).</p>
-              
+              <p className="text-[var(--muted-color)] mb-8">Para reservar el cupo y dar inicio al desarrollo, se requiere un anticipo del 50% ({parseBudgetAmount(lead.budget) > 0 ? `${(parseBudgetAmount(lead.budget) / 2).toFixed(2)}` : '---'} USD).</p>
+
               <div className="p-8 border-2 border-dashed border-[var(--primary-color)]/30 rounded-[2rem] bg-[var(--primary-color)]/5 mb-8">
                 <div className="text-4xl font-black text-[var(--primary-color)] mb-2">
-                  ${lead.budget ? (parseFloat(lead.budget.replace(/[^0-9.]/g, '')) / 2).toFixed(2) : '---'} <span className="text-sm font-normal">USD</span>
+                  ${parseBudgetAmount(lead.budget) > 0 ? (parseBudgetAmount(lead.budget) / 2).toFixed(2) : '---'} <span className="text-sm font-normal">USD</span>
                 </div>
                 <p className="text-sm text-[var(--muted-color)] uppercase tracking-widest font-bold">Elige tu método de pago</p>
               </div>

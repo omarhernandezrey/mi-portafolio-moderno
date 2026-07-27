@@ -215,13 +215,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mb-4">
               {post.tags.map(tag => (
-                <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 text-xs bg-[var(--primary-color)]/10 text-[var(--primary-color)] rounded-full border border-[var(--primary-color)]/20">
+                <span key={tag} className="font-mono-label inline-flex items-center gap-1 px-2 py-0.5 text-[0.6rem] bg-[var(--primary-color)]/10 text-[var(--primary-color)] rounded-full border border-[var(--primary-color)]/20">
                   <Tag size={10} />
                   {tag}
                 </span>
               ))}
             </div>
-            <h1 className="text-4xl font-bold mb-6 leading-tight" itemProp="headline">{post.title}</h1>
+            <h1 className="font-display italic text-4xl md:text-5xl font-medium mb-6 leading-tight" itemProp="headline">{post.title}</h1>
             <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--muted-color)]">
               <span className="flex items-center gap-1">
                 <Calendar size={13} />
@@ -261,7 +261,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Related Services — internal linking for SEO */}
           {relatedServices.length > 0 && (
             <section className="mt-12 p-6 rounded-2xl bg-[var(--primary-color)]/5 border border-[var(--primary-color)]/20">
-              <h2 className="text-base font-black uppercase tracking-widest text-[var(--primary-color)] mb-4">
+              <h2 className="font-mono-label text-[0.65rem] text-[var(--primary-color)] mb-4">
                 {isEnglish ? '→ Hire for your project' : '→ Contratar para tu proyecto'}
               </h2>
               <div className="flex flex-col gap-3">

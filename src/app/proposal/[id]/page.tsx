@@ -36,14 +36,17 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
     year: 'numeric'
   });
 
+  // Sanitizar texto libre del lead: MDX explota con `{`, `}`, `<`
+  const mdxSafe = (s: string) => s.replace(/[{}<>]/g, '').trim();
+
   // 3. Generar contenido basado en industria
   const markdown = generateProposalMarkdown({
-    customer_name: customerName,
-    project_name: lead.service_requested || 'Estrategia Digital',
+    customer_name: mdxSafe(customerName),
+    project_name: mdxSafe(lead.service_requested || 'Estrategia Digital'),
     industry: (lead as { industry?: string }).industry || 'General',
-    pain_points: lead.notes || 'Optimización de infraestructura digital',
-    price: budget,
-    timeline: lead.timeline || 'Consolidado a convenir',
+    pain_points: mdxSafe(lead.notes || 'Optimización de infraestructura digital'),
+    price: mdxSafe(budget),
+    timeline: mdxSafe(lead.timeline || 'Consolidado a convenir'),
     date,
     calcom_url: clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL
   });
