@@ -45,22 +45,42 @@ export async function POST(req: NextRequest) {
       ...(convsByFacts || []).map(c => c.id),
     ]));
 
-    // 2. Leads: por conversation_id O directamente por email
-    let deletedLeads = 0;
-    if (convIds.length > 0) {
-      const { data: del } = await supabaseServer
+    // 2. Leads: por conversation_id O directamente por email (localizar antes de borrar,
+    // para poder limpiar también sus tickets de soporte).
+    const { data: leadsByConv } = convIds.length > 0
+      ? await supabaseServer.from('leads').select('id').in('conversation_id', convIds)
+      : { data: [] as { id: string }[] };
+    const { data: leadsByEmail } = await supabaseServer
+      .from('leads')
+      .select('id')
+      .eq('email', email);
+
+    const leadIds = Array.from(new Set([
+      ...(leadsByConv || []).map(l => l.id),
+      ...(leadsByEmail || []).map(l => l.id),
+    ]));
+
+    // 2b. Tickets de soporte del lead — GDPR exige borrarlos también (no solo
+    // desvincularlos): título y mensajes pueden contener datos personales.
+    // ticket_messages tiene ON DELETE CASCADE sobre tickets, un solo delete basta.
+    let deletedTickets = 0;
+    if (leadIds.length > 0) {
+      const { data: delTickets } = await supabaseServer
+        .from('tickets')
+        .delete()
+        .in('lead_id', leadIds)
+        .select('id');
+      deletedTickets = delTickets?.length || 0;
+    }
+
+    const deletedLeads = leadIds.length;
+    if (leadIds.length > 0) {
+      const { error: delLeadsError } = await supabaseServer
         .from('leads')
         .delete()
-        .in('conversation_id', convIds)
-        .select('id');
-      deletedLeads += del?.length || 0;
+        .in('id', leadIds);
+      if (delLeadsError) throw delLeadsError;
     }
-    const { data: delByEmail } = await supabaseServer
-      .from('leads')
-      .delete()
-      .eq('email', email)
-      .select('id');
-    deletedLeads += delByEmail?.length || 0;
 
     // 3. Mensajes y conversaciones
     if (convIds.length > 0) {
@@ -84,7 +104,7 @@ export async function POST(req: NextRequest) {
     }
 
     await notifyTelegram(
-      `🗑️ *Derecho al olvido ejecutado*\nEmail: ${email}\nMotivo: ${reason || 'No especificado'}\nEjecutado por: ${auth.email}\nAcción: ${convIds.length} conversaciones, ${deletedLeads} leads y suscripciones eliminadas.`
+      `🗑️ *Derecho al olvido ejecutado*\nEmail: ${email}\nMotivo: ${reason || 'No especificado'}\nEjecutado por: ${auth.email}\nAcción: ${convIds.length} conversaciones, ${deletedLeads} leads, ${deletedTickets} tickets y suscripciones eliminadas.`
     );
 
     return NextResponse.json({
