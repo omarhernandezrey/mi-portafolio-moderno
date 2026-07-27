@@ -4,13 +4,19 @@ import { requireAdmin } from '@/lib/admin/auth';
 
 export const dynamic = 'force-dynamic';
 
+/** Escapa metacaracteres de ILIKE sin tocar `.`/`+` (válidos en emails). */
+function escapeIlike(raw: string): string {
+  return raw.trim().replace(/[%_\\]/g, '\\$&').slice(0, 120);
+}
+
 export async function GET(req: NextRequest) {
   const auth = await requireAdmin('owner');
   if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
   const action = searchParams.get('action');
-  const actor = searchParams.get('actor');
+  const actorRaw = searchParams.get('actor');
+  const actor = actorRaw ? escapeIlike(actorRaw) : '';
   const limit = Math.min(parseInt(searchParams.get('limit') || '100', 10) || 100, 500);
 
   let query = supabaseServer
