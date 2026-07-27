@@ -69,14 +69,14 @@ export default function RecursosContent() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
 
-      <main className="flex-1 max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-16 md:space-y-32">
+      <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16 md:space-y-32">
 
         {/* Header Architecture */}
         <header className="max-w-4xl mx-auto text-center space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic"
+            className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]"
           >
             Digital Assets & Intelligence
           </motion.div>
@@ -84,7 +84,7 @@ export default function RecursosContent() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-8xl font-black text-white-custom tracking-tighter leading-[0.9] italic"
+            className="font-display italic text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]"
           >
             Recursos de <br />
             <span className="text-primary">Alta Fidelidad</span>
@@ -102,7 +102,7 @@ export default function RecursosContent() {
         {/* Global Access Protocol */}
         <section className="max-w-xl mx-auto space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted opacity-40">Identity Authentication</h2>
+            <h2 className="font-mono-label text-[0.65rem] text-text-muted opacity-40">Identity Authentication</h2>
             <p className="text-xs text-text-muted/60 font-medium italic">Se requiere autorización vía email para liberar los activos.</p>
           </div>
 
@@ -145,7 +145,7 @@ export default function RecursosContent() {
               className="group relative bg-card-bg rounded-[32px] md:rounded-[48px] border border-white/5 p-6 md:p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
             >
               {/* Decorative Index */}
-              <div className="absolute top-8 right-8 text-[40px] font-black text-white-custom opacity-[0.03] italic italic-black italic-outline group-hover:opacity-[0.08] transition-opacity">
+              <div className="absolute top-8 right-8 text-[40px] font-black text-white-custom opacity-[0.03] italic group-hover:opacity-[0.08] transition-opacity">
                 0{idx + 1}
               </div>
 
@@ -201,7 +201,7 @@ export default function RecursosContent() {
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black text-white-custom tracking-tighter italic">
+              <h2 className="font-display italic text-4xl md:text-5xl font-medium text-white-custom tracking-tight">
                 Arquitectura de Inversión
               </h2>
               <p className="text-lg text-text-muted font-medium italic opacity-70 leading-relaxed max-w-lg mx-auto">
@@ -221,11 +221,11 @@ export default function RecursosContent() {
 
         {/* Global Security / Info Bar */}
         <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
-          <div className="flex items-center gap-2 font-black text-[9px] uppercase tracking-[0.4em] text-text-muted italic">
+          <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
             <Shield size={14} />
             Secure Asset Transmission
           </div>
-          <div className="flex items-center gap-2 font-black text-[9px] uppercase tracking-[0.4em] text-text-muted italic">
+          <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
             <FileText size={14} />
             Document Index 2026.04
           </div>

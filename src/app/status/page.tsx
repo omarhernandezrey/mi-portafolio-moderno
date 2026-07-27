@@ -43,14 +43,14 @@ export default function StatusPage() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
       
-      <main className="flex-1 max-w-[1000px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-16">
+      <main className="flex-1 max-w-[70rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
         
         {/* Monitoring Header */}
         <header className="text-center space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic"
+            className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]"
           >
             <Radio size={12} className="animate-pulse" />
             Live Infrastructure Monitor
@@ -59,9 +59,9 @@ export default function StatusPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-7xl font-black text-white-custom tracking-tighter leading-none italic"
+            className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none"
           >
-            System <span className="text-primary text-outline-primary">Status</span>
+            System <span className="text-primary">Status</span>
           </motion.h1>
           <p className="text-text-muted text-sm font-medium max-w-xl mx-auto opacity-60 leading-relaxed italic">
             Monitorización en tiempo real de los protocolos de redundancia, latencia de red y disponibilidad de servicios críticos del ecosistema.
@@ -84,7 +84,7 @@ export default function StatusPage() {
           >
             <AlertCircle className="mx-auto text-red-500 opacity-40" size={60} strokeWidth={1} />
             <div className="space-y-2">
-              <h2 className="text-2xl font-black text-white-custom italic tracking-tight uppercase">Protocol Break Detected</h2>
+              <h2 className="font-display italic text-2xl font-medium text-white-custom tracking-tight">Protocol Break Detected</h2>
               <p className="text-text-muted text-sm font-medium italic opacity-60">No se ha podido establecer una conexión segura con el nodo de monitoreo.</p>
             </div>
             <button 
@@ -116,7 +116,7 @@ export default function StatusPage() {
                     {data?.status === 'operational' ? <CheckCircle2 size={48} strokeWidth={1.5} /> : <AlertCircle size={48} strokeWidth={1.5} />}
                   </div>
                   <div className="space-y-2">
-                    <h2 className="text-3xl font-black text-white-custom tracking-tighter italic uppercase leading-none">
+                    <h2 className="font-display italic text-3xl font-medium text-white-custom tracking-tight leading-none">
                       {data?.status === 'operational' ? 'Operational Protocol' : 'Performance Alert'}
                     </h2>
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted italic opacity-40">
@@ -167,7 +167,7 @@ export default function StatusPage() {
             {/* Performance Timeline Visualization */}
             <div className="bg-card-bg rounded-[48px] border border-white/5 p-10 md:p-12 shadow-2xl relative overflow-hidden group">
                <div className="flex items-center justify-between mb-10">
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white-custom italic flex items-center gap-3">
+                  <h3 className="font-mono-label text-[0.6rem] text-white-custom flex items-center gap-3">
                     <BarChart3 size={14} className="text-primary" />
                     Uptime History Archive
                   </h3>
@@ -255,7 +255,7 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
 
 function TrustAsset({ icon, text }: { icon: React.ReactNode, text: string }) {
   return (
-    <div className="flex items-center gap-2 font-black text-[9px] uppercase tracking-[0.4em] text-text-muted italic">
+    <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
       {icon}
       {text}
     </div>

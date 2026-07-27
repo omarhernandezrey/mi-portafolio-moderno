@@ -21,18 +21,18 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
       
-      <main className="flex-1 max-w-[900px] mx-auto px-4 md:px-8 pt-32 pb-32 space-y-16">
+      <main className="flex-1 max-w-[60rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
         
         {/* Document Header */}
         <header className="space-y-8 border-b border-white/5 pb-16">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+              <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                 Global Compliance Standards
               </div>
-              <h1 className="text-4xl md:text-6xl font-black text-white-custom tracking-tighter leading-none italic uppercase">
+              <h1 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight leading-none">
                 Privacy <br />
-                <span className="text-primary text-outline-primary">Protocol</span>
+                <span className="text-primary">Protocol</span>
               </h1>
             </div>
             
@@ -150,7 +150,7 @@ function LegalBlock({ number, title, content, list, extra }: { number: string, t
     <div className="space-y-6 group">
       <div className="flex items-center gap-6">
         <div className="text-[32px] font-black text-primary/10 italic group-hover:text-primary/30 transition-colors leading-none">{number}</div>
-        <h2 className="text-2xl font-black text-white-custom italic tracking-tight uppercase leading-none">{title}</h2>
+        <h2 className="font-display italic text-2xl font-medium text-white-custom tracking-tight leading-none">{title}</h2>
       </div>
       <div className="pl-12 space-y-4">
         <p className="text-sm text-text-muted font-medium leading-relaxed italic opacity-70">{content}</p>
