@@ -30,16 +30,19 @@ export default function TicketDetailPage({ params }: Props) {
   const [sending, setSending] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [canWrite, setCanWrite] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [ticketData, msgsData] = await Promise.all([
+        const [ticketData, msgsData, me] = await Promise.all([
           adminFetch<TicketDetail>(`/api/tickets/${id}`),
           adminFetch<TicketMessage[]>(`/api/tickets/${id}/messages`),
+          adminFetch<{ role: string }>('/api/admin/me'),
         ]);
         setTicket(ticketData);
         setMessages(msgsData);
+        setCanWrite(me.role === 'assistant' || me.role === 'owner');
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
         toast.error('Error al cargar el ticket');
@@ -131,21 +134,21 @@ export default function TicketDetailPage({ params }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {ticket.status !== 'closed' ? (
-            <button 
+          {canWrite && (ticket.status !== 'closed' ? (
+            <button
               onClick={() => handleUpdateStatus('closed')}
               className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl text-xs font-bold hover:bg-emerald-500/20 transition-all border border-emerald-500/20"
             >
               <CheckCircle2 size={14} /> Cerrar Ticket
             </button>
           ) : (
-            <button 
+            <button
               onClick={() => handleUpdateStatus('open')}
               className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 text-blue-400 rounded-xl text-xs font-bold hover:bg-blue-500/20 transition-all border border-blue-500/20"
             >
               Reabrir Ticket
             </button>
-          )}
+          ))}
         </div>
       </div>
 
@@ -173,7 +176,7 @@ export default function TicketDetailPage({ params }: Props) {
             ))}
           </div>
 
-          {ticket.status !== 'closed' && (
+          {ticket.status !== 'closed' && canWrite && (
             <div className="p-4 border-t border-white/5 bg-background/50">
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <div className="flex-1 relative">
