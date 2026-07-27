@@ -15,12 +15,22 @@ export async function POST(req: NextRequest) {
 
     const { data: lead, error: fetchError } = await supabaseServer
       .from('leads')
-      .select('*')
+      .select('id, name, email, service_requested, budget, timeline, onboarding_step, contract_signed_at')
       .eq('onboarding_token', token)
       .single();
 
     if (fetchError || !lead) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 404 });
+    }
+
+    // Idempotencia: si ya firmó, no regenerar ni re-notificar
+    if (lead.contract_signed_at) {
+      return NextResponse.json({ success: true, alreadySigned: true });
+    }
+
+    // Orden de pasos: el brief (paso 2) debe existir antes de firmar
+    if ((lead.onboarding_step || 1) < 2) {
+      return NextResponse.json({ error: 'Completa el brief antes de firmar el contrato' }, { status: 400 });
     }
 
     // 1. Generar PDF
@@ -32,8 +42,8 @@ export async function POST(req: NextRequest) {
       timeline: lead.timeline || 'A convenir'
     });
 
-    // 2. Subir a Supabase Storage
-    const fileName = `contrato_${lead.id}_${Date.now()}.pdf`;
+    // 2. Subir a Supabase Storage — nombre determinista (upsert real, sin huérfanos)
+    const fileName = `contrato_${lead.id}.pdf`;
     const { data: uploadData, error: uploadError } = await supabaseServer
       .storage
       .from('contracts')
@@ -42,30 +52,30 @@ export async function POST(req: NextRequest) {
         upsert: true
       });
 
-    if (uploadError) {
+    if (uploadError || !uploadData) {
+      // Fallar en voz alta: no marcar como firmado si el PDF no quedó guardado
       console.error('Storage upload error:', uploadError);
-      // Si el bucket no existe, fallará. 
-      // TODO: Crear bucket 'contracts' en panel de Supabase
+      return NextResponse.json({ error: 'No se pudo guardar el contrato. Intenta de nuevo.' }, { status: 500 });
     }
-
-    const contractUrl = uploadData ? uploadData.path : fileName;
 
     // 3. Actualizar lead
     const { error: updateError } = await supabaseServer
       .from('leads')
-      .update({ 
+      .update({
         onboarding_step: 3,
         contract_signed_at: new Date().toISOString(),
-        contract_url: contractUrl
+        contract_url: uploadData.path
       })
-      .eq('id', lead.id);
+      .eq('id', lead.id)
+      .is('contract_signed_at', null); // doble seguro contra carreras
 
     if (updateError) {
       return NextResponse.json({ error: 'Error al actualizar el lead' }, { status: 500 });
     }
 
     // 4. Notificar a Omar
-    await notifyTelegram(`✍️ *Contrato Firmado*\nCliente: ${lead.name}\nProyecto: ${lead.service_requested}`);
+    await notifyTelegram(`✍️ *Contrato Firmado*\nCliente: ${lead.name}\nProyecto: ${lead.service_requested}`)
+      .catch(e => console.error('notifyTelegram error:', e));
 
     return NextResponse.json({ success: true });
   } catch (error) {

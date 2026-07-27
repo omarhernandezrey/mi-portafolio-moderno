@@ -13,6 +13,8 @@ import Link from 'next/link';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import { getAdminRole } from '@/lib/admin/auth';
+import { hasMinRole } from '@/lib/admin/roles';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +30,8 @@ async function getTickets() {
 
 export default async function AdminTicketsPage() {
   const tickets = await getTickets();
+  const role = await getAdminRole();
+  const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
 
   const getPriorityStyle = (priority: string) => {
     switch (priority) {
@@ -64,14 +68,16 @@ export default async function AdminTicketsPage() {
         title="Tickets"
         description="Seguimiento de incidencias y soporte al cliente."
         actions={
-          <Link 
-            href="/admin/tickets/new" 
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
-          >
-            <Plus size={16} />
-            <span className="hidden sm:inline">Nuevo Ticket</span>
-            <span className="sm:hidden">Nuevo</span>
-          </Link>
+          canWrite ? (
+            <Link
+              href="/admin/tickets/new"
+              className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
+            >
+              <Plus size={16} />
+              <span className="hidden sm:inline">Nuevo Ticket</span>
+              <span className="sm:hidden">Nuevo</span>
+            </Link>
+          ) : undefined
         }
       />
 

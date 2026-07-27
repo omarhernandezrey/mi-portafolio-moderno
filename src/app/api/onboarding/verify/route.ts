@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 
+// Solo los campos que el wizard necesita (minimización de datos)
+const LEAD_FIELDS = 'id, name, email, company, service_requested, budget, timeline, industry, onboarding_step, brief_data, contract_signed_at, paid_at';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const token = searchParams.get('token');
@@ -12,7 +15,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data: lead, error } = await supabaseServer
       .from('leads')
-      .select('*')
+      .select(LEAD_FIELDS)
       .eq('onboarding_token', token)
       .single();
 

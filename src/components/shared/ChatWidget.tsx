@@ -25,7 +25,7 @@ interface Message {
 export default function ChatWidget() {
   const { t, i18n } = useTranslation();
   const notyf = useNotyf();
-  const currentLanguage = i18n.language === 'en' ? 'en' : 'es';
+  const currentLanguage = (['es', 'en', 'pt'].includes(i18n.language) ? i18n.language : 'es') as 'es' | 'en' | 'pt';
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -153,6 +153,24 @@ export default function ChatWidget() {
     localStorage.setItem('chatbot_consent', 'true');
     localStorage.setItem('chatbot_consent_at', ts);
   };
+
+  // Restaurar historial al abrir el chat si la conversación ya existe
+  useEffect(() => {
+    if (!isOpen || !sessionId || !hasConsented) return;
+    if (messages.length > 0) return;
+
+    fetch(`/api/chat/history?sessionId=${encodeURIComponent(sessionId)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.messages && data.messages.length > 0) {
+          setMessages(data.messages);
+          const newest = data.messages[data.messages.length - 1];
+          if (newest.created_at) setLastPollTime(newest.created_at);
+        }
+      })
+      .catch(e => console.error('History restore failed:', e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- solo al primer open con historial vacío
+  }, [isOpen, sessionId, hasConsented]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

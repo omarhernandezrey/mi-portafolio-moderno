@@ -11,10 +11,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Buscar la última conversación y el interés
     const { data: conv } = await supabaseServer
       .from('conversations')
-      .select('visitor_name, intent, updated_at')
+      .select('visitor_name, intent, updated_at, facts')
       .eq('session_id', sessionId)
       .maybeSingle();
 
@@ -22,14 +21,26 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ reengage: false });
     }
 
-    // Verificar si han pasado más de 24h
-    const lastSeen = new Date(conv.updated_at).getTime();
+    // Si ya se reenganchó antes, no repetir en cada carga de página
+    const facts = (conv.facts as Record<string, string> | null) || {};
+    if (facts.reengaged_at) {
+      return NextResponse.json({ reengage: false });
+    }
+
+    // Verificar si han pasado más de 24h (updated_at puede ser null → tratar como viejo)
+    const lastSeen = conv.updated_at ? new Date(conv.updated_at).getTime() : 0;
     const now = Date.now();
     const twentyFourHours = 24 * 60 * 60 * 1000;
 
-    if (now - lastSeen < twentyFourHours) {
+    if (!Number.isFinite(lastSeen) || now - lastSeen < twentyFourHours) {
       return NextResponse.json({ reengage: false });
     }
+
+    // Marcar como reenganchado para no disparar de nuevo
+    await supabaseServer
+      .from('conversations')
+      .update({ facts: { ...facts, reengaged_at: new Date().toISOString() } })
+      .eq('session_id', sessionId);
 
     return NextResponse.json({
       reengage: true,

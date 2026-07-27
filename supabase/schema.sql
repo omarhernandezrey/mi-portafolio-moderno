@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS public.conversations (
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
     consent_at timestamp with time zone,
-    variant text
+    variant text,
+    facts jsonb DEFAULT '{}'::jsonb,
+    human_takeover boolean DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS public.messages (
@@ -61,16 +63,20 @@ CREATE TABLE IF NOT EXISTS public.api_logs (
 
 CREATE TABLE IF NOT EXISTS public.project_embeddings (
     id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-    project_id text NOT NULL,
+    project_id text NOT NULL UNIQUE,
     content text NOT NULL,
-    embedding vector(1536), -- Ajustado a 1536 para OpenAI/estándar
+    embedding vector(768), -- HuggingFace all-mpnet-base-v2 (RAG)
     metadata jsonb,
     created_at timestamp with time zone DEFAULT now()
 );
 
 -- Índices
-CREATE INDEX IF NOT EXISTS idx_conversations_session ON public.conversations(session_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_conversations_session_unique ON public.conversations(session_id);
 CREATE INDEX IF NOT EXISTS idx_messages_conversation ON public.messages(conversation_id);
+CREATE INDEX IF NOT EXISTS idx_leads_conversation ON public.leads(conversation_id);
+CREATE INDEX IF NOT EXISTS idx_leads_status ON public.leads(status);
+CREATE INDEX IF NOT EXISTS idx_conversations_updated ON public.conversations(updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_api_logs_created ON public.api_logs(created_at DESC);
 
 -- RLS
 ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;

@@ -66,7 +66,7 @@ export default function NewsletterForm() {
       </form>
       {status === "success" && (
         <p className="text-[var(--primary-color)] mt-2">
-          ¡Suscripción exitosa!
+          ¡Casi listo! Revisa tu correo y confirma tu suscripción (mira también en spam).
         </p>
       )}
       {status === "error" && (
