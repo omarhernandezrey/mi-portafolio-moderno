@@ -128,7 +128,7 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
-      <main className="flex-1 py-32 px-4 md:px-8">
+      <main className="flex-1 py-32 px-[var(--grid-margin)]">
         <JsonLd data={faqSchema} />
         <JsonLd data={breadcrumbSchema} />
 
@@ -136,12 +136,12 @@ export default function FAQPage() {
 
           {/* Section Header */}
           <div className="text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               Customer Support Center
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white-custom tracking-tighter italic leading-none">
+            <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none">
               Protocolos y <br />
-              <span className="text-primary text-outline-primary">Consultas</span>
+              <span className="text-primary">Consultas</span>
             </h1>
             <p className="text-text-muted text-sm font-medium max-w-2xl mx-auto opacity-70 italic">
               Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web freelance disponible para Colombia y USA.
@@ -156,7 +156,7 @@ export default function FAQPage() {
                   <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-inner">
                     {category.icon}
                   </div>
-                  <h2 className="text-2xl font-black text-white-custom tracking-tight italic uppercase leading-none">{category.title}</h2>
+                  <h2 className="font-display italic text-2xl font-medium text-white-custom tracking-tight leading-none">{category.title}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -187,7 +187,7 @@ export default function FAQPage() {
               </div>
 
               <div className="space-y-4">
-                <h2 className="text-3xl md:text-4xl font-black text-white-custom tracking-tighter italic">
+                <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
                   ¿Tu pregunta no está aquí?
                 </h2>
                 <p className="text-text-muted text-sm font-medium italic opacity-70 leading-relaxed">
@@ -232,7 +232,7 @@ export default function FAQPage() {
 
 function TrustItem({ icon, text }: { icon: React.ReactNode, text: string }) {
   return (
-    <div className="flex items-center gap-2 font-black text-[9px] uppercase tracking-[0.4em] text-text-muted italic">
+    <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
       {icon}
       {text}
     </div>

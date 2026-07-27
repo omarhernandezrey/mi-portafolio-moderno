@@ -84,11 +84,11 @@ export default function BudgetCalculator() {
         </div>
         
         <div className="relative z-10 space-y-4">
-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em]">
+          <div className="font-mono-label flex items-center gap-2 text-primary text-[0.65rem]">
             <span className="w-8 h-px bg-primary/30" />
             Financial Estimator
           </div>
-          <h1 className="text-4xl font-black text-white-custom tracking-tight italic leading-tight">
+          <h1 className="font-display italic text-4xl font-medium text-white-custom tracking-tight leading-tight">
             {lang === 'es' ? 'Calculadora de Presupuesto' : lang === 'en' ? 'Budget Calculator' : 'Calculadora de Orçamento'}
           </h1>
           <p className="text-text-muted text-sm font-medium max-w-md opacity-70">
@@ -139,7 +139,7 @@ export default function BudgetCalculator() {
                   0{currentStep + 1}
                 </div>
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-white-custom tracking-tight leading-tight italic">
+                  <h2 className="font-display italic text-xl sm:text-2xl font-medium text-white-custom tracking-tight leading-tight">
                     {currentStepData.title[lang]}
                   </h2>
                   <p className="text-text-muted text-xs font-medium opacity-50 mt-1 uppercase tracking-widest">Paso obligatorio de calificación</p>
@@ -217,7 +217,7 @@ export default function BudgetCalculator() {
                 </div>
               </div>
               <div className="space-y-4">
-                <h2 className="text-4xl font-black text-white-custom tracking-tighter italic">
+                <h2 className="font-display italic text-4xl font-medium text-white-custom tracking-tight">
                   {lang === 'es' ? 'Estrategia Generada' : 'Strategy Generated'}
                 </h2>
                 <p className="max-w-md text-text-muted text-sm font-medium leading-relaxed italic opacity-70">
@@ -240,10 +240,10 @@ export default function BudgetCalculator() {
               className="space-y-12 max-w-2xl mx-auto"
             >
               <div className="text-center space-y-4">
-                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest italic">
+                <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                   Última Fase: Exportación
                 </div>
-                <h2 className="text-3xl font-black text-white-custom tracking-tight italic leading-tight">
+                <h2 className="font-display italic text-3xl font-medium text-white-custom tracking-tight leading-tight">
                   {lang === 'es' ? 'Recibe tu Propuesta Formal' : 'Receive your Formal Proposal'}
                 </h2>
                 <p className="text-text-muted text-sm font-medium opacity-60">
