@@ -57,6 +57,7 @@ import { GET as getWebhooks } from '@/app/api/admin/webhooks/route';
 import { GET as getTickets } from '@/app/api/tickets/route';
 import { POST as postTicket } from '@/app/api/tickets/route';
 import { GET as getAudit } from '@/app/api/admin/audit/route';
+import { supabaseServer } from '@/lib/supabaseServer';
 
 function asUser(email = 'owner@test.com', id = 'user-1') {
   return { id, email };
@@ -113,8 +114,7 @@ function resetDataMocks() {
   chain.then = (resolve: (v: unknown) => unknown) =>
     Promise.resolve({ data: [], error: null, count: 0 }).then(resolve);
 
-  const { supabaseServer } = require('@/lib/supabaseServer');
-  supabaseServer.from.mockImplementation(() => chain);
+  (supabaseServer.from as jest.Mock).mockImplementation(() => chain);
 }
 
 beforeEach(() => {

@@ -53,7 +53,7 @@ export default function AdminWebhooksPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load(); }, []);
 
   const handleDelete = async (id: string, url: string) => {
     if (!confirm(`¿Eliminar webhook para ${new URL(url).host}?`)) return;
