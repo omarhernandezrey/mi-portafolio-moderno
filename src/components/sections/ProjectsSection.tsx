@@ -242,7 +242,7 @@ const ProjectsSection: React.FC = () => {
         </div>
 
         {/* ---------------- contenido principal ---------------- */}
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -265,14 +265,14 @@ const ProjectsSection: React.FC = () => {
             </motion.span>
 
             <h2
-              className="font-display italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-4 sm:mb-6"
+              className="font-display italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-4 sm:mb-6 px-2"
               style={{ color: "var(--text-color)" }}
             >
               {t('projects.title')}
             </h2>
 
             <p
-              className="text-sm sm:text-base md:text-lg lg:text-xl max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-4"
+              className="text-sm sm:text-base md:text-lg max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-2"
               style={{ color: "var(--muted-color)" }}
             >
               {t('projects.description')}
@@ -285,23 +285,16 @@ const ProjectsSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             viewport={{ once: true }}
-            className="max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-8 sm:mb-12 md:mb-16"
+            className="w-full max-w-md mx-auto mb-8 sm:mb-12 md:mb-16"
           >
             <div
-              className="relative backdrop-blur-xl border rounded-xl sm:rounded-2xl p-0.5 sm:p-1"
+              className="relative backdrop-blur-xl border rounded-xl sm:rounded-2xl p-0.5"
               style={{
                 backgroundColor: "rgba(40,40,60,0.5)",
                 borderColor: "rgba(209,209,224,0.3)",
               }}
             >
-              <input
-                type="text"
-                placeholder={t('projects.searchPlaceholder')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-transparent text-white placeholder-gray-400 focus:outline-none rounded-lg sm:rounded-xl text-sm sm:text-base"
-              />
-              <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
                 <svg
                   className="w-4 h-4 sm:w-5 sm:h-5 opacity-50"
                   fill="none"
@@ -317,6 +310,25 @@ const ProjectsSection: React.FC = () => {
                   />
                 </svg>
               </div>
+              <input
+                type="text"
+                placeholder={t('projects.searchPlaceholder')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-11 pr-10 py-3 sm:py-3.5 bg-transparent text-white placeholder-gray-400 focus:outline-none rounded-lg sm:rounded-xl text-sm"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-white/10 transition-colors"
+                  aria-label="Limpiar búsqueda"
+                >
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
             </div>
           </motion.div>
 
@@ -327,18 +339,18 @@ const ProjectsSection: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <p
-              className="text-xs sm:text-sm md:text-base px-4"
+              className="text-xs sm:text-sm"
               style={{ color: "var(--muted-color)" }}
             >
               {t('projects.showingResults', { count: filteredProjects.length, total: localizedProjects.length })}
-              {searchTerm && ` ${t('projects.searchResults', { searchTerm })}`}
+              {searchTerm && ` "${searchTerm}"`}
             </p>
           </motion.div>
 
           {/* grid de proyectos - SOLO 2 COLUMNAS MÁXIMO EN DESKTOP */}
           <div
             ref={gridRef}
-            className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 sm:gap-12 md:gap-20 lg:gap-28 xl:gap-32"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 md:gap-16 lg:gap-24"
           >
             <AnimatePresence>
               {paginatedProjects.map((p, i) => (
