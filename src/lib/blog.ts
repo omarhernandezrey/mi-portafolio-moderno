@@ -6,6 +6,8 @@ const blogDirectory = path.join(process.cwd(), 'content/blog');
 
 export interface PostMetadata {
   title: string;
+  /** Título corto (≤60 chars) para <title> y OG/Twitter; si falta, se usa `title`. */
+  seoTitle?: string;
   slug: string;
   date: string;
   description: string;

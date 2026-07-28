@@ -4,6 +4,7 @@ import { buildMetadata } from '@/lib/seo';
 import { ArrowLeft, Scale, Globe } from 'lucide-react';
 import Link from 'next/link';
 import Footer from '@/components/shared/Footer';
+import SetHtmlLang from '@/components/shared/SetHtmlLang';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Privacy Policy & Data Protection | Omar Hernández Rey',
@@ -20,7 +21,8 @@ export const metadata: Metadata = buildMetadata({
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
-      
+      <SetHtmlLang lang="en" />
+
       <main className="flex-1 max-w-[60rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
         
         {/* Document Header */}

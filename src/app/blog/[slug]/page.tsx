@@ -92,12 +92,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return { title: 'Post no encontrado' };
 
   const isEnglish = post.lang === 'en';
-  // Título absoluto: los titles de posts ya son largos; añadir sufijos de marca
-  // los llevaba a ~130 chars (y el template del layout sumaba la marca otra vez).
-  const title = post.title;
+  // Título absoluto: los `title` de posts son largos y descriptivos (se usan
+  // como H1 en la página); `seoTitle` (≤60 chars) es lo que se manda a
+  // <title>/OG/Twitter para no truncarse en resultados de búsqueda.
+  const title = post.seoTitle ?? post.title;
   const ogImageUrl = post.image?.startsWith('/api/og')
     ? `${BASE_URL}${post.image}`
-    : `${BASE_URL}/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent(isEnglish ? 'Omar Hernández Rey · Blog' : 'Blog · Omar Hernández Rey')}`;
+    : `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(isEnglish ? 'Omar Hernández Rey · Blog' : 'Blog · Omar Hernández Rey')}`;
 
   return {
     title: { absolute: title },
@@ -110,7 +111,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       canonical: `${BASE_URL}/blog/${slug}`,
     },
     openGraph: {
-      title: post.title,
+      title,
       description: post.description,
       type: 'article',
       url: `${BASE_URL}/blog/${slug}`,
@@ -118,11 +119,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       authors: [post.author],
       tags: post.tags,
       locale: isEnglish ? 'en_US' : 'es_CO',
-      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: post.title }],
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
+      title,
       description: post.description,
       images: [ogImageUrl],
     },

@@ -141,6 +141,7 @@ export const useTranslation = () => {
     "footer.location": "Bogotá, Colombia",
     "footer.name": "Omar Hernández Rey",
     "footer.description": "Desarrollador web freelance en Colombia. Especialista en React, Next.js y soluciones web a medida. Disponible para proyectos en Colombia y USA remoto.",
+    "footer.findMe": "Base en Bogotá · Remoto en toda Colombia y USA",
 
     // Common
     "common.loading": "Cargando...",

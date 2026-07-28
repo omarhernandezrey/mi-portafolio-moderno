@@ -102,7 +102,7 @@ export default function RecursosContent() {
         {/* Global Access Protocol */}
         <section className="max-w-xl mx-auto space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="font-mono-label text-[0.65rem] text-text-muted opacity-40">Identity Authentication</h2>
+            <h2 className="font-mono-label text-[0.65rem] text-text-muted opacity-40">Verificación de Acceso</h2>
             <p className="text-xs text-text-muted/60 font-medium italic">Se requiere autorización vía email para liberar los activos.</p>
           </div>
 

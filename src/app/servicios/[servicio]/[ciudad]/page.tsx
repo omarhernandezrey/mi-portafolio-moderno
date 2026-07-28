@@ -100,9 +100,29 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
   const benefits = isUS && servicio.benefitsEn ? servicio.benefitsEn : servicio.benefits;
   const process = isUS && servicio.processEn ? servicio.processEn : servicio.process;
-  const faqs = isUS && servicio.faqsEn
-    ? servicio.faqsEn.map(f => ({ q: f.q.replace('{city}', ciudad.name), a: f.a }))
-    : servicio.faqs.map(f => ({ q: f.q.replace('{ciudad}', ciudad.name), a: f.a }));
+  // FAQ local real (huso horario / modalidad remota), distinta a la del servicio,
+  // para que cada ciudad no sea solo la misma plantilla con el nombre cambiado.
+  const localFaq = isUS
+    ? {
+        q: 'What time zone do you work in?',
+        a: `I'm based in Colombia (UTC-5), at most 1 hour behind US Eastern Time — real-time collaboration during your business hours in ${ciudad.name} is easy, no overnight delays.`,
+      }
+    : ciudad.id === 'bogota'
+      ? {
+          q: '¿Podemos reunirnos en persona en Bogotá?',
+          a: 'Sí. Estoy radicado en Bogotá y, si el proyecto lo amerita, coordinamos una reunión presencial; el resto del trabajo se hace remoto.',
+        }
+      : {
+          q: '¿Trabajas de forma remota o necesito estar en Bogotá?',
+          a: `100% remoto. Coordinamos todo por videollamada y mensajería — no necesitas viajar ni yo debo desplazarme a ${ciudad.name}.`,
+        };
+
+  const faqs = [
+    ...(isUS && servicio.faqsEn
+      ? servicio.faqsEn.map(f => ({ q: f.q.replace('{city}', ciudad.name), a: f.a }))
+      : servicio.faqs.map(f => ({ q: f.q.replace('{ciudad}', ciudad.name), a: f.a }))),
+    localFaq,
+  ];
   const priceRange = isUS && servicio.priceRangeUsd ? servicio.priceRangeUsd : servicio.priceRange;
   const deliveryTime = isUS && servicio.deliveryTimeEn ? servicio.deliveryTimeEn : servicio.deliveryTime;
   const serviceName = isUS && servicio.nameEn ? servicio.nameEn : servicio.name;
@@ -115,7 +135,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
     ctaAudit: `Start Project in ${ciudad.name}`,
     infraTitle: `Infrastructure designed for ${ciudad.name}'s market`,
     geoTitle: 'Geographic Relevance',
-    geoDesc: `We optimize your digital presence for ${ciudad.name}'s search landscape, ensuring your business connects with high-intent clients across ${ciudad.country}.`,
+    geoDesc: `I coordinate with clients in ${ciudad.name} in real time: Colombia (UTC-5) is at most 1 hour behind US Eastern Time, and I invoice in USD via PayPal — no time-zone friction, no currency conversion headaches.`,
     effTitle: 'Execution Efficiency',
     effDesc: `We don't just write code — we deploy revenue-generating assets. From ${servicio.id === 'chatbot-ia' ? 'autonomous AI agents' : 'ultra-fast loading systems'} to outcompete in ${ciudad.name}.`,
     quote: `Our mission is to help organizations in ${ciudad.name} stop having simple websites and start operating automated conversion machines at world-class standards.`,
@@ -146,7 +166,9 @@ export default async function ServicioCiudadPage({ params }: Props) {
     ctaAudit: `Auditar Proyecto en ${ciudad.name}`,
     infraTitle: `Infraestructura diseñada para el mercado de ${ciudad.name}`,
     geoTitle: 'Relevancia Geográfica',
-    geoDesc: `Optimizamos su arquitectura digital para los protocolos de búsqueda específicos de ${ciudad.name}, asegurando que su entidad tecnológica conecte de forma prioritaria con clientes en ${ciudad.country}.`,
+    geoDesc: ciudad.id === 'bogota'
+      ? 'Con base en Bogotá, trabajo de forma remota para todo el país y puedo coordinar reuniones presenciales si tu proyecto lo requiere.'
+      : `Trabajo 100% remoto para clientes en ${ciudad.name}, en el mismo huso horario (COT, UTC-5) y con pagos en pesos colombianos vía Nequi o Wompi — sin fricciones de zona horaria ni cambio de moneda.`,
     effTitle: 'Eficiencia de Ejecución',
     effDesc: `No solo consolidamos código; desplegamos activos financieros. Desde ${servicio.id === 'chatbot-ia' ? 'agentes inteligentes autónomos' : 'sistemas de carga ultra-rápida'} para la competencia local en ${ciudad.name}.`,
     quote: `Nuestra misión operativa es que las organizaciones en ${ciudad.name} dejen de tener simples sitios web y comiencen a operar máquinas de conversión automatizadas bajo estándares de clase mundial.`,
