@@ -2,7 +2,7 @@ import React from 'react';
 import { buildMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Code2, Bot, Zap, ShoppingCart, LineChart, Target, Smartphone, Search, Link2, Wrench, MapPin, CheckCircle } from 'lucide-react';
+import { ArrowRight, Code2, Zap, ShoppingCart, LineChart, Target, Smartphone, Search, Link2, Wrench, MapPin, CheckCircle } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { serviciosProgramaticos } from '@/data/servicios';
@@ -11,7 +11,7 @@ import OpenChatButton from '@/components/shared/OpenChatButton';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Servicios de Desarrollo Web y Software | Colombia',
-  description: 'Desarrollo web, chatbots con IA, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $300 USD para Colombia, USA y LATAM.',
+  description: 'Desarrollo web, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $300 USD para Colombia, USA y LATAM.',
   path: '/servicios',
   ogSubtitle: 'Colombia & Remoto — Desde $300 USD',
   keywords: [
@@ -19,7 +19,6 @@ export const metadata: Metadata = buildMetadata({
     'programador freelance colombia',
     'desarrollador full stack colombia',
     'desarrollo web profesional colombia',
-    'chatbot ia colombia',
     'e-commerce colombia',
     'automatizacion de procesos colombia',
     'seo tecnico colombia',
@@ -32,7 +31,6 @@ export const metadata: Metadata = buildMetadata({
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'desarrollo-web': <Code2 size={28} />,
-  'chatbot-ia': <Bot size={28} />,
   'automatizacion': <Zap size={28} />,
   'e-commerce': <ShoppingCart size={28} />,
   'consultoria-tech': <LineChart size={28} />,
@@ -138,7 +136,7 @@ export default function ServiciosPage() {
               Soy Omar Hernández, desarrollador full stack freelance en Colombia. Creo webs, apps y chatbots con IA para empresas y emprendedores que quieren crecer digitalmente. Disponible para proyectos en Colombia y remoto para USA y LATAM.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
-              {['React & Next.js', 'Node.js', 'PostgreSQL', 'IA & Chatbots', 'SEO Técnico'].map(tech => (
+              {['React & Next.js', 'Node.js', 'PostgreSQL', 'SEO Técnico', 'E-commerce'].map(tech => (
                 <span key={tech} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-text-muted">
                   {tech}
                 </span>

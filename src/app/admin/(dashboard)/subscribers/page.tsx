@@ -122,7 +122,7 @@ export default function SubscribersPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <p className="font-mono-label text-[0.6rem] text-primary/60 mb-2">Newsletter</p>
-          <h1 className="text-3xl sm:text-4xl font-black text-white-custom tracking-tight">Suscriptores</h1>
+          <h1 className="font-display italic text-3xl sm:text-4xl font-medium text-white-custom tracking-tight">Suscriptores</h1>
           <p className="text-text-muted text-sm font-medium mt-2">
             Gestión de la lista de email marketing y lead magnets
           </p>

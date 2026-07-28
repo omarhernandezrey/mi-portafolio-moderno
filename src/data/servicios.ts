@@ -77,59 +77,6 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     deliveryTimeEn: '1-6 weeks depending on complexity',
   },
   {
-    id: 'chatbot-ia',
-    name: 'Chatbots con IA',
-    h1: 'Chatbots con Inteligencia Artificial en {ciudad}',
-    h2: 'Automatiza tus ventas 24/7 en {ciudad} con IA',
-    description: 'Chatbots con IA que captan leads y venden 24/7 para tu negocio en {ciudad}. Integración con WhatsApp Business y tu web, desde $400 USD.',
-    keywords: ['chatbot ia {ciudad}', 'automatización ventas {ciudad}', 'agente ai {ciudad}'],
-    benefits: [
-      'Atención al cliente 24/7 sin interrupciones',
-      'Integración nativa con WhatsApp Business',
-      'Captura automática de leads cualificados',
-      'Respuestas inteligentes en español natural',
-      'Escalación automática a humanos cuando es necesario'
-    ],
-    process: [
-      'Análisis: Identificamos las consultas más frecuentes de tu negocio',
-      'Configuración: Entrenamos el bot con tu información',
-      'Integración: Conectamos con WhatsApp y/o tu web',
-      'Pruebas: Ajustamos respuestas basados en conversaciones reales'
-    ],
-    faqs: [
-      { q: '¿Cuánto cuesta un chatbot con IA?', a: 'Desde $1.5M COP para chatbot web básico. WhatsApp Business + IA desde $4M COP más costos mensuales de API.' },
-      { q: '¿El chatbot puede vender por WhatsApp?', a: 'Sí, puede cualificar leads, responder preguntas frecuentes y escalar conversaciones listas para comprar.' },
-      { q: '¿Qué tan inteligente es?', a: 'Usamos GPT-4/Claude. Entiende contexto, mantiene conversaciones naturales y aprende de tu información específica.' }
-    ],
-    priceRange: '$1.5M - $8M COP ($400 - $2,000 USD)',
-    deliveryTime: '1-3 semanas',
-    nameEn: 'AI Chatbots',
-    h1En: 'AI-Powered Chatbots for Businesses in {city}',
-    h2En: 'Automate Your Sales 24/7 in {city} with Artificial Intelligence',
-    descriptionEn: 'AI chatbots that capture leads and sell 24/7 for your business in {city}. GPT-4 and Claude, WhatsApp Business integration, from $400 USD.',
-    keywordsEn: ['ai chatbot {city}', 'chatbot development {city}', 'whatsapp chatbot {city}', 'ai sales automation {city}', 'conversational ai {city}'],
-    benefitsEn: [
-      '24/7 customer support without interruptions',
-      'Native WhatsApp Business integration',
-      'Automatic lead capture and qualification',
-      'Natural language responses in English and Spanish',
-      'Automatic escalation to human agents when needed',
-    ],
-    processEn: [
-      'Analysis: We identify your most frequent customer queries',
-      'Configuration: We train the bot with your business information',
-      'Integration: Connect with WhatsApp and/or your website',
-      'Testing: Fine-tune responses based on real conversations',
-    ],
-    faqsEn: [
-      { q: 'How much does an AI chatbot cost?', a: 'Basic web chatbot from $400 USD. WhatsApp Business + AI integration from $1,000 USD plus monthly API costs.' },
-      { q: 'Can the chatbot sell through WhatsApp?', a: 'Yes — it qualifies leads, answers FAQs, sends quotes, and escalates sales-ready conversations.' },
-      { q: 'How smart is it?', a: 'We use GPT-4 and Claude. It understands context, maintains natural conversations, and learns from your specific business information.' },
-    ],
-    priceRangeUsd: '$400 - $2,000 USD',
-    deliveryTimeEn: '1-3 weeks',
-  },
-  {
     id: 'automatizacion',
     name: 'Automatización de Procesos',
     h1: 'Automatización de Procesos en {ciudad}',

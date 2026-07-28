@@ -29,75 +29,75 @@ export interface Service {
 export const servicesData: Service[] = [
   {
     title: {
-      es: "Desarrollo Frontend",
-      en: "Frontend Development",
-      pt: "Desenvolvimento Frontend"
+      es: "Sitios Web Profesionales",
+      en: "Professional Websites",
+      pt: "Sites Profissionais"
     },
     description: {
-      es: "Creando interfaces de usuario modernas y responsivas usando tecnologías como React y Next.js.",
-      en: "Creating modern, responsive user interfaces using technologies like React and Next.js.",
-      pt: "Criando interfaces de usuário modernas e responsivas usando tecnologias como React e Next.js."
+      es: "Tu negocio necesita una página web que venda, no solo que exista. Diseño sitios rápidos, optimizados para Google y que convierten visitantes en clientes.",
+      en: "Your business needs a website that sells, not just exists. I design fast, Google-optimized sites that turn visitors into paying clients.",
+      pt: "Seu negócio precisa de um site que vende, não apenas existe. Crio sites rápidos, otimizados para Google e que convertem visitantes em clientes."
     },
     icon: "/images/services/frontend.svg",
-    badge: "FE",
+    badge: "WEB",
     features: {
       es: [
-        "React & Next.js",
-        "TypeScript",
-        "Diseño Responsivo",
-        "Optimización de Rendimiento"
+        "Diseño orientado a conversión",
+        "Carga en menos de 2 segundos",
+        "Optimizado para Google (SEO)",
+        "Panel para que edites tú mismo"
       ],
       en: [
-        "React & Next.js",
-        "TypeScript",
-        "Responsive Design",
-        "Performance Optimization"
+        "Conversion-focused design",
+        "Loads in under 2 seconds",
+        "Google-optimized (SEO)",
+        "Admin panel for easy editing"
       ],
       pt: [
-        "React & Next.js",
-        "TypeScript",
-        "Design Responsivo",
-        "Otimização de Performance"
+        "Design focado em conversão",
+        "Carrega em menos de 2 segundos",
+        "Otimizado para Google (SEO)",
+        "Painel administrativo intuitivo"
       ]
     },
     gradient: "from-blue-500 to-cyan-500",
     priceRange: {
-      min: 250,
-      max: 1800,
+      min: 300,
+      max: 3800,
       currency: "USD"
     }
   },
   {
     title: {
-      es: "Desarrollo Backend",
-      en: "Backend Development",
-      pt: "Desenvolvimento Backend"
+      es: "Aplicaciones Web a Medida",
+      en: "Custom Web Applications",
+      pt: "Aplicações Web Personalizadas"
     },
     description: {
-      es: "Construyendo APIs robustas y escalables con Node.js, Express y bases de datos SQL/NoSQL.",
-      en: "Building robust, scalable APIs with Node.js, Express, and SQL/NoSQL databases.",
-      pt: "Construindo APIs robustas e escaláveis com Node.js, Express e bancos de dados SQL/NoSQL."
+      es: "¿Tu negocio necesita algo más que una página web? Construyo aplicaciones web completas con bases de datos, autenticación y funcionalidades específicas para tu operación.",
+      en: "Need more than a website? I build complete web applications with databases, authentication, and custom features tailored to your business operations.",
+      pt: "Precisa de mais que um site? Construo aplicações web completas com bancos de dados, autenticação e funcionalidades personalizadas para sua operação."
     },
     icon: "/images/services/backend.svg",
-    badge: "BE",
+    badge: "APP",
     features: {
       es: [
-        "Node.js & Express",
-        "Diseño de Bases de Datos",
-        "Desarrollo de APIs",
-        "Microservicios"
+        "Sistemas de gestión internos",
+        "Dashboards con datos en tiempo real",
+        "Autenticación segura de usuarios",
+        "APIs para conectar con otros sistemas"
       ],
       en: [
-        "Node.js & Express",
-        "Database Design",
-        "API Development",
-        "Microservices"
+        "Internal management systems",
+        "Real-time data dashboards",
+        "Secure user authentication",
+        "APIs to connect with other systems"
       ],
       pt: [
-        "Node.js & Express",
-        "Design de Banco de Dados",
-        "Desenvolvimento de APIs",
-        "Microsserviços"
+        "Sistemas de gestão internos",
+        "Dashboards com dados em tempo real",
+        "Autenticação segura de usuários",
+        "APIs para conectar com outros sistemas"
       ]
     },
     gradient: "from-green-500 to-emerald-500",
@@ -109,81 +109,81 @@ export const servicesData: Service[] = [
   },
   {
     title: {
-      es: "Diseño UI/UX",
-      en: "UI/UX Design",
-      pt: "Design UI/UX"
+      es: "Tiendas Online (E-commerce)",
+      en: "Online Stores (E-commerce)",
+      pt: "Lojas Online (E-commerce)"
     },
     description: {
-      es: "Prototipos funcionales y diseño enfocado en mejorar la experiencia del usuario.",
-      en: "Functional prototypes and design focused on enhancing user experience.",
-      pt: "Protótipos funcionais e design focado em melhorar a experiência do usuário."
+      es: "Vende tus productos online con una tienda profesional. Integro pasarelas de pago (Wompi, Stripe, PayPal), gestión de inventario y todo lo necesario para que empieces a facturar.",
+      en: "Sell your products online with a professional store. I integrate payment gateways (Stripe, PayPal), inventory management, and everything you need to start making sales.",
+      pt: "Venda seus produtos online com uma loja profissional. Integro gateways de pagamento (Stripe, PayPal), gestão de estoque e tudo que precisa para começar a faturar."
     },
     icon: "/images/services/design.svg",
-    badge: "UX",
+    badge: "SHOP",
     features: {
       es: [
-        "Investigación de Usuario",
-        "Wireframing",
-        "Prototipado",
-        "Sistemas de Diseño"
+        "Pagos con tarjeta, PSE y Nequi",
+        "Gestión de productos e inventario",
+        "Diseño que genera confianza para comprar",
+        "Panel administrativo intuitivo"
       ],
       en: [
-        "User Research",
-        "Wireframing",
-        "Prototyping",
-        "Design Systems"
+        "Credit card, PayPal and Stripe payments",
+        "Product and inventory management",
+        "Trust-building design that drives sales",
+        "Intuitive admin dashboard"
       ],
       pt: [
-        "Pesquisa de Usuário",
-        "Wireframing",
-        "Prototipagem",
-        "Sistemas de Design"
+        "Pagamentos com cartão, PayPal e Stripe",
+        "Gestão de produtos e estoque",
+        "Design que gera confiança para comprar",
+        "Painel administrativo intuitivo"
       ]
     },
     gradient: "from-purple-500 to-pink-500",
     priceRange: {
-      min: 300,
-      max: 2000,
+      min: 1500,
+      max: 5000,
       currency: "USD"
     }
   },
   {
     title: {
-      es: "Implementación DevOps",
-      en: "DevOps Implementation",
-      pt: "Implementação DevOps"
+      es: "Automatización y SEO",
+      en: "Automation & SEO",
+      pt: "Automação e SEO"
     },
     description: {
-      es: "Automatizando despliegues y manteniendo infraestructura en la nube.",
-      en: "Automating deployments and maintaining cloud infrastructure.",
-      pt: "Automatizando deploys e mantendo infraestrutura na nuvem."
+      es: "Elimina tareas repetitivas y haz que Google te encuentre. Automatizo procesos de tu negocio y optimizo tu sitio para que aparezca en los primeros resultados de búsqueda.",
+      en: "Eliminate repetitive tasks and get found on Google. I automate your business processes and optimize your site to rank on the first page of search results.",
+      pt: "Elimine tarefas repetitivas e apareça no Google. Automatizo processos do seu negócio e otimizo seu site para aparecer nas primeiras posições de busca."
     },
     icon: "/images/services/devops.svg",
-    badge: "OPS",
+    badge: "AUTO",
     features: {
       es: [
-        "Pipelines CI/CD",
-        "Infraestructura en la Nube",
-        "Orquestación de Contenedores",
-        "Monitoreo"
+        "Automatización de reportes y procesos",
+        "Integración entre tus herramientas",
+        "Optimización para Google (SEO técnico)",
+        "Mejora de velocidad de carga"
       ],
       en: [
-        "CI/CD Pipelines",
-        "Cloud Infrastructure",
-        "Container Orchestration",
-        "Monitoring"
+        "Automated reports and workflows",
+        "Integration between your tools",
+        "Google optimization (technical SEO)",
+        "Page speed improvement"
       ],
       pt: [
-        "Pipelines CI/CD",
-        "Infraestrutura na Nuvem",
-        "Orquestração de Containers",
-        "Monitoramento"
+        "Automação de relatórios e processos",
+        "Integração entre suas ferramentas",
+        "Otimização para Google (SEO técnico)",
+        "Melhoria de velocidade de carregamento"
       ]
     },
     gradient: "from-orange-500 to-red-500",
     priceRange: {
-      min: 500,
-      max: 3000,
+      min: 300,
+      max: 2500,
       currency: "USD"
     }
   },

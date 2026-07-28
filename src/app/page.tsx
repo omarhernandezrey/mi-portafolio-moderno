@@ -31,7 +31,6 @@ export const metadata: Metadata = buildMetadata({
     "software developer colombia",
     "ingeniero de software colombia",
     "desarrollador web profesional",
-    "chatbot ia colombia",
     "aplicaciones web colombia",
   ],
 });

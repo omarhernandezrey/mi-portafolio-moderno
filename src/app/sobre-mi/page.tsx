@@ -102,7 +102,6 @@ const coreSkills = [
 
 const services = [
   { name: 'Desarrollo Web', icon: <Code2 size={20} />, href: '/servicios/desarrollo-web', description: 'Sitios web profesionales con Next.js y React. Diseño responsive, SEO incluido y panel de administración.' },
-  { name: 'Chatbots con IA', icon: <Bot size={20} />, href: '/servicios/chatbot-ia', description: 'Agentes de IA inteligentes que captan leads y cierran ventas 24/7. Integración con WhatsApp Business.' },
   { name: 'E-commerce', icon: <ShoppingCart size={20} />, href: '/servicios/e-commerce', description: 'Tiendas online completas con pagos integrados, gestión de inventario y panel intuitivo.' },
   { name: 'Automatización', icon: <Zap size={20} />, href: '/servicios/automatizacion', description: 'Eliminación de tareas repetitivas integrando tus herramientas favoritas.' },
   { name: 'SEO Técnico', icon: <Search size={20} />, href: '/servicios/seo-tecnico', description: 'Auditoría y optimización SEO completa. Core Web Vitals, Schema.org y ranking real en Google.' },

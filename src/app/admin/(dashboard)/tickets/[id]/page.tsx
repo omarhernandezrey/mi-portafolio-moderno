@@ -129,7 +129,7 @@ export default function TicketDetailPage({ params }: Props) {
             <ArrowLeft size={20} />
           </Link>
           <div>
-            <h1 className="font-bold text-xl text-white-custom leading-none">{ticket.title}</h1>
+            <h1 className="font-display italic font-medium text-xl text-white-custom leading-none">{ticket.title}</h1>
             <span className="text-[10px] text-text-muted uppercase tracking-widest font-mono">ID: {ticket.id}</span>
           </div>
         </div>

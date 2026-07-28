@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import Typewriter from "typewriter-effect";
 import ParticlesComponent from "@/components/ParticlesComponent";
 import "@/styles/advancedButton.css";
 import Image from "next/image";
@@ -11,7 +10,6 @@ export default function HeroSection() {
   const projectsRef = useRef<HTMLElement | null>(null);
   const { t } = useTranslation();
 
-  // Scroll suave mejorado con useRef
   const handleViewProjects = () => {
     if (!projectsRef.current) {
       projectsRef.current = document.querySelector("#projects");
@@ -22,7 +20,11 @@ export default function HeroSection() {
     });
   };
 
-  // Precarga las partículas solo en cliente
+  const handleContact = () => {
+    const contactSection = document.querySelector("#contact");
+    contactSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const [showParticles, setShowParticles] = React.useState(false);
   useEffect(() => {
     setShowParticles(true);
@@ -42,7 +44,7 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <Image
           src="/images/hero-background.jpg"
-          alt="Fondo decorativo"
+          alt=""
           fill
           priority
           quality={85}
@@ -67,12 +69,12 @@ export default function HeroSection() {
         </div>
       )}
 
-      {/* Contenido — grid editorial asimétrico, no centrado */}
+      {/* Contenido — grid editorial asimétrico */}
       <div
         className="grid-editorial relative z-10 w-full py-28 lg:py-0"
         style={{ color: "var(--white-color)" }}
       >
-        {/* H1 — keyword-rich, siempre visible en SSR (Google lo lee) */}
+        {/* Badge de confianza */}
         <h1
           className="
             col-span-12 font-mono-label text-[0.65rem] sm:text-xs mb-6 sm:mb-8
@@ -90,35 +92,19 @@ export default function HeroSection() {
 
         {/* Columna principal: titular + descripción + CTA */}
         <div className="col-span-12 lg:col-span-7">
-          {/* Título visual animado — decorativo, no el H1 */}
+          {/* Título principal orientado a clientes */}
           <div
             className="
               font-display italic
               text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem]
               font-medium mb-6 leading-[1.05] text-left
             "
-            aria-hidden="true"
           >
             {t("hero.greeting")}{" "}
-            <span className="inline-block min-h-[1.2em]">
-              <Typewriter
-                options={{
-                  strings: [
-                    `<span style="color: var(--accent-color)">${t("hero.name")}</span>`,
-                    `<span style="color: var(--primary-color)">${t("hero.title")}</span>`,
-                    `<span style="color: var(--accent-color)">React &amp; Next.js Expert</span>`,
-                  ],
-                  autoStart: true,
-                  loop: true,
-                  delay: 75,
-                  deleteSpeed: 50,
-                  wrapperClassName: "inline-block",
-                }}
-              />
-            </span>
+            <span style={{ color: "var(--accent-color)" }}>{t("hero.name")}</span>
           </div>
 
-          {/* Descripción con keywords comerciales — visible y en SSR */}
+          {/* Descripción orientada a resultados del cliente */}
           <p
             className="
               max-w-xl text-base sm:text-lg md:text-xl
@@ -130,25 +116,45 @@ export default function HeroSection() {
             dangerouslySetInnerHTML={{ __html: t("hero.subtitle") }}
           />
 
-          {/* Botón interactivo mejorado */}
-          <button
-            type="button"
-            className="btn relative group"
-            onClick={handleViewProjects}
-            aria-label={t("hero.ariaLabel")}
-          >
-            <strong className="relative z-10">{t("hero.viewProjects")}</strong>
-            <div id="container-stars">
-              <div id="stars" className="group-hover:animate-pulse" />
-            </div>
-            <div id="glow">
-              <div className="circle group-hover:opacity-80" />
-              <div className="circle group-hover:opacity-60" />
-            </div>
-          </button>
+          {/* Botones CTA */}
+          <div className="flex flex-wrap gap-4">
+            <button
+              type="button"
+              onClick={handleContact}
+              className="btn relative group"
+              aria-label={t("hero.ariaLabel")}
+            >
+              <strong className="relative z-10">{t("hero.ctaPrimary")}</strong>
+              <div id="container-stars">
+                <div id="stars" className="group-hover:animate-pulse" />
+              </div>
+              <div id="glow">
+                <div className="circle group-hover:opacity-80" />
+                <div className="circle group-hover:opacity-60" />
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleViewProjects}
+              className="
+                inline-flex items-center gap-2 px-8 py-4 rounded-full
+                border text-sm font-bold transition-all duration-300 cursor-pointer
+                hover:scale-105
+              "
+              style={{
+                borderColor: "color-mix(in srgb, var(--white-color) 30%, transparent)",
+                color: "var(--white-color)",
+                backgroundColor: "color-mix(in srgb, var(--white-color) 5%, transparent)",
+              }}
+            >
+              {t("hero.viewProjects")}
+              <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+            </button>
+          </div>
         </div>
 
-        {/* Panel lateral — asimetría deliberada, deja el col 8 vacío como respiro */}
+        {/* Panel lateral — datos rápidos de confianza */}
         <div className="hidden lg:block lg:col-span-3 lg:col-start-10">
           <div
             className="rounded-2xl border backdrop-blur-sm p-6 space-y-5"
@@ -175,12 +181,16 @@ export default function HeroSection() {
 
             <dl className="space-y-3 text-sm">
               <div className="flex items-center justify-between gap-3">
-                <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Base</dt>
-                <dd className="text-right">{t("hero.location")}</dd>
+                <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Proyectos</dt>
+                <dd className="text-right font-bold">+30 entregados</dd>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>SLA</dt>
-                <dd className="text-right">{t("hero.responseTime")}</dd>
+                <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Desde</dt>
+                <dd className="text-right font-bold">$300 USD</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Respuesta</dt>
+                <dd className="text-right font-bold">{"<"} 24h</dd>
               </div>
             </dl>
 
@@ -191,7 +201,7 @@ export default function HeroSection() {
                 {t("hero.stackLabel")}
               </p>
               <div className="flex flex-wrap gap-2">
-                {["React", "Next.js", "Node.js", "IA"].map((tech) => (
+                {["React", "Next.js", "Node.js", "TypeScript"].map((tech) => (
                   <span
                     key={tech}
                     className="font-mono-label text-[0.6rem] tracking-normal normal-case px-2.5 py-1 rounded-md"

@@ -31,9 +31,9 @@ export const useTranslation = () => {
 
     // Hero
     "hero.h1": "Desarrollador Web Freelance · Colombia & USA Remote",
-    "hero.subtitle": "Construyo sitios web, apps y chatbots con IA usando <strong>React y Next.js</strong>. Atiendo empresas en <strong>Colombia</strong> y clientes remotos en <strong>USA y LATAM</strong>. <span>Proyectos desde $500 USD</span> — consulta gratis, respuesta en 24h.",
-    "hero.greeting": "¡Hola Soy",
-    "hero.name": "Omar Hernández Rey",
+    "hero.subtitle": "Construyo sitios web, tiendas online y aplicaciones que generan <strong>resultados reales</strong> para negocios en <strong>Colombia</strong> y <strong>USA</strong>. <span>Proyectos desde $300 USD</span> — consulta gratis, respuesta en 24h.",
+    "hero.greeting": "Tu Sitio Web Profesional",
+    "hero.name": "Listo en 2 Semanas",
     "hero.title": "Desarrollador Web Full Stack",
     "hero.description": "Combino {creativity}, {innovation} y {technology} para crear experiencias web {unforgettable}.",
     "hero.creativity": "creatividad",
@@ -41,7 +41,8 @@ export const useTranslation = () => {
     "hero.technology": "tecnología",
     "hero.unforgettable": "inolvidables",
     "hero.viewProjects": "Ver Proyectos",
-    "hero.ariaLabel": "Ver mis proyectos",
+    "hero.ctaPrimary": "Solicitar Cotización Gratis",
+    "hero.ariaLabel": "Solicitar cotización para tu proyecto",
     "hero.status": "Disponible para nuevos proyectos",
     "hero.location": "Colombia · Remoto LATAM & USA",
     "hero.responseTime": "Respuesta en 24h",
@@ -72,10 +73,10 @@ export const useTranslation = () => {
 
     // Services
     "services.badge": "Servicios Disponibles",
-    "services.title": "Servicios de Desarrollo Web Freelance",
-    "services.subtitle": "Desarrollo web, chatbots IA, e-commerce y automatización para Colombia y USA",
-    "services.description": "Contrata un desarrollador web freelance en Colombia. React, Next.js, Node.js e Inteligencia Artificial. Proyectos desde $500 USD para empresas y emprendedores.",
-    "services.cta": "Contratar Ahora — Consulta Gratis",
+    "services.title": "Soluciones Web para tu Negocio",
+    "services.subtitle": "Sitios web, tiendas online y aplicaciones para Colombia y USA",
+    "services.description": "Desarrollo soluciones web que generan resultados reales. Desde landing pages hasta aplicaciones completas, con React, Next.js y Node.js. Proyectos desde $300 USD.",
+    "services.cta": "Solicitar Cotización Gratis",
 
     // Skills
     "skills.badge": "Excelencia Técnica",
@@ -139,7 +140,7 @@ export const useTranslation = () => {
     "footer.in": "en",
     "footer.location": "Bogotá, Colombia",
     "footer.name": "Omar Hernández Rey",
-    "footer.description": "Desarrollador web freelance en Colombia. Especialista en React, Next.js y chatbots con IA. Disponible para proyectos en Colombia y USA remoto.",
+    "footer.description": "Desarrollador web freelance en Colombia. Especialista en React, Next.js y soluciones web a medida. Disponible para proyectos en Colombia y USA remoto.",
 
     // Common
     "common.loading": "Cargando...",

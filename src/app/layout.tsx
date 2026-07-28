@@ -116,7 +116,6 @@ export const metadata: Metadata = {
     "software developer colombia",
     "ingeniero de software colombia",
     "desarrollador web bogota",
-    "chatbot ia colombia",
     "e-commerce colombia",
     "aplicaciones web colombia",
   ],
