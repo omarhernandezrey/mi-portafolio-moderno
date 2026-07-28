@@ -2,7 +2,7 @@ import React from 'react';
 import { buildMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, GraduationCap, Briefcase, Code2, CheckCircle, Sparkles, MapPin, ExternalLink, BookOpen, Wrench, Bot, ShoppingCart, Zap, Search, Target } from 'lucide-react';
+import { ArrowRight, GraduationCap, Briefcase, Code2, CheckCircle, Sparkles, MapPin, ExternalLink, BookOpen, Wrench, ShoppingCart, Zap, Search, Target } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { OMAR_PROFILE } from '@/data/omarProfile';

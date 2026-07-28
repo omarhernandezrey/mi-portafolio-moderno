@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10 shadow-[0_0_20px_rgba(var(--primary-color-rgb),0.1)]">
               <Shield size={40} />
             </div>
-            <h1 className="text-3xl font-bold text-white-custom tracking-tight mb-2">Admin Portal</h1>
+            <h1 className="font-display italic text-3xl font-medium text-white-custom tracking-tight mb-2">Admin Portal</h1>
             <p className="text-text-muted text-sm leading-relaxed">
               Autenticación segura para el panel de gestión.
             </p>
@@ -97,7 +97,7 @@ export default function AdminLoginPage() {
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/20 text-primary">
                   <CheckCircle size={28} />
                 </div>
-                <h2 className="mb-3 text-xl font-bold text-white-custom">Enlace enviado</h2>
+                <h2 className="font-display italic mb-3 text-xl font-medium text-white-custom">Enlace enviado</h2>
                 <p className="text-sm text-text-muted leading-relaxed">
                   Hemos enviado un acceso mágico a <strong className="text-primary">{email}</strong>. 
                   Revisa tu bandeja (y spam si es necesario).
