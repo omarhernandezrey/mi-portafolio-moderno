@@ -127,7 +127,7 @@ export default function ApiLogsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.3em] font-black text-primary/60 mb-2">Observabilidad</p>
+          <p className="font-mono-label text-[0.6rem] text-primary/60 mb-2">Observabilidad</p>
           <h1 className="text-3xl sm:text-4xl font-black text-white-custom tracking-tight">Logs de API</h1>
           <p className="text-text-muted text-sm font-medium mt-2">
             Monitoreo de llamadas a proveedores de IA y latencia en tiempo real

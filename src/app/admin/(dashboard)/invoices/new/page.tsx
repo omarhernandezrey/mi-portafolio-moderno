@@ -109,7 +109,7 @@ export default function NewInvoicePage() {
             <FileText size={28} />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white-custom">Generar Factura</h1>
+            <h1 className="font-display italic text-xl sm:text-2xl lg:text-3xl font-medium text-white-custom">Generar Factura</h1>
             <p className="text-xs sm:text-sm text-text-muted">Crea un documento de cobro profesional para tu cliente.</p>
           </div>
         </div>

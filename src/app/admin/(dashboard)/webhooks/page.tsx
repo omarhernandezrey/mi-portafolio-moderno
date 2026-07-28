@@ -99,8 +99,8 @@ export default function AdminWebhooksPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.3em] font-black text-primary/60 mb-2">Integraciones</p>
-          <h1 className="text-3xl sm:text-4xl font-black text-white-custom tracking-tight">Webhooks</h1>
+          <p className="font-mono-label text-[0.6rem] text-primary/60 mb-2">Integraciones</p>
+          <h1 className="font-display italic text-3xl sm:text-4xl font-medium text-white-custom tracking-tight">Webhooks</h1>
           <p className="text-text-muted text-sm font-medium mt-2">
             Envía eventos del CRM a herramientas externas en tiempo real
           </p>

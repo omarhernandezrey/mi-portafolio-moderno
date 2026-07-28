@@ -73,7 +73,7 @@ export default function NewWebhookPage() {
           <CheckCircle size={40} className="text-primary" />
         </div>
         <div>
-          <h2 className="text-2xl font-black text-white-custom">Webhook creado</h2>
+          <h2 className="font-display italic text-2xl font-medium text-white-custom">Webhook creado</h2>
           <p className="text-text-muted text-sm mt-1">Redirigiendo a webhooks...</p>
         </div>
       </div>
@@ -91,8 +91,8 @@ export default function NewWebhookPage() {
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <p className="text-[10px] uppercase tracking-[0.3em] font-black text-primary/60">Integraciones</p>
-          <h1 className="text-3xl font-black text-white-custom tracking-tight">Nuevo Webhook</h1>
+          <p className="font-mono-label text-[0.6rem] text-primary/60">Integraciones</p>
+          <h1 className="font-display italic text-3xl font-medium text-white-custom tracking-tight">Nuevo Webhook</h1>
         </div>
       </div>
 

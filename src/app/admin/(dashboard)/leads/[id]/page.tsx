@@ -82,7 +82,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-1">
               CRM Intelligence
             </div>
-            <h1 className="text-2xl font-black text-white-custom tracking-tight flex items-center gap-3 italic">
+            <h1 className="font-display italic text-2xl font-medium text-white-custom tracking-tight flex items-center gap-3">
               {lead.name || 'Entidad no identificada'}
               <StatusBadge status={lead.status} />
             </h1>
