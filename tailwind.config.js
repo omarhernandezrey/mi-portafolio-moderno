@@ -120,6 +120,12 @@ module.exports = {
     },
   },
   plugins: [
+    // Requerido por las clases `prose`/`prose-*` (usadas en /proposal y otras
+    // vistas de documento largo) — estaba instalado en package.json pero
+    // nunca registrado aquí, así que esas clases no hacían nada.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- config CommonJS
+    require("@tailwindcss/typography"),
+
     // Plugin para formularios (opcional, comenta si no lo usas)
     // require("@tailwindcss/forms"),
 

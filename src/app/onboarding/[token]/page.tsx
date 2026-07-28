@@ -183,7 +183,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl"
             >
               <div className="text-center">
-                <h2 className="text-3xl font-black mb-2">Paso 1: El Brief</h2>
+                <h2 className="font-display italic text-3xl font-medium mb-2">Paso 1: El Brief</h2>
                 <p className="text-[var(--muted-color)]">Cuéntame más detalles sobre tu proyecto para empezar con el pie derecho.</p>
               </div>
 
@@ -248,7 +248,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl text-center"
             >
-              <h2 className="text-3xl font-black mb-2">Paso 2: Contrato</h2>
+              <h2 className="font-display italic text-3xl font-medium mb-2">Paso 2: Contrato</h2>
               <p className="text-[var(--muted-color)] mb-8">Revisa los términos del servicio. Este documento garantiza nuestra seriedad y profesionalismo.</p>
               
               <div className="aspect-[4/5] bg-white rounded-2xl border border-gray-200 overflow-hidden relative group">
@@ -285,7 +285,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl text-center"
             >
-              <h2 className="text-3xl font-black mb-2">Paso 3: Anticipo</h2>
+              <h2 className="font-display italic text-3xl font-medium mb-2">Paso 3: Anticipo</h2>
               <p className="text-[var(--muted-color)] mb-8">Para reservar el cupo y dar inicio al desarrollo, se requiere un anticipo del 50% ({parseBudgetAmount(lead.budget) > 0 ? `${(parseBudgetAmount(lead.budget) / 2).toFixed(2)}` : '---'} USD).</p>
 
               <div className="p-8 border-2 border-dashed border-[var(--primary-color)]/30 rounded-[2rem] bg-[var(--primary-color)]/5 mb-8">
@@ -349,7 +349,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               <div className="w-24 h-24 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-500/30">
                 <Rocket size={48} />
               </div>
-              <h2 className="text-4xl font-black mb-4">¡Todo listo, {lead.name}!</h2>
+              <h2 className="font-display italic text-4xl font-medium mb-4">¡Todo listo, {lead.name}!</h2>
               <p className="text-xl text-[var(--muted-color)] mb-8">
                 Ya recibí el pago y el contrato firmado. Oficialmente hemos iniciado tu proyecto de <strong>{lead.service_requested}</strong>.
               </p>
