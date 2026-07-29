@@ -37,7 +37,7 @@ export default function BlogNewsletterCTA() {
             Journal Subscription
           </div>
           <h2 className="font-display italic text-4xl md:text-5xl font-medium text-white-custom tracking-tight">
-            Reciba Research Técnico <br />
+            Recibe Contenido Técnico <br />
             <span className="text-primary">Directamente</span>
           </h2>
           <p className="text-lg text-text-muted font-medium italic opacity-70 leading-relaxed max-w-lg mx-auto">

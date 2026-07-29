@@ -10,19 +10,19 @@ import { track } from '@vercel/analytics';
 const magnets = [
   {
     id: 'checklist',
-    title: 'Audit Checklist: Technical Integrity',
+    title: 'Checklist de Auditoría Técnica',
     description: 'Protocolo de 15 puntos críticos para auditar la calidad y seguridad de un desarrollo antes de la fase de despliegue.',
     icon: <Shield size={32} />,
   },
   {
     id: 'guia-precios',
-    title: 'Market Report: Software Investment 2026',
+    title: 'Guía de Precios de Desarrollo Web 2026',
     description: 'Análisis detallado de los rangos de inversión en ingeniería de software para el mercado LATAM y Global.',
     icon: <BookOpen size={32} />,
   },
   {
     id: 'plantilla-brief',
-    title: 'Executive Template: Project Briefing',
+    title: 'Plantilla de Briefing de Proyecto',
     description: 'Documento de alta fidelidad para la definición estratégica de objetivos, KPIs y alcance técnico de proyectos digitales.',
     icon: <Target size={32} />,
   }
@@ -78,7 +78,7 @@ export default function RecursosContent() {
             animate={{ opacity: 1, y: 0 }}
             className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]"
           >
-            Digital Assets & Intelligence
+            Activos Digitales e Inteligencia
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -176,12 +176,12 @@ export default function RecursosContent() {
                     ) : successId === magnet.id ? (
                       <>
                         <CheckCircle size={16} />
-                        Access Granted
+                        Acceso Concedido
                       </>
                     ) : (
                       <>
                         <Lock size={14} className="opacity-40" />
-                        Download PDF
+                        Descargar PDF
                       </>
                     )}
                   </div>
@@ -202,7 +202,7 @@ export default function RecursosContent() {
 
             <div className="space-y-4">
               <h2 className="font-display italic text-4xl md:text-5xl font-medium text-white-custom tracking-tight">
-                Arquitectura de Inversión
+                Calcula tu Presupuesto
               </h2>
               <p className="text-lg text-text-muted font-medium italic opacity-70 leading-relaxed max-w-lg mx-auto">
                 Consolide sus requerimientos técnicos y obtenga una auditoría financiera instantánea para su próximo despliegue.
@@ -223,11 +223,11 @@ export default function RecursosContent() {
         <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
           <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
             <Shield size={14} />
-            Secure Asset Transmission
+            Transmisión Segura de Datos
           </div>
           <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
             <FileText size={14} />
-            Document Index 2026.04
+            Índice de Documento 2026.04
           </div>
         </div>
       </main>
