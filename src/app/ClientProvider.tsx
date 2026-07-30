@@ -16,12 +16,6 @@ const ChatWidget = dynamic(() => import('@/components/shared/ChatWidget'), {
   loading: () => null,
 });
 
-// Cargar WhatsAppFloatingButton de forma dinámica
-const WhatsAppFloatingButton = dynamic(() => import('@/components/shared/WhatsAppFloatingButton'), {
-  ssr: false,
-  loading: () => null,
-});
-
 interface ClientProviderProps {
   children: React.ReactNode;
 }
@@ -83,7 +77,6 @@ export default function ClientProvider({ children }: ClientProviderProps) {
           <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
             {children}
             <ChatWidget />
-            <WhatsAppFloatingButton />
           </MotionConfig>
         </NotyfProvider>
       </ToastProvider>
