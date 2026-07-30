@@ -198,6 +198,8 @@ const PortfolioLinkedInShare: React.FC<PortfolioLinkedInShareProps> = ({
             showOptions ? 'ring-2 ring-[#0077B5] ring-opacity-50' : ''
           }`}
           title="Más opciones"
+          aria-label="Más opciones para compartir"
+          aria-expanded={showOptions}
         >
           <svg
             className={`w-5 h-5 transition-all duration-300 ${showOptions ? 'rotate-180 text-yellow-200' : ''}`}

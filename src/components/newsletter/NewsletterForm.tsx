@@ -92,7 +92,8 @@ export default function NewsletterForm() {
                   <button
                     type="submit"
                     disabled={status === 'loading'}
-                    className="bg-[var(--primary-color)] text-white p-3 rounded-xl hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
+                    aria-label="Suscribirse al newsletter"
+                    className="bg-[var(--primary-color)] text-white p-3 rounded-xl hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-color)]"
                   >
                     {status === 'loading' ? (
                       <Loader2 className="animate-spin" size={24} />

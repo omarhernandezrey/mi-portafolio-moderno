@@ -315,7 +315,7 @@ const ProjectsSection: React.FC = () => {
                 placeholder={t('projects.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-11 pr-10 py-3 sm:py-3.5 bg-transparent text-white placeholder-gray-400 focus:outline-none rounded-lg sm:rounded-xl text-sm"
+                className="w-full pl-11 pr-10 py-3 sm:py-3.5 bg-transparent text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg sm:rounded-xl text-sm"
               />
               {searchTerm && (
                 <button

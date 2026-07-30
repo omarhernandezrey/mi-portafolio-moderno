@@ -165,7 +165,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
             {/* Botón de Cierre */}
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-[var(--muted-color)] hover:text-[var(--accent-color)] focus:outline-none z-10"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-[var(--muted-color)] hover:text-[var(--accent-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-color)] rounded-full z-10"
               aria-label={t('education.closeModal')}
               ref={closeButtonRef}
             >

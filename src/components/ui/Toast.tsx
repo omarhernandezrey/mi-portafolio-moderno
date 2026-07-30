@@ -91,9 +91,10 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: (id: string) => 
     >
       <Icon size={20} className="flex-shrink-0" />
       <p className="text-sm font-medium flex-1">{toast.message}</p>
-      <button 
+      <button
         onClick={() => onClose(toast.id)}
-        className="p-1 hover:bg-white/10 rounded-lg transition-colors opacity-60 hover:opacity-100"
+        className="p-1 hover:bg-white/10 rounded-lg transition-colors opacity-60 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        aria-label="Cerrar notificación"
       >
         <X size={16} />
       </button>

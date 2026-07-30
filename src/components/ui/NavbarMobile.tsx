@@ -144,7 +144,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
   <nav className="flex justify-between items-center px-6 py-4 bg-[var(--background-color)] text-[var(--text-color)] border-b border-[var(--accent-color)] fixed top-0 left-0 w-full z-[90] shadow-md">
         <button
           onClick={toggleMenu}
-          className="text-[var(--primary-color)] text-3xl focus:outline-none hover:text-[var(--primary-hover-color)] transition-colors duration-300"
+          className="text-[var(--primary-color)] text-3xl rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] hover:text-[var(--primary-hover-color)] transition-colors duration-300"
           aria-label="Toggle menu"
           aria-controls="mobile-menu-panel"
           aria-expanded={isOpen}
@@ -153,7 +153,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
         </button>
         <button
           onClick={() => handleLinkClick("#hero")}
-          className="absolute right-6 top-1/2 transform -translate-y-1/2 focus:outline-none border-2 rounded-full border-[var(--primary-color)] p-1"
+          className="absolute right-6 top-1/2 transform -translate-y-1/2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] border-2 rounded-full border-[var(--primary-color)] p-1"
           aria-label="Go to Home"
         >
           <Image
@@ -238,7 +238,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
               </div>
               <button
                 onClick={togglePalette}
-                className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 active:scale-95 hover:text-[var(--accent-hover-color)] focus:outline-none p-2 rounded-lg hover:bg-[var(--background-color)] animate-pulse"
+                className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 active:scale-95 hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] p-2 rounded-lg hover:bg-[var(--background-color)] animate-pulse"
                 aria-label={t("actions.change_theme", { defaultValue: "Cambiar tema" })}
                 title={t("actions.change_theme", { defaultValue: "Cambiar tema" })}
               >
