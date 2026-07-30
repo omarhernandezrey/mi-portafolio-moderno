@@ -307,13 +307,18 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed z-[9998] flex flex-col overflow-hidden bg-[var(--background-color)] shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-[var(--primary-color)]/15
-              bottom-0 right-0 h-[calc(100dvh-70px)] w-full rounded-t-2xl
-              sm:bottom-24 sm:right-4 sm:h-[min(70dvh,520px)] sm:w-[clamp(320px,88vw,380px)] sm:rounded-2xl
+            className="fixed z-[9998] flex flex-col overflow-hidden bg-[var(--background-color)] shadow-[0_8px_40px_rgba(0,0,0,0.35)] border-0 sm:border border-[var(--primary-color)]/15
+              inset-0 h-dvh w-full rounded-none pt-[env(safe-area-inset-top)]
+              sm:inset-auto sm:bottom-24 sm:right-4 sm:h-[min(70dvh,520px)] sm:w-[clamp(320px,88vw,380px)] sm:rounded-2xl sm:pt-0
               md:bottom-28 md:right-6 md:h-[min(65dvh,560px)] md:w-[380px] md:rounded-3xl"
             role="dialog"
             aria-modal="true"
           >
+            {/* Indicador de hoja inferior en móvil */}
+            <div className="sm:hidden flex shrink-0 justify-center pt-3 pb-1">
+              <div className="h-1.5 w-14 rounded-full bg-[var(--muted-color)]/40"></div>
+            </div>
+
             {/* Header */}
             <div className="flex items-center justify-between bg-[var(--card-bg-color)] border-b border-[var(--primary-color)]/20 p-4 sm:p-5">
               <div className="flex items-center gap-3">
@@ -340,10 +345,11 @@ export default function ChatWidget() {
                 </a>
                 <button
                   onClick={toggleChat}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary-color)]/10 text-[var(--text-color)] hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95"
+                  className="flex items-center gap-1.5 rounded-xl bg-red-500/10 px-3 py-2 text-xs font-bold text-red-500 hover:bg-red-500/20 hover:text-red-600 transition-all active:scale-95 sm:h-9 sm:w-9 sm:justify-center sm:px-0"
                   aria-label="Cerrar"
                 >
-                  <X size={18} />
+                  <X size={20} className="sm:h-[18px] sm:w-[18px]" />
+                  <span className="sm:hidden">{currentLanguage === 'es' ? 'Cerrar' : 'Close'}</span>
                 </button>
               </div>
             </div>
@@ -504,26 +510,26 @@ export default function ChatWidget() {
                   onChange={handleFileChange}
                 />
 
-                <div className="flex-1 px-4">
+                <div className="flex-1 min-w-0 px-3 sm:px-4">
                   <input
                     ref={inputRef}
                     type="text"
                     data-testid="chat-input"
                     placeholder={t('chatbot.placeholder')}
-                    className="w-full bg-transparent text-[15px] text-[var(--text-color)] placeholder-[var(--muted-color)] focus:outline-none disabled:opacity-50"
+                    className="w-full min-w-0 bg-transparent text-[15px] text-[var(--text-color)] placeholder-[var(--muted-color)] focus:outline-none disabled:opacity-50"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     disabled={isLoading || !hasConsented}
                   />
                 </div>
 
-                <div className="flex items-center gap-1 pr-1">
+                <div className="flex shrink-0 items-center gap-0.5 pr-1 sm:gap-1">
                   {/* Botón adjuntar imagen (Tarea AUD.5) */}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isLoading || !hasConsented}
-                    className={`flex h-11 w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
+                    className={`flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
                       imageDataUrl
                         ? 'text-[var(--primary-color)] bg-[var(--primary-color)]/10'
                         : 'text-[var(--muted-color)] hover:text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10'
@@ -540,7 +546,7 @@ export default function ChatWidget() {
                       type="button"
                       onClick={toggleMic}
                       disabled={isLoading || !hasConsented}
-                      className={`flex h-11 w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
+                      className={`flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
                         isListening
                           ? 'bg-red-500/20 text-red-500 animate-pulse'
                           : 'text-[var(--muted-color)] hover:text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10'
@@ -556,7 +562,7 @@ export default function ChatWidget() {
                     type="submit"
                     data-testid="chat-send"
                     disabled={isLoading || (!input.trim() && !imageDataUrl) || !hasConsented}
-                    className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:grayscale disabled:opacity-30"
+                    className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:grayscale disabled:opacity-30"
                     aria-label="Enviar"
                   >
                     <Send size={18} className="translate-x-0.5" />
