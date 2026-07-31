@@ -28,7 +28,7 @@ interface PortfolioLinkedInShareProps {
 const PortfolioLinkedInShare: React.FC<PortfolioLinkedInShareProps> = ({
   projects = [], // Valor por defecto
   className = '',
-  portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
+  portfolioUrl = 'https://omarhernandezrey.com',
   authorName = 'Omar Hernández'
 }) => {
   // Estados para mostrar feedback visual

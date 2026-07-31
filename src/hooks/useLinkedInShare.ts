@@ -71,7 +71,7 @@ interface UseLinkedInCertificateShareProps {
 
 export const useLinkedInShare = ({ 
   project, 
-  portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
+  portfolioUrl = 'https://omarhernandezrey.com',
   authorName = 'Omar Hernández' // Valor por defecto
 }: UseLinkedInShareProps) => {
   const notyf = useNotyf();
@@ -185,7 +185,7 @@ ${authorName ? `Desarrollado por: ${authorName}` : ''}
 // ► Hook específico para compartir certificados
 export const useLinkedInCertificateShare = ({
   certificate,
-  portfolioUrl = 'https://omarh-portafolio-web.vercel.app',
+  portfolioUrl = 'https://omarhernandezrey.com',
   authorName = 'Omar Hernández' // Valor por defecto
 }: UseLinkedInCertificateShareProps) => {
   const notyf = useNotyf();

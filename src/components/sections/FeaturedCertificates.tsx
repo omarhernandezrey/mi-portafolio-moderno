@@ -19,6 +19,7 @@ export interface FeaturedCertificate {
   summary: string;
   logo: string;
   certificate?: string | null;
+  isNew?: boolean;
 }
 
 interface FeaturedCertificatesProps {
@@ -318,7 +319,14 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
                   </span>
                   {activeCourse.institution}
                 </span>
-                <h4 className={styles.title}>{activeCourse.title}</h4>
+                <h4 className={styles.title}>
+                  {activeCourse.title}
+                  {activeCourse.isNew && (
+                    <span className={styles.newBadge}>
+                      {isHydrated ? t('education.latestBadge') : 'Nuevo'}
+                    </span>
+                  )}
+                </h4>
                 <p className={styles.summary}>{activeCourse.summary}</p>
                 {activeCourse.certificate && (
                   <a

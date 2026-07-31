@@ -456,17 +456,33 @@ const EducationSection = () => {
   const fallbackTotalLabel = currentLanguage === 'en'
     ? `${totalItems} courses completed`
     : `${totalItems} cursos completados`;
-  const highlightedCourses = useMemo(() =>
-    highlightedCoursesData.map((course) => ({
+  const highlightedCourses = useMemo(() => {
+    const baseList = highlightedCoursesData.map((course) => ({
       id: course.id,
       title: course.title[currentLanguage],
       institution: course.institution[currentLanguage],
       summary: course.summary[currentLanguage],
       logo: course.logo,
       certificate: course.certificate ?? null,
-    })),
-    [currentLanguage],
-  );
+    }));
+
+    if (latestItem && !baseList.some(c => c.id === 'latest-course')) {
+      const summaryText = currentLanguage === 'en'
+        ? 'Most recently completed course — latest achievement in my learning journey.'
+        : 'Curso más reciente — último logro en mi camino de aprendizaje.';
+      return [{
+        id: 'latest-course',
+        title: latestItem.title,
+        institution: latestItem.institution,
+        summary: summaryText,
+        logo: latestItem.logo,
+        certificate: latestItem.certificate ?? null,
+        isNew: true,
+      }, ...baseList];
+    }
+
+    return baseList.map(c => ({ ...c, isNew: false }));
+  }, [currentLanguage, latestItem]);
   const highlightCount = highlightedCourses.length;
 
   const [visibleCount, setVisibleCount] = useState<number>(0);
@@ -865,9 +881,19 @@ const EducationSection = () => {
         .timeline-item:nth-child(4) { animation-delay: 0.4s; }
         .timeline-item:nth-child(5) { animation-delay: 0.5s; }
         .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+        @keyframes latestGlow {
+          0%, 100% {
+            box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 35%, transparent), 0 0 0 0 color-mix(in srgb, var(--accent-color) 25%, transparent);
+          }
+          50% {
+            box-shadow: 0 18px 42px color-mix(in srgb, var(--accent-color) 50%, transparent), 0 0 30px 6px color-mix(in srgb, var(--accent-color) 20%, transparent);
+          }
+        }
+
         .timeline-item.latest-item .timeline-content {
           border-color: color-mix(in srgb, var(--accent-color) 70%, transparent);
           box-shadow: 0 12px 30px color-mix(in srgb, var(--accent-color) 35%, transparent);
+          animation: latestGlow 2.5s ease-in-out infinite;
         }
 
         .timeline-item.latest-item .timeline-icon {
@@ -882,20 +908,43 @@ const EducationSection = () => {
           box-shadow: 0 10px 24px color-mix(in srgb, var(--accent-color) 35%, transparent);
         }
 
+        @keyframes badgePulse {
+          0%, 100% {
+            box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color) 35%, transparent), 0 0 0 0 color-mix(in srgb, var(--accent-color) 40%, transparent);
+            transform: scale(1);
+          }
+          50% {
+            box-shadow: 0 8px 28px color-mix(in srgb, var(--accent-color) 55%, transparent), 0 0 24px 4px color-mix(in srgb, var(--accent-color) 30%, transparent);
+            transform: scale(1.1);
+          }
+        }
+
+        @keyframes badgeShimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+
+        @keyframes badgeGlow {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.3); }
+        }
+
         .latest-badge {
           display: inline-flex;
           align-items: center;
           justify-content: center;
           margin-left: 0.75rem;
-          padding: 0.25rem 0.65rem;
-          font-size: 0.65rem;
-          font-weight: 700;
+          padding: 0.3rem 0.75rem;
+          font-size: 0.7rem;
+          font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.1em;
           border-radius: 9999px;
-          background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 70%, white 30%));
+          background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 60%, #ff6b35 40%), color-mix(in srgb, var(--accent-color) 70%, white 30%));
+          background-size: 200% 200%;
           color: var(--background-color);
-          box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color) 35%, transparent);
+          box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color) 35%, transparent), 0 0 0 0 color-mix(in srgb, var(--accent-color) 40%, transparent);
+          animation: badgePulse 2s ease-in-out infinite, badgeShimmer 3s linear infinite, badgeGlow 2.5s ease-in-out infinite;
         }
 
         .timeline-item:nth-child(7) { animation-delay: 0.7s; }
@@ -910,6 +959,50 @@ const EducationSection = () => {
         .timeline-item:hover .timeline-icon {
           background-color: var(--accent-color);
           transform: scale(1.1);
+        }
+
+        /* Mobile: single-column left-aligned timeline instead of a squeezed
+           50%-width zigzag — the desktop alternating layout has no room to
+           breathe under 768px and forces titles into 5-6 wrapped lines. */
+        @media (max-width: 767px) {
+          .timeline-line {
+            left: 20px;
+            transform: none;
+          }
+
+          .cap-icon {
+            left: 20px;
+            transform: none;
+          }
+
+          .timeline-item,
+          .timeline-item.left,
+          .timeline-item.right {
+            width: 100%;
+            left: 0;
+            text-align: left;
+            padding: 10px 10px 10px 45px;
+          }
+
+          .timeline-item.left .timeline-icon,
+          .timeline-item.right .timeline-icon {
+            left: 2px;
+            right: auto;
+          }
+
+          .timeline-item.left .timeline-content::after,
+          .timeline-item.right .timeline-content::after {
+            top: 15px;
+            left: -8px;
+            right: auto;
+            border-width: 8px 8px 8px 0;
+            border-color: transparent var(--card-bg-color) transparent transparent;
+          }
+
+          .timeline-end-point {
+            left: 20px;
+            transform: none;
+          }
         }
 
         /* Tablet and Desktop styles */

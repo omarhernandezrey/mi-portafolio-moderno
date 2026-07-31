@@ -78,7 +78,8 @@ export default function HeroSection() {
         <h1
           className="
             col-span-12 font-mono-label text-[0.65rem] sm:text-xs mb-6 sm:mb-8
-            inline-flex w-fit items-center gap-2 px-4 py-2 rounded-full border
+            inline-flex w-fit max-w-[calc(100vw-2.5rem)] items-start sm:items-center gap-2
+            px-4 py-2 rounded-2xl sm:rounded-full border leading-relaxed sm:leading-normal
           "
           style={{
             color: "var(--accent-color)",
@@ -86,7 +87,7 @@ export default function HeroSection() {
             backgroundColor: "color-mix(in srgb, var(--accent-color) 10%, transparent)",
           }}
         >
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: "var(--accent-color)" }} />
+          <span className="w-1.5 h-1.5 rounded-full mt-1 sm:mt-0 shrink-0" style={{ backgroundColor: "var(--accent-color)" }} />
           {t("hero.h1")}
         </h1>
 

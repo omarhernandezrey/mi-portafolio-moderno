@@ -267,6 +267,29 @@ export const educationData: EducationCategory[] = [
           "/images/education/sena/05mentalidadDeLiderCertificadoAprobacion.png",
       },
       // Platzi Courses
+      // 88 - Curso de React.js: Manejo Profesional del Estado
+        {
+          title: {
+            es: "React.js: Manejo Profesional del Estado",
+            en: "React.js: Professional State Management"
+          },
+          institution: {
+            es: "Platzi",
+            en: "Platzi"
+          },
+          duration: {
+            es: "16 horas de teoría y práctica (Aprobado el 1 de febrero de 2025)",
+            en: "16 hours of theory and practice (Approved on February 1, 2025)"
+          },
+          description: {
+            es: "Curso enfocado en el manejo profesional del estado en React.js. Aborda useReducer, useContext, composición de estado global y buenas prácticas para aplicaciones React escalables y mantenibles.",
+            en: "Course focused on professional state management in React.js. Covers useReducer, useContext, global state composition, and best practices for scalable and maintainable React applications."
+          },
+          logo: "/images/education/platzi/platzi-logo.png",
+          certificate: "/images/education/platzi/58-diploma-react-estado.jpg",
+          isNew: true
+        },
+
       // 87 - Curso de React.js Nuevo
         {
           title: {
@@ -287,7 +310,6 @@ export const educationData: EducationCategory[] = [
           },
           logo: "/images/education/platzi/platzi-logo.png",
           certificate: "/images/education/platzi/57-diploma-react-patrones-render.jpg",
-          isNew: true
         },
 
       {
