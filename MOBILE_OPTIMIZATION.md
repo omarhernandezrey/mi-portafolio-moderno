@@ -353,7 +353,7 @@ Contrast:       WCAG AA ✅
 
 ### Opción 1: Dispositivo Real
 1. Abrir Safari en iPhone 7
-2. Navegar a: https://omarh-portafolio-web.vercel.app
+2. Navegar a: https://omarhernandezrey.com
 3. Verificar scroll suave
 4. Tocar inputs (no debe hacer zoom)
 5. Probar botones (fáciles de tocar)

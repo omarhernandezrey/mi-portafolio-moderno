@@ -5,7 +5,7 @@
 # Valida meta tags, headers y respuestas HTTP
 # ═══════════════════════════════════════════════════════════════
 
-URL='https://omarh-portafolio-web.vercel.app'
+URL='https://omarhernandezrey.com'
 
 echo ''
 echo '╔═══════════════════════════════════════════════════════════════╗'

@@ -9,7 +9,7 @@ const nextConfig = {
       },
       {
         protocol: 'https', 
-        hostname: 'omarh-portafolio-web.vercel.app',
+        hostname: 'omarhernandezrey.com',
       }
     ],
     formats: ['image/avif', 'image/webp'],

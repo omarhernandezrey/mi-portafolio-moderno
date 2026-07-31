@@ -203,13 +203,13 @@ xdg-settings set default-web-browser google-chrome.desktop
 ### Ejecutar solo una validación específica:
 ```bash
 # Solo Facebook
-xdg-open 'https://developers.facebook.com/tools/debug/?q=https://omarh-portafolio-web.vercel.app'
+xdg-open 'https://developers.facebook.com/tools/debug/?q=https://omarhernandezrey.com'
 
 # Solo Twitter
 xdg-open 'https://cards-dev.twitter.com/validator'
 
 # Solo PageSpeed
-xdg-open 'https://pagespeed.web.dev/report?url=https://omarh-portafolio-web.vercel.app'
+xdg-open 'https://pagespeed.web.dev/report?url=https://omarhernandezrey.com'
 ```
 
 ---

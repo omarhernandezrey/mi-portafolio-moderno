@@ -5,7 +5,7 @@
 # Ejecuta validaciones en todas las plataformas tras el deploy
 # ═══════════════════════════════════════════════════════════════
 
-URL='https://omarh-portafolio-web.vercel.app'
+URL='https://omarhernandezrey.com'
 
 echo ''
 echo '╔═══════════════════════════════════════════════════════════════╗'

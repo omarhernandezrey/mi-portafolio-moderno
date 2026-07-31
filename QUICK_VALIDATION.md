@@ -8,7 +8,7 @@
 
 **URL directa:**
 ```
-https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg
+https://omarhernandezrey.com/portfolio-preview.jpg
 ```
 
 ✅ **Debe mostrar:** Tu imagen de 1200x630 píxeles
@@ -20,7 +20,7 @@ https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg
 **URL:** https://developers.facebook.com/tools/debug/
 
 **Pasos:**
-1. Pegar: `https://omarh-portafolio-web.vercel.app`
+1. Pegar: `https://omarhernandezrey.com`
 2. Click **"Debug"**
 3. Click **"Scrape Again"** (importante para limpiar caché)
 4. Verificar:
@@ -38,7 +38,7 @@ https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg
 **URL:** https://cards-dev.twitter.com/validator
 
 **Pasos:**
-1. Pegar: `https://omarh-portafolio-web.vercel.app`
+1. Pegar: `https://omarhernandezrey.com`
 2. Click **"Preview card"**
 3. Verificar:
    - ✅ Card type: "Summary with Large Image"
@@ -55,7 +55,7 @@ https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg
 **URL:** https://www.linkedin.com/post-inspector/
 
 **Pasos:**
-1. Pegar: `https://omarh-portafolio-web.vercel.app`
+1. Pegar: `https://omarhernandezrey.com`
 2. Click **"Inspect"**
 3. Verificar:
    - ✅ Preview con imagen
@@ -68,12 +68,12 @@ https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg
 ## 5️⃣ VERIFICAR META TAGS (View Source)
 
 **Pasos:**
-1. Ir a: https://omarh-portafolio-web.vercel.app
+1. Ir a: https://omarhernandezrey.com
 2. Click derecho → **"Ver código fuente"**
 3. Buscar (Ctrl+F): `og:image`
 4. Verificar que aparece:
    ```html
-   <meta property="og:image" content="https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg" />
+   <meta property="og:image" content="https://omarhernandezrey.com/portfolio-preview.jpg" />
    ```
 
 ---
@@ -82,7 +82,7 @@ https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg
 
 **URL directa:**
 ```
-https://omarh-portafolio-web.vercel.app/robots.txt
+https://omarhernandezrey.com/robots.txt
 ```
 
 ✅ **Debe mostrar:**
@@ -91,7 +91,7 @@ User-agent: *
 Allow: /
 Crawl-delay: 1
 ...
-Sitemap: https://omarh-portafolio-web.vercel.app/sitemap.xml
+Sitemap: https://omarhernandezrey.com/sitemap.xml
 ```
 
 ---
@@ -100,7 +100,7 @@ Sitemap: https://omarh-portafolio-web.vercel.app/sitemap.xml
 
 **URL directa:**
 ```
-https://omarh-portafolio-web.vercel.app/sitemap.xml
+https://omarhernandezrey.com/sitemap.xml
 ```
 
 ✅ **Debe mostrar:** XML con todas tus páginas
@@ -112,7 +112,7 @@ https://omarh-portafolio-web.vercel.app/sitemap.xml
 **URL:** https://pagespeed.web.dev/
 
 **Pasos:**
-1. Pegar: `https://omarh-portafolio-web.vercel.app`
+1. Pegar: `https://omarhernandezrey.com`
 2. Click **"Analizar"**
 3. Ir a pestaña **"SEO"**
 4. Verificar:
@@ -155,7 +155,7 @@ Ahora puedes:
 ### Facebook no muestra imagen:
 1. Click en "Scrape Again" (puede tardar 1-2 minutos)
 2. Espera y refresca
-3. Verifica que la imagen carga en: https://omarh-portafolio-web.vercel.app/portfolio-preview.jpg
+3. Verifica que la imagen carga en: https://omarhernandezrey.com/portfolio-preview.jpg
 
 ### Twitter no muestra card:
 1. Espera 2-3 minutos más (caché)
