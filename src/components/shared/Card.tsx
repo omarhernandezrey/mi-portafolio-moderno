@@ -135,7 +135,7 @@ const Card: React.FC<CardProps> = ({
       </div>
 
       {/* Contenido del proyecto */}
-      <div className="mt-4 sm:mt-6 text-center px-2 sm:px-4">
+      <div className="mt-4 sm:mt-20 md:mt-24 lg:mt-32 xl:mt-44 text-center px-2 sm:px-4">
         <h3 className="text-lg sm:text-xl font-bold text-[var(--accent-color)] leading-tight">
           {title}
         </h3>
