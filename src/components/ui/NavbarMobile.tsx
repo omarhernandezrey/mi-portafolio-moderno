@@ -255,7 +255,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
                   href="https://github.com/omarhernandezrey"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
+                  className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
                   aria-label="GitHub"
                 >
                   <AiFillGithub size={32} />
@@ -264,7 +264,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
                   href="https://www.linkedin.com/in/omarhernandezrey/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
+                  className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
                   aria-label="LinkedIn"
                 >
                   <AiFillLinkedin size={32} />

@@ -41,7 +41,7 @@ const LinkedInShareButton: React.FC<LinkedInShareButtonProps> = ({
     <motion.button
       onClick={handleShare}
       disabled={isSharing}
-      className={`group relative flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
+      className={`group relative flex items-center justify-center gap-2 px-4 py-2 min-h-[44px] rounded-lg font-medium text-sm transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
       style={{
         backgroundColor: isSharing 
           ? 'rgba(10, 102, 194, 0.1)' 

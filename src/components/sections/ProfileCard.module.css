@@ -31,8 +31,10 @@
 
 .mail {
   position: absolute;
-  right: 2rem;
-  top: 1.4rem;
+  right: 1.2rem;
+  top: 0.6rem;
+  min-width: 44px;
+  min-height: 44px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -129,6 +131,9 @@
 .socialLinksContainer a {
   display: flex;
   align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
 }
 
 .socialLinksContainer svg {
@@ -151,7 +156,11 @@
   border-radius: 20px;
   font-size: 0.6rem;
   font-weight: 600;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem 0.8rem;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: color-mix(in srgb, var(--accent-color) 20%, transparent) 0px 5px 5px 0px;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;

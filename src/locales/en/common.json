@@ -272,7 +272,7 @@
     "placeholder": "Your Email Address",
     "subscribing": "Subscribing...",
     "subscribe": "Subscribe",
-    "success": "Successfully subscribed!",
+    "success": "Almost there! Check your email to confirm your subscription (check spam too).",
     "error": "Error subscribing. Please try again."
   },
   "common": {

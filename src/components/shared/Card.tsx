@@ -183,7 +183,7 @@ const Card: React.FC<CardProps> = ({
             href={repository}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-medium text-[var(--text-color)] bg-[var(--secondary-background-color)] border border-[var(--muted-color)] rounded-lg hover:bg-[var(--muted-color)] transition duration-200 w-full sm:w-auto justify-center"
+            className="flex items-center gap-2 px-5 py-2.5 min-h-[44px] text-xs sm:text-sm font-medium text-[var(--text-color)] bg-[var(--secondary-background-color)] border border-[var(--muted-color)] rounded-lg hover:bg-[var(--muted-color)] transition duration-200 w-full sm:w-auto justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +200,7 @@ const Card: React.FC<CardProps> = ({
             href={demo}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 py-2.5 text-xs sm:text-sm font-medium text-[var(--text-color)] bg-[var(--primary-color)] rounded-lg hover:bg-[var(--primary-hover-color)] transition duration-300 w-full sm:w-auto text-center"
+            className="flex items-center justify-center px-5 py-2.5 min-h-[44px] text-xs sm:text-sm font-medium text-[var(--text-color)] bg-[var(--primary-color)] rounded-lg hover:bg-[var(--primary-hover-color)] transition duration-300 w-full sm:w-auto text-center"
           >
             Ver Demo
           </a>

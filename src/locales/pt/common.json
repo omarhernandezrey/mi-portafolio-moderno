@@ -229,12 +229,14 @@
     "mapTitle": "Localização de Omar Hernández Rey em Bogotá, Colômbia",
     "navigation": {
       "aboutMe": "Sobre Mim",
+      "services": "Serviços de Desenvolvimento Web",
+      "blog": "Blog Técnico",
+      "faq": "Perguntas Frequentes",
       "projects": "Projetos",
       "skills": "Habilidades",
       "contact": "Contato",
       "calculator": "Calculadora",
       "privacy": "Privacidade"
-
     }
   },
   "newsletter": {
@@ -242,7 +244,7 @@
     "placeholder": "Seu E-mail",
     "subscribing": "Inscrevendo...",
     "subscribe": "Inscrever-se",
-    "success": "Inscrição realizada com sucesso!",
+    "success": "Quase lá! Verifique seu e-mail para confirmar sua inscrição (olhe também no spam).",
     "error": "Erro ao se inscrever. Tente novamente."
   },
   "common": {

@@ -119,7 +119,7 @@ export default function Footer() {
                         handleLinkClick(social.href);
                       }
                     }}
-                    className="w-10 h-10 rounded-full flex items-center justify-center border transition-all cursor-pointer"
+                    className="w-[44px] h-[44px] rounded-full flex items-center justify-center border transition-all cursor-pointer"
                     style={{ 
                       borderColor: 'color-mix(in srgb, var(--muted-color) 20%, transparent)',
                       color: 'var(--muted-color)' 

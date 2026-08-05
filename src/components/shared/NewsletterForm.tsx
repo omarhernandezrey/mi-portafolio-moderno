@@ -1,8 +1,10 @@
 // components/shared/NewsletterForm.tsx
 "use client";
 import React, { useState } from "react";
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function NewsletterForm() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -21,7 +23,7 @@ export default function NewsletterForm() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || 'Error al suscribirse');
+        throw new Error(data.error || t("newsletter.error"));
       }
 
       setStatus("success");
@@ -35,7 +37,7 @@ export default function NewsletterForm() {
   return (
     <div className="mt-8">
       <h3 className="text-xl font-semibold mb-4 text-[var(--accent-color)]">
-        Suscríbete a mi Newsletter
+        {t("newsletter.title")}
       </h3>
       <form
         onSubmit={handleSubmit}
@@ -43,7 +45,7 @@ export default function NewsletterForm() {
       >
         <input
           type="email"
-          placeholder="Tu Correo Electrónico"
+          placeholder={t("newsletter.placeholder")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="
@@ -61,17 +63,17 @@ export default function NewsletterForm() {
             ${status === "loading" ? "opacity-50 cursor-not-allowed" : ""}
           `}
         >
-          {status === "loading" ? "Suscribiendo..." : "Suscribirse"}
+          {status === "loading" ? t("newsletter.subscribing") : t("newsletter.subscribe")}
         </button>
       </form>
       {status === "success" && (
         <p className="text-[var(--primary-color)] mt-2">
-          ¡Casi listo! Revisa tu correo y confirma tu suscripción (mira también en spam).
+          {t("newsletter.success")}
         </p>
       )}
       {status === "error" && (
         <p className="text-[var(--error-color)] mt-2">
-          Error al suscribirse. Inténtalo de nuevo.
+          {t("newsletter.error")}
         </p>
       )}
     </div>
