@@ -76,11 +76,31 @@
     }
   },
   "projects": {
-    "title": "Projetos",
+    "badge": "Projetos em Destaque",
+    "title": "Meus Projetos",
     "subtitle": "Alguns dos meus trabalhos recentes",
+    "description": "Explore minha coleção de aplicações web e projetos de desenvolvimento",
+    "searchPlaceholder": "Buscar projetos...",
+    "showingResults": "Mostrando {count} de {total} projetos",
+    "searchResults": "para \"{searchTerm}\"",
+    "noResults": "Nenhum projeto encontrado",
+    "noResultsDescription": "Tente ajustar sua busca ou os filtros.",
+    "clearFilters": "Limpar filtros",
     "viewProject": "Ver Projeto",
     "viewCode": "Ver Código",
-    "technologies": "Tecnologias"
+    "technologies": "Tecnologias",
+    "paginationLabel": "Paginação de projetos",
+    "previousPage": "Página anterior",
+    "nextPage": "Próxima página",
+    "goToPage": "Ir para a página {page}",
+    "pageStatus": "Página {current} de {total}",
+    "categories": {
+      "all": "Todos",
+      "javascript": "JavaScript",
+      "css": "CSS",
+      "nextjs": "Next.js",
+      "react": "React"
+    }
   },
   "services": {
     "badge": "O que Ofereço",

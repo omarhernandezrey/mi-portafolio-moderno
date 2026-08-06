@@ -79,13 +79,6 @@
       "title": "Mis Intereses"
     }
   },
-  "projects": {
-    "title": "Proyectos",
-    "subtitle": "Algunos de mis trabajos recientes",
-    "viewProject": "Ver Proyecto",
-    "viewCode": "Ver Código",
-    "technologies": "Tecnologías"
-  },
   "services": {
     "badge": "Lo que Ofrezco",
     "title": "Mis Servicios",
