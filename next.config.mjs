@@ -1,3 +1,7 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Configuración para imágenes optimizada para Vercel
@@ -28,6 +32,28 @@ const nextConfig = {
       {
         source: '/blog/chatbot-ia-negocio-colombia',
         destination: '/blog',
+        permanent: true,
+      },
+      // Consolidación de /privacidad + /privacy en una sola ruta localizada
+      {
+        source: '/privacy',
+        destination: '/en/privacidad',
+        permanent: true,
+      },
+      // Posts en inglés que vivían sin prefijo /en/ (inconsistente con hreflang)
+      {
+        source: '/blog/build-mvp-nextjs-30-days-process',
+        destination: '/en/blog/build-mvp-nextjs-30-days-process',
+        permanent: true,
+      },
+      {
+        source: '/blog/freelance-developer-vs-agency-web-project',
+        destination: '/en/blog/freelance-developer-vs-agency-web-project',
+        permanent: true,
+      },
+      {
+        source: '/blog/why-hire-colombian-developer-2026',
+        destination: '/en/blog/why-hire-colombian-developer-2026',
         permanent: true,
       },
     ];
@@ -76,4 +102,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

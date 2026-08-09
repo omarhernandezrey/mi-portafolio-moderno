@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Bot, Phone, Calendar, ShieldCheck, Mic, MicOff, Paperclip } from 'lucide-react';
 import { nanoid } from 'nanoid';
 import { sendChatMessage } from '@/services/chatService';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { buildCalcomUrl } from '@/lib/chatbot/calcom';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import useSpeechToText from '@/hooks/useSpeechToText';
 import { track } from '@vercel/analytics';
@@ -23,9 +23,9 @@ interface Message {
 }
 
 export default function ChatWidget() {
-  const { t, i18n } = useTranslation();
+  const { t, language } = useTranslation();
   const notyf = useNotyf();
-  const currentLanguage = (['es', 'en'].includes(i18n.language) ? i18n.language : 'es') as 'es' | 'en';
+  const currentLanguage = (['es', 'en'].includes(language) ? language : 'es') as 'es' | 'en';
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -460,6 +460,7 @@ export default function ChatWidget() {
                     <div className="mt-3">
                       <Link
                         href="/privacidad"
+                        locale={currentLanguage}
                         target="_blank"
                         className="text-[10px] font-bold text-[var(--muted-color)] hover:text-[var(--primary-color)] transition-colors underline"
                       >

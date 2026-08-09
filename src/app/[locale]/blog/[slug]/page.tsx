@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { getPostBySlug, getAllPosts, getRelatedPosts } from '@/lib/blog';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import { ArrowRight, Clock, Calendar, Tag, ChevronLeft } from 'lucide-react';
 
@@ -82,15 +82,22 @@ function getRelatedServices(tags: string[]): Array<{ href: string; label: string
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  // Cada post solo se genera bajo SU locale — un post ES no debe existir
+  // en /en/blog/<slug> ni viceversa (evita contenido en el idioma
+  // equivocado sirviéndose bajo una URL que promete lo contrario).
+  return posts.map((post) => ({
+    locale: post.lang === 'en' ? 'en' : 'es',
+    slug: post.slug,
+  }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
+  const { locale, slug } = await params;
   const post = await getPostBySlug(slug);
-  if (!post) return { title: 'Post no encontrado' };
+  if (!post || (post.lang === 'en') !== (locale === 'en')) return { title: 'Post no encontrado' };
 
   const isEnglish = post.lang === 'en';
+  const path = isEnglish ? `${BASE_URL}/en/blog/${slug}` : `${BASE_URL}/blog/${slug}`;
   // Título absoluto: los `title` de posts son largos y descriptivos (se usan
   // como H1 en la página); `seoTitle` (≤60 chars) es lo que se manda a
   // <title>/OG/Twitter para no truncarse en resultados de búsqueda.
@@ -107,13 +114,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     // Sin hreflang: cada post existe en un solo idioma, no hay par equivalente
     // que declarar (y un x-default hacia /blog era una señal inválida).
     alternates: {
-      canonical: `${BASE_URL}/blog/${slug}`,
+      canonical: path,
     },
     openGraph: {
       title,
       description: post.description,
       type: 'article',
-      url: `${BASE_URL}/blog/${slug}`,
+      url: path,
       publishedTime: post.date,
       authors: [post.author],
       tags: post.tags,
@@ -129,13 +136,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params;
   const [post, allPosts] = await Promise.all([getPostBySlug(slug), getAllPosts()]);
 
-  if (!post) notFound();
+  if (!post || (post.lang === 'en') !== (locale === 'en')) notFound();
 
   const isEnglish = post.lang === 'en';
+  const path = isEnglish ? `${BASE_URL}/en/blog/${slug}` : `${BASE_URL}/blog/${slug}`;
+  const blogPath = isEnglish ? `${BASE_URL}/en/blog` : `${BASE_URL}/blog`;
+  const homePath = isEnglish ? `${BASE_URL}/en` : BASE_URL;
   const relatedPosts = getRelatedPosts(slug, post.tags, allPosts);
   const relatedServices = getRelatedServices(post.tags);
   const ogImageUrl = post.image?.startsWith('/api/og')
@@ -145,7 +155,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const blogPostingSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "@id": `${BASE_URL}/blog/${slug}`,
+    "@id": path,
     "headline": post.title,
     "description": post.description,
     "keywords": post.tags.join(', '),
@@ -168,8 +178,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       "logo": { "@type": "ImageObject", "url": `${BASE_URL}/favicon.png` },
     },
     "image": { "@type": "ImageObject", "url": ogImageUrl, "width": 1200, "height": 630 },
-    "url": `${BASE_URL}/blog/${slug}`,
-    "mainEntityOfPage": { "@type": "WebPage", "@id": `${BASE_URL}/blog/${slug}` },
+    "url": path,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": path },
     "isPartOf": { "@id": `${BASE_URL}/#website` },
     "speakable": {
       "@type": "SpeakableSpecification",
@@ -182,9 +192,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": BASE_URL },
-      { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${BASE_URL}/blog` },
-      { "@type": "ListItem", "position": 3, "name": post.title, "item": `${BASE_URL}/blog/${slug}` },
+      { "@type": "ListItem", "position": 1, "name": isEnglish ? "Home" : "Inicio", "item": homePath },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": blogPath },
+      { "@type": "ListItem", "position": 3, "name": post.title, "item": path },
     ],
   };
 
@@ -197,7 +207,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* Breadcrumb nav */}
         <nav aria-label="Breadcrumb" className="mb-8">
           <ol className="flex items-center gap-2 text-sm text-[var(--muted-color)]">
-            <li><Link href="/" className="hover:text-[var(--primary-color)] transition-colors">Inicio</Link></li>
+            <li><Link href="/" className="hover:text-[var(--primary-color)] transition-colors">{isEnglish ? 'Home' : 'Inicio'}</Link></li>
             <li aria-hidden="true">/</li>
             <li><Link href="/blog" className="hover:text-[var(--primary-color)] transition-colors">Blog</Link></li>
             <li aria-hidden="true">/</li>

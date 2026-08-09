@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import { useLocale } from "next-intl";
 
 export default function BlogNewsletterCTA() {
+  const isEn = useLocale() === 'en';
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -17,7 +19,7 @@ export default function BlogNewsletterCTA() {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Error al suscribirse");
+        throw new Error(data.error || (isEn ? "Error subscribing" : "Error al suscribirse"));
       }
       setStatus("success");
       setEmail("");
@@ -37,11 +39,16 @@ export default function BlogNewsletterCTA() {
             Journal Subscription
           </div>
           <h2 className="font-display italic text-4xl md:text-5xl font-medium text-white-custom tracking-tight">
-            Recibe Contenido Técnico <br />
-            <span className="text-primary">Directamente</span>
+            {isEn ? (
+              <>Get Technical Content <br /><span className="text-primary">Delivered Directly</span></>
+            ) : (
+              <>Recibe Contenido Técnico <br /><span className="text-primary">Directamente</span></>
+            )}
           </h2>
           <p className="text-lg text-text-muted font-medium italic opacity-70 leading-relaxed max-w-lg mx-auto">
-            Únase al protocolo de actualización para recibir análisis profundos sobre el futuro del desarrollo de software.
+            {isEn
+              ? 'Join the update protocol to receive in-depth analysis on the future of software development.'
+              : 'Únase al protocolo de actualización para recibir análisis profundos sobre el futuro del desarrollo de software.'}
           </p>
         </div>
 
@@ -53,7 +60,7 @@ export default function BlogNewsletterCTA() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="su-email@compania.com"
+              placeholder={isEn ? 'your-email@company.com' : 'su-email@compania.com'}
               className="w-full bg-transparent border-none focus:ring-0 px-6 py-4 text-xs font-bold text-white-custom placeholder:text-text-muted/20 placeholder:italic"
             />
             <button
@@ -61,15 +68,19 @@ export default function BlogNewsletterCTA() {
               disabled={status === "loading"}
               className="bg-primary text-background px-8 py-3 rounded-[18px] font-black text-[9px] uppercase tracking-widest hover:scale-105 transition-transform shadow-lg disabled:opacity-50 disabled:hover:scale-100 shrink-0"
             >
-              {status === "loading" ? "Enviando..." : "Suscribirse"}
+              {status === "loading" ? (isEn ? "Sending..." : "Enviando...") : (isEn ? "Subscribe" : "Suscribirse")}
             </button>
           </div>
         </form>
         {status === "success" && (
-          <p className="text-primary text-sm font-bold -mt-8">¡Suscripción exitosa! Revisa tu correo.</p>
+          <p className="text-primary text-sm font-bold -mt-8">
+            {isEn ? 'Successfully subscribed! Check your email.' : '¡Suscripción exitosa! Revisa tu correo.'}
+          </p>
         )}
         {status === "error" && (
-          <p className="text-red-400 text-sm font-bold -mt-8">Error al suscribirse. Inténtalo de nuevo.</p>
+          <p className="text-red-400 text-sm font-bold -mt-8">
+            {isEn ? 'Error subscribing. Please try again.' : 'Error al suscribirse. Inténtalo de nuevo.'}
+          </p>
         )}
       </div>
     </section>

@@ -3,13 +3,13 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CALCULATOR_STEPS, calculateBudget } from '@/lib/calculator/pricing';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { ArrowRight, ArrowLeft, Check, Download, Info, Sparkles, Target, Wallet } from 'lucide-react';
 import { track } from '@vercel/analytics';
 
 export default function BudgetCalculator() {
-  const { i18n } = useTranslation();
-  const lang = (i18n.language || 'es') as 'es' | 'en';
+  const { language } = useTranslation();
+  const lang = (language || 'es') as 'es' | 'en';
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<Record<string, string | string[]>>({});
@@ -227,7 +227,7 @@ export default function BudgetCalculator() {
                 </p>
               </div>
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => window.location.href = lang === 'es' ? '/' : `/${lang}`}
                 className="rounded-[24px] border-2 border-primary text-primary px-12 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:bg-primary hover:text-background shadow-xl"
               >
                 {lang === 'es' ? 'Volver al Centro de Mando' : 'Back to Control Center'}

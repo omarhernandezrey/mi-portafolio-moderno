@@ -3,27 +3,54 @@ import { buildMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
 import JsonLd from '@/components/seo/JsonLd';
 import { HelpCircle, MessageCircle, ChevronRight, Zap, Shield, Wallet, Clock, UserCheck, Globe } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Footer from '@/components/shared/Footer';
 
 const BASE_URL = 'https://omarhernandezrey.com';
 
-export const metadata: Metadata = buildMetadata({
-  title: 'Preguntas Frecuentes | Desarrollador Web Colombia',
-  description: '¿Cuánto cuesta un sitio web en Colombia? ¿Cuánto tarda? ¿Cómo se paga? Respuestas claras sobre precios, tiempos y proceso de trabajo freelance.',
-  path: '/faq',
-  ogSubtitle: 'Desarrollador Web Freelance Colombia',
-  keywords: [
-    'preguntas frecuentes desarrollador web colombia',
-    'cuanto cuesta sitio web colombia',
-    'cuanto tarda pagina web',
-    'como contratar programador freelance',
-    'precios desarrollo web 2026',
-    'desarrollador web freelance colombia preguntas',
-  ],
-});
+type Props = {
+  params: Promise<{ locale: string }>;
+};
 
-const CATEGORIES = [
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const isEn = locale === 'en';
+
+  return buildMetadata(
+    isEn
+      ? {
+          title: 'FAQ | Freelance Web Developer Colombia',
+          description: 'How much does a website cost in Colombia? How long does it take? How do payments work? Clear answers on pricing, timelines, and the freelance process.',
+          path: '/faq',
+          locale: 'en',
+          ogSubtitle: 'Freelance Web Developer Colombia',
+          keywords: [
+            'freelance web developer colombia faq',
+            'how much does a website cost colombia',
+            'how long does a website take',
+            'how to hire a freelance developer',
+            'web development pricing 2026',
+          ],
+        }
+      : {
+          title: 'Preguntas Frecuentes | Desarrollador Web Colombia',
+          description: '¿Cuánto cuesta un sitio web en Colombia? ¿Cuánto tarda? ¿Cómo se paga? Respuestas claras sobre precios, tiempos y proceso de trabajo freelance.',
+          path: '/faq',
+          locale: 'es',
+          ogSubtitle: 'Desarrollador Web Freelance Colombia',
+          keywords: [
+            'preguntas frecuentes desarrollador web colombia',
+            'cuanto cuesta sitio web colombia',
+            'cuanto tarda pagina web',
+            'como contratar programador freelance',
+            'precios desarrollo web 2026',
+            'desarrollador web freelance colombia preguntas',
+          ],
+        }
+  );
+}
+
+const CATEGORIES_ES = [
   {
     title: 'Precios & Pagos',
     icon: <Wallet size={20} />,
@@ -98,15 +125,95 @@ const CATEGORIES = [
   },
 ];
 
-export default function FAQPage() {
+const CATEGORIES_EN = [
+  {
+    title: 'Pricing & Payments',
+    icon: <Wallet size={20} />,
+    faqs: [
+      {
+        q: 'How much does a landing page or website cost in Colombia?',
+        a: 'Professional landing pages start at $300 USD. Corporate websites start at $1,000 USD. E-commerce stores start at $1,500 USD. The final price depends on features: payment integrations, advanced forms, admin panels, etc. Use my calculator to get an estimate in 2 minutes.'
+      },
+      {
+        q: 'What payment methods do you accept for projects in the US and abroad?',
+        a: 'For clients in the US and abroad: PayPal (USD/EUR). For Colombia: Wompi (cards, PSE, Nequi, Bancolombia) and bank transfers. The standard schedule is 50% to start the project and 50% on delivery.'
+      },
+      {
+        q: 'Do you offer web maintenance after delivering the project?',
+        a: 'Yes. I offer monthly maintenance plans starting at $100 USD. They include security updates, weekly backups, 24/7 uptime monitoring, and priority technical support by email with a 24h response time.'
+      },
+      {
+        q: 'How much does a freelance web developer in Colombia charge vs. an agency?',
+        a: 'A senior freelancer in Colombia charges 30-50% less than a local agency while maintaining the same technical quality. The reason: no office overhead, account managers, or corporate structure — the full budget goes into actually building your project.'
+      },
+    ]
+  },
+  {
+    title: 'Technology & Process',
+    icon: <Zap size={20} />,
+    faqs: [
+      {
+        q: 'What technologies do you use to build websites and apps?',
+        a: 'I build exclusively with Next.js 15+ and React on the frontend, Node.js on the backend, and PostgreSQL/Supabase for databases. This stack delivers the best results in Core Web Vitals, technical SEO, and scalability — it outperforms any traditional CMS in speed and flexibility.'
+      },
+      {
+        q: 'Is web design included in the project price?',
+        a: 'Yes, design is included. The process includes a Figma design phase focused on conversion and user experience. We create mockups for your approval before writing a single line of code, and you can request adjustments until you\'re fully satisfied.'
+      },
+      {
+        q: 'Do I own the source code of the project?',
+        a: 'Yes. Once payment is completed in full, all source code rights are transferred to you. The software is an asset of your company — you get full access to the GitHub repositories and admin access to every service (hosting, domain, database).'
+      },
+    ]
+  },
+  {
+    title: 'Timelines & Logistics',
+    icon: <Clock size={20} />,
+    faqs: [
+      {
+        q: 'How long will my website or app take to be ready?',
+        a: 'Landing pages: 3-7 business days. Corporate sites (5-10 pages): 2-4 weeks. E-commerce: 3-6 weeks. Custom web apps: 4-8 weeks. Timelines depend on complexity and how quickly you review and approve deliverables.'
+      },
+      {
+        q: 'Who controls the hosting and domain for my site?',
+        a: 'You do. Everything is set up under your name: domain, hosting on Vercel/AWS/Google Cloud, and database. You get full admin access from day one — you\'re never dependent on me for renewals or provider changes down the line.'
+      },
+      {
+        q: 'Do you offer a guarantee if something breaks after launch?',
+        a: 'Yes. Every project includes a 30-day post-launch guarantee at no extra cost. During that period, I fix any technical bug as a priority. After the guarantee period, I can continue support through a monthly maintenance plan.'
+      },
+    ]
+  },
+  {
+    title: 'Colombia & USA',
+    icon: <Globe size={20} />,
+    faqs: [
+      {
+        q: 'Can you take on projects for clients outside Colombia, like in the US?',
+        a: 'Yes. I work with clients in the US, Canada, Spain, and across LATAM, 100% remote. I work comfortably across EST, CST, and PST time zones, communicating in both English and Spanish via Slack, email, and video calls. I\'ve delivered 10+ projects for US-based clients over the last 3 years.'
+      },
+      {
+        q: 'How many projects have you delivered, and how much experience do you have?',
+        a: '30+ projects delivered over 5+ years: landing pages, e-commerce stores, web applications, and automation systems for companies in Colombia, the US, and LATAM. I hold a Software Engineering degree from Politécnico Grancolombiano plus additional certifications in React, Node.js, and Cloud Architecture.'
+      },
+    ]
+  },
+];
+
+export default async function FAQPage({ params }: Props) {
+  const { locale } = await params;
+  const isEn = locale === 'en';
+  const CATEGORIES = isEn ? CATEGORIES_EN : CATEGORIES_ES;
   const allFaqs = CATEGORIES.flatMap(c => c.faqs);
+  const pageUrl = isEn ? `${BASE_URL}/en/faq` : `${BASE_URL}/faq`;
 
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "@id": `${BASE_URL}/faq`,
-    "url": `${BASE_URL}/faq`,
-    "name": "Preguntas Frecuentes — Desarrollador Web Freelance Colombia",
+    "@id": pageUrl,
+    "url": pageUrl,
+    "name": isEn ? "FAQ — Freelance Web Developer Colombia" : "Preguntas Frecuentes — Desarrollador Web Freelance Colombia",
+    "inLanguage": isEn ? "en" : "es",
     "mainEntity": allFaqs.map(faq => ({
       "@type": "Question",
       "name": faq.q,
@@ -121,8 +228,8 @@ export default function FAQPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": BASE_URL },
-      { "@type": "ListItem", "position": 2, "name": "Preguntas Frecuentes", "item": `${BASE_URL}/faq` },
+      { "@type": "ListItem", "position": 1, "name": isEn ? "Home" : "Inicio", "item": isEn ? `${BASE_URL}/en` : BASE_URL },
+      { "@type": "ListItem", "position": 2, "name": isEn ? "FAQ" : "Preguntas Frecuentes", "item": pageUrl },
     ],
   };
 
@@ -140,11 +247,16 @@ export default function FAQPage() {
               Customer Support Center
             </div>
             <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none">
-              Protocolos y <br />
-              <span className="text-primary">Consultas</span>
+              {isEn ? (
+                <>Protocols & <br /><span className="text-primary">Inquiries</span></>
+              ) : (
+                <>Protocolos y <br /><span className="text-primary">Consultas</span></>
+              )}
             </h1>
             <p className="text-text-muted text-sm font-medium max-w-2xl mx-auto opacity-70 italic">
-              Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web freelance disponible para Colombia y USA.
+              {isEn
+                ? "Direct answers on pricing, timelines, technologies, and the work process. Freelance web developer available for Colombia and the US."
+                : "Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web freelance disponible para Colombia y USA."}
             </p>
           </div>
 
@@ -188,10 +300,12 @@ export default function FAQPage() {
 
               <div className="space-y-4">
                 <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
-                  ¿Tu pregunta no está aquí?
+                  {isEn ? "Don't see your question here?" : "¿Tu pregunta no está aquí?"}
                 </h2>
                 <p className="text-text-muted text-sm font-medium italic opacity-70 leading-relaxed">
-                  Cada proyecto es diferente. Cuéntame tu situación y te doy una respuesta personalizada. Consulta inicial gratis, sin compromiso.
+                  {isEn
+                    ? "Every project is different. Tell me your situation and I'll give you a personalized answer. Free initial consultation, no obligation."
+                    : "Cada proyecto es diferente. Cuéntame tu situación y te doy una respuesta personalizada. Consulta inicial gratis, sin compromiso."}
                 </p>
               </div>
 
@@ -200,7 +314,7 @@ export default function FAQPage() {
                   href="/calculadora"
                   className="bg-white/5 hover:bg-white/10 text-white-custom px-10 py-5 rounded-[24px] border border-white/10 font-black text-[10px] uppercase tracking-[0.3em] transition-all"
                 >
-                  Calcular Presupuesto
+                  {isEn ? "Calculate Budget" : "Calcular Presupuesto"}
                 </Link>
                 <a
                   href="https://wa.me/573219052878"
@@ -209,7 +323,7 @@ export default function FAQPage() {
                   className="bg-primary hover:scale-105 text-background px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.3em] transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
                 >
                   <MessageCircle size={16} fill="currentColor" />
-                  WhatsApp Directo
+                  {isEn ? "Direct WhatsApp" : "WhatsApp Directo"}
                 </a>
               </div>
             </div>
@@ -217,9 +331,9 @@ export default function FAQPage() {
 
           {/* Global Trust Bar */}
           <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
-            <TrustItem icon={<Shield size={14} />} text="Protocolo Seguro" />
-            <TrustItem icon={<UserCheck size={14} />} text="Identidad Verificada" />
-            <TrustItem icon={<Clock size={14} />} text="Alta Disponibilidad" />
+            <TrustItem icon={<Shield size={14} />} text={isEn ? "Secure Protocol" : "Protocolo Seguro"} />
+            <TrustItem icon={<UserCheck size={14} />} text={isEn ? "Verified Identity" : "Identidad Verificada"} />
+            <TrustItem icon={<Clock size={14} />} text={isEn ? "High Availability" : "Alta Disponibilidad"} />
           </div>
 
         </div>

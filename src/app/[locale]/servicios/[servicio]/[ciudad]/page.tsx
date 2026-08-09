@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
@@ -12,22 +12,27 @@ import { buildMetadata, withBrand } from '@/lib/seo';
 
 interface Props {
   params: Promise<{
+    locale: string;
     servicio: string;
     ciudad: string;
   }>;
 }
 
-// Solo se generan páginas para ciudades curadas. Las URLs antiguas de las
-// demás ciudades responden 301 hacia la página pilar del servicio (ver abajo),
-// consolidando señales en lugar de repartirlas entre 810 páginas casi idénticas.
+// Solo se generan páginas para ciudades curadas, en ambos locales. Las URLs
+// de ciudades no curadas responden 301 hacia la página pilar del servicio
+// (ver abajo), consolidando señales en lugar de repartirlas entre cientos
+// de páginas casi idénticas.
 export async function generateStaticParams() {
   const paths = [];
-  for (const servicio of serviciosProgramaticos) {
-    for (const ciudadId of CIUDADES_INDEXABLES) {
-      paths.push({
-        servicio: servicio.id,
-        ciudad: ciudadId,
-      });
+  for (const locale of ['es', 'en']) {
+    for (const servicio of serviciosProgramaticos) {
+      for (const ciudadId of CIUDADES_INDEXABLES) {
+        paths.push({
+          locale,
+          servicio: servicio.id,
+          ciudad: ciudadId,
+        });
+      }
     }
   }
   return paths;
@@ -38,40 +43,40 @@ function esCiudadIndexable(ciudadId: string): boolean {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { servicio: servicioId, ciudad: ciudadId } = await params;
+  const { locale, servicio: servicioId, ciudad: ciudadId } = await params;
   const servicio = serviciosProgramaticos.find(s => s.id === servicioId);
   const ciudad = ciudades.find(c => c.id === ciudadId);
 
   if (!servicio || !ciudad || !esCiudadIndexable(ciudadId)) return {};
 
-  const isUS = ciudad.country === 'United States';
+  const isEn = locale === 'en';
 
-  const title = isUS && servicio.h1En
+  const title = isEn && servicio.h1En
     ? servicio.h1En.replace('{city}', ciudad.name)
     : servicio.h1.replace('{ciudad}', ciudad.name);
 
-  const description = isUS && servicio.descriptionEn
+  const description = isEn && servicio.descriptionEn
     ? servicio.descriptionEn.replace('{city}', ciudad.name).replace('{country}', ciudad.country)
     : servicio.description.replace('{ciudad}', ciudad.name).replace('{country}', ciudad.country);
 
-  const keywords = isUS && servicio.keywordsEn
+  const keywords = isEn && servicio.keywordsEn
     ? servicio.keywordsEn.map(k => k.replace('{city}', ciudad.name))
     : servicio.keywords.map(k => k.replace('{ciudad}', ciudad.name).replace('{country}', ciudad.country));
 
-  const serviceName = isUS && servicio.nameEn ? servicio.nameEn : servicio.name;
+  const serviceName = isEn && servicio.nameEn ? servicio.nameEn : servicio.name;
 
   return buildMetadata({
     title: withBrand(title),
     description,
     path: `/servicios/${servicioId}/${ciudadId}`,
-    ogSubtitle: serviceName + (isUS ? ' in ' : ' en ') + ciudad.name,
+    locale: isEn ? 'en' : 'es',
+    ogSubtitle: serviceName + (isEn ? ' in ' : ' en ') + ciudad.name,
     keywords,
-    locale: isUS ? 'en_US' : 'es_CO',
   });
 }
 
 export default async function ServicioCiudadPage({ params }: Props) {
-  const { servicio: servicioId, ciudad: ciudadId } = await params;
+  const { locale, servicio: servicioId, ciudad: ciudadId } = await params;
   const servicio = serviciosProgramaticos.find(s => s.id === servicioId);
   const ciudad = ciudades.find(c => c.id === ciudadId);
 
@@ -84,29 +89,34 @@ export default async function ServicioCiudadPage({ params }: Props) {
     permanentRedirect(`/servicios/${servicioId}`);
   }
 
-  const isUS = ciudad.country === 'United States';
+  const isEn = locale === 'en';
 
-  const h1 = isUS && servicio.h1En
+  const h1 = isEn && servicio.h1En
     ? servicio.h1En.replace('{city}', ciudad.name)
     : servicio.h1.replace('{ciudad}', ciudad.name);
 
-  const h2 = isUS && servicio.h2En
+  const h2 = isEn && servicio.h2En
     ? servicio.h2En.replace('{city}', ciudad.name)
     : servicio.h2.replace('{ciudad}', ciudad.name);
 
-  const description = isUS && servicio.descriptionEn
+  const description = isEn && servicio.descriptionEn
     ? servicio.descriptionEn.replace('{city}', ciudad.name).replace('{country}', ciudad.country)
     : servicio.description.replace('{ciudad}', ciudad.name).replace('{country}', ciudad.country);
 
-  const benefits = isUS && servicio.benefitsEn ? servicio.benefitsEn : servicio.benefits;
-  const process = isUS && servicio.processEn ? servicio.processEn : servicio.process;
+  const benefits = isEn && servicio.benefitsEn ? servicio.benefitsEn : servicio.benefits;
+  const process = isEn && servicio.processEn ? servicio.processEn : servicio.process;
   // FAQ local real (huso horario / modalidad remota), distinta a la del servicio,
   // para que cada ciudad no sea solo la misma plantilla con el nombre cambiado.
-  const localFaq = isUS
-    ? {
-        q: 'What time zone do you work in?',
-        a: `I'm based in Colombia (UTC-5), at most 1 hour behind US Eastern Time — real-time collaboration during your business hours in ${ciudad.name} is easy, no overnight delays.`,
-      }
+  const localFaq = isEn
+    ? (ciudad.id === 'bogota'
+      ? {
+          q: 'Are you based in Bogotá, or fully remote?',
+          a: `I'm based in Bogotá, Colombia. All collaboration happens remotely via video call and messaging — no on-site presence needed for a ${ciudad.name} project.`,
+        }
+      : {
+          q: 'What time zone do you work in?',
+          a: `I'm based in Colombia (UTC-5), at most 1 hour behind US Eastern Time — real-time collaboration during your business hours in ${ciudad.name} is easy, no overnight delays.`,
+        })
     : ciudad.id === 'bogota'
       ? {
           q: '¿Podemos reunirnos en persona en Bogotá?',
@@ -118,20 +128,20 @@ export default async function ServicioCiudadPage({ params }: Props) {
         };
 
   const faqs = [
-    ...(isUS && servicio.faqsEn
+    ...(isEn && servicio.faqsEn
       ? servicio.faqsEn.map(f => ({ q: f.q.replace('{city}', ciudad.name), a: f.a }))
       : servicio.faqs.map(f => ({ q: f.q.replace('{ciudad}', ciudad.name), a: f.a }))),
     localFaq,
   ];
-  const priceRange = isUS && servicio.priceRangeUsd ? servicio.priceRangeUsd : servicio.priceRange;
-  const deliveryTime = isUS && servicio.deliveryTimeEn ? servicio.deliveryTimeEn : servicio.deliveryTime;
-  const serviceName = isUS && servicio.nameEn ? servicio.nameEn : servicio.name;
+  const priceRange = isEn && servicio.priceRangeUsd ? servicio.priceRangeUsd : servicio.priceRange;
+  const deliveryTime = isEn && servicio.deliveryTimeEn ? servicio.deliveryTimeEn : servicio.deliveryTime;
+  const serviceName = isEn && servicio.nameEn ? servicio.nameEn : servicio.name;
 
-  const splitWord = isUS ? ' in ' : ' en ';
+  const splitWord = isEn ? ' in ' : ' en ';
   const h1Parts = h1.split(splitWord);
-  const cityLabel = isUS ? `in ${ciudad.name}` : `en ${ciudad.name}`;
+  const cityLabel = isEn ? `in ${ciudad.name}` : `en ${ciudad.name}`;
 
-  const ui = isUS ? {
+  const ui = isEn ? {
     ctaAudit: `Start Project in ${ciudad.name}`,
     infraTitle: `Infrastructure designed for ${ciudad.name}'s market`,
     geoTitle: 'Geographic Relevance',
@@ -197,12 +207,14 @@ export default async function ServicioCiudadPage({ params }: Props) {
     blog3Href: '/blog/build-mvp-nextjs-30-days-process',
   };
 
+  const base = isEn ? 'https://omarhernandezrey.com/en' : 'https://omarhernandezrey.com';
+
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ProfessionalService"],
-    "@id": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
+    "@id": `${base}/servicios/${servicioId}/${ciudadId}`,
     "name": `Omar Hernández Rey — ${serviceName} in ${ciudad.name}`,
-    "url": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}`,
+    "url": `${base}/servicios/${servicioId}/${ciudadId}`,
     "telephone": "+573219052878",
     "priceRange": "$$-$$$",
     "description": description,
@@ -222,19 +234,19 @@ export default async function ServicioCiudadPage({ params }: Props) {
     "offers": {
       "@type": "Offer",
       "priceCurrency": "USD",
-      "priceRange": isUS && servicio.priceRangeUsd ? servicio.priceRangeUsd : "300-5000",
+      "priceRange": isEn && servicio.priceRangeUsd ? servicio.priceRangeUsd : "300-5000",
     },
-    "inLanguage": isUS ? "en" : "es",
+    "inLanguage": isEn ? "en" : "es",
   };
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://omarhernandezrey.com" },
-      { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://omarhernandezrey.com/servicios" },
-      { "@type": "ListItem", "position": 3, "name": serviceName, "item": `https://omarhernandezrey.com/servicios/${servicioId}` },
-      { "@type": "ListItem", "position": 4, "name": `${serviceName} in ${ciudad.name}`, "item": `https://omarhernandezrey.com/servicios/${servicioId}/${ciudadId}` },
+      { "@type": "ListItem", "position": 1, "name": isEn ? "Home" : "Inicio", "item": base },
+      { "@type": "ListItem", "position": 2, "name": isEn ? "Services" : "Servicios", "item": `${base}/servicios` },
+      { "@type": "ListItem", "position": 3, "name": serviceName, "item": `${base}/servicios/${servicioId}` },
+      { "@type": "ListItem", "position": 4, "name": `${serviceName} ${cityLabel}`, "item": `${base}/servicios/${servicioId}/${ciudadId}` },
     ],
   };
 
@@ -426,10 +438,10 @@ export default async function ServicioCiudadPage({ params }: Props) {
                 >
                   <div>
                     <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-1">
-                      {isUS && s.nameEn ? s.nameEn : s.name}
+                      {isEn && s.nameEn ? s.nameEn : s.name}
                     </p>
                     <p className="text-[10px] text-text-muted/50">
-                      {isUS && s.priceRangeUsd ? s.priceRangeUsd : s.priceRange.split('(')[0].trim()}
+                      {isEn && s.priceRangeUsd ? s.priceRangeUsd : s.priceRange.split('(')[0].trim()}
                     </p>
                   </div>
                   <ArrowRight size={14} className="text-text-muted/30 group-hover:text-primary transition-colors shrink-0" />
@@ -441,7 +453,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
               href={`/servicios/${servicioId}`}
               className="inline-flex items-center gap-2 text-sm font-bold text-primary/80 hover:text-primary transition-colors"
             >
-              {isUS ? `${serviceName} — full service page` : `Página completa de ${serviceName}`}
+              {isEn ? `${serviceName} — full service page` : `Página completa de ${serviceName}`}
               <ArrowRight size={14} />
             </Link>
             <Link

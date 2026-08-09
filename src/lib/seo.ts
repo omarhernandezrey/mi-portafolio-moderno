@@ -28,20 +28,25 @@ export interface BuildMetadataOptions {
   title: string;
   /** Meta description única (≤155 chars). */
   description: string;
-  /** Ruta desde la raíz, ej. '/faq'. Cadena vacía para el home. */
+  /**
+   * Ruta canónica AGNÓSTICA de idioma, desde la raíz sin prefijo /en,
+   * ej. '/faq', '/servicios/desarrollo-web/bogota'. Cadena vacía para el home.
+   */
   path: string;
+  /** Idioma de ESTA página. 'es' = sin prefijo, 'en' = bajo /en. Default 'es'. */
+  locale?: 'es' | 'en';
   /** Subtítulo de la imagen OG; por defecto la marca. */
   ogSubtitle?: string;
-  locale?: 'es_CO' | 'en_US';
   keywords?: string[];
   /** URL absoluta de imagen OG propia; por defecto se genera con /api/og. */
   image?: string;
   noIndex?: boolean;
   /**
-   * Pares hreflang ABSOLUTOS. Solo declararlos si la página equivalente
-   * existe en el otro idioma y esa página declara el par recíproco.
+   * La página NO tiene versión en el otro idioma (ej. un post de blog sin
+   * traducir) — omite el bloque hreflang para no prometerle a Google una
+   * URL que da 404.
    */
-  languages?: Record<string, string>;
+  singleLanguage?: boolean;
 }
 
 export function buildMetadata(opts: BuildMetadataOptions): Metadata {
@@ -50,15 +55,18 @@ export function buildMetadata(opts: BuildMetadataOptions): Metadata {
     description,
     path,
     ogSubtitle,
-    locale = 'es_CO',
+    locale = 'es',
     keywords,
     image,
     noIndex,
-    languages,
+    singleLanguage,
   } = opts;
 
-  const url = `${SITE_URL}${path}`;
+  const esUrl = `${SITE_URL}${path}`;
+  const enUrl = `${SITE_URL}/en${path}`;
+  const url = locale === 'es' ? esUrl : enUrl;
   const ogImage = image ?? ogImageUrl(title, ogSubtitle ?? BRAND);
+  const ogLocale = locale === 'es' ? 'es_CO' : 'en_US';
 
   if (clientEnv.IS_DEV) {
     if (title.length > TITLE_MAX) {
@@ -68,6 +76,12 @@ export function buildMetadata(opts: BuildMetadataOptions): Metadata {
       console.warn(`[seo] description de ${description.length} chars (>${DESCRIPTION_MAX}) en ${path || '/'}`);
     }
   }
+
+  // Pares hreflang generados a partir de path+locale — imposible que se
+  // desalineen entre sí, a diferencia de declararlos a mano por página.
+  const languages = singleLanguage
+    ? undefined
+    : { es: esUrl, en: enUrl, 'x-default': esUrl };
 
   return {
     title: { absolute: title },
@@ -80,7 +94,7 @@ export function buildMetadata(opts: BuildMetadataOptions): Metadata {
     ...(noIndex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: 'website',
-      locale,
+      locale: ogLocale,
       url,
       siteName: BRAND,
       title,

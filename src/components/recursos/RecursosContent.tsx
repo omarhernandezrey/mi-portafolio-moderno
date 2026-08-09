@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, CheckCircle, Loader2, Mail, Shield, BookOpen, Target, Sparkles, ChevronRight, Lock } from 'lucide-react';
-import Link from 'next/link';
+import { useLocale } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import Footer from '@/components/shared/Footer';
 import { track } from '@vercel/analytics';
 
-const magnets = [
+const magnetsEs = [
   {
     id: 'checklist',
     title: 'Checklist de Auditoría Técnica',
@@ -28,7 +29,32 @@ const magnets = [
   }
 ];
 
+const magnetsEn = [
+  {
+    id: 'checklist',
+    title: 'Technical Audit Checklist',
+    description: '15 critical checkpoints to audit the quality and security of a build before the deployment phase.',
+    icon: <Shield size={32} />,
+  },
+  {
+    id: 'guia-precios',
+    title: 'Web Development Pricing Guide 2026',
+    description: 'Detailed breakdown of software engineering investment ranges for the LATAM and global market.',
+    icon: <BookOpen size={32} />,
+  },
+  {
+    id: 'plantilla-brief',
+    title: 'Project Briefing Template',
+    description: 'High-fidelity document for the strategic definition of objectives, KPIs, and technical scope of digital projects.',
+    icon: <Target size={32} />,
+  }
+];
+
 export default function RecursosContent() {
+  const locale = useLocale();
+  const isEn = locale === 'en';
+  const magnets = isEn ? magnetsEn : magnetsEs;
+
   const [email, setEmail] = useState('');
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [successId, setSuccessId] = useState<string | null>(null);
@@ -36,7 +62,7 @@ export default function RecursosContent() {
 
   const handleDownload = async (magnetId: string) => {
     if (!email || !email.includes('@')) {
-      setError('Por favor, ingresa un email corporativo válido');
+      setError(isEn ? 'Please enter a valid business email' : 'Por favor, ingresa un email corporativo válido');
       return;
     }
 
@@ -53,7 +79,7 @@ export default function RecursosContent() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Error al procesar la solicitud');
+        throw new Error(data.error || (isEn ? 'Error processing the request' : 'Error al procesar la solicitud'));
       }
 
       setSuccessId(magnetId);
@@ -78,7 +104,7 @@ export default function RecursosContent() {
             animate={{ opacity: 1, y: 0 }}
             className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]"
           >
-            Activos Digitales e Inteligencia
+            {isEn ? 'Digital Assets & Intelligence' : 'Activos Digitales e Inteligencia'}
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -86,8 +112,11 @@ export default function RecursosContent() {
             transition={{ delay: 0.1 }}
             className="font-display italic text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]"
           >
-            Recursos de <br />
-            <span className="text-primary">Alta Fidelidad</span>
+            {isEn ? (
+              <>High-Fidelity <br /><span className="text-primary">Resources</span></>
+            ) : (
+              <>Recursos de <br /><span className="text-primary">Alta Fidelidad</span></>
+            )}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -95,15 +124,17 @@ export default function RecursosContent() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-text-muted font-medium max-w-2xl mx-auto opacity-70 leading-relaxed italic"
           >
-            Herramientas ejecutivas y guías técnicas diseñadas para optimizar la toma de decisiones en el ecosistema digital moderno.
+            {isEn
+              ? 'Executive tools and technical guides designed to optimize decision-making in the modern digital ecosystem.'
+              : 'Herramientas ejecutivas y guías técnicas diseñadas para optimizar la toma de decisiones en el ecosistema digital moderno.'}
           </motion.p>
         </header>
 
         {/* Global Access Protocol */}
         <section className="max-w-xl mx-auto space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="font-mono-label text-[0.65rem] text-text-muted opacity-40">Verificación de Acceso</h2>
-            <p className="text-xs text-text-muted/60 font-medium italic">Se requiere autorización vía email para liberar los activos.</p>
+            <h2 className="font-mono-label text-[0.65rem] text-text-muted opacity-40">{isEn ? 'Access Verification' : 'Verificación de Acceso'}</h2>
+            <p className="text-xs text-text-muted/60 font-medium italic">{isEn ? 'Email authorization is required to unlock the assets.' : 'Se requiere autorización vía email para liberar los activos.'}</p>
           </div>
 
           <div className="relative group">
@@ -112,7 +143,7 @@ export default function RecursosContent() {
               <Mail className="ml-6 text-text-muted/40 group-focus-within:text-primary transition-colors" size={20} />
               <input
                 type="email"
-                placeholder="Introduzca su email de negocio..."
+                placeholder={isEn ? 'Enter your business email...' : 'Introduzca su email de negocio...'}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent border-none focus:ring-0 px-6 py-5 text-sm font-bold text-white-custom placeholder:text-text-muted/20 placeholder:italic"
@@ -176,12 +207,12 @@ export default function RecursosContent() {
                     ) : successId === magnet.id ? (
                       <>
                         <CheckCircle size={16} />
-                        Acceso Concedido
+                        {isEn ? 'Access Granted' : 'Acceso Concedido'}
                       </>
                     ) : (
                       <>
                         <Lock size={14} className="opacity-40" />
-                        Descargar PDF
+                        {isEn ? 'Download PDF' : 'Descargar PDF'}
                       </>
                     )}
                   </div>
@@ -202,10 +233,12 @@ export default function RecursosContent() {
 
             <div className="space-y-4">
               <h2 className="font-display italic text-4xl md:text-5xl font-medium text-white-custom tracking-tight">
-                Calcula tu Presupuesto
+                {isEn ? 'Calculate Your Budget' : 'Calcula tu Presupuesto'}
               </h2>
               <p className="text-lg text-text-muted font-medium italic opacity-70 leading-relaxed max-w-lg mx-auto">
-                Consolide sus requerimientos técnicos y obtenga una auditoría financiera instantánea para su próximo despliegue.
+                {isEn
+                  ? 'Consolidate your technical requirements and get an instant financial audit for your next deployment.'
+                  : 'Consolide sus requerimientos técnicos y obtenga una auditoría financiera instantánea para su próximo despliegue.'}
               </p>
             </div>
 
@@ -213,7 +246,7 @@ export default function RecursosContent() {
               href="/calculadora"
               className="group inline-flex items-center gap-4 bg-primary text-background px-12 py-6 rounded-[28px] font-black text-[12px] uppercase tracking-[0.4em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
             >
-              Auditar Presupuesto
+              {isEn ? 'Audit Budget' : 'Auditar Presupuesto'}
               <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -223,11 +256,11 @@ export default function RecursosContent() {
         <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
           <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
             <Shield size={14} />
-            Transmisión Segura de Datos
+            {isEn ? 'Secure Data Transmission' : 'Transmisión Segura de Datos'}
           </div>
           <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
             <FileText size={14} />
-            Índice de Documento 2026.04
+            {isEn ? 'Document Index 2026.04' : 'Índice de Documento 2026.04'}
           </div>
         </div>
       </main>

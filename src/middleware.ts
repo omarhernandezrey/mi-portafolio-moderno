@@ -1,11 +1,15 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import createIntlMiddleware from 'next-intl/middleware'
 import { serverEnv } from './config/env'
 import { canAccessAdminPath, minRoleForApiRequest } from './lib/admin/permissions'
 import { hasMinRole, isAdminRole } from './lib/admin/roles'
 import { isEmailAllowed } from './lib/admin/access'
+import { routing } from './i18n/routing'
 
-export async function middleware(request: NextRequest) {
+const intlMiddleware = createIntlMiddleware(routing)
+
+async function runSupabaseAuth(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -95,6 +99,24 @@ export async function middleware(request: NextRequest) {
   return response
 }
 
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // /admin y /api/* nunca deben pasar por el locale routing — son rutas
+  // absolutas, no localizadas. El early-return es la barrera real, no
+  // solo el matcher.
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) {
+    return runSupabaseAuth(request)
+  }
+
+  return intlMiddleware(request)
+}
+
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/tickets/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/api/admin/:path*',
+    '/api/tickets/:path*',
+    '/((?!_next|.*\\..*).*)',
+  ],
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { buildMetadata } from '@/lib/seo';
-import Link from 'next/link';
+import { Metadata } from 'next';
+import { Link } from '@/i18n/navigation';
 import { getAllPosts } from '@/lib/blog';
 import { BookOpen, Calendar, Clock, ArrowRight, Search, Sparkles, ChevronRight } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
@@ -8,30 +9,62 @@ import JsonLd from '@/components/seo/JsonLd';
 import { breadcrumbList } from '@/lib/schemas';
 import BlogNewsletterCTA from '@/components/blog/BlogNewsletterCTA';
 
-export const metadata = buildMetadata({
-  title: 'Blog de Desarrollo Web y SEO | Omar Hernández Rey',
-  description: 'Artículos técnicos sobre desarrollo web con React y Next.js, SEO y estrategia digital para emprendedores en Colombia y LATAM.',
-  path: '/blog',
-  ogSubtitle: 'Desarrollo Web y Estrategia Digital',
-  keywords: [
-    'blog desarrollo web colombia',
-    'tutorial react next.js',
-    'seo tecnico colombia',
-    'estrategia digital emprendedores',
-    'programacion web colombia',
-  ],
-});
+type Props = {
+  params: Promise<{ locale: string }>;
+};
 
-export default async function BlogPage() {
-  const posts = await getAllPosts();
-  const esPosts = posts.filter(p => p.lang === 'es' || !p.lang);
-  const enPosts = posts.filter(p => p.lang === 'en');
-  const featuredPost = esPosts[0] || enPosts[0] || posts[0];
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const isEn = locale === 'en';
+
+  return buildMetadata(
+    isEn
+      ? {
+          title: 'Web Development & SEO Blog | Omar Hernández Rey',
+          description: 'Technical articles on web development with React and Next.js, SEO, and digital strategy for entrepreneurs in Colombia and LATAM.',
+          path: '/blog',
+          locale: 'en',
+          ogSubtitle: 'Web Development & Digital Strategy',
+          keywords: [
+            'web development blog colombia',
+            'react next.js tutorial',
+            'technical seo colombia',
+            'digital strategy entrepreneurs',
+          ],
+        }
+      : {
+          title: 'Blog de Desarrollo Web y SEO | Omar Hernández Rey',
+          description: 'Artículos técnicos sobre desarrollo web con React y Next.js, SEO y estrategia digital para emprendedores en Colombia y LATAM.',
+          path: '/blog',
+          locale: 'es',
+          ogSubtitle: 'Desarrollo Web y Estrategia Digital',
+          keywords: [
+            'blog desarrollo web colombia',
+            'tutorial react next.js',
+            'seo tecnico colombia',
+            'estrategia digital emprendedores',
+            'programacion web colombia',
+          ],
+        }
+  );
+}
+
+export default async function BlogPage({ params }: Props) {
+  const { locale } = await params;
+  const isEn = locale === 'en';
+  const allPosts = await getAllPosts();
+  // Cada idioma solo lista su propio contenido — evita mezclar ES/EN en
+  // una página que hreflang le promete a Google como monolingüe.
+  const posts = allPosts.filter(p => (isEn ? p.lang === 'en' : p.lang === 'es' || !p.lang));
+  const featuredPost = posts[0];
   const regularPosts = posts.filter(p => p.slug !== featuredPost?.slug);
 
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
-      <JsonLd data={breadcrumbList([{ name: 'Inicio', path: '' }, { name: 'Blog', path: '/blog' }])} />
+      <JsonLd data={breadcrumbList([
+        { name: isEn ? 'Home' : 'Inicio', path: '' },
+        { name: 'Blog', path: '/blog' },
+      ])} />
 
       <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-12 md:space-y-24">
 
@@ -41,15 +74,20 @@ export default async function BlogPage() {
             Knowledge Base &amp; Research
           </div>
           <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
-            Journal de <br />
-            <span className="text-primary">Ingeniería</span>
+            {isEn ? (
+              <>Engineering <br /><span className="text-primary">Journal</span></>
+            ) : (
+              <>Journal de <br /><span className="text-primary">Ingeniería</span></>
+            )}
           </h1>
           <div className="flex flex-wrap items-center gap-4">
             <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
-              Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.
+              {isEn
+                ? 'Technical articles and strategic reflections at the intersection of high-performance code and intelligent systems.'
+                : 'Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.'}
             </p>
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 text-primary text-xs font-black italic shrink-0">
-              {posts.length} artículos publicados
+              {isEn ? `${posts.length} articles published` : `${posts.length} artículos publicados`}
             </span>
           </div>
         </header>
@@ -57,24 +95,24 @@ export default async function BlogPage() {
         {/* Blog Infrastructure Control */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 border-b border-white/5 pb-10">
           <nav className="flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/40">
-            <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">Todos</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Desarrollo Web</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Negocios</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">Tecnología</Link>
+            <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">{isEn ? 'All' : 'Todos'}</Link>
+            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Web Development' : 'Desarrollo Web'}</Link>
+            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Business' : 'Negocios'}</Link>
+            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Technology' : 'Tecnología'}</Link>
           </nav>
-          
+
           <div className="flex items-center gap-3 w-full lg:w-auto">
             <div className="relative group w-full lg:w-72">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted/40 group-focus-within:text-primary transition-colors" size={16} />
-              <input 
-                type="text" 
-                placeholder="Buscar artículo..." 
+              <input
+                type="text"
+                placeholder={isEn ? 'Search article...' : 'Buscar artículo...'}
                 className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold text-white-custom outline-none focus:border-primary/30 transition-all italic"
               />
             </div>
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full text-[9px] font-black uppercase tracking-widest text-primary/70 italic shrink-0">
-              ES
-              <span className="text-text-muted/30">Español</span>
+              {isEn ? 'EN' : 'ES'}
+              <span className="text-text-muted/30">{isEn ? 'English' : 'Español'}</span>
             </span>
           </div>
         </div>
@@ -85,33 +123,30 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
               <div className="p-6 sm:p-10 md:p-20 space-y-6 sm:space-y-10 relative z-10">
                 <div className="flex items-center gap-4">
-                  <span className="px-3 py-1 rounded-md bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest italic">Destacado</span>
-                  {featuredPost.lang === 'en' && (
-                    <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[9px] font-black uppercase tracking-widest">EN</span>
-                  )}
+                  <span className="px-3 py-1 rounded-md bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest italic">{isEn ? 'Featured' : 'Destacado'}</span>
                   <div className="flex items-center gap-2 text-[10px] text-text-muted/40 font-black uppercase tracking-widest">
                     <Calendar size={12} />
-                    {new Date(featuredPost.date).toLocaleDateString(featuredPost.lang === 'en' ? 'en-US' : 'es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    {new Date(featuredPost.date).toLocaleDateString(isEn ? 'en-US' : 'es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}
                   </div>
                 </div>
-                
+
                 <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight leading-tight group-hover:text-primary transition-colors">
                   {featuredPost.title}
                 </h2>
-                
+
                 <p className="text-lg text-text-muted font-medium italic opacity-60 leading-relaxed max-w-lg">
                   {featuredPost.description}
                 </p>
-                
-                <Link 
+
+                <Link
                   href={`/blog/${featuredPost.slug}`}
                   className="group/btn inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
                 >
-                  Leer Publicación
+                  {isEn ? 'Read Post' : 'Leer Publicación'}
                   <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
                 </Link>
               </div>
-              
+
               <div className="h-[400px] lg:h-full bg-background relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-card-bg to-transparent z-10 lg:block hidden" />
                 <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors duration-700" />
@@ -143,13 +178,8 @@ export default async function BlogPage() {
                     <Clock size={12} className="text-primary" />
                     {post.readingTime || 5} min
                   </div>
-                  <div className="flex items-center gap-2">
-                    {post.lang === 'en' && (
-                      <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[8px] font-black uppercase tracking-widest">EN</span>
-                    )}
-                    <div className="text-[10px] font-black text-primary/60 uppercase tracking-tighter italic">
-                      {new Date(post.date).toLocaleDateString(post.lang === 'en' ? 'en-US' : 'es-CO', { day: '2-digit', month: 'short' })}
-                    </div>
+                  <div className="text-[10px] font-black text-primary/60 uppercase tracking-tighter italic">
+                    {new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'es-CO', { day: '2-digit', month: 'short' })}
                   </div>
                 </div>
 
@@ -168,11 +198,11 @@ export default async function BlogPage() {
                       <span key={tag} className="text-[8px] font-black uppercase tracking-widest text-text-muted/30">#{tag}</span>
                     ))}
                   </div>
-                  <Link 
+                  <Link
                     href={`/blog/${post.slug}`}
                     className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted hover:text-white-custom transition-colors"
                   >
-                    Leer más
+                    {isEn ? 'Read more' : 'Leer más'}
                     <ChevronRight size={14} />
                   </Link>
                 </div>

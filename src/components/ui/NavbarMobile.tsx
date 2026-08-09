@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 import {
   AiOutlineHome,
@@ -28,6 +29,7 @@ interface NavbarMobileProps {
 
 const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
   const pathname = usePathname();
+  const locale = useLocale();
   const menuRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState<string>("#hero");
   const { togglePalette } = usePalette();
@@ -62,15 +64,17 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
   }, [isOpen, toggleMenu]);
 
   const handleLinkClick = (id: string, isPage?: boolean) => {
+    const prefix = locale === 'es' ? '' : `/${locale}`;
+
     if (isPage) {
-      window.location.href = id;
+      window.location.href = `${prefix}${id}`;
       toggleMenu();
       return;
     }
 
     // Si estamos en otra página y es un link interno, redirigir al home con el ancla
     if (pathname !== "/" && id.startsWith("#")) {
-      window.location.href = `/${id}`;
+      window.location.href = `${prefix}/${id}`;
       toggleMenu();
       return;
     }

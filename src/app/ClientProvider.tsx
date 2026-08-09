@@ -7,9 +7,6 @@ import { ToastProvider } from '@/components/ui/Toast';
 import { NotyfProvider } from '@/components/ui/NotyfProvider';
 import dynamic from 'next/dynamic';
 
-// Importar i18n para inicializar
-import '@/lib/i18n';
-
 // Cargar ChatWidget de forma dinámica para optimizar performance (SSR: false)
 const ChatWidget = dynamic(() => import('@/components/shared/ChatWidget'), {
   ssr: false,
@@ -35,9 +32,6 @@ export default function ClientProvider({ children }: ClientProviderProps) {
   }, []);
 
   useEffect(() => {
-    // Asegurar que i18n esté inicializado en el cliente
-    import('@/lib/i18n');
-    
     // SOLUCIÓN: Forzar scroll funcional (ejecutar después de la hidratación)
     const forceScrollEnabled = () => {
       // Usar requestAnimationFrame para evitar problemas de hidratación

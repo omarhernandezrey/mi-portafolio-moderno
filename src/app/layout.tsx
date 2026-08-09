@@ -7,6 +7,8 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/seo/JsonLd";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { clientEnv } from "@/config/env";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 // SEO: Global schema graph — Person + Organization + WebSite with SearchAction
 const personData = {
   "@context": "https://schema.org",
@@ -157,13 +159,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // getLocale()/getMessages() resuelven el locale de la request actual
+  // (vía el header que setea el middleware de next-intl). Para rutas
+  // fuera de /[locale]/ (admin, api-adjacent) no hay locale en la URL,
+  // así que caen al default 'es' definido en src/i18n/request.ts — el
+  // provider queda disponible en TODA la app sin duplicar root layouts.
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://omarhernandezrey.com" />
         <link rel="dns-prefetch" href="https://api.indexnow.org" />
@@ -173,11 +183,13 @@ export default function RootLayout({
         className={`${fraunces.variable} ${manrope.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <JsonLd data={personData} />
-        <ClientProvider>
-          <NavbarLogic />
-          {children}
-          <Analytics />
-        </ClientProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ClientProvider>
+            <NavbarLogic />
+            {children}
+            <Analytics />
+          </ClientProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

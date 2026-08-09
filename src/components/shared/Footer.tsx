@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import NextLink from "next/link";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
 import {
   FaGithub,
   FaLinkedin,
@@ -15,13 +16,17 @@ import NewsletterForm from "./NewsletterForm";
 import { useTranslation } from "../../hooks/useTranslation";
 
 export default function Footer() {
+  // usePathname aquí viene sin el prefijo de locale (next-intl lo resuelve
+  // internamente) — comparar contra "/" sigue siendo válido en cualquier idioma.
   const pathname = usePathname();
+  const locale = useLocale();
   const { t } = useTranslation();
 
   const handleLinkClick = (id: string) => {
     // Si estamos en otra página y es un link interno, redirigir al home con el ancla
     if (pathname !== "/" && id.startsWith("#")) {
-      window.location.href = `/${id}`;
+      const prefix = locale === 'es' ? '' : `/${locale}`;
+      window.location.href = `${prefix}/${id}`;
       return;
     }
 
@@ -239,9 +244,9 @@ export default function Footer() {
             <Link href="/faq" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
               FAQ
             </Link>
-            <Link href="/status" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
+            <NextLink href="/status" className="px-3 py-1 rounded-full border border-white/10 hover:border-primary/50 hover:text-primary transition-all bg-white/5">
               STATUS
-            </Link>
+            </NextLink>
           </div>
         </div>
       </div>

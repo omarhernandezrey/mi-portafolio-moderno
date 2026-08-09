@@ -7,11 +7,20 @@ import { getAllPosts } from '@/lib/blog';
 // Regla: el sitemap SOLO contiene URLs indexables (200, self-canonical, sin noindex).
 // Excluidos a propósito: /status (noindex), /certificates (la ruta raíz no existe,
 // solo el catch-all), y las ~740 combinaciones servicio×ciudad retiradas (ahora 301).
+// /privacy ya no es una página propia — es un 301 a /en/privacidad.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = clientEnv.NEXT_PUBLIC_SITE_URL || 'https://omarhernandezrey.com';
   const currentDate = new Date();
 
-  // Rutas estáticas principales
+  const altPair = (path: string) => ({
+    languages: {
+      es: `${baseUrl}${path}`,
+      en: `${baseUrl}/en${path}`,
+    },
+  });
+
+  // Rutas estáticas principales — cada una existe en es (sin prefijo) y en
+  // (bajo /en), con hreflang cruzado vía `alternates.languages`.
   const staticRoutes = [
     { url: '', priority: 1.0, changeFrequency: 'weekly' as const },
     { url: '/servicios', priority: 0.95, changeFrequency: 'weekly' as const },
@@ -21,48 +30,82 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: '/sobre-mi', priority: 0.8, changeFrequency: 'monthly' as const },
     { url: '/recursos', priority: 0.7, changeFrequency: 'monthly' as const },
     { url: '/privacidad', priority: 0.3, changeFrequency: 'yearly' as const },
-    { url: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
   ];
 
-  // Páginas pilar por servicio — el hub canónico de cada servicio
-  const serviciosPilar = serviciosProgramaticos.map((servicio) => ({
-    url: `${baseUrl}/servicios/${servicio.id}`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly' as const,
-    priority: 0.9,
-  }));
+  const staticSitemap: MetadataRoute.Sitemap = staticRoutes.flatMap((route) => [
+    {
+      url: `${baseUrl}${route.url}`,
+      lastModified: currentDate,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
+      alternates: altPair(route.url),
+    },
+    {
+      url: `${baseUrl}/en${route.url}`,
+      lastModified: currentDate,
+      changeFrequency: route.changeFrequency,
+      priority: route.priority * 0.9,
+      alternates: altPair(route.url),
+    },
+  ]);
 
-  // Servicio × ciudad: solo el set curado de ciudades indexables
+  // Páginas pilar por servicio — el hub canónico de cada servicio, es + en
+  const serviciosPilar: MetadataRoute.Sitemap = serviciosProgramaticos.flatMap((servicio) => [
+    {
+      url: `${baseUrl}/servicios/${servicio.id}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
+      alternates: altPair(`/servicios/${servicio.id}`),
+    },
+    {
+      url: `${baseUrl}/en/servicios/${servicio.id}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+      alternates: altPair(`/servicios/${servicio.id}`),
+    },
+  ]);
+
+  // Servicio × ciudad × idioma — solo el set curado de ciudades indexables
   const ciudadesIndexables = ciudades.filter((c) =>
     (CIUDADES_INDEXABLES as readonly string[]).includes(c.id)
   );
-  const serviciosCiudades = serviciosProgramaticos.flatMap((servicio) =>
-    ciudadesIndexables.map((ciudad) => ({
-      url: `${baseUrl}/servicios/${servicio.id}/${ciudad.id}`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: ciudad.id === 'bogota' ? 0.85 : 0.75,
-    }))
+  const serviciosCiudades: MetadataRoute.Sitemap = serviciosProgramaticos.flatMap((servicio) =>
+    ciudadesIndexables.flatMap((ciudad) => {
+      const path = `/servicios/${servicio.id}/${ciudad.id}`;
+      const priority = ciudad.id === 'bogota' ? 0.85 : 0.75;
+      return [
+        {
+          url: `${baseUrl}${path}`,
+          lastModified: currentDate,
+          changeFrequency: 'monthly' as const,
+          priority,
+          alternates: altPair(path),
+        },
+        {
+          url: `${baseUrl}/en${path}`,
+          lastModified: currentDate,
+          changeFrequency: 'monthly' as const,
+          priority: priority * 0.9,
+          alternates: altPair(path),
+        },
+      ];
+    })
   );
 
-  // Blog posts
+  // Blog posts — cada post existe en un solo idioma (sin hreflang cruzado,
+  // ver comentario en blog/[slug]/page.tsx sobre `singleLanguage`).
   const posts = await getAllPosts();
-  const blogRoutes = posts.map((post) => {
-    const isSpanish = post.lang === 'es' || !post.lang;
+  const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => {
+    const isEnglish = post.lang === 'en';
     return {
-      url: `${baseUrl}/blog/${post.slug}`,
+      url: isEnglish ? `${baseUrl}/en/blog/${post.slug}` : `${baseUrl}/blog/${post.slug}`,
       lastModified: new Date(post.date),
       changeFrequency: 'monthly' as const,
-      priority: isSpanish ? 0.82 : 0.75,
+      priority: isEnglish ? 0.75 : 0.82,
     };
   });
-
-  const staticSitemap = staticRoutes.map((route) => ({
-    url: `${baseUrl}${route.url}`,
-    lastModified: currentDate,
-    changeFrequency: route.changeFrequency,
-    priority: route.priority,
-  }));
 
   return [...staticSitemap, ...serviciosPilar, ...serviciosCiudades, ...blogRoutes];
 }
