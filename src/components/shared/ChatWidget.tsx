@@ -25,7 +25,7 @@ interface Message {
 export default function ChatWidget() {
   const { t, i18n } = useTranslation();
   const notyf = useNotyf();
-  const currentLanguage = (['es', 'en', 'pt'].includes(i18n.language) ? i18n.language : 'es') as 'es' | 'en' | 'pt';
+  const currentLanguage = (['es', 'en'].includes(i18n.language) ? i18n.language : 'es') as 'es' | 'en';
 
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);

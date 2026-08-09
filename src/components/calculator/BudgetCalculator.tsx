@@ -9,7 +9,7 @@ import { track } from '@vercel/analytics';
 
 export default function BudgetCalculator() {
   const { i18n } = useTranslation();
-  const lang = (i18n.language || 'es') as 'es' | 'en' | 'pt';
+  const lang = (i18n.language || 'es') as 'es' | 'en';
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<Record<string, string | string[]>>({});

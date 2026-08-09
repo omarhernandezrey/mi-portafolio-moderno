@@ -1,21 +1,21 @@
 import { SERVICES_CATALOG, OBJECTIONS, PORTFOLIO_DATA } from './data';
 
-const pickLang = <T extends { es: T[keyof T]; en: T[keyof T] }>(obj: T, language: 'es' | 'en' | 'pt'): T[keyof T] => {
+const pickLang = <T extends { es: T[keyof T]; en: T[keyof T] }>(obj: T, language: 'es' | 'en'): T[keyof T] => {
   const rec = obj as Record<string, T[keyof T]>;
   return rec[language] ?? rec.en ?? rec.es;
 };
 
-const serializeCatalog = (language: 'es' | 'en' | 'pt') =>
+const serializeCatalog = (language: 'es' | 'en') =>
   SERVICES_CATALOG.map(s => `- ${s.name[language]}: $${s.priceRange.min}–$${s.priceRange.max} ${s.priceRange.currency}`).join('\n');
 
-const serializeProjects = (language: 'es' | 'en' | 'pt') =>
+const serializeProjects = (language: 'es' | 'en') =>
   PORTFOLIO_DATA.projects.slice(0, 5).map(p => `- ${pickLang(p.title, language)}: ${p.technologies.slice(0, 3).join(', ')}`).join('\n');
 
-const serializeObjections = (language: 'es' | 'en' | 'pt') =>
+const serializeObjections = (language: 'es' | 'en') =>
   OBJECTIONS.map(o => `- ${o.acknowledge[language]}`).join('\n');
 
 export function buildSystemPrompt(
-  language: 'es' | 'en' | 'pt',
+  language: 'es' | 'en',
   context?: { visitorName?: string; visitorEmail?: string; visitorPhone?: string; visitorNeed?: string }
 ): string {
   const catalog = serializeCatalog(language);

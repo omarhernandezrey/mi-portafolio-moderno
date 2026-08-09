@@ -19,7 +19,7 @@ const calcSchema = z.object({
     if (!Number.isFinite(n) || n < 0 || n > 10_000_000) throw new Error('invalid budget');
     return Math.round(n);
   }),
-  language: z.enum(['es', 'en', 'pt']).default('es'),
+  language: z.enum(['es', 'en']).default('es'),
 });
 
 // drawText falla con caracteres fuera de WinAnsi — sanear para el PDF

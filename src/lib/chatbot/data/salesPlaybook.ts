@@ -43,28 +43,6 @@ export const SALES_PLAYBOOK = {
       { category: 'problem', question: "Does the lack of automatic integrations force you to do a lot of manual work?" },
       { category: 'implication', question: "How many leads are you missing out on by not having a 24/7 chatbot?" },
       { category: 'need-payoff', question: "How would it impact your ROI to automate 80% of frequent queries?" }
-    ],
-    pt: [
-      { category: 'situation', question: "O que você tem hoje funcionando na sua presença digital?" },
-      { category: 'problem', question: "O que mais te frustra na sua solução atual?" },
-      { category: 'implication', question: "Quanto tempo ou dinheiro você acha que está perdendo por não resolver isso?" },
-      { category: 'need-payoff', question: "Qual impacto teria no seu negócio ter isso pronto em 4-6 semanas?" },
-      { category: 'situation', question: "Você já tem um design ou começamos do zero com o Figma?" },
-      { category: 'problem', question: "Seu site atual é lento ou difícil de atualizar?" },
-      { category: 'implication', question: "Você notou se os clientes vão embora por causa da lentidão da página?" },
-      { category: 'need-payoff', question: "Como mudaria o seu dia a dia ter um painel administrativo personalizado?" },
-      { category: 'situation', question: "Qual stack tecnológica vocês estão usando atualmente?" },
-      { category: 'problem', question: "O custo de manutenção atual é muito elevado?" },
-      { category: 'implication', question: "Como isso está afetando o moral da sua equipe técnica?" },
-      { category: 'need-payoff', question: "Quão valioso seria reduzir os tempos de carregamento pela metade?" },
-      { category: 'situation', question: "Quantos usuários ativos você gerencia mensalmente?" },
-      { category: 'problem', question: "Você se preocupa com a escalabilidade diante de um pico de tráfego?" },
-      { category: 'implication', question: "Quanto você perde por cada hora que o sistema está fora do ar?" },
-      { category: 'need-payoff', question: "Como melhoraria sua taxa de conversão com um fluxo de pagamento otimizado?" },
-      { category: 'situation', question: "Vocês já têm um orçamento aprovado para este projeto?" },
-      { category: 'problem', question: "A falta de integrações automáticas obriga vocês a fazerem muito trabalho manual?" },
-      { category: 'implication', question: "Quantos leads vocês estão deixando de captar por não terem um chatbot 24/7?" },
-      { category: 'need-payoff', question: "Como impactaria o seu ROI automatizar 80% das consultas frequentes?" }
     ]
   },
   qualificationBANT: {
@@ -83,14 +61,6 @@ export const SALES_PLAYBOOK = {
       timeline: "What is your ideal launch date? Knowing this helps me organize my schedule and ensure we deliver with the highest quality.",
       analysis: "Before moving forward, how critical is it for you that the solution is scalable in the long term vs. a quick launch today?",
       competition: "Are you currently evaluating other options or vendors to compare approaches?"
-    },
-    pt: {
-      budget: "Entendo perfeitamente. Para projetos com esta complexidade, a faixa de investimento costuma ficar entre {min} e {max} USD. Este orçamento está alinhado com o que você projetou para esta etapa?",
-      authority: "Você é quem lidera a decisão técnica do projeto ou há outros stakeholders (como sócios ou diretores) com quem devamos validar a proposta final?",
-      need: "Com base no que conversamos, sua prioridade número um é {need} para evitar que o negócio seja afetado. Estamos na mesma página?",
-      timeline: "Qual é a sua data ideal de lançamento? Saber disso me ajuda a organizar minha agenda e garantir que cheguemos com a máxima qualidade.",
-      analysis: "Antes de prosseguir, quão crítico é para vocês que a solução seja escalável a longo prazo vs. um lançamento rápido hoje?",
-      competition: "Você está avaliando outras opções ou fornecedores no momento para comparar abordagens?"
     }
   },
   closingTechniques: {
@@ -117,18 +87,6 @@ export const SALES_PLAYBOOK = {
       { name: "Negative Close", example: "If you feel it's not the right time to invest in quality yet, no problem. We can talk when you're ready to scale." },
       { name: "Ben Franklin Close", example: "Let's make a list: on one side the benefits of launching today and on the other the doubts. You'll see the value outweighs any risk." },
       { name: "Next Week Close", example: "Would you like to start with the design this Monday or would you prefer Omar to handle the infrastructure first?" }
-    ],
-    pt: [
-      { name: "Alternativa", example: "Tudo bem se agendarmos a chamada inicial para esta terça-feira às 10h ou você prefere na quinta à tarde?" },
-      { name: "Escassez", example: "Atualmente tenho vaga para iniciar apenas um projeto de grande escala este mês. Se reservarmos hoje, garantimos o seu espaço." },
-      { name: "Risco Invertido", example: "Minha prioridade é sua satisfação. Se após a primeira semana você não vir o valor esperado, cancelamos o contrato e eu devolvo o adiantamento." },
-      { name: "Soma de Sim", example: "Então, buscamos um site rápido, conectado ao seu estoque e que possa ser lançado antes da Cyber Monday? Vamos em frente!" },
-      { name: "Urgência", example: "Se conseguirmos fechar os detalhes do brief esta semana, posso me comprometer a ter o MVP pronto antes da sua reunião com investidores." },
-      { name: "Fechamento Direto", example: "Tenho total clareza sobre o problema. Você quer que eu te envie o link de pagamento para começar o setup do repositório hoje mesmo?" },
-      { name: "Técnica do Filhote", example: "Vamos testar a consultoria inicial de uma hora. Se você não sentir que teve clareza absoluta sobre o caminho a seguir, não precisa me pagar nada." },
-      { name: "Fechamento Negativo", example: "Se você sente que ainda não é o momento certo para investir em qualidade, não tem problema. Podemos conversar quando você estiver pronto para escalar." },
-      { name: "Fechamento de Ben Franklin", example: "Vamos fazer uma lista: de um lado os benefícios de lançar hoje mesmo e do outro as dúvidas. Você verá que o valor supera qualquer risco." },
-      { name: "Fechamento da Próxima Semana", example: "Você quer começar com o design esta segunda-feira ou prefere que o Omar cuide da infraestrutura primeiro?" }
     ]
   },
   nextSteps: {
@@ -149,15 +107,6 @@ export const SALES_PLAYBOOK = {
       { level: 'onboarding', action: "Payment received. Here is access to your project dashboard so you can see progress in real-time.", cta: "Go to Admin" },
       { level: 'discovery-call', action: "I've prepared an agenda for our call. Would you like to review it beforehand?", cta: "See Agenda" },
       { level: 'post-proposal', action: "Were you able to review the proposal I sent? I have a couple of extra ideas.", cta: "Review Proposal" }
-    ],
-    pt: [
-      { level: 'cold', action: "Compartilho com você este caso de sucesso semelhante ao que você procura para que veja como resolvi um desafio parecido.", cta: "Ver projeto" },
-      { level: 'warm', action: "Que tal agendarmos 15 min para definir os detalhes técnicos e te dar um orçamento exato?", cta: "Agendar no Cal.com" },
-      { level: 'hot', action: "Excelente! Só preciso que você confirme o brief final para eu te enviar o link de adiantamento e reservar minha disponibilidade.", cta: "Enviar Brief" },
-      { level: 'follow-up', action: "Continuo pensando no seu projeto de {service}. Tive uma ideia para a integração. Vamos conversar?", cta: "Retomar chat" },
-      { level: 'onboarding', action: "Pagamento recebido. Aqui está o acesso ao seu dashboard do projeto para que você veja o progresso em tempo real.", cta: "Ir para Admin" },
-      { level: 'discovery-call', action: "Preparei uma agenda para nossa chamada. Gostaria de revisá-la antes?", cta: "Ver Agenda" },
-      { level: 'post-proposal', action: "Você conseguiu revisar a proposta que enviei? Tenho algumas ideias extras.", cta: "Revisar Proposta" }
     ]
   },
   scripts: {
@@ -174,13 +123,6 @@ export const SALES_PLAYBOOK = {
       agileProcess: "Omar works with agile methodologies. This means you'll see functional progress every week rather than just at the end of two months. How important is continuous visibility to you?",
       stackRecommendation: "For a {service} project, Omar recommends using Next.js and Supabase for their development speed and scalability. Do you have any different technical preference?",
       qualityGuarantee: "Every line of code Omar delivers undergoes a rigorous audit. We don't just deliver functionality, we deliver technical peace of mind."
-    },
-    pt: {
-      initialContact: "Olá, sou o assistente do Omar. Vi que você tem interesse em {topic}. Para te ajudar melhor, é um projeto novo ou uma melhoria de algo existente?",
-      pricingObjection: "Entendo que o preço seja um factor. Minhas tarifas refletem a garantia de um código sustentável que não te dará dores de cabeça em 6 meses. Você prefere economizar hoje ou economizar em reparos amanhã?",
-      agileProcess: "Omar trabalha com metodologias ágeis. Isso significa que você verá progresso funcional toda semana e não apenas ao final de dois meses. Quão importante é para você ter visibilidade contínua?",
-      stackRecommendation: "Para um projeto de {service}, o Omar recomenda usar Next.js e Supabase pela rapidez de desenvolvimento e escalabilidade. Você tem alguma preferência técnica diferente?",
-      qualityGuarantee: "Cada linha de código que o Omar entrega passa por uma auditoria rigorosa. Não apenas entregamos funcionalidade, entregamos tranquilidade técnica."
     }
   },
   objectionHandlingStrategy: {
@@ -195,12 +137,6 @@ export const SALES_PLAYBOOK = {
       reframeToValue: "Shift the conversation from cost to value: 'More than an expense, this is an investment in {benefit} that will save you {pain} in the future'.",
       socialProof: "Cite previous cases: 'I actually helped a client with a similar challenge in {industry} and we achieved {result}'.",
       clarityOverConfusion: "If the client is confused, simplify: 'Basically, what we'll do is {action} to achieve {goal}'."
-    },
-    pt: {
-      empathyFirst: "Nunca discuta com o cliente. Valide sua preocupação primeiro: 'Entendo perfeitamente que {concern} seja importante para você'.",
-      reframeToValue: "Desloque a conversa do custo para o valor: 'Mais do que um gasto, isso é um investimento em {benefit} que lhe poupará {pain} no futuro'.",
-      socialProof: "Cite casos anteriores: 'Justamente ajudei um cliente com um desafio semelhante em {industry} e alcançamos {result}'.",
-      clarityOverConfusion: "Se o cliente estiver confuso, simplifique: 'Basicamente, o que faremos é {action} para alcançar {goal}'."
     }
   }
 };

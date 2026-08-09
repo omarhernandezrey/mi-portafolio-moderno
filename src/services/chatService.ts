@@ -8,7 +8,7 @@ export interface ChatResponse {
 export async function sendChatMessage(
   sessionId: string,
   message: string,
-  language: 'es' | 'en' | 'pt',
+  language: 'es' | 'en',
   visitorMeta?: { name?: string; email?: string; phone?: string },
   consentAt?: string,
   imageDataUrl?: string

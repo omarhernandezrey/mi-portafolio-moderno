@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 const chatSchema = z.object({
   sessionId: z.string().min(1),
   message: z.string().min(1).max(2000),
-  language: z.enum(['es', 'en', 'pt']),
+  language: z.enum(['es', 'en']),
   website: z.string().optional(),
   imageDataUrl: z.string().optional(),
   consentAt: z.string().optional(),
@@ -132,11 +132,6 @@ function buildClosingMessage(name: string, contact: string, service: string, pri
     const proj = serviceTag || (need ? `your project: ${need.substring(0, 60)}` : 'your project');
     return `${prefix}Your info is saved. Omar Hernández will reach out to you at ${contact} right away to kick off ${proj}. If you'd like to message him directly, tap the WhatsApp button below!`;
   }
-  if (lang === 'pt') {
-    const prefix = name ? `Tudo certo, ${name}! ` : 'Tudo certo! ';
-    const proj = serviceTag || (need ? `seu projeto: ${need.substring(0, 60)}` : 'seu projeto');
-    return `${prefix}Seus dados foram salvos. Omar Hernández vai entrar em contato pelo ${contact} agora mesmo para iniciar ${proj}. Se quiser falar com ele diretamente, use o botão do WhatsApp abaixo!`;
-  }
   const prefix = name ? `¡Perfecto, ${name}! ` : '¡Perfecto! ';
   const proj = serviceTag || (need ? `proyecto: ${need.substring(0, 60)}` : 'proyecto');
   return `${prefix}Tus datos quedaron guardados. Omar Hernández te contactará inmediatamente al ${contact} para coordinar tu ${proj}. Si quieres escribirle ya, usa el botón de WhatsApp aquí abajo.`;
@@ -153,15 +148,6 @@ function buildContactRequest(name: string, hasEmail: boolean, hasPhone: boolean,
     }
     if (!hasEmail) return `${greeting}what's your email so Omar can send you the proposal?`;
     return `${greeting}and your WhatsApp so Omar can reach out?`;
-  }
-  if (lang === 'pt') {
-    if (!hasEmail && !hasPhone) {
-      return hasName
-        ? `${greeting}para iniciar com Omar — qual é seu email e WhatsApp?`
-        : `para Omar entrar em contato — qual é seu nome completo, email e WhatsApp?`;
-    }
-    if (!hasEmail) return `${greeting}qual é seu email para Omar enviar os detalhes?`;
-    return `${greeting}e seu WhatsApp para Omar entrar em contato?`;
   }
   if (!hasEmail && !hasPhone) {
     return hasName
@@ -245,8 +231,7 @@ export async function POST(req: NextRequest) {
         await supabaseServer.from('messages').insert([{ conversation_id: conversationId, role: 'user', content: message }]);
         const fallbackMsg = {
           es: "Omar está revisando tu mensaje...",
-          en: "Omar is reviewing your message...",
-          pt: "Omar está revisando sua mensagem..."
+          en: "Omar is reviewing your message..."
         };
         return NextResponse.json({ reply: fallbackMsg[language] || fallbackMsg.es });
       }
@@ -356,8 +341,6 @@ export async function POST(req: NextRequest) {
     if (hasContact && botRecentlyAskedContact && !effectiveName && !alreadyRequestedName && !isEval) {
       const nameAsk = language === 'en'
         ? `And what's your full name so Omar can reach you personally?`
-        : language === 'pt'
-        ? `E qual é o seu nome completo para Omar entrar em contato com você?`
         : `¿Y cuál es tu nombre completo para que Omar pueda contactarte?`;
 
       await supabaseServer.from('messages').insert([

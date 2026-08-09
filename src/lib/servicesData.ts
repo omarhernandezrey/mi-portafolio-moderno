@@ -3,20 +3,17 @@
 export interface Service {
   title: {
     es: string;
-    en: string;
-    pt: string;
+    en: string
   };
   description: {
     es: string;
-    en: string;
-    pt: string;
+    en: string
   };
   icon: string;
   badge: string;
   features: {
     es: string[];
-    en: string[];
-    pt: string[];
+    en: string[]
   };
   gradient: string;
   priceRange?: {
@@ -30,13 +27,11 @@ export const servicesData: Service[] = [
   {
     title: {
       es: "Sitios Web Profesionales",
-      en: "Professional Websites",
-      pt: "Sites Profissionais"
+      en: "Professional Websites"
     },
     description: {
       es: "Tu negocio necesita una página web que venda, no solo que exista. Diseño sitios rápidos, optimizados para Google y que convierten visitantes en clientes.",
-      en: "Your business needs a website that sells, not just exists. I design fast, Google-optimized sites that turn visitors into paying clients.",
-      pt: "Seu negócio precisa de um site que vende, não apenas existe. Crio sites rápidos, otimizados para Google e que convertem visitantes em clientes."
+      en: "Your business needs a website that sells, not just exists. I design fast, Google-optimized sites that turn visitors into paying clients."
     },
     icon: "/images/services/frontend.svg",
     badge: "WEB",
@@ -52,12 +47,6 @@ export const servicesData: Service[] = [
         "Loads in under 2 seconds",
         "Google-optimized (SEO)",
         "Admin panel for easy editing"
-      ],
-      pt: [
-        "Design focado em conversão",
-        "Carrega em menos de 2 segundos",
-        "Otimizado para Google (SEO)",
-        "Painel administrativo intuitivo"
       ]
     },
     gradient: "from-blue-500 to-cyan-500",
@@ -70,13 +59,11 @@ export const servicesData: Service[] = [
   {
     title: {
       es: "Aplicaciones Web a Medida",
-      en: "Custom Web Applications",
-      pt: "Aplicações Web Personalizadas"
+      en: "Custom Web Applications"
     },
     description: {
       es: "¿Tu negocio necesita algo más que una página web? Construyo aplicaciones web completas con bases de datos, autenticación y funcionalidades específicas para tu operación.",
-      en: "Need more than a website? I build complete web applications with databases, authentication, and custom features tailored to your business operations.",
-      pt: "Precisa de mais que um site? Construo aplicações web completas com bancos de dados, autenticação e funcionalidades personalizadas para sua operação."
+      en: "Need more than a website? I build complete web applications with databases, authentication, and custom features tailored to your business operations."
     },
     icon: "/images/services/backend.svg",
     badge: "APP",
@@ -92,12 +79,6 @@ export const servicesData: Service[] = [
         "Real-time data dashboards",
         "Secure user authentication",
         "APIs to connect with other systems"
-      ],
-      pt: [
-        "Sistemas de gestão internos",
-        "Dashboards com dados em tempo real",
-        "Autenticação segura de usuários",
-        "APIs para conectar com outros sistemas"
       ]
     },
     gradient: "from-green-500 to-emerald-500",
@@ -110,13 +91,11 @@ export const servicesData: Service[] = [
   {
     title: {
       es: "Tiendas Online (E-commerce)",
-      en: "Online Stores (E-commerce)",
-      pt: "Lojas Online (E-commerce)"
+      en: "Online Stores (E-commerce)"
     },
     description: {
       es: "Vende tus productos online con una tienda profesional. Integro pasarelas de pago (Wompi, Stripe, PayPal), gestión de inventario y todo lo necesario para que empieces a facturar.",
-      en: "Sell your products online with a professional store. I integrate payment gateways (Stripe, PayPal), inventory management, and everything you need to start making sales.",
-      pt: "Venda seus produtos online com uma loja profissional. Integro gateways de pagamento (Stripe, PayPal), gestão de estoque e tudo que precisa para começar a faturar."
+      en: "Sell your products online with a professional store. I integrate payment gateways (Stripe, PayPal), inventory management, and everything you need to start making sales."
     },
     icon: "/images/services/design.svg",
     badge: "SHOP",
@@ -132,12 +111,6 @@ export const servicesData: Service[] = [
         "Product and inventory management",
         "Trust-building design that drives sales",
         "Intuitive admin dashboard"
-      ],
-      pt: [
-        "Pagamentos com cartão, PayPal e Stripe",
-        "Gestão de produtos e estoque",
-        "Design que gera confiança para comprar",
-        "Painel administrativo intuitivo"
       ]
     },
     gradient: "from-purple-500 to-pink-500",
@@ -150,13 +123,11 @@ export const servicesData: Service[] = [
   {
     title: {
       es: "Automatización y SEO",
-      en: "Automation & SEO",
-      pt: "Automação e SEO"
+      en: "Automation & SEO"
     },
     description: {
       es: "Elimina tareas repetitivas y haz que Google te encuentre. Automatizo procesos de tu negocio y optimizo tu sitio para que aparezca en los primeros resultados de búsqueda.",
-      en: "Eliminate repetitive tasks and get found on Google. I automate your business processes and optimize your site to rank on the first page of search results.",
-      pt: "Elimine tarefas repetitivas e apareça no Google. Automatizo processos do seu negócio e otimizo seu site para aparecer nas primeiras posições de busca."
+      en: "Eliminate repetitive tasks and get found on Google. I automate your business processes and optimize your site to rank on the first page of search results."
     },
     icon: "/images/services/devops.svg",
     badge: "AUTO",
@@ -172,12 +143,6 @@ export const servicesData: Service[] = [
         "Integration between your tools",
         "Google optimization (technical SEO)",
         "Page speed improvement"
-      ],
-      pt: [
-        "Automação de relatórios e processos",
-        "Integração entre suas ferramentas",
-        "Otimização para Google (SEO técnico)",
-        "Melhoria de velocidade de carregamento"
       ]
     },
     gradient: "from-orange-500 to-red-500",
@@ -191,7 +156,7 @@ export const servicesData: Service[] = [
 
 // Función para obtener datos de servicios localizados
 export const getLocalizedServicesData = (servicesData: Service[], language: string) => {
-  const lang = language as 'es' | 'en' | 'pt';
+  const lang = language as 'es' | 'en';
 
   return servicesData.map(service => ({
     title: service.title[lang] || service.title.es,
