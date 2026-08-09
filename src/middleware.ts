@@ -99,6 +99,18 @@ async function runSupabaseAuth(request: NextRequest) {
   return response
 }
 
+// Rutas fuera del árbol src/app/[locale]/ — next-intl no debe reescribirlas
+// (con localePrefix:'as-needed' igual reescribe internamente a /es/<path>
+// para el locale por defecto, y como esa ruta no existe bajo [locale], da 404).
+const NON_LOCALIZED_PREFIXES = [
+  '/status',
+  '/onboarding',
+  '/proposal',
+  '/certificates',
+  '/auth',
+  '/opengraph-image',
+]
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -107,6 +119,10 @@ export async function middleware(request: NextRequest) {
   // solo el matcher.
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) {
     return runSupabaseAuth(request)
+  }
+
+  if (NON_LOCALIZED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))) {
+    return NextResponse.next()
   }
 
   return intlMiddleware(request)
