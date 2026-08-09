@@ -38,9 +38,8 @@ const TAG_SERVICE: Record<string, { href: string; label: string }> = {
   'ecommerce': { href: '/servicios/e-commerce/bogota', label: 'E-commerce Profesional' },
   'tienda online': { href: '/servicios/e-commerce/bogota', label: 'Tiendas Online' },
   'ventas online': { href: '/servicios/e-commerce/bogota', label: 'Ventas Online' },
-  'chatbot': { href: '/servicios/chatbot-ia/bogota', label: 'Chatbots con IA' },
-  'inteligencia artificial': { href: '/servicios/chatbot-ia/bogota', label: 'Chatbots con IA' },
   'automatización': { href: '/servicios/automatizacion/bogota', label: 'Automatización de Procesos' },
+  'inteligencia artificial': { href: '/servicios/automatizacion/bogota', label: 'Automatización de Procesos' },
   'seo': { href: '/servicios/seo-tecnico/bogota', label: 'SEO Técnico Profesional' },
   'seo tecnico': { href: '/servicios/seo-tecnico/bogota', label: 'SEO Técnico Profesional' },
   'mvp': { href: '/servicios/desarrollo-web/bogota', label: 'Desarrollo de MVP' },
@@ -253,8 +252,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <p className="font-bold text-sm" itemProp="name">{post.author}</p>
               <p className="text-xs text-[var(--muted-color)] mt-1" itemProp="description">
                 {isEnglish
-                  ? 'Full Stack Web Developer freelance based in Colombia. 5+ years building web apps, chatbots with AI, and e-commerce solutions for Colombia and USA clients. React, Next.js, Node.js specialist.'
-                  : 'Desarrollador web full stack freelance con más de 5 años entregando proyectos en Colombia y USA. Especialista en React, Next.js, Node.js y chatbots con IA.'}
+                  ? 'Full Stack Web Developer freelance based in Colombia. 5+ years building web apps and e-commerce solutions for Colombia and USA clients. React, Next.js, Node.js specialist.'
+                  : 'Desarrollador web full stack freelance con más de 5 años entregando proyectos en Colombia y USA. Especialista en React, Next.js y Node.js.'}
               </p>
             </div>
           </aside>

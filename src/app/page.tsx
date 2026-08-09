@@ -15,7 +15,7 @@ import { OMAR_PROFILE } from "@/data/omarProfile";
 
 export const metadata: Metadata = buildMetadata({
   title: "Desarrollador Web Freelance Colombia | React y Next.js",
-  description: "Contrata un desarrollador web freelance en Colombia. Webs, apps y chatbots con IA en React y Next.js desde $500 USD. Consulta gratis, respuesta en 24h.",
+  description: "Contrata un desarrollador web freelance en Colombia. Webs y aplicaciones a medida en React y Next.js desde $500 USD. Consulta gratis, respuesta en 24h.",
   path: "",
   ogSubtitle: "React & Next.js | Desde $500 USD",
   keywords: [

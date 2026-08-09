@@ -33,6 +33,8 @@
     "greeting": "Olá, eu sou",
     "name": "Omar Hernández Rey",
     "title": "Desenvolvedor Web Full Stack",
+    "h1": "Desenvolvedor Web Freelance · Colômbia & EUA Remoto",
+    "subtitle": "Construo sites e aplicações personalizadas usando <strong>React e Next.js</strong>. Atendo empresas na <strong>Colômbia</strong> e clientes remotos nos <strong>EUA e LATAM</strong>. <span>Projetos a partir de $500 USD</span> — consulta gratuita, resposta em 24h.",
     "description": "Combinando {creativity}, {innovation} e {technology} para criar experiências web {unforgettable}.",
     "creativity": "criatividade",
     "innovation": "inovação",
@@ -68,7 +70,7 @@
       "fullName": "Omar Hernández Rey",
       "birth": "14 de fevereiro de 1990",
       "location": "Carrera 2N #39D-16 Sur, Bogotá",
-      "phoneNumber": "(+57) 3219058278"
+      "phoneNumber": "(+57) 3219052878"
     },
     "interests": {
       "badge": "Paixões",

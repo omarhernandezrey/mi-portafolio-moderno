@@ -22,6 +22,17 @@ const nextConfig = {
     optimizePackageImports: ['react-icons', 'framer-motion'],
   },
 
+  // Redirects 301 para rutas retiradas (evitar 404 en URLs ya indexadas)
+  async redirects() {
+    return [
+      {
+        source: '/blog/chatbot-ia-negocio-colombia',
+        destination: '/blog',
+        permanent: true,
+      },
+    ];
+  },
+
   // Headers de seguridad
   async headers() {
     return [

@@ -9,14 +9,13 @@ import { breadcrumbList } from '@/lib/schemas';
 import BlogNewsletterCTA from '@/components/blog/BlogNewsletterCTA';
 
 export const metadata = buildMetadata({
-  title: 'Blog de Desarrollo Web, IA y SEO | Omar Hernández Rey',
-  description: 'Artículos técnicos sobre desarrollo web con React y Next.js, chatbots con IA, SEO y estrategia digital para emprendedores en Colombia y LATAM.',
+  title: 'Blog de Desarrollo Web y SEO | Omar Hernández Rey',
+  description: 'Artículos técnicos sobre desarrollo web con React y Next.js, SEO y estrategia digital para emprendedores en Colombia y LATAM.',
   path: '/blog',
-  ogSubtitle: 'Desarrollo Web, IA y Estrategia Digital',
+  ogSubtitle: 'Desarrollo Web y Estrategia Digital',
   keywords: [
     'blog desarrollo web colombia',
     'tutorial react next.js',
-    'chatbot ia tutorial',
     'seo tecnico colombia',
     'estrategia digital emprendedores',
     'programacion web colombia',

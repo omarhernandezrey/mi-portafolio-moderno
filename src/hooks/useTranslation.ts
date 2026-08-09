@@ -31,7 +31,7 @@ export const useTranslation = () => {
 
     // Hero
     "hero.h1": "Desarrollador Web Freelance · Colombia & USA Remote",
-    "hero.subtitle": "Construyo sitios web, apps y chatbots con IA usando <strong>React y Next.js</strong>. Atiendo empresas en <strong>Colombia</strong> y clientes remotos en <strong>USA y LATAM</strong>. <span>Proyectos desde $500 USD</span> — consulta gratis, respuesta en 24h.",
+    "hero.subtitle": "Construyo sitios web y aplicaciones a medida usando <strong>React y Next.js</strong>. Atiendo empresas en <strong>Colombia</strong> y clientes remotos en <strong>USA y LATAM</strong>. <span>Proyectos desde $500 USD</span> — consulta gratis, respuesta en 24h.",
     "hero.greeting": "¡Hola Soy",
     "hero.name": "Omar Hernández Rey",
     "hero.title": "Desarrollador Web Full Stack",
@@ -69,7 +69,7 @@ export const useTranslation = () => {
     "about.personalInfo.fullName": "Omar Hernández Rey",
     "about.personalInfo.birth": "14 de febrero de 1990",
     "about.personalInfo.location": "Carrera 2N #39D-16 Sur, Bogotá",
-    "about.personalInfo.phoneNumber": "(+57) 3219058278",
+    "about.personalInfo.phoneNumber": "(+57) 3219052878",
 
     // Services
     "services.badge": "Lo que Ofrezco",

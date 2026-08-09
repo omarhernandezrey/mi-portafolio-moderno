@@ -50,7 +50,7 @@ export default function ServiciosPage() {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     'name': 'Servicios de Desarrollo Web y Software — Omar Hernández Rey',
-    'description': 'Servicios profesionales de desarrollo web, chatbots con IA, e-commerce y más para Colombia y LATAM.',
+    'description': 'Servicios profesionales de desarrollo web full stack, e-commerce y automatización para Colombia y LATAM.',
     'url': 'https://omarhernandezrey.com/servicios',
     'numberOfItems': serviciosProgramaticos.length,
     'itemListElement': serviciosProgramaticos.map((s, i) => ({
@@ -133,7 +133,7 @@ export default function ServiciosPage() {
               y Software
             </h1>
             <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed opacity-80">
-              Soy Omar Hernández, desarrollador full stack freelance en Colombia. Creo webs, apps y chatbots con IA para empresas y emprendedores que quieren crecer digitalmente. Disponible para proyectos en Colombia y remoto para USA y LATAM.
+              Soy Omar Hernández, desarrollador full stack freelance en Colombia. Creo webs y aplicaciones a medida para empresas y emprendedores que quieren crecer digitalmente. Disponible para proyectos en Colombia y remoto para USA y LATAM.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               {['React & Next.js', 'Node.js', 'PostgreSQL', 'SEO Técnico', 'E-commerce'].map(tech => (

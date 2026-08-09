@@ -70,7 +70,7 @@ const CATEGORIES = [
     faqs: [
       {
         q: '¿Cuánto tarda en estar listo mi sitio web o aplicación?',
-        a: 'Landing pages: 3-7 días hábiles. Sitios corporativos (5-10 páginas): 2-4 semanas. E-commerce: 3-6 semanas. Apps web o chatbots con IA: 4-8 semanas. Los tiempos dependen de la complejidad y de qué tan rápido revisas y apruebas los entregables.'
+        a: 'Landing pages: 3-7 días hábiles. Sitios corporativos (5-10 páginas): 2-4 semanas. E-commerce: 3-6 semanas. Aplicaciones web a medida: 4-8 semanas. Los tiempos dependen de la complejidad y de qué tan rápido revisas y apruebas los entregables.'
       },
       {
         q: '¿Quién controla el hosting y el dominio de mi sitio?',
@@ -92,7 +92,7 @@ const CATEGORIES = [
       },
       {
         q: '¿Cuántos proyectos has entregado y cuánta experiencia tienes?',
-        a: 'Más de 30 proyectos entregados en 5+ años: landing pages, e-commerce, aplicaciones web, chatbots con IA y sistemas de automatización para empresas en Colombia, USA y LATAM. Graduado en Ingeniería de Software del Politécnico Grancolombiano con certificaciones adicionales en React, Node.js y Cloud Architecture.'
+        a: 'Más de 30 proyectos entregados en 5+ años: landing pages, e-commerce, aplicaciones web y sistemas de automatización para empresas en Colombia, USA y LATAM. Graduado en Ingeniería de Software del Politécnico Grancolombiano con certificaciones adicionales en React, Node.js y Cloud Architecture.'
       },
     ]
   },

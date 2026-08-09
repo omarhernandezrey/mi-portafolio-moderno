@@ -137,7 +137,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
     geoTitle: 'Geographic Relevance',
     geoDesc: `I coordinate with clients in ${ciudad.name} in real time: Colombia (UTC-5) is at most 1 hour behind US Eastern Time, and I invoice in USD via PayPal — no time-zone friction, no currency conversion headaches.`,
     effTitle: 'Execution Efficiency',
-    effDesc: `We don't just write code — we deploy revenue-generating assets. From ${servicio.id === 'chatbot-ia' ? 'autonomous AI agents' : 'ultra-fast loading systems'} to outcompete in ${ciudad.name}.`,
+    effDesc: `We don't just write code — we deploy revenue-generating assets. From ultra-fast loading systems to outcompete in ${ciudad.name}.`,
     quote: `Our mission is to help organizations in ${ciudad.name} stop having simple websites and start operating automated conversion machines at world-class standards.`,
     ctaConsult: `Technical Consulting in ${ciudad.name}`,
     benefitsLabel: 'Benefits',
@@ -170,7 +170,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
       ? 'Con base en Bogotá, trabajo de forma remota para todo el país y puedo coordinar reuniones presenciales si tu proyecto lo requiere.'
       : `Trabajo 100% remoto para clientes en ${ciudad.name}, en el mismo huso horario (COT, UTC-5) y con pagos en pesos colombianos vía Nequi o Wompi — sin fricciones de zona horaria ni cambio de moneda.`,
     effTitle: 'Eficiencia de Ejecución',
-    effDesc: `No solo consolidamos código; desplegamos activos financieros. Desde ${servicio.id === 'chatbot-ia' ? 'agentes inteligentes autónomos' : 'sistemas de carga ultra-rápida'} para la competencia local en ${ciudad.name}.`,
+    effDesc: `No solo consolidamos código; desplegamos activos financieros. Desde sistemas de carga ultra-rápida para la competencia local en ${ciudad.name}.`,
     quote: `Nuestra misión operativa es que las organizaciones en ${ciudad.name} dejen de tener simples sitios web y comiencen a operar máquinas de conversión automatizadas bajo estándares de clase mundial.`,
     ctaConsult: `Consultoría Técnica en ${ciudad.name}`,
     benefitsLabel: 'Ventajas',

@@ -16,7 +16,7 @@ const personData = {
       "@id": "https://omarhernandezrey.com/#website",
       "url": "https://omarhernandezrey.com",
       "name": "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
-      "description": "Servicios de desarrollo web, chatbots con IA, e-commerce y automatización. React, Next.js, Node.js. Colombia y USA remoto.",
+      "description": "Servicios de desarrollo web full stack, e-commerce y automatización. React, Next.js, Node.js. Colombia y USA remoto.",
       "publisher": { "@id": "https://omarhernandezrey.com/#organization" },
       "inLanguage": ["es", "en"],
 
@@ -63,7 +63,7 @@ const personData = {
         "contactType": "customer service",
         "availableLanguage": ["Spanish", "English"],
       },
-      "description": "Servicios profesionales de desarrollo web, chatbots con IA, e-commerce y automatización para Colombia y LATAM.",
+      "description": "Servicios profesionales de desarrollo web full stack, e-commerce y automatización para Colombia y LATAM.",
       "areaServed": ["CO", "US", "MX", "AR", "CL", "PE"],
     },
   ],
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
     default: "Omar Hernández Rey · Desarrollador Web Freelance Colombia",
   },
   description:
-    "Desarrollo webs, apps y chatbots con IA en React y Next.js. Proyectos desde $500 USD para Colombia y USA. Consulta gratis, respuesta en 24h.",
+    "Desarrollo webs y aplicaciones a medida en React y Next.js. Proyectos desde $500 USD para Colombia y USA. Consulta gratis, respuesta en 24h.",
   verification: {
     google: clientEnv.NEXT_PUBLIC_GSC_VERIFICATION,
     other: {
@@ -130,7 +130,7 @@ export const metadata: Metadata = {
     url: "https://omarhernandezrey.com",
     siteName: "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
     title: "Desarrollador Web Freelance Colombia | React & Next.js | Omar Hernández Rey",
-    description: "Contratar desarrollador web freelance en Colombia. Webs, apps y chatbots con IA. React, Next.js, Node.js. Desde $500 USD. Consulta gratis.",
+    description: "Contratar desarrollador web freelance en Colombia. Webs y aplicaciones a medida. React, Next.js, Node.js. Desde $500 USD. Consulta gratis.",
     images: [
       {
         url: "https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%24500%20USD",
@@ -144,7 +144,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Desarrollador Web Freelance Colombia | Omar Hernández Rey",
-    description: "Contratar desarrollador web en Colombia. React, Next.js, chatbots IA. Desde $500 USD. Consulta gratis.",
+    description: "Contratar desarrollador web en Colombia. React, Next.js, Node.js. Desde $500 USD. Consulta gratis.",
     images: ["https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%24500%20USD"],
   },
   robots: {

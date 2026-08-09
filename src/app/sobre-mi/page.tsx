@@ -129,8 +129,8 @@ const timeline = [
   },
   {
     year: '2025 - Presente',
-    title: 'Especialización en IA y Automatización',
-    description: 'Enfoque en inteligencia artificial aplicada a chatbots y automatización de procesos empresariales. Próximo a graduarme como Ingeniero de Software. Desarrollo de soluciones full stack para clientes en Colombia y remoto USA, con stack React, Next.js, Node.js y PostgreSQL.',
+    title: 'Especialización Full Stack y Automatización',
+    description: 'Enfoque en automatización de procesos empresariales y arquitecturas escalables. Próximo a graduarme como Ingeniero de Software. Desarrollo de soluciones full stack para clientes en Colombia y remoto USA, con stack React, Next.js, Node.js y PostgreSQL.',
     icon: <Briefcase size={20} />,
   },
 ];
@@ -262,7 +262,7 @@ export default function SobreMiPage() {
                 Desarrollador Web Freelance
               </h3>
               <p className="text-text-muted leading-relaxed mb-6">
-                Desde 2020, he estado construyendo soluciones web a medida para emprendedores y negocios. Mi stack principal incluye React, Next.js, TypeScript y Node.js, con bases de datos PostgreSQL y Supabase. He desarrollado e-commerce, landing pages, aplicaciones web progresivas, chatbots con IA e integraciones de sistemas complejos.
+                Desde 2020, he estado construyendo soluciones web a medida para emprendedores y negocios. Mi stack principal incluye React, Next.js, TypeScript y Node.js, con bases de datos PostgreSQL y Supabase. He desarrollado e-commerce, landing pages, aplicaciones web progresivas e integraciones de sistemas complejos.
               </p>
               <div className="flex flex-wrap gap-3">
                 {['React', 'Next.js', 'TypeScript', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind CSS', 'Prisma ORM'].map((tech) => (
