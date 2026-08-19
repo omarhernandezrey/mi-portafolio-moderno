@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { getPostBySlug, getAllPosts, getRelatedPosts } from '@/lib/blog';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 import { Link } from '@/i18n/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import { ArrowRight, Clock, Calendar, Tag, ChevronLeft } from 'lucide-react';
@@ -24,8 +25,8 @@ const components = {
   ),
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => <a className="text-[var(--primary-color)] hover:underline" {...props} />,
   table: (props: React.HTMLAttributes<HTMLTableElement>) => <div className="overflow-x-auto mb-6"><table className="w-full text-sm border-collapse" {...props} /></div>,
-  th: (props: React.HTMLAttributes<HTMLTableCellElement>) => <th className="border border-white/10 px-3 py-2 text-left font-bold bg-white/5" {...props} />,
-  td: (props: React.HTMLAttributes<HTMLTableCellElement>) => <td className="border border-white/10 px-3 py-2" {...props} />,
+  th: (props: React.HTMLAttributes<HTMLTableCellElement>) => <th className="border border-[var(--muted-color)]/20 px-3 py-2 text-left font-bold bg-[var(--muted-color)]/10" {...props} />,
+  td: (props: React.HTMLAttributes<HTMLTableCellElement>) => <td className="border border-[var(--muted-color)]/20 px-3 py-2" {...props} />,
 };
 
 // Tag → service page mapping for internal linking
@@ -251,8 +252,31 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
             </div>
           </header>
 
-          <div className="prose dark:prose-invert max-w-none" itemProp="articleBody">
-            <MDXRemote source={post.content} components={components} />
+          <div
+            className="prose max-w-none"
+            style={{
+              '--tw-prose-body': 'var(--text-color)',
+              '--tw-prose-headings': 'var(--text-color)',
+              '--tw-prose-lead': 'var(--muted-color)',
+              '--tw-prose-links': 'var(--primary-color)',
+              '--tw-prose-bold': 'var(--text-color)',
+              '--tw-prose-counters': 'var(--muted-color)',
+              '--tw-prose-bullets': 'var(--muted-color)',
+              '--tw-prose-hr': 'var(--muted-color)',
+              '--tw-prose-quotes': 'var(--text-color)',
+              '--tw-prose-quote-borders': 'var(--primary-color)',
+              '--tw-prose-captions': 'var(--muted-color)',
+              '--tw-prose-code': 'var(--text-color)',
+              '--tw-prose-th-borders': 'var(--muted-color)',
+              '--tw-prose-td-borders': 'var(--muted-color)',
+            } as React.CSSProperties}
+            itemProp="articleBody"
+          >
+            <MDXRemote
+              source={post.content}
+              components={components}
+              options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+            />
           </div>
 
           {/* Author bio / EEAT signal */}
