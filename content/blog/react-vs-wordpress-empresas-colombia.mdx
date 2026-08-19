@@ -89,7 +89,7 @@ En lugar de instalar un CMS con temas y plugins, tu sitio es construido desde ce
 | **Rendimiento** | Excelente (90-100 en PageSpeed). Carga típica: 0.8-2 segundos. Ideal para tráfico móvil colombiano. | Variable (40-85 en PageSpeed). Depende de plugins y optimización. Carga típica: 2-8 segundos sin optimización profesional. |
 | **SEO** | Nativo y completo. SSG/SSR, metadatos por página, JSON-LD integrable, Core Web Vitals excelentes. Puntúa alto en Google. | Bueno si se optimiza con Yoast/Rank Math. Core Web Vitals difíciles de controlar por el peso de plugins. Requiere más trabajo para puntuar bien. |
 | **Seguridad** | Muy alta. Sin panel admin expuesto, sin plugins de terceros, menor superficie de ataque. Cada deploy es una versión inmutable. | Baja a media. Requiere actualizaciones constantes, plugins de seguridad adicionales, firewall, monitoreo activo. El panel wp-admin es blanco de ataques masivos. |
-| **Costo inicial** | Alto. $2,500 - $8,000+ USD para sitios corporativos. No usa temas prefabricados. Cada proyecto es artesanal. | Bajo a medio. $300 - $2,000 USD con tema premium y configuración. Puede ser más si se requiere desarrollo personalizado. |
+| **Costo inicial** | Alto. $6,000 - $25,000+ USD para sitios corporativos. No usa temas prefabricados. Cada proyecto es artesanal. | Bajo a medio. $300 - $2,000 USD con tema premium y configuración. Puede ser más si se requiere desarrollo personalizado. |
 | **Costo a largo plazo** | Bajo. Principalmente hosting ($20-50/mes), CMS headless si se usa, y soporte técnico ocasional para nuevas funcionalidades. | Medio a alto. Hosting ($15-100+/mes según tráfico), licencias de plugins premium ($100-500/año cada uno), plan de mantenimiento mensual ($50-200/mes), seguridad extra. |
 | **Escalabilidad** | Excelente. Arquitectura JAMstack/SSR, CDN global, despliegue serverless. Maneja picos de tráfico sin degradación. | Limitada. Requiere servidores más potentes, cachés agresivas (Redis, Varnish), optimización de base de datos. Escalar tiene costos crecientes y complejidad. |
 | **Personalización** | Total. Cualquier funcionalidad es posible. Ideal para modelos de negocio únicos, integraciones complejas y flujos personalizados. | Limitada por lo que existe en plugins. Crear funcionalidades propias requiere desarrollo PHP complejo que se desvía del ecosistema WordPress y es difícil de mantener. |
@@ -103,7 +103,7 @@ En lugar de instalar un CMS con temas y plugins, tu sitio es construido desde ce
 
 ### Caso 1: La tienda de ropa en Instagram que quiere su e-commerce
 
-**Perfil:** Un emprendimiento en Bogotá que vende ropa por Instagram y WhatsApp. Tiene 50 productos, quiere su propia tienda online, y su presupuesto total es de $3 millones de pesos.
+**Perfil:** Un emprendimiento en Bogotá que vende ropa por Instagram y WhatsApp. Tiene 50 productos, quiere su propia tienda online, y su presupuesto total es de COP 3.5 millones de pesos.
 
 **Recomendación: WordPress + WooCommerce.** Con $3 millones COP, podés tener una tienda funcional usando un tema para WooCommerce, la pasarela de pagos Wompi (gratis), y configuración estándar. No vas a tener la tienda más rápida del mundo, pero vas a empezar a vender en línea en 1-2 semanas. Cuando el negocio crezca y facture $30+ millones al mes, migrar a Next.js será una inversión lógica y necesaria. Pero para empezar, WordPress te permite validar el modelo de negocio sin descapitalizarte.
 
@@ -111,7 +111,7 @@ En lugar de instalar un CMS con temas y plugins, tu sitio es construido desde ce
 
 **Perfil:** Una empresa de transporte en Cali con 30 vehículos. Necesitan un portal donde sus clientes puedan rastrear envíos en tiempo real, con integración a su sistema interno de GPS y despachos, panel de administración para operadores, y facturación electrónica conectada a la DIAN.
 
-**Recomendación: React / Next.js.** Simplemente no existe un plugin de WordPress que haga esto de forma robusta. Intentar construir este sistema sobre WordPress sería un error arquitectónico grave. Next.js permite crear exactamente la aplicación que la empresa necesita, con integraciones a APIs externas, autenticación segura con roles, y una experiencia de usuario rápida tanto en web como en móvil. La inversión será mayor ($8,000 - $15,000 USD), pero es el costo justo de construir un sistema que realmente resuelve el problema de negocio.
+**Recomendación: React / Next.js.** Simplemente no existe un plugin de WordPress que haga esto de forma robusta. Intentar construir este sistema sobre WordPress sería un error arquitectónico grave. Next.js permite crear exactamente la aplicación que la empresa necesita, con integraciones a APIs externas, autenticación segura con roles, y una experiencia de usuario rápida tanto en web como en móvil. La inversión será mayor ($30,000 - $120,000 USD), pero es el costo justo de construir un sistema que realmente resuelve el problema de negocio.
 
 ### Caso 3: El restaurante que quiere presencia web y pedidos online
 
@@ -138,9 +138,9 @@ He conversado con varios dueños de negocio en Colombia que migraron de WordPres
 
 ### Paso 1: Definí tu presupuesto real
 
-- **Menos de $5 millones COP (~$1,200 USD):** WordPress es tu única opción viable hoy. Buscá un buen implementador que te deje el sitio optimizado y con plan de mantenimiento.
-- **$5 a $15 millones COP (~$1,200 - $3,600 USD):** Podés considerar un sitio con Next.js y diseño estándar (no personalizado desde cero), o un WordPress de muy alta calidad con optimización profesional. Ambas son buenas opciones, evaluá los siguientes pasos.
-- **Más de $15 millones COP (~$3,600+ USD):** Next.js es la mejor inversión a largo plazo. Vas a tener un activo digital que envejece bien, sin deuda técnica de plugins abandonados.
+- **Menos de $4 millones COP (~$950 USD):** WordPress es tu única opción viable hoy. Buscá un buen implementador que te deje el sitio optimizado y con plan de mantenimiento.
+- **$4 a $14 millones COP (~$950 - $3,330 USD):** Podés considerar un sitio con Next.js y diseño estándar (no personalizado desde cero), o un WordPress de muy alta calidad con optimización profesional. Ambas son buenas opciones, evaluá los siguientes pasos.
+- **Más de $14 millones COP (~$3,330+ USD):** Next.js es la mejor inversión a largo plazo. Vas a tener un activo digital que envejece bien, sin deuda técnica de plugins abandonados.
 
 ### Paso 2: Identificá si tu negocio necesita funcionalidades únicas
 
@@ -167,12 +167,12 @@ Este es el error más común. Un WordPress de $800 USD puede terminar costando m
 
 | Costo en 3 años (USD) | WordPress | Next.js |
 |------------------------|-----------|---------|
-| Desarrollo inicial | $800 - $2,000 | $2,500 - $8,000 |
+| Desarrollo inicial | $800 - $2,000 | $6,000 - $25,000 |
 | Hosting | $600 - $3,600 | $300 - $720 |
 | Plugins/licencias | $300 - $1,500 | $0 (o CMS headless: $0 - $600) |
-| Mantenimiento técnico | $1,200 - $3,600 | $600 - $1,800 |
+| Mantenimiento técnico | $1,800 - $7,200 | $600 - $1,800 |
 | Seguridad y recuperación | $200 - $1,000+ | $0 - $200 |
-| **Total estimado** | **$3,100 - $11,700** | **$3,400 - $11,320** |
+| **Total estimado** | **$3,700 - $15,300** | **$6,900 - $28,320** |
 
 En el rango bajo, WordPress sigue siendo más barato. Pero en el rango medio-alto, los costos tienden a igualarse, y con Next.js obtenés un producto técnicamente superior: más rápido, más seguro y más preparado para el futuro.
 
@@ -212,7 +212,7 @@ Técnicamente, Next.js tiene ventaja porque te permite controlar exactamente el 
 
 ### 4. ¿Cuánto cuesta mantener un sitio Next.js vs uno WordPress al mes?
 
-Un sitio Next.js típico tiene costos mensuales de hosting entre $20 y $50 USD (Vercel Pro o similar) más un plan de mantenimiento ocasional. WordPress típicamente requiere hosting ($15-100 USD, más caro si tiene más tráfico), licencias de plugins premium ($10-50/mes), y un plan de mantenimiento mensual indispensable ($50-200/mes) para mantener todo actualizado y seguro. En el rango bajo, Next.js suele ser más barato de mantener. En el rango alto, pueden ser similares.
+Un sitio Next.js típico tiene costos mensuales de hosting entre $20 y $50 USD (Vercel Pro o similar) más un plan de mantenimiento ocasional. WordPress típicamente requiere hosting ($15-100 USD, más caro si tiene más tráfico), licencias de plugins premium ($10-50/mes), y un plan de mantenimiento mensual indispensable ($150-600/mes) para mantener todo actualizado y seguro. En el rango bajo, Next.js suele ser más barato de mantener. En el rango alto, pueden ser similares.
 
 ### 5. ¿Puedo tener un blog en un sitio Next.js?
 
@@ -226,7 +226,7 @@ No. WordPress va a seguir siendo la opción más popular para sitios sencillos, 
 
 Después de años construyendo sitios web con ambas tecnologías para empresas colombianas, mi respuesta honesta es esta:
 
-**Elegí WordPress si** tu presupuesto es limitado (menos de $1,200 USD), necesitás resultados en días (no semanas), querés que tu equipo administre todo sin ayuda técnica, y tu negocio es relativamente estándar — no necesitás funcionalidades únicas ni esperás un crecimiento explosivo en tráfico o catálogo.
+**Elegí WordPress si** tu presupuesto es limitado (menos de $950 USD), necesitás resultados en días (no semanas), querés que tu equipo administre todo sin ayuda técnica, y tu negocio es relativamente estándar — no necesitás funcionalidades únicas ni esperás un crecimiento explosivo en tráfico o catálogo.
 
 **Elegí React/Next.js si** querés una inversión que dure 3-5+ años sin dolores de cabeza, tu negocio tiene o va a tener funcionalidades únicas que no se resuelven con plugins, el rendimiento y el SEO son críticos para tus ventas, planeás escalar tu operación digital significativamente, o ya pasaste por WordPress y sentís que te quedó chico.
 

@@ -21,10 +21,10 @@ const serviceOptions = [
 
 const budgetOptions = [
   { value: "", label: "¿Cuál es tu presupuesto?" },
-  { value: "<500", label: "Menos de $500 USD" },
-  { value: "500-1000", label: "$500 - $1,000 USD" },
-  { value: "1000-3000", label: "$1,000 - $3,000 USD" },
-  { value: "3000+", label: "Más de $3,000 USD" },
+  { value: "<1500", label: "Menos de $1,500 USD" },
+  { value: "1500-6000", label: "$1,500 - $6,000 USD" },
+  { value: "6000-25000", label: "$6,000 - $25,000 USD" },
+  { value: "25000+", label: "Más de $25,000 USD" },
 ];
 
 const timelineOptions = [

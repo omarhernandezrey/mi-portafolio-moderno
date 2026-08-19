@@ -24,10 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     isEn
       ? {
           title: "Freelance Web Developer Colombia | React & Next.js",
-          description: "Hire a freelance web developer in Colombia. Custom websites and apps in React and Next.js from $500 USD. Free consultation, 24h response.",
+          description: "Hire a freelance web developer in Colombia. Custom websites and apps in React and Next.js from $1,500 USD. Free consultation, 24h response.",
           path: "",
           locale: 'en',
-          ogSubtitle: "React & Next.js | From $500 USD",
+          ogSubtitle: "React & Next.js | From $1,500 USD",
           keywords: [
             "hire web developer colombia",
             "freelance developer colombia",
@@ -42,10 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
       : {
           title: "Desarrollador Web Freelance Colombia | React y Next.js",
-          description: "Contrata un desarrollador web freelance en Colombia. Webs y aplicaciones a medida en React y Next.js desde $500 USD. Consulta gratis, respuesta en 24h.",
+          description: "Contrata un desarrollador web freelance en Colombia. Webs y aplicaciones a medida en React y Next.js desde $1,500 USD. Consulta gratis, respuesta en 24h.",
           path: "",
           locale: 'es',
-          ogSubtitle: "React & Next.js | Desde $500 USD",
+          ogSubtitle: "React & Next.js | Desde $1,500 USD",
           keywords: [
             "contratar desarrollador web colombia",
             "programador freelance colombia",
@@ -87,7 +87,7 @@ export default function Home() {
           "latitude": 4.6097,
           "longitude": -74.0817
         },
-        "description": "Desarrollador Full Stack freelance en Colombia. React, Next.js, Node.js e IA. Proyectos desde $500 USD para Colombia y USA remoto.",
+        "description": "Desarrollador Full Stack freelance en Colombia. React, Next.js, Node.js e IA. Proyectos desde $1,500 USD para Colombia y USA remoto.",
         "provider": {
           "@type": "Person",
           "@id": "https://omarhernandezrey.com/#person"

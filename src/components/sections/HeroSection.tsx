@@ -187,7 +187,7 @@ export default function HeroSection() {
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Desde</dt>
-                <dd className="text-right font-bold">$300 USD</dd>
+                <dd className="text-right font-bold">$1,500 USD</dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Respuesta</dt>

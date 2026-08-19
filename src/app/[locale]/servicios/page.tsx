@@ -21,10 +21,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     isEn
       ? {
           title: 'Web Development & Software Services | Colombia',
-          description: 'Web development, e-commerce, technical SEO, and automation with React and Next.js. Projects from $300 USD for Colombia, the US, and LATAM.',
+          description: 'Web development, e-commerce, technical SEO, and automation with React and Next.js. Projects from $1,500 USD for Colombia, the US, and LATAM.',
           path: '/servicios',
           locale: 'en',
-          ogSubtitle: 'Colombia & Remote — From $300 USD',
+          ogSubtitle: 'Colombia & Remote — From $1,500 USD',
           keywords: [
             'hire web developer colombia',
             'freelance developer colombia',
@@ -37,10 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
       : {
           title: 'Servicios de Desarrollo Web y Software | Colombia',
-          description: 'Desarrollo web, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $300 USD para Colombia, USA y LATAM.',
+          description: 'Desarrollo web, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $1,500 USD para Colombia, USA y LATAM.',
           path: '/servicios',
           locale: 'es',
-          ogSubtitle: 'Colombia & Remoto — Desde $300 USD',
+          ogSubtitle: 'Colombia & Remoto — Desde $1,500 USD',
           keywords: [
             'contratar desarrollador web colombia',
             'programador freelance colombia',
@@ -210,13 +210,13 @@ export default async function ServiciosPage({ params }: Props) {
               ? [
                   { value: '+30', label: 'Projects delivered' },
                   { value: '5+', label: 'Years of experience' },
-                  { value: '$500 USD', label: 'Starting price' },
+                  { value: '$1,500 USD', label: 'Starting price' },
                   { value: '24h', label: 'Response time' },
                 ]
               : [
                   { value: '+30', label: 'Proyectos entregados' },
                   { value: '5+', label: 'Años de experiencia' },
-                  { value: '$500 USD', label: 'Desde por proyecto' },
+                  { value: '$1,500 USD', label: 'Desde por proyecto' },
                   { value: '24h', label: 'Tiempo de respuesta' },
                 ]
             ).map(stat => (

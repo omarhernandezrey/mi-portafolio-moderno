@@ -28,7 +28,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     name: 'Desarrollo Web',
     h1: 'Desarrollo Web Profesional en {ciudad}',
     h2: 'Creamos sitios web de alto rendimiento para negocios en {ciudad}',
-    description: 'Desarrollo web a medida con Next.js y React en {ciudad}. Sitios rápidos, optimizados para SEO y conversión, desde $300 USD.',
+    description: 'Desarrollo web a medida con Next.js y React en {ciudad}. Sitios rápidos, optimizados para SEO y conversión, desde $1,500 USD.',
     keywords: ['desarrollo web {ciudad}', 'programador web {ciudad}', 'diseño web {ciudad}'],
     benefits: [
       'Sitios web ultra-rápidos con Next.js y React',
@@ -44,16 +44,16 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Lanzamiento: Desplegamos y configuramos todo'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una página web en {ciudad}?', a: 'Los precios varían según complejidad: landing pages desde $1.2M COP, sitios corporativos desde $4M COP, e-commerce desde $6M COP.' },
+      { q: '¿Cuánto cuesta una página web en {ciudad}?', a: 'Los precios varían según complejidad: landing pages desde $1.2M COP, sitios corporativos desde $4M COP, e-commerce desde $3.5M COP.' },
       { q: '¿Cuánto tiempo toma desarrollar mi sitio?', a: 'Landing pages: 3-7 días. Sitios corporativos: 2-4 semanas. E-commerce: 3-6 semanas.' },
       { q: '¿Incluye diseño o debo tenerlo listo?', a: 'El diseño está incluido. Trabajamos juntos en Figma hasta que estés 100% satisfecho.' }
     ],
-    priceRange: '$1.2M - $15M COP ($300 - $3,800 USD)',
+    priceRange: '$1.2M - $25M COP ($1,500 - $40,000 USD)',
     deliveryTime: '1-6 semanas según complejidad',
     nameEn: 'Web Development',
     h1En: 'Professional Web Development in {city}',
     h2En: 'High-Performance Websites for Businesses in {city}',
-    descriptionEn: 'Custom web development with Next.js and React in {city}. Fast, SEO-ready sites that turn visitors into paying clients, from $300 USD.',
+    descriptionEn: 'Custom web development with Next.js and React in {city}. Fast, SEO-ready sites that turn visitors into paying clients, from $1,500 USD.',
     keywordsEn: ['web development {city}', 'web developer {city}', 'hire web developer {city}', 'website design {city}', 'freelance web developer {city}'],
     benefitsEn: [
       'Ultra-fast Next.js & React websites',
@@ -69,11 +69,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Launch: Deploy, configure, and go live with full handover',
     ],
     faqsEn: [
-      { q: 'How much does a website cost in {city}?', a: 'Landing pages start at $300 USD. Corporate websites from $1,000 USD. E-commerce from $1,500 USD. Final price depends on features: payment integrations, advanced forms, admin panel, etc.' },
+      { q: 'How much does a website cost in {city}?', a: 'Landing pages start at $1,500 USD. Corporate websites from $6,000 USD. E-commerce from $4,000 USD. Final price depends on features: payment integrations, advanced forms, admin panel, etc.' },
       { q: 'How long does it take to build my website?', a: 'Landing pages: 3-7 business days. Corporate sites: 2-4 weeks. E-commerce: 3-6 weeks.' },
       { q: 'Is design included in the price?', a: 'Yes. We work in Figma until you\'re 100% satisfied before writing a single line of code.' },
     ],
-    priceRangeUsd: '$300 - $3,800 USD',
+    priceRangeUsd: '$1,500 - $40,000 USD',
     deliveryTimeEn: '1-6 weeks depending on complexity',
   },
   {
@@ -101,7 +101,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Necesito saber programar?', a: 'No. Nosotros construimos todo y te entregamos documentación simple para gestionar.' },
       { q: '¿Con qué herramientas se integra?', a: 'WhatsApp, Notion, Google Sheets, Airtable, Slack, Telegram, correo, y cualquier API moderna.' }
     ],
-    priceRange: '$2M - $10M COP ($500 - $2,500 USD)',
+    priceRange: '$2M - $8M COP ($500 - $2,000 USD)',
     deliveryTime: '2-4 semanas',
     nameEn: 'Process Automation',
     h1En: 'Business Process Automation in {city}',
@@ -126,7 +126,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: 'Do I need to know how to code?', a: 'No. We build everything and deliver simple documentation so you can manage it yourself.' },
       { q: 'What tools do you integrate with?', a: 'WhatsApp, Notion, Google Sheets, Airtable, Slack, Telegram, HubSpot, Salesforce, and any modern API.' },
     ],
-    priceRangeUsd: '$500 - $2,500 USD',
+    priceRangeUsd: '$500 - $2,000 USD',
     deliveryTimeEn: '2-4 weeks',
   },
   {
@@ -150,11 +150,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Lanzamiento: Te capacitamos para gestionar tu tienda'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una tienda online?', a: 'E-commerce básico desde $6M COP. Con funcionalidades avanzadas (suscripciones, membresías) desde $10M COP.' },
+      { q: '¿Cuánto cuesta una tienda online?', a: 'E-commerce estándar desde $3.5M COP. E-commerce personalizado desde $18M COP.' },
       { q: '¿Qué pasarela de pagos usar?', a: 'En Colombia recomendamos Wompi (tiene PSE, tarjetas, Nequi). Para internacional: Stripe o PayPal.' },
       { q: '¿Puedo gestionar productos yo mismo?', a: 'Sí, incluimos un panel intuitivo donde puedes agregar, editar y eliminar productos sin saber código.' }
     ],
-    priceRange: '$6M - $20M COP ($1,500 - $5,000 USD)',
+    priceRange: '$3.5M - $60M COP ($4,000 - $90,000 USD)',
     deliveryTime: '3-6 semanas',
     nameEn: 'E-Commerce Development',
     h1En: 'High-Impact E-Commerce Development in {city}',
@@ -175,11 +175,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Launch: Full training so you can manage it independently',
     ],
     faqsEn: [
-      { q: 'How much does an online store cost?', a: 'Basic e-commerce from $1,500 USD. With advanced features (subscriptions, memberships, multi-vendor) from $2,500 USD.' },
+      { q: 'How much does an online store cost?', a: 'Standard e-commerce from $4,000 USD. Custom e-commerce from $25,000 USD.' },
       { q: 'Which payment gateway should I use?', a: 'For US customers: Stripe or PayPal. For international: both. We handle the full integration.' },
       { q: 'Can I manage products myself?', a: 'Yes. We provide an intuitive dashboard where you can add, edit, and remove products without any coding knowledge.' },
     ],
-    priceRangeUsd: '$1,500 - $5,000 USD',
+    priceRangeUsd: '$4,000 - $90,000 USD',
     deliveryTimeEn: '3-6 weeks',
   },
   {
@@ -203,11 +203,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Acompañamiento: Estamos disponibles para dudas posteriores'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta la consultoría?', a: 'Auditoría básica desde $800k COP. Consultoría completa con documentación técnica desde $2M COP.' },
+      { q: '¿Cuánto cuesta la consultoría?', a: 'Auditoría técnica desde $2.5M COP. Sesiones de estrategia desde $250k COP/hora.' },
       { q: '¿Debo contratar el desarrollo con ustedes después?', a: 'No es obligatorio. Nuestra consultoría es independiente, aunque muchos clientes prefieren que ejecutemos también.' },
       { q: '¿Tengo que tener conocimientos técnicos?', a: 'No. Explicamos todo en lenguaje claro para que tomes decisiones informadas.' }
     ],
-    priceRange: '$800k - $5M COP ($200 - $1,250 USD)',
+    priceRange: '$250k - $15M COP ($200 - $20,000 USD)',
     deliveryTime: '3-10 días',
     nameEn: 'Tech Consulting',
     h1En: 'Tech Consulting Services in {city}',
@@ -228,11 +228,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Support: Available for follow-up questions post-delivery',
     ],
     faqsEn: [
-      { q: 'How much does tech consulting cost?', a: 'Basic audit from $200 USD. Full consulting with technical documentation from $500 USD.' },
+      { q: 'How much does tech consulting cost?', a: 'Technical audit from $3,000 USD. Strategy sessions from $200 USD/hour.' },
       { q: 'Do I need to hire you for development afterwards?', a: 'Not required. Our consulting is independent, though many clients prefer us to execute as well.' },
       { q: 'Do I need technical knowledge?', a: 'No. We explain everything in plain language so you can make informed decisions.' },
     ],
-    priceRangeUsd: '$200 - $1,250 USD',
+    priceRangeUsd: '$200 - $20,000 USD',
     deliveryTimeEn: '3-10 business days',
   },
   {
@@ -256,11 +256,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Lanzamiento: Configuramos tracking y publicamos'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una landing page?', a: 'Landing pages profesionales desde $1.2M COP. Con A/B testing y optimización avanzada desde $2M COP.' },
+      { q: '¿Cuánto cuesta una landing page?', a: 'Landing pages profesionales desde $1.2M COP. Con A/B testing y optimización avanzada desde $2.5M COP.' },
       { q: '¿Landing page o sitio web completo?', a: 'Si tienes un objetivo específico (vender un producto, captar leads), landing page. Si necesitas presencia institucional completa, sitio web.' },
       { q: '¿Incluye hosting y dominio?', a: 'Incluimos configuración en tu hosting. Si no tienes, te recomendamos las mejores opciones según tu presupuesto.' }
     ],
-    priceRange: '$1.2M - $3M COP ($300 - $750 USD)',
+    priceRange: '$1.2M - $4M COP ($1,500 - $6,000 USD)',
     deliveryTime: '3-7 días',
     nameEn: 'High-Converting Landing Pages',
     h1En: 'High-Converting Landing Pages in {city}',
@@ -281,11 +281,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Launch: We set up tracking and publish',
     ],
     faqsEn: [
-      { q: 'How much does a landing page cost?', a: 'Professional landing pages from $300 USD. With A/B testing and advanced optimization from $500 USD.' },
+      { q: 'How much does a landing page cost?', a: 'Professional landing pages from $1,500 USD. With A/B testing and advanced optimization from $2,500 USD.' },
       { q: 'Landing page or full website?', a: 'If you have one specific goal (sell a product, capture leads), go landing page. For full institutional presence, choose a website.' },
       { q: 'Does it include hosting?', a: 'We include hosting setup on your account. If you don\'t have hosting yet, we recommend the best options for your budget.' },
     ],
-    priceRangeUsd: '$300 - $750 USD',
+    priceRangeUsd: '$1,500 - $6,000 USD',
     deliveryTimeEn: '3-7 business days',
   },
   {
@@ -366,7 +366,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Garantizas primera posición en Google?', a: 'No. Nadie puede garantizar eso. Pero sí garantizamos implementar todas las mejores prácticas técnicas.' },
       { q: '¿Incluye creación de contenido?', a: 'El SEO técnico no incluye contenido. Para content marketing y link building tenemos un servicio separado.' }
     ],
-    priceRange: '$2M - $8M COP ($500 - $2,000 USD)',
+    priceRange: '$4M - $12M COP ($1,000 - $3,000 USD)',
     deliveryTime: '1-4 semanas',
     nameEn: 'Technical SEO',
     h1En: 'Technical SEO Services in {city}',
@@ -391,7 +391,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: 'Do you guarantee first position on Google?', a: 'No one can guarantee that. We guarantee implementing all technical best practices that give you the best chance to rank.' },
       { q: 'Does it include content creation?', a: 'Technical SEO does not include content. For content marketing and link building, we offer a separate service.' },
     ],
-    priceRangeUsd: '$500 - $2,000 USD',
+    priceRangeUsd: '$1,000 - $3,000 USD',
     deliveryTimeEn: '1-4 weeks',
   },
   {
@@ -468,11 +468,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Soporte: Respuesta a incidentes y dudas'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta el mantenimiento?', a: 'Planes desde $500k COP/mes para sitios pequeños. Sitios complejos o e-commerce desde $1.2M COP/mes.' },
+      { q: '¿Cuánto cuesta el mantenimiento?', a: 'Planes desde $600k COP/mes para sitios pequeños. Sitios complejos o e-commerce desde $1.5M COP/mes.' },
       { q: '¿Qué incluye el plan básico?', a: 'Backups semanales, actualizaciones de seguridad, monitoreo uptime, soporte por email con respuesta en 24h.' },
       { q: '¿Pueden mantener un sitio que no desarrollaron ustedes?', a: 'Sí, pero primero hacemos una auditoría para evaluar el estado del código y determinar si podemos asumir el mantenimiento.' }
     ],
-    priceRange: '$500k - $3M COP/mes ($125 - $750 USD/mes)',
+    priceRange: '$600k - $2.5M COP/mes ($500 - $2,000 USD/mes)',
     deliveryTime: 'Plan continuo',
     nameEn: 'Web Maintenance & Support',
     h1En: 'Professional Web Maintenance & Support in {city}',
@@ -493,11 +493,11 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Support: Fast response to incidents and technical questions',
     ],
     faqsEn: [
-      { q: 'How much does web maintenance cost?', a: 'Plans from $100 USD/month for simple sites. Complex sites or e-commerce from $300 USD/month.' },
+      { q: 'How much does web maintenance cost?', a: 'Plans from $500 USD/month for simple sites. Complex sites or e-commerce from $1,500 USD/month.' },
       { q: 'What does the basic plan include?', a: 'Weekly backups, security updates, uptime monitoring, email support with 24h response time.' },
       { q: 'Can you maintain a site you didn\'t build?', a: 'Yes, but we first conduct an audit to evaluate code quality and determine if we can take it on.' },
     ],
-    priceRangeUsd: '$100 - $750 USD/month',
+    priceRangeUsd: '$500 - $2,000 USD/month',
     deliveryTimeEn: 'Ongoing monthly plan',
   }
 ];
