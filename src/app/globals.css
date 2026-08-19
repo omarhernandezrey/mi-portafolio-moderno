@@ -150,8 +150,8 @@ body {
   --background-color: #0d131a; /* Azul oscuro profundo para el fondo principal */
   --secondary-background-color: #1c2731; /* Azul grisáceo para fondo secundario */
   --white-color: #fff; /* Blanco puro para textos */
-  --text-color: #d1d5db; /* Gris claro para texto general */
-  --muted-color: #a1aab8; /* Gris apagado para textos secundarios */
+  --text-color: #e5e7eb; /* Gris claro brillante para texto general — alto contraste */
+  --muted-color: #b8bfca; /* Gris suave para textos secundarios — mejor legibilidad */
   --primary-color: #00cba9; /* Verde brillante para elementos principales */
   --accent-color: #00a086; /* Verde más oscuro como color de acento */
   --card-bg-color: #1c2731; /* Fondo de tarjetas similar al secundario */
@@ -285,8 +285,8 @@ body {
 
   /* Texto */
   --white-color: #fff; /* Blanco puro para elementos puntuales */
-  --text-color: #e0e0e0; /* Gris claro para texto principal */
-  --muted-color: #888; /* Gris medio para texto secundario */
+  --text-color: #eeeeee; /* Gris claro brillante para texto principal */
+  --muted-color: #a0a0a0; /* Gris medio claro para texto secundario — mejor contraste */
 
   /* Colores principales (rojo intenso) */
   --primary-color: #ed3434; /* Rojo brillante para elementos destacados */
@@ -356,8 +356,8 @@ body {
 
   /* Texto */
   --white-color: #fff;
-  --text-color: #d1e7dd; /* Verde claro suave */
-  --muted-color: #8ab39c; /* Verde apagado */
+  --text-color: #e0f0e6; /* Verde claro brillante para texto — alto contraste */
+  --muted-color: #a3c9b5; /* Verde suave para texto secundario — mejor legibilidad */
 
   /* Colores principales */
   --primary-color: #4caf50; /* Verde vibrante */
@@ -426,8 +426,8 @@ body {
 
   /* Texto */
   --white-color: #fff;
-  --text-color: #d1e0ff; /* Azul claro */
-  --muted-color: #8a9bb8; /* Azul grisáceo */
+  --text-color: #e0eaff; /* Azul claro brillante para texto — alto contraste */
+  --muted-color: #a8b8d0; /* Azul grisáceo suave para texto secundario */
 
   /* Colores principales */
   --primary-color: #00b4d8; /* Azul turquesa */
