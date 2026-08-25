@@ -10,6 +10,8 @@ export interface PostMetadata {
   seoTitle?: string;
   slug: string;
   date: string;
+  /** Fecha de última edición sustancial (ISO). Si falta, se asume igual a `date`. */
+  updated?: string;
   description: string;
   tags: string[];
   image?: string;

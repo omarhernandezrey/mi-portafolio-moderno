@@ -147,7 +147,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
   const path = isEnglish ? `${BASE_URL}/en/blog/${slug}` : `${BASE_URL}/blog/${slug}`;
   const blogPath = isEnglish ? `${BASE_URL}/en/blog` : `${BASE_URL}/blog`;
   const homePath = isEnglish ? `${BASE_URL}/en` : BASE_URL;
-  const relatedPosts = getRelatedPosts(slug, post.tags, allPosts);
+  const sameLangPosts = allPosts.filter((p) => p.lang === post.lang);
+  const relatedPosts = getRelatedPosts(slug, post.tags, sameLangPosts);
   const relatedServices = getRelatedServices(post.tags);
   const ogImageUrl = post.image?.startsWith('/api/og')
     ? `${BASE_URL}${post.image}`
@@ -161,7 +162,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
     "description": post.description,
     "keywords": post.tags.join(', '),
     "datePublished": post.date,
-    "dateModified": post.date,
+    "dateModified": post.updated ?? post.date,
     "wordCount": post.wordCount,
     "timeRequired": `PT${post.readingTime}M`,
     "inLanguage": isEnglish ? 'en' : 'es',

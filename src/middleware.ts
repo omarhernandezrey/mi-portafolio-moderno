@@ -108,7 +108,6 @@ const NON_LOCALIZED_PREFIXES = [
   '/proposal',
   '/certificates',
   '/auth',
-  '/opengraph-image',
 ]
 
 export async function middleware(request: NextRequest) {
