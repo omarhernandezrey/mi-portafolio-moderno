@@ -1,7 +1,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { getPostBySlug, getAllPosts, getRelatedPosts } from '@/lib/blog';
+import { getPostBySlug, getAllPosts, getRelatedPosts, getFaqSection } from '@/lib/blog';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import { Link } from '@/i18n/navigation';
@@ -200,10 +200,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
     ],
   };
 
+  // Rich snippet de preguntas frecuentes cuando el post tiene una sección FAQ real.
+  const faqItems = getFaqSection(post.content);
+  const faqSchema = faqItems && {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(({ question, answer }) => ({
+      "@type": "Question",
+      "name": question,
+      "acceptedAnswer": { "@type": "Answer", "text": answer },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-[var(--background-color)] text-[var(--text-color)]">
       <JsonLd data={blogPostingSchema} />
       <JsonLd data={breadcrumbSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
 
       <div className="container mx-auto px-4 py-16 max-w-3xl">
         {/* Breadcrumb nav */}

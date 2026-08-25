@@ -1,5 +1,5 @@
 import React from "react";
-import { buildMetadata } from '@/lib/seo';
+import { buildMetadata, withBrand } from '@/lib/seo';
 import { Metadata } from "next";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMetadata(
     isEn
       ? {
-          title: "Freelance Web Developer Colombia | React & Next.js",
+          title: withBrand("Freelance Web Developer Colombia"),
           description: "Hire a freelance web developer in Colombia. Custom websites and apps in React and Next.js from $1,500 USD. Free consultation, 24h response.",
           path: "",
           locale: 'en',
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           ],
         }
       : {
-          title: "Desarrollador Web Freelance Colombia | React y Next.js",
+          title: withBrand("Desarrollador Web Freelance Colombia"),
           description: "Contrata un desarrollador web freelance en Colombia. Webs y aplicaciones a medida en React y Next.js desde $1,500 USD. Consulta gratis, respuesta en 24h.",
           path: "",
           locale: 'es',

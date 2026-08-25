@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { serviciosProgramaticos } from '@/data/servicios';
-import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
+import { ciudades, CIUDADES_INDEXABLES, CIUDAD_CONTEXTO } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
 import { ArrowRight, Shield, Zap, Globe, Target, UserCheck, CheckCircle, Clock, DollarSign, HelpCircle } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
@@ -103,6 +103,11 @@ export default async function ServicioCiudadPage({ params }: Props) {
     ? servicio.descriptionEn.replace('{city}', ciudad.name).replace('{country}', ciudad.country)
     : servicio.description.replace('{ciudad}', ciudad.name).replace('{country}', ciudad.country);
 
+  // Contexto de mercado real por ciudad (no plantilla) — reduce el % de
+  // contenido idéntico entre páginas de ciudad que Google trata como thin content.
+  const cityContexto = CIUDAD_CONTEXTO[ciudad.id];
+  const marketContext = cityContexto ? (isEn ? cityContexto.marketContext.en : cityContexto.marketContext.es) : '';
+
   const benefits = isEn && servicio.benefitsEn ? servicio.benefitsEn : servicio.benefits;
   const process = isEn && servicio.processEn ? servicio.processEn : servicio.process;
   // FAQ local real (huso horario / modalidad remota), distinta a la del servicio,
@@ -127,11 +132,14 @@ export default async function ServicioCiudadPage({ params }: Props) {
           a: `100% remoto. Coordinamos todo por videollamada y mensajería — no necesitas viajar ni yo debo desplazarme a ${ciudad.name}.`,
         };
 
+  const paymentFaq = cityContexto ? (isEn ? cityContexto.paymentFaq.en : cityContexto.paymentFaq.es) : null;
+
   const faqs = [
     ...(isEn && servicio.faqsEn
       ? servicio.faqsEn.map(f => ({ q: f.q.replace('{city}', ciudad.name), a: f.a }))
       : servicio.faqs.map(f => ({ q: f.q.replace('{ciudad}', ciudad.name), a: f.a }))),
     localFaq,
+    ...(paymentFaq ? [paymentFaq] : []),
   ];
   const priceRange = isEn && servicio.priceRangeUsd ? servicio.priceRangeUsd : servicio.priceRange;
   const deliveryTime = isEn && servicio.deliveryTimeEn ? servicio.deliveryTimeEn : servicio.deliveryTime;
@@ -277,6 +285,11 @@ export default async function ServicioCiudadPage({ params }: Props) {
             <p className="text-lg text-text-muted/70 font-medium leading-relaxed max-w-2xl mx-auto italic">
               {description}
             </p>
+            {marketContext && (
+              <p className="text-sm text-text-muted/50 font-medium leading-relaxed max-w-2xl mx-auto">
+                {marketContext}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">

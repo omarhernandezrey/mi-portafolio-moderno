@@ -10,7 +10,16 @@
     "education": "Educación",
     "contact": "Contacto",
     "calculator": "Calculadora",
-    "language": "Idioma"
+    "language": "Idioma",
+    "menu": "Menú",
+    "go_to": "Ir a"
+  },
+  "actions": {
+    "close": "Cerrar",
+    "change_theme": "Cambiar tema"
+  },
+  "theme": {
+    "change": "Cambiar tema"
   },
   "chatbot": {
     "title": "Asistente de Omar",
@@ -36,8 +45,8 @@
     "name": "Omar Hernández Rey",
     "title": "Desarrollador Web Full Stack",
     "h1": "Desarrollador Web Freelance · Colombia & USA Remote",
-    "subtitle": "Construyo sitios web y aplicaciones a medida usando <strong>React y Next.js</strong>. Atiendo empresas en <strong>Colombia</strong> y clientes remotos en <strong>USA y LATAM</strong>. <span>Proyectos desde $1,500 USD</span> — consulta gratis, respuesta en 24h.",
-    "description": "Combino {creativity}, {innovation} y {technology} para crear experiencias web {unforgettable}.",
+    "subtitle": "Construyo sitios web y aplicaciones a medida usando [[b]]React y Next.js[[/b]]. Atiendo empresas en [[b]]Colombia[[/b]] y clientes remotos en [[b]]USA y LATAM[[/b]]. [[hl]]Consulta gratuita[[/hl]] — respuesta en menos de 24h.",
+    "description": "Combino [[creativity]], [[innovation]] y [[technology]] para crear experiencias web [[unforgettable]].",
     "creativity": "creatividad",
     "innovation": "innovación",
     "technology": "tecnología",
@@ -53,7 +62,7 @@
   "about": {
     "badge": "Conóceme",
     "title": "Sobre mí",
-    "description": "¡Hola! Soy {name}, un {role} con experiencia tanto en {frontend} como en {backend}. Estoy a punto de graduarme en {degree} del {university} y continuo aprendiendo con cursos de {platform} sobre tecnologías web, DevOps y más.",
+    "description": "¡Hola! Soy [[name]], un [[role]] con experiencia tanto en [[frontend]] como en [[backend]]. Estoy a punto de graduarme en [[degree]] del [[university]] y continuo aprendiendo con cursos de [[platform]] sobre tecnologías web, DevOps y más.",
     "name": "Omar Hernández Rey",
     "role": "Desarrollador Web Full Stack",
     "frontend": "Front-End",

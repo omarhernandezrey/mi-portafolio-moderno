@@ -106,12 +106,14 @@ describe('Chatbot Widget — Flujo de venta E2E', () => {
     cy.get('[data-testid="chat-message"][data-role="assistant"]', { timeout: 30000 })
       .should('have.length.greaterThan', 0);
 
-    // Mensaje 2: confirmar interés
-    cy.wait(2000); // pausa para no hacer flood al LLM
+    // Mensaje 2: confirmar interés — esperar a que el input se reactive
+    // (queda disabled mientras el LLM responde; una espera fija no es
+    // confiable porque la latencia real del LLM varía).
+    cy.get('[data-testid="chat-input"]', { timeout: 30000 }).should('not.be.disabled');
     cy.enviarMensajeChat('Me interesa la landing page');
 
     // Mensaje 3: dar datos de contacto
-    cy.wait(2000);
+    cy.get('[data-testid="chat-input"]', { timeout: 30000 }).should('not.be.disabled');
     cy.enviarMensajeChat('Mi nombre es Test User y mi correo es test@ejemplo.co');
   });
 });

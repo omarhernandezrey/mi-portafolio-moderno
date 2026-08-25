@@ -75,6 +75,56 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   };
 }
 
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+function cleanMarkdown(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // [texto](url) -> texto
+    .replace(/\*\*([^*]+)\*\*/g, '$1') // **bold**
+    .replace(/\*([^*]+)\*/g, '$1') // *italic*
+    .replace(/`([^`]+)`/g, '$1') // `code`
+    .replace(/\n+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Extrae pares pregunta/respuesta de la sección "## Preguntas Frecuentes" / "## FAQ"
+ * del MDX crudo del post, si existe, para generar structured data FAQPage.
+ * No confía en que exista: si no hay sección FAQ reconocible, retorna null.
+ */
+export function getFaqSection(content: string): FaqItem[] | null {
+  const sectionMatch = content.match(/(?:^|\n)##\s+.*(?:FAQ|Frecuentes|Frequently\s+Asked\s+Questions)[^\n]*\n([\s\S]*?)(?=\n##\s|\n---\s*\n|$)/i);
+  if (!sectionMatch) return null;
+
+  const body = sectionMatch[1];
+  const items: FaqItem[] = [];
+
+  // Formato principal: "### Pregunta" seguido de uno o más párrafos de respuesta.
+  const questionBlocks = body.split(/\n###\s+/).slice(1); // el primer trozo es texto previo al primer ###
+  for (const block of questionBlocks) {
+    const newlineIdx = block.indexOf('\n');
+    if (newlineIdx === -1) continue;
+    const question = cleanMarkdown(block.slice(0, newlineIdx));
+    const answer = cleanMarkdown(block.slice(newlineIdx + 1));
+    if (question && answer) items.push({ question, answer });
+  }
+  if (items.length > 0) return items;
+
+  // Formato alterno: "**Q: Pregunta**" en una línea, "A: Respuesta" en la siguiente.
+  const boldPairs = body.matchAll(/\*\*Q:\s*([^*]+?)\*\*\s*\n\s*A:\s*(.+)/gi);
+  for (const match of boldPairs) {
+    const question = cleanMarkdown(match[1]);
+    const answer = cleanMarkdown(match[2]);
+    if (question && answer) items.push({ question, answer });
+  }
+
+  return items.length > 0 ? items : null;
+}
+
 export function getRelatedPosts(currentSlug: string, currentTags: string[], allPosts: PostMetadata[], limit = 3): PostMetadata[] {
   const currentLang = allPosts.find(p => p.slug === currentSlug)?.lang;
   const tagsLower = currentTags.map(t => t.toLowerCase());

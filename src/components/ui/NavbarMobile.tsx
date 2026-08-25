@@ -182,7 +182,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
         id="mobile-menu-panel"
         role="dialog"
         aria-modal="true"
-        aria-label={t("navigation.menu", { defaultValue: "Menú" })}
+        aria-label={t("navigation.menu")}
       >
         <div className="flex flex-col min-h-full">
           {/* Selector de idioma + botón Cerrar (sticky) */}
@@ -199,10 +199,10 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
               <button
                 onClick={toggleMenu}
                 className="flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg px-2 py-1"
-                aria-label={`${t("actions.close", { defaultValue: "Cerrar" })} menú`}
+                aria-label={`${t("actions.close")} menú`}
               >
                 <AiOutlineClose size={22} />
-                <span className="text-sm hidden xs:inline">{t("actions.close", { defaultValue: "Cerrar" })}</span>
+                <span className="text-sm hidden xs:inline">{t("actions.close")}</span>
               </button>
             </div>
           </div>
@@ -237,14 +237,14 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-[var(--text-color)]/70 font-medium">
-                  {t("theme.change", { defaultValue: "Cambiar tema" })}
+                  {t("theme.change")}
                 </span>
               </div>
               <button
                 onClick={togglePalette}
                 className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 active:scale-95 hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] p-2 rounded-lg hover:bg-[var(--background-color)] animate-pulse"
-                aria-label={t("actions.change_theme", { defaultValue: "Cambiar tema" })}
-                title={t("actions.change_theme", { defaultValue: "Cambiar tema" })}
+                aria-label={t("actions.change_theme")}
+                title={t("actions.change_theme")}
               >
                 <MdColorLens size={28} />
               </button>

@@ -4,6 +4,135 @@ export interface Ciudad {
   country: string;
 }
 
+export interface CiudadContexto {
+  marketContext: { es: string; en: string };
+  paymentFaq: {
+    es: { q: string; a: string };
+    en: { q: string; a: string };
+  };
+}
+
+// Contenido local REAL (no plantilla) para las ciudades indexables — hechos
+// generales y verificables sobre cada mercado, no afirmaciones de clientes o
+// casos concretos que no existen. Reduce el % de contenido idéntico entre
+// páginas de ciudad, que es la señal que Google usa para tratarlas como
+// doorway pages (ver auditoría GSC ago-2026: 116 páginas "descubierta, sin
+// indexar" — la mayoría eran servicio×ciudad).
+export const CIUDAD_CONTEXTO: Record<string, CiudadContexto> = {
+  bogota: {
+    marketContext: {
+      es: 'Bogotá es la capital económica de Colombia: aquí operan la mayoría de bancos, aseguradoras, multinacionales y entidades de gobierno del país, lo que la convierte en el mercado digital más grande y exigente de Colombia.',
+      en: "Bogotá is Colombia's economic capital — home to most of the country's banks, insurers, multinationals, and government entities, making it Colombia's largest and most demanding digital market.",
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Puedo pagar en pesos colombianos y con factura electrónica?',
+        a: 'Sí. Facturo en COP vía Nequi, Wompi o transferencia bancaria, y emito factura electrónica ante la DIAN si tu empresa la requiere para efectos contables.',
+      },
+      en: {
+        q: 'Can I pay in Colombian pesos with an official invoice?',
+        a: 'Yes. I invoice in COP via Nequi, Wompi, or bank transfer, and issue a DIAN-compliant electronic invoice if your company needs it for accounting.',
+      },
+    },
+  },
+  medellin: {
+    marketContext: {
+      es: 'Medellín se consolidó como el principal polo de innovación y startups tecnológicas de Colombia, con un ecosistema de coworkings, aceleradoras y talento tech que sigue creciendo cada año.',
+      en: "Medellín has become Colombia's leading tech and startup hub, with a growing ecosystem of coworking spaces, accelerators, and tech talent.",
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Puedo pagar en pesos colombianos y con factura electrónica?',
+        a: 'Sí. Facturo en COP vía Nequi, Wompi o transferencia bancaria, y emito factura electrónica ante la DIAN si tu empresa la requiere para efectos contables.',
+      },
+      en: {
+        q: 'Can I pay in Colombian pesos with an official invoice?',
+        a: 'Yes. I invoice in COP via Nequi, Wompi, or bank transfer, and issue a DIAN-compliant electronic invoice if your company needs it for accounting.',
+      },
+    },
+  },
+  cali: {
+    marketContext: {
+      es: 'Cali es el centro industrial y agroindustrial del suroccidente colombiano, con fuerte presencia de manufactura, salud y centros de servicios (BPO) — sectores donde una presencia digital sólida marca la diferencia frente a la competencia regional.',
+      en: 'Cali is the industrial and agribusiness hub of southwestern Colombia, with a strong presence of manufacturing, healthcare, and BPO/service centers.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Puedo pagar en pesos colombianos y con factura electrónica?',
+        a: 'Sí. Facturo en COP vía Nequi, Wompi o transferencia bancaria, y emito factura electrónica ante la DIAN si tu empresa la requiere para efectos contables.',
+      },
+      en: {
+        q: 'Can I pay in Colombian pesos with an official invoice?',
+        a: 'Yes. I invoice in COP via Nequi, Wompi, or bank transfer, and issue a DIAN-compliant electronic invoice if your company needs it for accounting.',
+      },
+    },
+  },
+  barranquilla: {
+    marketContext: {
+      es: 'Barranquilla es el principal puerto y centro logístico del Caribe colombiano, con una economía impulsada por el comercio exterior, la zona franca y un sector empresarial en plena expansión.',
+      en: 'Barranquilla is the leading port and logistics hub of the Colombian Caribbean, with an economy driven by foreign trade, its free trade zone, and a fast-growing business sector.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Puedo pagar en pesos colombianos y con factura electrónica?',
+        a: 'Sí. Facturo en COP vía Nequi, Wompi o transferencia bancaria, y emito factura electrónica ante la DIAN si tu empresa la requiere para efectos contables.',
+      },
+      en: {
+        q: 'Can I pay in Colombian pesos with an official invoice?',
+        a: 'Yes. I invoice in COP via Nequi, Wompi, or bank transfer, and issue a DIAN-compliant electronic invoice if your company needs it for accounting.',
+      },
+    },
+  },
+  bucaramanga: {
+    marketContext: {
+      es: 'Bucaramanga combina una fuerte tradición universitaria (UIS, UNAB, entre otras) con un ecosistema emprendedor creciente, lo que la ha posicionado como una de las ciudades intermedias con más dinamismo tech de Colombia.',
+      en: "Bucaramanga combines a strong university tradition (UIS, UNAB, among others) with a growing entrepreneurial ecosystem, positioning it as one of Colombia's most dynamic mid-size tech cities.",
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Puedo pagar en pesos colombianos y con factura electrónica?',
+        a: 'Sí. Facturo en COP vía Nequi, Wompi o transferencia bancaria, y emito factura electrónica ante la DIAN si tu empresa la requiere para efectos contables.',
+      },
+      en: {
+        q: 'Can I pay in Colombian pesos with an official invoice?',
+        a: 'Yes. I invoice in COP via Nequi, Wompi, or bank transfer, and issue a DIAN-compliant electronic invoice if your company needs it for accounting.',
+      },
+    },
+  },
+  miami: {
+    marketContext: {
+      es: 'Miami funciona como la puerta de entrada de negocios entre Estados Unidos y Latinoamérica, con una alta concentración de startups, empresas bilingües y operaciones regionales que necesitan desarrollo ágil y confiable.',
+      en: 'Miami serves as the business gateway between the US and Latin America, with a high concentration of startups, bilingual companies, and regional operations that need agile, reliable development.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  'new-york': {
+    marketContext: {
+      es: 'Nueva York es el centro financiero y corporativo más grande de Estados Unidos, con alta demanda de desarrollo a medida en sectores como fintech, medios y empresas enterprise.',
+      en: 'New York is the largest financial and corporate hub in the US, with strong demand for custom development in fintech, media, and enterprise companies.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+};
+
 // Ciudades con página propia indexable. El resto de `ciudades` se conserva
 // solo para redirigir (301) URLs antiguas hacia la página pilar del servicio.
 // Criterio: búsqueda local real en español (Colombia) + 2 mercados USA con

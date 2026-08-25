@@ -250,13 +250,13 @@ const AboutSection: React.FC = () => {
               }}
               dangerouslySetInnerHTML={{
                 __html: t("about.description")
-                  .replace("{name}", `<strong class="font-bold text-[var(--text-color)]">${t("about.name")}</strong>`)
-                  .replace("{role}", `<strong class="font-bold text-[var(--primary-color)]">${t("about.role")}</strong>`)
-                  .replace("{frontend}", `<strong class="font-bold text-[var(--accent-color)]">${t("about.frontend")}</strong>`)
-                  .replace("{backend}", `<strong class="font-bold text-[var(--accent-color)]">${t("about.backend")}</strong>`)
-                  .replace("{degree}", `<strong class="font-bold text-[var(--primary-color)]">${t("about.degree")}</strong>`)
-                  .replace("{university}", `<strong class="font-bold text-[var(--primary-color)]">${t("about.university")}</strong>`)
-                  .replace("{platform}", `<strong class="font-bold text-[var(--accent-color)]">${t("about.platform")}</strong>`),
+                  .replace("[[name]]", `<strong class="font-bold text-[var(--text-color)]">${t("about.name")}</strong>`)
+                  .replace("[[role]]", `<strong class="font-bold text-[var(--primary-color)]">${t("about.role")}</strong>`)
+                  .replace("[[frontend]]", `<strong class="font-bold text-[var(--accent-color)]">${t("about.frontend")}</strong>`)
+                  .replace("[[backend]]", `<strong class="font-bold text-[var(--accent-color)]">${t("about.backend")}</strong>`)
+                  .replace("[[degree]]", `<strong class="font-bold text-[var(--primary-color)]">${t("about.degree")}</strong>`)
+                  .replace("[[university]]", `<strong class="font-bold text-[var(--primary-color)]">${t("about.university")}</strong>`)
+                  .replace("[[platform]]", `<strong class="font-bold text-[var(--accent-color)]">${t("about.platform")}</strong>`),
               }}
             />
 

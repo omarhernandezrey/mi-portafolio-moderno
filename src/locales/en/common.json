@@ -10,7 +10,16 @@
     "education": "Education",
     "contact": "Contact",
     "calculator": "Calculator",
-    "language": "Language"
+    "language": "Language",
+    "menu": "Menu",
+    "go_to": "Go to"
+  },
+  "actions": {
+    "close": "Close",
+    "change_theme": "Change theme"
+  },
+  "theme": {
+    "change": "Change theme"
   },
   "chatbot": {
     "title": "Omar's Assistant",
@@ -36,8 +45,8 @@
     "name": "Omar Hernández Rey",
     "title": "Full Stack Web Developer",
     "h1": "Freelance Web Developer · Colombia & USA Remote",
-    "subtitle": "I build custom websites and web applications using <strong>React & Next.js</strong>. Serving businesses in <strong>Colombia</strong> and remote clients in the <strong>USA & LATAM</strong>. <span>Projects from $1,500 USD</span> — free consultation, 24h response.",
-    "description": "I combine {creativity}, {innovation} and {technology} to create {unforgettable} web experiences.",
+    "subtitle": "I build custom websites and web applications using [[b]]React & Next.js[[/b]]. Serving businesses in [[b]]Colombia[[/b]] and remote clients in the [[b]]USA & LATAM[[/b]]. [[hl]]Free consultation[[/hl]] — response within 24h.",
+    "description": "I combine [[creativity]], [[innovation]] and [[technology]] to create [[unforgettable]] web experiences.",
     "creativity": "creativity",
     "innovation": "innovation",
     "technology": "technology",
@@ -53,7 +62,7 @@
   "about": {
     "badge": "Get to know me",
     "title": "About me",
-    "description": "Hello! I'm {name}, a {role} with experience in both {frontend} and {backend}. I'm about to graduate with a {degree} from {university} and I continue learning with {platform} courses on web technologies, DevOps and more.",
+    "description": "Hello! I'm [[name]], a [[role]] with experience in both [[frontend]] and [[backend]]. I'm about to graduate with a [[degree]] from [[university]] and I continue learning with [[platform]] courses on web technologies, DevOps and more.",
     "name": "Omar Hernández Rey",
     "role": "Full Stack Web Developer",
     "frontend": "Front-End",

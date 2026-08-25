@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import ParticlesComponent from "@/components/ParticlesComponent";
 import "@/styles/advancedButton.css";
 import Image from "next/image";
@@ -75,7 +76,10 @@ export default function HeroSection() {
         style={{ color: "var(--white-color)" }}
       >
         {/* Badge de confianza */}
-        <h1
+        <motion.h1
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           className="
             col-span-12 font-mono-label text-[0.65rem] sm:text-xs mb-6 sm:mb-8
             inline-flex w-fit max-w-[calc(100vw-2.5rem)] items-start sm:items-center gap-2
@@ -89,12 +93,15 @@ export default function HeroSection() {
         >
           <span className="w-1.5 h-1.5 rounded-full mt-1 sm:mt-0 shrink-0" style={{ backgroundColor: "var(--accent-color)" }} />
           {t("hero.h1")}
-        </h1>
+        </motion.h1>
 
         {/* Columna principal: titular + descripción + CTA */}
         <div className="col-span-12 lg:col-span-7">
           {/* Título principal orientado a clientes */}
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
             className="
               font-display italic
               text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem]
@@ -103,22 +110,33 @@ export default function HeroSection() {
           >
             {t("hero.greeting")}{" "}
             <span style={{ color: "var(--accent-color)" }}>{t("hero.name")}</span>
-          </div>
+          </motion.div>
 
           {/* Descripción orientada a resultados del cliente */}
-          <p
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
             className="
               max-w-xl text-base sm:text-lg md:text-xl
               mt-2 mb-8 leading-relaxed text-left
               [text-shadow:_0_2px_4px_rgba(0,0,0,0.5)]
-              animate-fadeIn
             "
             style={{ color: "rgba(255, 255, 255, 0.85)" }}
-            dangerouslySetInnerHTML={{ __html: t("hero.subtitle") }}
+            dangerouslySetInnerHTML={{
+              __html: t("hero.subtitle")
+                .replace(/\[\[b\]\](.*?)\[\[\/b\]\]/g, "<strong>$1</strong>")
+                .replace(/\[\[hl\]\](.*?)\[\[\/hl\]\]/g, "<span>$1</span>"),
+            }}
           />
 
           {/* Botones CTA */}
-          <div className="flex flex-wrap gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.45, ease: "easeOut" }}
+            className="flex flex-wrap gap-4"
+          >
             <button
               type="button"
               onClick={handleContact}
@@ -152,11 +170,16 @@ export default function HeroSection() {
               {t("hero.viewProjects")}
               <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* Panel lateral — datos rápidos de confianza */}
-        <div className="hidden lg:block lg:col-span-3 lg:col-start-10">
+        <motion.div
+          initial={{ opacity: 0, y: 24, x: 16 }}
+          animate={{ opacity: 1, y: 0, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
+          className="hidden lg:block lg:col-span-3 lg:col-start-10"
+        >
           <div
             className="rounded-2xl border backdrop-blur-sm p-6 space-y-5"
             style={{
@@ -186,8 +209,8 @@ export default function HeroSection() {
                 <dd className="text-right font-bold">+30 entregados</dd>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Desde</dt>
-                <dd className="text-right font-bold">$1,500 USD</dd>
+                <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Experiencia</dt>
+                <dd className="text-right font-bold">5+ años</dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Respuesta</dt>
@@ -217,7 +240,7 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

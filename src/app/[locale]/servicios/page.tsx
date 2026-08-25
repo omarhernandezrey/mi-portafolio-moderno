@@ -6,7 +6,7 @@ import { ArrowRight, Code2, Zap, ShoppingCart, LineChart, Target, Smartphone, Se
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { serviciosProgramaticos } from '@/data/servicios';
-import { ciudades } from '@/data/ciudades';
+import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import OpenChatButton from '@/components/shared/OpenChatButton';
 
 type Props = {
@@ -70,13 +70,15 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'mantenimiento-web': <Wrench size={28} />,
 };
 
-const COLOMBIA_CITIES = ['bogota', 'medellin', 'cali', 'barranquilla', 'bucaramanga'];
-
 export default async function ServiciosPage({ params }: Props) {
   const { locale } = await params;
   const isEn = locale === 'en';
   const base = isEn ? 'https://omarhernandezrey.com/en' : 'https://omarhernandezrey.com';
-  const ciudadesPrincipales = ciudades.filter(c => COLOMBIA_CITIES.includes(c.id));
+  // Las 7 ciudades con página propia indexable — enlazarlas todas desde el
+  // hub de servicios ayuda a Google a descubrirlas/rastrearlas más rápido
+  // (antes solo se enlazaban las 5 colombianas; Miami y NY solo aparecían
+  // como texto plano, sin <Link>).
+  const ciudadesPrincipales = ciudades.filter(c => (CIUDADES_INDEXABLES as readonly string[]).includes(c.id));
 
   const svcName = (s: typeof serviciosProgramaticos[number]) => (isEn ? s.nameEn ?? s.name : s.name);
   const svcDescription = (s: typeof serviciosProgramaticos[number]) =>
@@ -307,7 +309,7 @@ export default async function ServiciosPage({ params }: Props) {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {ciudadesPrincipales.map(ciudad => (
               <Link
                 key={ciudad.id}
@@ -323,8 +325,8 @@ export default async function ServiciosPage({ params }: Props) {
           <div className="text-center">
             <p className="text-xs text-text-muted/40">
               {isEn
-                ? 'Also serving: Medellín, Cali, Barranquilla, Cartagena, Bucaramanga, Pereira, Manizales, and all of Colombia. Remote for: Miami, New York, Mexico City, Buenos Aires, Lima, Santiago.'
-                : 'También atiendo: Medellín, Cali, Barranquilla, Cartagena, Bucaramanga, Pereira, Manizales y toda Colombia. Remoto para: Miami, New York, Ciudad de México, Buenos Aires, Lima, Santiago.'}
+                ? 'Also serving all of Colombia (Cartagena, Pereira, Manizales, and more) and remote for Mexico City, Buenos Aires, Lima, and Santiago.'
+                : 'También atiendo toda Colombia (Cartagena, Pereira, Manizales y más) y en remoto para Ciudad de México, Buenos Aires, Lima y Santiago.'}
             </p>
           </div>
         </div>

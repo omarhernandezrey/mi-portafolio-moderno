@@ -117,6 +117,12 @@ describe('POST /api/chat', () => {
       expect(res.status).toBe(400);
     });
 
+    it('retorna 400 con language pt (eliminado del proyecto, ver Fase 0 ES/EN)', async () => {
+      const req = makeRequest({ sessionId: 'abc', message: 'hola', language: 'pt' });
+      const res = await POST(req);
+      expect(res.status).toBe(400);
+    });
+
     it('retorna 400 si message excede 2000 caracteres', async () => {
       const req = makeRequest({ ...validPayload, message: 'x'.repeat(2001) });
       const res = await POST(req);
@@ -156,11 +162,6 @@ describe('POST /api/chat', () => {
       expect(res.status).toBe(200);
     });
 
-    it('acepta language pt', async () => {
-      const req = makeRequest({ ...validPayload, language: 'pt' });
-      const res = await POST(req);
-      expect(res.status).toBe(200);
-    });
   });
 
   describe('rate limiting', () => {

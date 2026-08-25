@@ -10,11 +10,10 @@ describe('OPENINGS', () => {
     expect(ids).toContain('D');
   });
 
-  it('cada variante tiene texto en los 3 idiomas', () => {
+  it('cada variante tiene texto en los 2 idiomas soportados (es/en)', () => {
     for (const opening of OPENINGS) {
       expect(opening.text.es).toBeTruthy();
       expect(opening.text.en).toBeTruthy();
-      expect(opening.text.pt).toBeTruthy();
     }
   });
 
@@ -32,7 +31,6 @@ describe('OPENINGS', () => {
     for (const opening of OPENINGS) {
       expect(opening.text.es.length).toBeGreaterThan(20);
       expect(opening.text.en.length).toBeGreaterThan(20);
-      expect(opening.text.pt.length).toBeGreaterThan(20);
     }
   });
 });
