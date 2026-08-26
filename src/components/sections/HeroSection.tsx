@@ -1,15 +1,67 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 import ParticlesComponent from "@/components/ParticlesComponent";
 import "@/styles/advancedButton.css";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
 
+/**
+ * Máquina de escribir propia, sin dependencias — tipea y borra en loop
+ * infinito alternando entre `strings`. Deliberadamente NO usa la librería
+ * typewriter-effect: esa usa requestAnimationFrame internamente, que Chrome
+ * pausa por completo en pestañas ocultas/sin foco (comprobado leyendo su
+ * código fuente); setTimeout no tiene ese problema.
+ */
+function useTypewriterLoop(
+  strings: string[],
+  { typeSpeed = 55, deleteSpeed = 30, pauseMs = 1800 } = {}
+) {
+  const [text, setText] = React.useState("");
+
+  useEffect(() => {
+    let stringIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+      const current = strings[stringIndex] ?? "";
+      if (!deleting) {
+        charIndex++;
+        setText(current.slice(0, charIndex));
+        if (charIndex >= current.length) {
+          timeoutId = setTimeout(() => {
+            deleting = true;
+            tick();
+          }, pauseMs);
+          return;
+        }
+        timeoutId = setTimeout(tick, typeSpeed);
+      } else {
+        charIndex--;
+        setText(current.slice(0, charIndex));
+        if (charIndex <= 0) {
+          deleting = false;
+          stringIndex = (stringIndex + 1) % strings.length;
+        }
+        timeoutId = setTimeout(tick, deleteSpeed);
+      }
+    };
+
+    timeoutId = setTimeout(tick, typeSpeed);
+    return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [strings.join("|"), typeSpeed, deleteSpeed, pauseMs]);
+
+  return text;
+}
+
 export default function HeroSection() {
   const projectsRef = useRef<HTMLElement | null>(null);
   const { t } = useTranslation();
+  const typedNameOrRole = useTypewriterLoop([t("hero.name"), t("hero.title")]);
 
   const handleViewProjects = () => {
     if (!projectsRef.current) {
@@ -32,10 +84,15 @@ export default function HeroSection() {
   }, []);
 
   return (
+    // El sitio apaga toda animación en <768px (ver ClientProvider.tsx,
+    // MotionConfig global reducedMotion="always" en móvil, por batería/perf).
+    // El hero es la primera impresión del portafolio — aquí sí queremos que
+    // se vea, incluso en móvil, así que este subárbol anula esa regla.
+    <MotionConfig reducedMotion="never">
     <section
       id="hero"
       className="
-        relative w-full min-h-screen 
+        relative w-full min-h-screen
         flex items-center justify-center
         overflow-hidden
       "
@@ -97,19 +154,33 @@ export default function HeroSection() {
 
         {/* Columna principal: titular + descripción + CTA */}
         <div className="col-span-12 lg:col-span-7">
-          {/* Título principal orientado a clientes */}
+          {/* Saludo — estático, sin animación. */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="
               font-display italic
               text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem]
-              font-medium mb-6 leading-[1.05] text-left
+              font-medium mb-2 leading-[1.05] text-left
             "
           >
-            {t("hero.greeting")}{" "}
-            <span style={{ color: "var(--accent-color)" }}>{t("hero.name")}</span>
+            {t("hero.greeting")}
+          </motion.div>
+
+          {/* Nombre + rol — un solo máquina de escribir en loop infinito que
+              nunca se detiene, alternando entre ambos. Fuente sans (no la
+              cursiva del saludo, que no tipea limpio letra a letra: los
+              anchos de carácter saltan y se ve tosco). */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+            className="font-sans font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 text-left min-h-[1.3em] tracking-tight"
+            style={{ color: "var(--accent-color)" }}
+          >
+            {typedNameOrRole}
+            <span className="animate-pulse">_</span>
           </motion.div>
 
           {/* Descripción orientada a resultados del cliente */}
@@ -243,5 +314,6 @@ export default function HeroSection() {
         </motion.div>
       </div>
     </section>
+    </MotionConfig>
   );
 }

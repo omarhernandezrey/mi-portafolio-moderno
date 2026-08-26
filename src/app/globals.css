@@ -694,6 +694,19 @@ video {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Excepción: el hero (primera impresión del portafolio) sí anima aunque
+     el sistema tenga "reducir movimiento" activado — ver también el
+     MotionConfig reducedMotion="never" en HeroSection.tsx, que resuelve
+     esto mismo a nivel de Framer Motion; esta regla cubre el nivel CSS. */
+  #hero,
+  #hero *,
+  #hero *::before,
+  #hero *::after {
+    animation-duration: revert !important;
+    animation-iteration-count: revert !important;
+    transition-duration: revert !important;
+  }
 }
 
 /* Container responsive */
