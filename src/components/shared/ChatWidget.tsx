@@ -563,7 +563,7 @@ export default function ChatWidget() {
                     type="submit"
                     data-testid="chat-send"
                     disabled={isLoading || (!input.trim() && !imageDataUrl) || !hasConsented}
-                    className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:grayscale disabled:opacity-30"
+                    className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:saturate-[0.35] disabled:opacity-50 disabled:shadow-none"
                     aria-label="Enviar"
                   >
                     <Send size={18} className="translate-x-0.5" />
