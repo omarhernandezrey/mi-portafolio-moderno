@@ -178,6 +178,28 @@ export const educationData: EducationCategory[] = [
       en: "Online Courses (SENA),(Platzi) and more..."
     },
     items: [
+      // 89 - Agile Explorer (IBM SkillsBuild)
+      {
+        title: {
+          es: "Agile Explorer",
+          en: "Agile Explorer"
+        },
+        institution: {
+          es: "IBM SkillsBuild",
+          en: "IBM SkillsBuild"
+        },
+        duration: {
+          es: "Insignia digital (Aprobado el 25 de agosto de 2026)",
+          en: "Digital badge (Approved on August 25, 2026)"
+        },
+        description: {
+          es: "Insignia digital de IBM SkillsBuild que certifica el aprendizaje de los fundamentos de las metodologías ágiles: mentalidad ágil, Scrum y prácticas de colaboración para equipos de desarrollo.",
+          en: "IBM SkillsBuild digital badge certifying foundational knowledge of agile methodologies: agile mindset, Scrum, and collaboration practices for development teams."
+        },
+        logo: "/images/education/IBM-skillsbuild/01agile-explorer-logo.png",
+        certificate: "/images/education/IBM-skillsbuild/01agile-explorer-certificado.jpg",
+        isNew: true
+      },
       // 80 - Metodología de la Programación de Sistemas Informáticos
       {
         title: {
@@ -287,7 +309,7 @@ export const educationData: EducationCategory[] = [
           },
           logo: "/images/education/platzi/platzi-logo.png",
           certificate: "/images/education/platzi/58-diploma-react-estado.jpg",
-          isNew: true
+          isNew: false
         },
 
       // 87 - Curso de React.js Nuevo
@@ -353,7 +375,7 @@ export const educationData: EducationCategory[] = [
         },
         logo: "/images/education/platzi/platzi-logo.png",
         certificate: "/images/education/platzi/55-diploma-react-vite-tailwindcss.jpg",
-        isNew: true
+        isNew: false
       },
       // 86 - Curso de React.js
       {
