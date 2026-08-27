@@ -80,14 +80,14 @@ export default function CommentSection({
               style={{ backgroundColor: "color-mix(in srgb, var(--muted-color) 6%, transparent)" }}
             >
               <div className="flex items-center justify-between gap-3 mb-1">
-                <span className="font-bold text-sm" style={{ color: "var(--text-color)" }}>
+                <span className="font-bold text-sm truncate min-w-0" style={{ color: "var(--text-color)" }}>
                   {comment.author_name}
                 </span>
                 <span className="text-xs shrink-0" style={{ color: "var(--muted-color)" }}>
                   {relativeTime(comment.created_at, language === "en" ? "en" : "es")}
                 </span>
               </div>
-              <p className="text-sm whitespace-pre-wrap" style={{ color: "var(--text-color)" }}>
+              <p className="text-sm whitespace-pre-wrap break-words" style={{ color: "var(--text-color)" }}>
                 {comment.body}
               </p>
             </li>

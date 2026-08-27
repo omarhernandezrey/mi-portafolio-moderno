@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { BadgeCheck, MessageCircle } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -37,22 +38,24 @@ export default function FeedPostCard({
   variant?: "card" | "full";
 }) {
   const { t, language } = useTranslation();
+  const [likesCount, setLikesCount] = useState(post.likes_count);
   const isTruncated = variant === "card" && post.body.length > MAX_CARD_CHARS;
   const bodyText = isTruncated ? post.body.slice(0, MAX_CARD_CHARS).trimEnd() + "…" : post.body;
   const postUrl = `${SITE_URL}${post.lang === "en" ? "/en" : ""}/comunidad/${post.id}`;
   const topReactions = REACTIONS.filter((r) => (post.reaction_counts[r.type] ?? 0) > 0)
     .sort((a, b) => (post.reaction_counts[b.type] ?? 0) - (post.reaction_counts[a.type] ?? 0))
     .slice(0, 3);
+  const commentLabel = t("feed.commentsTitle");
 
   return (
     <article
-      className="rounded-2xl border p-5 sm:p-6 transition-all"
+      className="rounded-2xl border p-4 sm:p-6 transition-all overflow-hidden"
       style={{
         backgroundColor: "var(--card-bg-color)",
         borderColor: "color-mix(in srgb, var(--muted-color) 15%, transparent)",
       }}
     >
-      <header className="flex items-center justify-between gap-3 mb-3">
+      <header className="flex items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2 min-w-0">
           <div
             className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-black text-sm"
@@ -66,7 +69,7 @@ export default function FeedPostCard({
                 {post.author_name}
               </span>
               {post.author_role === "owner" && (
-                <BadgeCheck size={15} style={{ color: "var(--primary-color)" }} aria-label={t("feed.verified")} />
+                <BadgeCheck size={15} className="shrink-0" style={{ color: "var(--primary-color)" }} aria-label={t("feed.verified")} />
               )}
             </div>
             <span className="text-xs" style={{ color: "var(--muted-color)" }}>
@@ -74,22 +77,24 @@ export default function FeedPostCard({
             </span>
           </div>
         </div>
-        <FeedBadge tone="accent">{t(`feed.category.${post.category}`)}</FeedBadge>
+        <FeedBadge tone="accent">
+          <span className="shrink-0">{t(`feed.category.${post.category}`)}</span>
+        </FeedBadge>
       </header>
 
       {variant === "full" ? (
-        <h1 className="font-display italic text-2xl font-medium mb-2" style={{ color: "var(--text-color)" }}>
+        <h1 className="font-display italic text-xl sm:text-2xl font-medium mb-2 break-words" style={{ color: "var(--text-color)" }}>
           {post.title ?? bodyText.slice(0, 80)}
         </h1>
       ) : (
         post.title && (
-          <h3 className="font-display italic text-lg font-medium mb-2" style={{ color: "var(--text-color)" }}>
+          <h3 className="font-display italic text-lg font-medium mb-2 break-words" style={{ color: "var(--text-color)" }}>
             {post.title}
           </h3>
         )
       )}
 
-      <p className="text-sm leading-relaxed whitespace-pre-wrap mb-3" style={{ color: "var(--text-color)" }}>
+      <p className="text-sm leading-relaxed whitespace-pre-wrap break-words mb-3" style={{ color: "var(--text-color)" }}>
         {bodyText}
       </p>
 
@@ -117,10 +122,10 @@ export default function FeedPostCard({
         </a>
       )}
 
-      {(post.likes_count > 0 || post.comments_count > 0) && (
-        <div className="flex items-center justify-between text-xs mt-1 mb-1" style={{ color: "var(--muted-color)" }}>
-          {post.likes_count > 0 ? (
-            <span className="inline-flex items-center gap-1">
+      {(likesCount > 0 || post.comments_count > 0) && (
+        <div className="flex items-center justify-between gap-2 text-xs mt-1 mb-1" style={{ color: "var(--muted-color)" }}>
+          {likesCount > 0 ? (
+            <span className="inline-flex items-center gap-1 shrink-0">
               <span className="inline-flex -space-x-1">
                 {topReactions.map(({ type, emoji }) => (
                   <span key={type} className="text-sm leading-none">
@@ -128,27 +133,32 @@ export default function FeedPostCard({
                   </span>
                 ))}
               </span>
-              {post.likes_count}
+              {likesCount}
             </span>
           ) : (
             <span />
           )}
-          {post.comments_count > 0 && <span>{post.comments_count} {t("feed.commentsTitle").toLowerCase()}</span>}
+          {post.comments_count > 0 && (
+            <span className="shrink-0">
+              {post.comments_count} {commentLabel.toLowerCase()}
+            </span>
+          )}
         </div>
       )}
 
       <footer
-        className="flex items-center justify-between gap-2 pt-2 mt-1 border-t"
+        className="flex items-stretch gap-1 pt-1 mt-1 border-t"
         style={{ borderColor: "color-mix(in srgb, var(--muted-color) 12%, transparent)" }}
       >
-        <ReactionButton postId={post.id} initialCount={post.likes_count} />
+        <ReactionButton postId={post.id} onLikesCountChange={setLikesCount} />
         <Link
           href={`/comunidad/${post.id}`}
-          className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
+          aria-label={commentLabel}
+          title={commentLabel}
+          className="flex-1 flex items-center justify-center py-3 rounded-lg transition-all hover:bg-[color-mix(in_srgb,var(--muted-color)_10%,transparent)] active:scale-95"
           style={{ color: "var(--muted-color)" }}
         >
-          <MessageCircle size={16} />
-          {t("feed.commentsTitle")}
+          <MessageCircle size={18} />
         </Link>
         <ShareButton url={postUrl} title={post.title ?? post.body.slice(0, 60)} />
       </footer>

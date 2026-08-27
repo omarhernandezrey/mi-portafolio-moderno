@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ThumbsUp } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { ReactionType } from "@/lib/feed";
 
@@ -19,13 +20,12 @@ const CLOSE_DELAY_MS = 300;
 
 export default function ReactionButton({
   postId,
-  initialCount,
+  onLikesCountChange,
 }: {
   postId: string;
-  initialCount: number;
+  onLikesCountChange?: (count: number) => void;
 }) {
   const { t } = useTranslation();
-  const [count, setCount] = useState(initialCount);
   const [myReaction, setMyReaction] = useState<ReactionType | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -49,7 +49,6 @@ export default function ReactionButton({
     const previous = myReaction;
     const removing = previous === reaction;
     setMyReaction(removing ? null : reaction);
-    setCount((c) => (removing ? Math.max(c - 1, 0) : previous ? c : c + 1));
 
     try {
       const res = await fetch(`/api/feed/posts/${postId}/like`, {
@@ -61,9 +60,7 @@ export default function ReactionButton({
       const data = await res.json();
       const finalReaction = (data.reaction ?? null) as ReactionType | null;
       setMyReaction(finalReaction);
-      // El conteo final siempre lo confirma el servidor — evita que clics
-      // rápidos sucesivos desincronicen el número mostrado localmente.
-      if (typeof data.likes_count === "number") setCount(data.likes_count);
+      if (typeof data.likes_count === "number") onLikesCountChange?.(data.likes_count);
       try {
         if (finalReaction) localStorage.setItem(storageKey(postId), finalReaction);
         else localStorage.removeItem(storageKey(postId));
@@ -72,7 +69,6 @@ export default function ReactionButton({
       }
     } catch {
       setMyReaction(previous);
-      setCount(initialCount);
     } finally {
       setBusy(false);
     }
@@ -105,9 +101,10 @@ export default function ReactionButton({
   };
 
   const active = REACTIONS.find((r) => r.type === myReaction);
+  const label = t(active?.labelKey ?? "feed.reaction.like");
 
   return (
-    <div className="relative inline-flex items-center gap-1.5" onMouseLeave={scheduleClose}>
+    <div className="relative flex-1" onMouseLeave={scheduleClose}>
       {pickerOpen && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setPickerOpen(false)} />
@@ -125,7 +122,8 @@ export default function ReactionButton({
                 type="button"
                 onClick={() => send(r.type)}
                 title={t(r.labelKey)}
-                className="text-xl leading-none p-1 hover:scale-125 transition-transform"
+                aria-label={t(r.labelKey)}
+                className="text-xl leading-none p-1.5 hover:scale-125 transition-transform"
               >
                 {r.emoji}
               </button>
@@ -141,19 +139,21 @@ export default function ReactionButton({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         disabled={busy}
-        aria-label={t(active?.labelKey ?? "feed.reaction.like")}
-        className="inline-flex items-center gap-1.5 text-sm font-medium transition-all disabled:cursor-default"
-        style={{ color: active ? "var(--primary-color)" : "var(--muted-color)" }}
+        aria-label={label}
+        title={label}
+        aria-pressed={Boolean(active)}
+        className="w-full flex items-center justify-center gap-1.5 py-3 rounded-lg transition-all disabled:opacity-60 hover:bg-[color-mix(in_srgb,var(--muted-color)_10%,transparent)] focus-visible:outline-none focus-visible:ring-2 active:scale-95"
+        style={{
+          color: active ? "var(--primary-color)" : "var(--muted-color)",
+          ["--tw-ring-color" as string]: "var(--primary-color)",
+        }}
       >
-        <span className="text-base leading-none">{active?.emoji ?? "👍"}</span>
-        <span>{t(active?.labelKey ?? "feed.reaction.like")}</span>
+        {active ? (
+          <span className={`text-lg leading-none ${busy ? "animate-pulse" : ""}`}>{active.emoji}</span>
+        ) : (
+          <ThumbsUp size={18} className={busy ? "animate-pulse" : ""} />
+        )}
       </button>
-
-      {count > 0 && (
-        <span className="text-sm" style={{ color: "var(--muted-color)" }}>
-          {count}
-        </span>
-      )}
     </div>
   );
 }

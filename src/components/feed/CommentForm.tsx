@@ -126,7 +126,8 @@ export default function CommentForm({
         onChange={(e) => setWebsite(e.target.value)}
         tabIndex={-1}
         autoComplete="off"
-        className="absolute -left-[9999px] w-px h-px opacity-0"
+        className="absolute w-px h-px -m-px p-0 overflow-hidden whitespace-nowrap border-0"
+        style={{ clip: "rect(0,0,0,0)", clipPath: "inset(50%)" }}
         aria-hidden="true"
       />
 

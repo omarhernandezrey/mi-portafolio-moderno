@@ -48,7 +48,7 @@ export default function FeedImageGrid({ images, alt }: { images: string[]; alt: 
 
   if (visible.length === 2) {
     return (
-      <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border h-72" style={{ borderColor }}>
+      <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border aspect-[16/9]" style={{ borderColor }}>
         <Tile src={visible[0]} index={0} />
         <Tile src={visible[1]} index={1} overlay={extraCount || undefined} />
       </div>
@@ -57,7 +57,7 @@ export default function FeedImageGrid({ images, alt }: { images: string[]; alt: 
 
   if (visible.length === 3) {
     return (
-      <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border h-80" style={{ borderColor }}>
+      <div className="grid grid-cols-2 grid-rows-2 gap-1 rounded-xl overflow-hidden my-3 border aspect-[4/3]" style={{ borderColor }}>
         <div className="row-span-2">
           <Tile src={visible[0]} index={0} />
         </div>
@@ -69,7 +69,7 @@ export default function FeedImageGrid({ images, alt }: { images: string[]; alt: 
 
   if (visible.length === 4) {
     return (
-      <div className="grid grid-cols-2 grid-rows-2 gap-1 rounded-xl overflow-hidden my-3 border h-80" style={{ borderColor }}>
+      <div className="grid grid-cols-2 grid-rows-2 gap-1 rounded-xl overflow-hidden my-3 border aspect-square" style={{ borderColor }}>
         <Tile src={visible[0]} index={0} />
         <Tile src={visible[1]} index={1} />
         <Tile src={visible[2]} index={2} />
@@ -80,12 +80,12 @@ export default function FeedImageGrid({ images, alt }: { images: string[]; alt: 
 
   // 5 o más: 2 grandes a la izquierda apiladas + 3 en grid a la derecha (última con "+N").
   return (
-    <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border h-96" style={{ borderColor }}>
-      <div className="grid grid-rows-2 gap-1">
+    <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border aspect-[4/3]" style={{ borderColor }}>
+      <div className="grid grid-rows-2 gap-1 h-full">
         <Tile src={visible[0]} index={0} />
         <Tile src={visible[1]} index={1} />
       </div>
-      <div className="grid grid-rows-3 gap-1">
+      <div className="grid grid-rows-3 gap-1 h-full">
         <Tile src={visible[2]} index={2} />
         <Tile src={visible[3]} index={3} />
         <Tile src={visible[4]} index={4} overlay={extraCount || undefined} />
