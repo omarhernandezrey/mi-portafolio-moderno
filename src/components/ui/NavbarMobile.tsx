@@ -12,6 +12,7 @@ import {
   AiOutlineMail,
   AiOutlineClose,
   AiOutlineMenu,
+  AiOutlineTeam,
   AiFillGithub,
   AiFillLinkedin,
 } from "react-icons/ai";
@@ -93,6 +94,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
     { id: "#skills", label: t("navigation.skills"), icon: <BiBrain size={20} /> },
     { id: "#projects", label: t("navigation.projects"), icon: <AiOutlineProject size={20} /> },
     { id: "#services", label: t("navigation.services"), icon: <FaTools size={20} /> },
+    { id: "/comunidad", label: t("navigation.comunidad"), icon: <AiOutlineTeam size={20} />, isPage: true },
     { id: "/calculadora", label: t("navigation.calculator"), icon: <FaTools size={20} />, isPage: true },
     { id: "#contact", label: t("navigation.contact"), icon: <AiOutlineMail size={20} /> },
   ], [t]);

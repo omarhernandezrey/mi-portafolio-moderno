@@ -4,6 +4,7 @@
     "about": "Sobre mí",
     "sobreMi": "Sobre Mí",
     "blog": "Blog",
+    "comunidad": "Comunidad",
     "projects": "Proyectos",
     "services": "Servicios",
     "skills": "Habilidades",
@@ -237,6 +238,7 @@
       "aboutMe": "Sobre Mí",
       "services": "Servicios de Desarrollo Web",
       "blog": "Blog Técnico",
+      "comunidad": "Comunidad",
       "faq": "Preguntas Frecuentes",
       "calculator": "Calculadora",
       "privacy": "Privacidad"

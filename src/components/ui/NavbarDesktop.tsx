@@ -11,6 +11,7 @@ import {
   FaEnvelope,
   FaProjectDiagram,
   FaToolbox,
+  FaUsers,
 } from "react-icons/fa";
 import { MdColorLens } from "react-icons/md";
 import { usePalette } from "../../hooks/usePalette";
@@ -102,6 +103,7 @@ const NavbarDesktop = () => {
     { id: "#projects", label: t("navigation.projects"), icon: <FaProjectDiagram /> },
     { id: "#services", label: t("navigation.services"), icon: <FaCode /> },
     { id: "/blog", label: t("navigation.blog"), icon: <FaCode />, isPage: true },
+    { id: "/comunidad", label: t("navigation.comunidad"), icon: <FaUsers />, isPage: true },
     { id: "/calculadora", label: t("navigation.calculator"), icon: <FaToolbox />, isPage: true },
     { id: "#contact", label: t("navigation.contact"), icon: <FaEnvelope /> },
   ], [t]);

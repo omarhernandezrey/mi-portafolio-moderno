@@ -71,6 +71,7 @@ export default function Footer() {
     { href: "/#about", label: t("footer.navigation.aboutMe") },
     { href: "/servicios", label: t("footer.navigation.services") },
     { href: "/blog", label: t("footer.navigation.blog") },
+    { href: "/comunidad", label: t("footer.navigation.comunidad") },
     { href: "/calculadora", label: t("footer.navigation.calculator") },
     { href: "/faq", label: t("footer.navigation.faq") },
     { href: "/privacidad", label: t("footer.navigation.privacy") },

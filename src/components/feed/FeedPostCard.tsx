@@ -77,10 +77,16 @@ export default function FeedPostCard({
         <FeedBadge tone="accent">{t(`feed.category.${post.category}`)}</FeedBadge>
       </header>
 
-      {post.title && (
-        <h3 className="font-display italic text-lg font-medium mb-2" style={{ color: "var(--text-color)" }}>
-          {post.title}
-        </h3>
+      {variant === "full" ? (
+        <h1 className="font-display italic text-2xl font-medium mb-2" style={{ color: "var(--text-color)" }}>
+          {post.title ?? bodyText.slice(0, 80)}
+        </h1>
+      ) : (
+        post.title && (
+          <h3 className="font-display italic text-lg font-medium mb-2" style={{ color: "var(--text-color)" }}>
+            {post.title}
+          </h3>
+        )
       )}
 
       <p className="text-sm leading-relaxed whitespace-pre-wrap mb-3" style={{ color: "var(--text-color)" }}>
@@ -97,7 +103,7 @@ export default function FeedPostCard({
         </Link>
       )}
 
-      <FeedImageGrid images={post.image_urls} />
+      <FeedImageGrid images={post.image_urls} alt={post.title ?? bodyText.slice(0, 100)} />
 
       {post.link_url && (
         <a

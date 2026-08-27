@@ -8,7 +8,7 @@ const MAX_VISIBLE = 5;
  * (igual que Facebook) y la última celda visible muestra "+N" si hay más
  * fotos de las que caben en el mosaico.
  */
-export default function FeedImageGrid({ images }: { images: string[] }) {
+export default function FeedImageGrid({ images, alt }: { images: string[]; alt: string }) {
   if (images.length === 0) return null;
 
   if (images.length === 1) {
@@ -21,7 +21,7 @@ export default function FeedImageGrid({ images }: { images: string[] }) {
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={images[0]} alt="" className="w-full h-auto max-h-[80vh] object-contain" />
+        <img src={images[0]} alt={alt} loading="lazy" className="w-full h-auto max-h-[80vh] object-contain" />
       </div>
     );
   }
@@ -31,10 +31,10 @@ export default function FeedImageGrid({ images }: { images: string[] }) {
 
   const borderColor = "color-mix(in srgb, var(--muted-color) 15%, transparent)";
 
-  const Tile = ({ src, overlay }: { src: string; overlay?: number }) => (
+  const Tile = ({ src, index, overlay }: { src: string; index: number; overlay?: number }) => (
     <div className="relative w-full h-full overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" className="w-full h-full object-cover" />
+      <img src={src} alt={`${alt} (${index + 1}/${images.length})`} loading="lazy" className="w-full h-full object-cover" />
       {overlay ? (
         <div
           className="absolute inset-0 flex items-center justify-center text-white text-xl font-bold"
@@ -49,8 +49,8 @@ export default function FeedImageGrid({ images }: { images: string[] }) {
   if (visible.length === 2) {
     return (
       <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border h-72" style={{ borderColor }}>
-        <Tile src={visible[0]} />
-        <Tile src={visible[1]} overlay={extraCount || undefined} />
+        <Tile src={visible[0]} index={0} />
+        <Tile src={visible[1]} index={1} overlay={extraCount || undefined} />
       </div>
     );
   }
@@ -59,10 +59,10 @@ export default function FeedImageGrid({ images }: { images: string[] }) {
     return (
       <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border h-80" style={{ borderColor }}>
         <div className="row-span-2">
-          <Tile src={visible[0]} />
+          <Tile src={visible[0]} index={0} />
         </div>
-        <Tile src={visible[1]} />
-        <Tile src={visible[2]} overlay={extraCount || undefined} />
+        <Tile src={visible[1]} index={1} />
+        <Tile src={visible[2]} index={2} overlay={extraCount || undefined} />
       </div>
     );
   }
@@ -70,10 +70,10 @@ export default function FeedImageGrid({ images }: { images: string[] }) {
   if (visible.length === 4) {
     return (
       <div className="grid grid-cols-2 grid-rows-2 gap-1 rounded-xl overflow-hidden my-3 border h-80" style={{ borderColor }}>
-        <Tile src={visible[0]} />
-        <Tile src={visible[1]} />
-        <Tile src={visible[2]} />
-        <Tile src={visible[3]} overlay={extraCount || undefined} />
+        <Tile src={visible[0]} index={0} />
+        <Tile src={visible[1]} index={1} />
+        <Tile src={visible[2]} index={2} />
+        <Tile src={visible[3]} index={3} overlay={extraCount || undefined} />
       </div>
     );
   }
@@ -82,13 +82,13 @@ export default function FeedImageGrid({ images }: { images: string[] }) {
   return (
     <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden my-3 border h-96" style={{ borderColor }}>
       <div className="grid grid-rows-2 gap-1">
-        <Tile src={visible[0]} />
-        <Tile src={visible[1]} />
+        <Tile src={visible[0]} index={0} />
+        <Tile src={visible[1]} index={1} />
       </div>
       <div className="grid grid-rows-3 gap-1">
-        <Tile src={visible[2]} />
-        <Tile src={visible[3]} />
-        <Tile src={visible[4]} overlay={extraCount || undefined} />
+        <Tile src={visible[2]} index={2} />
+        <Tile src={visible[3]} index={3} />
+        <Tile src={visible[4]} index={4} overlay={extraCount || undefined} />
       </div>
     </div>
   );
