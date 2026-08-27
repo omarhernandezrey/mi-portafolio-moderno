@@ -282,5 +282,52 @@
     "error": "Error",
     "tryAgain": "Intentar de nuevo",
     "close": "Cerrar"
+  },
+  "feed": {
+    "title": "Comunidad",
+    "subtitle": "Publicaciones, logros y conversación abierta.",
+    "composerPlaceholder": "¿Qué quieres compartir?",
+    "namePlaceholder": "Tu nombre",
+    "emailPlaceholder": "Tu correo (no se muestra públicamente)",
+    "linkPlaceholder": "Enlace opcional (https://...)",
+    "addImage": "Añadir imagen",
+    "removeImage": "Quitar imagen",
+    "submit": "Publicar",
+    "submitting": "Publicando...",
+    "postSuccess": "¡Publicado! Gracias por compartir.",
+    "postError": "No se pudo publicar. Intenta de nuevo.",
+    "rateLimited": "Demasiadas publicaciones. Intenta más tarde.",
+    "loadMore": "Cargar más",
+    "loadingMore": "Cargando...",
+    "noPosts": "Aún no hay publicaciones. ¡Sé el primero!",
+    "verified": "Verificado",
+    "like": "Me gusta",
+    "liked": "Te gusta",
+    "share": "Compartir",
+    "linkCopied": "¡Enlace copiado!",
+    "reaction": {
+      "like": "Me gusta",
+      "love": "Me encanta",
+      "haha": "Me divierte",
+      "wow": "Me asombra",
+      "sad": "Me entristece",
+      "angry": "Me enoja"
+    },
+    "commentsTitle": "Comentarios",
+    "commentPlaceholder": "Escribe un comentario...",
+    "commentSubmit": "Comentar",
+    "commentSuccess": "Comentario publicado.",
+    "commentError": "No se pudo comentar. Intenta de nuevo.",
+    "noComments": "Sé el primero en comentar.",
+    "readMore": "Ver publicación completa",
+    "backToFeed": "Volver a la comunidad",
+    "category": {
+      "general": "General",
+      "status": "Actualización",
+      "curso": "Curso",
+      "skill": "Habilidad",
+      "proyecto": "Proyecto",
+      "postulacion": "Postulación laboral"
+    }
   }
 }

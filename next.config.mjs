@@ -12,8 +12,12 @@ const nextConfig = {
         hostname: '**.vercel.app',
       },
       {
-        protocol: 'https', 
+        protocol: 'https',
         hostname: 'omarhernandezrey.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ozftxfwkhomnbvicjtae.supabase.co',
       }
     ],
     formats: ['image/avif', 'image/webp'],

@@ -277,8 +277,8 @@ export const educationData: EducationCategory[] = [
           en: "National Learning Service (SENA)"
         },
         duration: {
-          es: "20 horas (Finalizado el 20 de enero de 2011)",
-          en: "20 hours (Completed on January 20, 2011)"
+          es: "20 horas (Finalizado el 20 de enero de 2021)",
+          en: "20 hours (Completed on January 20, 2021)"
         },
         description: {
           es: "Cursé y aprobé la formación en Mentalidad de Líder, adquiriendo competencias en liderazgo, gestión de equipos y habilidades estratégicas para impulsar el desarrollo personal y profesional.",

@@ -282,5 +282,52 @@
     "error": "Error",
     "tryAgain": "Try again",
     "close": "Close"
+  },
+  "feed": {
+    "title": "Community",
+    "subtitle": "Posts, achievements, and open conversation.",
+    "composerPlaceholder": "What do you want to share?",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "Your email (never shown publicly)",
+    "linkPlaceholder": "Optional link (https://...)",
+    "addImage": "Add image",
+    "removeImage": "Remove image",
+    "submit": "Post",
+    "submitting": "Posting...",
+    "postSuccess": "Posted! Thanks for sharing.",
+    "postError": "Couldn't post. Please try again.",
+    "rateLimited": "Too many posts. Try again later.",
+    "loadMore": "Load more",
+    "loadingMore": "Loading...",
+    "noPosts": "No posts yet. Be the first!",
+    "verified": "Verified",
+    "like": "Like",
+    "liked": "Liked",
+    "share": "Share",
+    "linkCopied": "Link copied!",
+    "reaction": {
+      "like": "Like",
+      "love": "Love",
+      "haha": "Haha",
+      "wow": "Wow",
+      "sad": "Sad",
+      "angry": "Angry"
+    },
+    "commentsTitle": "Comments",
+    "commentPlaceholder": "Write a comment...",
+    "commentSubmit": "Comment",
+    "commentSuccess": "Comment posted.",
+    "commentError": "Couldn't comment. Please try again.",
+    "noComments": "Be the first to comment.",
+    "readMore": "View full post",
+    "backToFeed": "Back to community",
+    "category": {
+      "general": "General",
+      "status": "Update",
+      "curso": "Course",
+      "skill": "Skill",
+      "proyecto": "Project",
+      "postulacion": "Job application"
+    }
   }
 }

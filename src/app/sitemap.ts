@@ -3,6 +3,7 @@ import { clientEnv } from '@/config/env';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import { getAllPosts } from '@/lib/blog';
+import { getFeedPosts } from '@/lib/feed';
 
 // Regla: el sitemap SOLO contiene URLs indexables (200, self-canonical, sin noindex).
 // Excluidos a propósito: /status (noindex), /certificates (la ruta raíz no existe,
@@ -107,5 +108,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  return [...staticSitemap, ...serviciosPilar, ...serviciosCiudades, ...blogRoutes];
+  // Posts de comunidad publicados — igual que el blog, un post existe en
+  // un solo idioma (sin hreflang cruzado). getFeedPosts limita a 50 por
+  // página (mismo cap que la API pública), así que paginamos hasta 10
+  // páginas (500 posts) para cubrir el crecimiento del feed.
+  const feedPosts = [];
+  for (let page = 1; page <= 10; page++) {
+    const { posts: pagePosts, hasMore } = await getFeedPosts({ page, limit: 50 });
+    feedPosts.push(...pagePosts);
+    if (!hasMore) break;
+  }
+  const feedRoutes: MetadataRoute.Sitemap = feedPosts.map((post) => {
+    const isEnglish = post.lang === 'en';
+    return {
+      url: isEnglish ? `${baseUrl}/en/comunidad/${post.id}` : `${baseUrl}/comunidad/${post.id}`,
+      lastModified: new Date(post.created_at),
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
+    };
+  });
+
+  return [...staticSitemap, ...serviciosPilar, ...serviciosCiudades, ...blogRoutes, ...feedRoutes];
 }

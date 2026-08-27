@@ -1,0 +1,100 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Pin, PinOff, Trash2, Loader2 } from "lucide-react";
+import { useAdminToast } from "@/hooks/useAdminToast";
+import { adminFetch } from "@/lib/admin/client-fetch";
+
+export default function FeedPostRowActions({
+  postId,
+  status,
+  pinned,
+  canWrite,
+  canPin,
+}: {
+  postId: string;
+  status: "published" | "hidden";
+  pinned: boolean;
+  canWrite: boolean;
+  canPin: boolean;
+}) {
+  const [loading, setLoading] = useState<string | null>(null);
+  const router = useRouter();
+  const toast = useAdminToast();
+
+  const patch = async (body: Record<string, unknown>, key: string, successMsg: string) => {
+    setLoading(key);
+    try {
+      await adminFetch(`/api/admin/feed/posts/${postId}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      });
+      toast.success(successMsg);
+      router.refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Error al actualizar");
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("¿Borrar esta publicación permanentemente? Se eliminarán también sus comentarios y likes.")) return;
+    setLoading("delete");
+    try {
+      await adminFetch(`/api/admin/feed/posts/${postId}`, { method: "DELETE" });
+      toast.success("Publicación eliminada");
+      router.refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Error al eliminar");
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  if (!canWrite) {
+    return <span className="text-[10px] text-text-muted/40 font-black uppercase tracking-widest">Solo lectura</span>;
+  }
+
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <button
+        onClick={() =>
+          patch(
+            { status: status === "published" ? "hidden" : "published" },
+            "status",
+            status === "published" ? "Publicación ocultada" : "Publicación restaurada"
+          )
+        }
+        disabled={loading !== null}
+        title={status === "published" ? "Ocultar" : "Publicar"}
+        className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white-custom hover:border-primary/30 transition-all disabled:opacity-50"
+      >
+        {loading === "status" ? <Loader2 size={14} className="animate-spin" /> : status === "published" ? <EyeOff size={14} /> : <Eye size={14} />}
+      </button>
+
+      {canPin && (
+        <button
+          onClick={() => patch({ pinned: !pinned }, "pin", pinned ? "Publicación desfijada" : "Publicación fijada")}
+          disabled={loading !== null}
+          title={pinned ? "Desfijar" : "Fijar"}
+          className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all disabled:opacity-50 ${
+            pinned ? "bg-primary/10 border-primary/30 text-primary" : "bg-white/5 border-white/10 text-text-muted hover:text-white-custom hover:border-primary/30"
+          }`}
+        >
+          {loading === "pin" ? <Loader2 size={14} className="animate-spin" /> : pinned ? <PinOff size={14} /> : <Pin size={14} />}
+        </button>
+      )}
+
+      <button
+        onClick={handleDelete}
+        disabled={loading !== null}
+        title="Eliminar"
+        className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-50"
+      >
+        {loading === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+      </button>
+    </div>
+  );
+}

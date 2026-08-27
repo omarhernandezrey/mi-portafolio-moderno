@@ -16,7 +16,12 @@ export type AuditAction =
   | 'webhook.create'
   | 'webhook.update'
   | 'webhook.delete'
-  | 'webhook.test';
+  | 'webhook.test'
+  | 'feed_post.create'
+  | 'feed_post.update'
+  | 'feed_post.delete'
+  | 'feed_comment.update'
+  | 'feed_comment.delete';
 
 export type AuditActor = {
   userId: string;
