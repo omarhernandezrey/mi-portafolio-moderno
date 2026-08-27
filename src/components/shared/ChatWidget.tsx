@@ -253,6 +253,8 @@ export default function ChatWidget() {
     else startListening();
   };
 
+  const isSendDisabled = isLoading || (!input.trim() && !imageDataUrl) || !hasConsented;
+
   return (
     <>
       {/* Botón Flotante */}
@@ -524,13 +526,13 @@ export default function ChatWidget() {
                   />
                 </div>
 
-                <div className="flex shrink-0 items-center gap-0.5 pr-1 sm:gap-1">
+                <div className="flex shrink-0 items-center gap-1 pr-1">
                   {/* Botón adjuntar imagen (Tarea AUD.5) */}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isLoading || !hasConsented}
-                    className={`flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-all active:scale-90 ${
                       imageDataUrl
                         ? 'text-[var(--primary-color)] bg-[var(--primary-color)]/10'
                         : 'text-[var(--muted-color)] hover:text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10'
@@ -538,7 +540,7 @@ export default function ChatWidget() {
                     aria-label="Adjuntar imagen"
                     title={currentLanguage === 'es' ? 'Adjuntar imagen' : 'Attach image'}
                   >
-                    <Paperclip size={18} />
+                    <Paperclip size={20} />
                   </button>
 
                   {/* Botón Micrófono (Tarea 28.4) */}
@@ -547,7 +549,7 @@ export default function ChatWidget() {
                       type="button"
                       onClick={toggleMic}
                       disabled={isLoading || !hasConsented}
-                      className={`flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-all active:scale-90 ${
                         isListening
                           ? 'bg-red-500/20 text-red-500 animate-pulse'
                           : 'text-[var(--muted-color)] hover:text-[var(--primary-color)] hover:bg-[var(--primary-color)]/10'
@@ -555,18 +557,23 @@ export default function ChatWidget() {
                       aria-label="Dictado por voz"
                       title={isListening ? 'Detener dictado' : 'Dictado por voz'}
                     >
-                      {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+                      {isListening ? <MicOff size={20} /> : <Mic size={20} />}
                     </button>
                   )}
 
                   <button
                     type="submit"
                     data-testid="chat-send"
-                    disabled={isLoading || (!input.trim() && !imageDataUrl) || !hasConsented}
-                    className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] shadow-lg transition-all hover:scale-105 active:scale-95 disabled:saturate-[0.35] disabled:opacity-50 disabled:shadow-none"
+                    disabled={isSendDisabled}
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full shadow-lg transition-all active:scale-95 ${
+                      isSendDisabled
+                        ? 'shadow-none'
+                        : 'bg-gradient-to-br from-[var(--primary-color)] to-[var(--accent-color)] text-[var(--inner-circle-text-color)] hover:scale-105'
+                    }`}
+                    style={isSendDisabled ? { backgroundColor: '#9ca3af', color: '#1f2937' } : undefined}
                     aria-label="Enviar"
                   >
-                    <Send size={18} className="translate-x-0.5" />
+                    <Send size={20} className="translate-x-0.5" />
                   </button>
                 </div>
               </form>
