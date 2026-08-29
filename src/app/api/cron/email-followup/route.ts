@@ -9,6 +9,10 @@ export const dynamic = 'force-dynamic';
 // Fuentes de subscribers que SÍ descargaron un recurso (lead magnet)
 const LEAD_MAGNET_SOURCES = ['checklist', 'guia-precios', 'plantilla-brief', 'leadmagnet'];
 
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+const isEmail = (v: unknown): v is string =>
+  typeof v === 'string' && EMAIL_RE.test(v.trim());
+
 export async function GET(req: NextRequest) {
   const authError = requireCronAuth(req);
   if (authError) return authError;
@@ -36,10 +40,17 @@ export async function GET(req: NextRequest) {
 
     const results = [];
 
+    let skippedInvalid = 0;
+
     // Procesar Leads
     if (coldLeads) {
       for (const lead of coldLeads) {
-        if (!lead.email) continue;
+        // Email ausente o mal formado: sacar de 'cold' para no reintentar en cada corrida
+        if (!isEmail(lead.email)) {
+          await supabaseServer.from('leads').update({ status: 'invalid_email' }).eq('id', lead.id);
+          skippedInvalid++;
+          continue;
+        }
         const sent = await sendFollowUpEmail(lead.email, lead.name || 'Hola', lead.service_requested || 'tu proyecto');
         if (sent) {
           await supabaseServer.from('leads').update({ status: 'followed_up' }).eq('id', lead.id);
@@ -52,6 +63,7 @@ export async function GET(req: NextRequest) {
     if (subscribers) {
       for (const sub of subscribers) {
         if (!LEAD_MAGNET_SOURCES.some(s => (sub.source || '').includes(s))) continue;
+        if (!isEmail(sub.email)) { skippedInvalid++; continue; }
         const sent = await sendLeadMagnetFollowUp(sub.email, sub.source);
         if (sent) {
           await supabaseServer.from('subscribers').update({ followup_sent_at: now.toISOString() }).eq('id', sub.id);
@@ -65,7 +77,7 @@ export async function GET(req: NextRequest) {
       await notifyTelegram(`✉️ *Follow-up automático* enviado a ${sentCount} contactos (leads + recursos).`);
     }
 
-    return NextResponse.json({ success: true, processed: results.length, sent: sentCount });
+    return NextResponse.json({ success: true, processed: results.length, sent: sentCount, skippedInvalid });
 
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : 'Unknown error';

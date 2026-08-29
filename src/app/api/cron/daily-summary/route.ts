@@ -30,15 +30,7 @@ export async function GET(req: NextRequest) {
   try {
     const { start: startOfYesterday, end: startOfToday } = bogotaDayRange(1);
 
-    // 1. Conversaciones de ayer
-    const { count: convCount, error: convErr } = await supabaseServer
-      .from('conversations')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', startOfYesterday)
-      .lt('created_at', startOfToday);
-    if (convErr) throw convErr;
-
-    // 2. Leads nuevos de ayer
+    // 1. Leads nuevos de ayer
     const { count: leadsCount, error: leadsErr } = await supabaseServer
       .from('leads')
       .select('*', { count: 'exact', head: true })
@@ -46,14 +38,14 @@ export async function GET(req: NextRequest) {
       .lt('created_at', startOfToday);
     if (leadsErr) throw leadsErr;
 
-    // 3. Pendientes de respuesta (status 'new' o 'cold')
+    // 2. Pendientes de respuesta (status 'new' o 'cold')
     const { count: pendingCount, error: pendingErr } = await supabaseServer
       .from('leads')
       .select('*', { count: 'exact', head: true })
       .in('status', ['new', 'cold']);
     if (pendingErr) throw pendingErr;
 
-    // 4. Pagos confirmados de ayer (status 'paid', por fecha de pago si existe)
+    // 3. Pagos confirmados de ayer (status 'paid', por fecha de pago si existe)
     const { data: paidLeads, error: paidErr } = await supabaseServer
       .from('leads')
       .select('budget')
@@ -82,11 +74,10 @@ export async function GET(req: NextRequest) {
     });
     const topService = Object.entries(serviceCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
 
-    // 6. Enviar mensaje a Telegram
+    // 4. Enviar mensaje a Telegram
     const message = [
       '☀️ *Buenos días Omar*',
       'Ayer:',
-      `- 🗨️ ${convCount || 0} conversaciones`,
       `- 🎯 ${leadsCount || 0} leads nuevos`,
       `- ⏳ ${pendingCount || 0} pendientes de tu respuesta`,
       `- 💰 ${totalPaid} USD en pagos confirmados`,
