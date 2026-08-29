@@ -31,6 +31,7 @@
       "service": "Ask about a service",
       "recruiter": "I have a job offer",
       "support": "Support",
+      "callNow": "Call now",
       "call": "Schedule a call"
     }
   },

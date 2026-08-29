@@ -9,6 +9,9 @@ import { clientEnv } from '@/config/env';
 export const WHATSAPP_NUMBER: string =
   clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER || '573219052878';
 
+/** Enlace `tel:` para llamada telefónica directa (E.164 con '+'). */
+export const PHONE_TEL_URL = `tel:+${WHATSAPP_NUMBER}`;
+
 /** URL pública de Cal.com para agendar la consulta corta. Vacía = usar WhatsApp. */
 export const CALCOM_CONSULT_URL: string =
   clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL || '';
@@ -16,13 +19,20 @@ export const CALCOM_CONSULT_URL: string =
 export type Locale = 'es' | 'en';
 
 /** Intenciones del menú rápido del botón flotante. */
-export type WhatsAppIntent = 'quote' | 'service' | 'recruiter' | 'support' | 'call';
+export type WhatsAppIntent =
+  | 'quote'
+  | 'service'
+  | 'recruiter'
+  | 'support'
+  | 'callNow'
+  | 'call';
 
 export const WHATSAPP_INTENTS: readonly WhatsAppIntent[] = [
   'quote',
   'service',
   'recruiter',
   'support',
+  'callNow',
   'call',
 ] as const;
 
@@ -80,7 +90,10 @@ const DEFAULT_CONTEXT: LocalizedText = {
   en: 'Hi Omar, I\'m coming from your portfolio',
 };
 
-const INTENT_PHRASES: Record<WhatsAppIntent, LocalizedText> = {
+/** Intenciones que abren un chat de WhatsApp con mensaje precargado. */
+type MessageIntent = Exclude<WhatsAppIntent, 'callNow'>;
+
+const INTENT_PHRASES: Record<MessageIntent, LocalizedText> = {
   quote: {
     es: 'Quiero cotizar un proyecto web. ¿Podemos hablar?',
     en: 'I want to get a quote for a web project. Can we talk?',
@@ -114,14 +127,14 @@ function resolveContext(pathname: string): LocalizedText {
 export function getIntentMessage(
   pathname: string,
   locale: Locale,
-  intent: WhatsAppIntent,
+  intent: MessageIntent,
 ): string {
   const context = resolveContext(pathname)[locale];
   const phrase = INTENT_PHRASES[intent][locale];
   return `${context}. ${phrase}`;
 }
 
-export type ContactChannel = 'whatsapp' | 'calcom';
+export type ContactChannel = 'whatsapp' | 'phone' | 'calcom';
 
 export interface IntentTarget {
   href: string;
@@ -129,15 +142,20 @@ export interface IntentTarget {
 }
 
 /**
- * Destino de cada intención del menú. Todas abren WhatsApp salvo "call", que
- * abre Cal.com si `NEXT_PUBLIC_CALCOM_CONSULT_URL` está configurada (fallback a
- * WhatsApp si no).
+ * Destino de cada intención del menú:
+ * - `callNow`  → llamada telefónica directa (`tel:`)
+ * - `call`     → Cal.com si `NEXT_PUBLIC_CALCOM_CONSULT_URL` está configurada;
+ *                si no, WhatsApp con mensaje de "agendar llamada"
+ * - resto      → chat de WhatsApp con mensaje precargado según la ruta
  */
 export function getIntentTarget(
   pathname: string,
   locale: Locale,
   intent: WhatsAppIntent,
 ): IntentTarget {
+  if (intent === 'callNow') {
+    return { href: PHONE_TEL_URL, channel: 'phone' };
+  }
   if (intent === 'call' && CALCOM_CONSULT_URL) {
     return { href: CALCOM_CONSULT_URL, channel: 'calcom' };
   }

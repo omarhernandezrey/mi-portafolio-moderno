@@ -5,17 +5,18 @@ Base: `0bc3557`
 
 ## Qué reemplaza al chatbot
 
-Un **botón flotante de WhatsApp** (`src/components/whatsapp/WhatsAppFloatingButton.tsx`) fijo en `bottom-6 right-6 z-[9999]` — el mismo sitio que ocupaba el launcher del chat. Al pulsarlo abre un **menú de 5 intenciones**:
+Un **botón flotante de WhatsApp** (`src/components/whatsapp/WhatsAppFloatingButton.tsx`) fijo en `bottom-6 right-6 z-[9999]` — el mismo sitio que ocupaba el launcher del chat. Al pulsarlo abre un **menú de 6 intenciones**:
 
-| Intención | Abre |
-|---|---|
-| Cotizar un proyecto | WhatsApp con mensaje precargado |
-| Consultar un servicio | WhatsApp con mensaje precargado |
-| Tengo una oferta laboral | WhatsApp con mensaje precargado (reemplaza el flujo de reclutador del chatbot) |
-| Soporte | WhatsApp con mensaje precargado |
-| Agendar una llamada | **Cal.com** (`NEXT_PUBLIC_CALCOM_CONSULT_URL`); fallback a WhatsApp si no está configurada |
+| Intención | Abre | Evento |
+|---|---|---|
+| Cotizar un proyecto | WhatsApp con mensaje precargado | `whatsapp_click` |
+| Consultar un servicio | WhatsApp con mensaje precargado | `whatsapp_click` |
+| Tengo una oferta laboral | WhatsApp con mensaje precargado (reemplaza el flujo de reclutador del chatbot — sin agendar cita) | `whatsapp_click` |
+| Soporte | WhatsApp con mensaje precargado | `whatsapp_click` |
+| Llamar ahora | Llamada telefónica directa (`tel:+<NEXT_PUBLIC_WHATSAPP_NUMBER>`) | `phone_click` |
+| Agendar una llamada | **Cal.com** (`NEXT_PUBLIC_CALCOM_CONSULT_URL`); fallback a WhatsApp si no está configurada | `calcom_click` |
 
-El mensaje se arma según la ruta actual (`getIntentTarget` en `src/config/whatsapp.ts`). Analítica: `track('whatsapp_click' | 'calcom_click', { intent, page })`.
+Destino y canal se resuelven en `getIntentTarget()` (`src/config/whatsapp.ts`). El mensaje de WhatsApp se arma según la ruta actual.
 
 Además, `WhatsAppCTA` (`src/components/whatsapp/WhatsAppCTA.tsx`) reemplaza al antiguo `<OpenChatButton>` en las 3 páginas de servicios — misma API (`message`, `className`, `children`), ahora un enlace `wa.me`.
 

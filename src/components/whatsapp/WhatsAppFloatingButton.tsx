@@ -3,22 +3,29 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaWhatsapp } from 'react-icons/fa';
-import { Calendar, X } from 'lucide-react';
+import { Calendar, Phone, X } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { usePathname } from '@/i18n/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   WHATSAPP_INTENTS,
   getIntentTarget,
+  type ContactChannel,
   type Locale,
   type WhatsAppIntent,
 } from '@/config/whatsapp';
 
+const CHANNEL_EVENT: Record<ContactChannel, string> = {
+  whatsapp: 'whatsapp_click',
+  phone: 'phone_click',
+  calcom: 'calcom_click',
+};
+
 /**
  * Botón flotante de contacto por WhatsApp con menú rápido de intención.
  * Reemplaza al ChatWidget como canal de contacto. No escribe nada en la BD:
- * cada opción abre WhatsApp (o Cal.com para "agendar llamada"); el clic solo
- * se registra como evento de analítica (`whatsapp_click` / `calcom_click`).
+ * cada opción abre WhatsApp, una llamada telefónica directa o Cal.com; el clic
+ * solo se registra como evento de analítica.
  */
 export default function WhatsAppFloatingButton() {
   const { t, language } = useTranslation();
@@ -67,11 +74,8 @@ export default function WhatsAppFloatingButton() {
   }, [open]);
 
   const handleIntent = useCallback(
-    (intent: WhatsAppIntent, channel: 'whatsapp' | 'calcom') => {
-      track(channel === 'calcom' ? 'calcom_click' : 'whatsapp_click', {
-        intent,
-        page: pathname,
-      });
+    (intent: WhatsAppIntent, channel: ContactChannel) => {
+      track(CHANNEL_EVENT[channel], { intent, page: pathname });
       setOpen(false);
     },
     [pathname],
@@ -114,18 +118,24 @@ export default function WhatsAppFloatingButton() {
             <ul className="p-2">
               {WHATSAPP_INTENTS.map((intent) => {
                 const target = getIntentTarget(pathname, locale, intent);
+                const external = target.channel !== 'phone';
                 return (
                   <li key={intent}>
                     <a
                       role="menuitem"
                       href={target.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target={external ? '_blank' : undefined}
+                      rel={external ? 'noopener noreferrer' : undefined}
                       onClick={() => handleIntent(intent, target.channel)}
                       className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[var(--text-color)] transition-colors hover:bg-[var(--primary-color)]/10 focus-visible:bg-[var(--primary-color)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--primary-color)]"
                     >
                       {target.channel === 'calcom' ? (
                         <Calendar
+                          className="shrink-0 text-[var(--primary-color)]"
+                          size={18}
+                        />
+                      ) : target.channel === 'phone' ? (
+                        <Phone
                           className="shrink-0 text-[var(--primary-color)]"
                           size={18}
                         />
