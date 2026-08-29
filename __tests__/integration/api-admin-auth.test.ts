@@ -22,8 +22,6 @@ jest.mock('@/config/env', () => ({
     SUPABASE_URL: 'https://test.supabase.co',
     SUPABASE_ANON_KEY: 'anon',
     SUPABASE_SERVICE_ROLE_KEY: 'service',
-    ADMIN_PASSWORD: 'test-pass',
-    ADMIN_SECRET: 'test-secret-long',
     CRON_SECRET: 'test-cron',
   },
   clientEnv: {},

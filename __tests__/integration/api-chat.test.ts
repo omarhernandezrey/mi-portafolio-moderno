@@ -56,8 +56,6 @@ jest.mock('@/config/env', () => ({
     SUPABASE_SERVICE_ROLE_KEY: 'test-service-key',
     TELEGRAM_BOT_TOKEN: 'test-token',
     TELEGRAM_CHAT_ID: '12345',
-    ADMIN_PASSWORD: 'test-pass',
-    ADMIN_SECRET: 'test-secret-long',
     CRON_SECRET: 'test-cron-secret',
   },
   clientEnv: {
