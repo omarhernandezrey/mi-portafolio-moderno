@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
       for (const lead of coldLeads) {
         // Email ausente o mal formado: sacar de 'cold' para no reintentar en cada corrida
         if (!isEmail(lead.email)) {
-          await supabaseServer.from('leads').update({ status: 'invalid_email' }).eq('id', lead.id);
+          await supabaseServer.from('leads').update({ status: 'archived' }).eq('id', lead.id);
           skippedInvalid++;
           continue;
         }
