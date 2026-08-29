@@ -1,6 +1,6 @@
 import { Client } from '@notionhq/client';
 import { serverEnv } from '@/config/env';
-import { Lead } from './parser';
+import { Lead } from '@/lib/leads/types';
 
 /**
  * Envía un lead a la base de datos de Notion configurada.

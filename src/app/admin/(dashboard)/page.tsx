@@ -3,7 +3,6 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { createClient } from '@/lib/supabase/server';
 import {
   Users,
-  MessageSquare,
   TrendingUp,
   DollarSign,
   ChevronRight,
@@ -51,17 +50,6 @@ async function getStats() {
     .gte('created_at', firstDayOfMonth)
     .eq('status', 'paid');
 
-  const { count: totalConvs } = await supabaseServer
-    .from('conversations')
-    .select('*', { count: 'exact', head: true })
-    .gte('created_at', firstDayOfMonth);
-
-  const { count: prevConvs } = await supabaseServer
-    .from('conversations')
-    .select('*', { count: 'exact', head: true })
-    .gte('created_at', firstDayOfPrevMonth)
-    .lte('created_at', lastDayOfPrevMonth);
-
   const { count: openTickets } = await supabaseServer
     .from('tickets')
     .select('*', { count: 'exact', head: true })
@@ -84,26 +72,15 @@ async function getStats() {
     ? `${((totalLeads || 0) - prevLeads) >= 0 ? '+' : ''}${(((totalLeads || 0) - prevLeads) / prevLeads * 100).toFixed(1)}%`
     : 'Nuevo';
 
-  const convsTrend = prevConvs && prevConvs > 0
-    ? `${((totalConvs || 0) - prevConvs) >= 0 ? '+' : ''}${(((totalConvs || 0) - prevConvs) / prevConvs * 100).toFixed(1)}%`
-    : 'Nuevo';
-
-  const conversionRate = totalConvs && totalConvs > 0 
-    ? ((totalLeads || 0) / totalConvs * 100).toFixed(1) 
-    : '0';
-
   const monthRevenue = (invoiceData || []).reduce((sum, inv) => sum + (inv.total || 0), 0);
 
   return {
     monthLeads: totalLeads || 0,
     monthPaid: paidLeads || 0,
-    monthConvs: totalConvs || 0,
     openTickets: openTickets || 0,
-    conversionRate,
     recentLeads: recentLeads || [],
     recentTickets: recentTickets || [],
     leadsTrend,
-    convsTrend,
     monthRevenue,
   };
 }
@@ -185,21 +162,21 @@ export default async function AdminDashboardPage() {
           color="primary"
           description="Nuevos clientes potenciales vs mes anterior"
         />
-        <StatCard 
-          title="Conversaciones" 
-          value={stats.monthConvs.toString()} 
-          icon={<MessageSquare size={22} />} 
-          trend={stats.convsTrend}
+        <StatCard
+          title="Tickets Abiertos"
+          value={stats.openTickets.toString()}
+          icon={<Ticket size={22} />}
+          trend="Pendientes"
           color="accent"
-          description="Interacciones del chatbot vs mes anterior"
+          description="Tickets de soporte sin cerrar"
         />
-        <StatCard 
-          title="Tasa de Conversión" 
-          value={`${stats.conversionRate}%`} 
-          icon={<TrendingUp size={22} />} 
-          trend="Leads/Conv"
+        <StatCard
+          title="Ventas Cerradas"
+          value={stats.monthPaid.toString()}
+          icon={<TrendingUp size={22} />}
+          trend="Este mes"
           color="primary"
-          description="Proporción leads sobre conversaciones este mes"
+          description="Leads marcados como pagados este mes"
         />
         <StatCard
           title="Ingresos del Mes"
@@ -393,7 +370,6 @@ export default async function AdminDashboardPage() {
             </h3>
             <div className="space-y-4 sm:space-y-6">
               <MetricItem label="Total Leads" value={stats.monthLeads.toString()} />
-              <MetricItem label="Conversaciones" value={stats.monthConvs.toString()} />
               <MetricItem label="Tickets Abiertos" value={stats.openTickets.toString()} />
               <MetricItem label="Ventas Cerradas" value={stats.monthPaid.toString()} />
               {stats.monthRevenue > 0 && (

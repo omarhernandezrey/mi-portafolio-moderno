@@ -18,7 +18,6 @@ export const ADMIN_PATH_PERMISSIONS: ReadonlyArray<{
   { prefix: '/admin/timer', minRole: 'assistant' },
   { prefix: '/admin/docs', minRole: 'assistant' },
   { prefix: '/admin/feed', minRole: 'viewer' },
-  { prefix: '/admin/conversations', minRole: 'viewer' },
   { prefix: '/admin/tickets', minRole: 'viewer' },
   { prefix: '/admin/leads', minRole: 'viewer' },
   { prefix: '/admin', minRole: 'viewer' },
@@ -44,7 +43,6 @@ export const ADMIN_API_PERMISSIONS: ReadonlyArray<ApiPermission> = [
   { prefix: '/api/admin/timer', read: 'assistant', write: 'assistant' },
   { prefix: '/api/admin/leads', read: 'viewer', write: 'assistant' },
   { prefix: '/api/admin/feed', read: 'viewer', write: 'assistant' },
-  { prefix: '/api/admin/conversations', read: 'viewer' },
   { prefix: '/api/tickets', read: 'viewer', write: 'assistant' },
   { prefix: '/api/admin', read: 'viewer', write: 'assistant' },
 ];
@@ -90,7 +88,6 @@ export const NAV_ITEMS: ReadonlyArray<{
 }> = [
   { label: 'Dashboard', href: '/admin', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
   { label: 'Leads', href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-  { label: 'Conversaciones', href: '/admin/conversations', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
   { label: 'Tickets', href: '/admin/tickets', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
   { label: 'Comunidad', href: '/admin/feed', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
   { label: 'Timer', href: '/admin/timer', roles: ['owner', 'assistant'], group: 'ops' },

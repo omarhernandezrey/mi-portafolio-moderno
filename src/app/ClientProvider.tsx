@@ -7,13 +7,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import { NotyfProvider } from '@/components/ui/NotyfProvider';
 import dynamic from 'next/dynamic';
 
-// Cargar ChatWidget de forma dinámica para optimizar performance (SSR: false)
-const ChatWidget = dynamic(() => import('@/components/shared/ChatWidget'), {
-  ssr: false,
-  loading: () => null,
-});
-
-// Botón flotante de WhatsApp (canal de contacto principal)
+// Botón flotante de WhatsApp (canal de contacto principal) — carga diferida
 const WhatsAppFloatingButton = dynamic(
   () => import('@/components/whatsapp/WhatsAppFloatingButton'),
   { ssr: false, loading: () => null },
@@ -77,7 +71,6 @@ export default function ClientProvider({ children }: ClientProviderProps) {
           <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
             {children}
             <WhatsAppFloatingButton />
-            <ChatWidget />
           </MotionConfig>
         </NotyfProvider>
       </ToastProvider>

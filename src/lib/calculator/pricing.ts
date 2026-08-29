@@ -1,4 +1,4 @@
-import { SERVICES_CATALOG } from '../chatbot/data/catalog';
+import { SERVICES_CATALOG } from '../services/catalog';
 
 export interface CalculatorStep {
   id: string;

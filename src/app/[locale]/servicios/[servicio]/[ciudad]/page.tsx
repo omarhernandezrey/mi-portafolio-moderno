@@ -4,7 +4,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades, CIUDADES_INDEXABLES, CIUDAD_CONTEXTO } from '@/data/ciudades';
-import OpenChatButton from '@/components/shared/OpenChatButton';
+import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 import { ArrowRight, Shield, Zap, Globe, Target, UserCheck, CheckCircle, Clock, DollarSign, HelpCircle } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
@@ -293,13 +293,13 @@ export default async function ServicioCiudadPage({ params }: Props) {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-            <OpenChatButton
+            <WhatsAppCTA
               message={ui.chatMsg}
               className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
             >
               {ui.ctaAudit}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </OpenChatButton>
+            </WhatsAppCTA>
           </div>
         </div>
       </section>
@@ -329,12 +329,12 @@ export default async function ServicioCiudadPage({ params }: Props) {
               </p>
               <div className="flex items-center justify-center gap-4 pt-6">
                 <div className="w-12 h-px bg-primary/30" />
-                <OpenChatButton
+                <WhatsAppCTA
                   message={ui.chatMsg}
                   className="text-primary font-black text-[11px] uppercase tracking-[0.4em] hover:scale-105 transition-transform italic"
                 >
                   {ui.ctaConsult}
-                </OpenChatButton>
+                </WhatsAppCTA>
                 <div className="w-12 h-px bg-primary/30" />
               </div>
             </div>

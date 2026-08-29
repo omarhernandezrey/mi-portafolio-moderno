@@ -48,7 +48,7 @@ describe('admin path permissions', () => {
     expect(minRoleForApiPath('/api/admin/webhooks')).toBe('owner');
     expect(minRoleForApiPath('/api/admin/timer')).toBe('assistant');
     expect(minRoleForApiPath('/api/admin/timer/report')).toBe('owner');
-    expect(minRoleForApiPath('/api/admin/conversations')).toBe('viewer');
+    expect(minRoleForApiPath('/api/admin/feed')).toBe('viewer');
     expect(minRoleForApiPath('/api/tickets/xyz')).toBe('viewer');
     expect(minRoleForApiPath('/api/admin/audit')).toBe('owner');
   });

@@ -8,7 +8,6 @@ import {
   LogOut,
   LayoutDashboard,
   Users,
-  MessageSquare,
   Clock,
   Menu,
   X,
@@ -31,7 +30,6 @@ import type { AdminRole } from '@/lib/admin/roles';
 const NAV_ICONS: Record<string, LucideIcon> = {
   '/admin': LayoutDashboard,
   '/admin/leads': Users,
-  '/admin/conversations': MessageSquare,
   '/admin/tickets': Ticket,
   '/admin/timer': Clock,
   '/admin/invoices': CreditCard,

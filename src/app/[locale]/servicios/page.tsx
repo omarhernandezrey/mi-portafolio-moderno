@@ -7,7 +7,7 @@ import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
-import OpenChatButton from '@/components/shared/OpenChatButton';
+import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -190,13 +190,13 @@ export default async function ServiciosPage({ params }: Props) {
               ))}
             </div>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <OpenChatButton
+              <WhatsAppCTA
                 message={isEn ? "Hi Omar, I'm coming from the services page. I want to know more about what you offer." : "Hola Omar, vengo de la página de servicios. Quiero saber más sobre lo que ofreces."}
                 className="inline-flex items-center gap-3 bg-primary text-background px-8 py-4 rounded-[24px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
               >
                 {isEn ? 'Free Consultation' : 'Consulta Gratis'}
                 <ArrowRight size={16} />
-              </OpenChatButton>
+              </WhatsAppCTA>
               <Link
                 href="#servicios"
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-[24px] border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:border-white/20 transition-all"
@@ -382,13 +382,13 @@ export default async function ServiciosPage({ params }: Props) {
               : 'La consulta inicial es gratis y sin compromiso. Cuéntame tu idea y te digo en menos de 24 horas cómo puedo ayudarte.'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <OpenChatButton
+            <WhatsAppCTA
               message={isEn ? "Hi Omar, I want to hire your web development services. I'd like to schedule a consultation." : "Hola Omar, quiero contratar tus servicios de desarrollo web. Me gustaría agendar una consulta."}
               className="inline-flex items-center gap-3 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
             >
               {isEn ? 'Schedule Free Consultation' : 'Agendar Consulta Gratis'}
               <ArrowRight size={16} />
-            </OpenChatButton>
+            </WhatsAppCTA>
             <Link
               href="/blog"
               className="inline-flex items-center gap-3 px-10 py-5 rounded-[28px] border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:border-white/20 transition-all"

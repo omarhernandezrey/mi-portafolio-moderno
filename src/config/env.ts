@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 const serverSchema = z.object({
-  GROQ_API_KEY: z.string().min(1),
   SUPABASE_URL: z.string().url(),
   SUPABASE_ANON_KEY: z.string().min(1),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
@@ -10,37 +9,15 @@ const serverSchema = z.object({
   TELEGRAM_BOT_USERNAME: z.string().optional(),
   ADMIN_ALLOWED_EMAILS: z.string().optional(),
   CRON_SECRET: z.string().min(10),
-  HF_TOKEN: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
   NOTION_API_KEY: z.string().optional(),
   NOTION_DATABASE_ID: z.string().optional(),
-  // FASE 27 — proveedores LLM de respaldo (todos opcionales)
-  OPENROUTER_API_KEY: z.string().optional(),
-  CEREBRAS_API_KEY: z.string().optional(),
-  MISTRAL_API_KEY: z.string().optional(),
-  DEEPSEEK_API_KEY: z.string().optional(),
-  CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
-  CLOUDFLARE_API_TOKEN: z.string().optional(),
-  OLLAMA_BASE_URL: z.string().url().optional(),
-  OLLAMA_MODEL: z.string().optional(),
-  LLM_PROVIDER_CHAIN: z.string().optional(),
-  NVIDIA_API_KEY: z.string().optional(),
-  NVIDIA_MISTRAL_API_KEY: z.string().optional(),
-  NVIDIA_KIMI_API_KEY: z.string().optional(),
-  NVIDIA_NEMOTRON_API_KEY: z.string().optional(),
-  NVIDIA_LLAMA4_API_KEY: z.string().optional(),
-  NVIDIA_MISTRAL_NEMOTRON_API_KEY: z.string().optional(),
-  NVIDIA_PHI4_API_KEY: z.string().optional(),
-  NVIDIA_GEMMA3_API_KEY: z.string().optional(),
-  NVIDIA_DRACARYS_API_KEY: z.string().optional(),
-  NVIDIA_SOLAR_API_KEY: z.string().optional(),
   DEV_TO_API_KEY: z.string().optional(),
   HASHNODE_TOKEN: z.string().optional(),
   HASHNODE_PUBLICATION_ID: z.string().optional(),
 });
 
 export const serverEnv = {
-  get GROQ_API_KEY() { return process.env.GROQ_API_KEY || ""; },
   get SUPABASE_URL() { return process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || ""; },
   get SUPABASE_ANON_KEY() { return process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""; },
   get SUPABASE_SERVICE_ROLE_KEY() { return process.env.SUPABASE_SERVICE_ROLE_KEY || ""; },
@@ -51,31 +28,9 @@ export const serverEnv = {
   /** Lista opcional separada por comas. Si está vacía, cualquier usuario con rol en user_roles puede entrar. */
   get ADMIN_ALLOWED_EMAILS() { return process.env.ADMIN_ALLOWED_EMAILS || ""; },
   get CRON_SECRET() { return process.env.CRON_SECRET || ""; },
-  get HF_TOKEN() { return process.env.HF_TOKEN || ""; },
   get RESEND_API_KEY() { return process.env.RESEND_API_KEY || ""; },
   get NOTION_API_KEY() { return process.env.NOTION_API_KEY || ""; },
   get NOTION_DATABASE_ID() { return process.env.NOTION_DATABASE_ID || ""; },
-
-  // FASE 27 — multi-provider failover
-  get OPENROUTER_API_KEY() { return process.env.OPENROUTER_API_KEY || ""; },
-  get CEREBRAS_API_KEY() { return process.env.CEREBRAS_API_KEY || ""; },
-  get MISTRAL_API_KEY() { return process.env.MISTRAL_API_KEY || ""; },
-  get DEEPSEEK_API_KEY() { return process.env.DEEPSEEK_API_KEY || ""; },
-  get CLOUDFLARE_ACCOUNT_ID() { return process.env.CLOUDFLARE_ACCOUNT_ID || ""; },
-  get CLOUDFLARE_API_TOKEN() { return process.env.CLOUDFLARE_API_TOKEN || ""; },
-  get OLLAMA_BASE_URL() { return process.env.OLLAMA_BASE_URL || "http://localhost:11434"; },
-  get OLLAMA_MODEL() { return process.env.OLLAMA_MODEL || "llama3.2:3b"; },
-  get LLM_PROVIDER_CHAIN() { return process.env.LLM_PROVIDER_CHAIN || ""; },
-  get NVIDIA_API_KEY() { return process.env.NVIDIA_API_KEY || ""; },
-  get NVIDIA_MISTRAL_API_KEY() { return process.env.NVIDIA_MISTRAL_API_KEY || ""; },
-  get NVIDIA_KIMI_API_KEY() { return process.env.NVIDIA_KIMI_API_KEY || ""; },
-  get NVIDIA_NEMOTRON_API_KEY() { return process.env.NVIDIA_NEMOTRON_API_KEY || ""; },
-  get NVIDIA_LLAMA4_API_KEY() { return process.env.NVIDIA_LLAMA4_API_KEY || ""; },
-  get NVIDIA_MISTRAL_NEMOTRON_API_KEY() { return process.env.NVIDIA_MISTRAL_NEMOTRON_API_KEY || ""; },
-  get NVIDIA_PHI4_API_KEY() { return process.env.NVIDIA_PHI4_API_KEY || ""; },
-  get NVIDIA_GEMMA3_API_KEY() { return process.env.NVIDIA_GEMMA3_API_KEY || ""; },
-  get NVIDIA_DRACARYS_API_KEY() { return process.env.NVIDIA_DRACARYS_API_KEY || ""; },
-  get NVIDIA_SOLAR_API_KEY() { return process.env.NVIDIA_SOLAR_API_KEY || ""; },
 
   // Auto-submit keys
   get DEV_TO_API_KEY() { return process.env.DEV_TO_API_KEY || ""; },

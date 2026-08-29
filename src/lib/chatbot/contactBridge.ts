@@ -1,7 +1,7 @@
 import { supabaseServer } from '../supabaseServer';
 import { notifyTelegram } from './telegram';
 import { sendContactNotification } from './email';
-import { Lead } from './parser';
+import { Lead } from '@/lib/leads/types';
 
 /**
  * Registra un lead proveniente del formulario de contacto tradicional.

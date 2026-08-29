@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
-import OpenChatButton from '@/components/shared/OpenChatButton';
+import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 import { ArrowRight, CheckCircle, Clock, DollarSign, HelpCircle, MapPin } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
@@ -166,13 +166,13 @@ export default async function ServicioPilarPage({ params }: Props) {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-            <OpenChatButton
+            <WhatsAppCTA
               message={chatMsg}
               className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
             >
               {isEn ? 'Quote my project' : 'Cotizar mi proyecto'}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </OpenChatButton>
+            </WhatsAppCTA>
           </div>
         </div>
       </section>

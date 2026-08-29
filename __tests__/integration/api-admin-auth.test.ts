@@ -50,7 +50,6 @@ jest.mock('@/lib/chatbot/telegram', () => ({
 }));
 
 import { NextRequest } from 'next/server';
-import { GET as getConversations } from '@/app/api/admin/conversations/route';
 import { GET as getWebhooks } from '@/app/api/admin/webhooks/route';
 import { GET as getTickets } from '@/app/api/tickets/route';
 import { POST as postTicket } from '@/app/api/tickets/route';
@@ -123,12 +122,6 @@ beforeEach(() => {
 describe('API admin auth — sin sesión', () => {
   beforeEach(() => mockAuth({ user: null }));
 
-  it('GET /api/admin/conversations → 401', async () => {
-    const res = await getConversations();
-    expect(res.status).toBe(401);
-    await expect(res.json()).resolves.toEqual({ error: 'No autenticado' });
-  });
-
   it('GET /api/admin/webhooks → 401', async () => {
     const res = await getWebhooks();
     expect(res.status).toBe(401);
@@ -148,8 +141,8 @@ describe('API admin auth — sin sesión', () => {
 describe('API admin auth — sin rol', () => {
   beforeEach(() => mockAuth({ user: asUser('stranger@test.com'), role: null }));
 
-  it('GET /api/admin/conversations → 403', async () => {
-    const res = await getConversations();
+  it('GET /api/admin/webhooks → 403', async () => {
+    const res = await getWebhooks();
     expect(res.status).toBe(403);
     const body = await res.json();
     expect(body.error).toMatch(/rol/i);
@@ -185,13 +178,6 @@ describe('API admin auth — rol insuficiente', () => {
 });
 
 describe('API admin auth — acceso permitido', () => {
-  it('viewer puede listar conversaciones', async () => {
-    mockAuth({ user: asUser('viewer@test.com'), role: 'viewer' });
-    const res = await getConversations();
-    expect(res.status).toBe(200);
-    await expect(res.json()).resolves.toEqual([]);
-  });
-
   it('owner puede listar webhooks', async () => {
     mockAuth({ user: asUser('owner@test.com'), role: 'owner' });
     const res = await getWebhooks();
