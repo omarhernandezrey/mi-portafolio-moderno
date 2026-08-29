@@ -3,14 +3,13 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaWhatsapp } from 'react-icons/fa';
-import { X } from 'lucide-react';
+import { Calendar, X } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { usePathname } from '@/i18n/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   WHATSAPP_INTENTS,
-  buildWhatsAppUrl,
-  getIntentMessage,
+  getIntentTarget,
   type Locale,
   type WhatsAppIntent,
 } from '@/config/whatsapp';
@@ -18,8 +17,8 @@ import {
 /**
  * Botón flotante de contacto por WhatsApp con menú rápido de intención.
  * Reemplaza al ChatWidget como canal de contacto. No escribe nada en la BD:
- * la conversación ocurre dentro de WhatsApp; el clic solo se registra como
- * evento de analítica (`whatsapp_click`).
+ * cada opción abre WhatsApp (o Cal.com para "agendar llamada"); el clic solo
+ * se registra como evento de analítica (`whatsapp_click` / `calcom_click`).
  */
 export default function WhatsAppFloatingButton() {
   const { t, language } = useTranslation();
@@ -68,8 +67,11 @@ export default function WhatsAppFloatingButton() {
   }, [open]);
 
   const handleIntent = useCallback(
-    (intent: WhatsAppIntent) => {
-      track('whatsapp_click', { intent, page: pathname });
+    (intent: WhatsAppIntent, channel: 'whatsapp' | 'calcom') => {
+      track(channel === 'calcom' ? 'calcom_click' : 'whatsapp_click', {
+        intent,
+        page: pathname,
+      });
       setOpen(false);
     },
     [pathname],
@@ -110,23 +112,34 @@ export default function WhatsAppFloatingButton() {
             </div>
 
             <ul className="p-2">
-              {WHATSAPP_INTENTS.map((intent) => (
-                <li key={intent}>
-                  <a
-                    role="menuitem"
-                    href={buildWhatsAppUrl(
-                      getIntentMessage(pathname, locale, intent),
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleIntent(intent)}
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[var(--text-color)] transition-colors hover:bg-[var(--primary-color)]/10 focus-visible:bg-[var(--primary-color)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--primary-color)]"
-                  >
-                    <FaWhatsapp className="shrink-0 text-[#25D366]" size={18} />
-                    {t(`whatsapp.intent.${intent}`)}
-                  </a>
-                </li>
-              ))}
+              {WHATSAPP_INTENTS.map((intent) => {
+                const target = getIntentTarget(pathname, locale, intent);
+                return (
+                  <li key={intent}>
+                    <a
+                      role="menuitem"
+                      href={target.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => handleIntent(intent, target.channel)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[var(--text-color)] transition-colors hover:bg-[var(--primary-color)]/10 focus-visible:bg-[var(--primary-color)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--primary-color)]"
+                    >
+                      {target.channel === 'calcom' ? (
+                        <Calendar
+                          className="shrink-0 text-[var(--primary-color)]"
+                          size={18}
+                        />
+                      ) : (
+                        <FaWhatsapp
+                          className="shrink-0 text-[#25D366]"
+                          size={18}
+                        />
+                      )}
+                      {t(`whatsapp.intent.${intent}`)}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </motion.div>
         )}

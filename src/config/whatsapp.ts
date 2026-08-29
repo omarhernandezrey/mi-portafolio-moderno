@@ -9,14 +9,19 @@ import { clientEnv } from '@/config/env';
 export const WHATSAPP_NUMBER: string =
   clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER || '573219052878';
 
+/** URL pública de Cal.com para agendar la consulta corta. Vacía = usar WhatsApp. */
+export const CALCOM_CONSULT_URL: string =
+  clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL || '';
+
 export type Locale = 'es' | 'en';
 
 /** Intenciones del menú rápido del botón flotante. */
-export type WhatsAppIntent = 'quote' | 'service' | 'support' | 'call';
+export type WhatsAppIntent = 'quote' | 'service' | 'recruiter' | 'support' | 'call';
 
 export const WHATSAPP_INTENTS: readonly WhatsAppIntent[] = [
   'quote',
   'service',
+  'recruiter',
   'support',
   'call',
 ] as const;
@@ -84,6 +89,10 @@ const INTENT_PHRASES: Record<WhatsAppIntent, LocalizedText> = {
     es: 'Quiero consultar sobre uno de tus servicios.',
     en: 'I have a question about one of your services.',
   },
+  recruiter: {
+    es: 'Tengo una oferta laboral / vacante que podría interesarte. ¿Podemos hablar?',
+    en: 'I have a job opportunity that might interest you. Can we talk?',
+  },
   support: {
     es: 'Necesito soporte con un proyecto existente.',
     en: 'I need support with an existing project.',
@@ -110,6 +119,32 @@ export function getIntentMessage(
   const context = resolveContext(pathname)[locale];
   const phrase = INTENT_PHRASES[intent][locale];
   return `${context}. ${phrase}`;
+}
+
+export type ContactChannel = 'whatsapp' | 'calcom';
+
+export interface IntentTarget {
+  href: string;
+  channel: ContactChannel;
+}
+
+/**
+ * Destino de cada intención del menú. Todas abren WhatsApp salvo "call", que
+ * abre Cal.com si `NEXT_PUBLIC_CALCOM_CONSULT_URL` está configurada (fallback a
+ * WhatsApp si no).
+ */
+export function getIntentTarget(
+  pathname: string,
+  locale: Locale,
+  intent: WhatsAppIntent,
+): IntentTarget {
+  if (intent === 'call' && CALCOM_CONSULT_URL) {
+    return { href: CALCOM_CONSULT_URL, channel: 'calcom' };
+  }
+  return {
+    href: buildWhatsAppUrl(getIntentMessage(pathname, locale, intent)),
+    channel: 'whatsapp',
+  };
 }
 
 /** Mensaje precargado genérico (CTAs inline, sin menú de intención). */

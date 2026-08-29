@@ -29,6 +29,7 @@
     "intent": {
       "quote": "Cotizar un proyecto",
       "service": "Consultar un servicio",
+      "recruiter": "Tengo una oferta laboral",
       "support": "Soporte",
       "call": "Agendar una llamada"
     }

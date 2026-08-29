@@ -29,6 +29,7 @@
     "intent": {
       "quote": "Get a project quote",
       "service": "Ask about a service",
+      "recruiter": "I have a job offer",
       "support": "Support",
       "call": "Schedule a call"
     }

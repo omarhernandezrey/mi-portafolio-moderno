@@ -5,7 +5,17 @@ Base: `0bc3557`
 
 ## Qué reemplaza al chatbot
 
-Un **botón flotante de WhatsApp** (`src/components/whatsapp/WhatsAppFloatingButton.tsx`) fijo en `bottom-6 right-6 z-[9999]` — el mismo sitio que ocupaba el launcher del chat. Al pulsarlo abre un **menú de 4 intenciones** (Cotizar un proyecto · Consultar un servicio · Soporte · Agendar una llamada). Cada opción arma un mensaje precargado según la ruta actual y abre `https://wa.me/573219052878?text=...`.
+Un **botón flotante de WhatsApp** (`src/components/whatsapp/WhatsAppFloatingButton.tsx`) fijo en `bottom-6 right-6 z-[9999]` — el mismo sitio que ocupaba el launcher del chat. Al pulsarlo abre un **menú de 5 intenciones**:
+
+| Intención | Abre |
+|---|---|
+| Cotizar un proyecto | WhatsApp con mensaje precargado |
+| Consultar un servicio | WhatsApp con mensaje precargado |
+| Tengo una oferta laboral | WhatsApp con mensaje precargado (reemplaza el flujo de reclutador del chatbot) |
+| Soporte | WhatsApp con mensaje precargado |
+| Agendar una llamada | **Cal.com** (`NEXT_PUBLIC_CALCOM_CONSULT_URL`); fallback a WhatsApp si no está configurada |
+
+El mensaje se arma según la ruta actual (`getIntentTarget` en `src/config/whatsapp.ts`). Analítica: `track('whatsapp_click' | 'calcom_click', { intent, page })`.
 
 Además, `WhatsAppCTA` (`src/components/whatsapp/WhatsAppCTA.tsx`) reemplaza al antiguo `<OpenChatButton>` en las 3 páginas de servicios — misma API (`message`, `className`, `children`), ahora un enlace `wa.me`.
 
