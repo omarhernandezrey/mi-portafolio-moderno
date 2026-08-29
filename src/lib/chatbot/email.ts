@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { serverEnv, clientEnv } from '@/config/env';
+import { buildWhatsAppUrl } from '@/config/whatsapp';
 
 export async function sendContactNotification(name: string, email: string, message: string) {
   if (!serverEnv.RESEND_API_KEY) return null;
@@ -43,10 +44,10 @@ export async function sendFollowUpEmail(to: string, name: string, service: strin
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
       <p>Hola ${name || 'allí'},</p>
-      <p>Hace unos días estuvimos conversando a través de mi asistente virtual sobre tu proyecto de <strong>${service || 'desarrollo web'}</strong>.</p>
+      <p>Hace unos días nos escribiste sobre tu proyecto de <strong>${service || 'desarrollo web'}</strong>.</p>
       <p>Me paso por aquí personalmente para saber si tienes alguna duda adicional o si te gustaría que agendemos una llamada corta de 15 minutos para concretar detalles.</p>
       <p>Puedes agendar directamente aquí: <a href="${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}">${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}</a></p>
-      <p>O si prefieres, escríbeme por WhatsApp: <a href="https://wa.me/${clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER}">Chat directo</a></p>
+      <p>O si prefieres, escríbeme por WhatsApp: <a href="${buildWhatsAppUrl('Hola Omar, te escribo por el seguimiento de mi proyecto de ' + (service || 'desarrollo web') + '.')}">Chat directo</a></p>
       <br/>
       <p>¡Quedo atento!</p>
       <p>—<br/><strong>Omar Hernández Rey</strong><br/>Full Stack Developer</p>

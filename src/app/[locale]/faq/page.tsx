@@ -5,6 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 import { HelpCircle, MessageCircle, ChevronRight, Zap, Shield, Wallet, Clock, UserCheck, Globe } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import Footer from '@/components/shared/Footer';
+import { buildWhatsAppUrl } from '@/config/whatsapp';
 
 const BASE_URL = 'https://omarhernandezrey.com';
 
@@ -317,7 +318,11 @@ export default async function FAQPage({ params }: Props) {
                   {isEn ? "Calculate Budget" : "Calcular Presupuesto"}
                 </Link>
                 <a
-                  href="https://wa.me/573219052878"
+                  href={buildWhatsAppUrl(
+                    isEn
+                      ? 'Hi Omar, I have a question that isn\'t in your FAQ.'
+                      : 'Hola Omar, tengo una pregunta que no está en tus FAQ.',
+                  )}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-primary hover:scale-105 text-background px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.3em] transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"

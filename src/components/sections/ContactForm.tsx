@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { track } from "@vercel/analytics";
 import { useNotyf } from "@/components/ui/NotyfProvider";
-import { clientEnv } from "@/config/env";
+import { buildWhatsAppUrl } from "@/config/whatsapp";
 
 const serviceOptions = [
   { value: "", label: "Selecciona un servicio" },
@@ -588,7 +588,7 @@ export default function ContactForm() {
 
                 {/* Alternativa WhatsApp */}
                 <a
-                  href={`https://wa.me/${clientEnv.NEXT_PUBLIC_WHATSAPP_NUMBER}?text=${encodeURIComponent("Hola Omar, vi tu portafolio y me interesa trabajar contigo. ¿Podemos hablar?")}`}
+                  href={buildWhatsAppUrl("Hola Omar, vi tu portafolio y me interesa trabajar contigo. ¿Podemos hablar?")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105"
