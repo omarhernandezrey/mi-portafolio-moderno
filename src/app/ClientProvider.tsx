@@ -13,6 +13,12 @@ const ChatWidget = dynamic(() => import('@/components/shared/ChatWidget'), {
   loading: () => null,
 });
 
+// Botón flotante de WhatsApp (canal de contacto principal)
+const WhatsAppFloatingButton = dynamic(
+  () => import('@/components/whatsapp/WhatsAppFloatingButton'),
+  { ssr: false, loading: () => null },
+);
+
 interface ClientProviderProps {
   children: React.ReactNode;
 }
@@ -70,6 +76,7 @@ export default function ClientProvider({ children }: ClientProviderProps) {
         <NotyfProvider>
           <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
             {children}
+            <WhatsAppFloatingButton />
             <ChatWidget />
           </MotionConfig>
         </NotyfProvider>

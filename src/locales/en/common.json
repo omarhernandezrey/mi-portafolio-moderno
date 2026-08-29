@@ -41,6 +41,17 @@
       "tech": "Technical question"
     }
   },
+  "whatsapp": {
+    "float": "Message me on WhatsApp",
+    "close": "Close menu",
+    "menuTitle": "How can I help you?",
+    "intent": {
+      "quote": "Get a project quote",
+      "service": "Ask about a service",
+      "support": "Support",
+      "call": "Schedule a call"
+    }
+  },
   "hero": {
     "greeting": "Hello I'm",
     "name": "Omar Hernández Rey",
