@@ -205,7 +205,34 @@
       "send": "Send Message",
       "sending": "Sending...",
       "success": "Message sent successfully!",
-      "error": "Error sending message. Please try again."
+      "error": "Error sending message. Please try again.",
+      "servicePlaceholder": "Select a service",
+      "serviceOptions": {
+        "landingPage": "Landing Page",
+        "fullWebsite": "Full Website",
+        "ecommerce": "Online Store",
+        "webApp": "Web Application",
+        "seo": "Technical SEO",
+        "automation": "Automation",
+        "other": "Other"
+      },
+      "budgetPlaceholder": "What's your budget?",
+      "budgetOptions": {
+        "tier1": "Under $1,200 USD",
+        "tier2": "$1,200 - $8,000 USD",
+        "tier3": "$8,000 - $25,000 USD",
+        "tier4": "Over $25,000 USD"
+      },
+      "timelinePlaceholder": "When do you need it?",
+      "timelineOptions": {
+        "urgent": "This week",
+        "month": "This month",
+        "quarter": "In 2-3 months",
+        "flexible": "No rush"
+      },
+      "trust": "I respond within 24 hours. No commitment.",
+      "whatsappDirect": "WhatsApp Direct",
+      "whatsappMessage": "Hi Omar, I saw your portfolio and I'm interested in working with you. Can we talk?"
     },
     "info": {
       "email": "Email",

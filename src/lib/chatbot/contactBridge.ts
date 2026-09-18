@@ -11,6 +11,10 @@ export async function registerContactFormLead(data: {
   email: string;
   message: string;
   source?: string;
+  service?: string;
+  /** Prefijado "cop:"/"usd:" — ver ContactForm.tsx y pricing-sources.ts. */
+  budget?: string;
+  timeline?: string;
 }) {
   try {
     // 1. Crear una conversación ficticia para el registro
@@ -33,6 +37,9 @@ export async function registerContactFormLead(data: {
       type: 'other',
       name: data.name,
       email: data.email,
+      service_requested: data.service || null,
+      budget: data.budget || null,
+      timeline: data.timeline || null,
       notes: data.message
     };
 
@@ -50,7 +57,7 @@ export async function registerContactFormLead(data: {
     const telegramMsg = `
 📩 *Nuevo mensaje desde Formulario*
 Nombre: ${data.name}
-Email: ${data.email}
+Email: ${data.email}${data.service ? `\nServicio: ${data.service}` : ''}${data.budget ? `\nPresupuesto: ${data.budget}` : ''}${data.timeline ? `\nPlazo: ${data.timeline}` : ''}
 ---
 Mensaje: "${data.message}"
     `.trim();

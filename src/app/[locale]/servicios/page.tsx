@@ -59,6 +59,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 }
 
+/**
+ * Extrae el precio mínimo de un priceRange para el JSON-LD Offer.price.
+ * Los rangos en COP van abreviados ("$1.8M", "$250k") — un simple
+ * "quita todo lo que no sea dígito" los rompe (1.8M-3.5M → "1835").
+ * Soporta ambos formatos: abreviado (k/M) y plano con comas ("$1,200").
+ */
+function parseLeadPrice(range: string | undefined): number | undefined {
+  if (!range) return undefined;
+  const match = range.match(/\$?([\d.,]+)\s*(k|M)?/i);
+  if (!match) return undefined;
+  const raw = parseFloat(match[1].replace(/,/g, ''));
+  if (!Number.isFinite(raw)) return undefined;
+  const suffix = match[2]?.toLowerCase();
+  const multiplier = suffix === 'k' ? 1_000 : suffix === 'm' ? 1_000_000 : 1;
+  return Math.round(raw * multiplier) || undefined;
+}
+
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
   'desarrollo-web': <Code2 size={28} />,
   'automatizacion': <Zap size={28} />,
@@ -140,10 +157,8 @@ export default async function ServiciosPage({ params }: Props) {
       'name': isEn ? 'Web Development Services' : 'Servicios de Desarrollo Web',
       'itemListElement': serviciosProgramaticos.map(s => ({
         '@type': 'Offer',
-        'priceCurrency': 'USD',
-        'price': s.priceRangeUsd
-          ? parseInt(s.priceRangeUsd.replace(/[^0-9]/g, '').slice(0, 4)) || undefined
-          : undefined,
+        'priceCurrency': isEn ? 'USD' : 'COP',
+        'price': parseLeadPrice(isEn ? s.priceRangeUsd : s.priceRange),
         'itemOffered': {
           '@type': 'Service',
           'name': svcName(s),
