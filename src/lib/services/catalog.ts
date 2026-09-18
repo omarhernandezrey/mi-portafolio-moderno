@@ -18,7 +18,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Una página de aterrizaje optimizada para conversión, ideal para productos o servicios específicos.',
       en: 'A conversion-optimized landing page, ideal for specific products or services.'
     },
-    priceRange: { min: 1500, max: 6000, currency: 'USD' },
+    priceRange: { min: 300, max: 1200, currency: 'USD' },
     deliveryDays: { min: 3, max: 7 },
     includes: {
       es: ['Diseño UI responsivo', 'Optimización de carga', 'Integración de formulario', 'SEO básico'],
@@ -37,7 +37,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Presencia profesional para tu empresa con múltiples secciones informativas.',
       en: 'Professional presence for your company with multiple informative sections.'
     },
-    priceRange: { min: 6000, max: 25000, currency: 'USD' },
+    priceRange: { min: 800, max: 2500, currency: 'USD' },
     deliveryDays: { min: 14, max: 30 },
     includes: {
       es: ['Hasta 10 páginas', 'Gestión de contenidos', 'Blog (opcional)', 'Diseño personalizado'],
@@ -56,7 +56,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Tienda en línea completa para vender tus productos físicamente o digitales.',
       en: 'Complete online store to sell your physical or digital products.'
     },
-    priceRange: { min: 4000, max: 15000, currency: 'USD' },
+    priceRange: { min: 1500, max: 4000, currency: 'USD' },
     deliveryDays: { min: 30, max: 60 },
     includes: {
       es: ['Pasarela de pagos (Stripe/PayPal)', 'Gestión de inventario', 'Panel de administración', 'Carrito de compras'],
@@ -75,7 +75,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Desarrollo de un Producto Mínimo Viable para validar tu idea de negocio.',
       en: 'Development of a Minimum Viable Product to validate your business idea.'
     },
-    priceRange: { min: 30000, max: 120000, currency: 'USD' },
+    priceRange: { min: 3000, max: 10000, currency: 'USD' },
     deliveryDays: { min: 30, max: 90 },
     includes: {
       es: ['Autenticación de usuarios', 'Base de datos escalable', 'Funcionalidades core personalizadas', 'Infraestructura cloud'],
@@ -112,7 +112,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Optimización profunda para que tu sitio aparezca en los primeros resultados de Google.',
       en: 'Deep optimization for your site to rank on the first page of Google.'
     },
-    priceRange: { min: 1000, max: 3000, currency: 'USD' },
+    priceRange: { min: 400, max: 1200, currency: 'USD' },
     deliveryDays: { min: 7, max: 21 },
     includes: {
       es: ['Auditoría completa', 'Optimización de Core Web Vitals', 'Indexación avanzada', 'Sitemap y Robots.txt'],
@@ -148,7 +148,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Tranquilidad total con soporte continuo y actualizaciones de seguridad.',
       en: 'Total peace of mind with ongoing support and security updates.'
     },
-    priceRange: { min: 500, max: 2000, currency: 'USD' },
+    priceRange: { min: 80, max: 400, currency: 'USD' },
     deliveryDays: { min: 30, max: 30 },
     includes: {
       es: ['Backups diarios', 'Actualizaciones de seguridad', 'Soporte prioritario', 'Pequeños cambios mensuales'],
@@ -166,7 +166,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Paquete optimizado para resultados rápidos con diseño y copy persuasivo.',
       en: 'Package optimized for fast results with persuasive design and copy.'
     },
-    priceRange: { min: 2500, max: 6000, currency: 'USD' },
+    priceRange: { min: 800, max: 2000, currency: 'USD' },
     deliveryDays: { min: 7, max: 7 },
     includes: {
       es: ['Diseño + Copy enfocado a venta', 'Setup de analíticas', '1 mes de mantenimiento incluido', 'Optimización de velocidad'],
@@ -184,7 +184,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Todo lo necesario para validar tu idea de negocio en el mercado real.',
       en: 'Everything you need to validate your business idea in the real market.'
     },
-    priceRange: { min: 30000, max: 120000, currency: 'USD' },
+    priceRange: { min: 4000, max: 12000, currency: 'USD' },
     deliveryDays: { min: 30, max: 45 },
     includes: {
       es: ['Autenticación + Base de Datos', 'CRUD completo de funcionalidades core', 'Dashboard administrativo', 'Despliegue con CI/CD automático'],

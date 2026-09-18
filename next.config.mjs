@@ -60,6 +60,38 @@ const nextConfig = {
         destination: '/en/blog/why-hire-colombian-developer-2026',
         permanent: true,
       },
+      {
+        source: '/blog/como-elegir-dev-web-2026',
+        destination: '/blog/cuanto-cobra-desarrollador-web-freelance-colombia',
+        permanent: true,
+      },
+      {
+        source: '/en/privacy',
+        destination: '/en/privacidad',
+        permanent: true,
+      },
+      // El servicio chatbot-ia se retiró del catálogo, pero sus páginas por
+      // ciudad quedaron indexadas y devolvían 404.
+      {
+        source: '/servicios/chatbot-ia',
+        destination: '/servicios/automatizacion',
+        permanent: true,
+      },
+      {
+        source: '/servicios/chatbot-ia/:ciudad',
+        destination: '/servicios/automatizacion',
+        permanent: true,
+      },
+      {
+        source: '/en/servicios/chatbot-ia',
+        destination: '/en/servicios/automatizacion',
+        permanent: true,
+      },
+      {
+        source: '/en/servicios/chatbot-ia/:ciudad',
+        destination: '/en/servicios/automatizacion',
+        permanent: true,
+      },
     ];
   },
 
