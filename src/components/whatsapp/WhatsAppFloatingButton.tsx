@@ -158,6 +158,7 @@ export default function WhatsAppFloatingButton() {
       <button
         ref={fabRef}
         type="button"
+        data-testid="whatsapp-toggle"
         onClick={() => setOpen((v) => !v)}
         aria-label={t('whatsapp.float')}
         aria-haspopup="menu"
