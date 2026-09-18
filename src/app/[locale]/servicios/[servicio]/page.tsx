@@ -7,6 +7,7 @@ import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 import { ArrowRight, CheckCircle, Clock, DollarSign, HelpCircle, MapPin } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
+import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
 import { buildMetadata, withBrand, SITE_URL as BASE_URL } from '@/lib/seo';
 
@@ -106,7 +107,7 @@ export default async function ServicioPilarPage({ params }: Props) {
     areaServed: ['CO', 'US', 'MX', 'AR', 'CL', 'PE'],
     offers: {
       '@type': 'Offer',
-      priceCurrency: 'USD',
+      priceCurrency: isEn ? 'USD' : 'COP',
       priceRange,
     },
     inLanguage: isEn ? 'en' : 'es',
@@ -338,6 +339,7 @@ export default async function ServicioPilarPage({ params }: Props) {
         </div>
       </section>
 
+      <PricingReviewedNote isEn={isEn} />
       <Footer />
     </div>
   );

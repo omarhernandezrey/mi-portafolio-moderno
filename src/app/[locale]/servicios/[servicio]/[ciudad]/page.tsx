@@ -7,6 +7,7 @@ import { ciudades, CIUDADES_INDEXABLES, CIUDAD_CONTEXTO } from '@/data/ciudades'
 import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 import { ArrowRight, Shield, Zap, Globe, Target, UserCheck, CheckCircle, Clock, DollarSign, HelpCircle } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
+import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
 import { buildMetadata, withBrand } from '@/lib/seo';
 
@@ -241,8 +242,8 @@ export default async function ServicioCiudadPage({ params }: Props) {
     "serviceType": serviceName,
     "offers": {
       "@type": "Offer",
-      "priceCurrency": "USD",
-      "priceRange": isEn && servicio.priceRangeUsd ? servicio.priceRangeUsd : "300-5000",
+      "priceCurrency": isEn ? "USD" : "COP",
+      "priceRange": isEn && servicio.priceRangeUsd ? servicio.priceRangeUsd : servicio.priceRange,
     },
     "inLanguage": isEn ? "en" : "es",
   };
@@ -513,6 +514,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
         <TrustItem icon={<Target size={14} />} text="Data Driven Strategy" />
       </div>
 
+      <PricingReviewedNote isEn={isEn} />
       <Footer />
     </div>
   );

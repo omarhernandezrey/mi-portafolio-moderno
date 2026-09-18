@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight, Code2, Zap, ShoppingCart, LineChart, Target, Smartphone, Search, Link2, Wrench, MapPin, CheckCircle } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
+import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
@@ -21,10 +22,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     isEn
       ? {
           title: 'Web Development & Software Services | Colombia',
-          description: 'Web development, e-commerce, technical SEO, and automation with React and Next.js. Projects from $1,500 USD for Colombia, the US, and LATAM.',
+          description: 'Web development, e-commerce, technical SEO, and automation with React and Next.js. US projects from $1,200 USD.',
           path: '/servicios',
           locale: 'en',
-          ogSubtitle: 'Colombia & Remote — From $1,500 USD',
+          ogSubtitle: 'Colombia & Remote — From $1,200 USD',
           keywords: [
             'hire web developer colombia',
             'freelance developer colombia',
@@ -37,10 +38,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
       : {
           title: 'Servicios de Desarrollo Web y Software | Colombia',
-          description: 'Desarrollo web, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $1,500 USD para Colombia, USA y LATAM.',
+          description: 'Desarrollo web, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $1.8M COP.',
           path: '/servicios',
           locale: 'es',
-          ogSubtitle: 'Colombia & Remoto — Desde $1,500 USD',
+          ogSubtitle: 'Colombia & Remoto — Desde $1.8M COP',
           keywords: [
             'contratar desarrollador web colombia',
             'programador freelance colombia',
@@ -212,13 +213,13 @@ export default async function ServiciosPage({ params }: Props) {
               ? [
                   { value: '+30', label: 'Projects delivered' },
                   { value: '5+', label: 'Years of experience' },
-                  { value: '$1,500 USD', label: 'Starting price' },
+                  { value: '$1,200 USD', label: 'Starting price' },
                   { value: '24h', label: 'Response time' },
                 ]
               : [
                   { value: '+30', label: 'Proyectos entregados' },
                   { value: '5+', label: 'Años de experiencia' },
-                  { value: '$1,500 USD', label: 'Desde por proyecto' },
+                  { value: '$1.8M COP', label: 'Desde por proyecto' },
                   { value: '24h', label: 'Tiempo de respuesta' },
                 ]
             ).map(stat => (
@@ -275,7 +276,7 @@ export default async function ServiciosPage({ params }: Props) {
                 </div>
 
                 <div className="pt-5 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-xs font-black text-primary/80 italic">{servicio.priceRange.split('(')[0].trim()}</span>
+                  <span className="text-xs font-black text-primary/80 italic">{(isEn ? servicio.priceRangeUsd ?? servicio.priceRange : servicio.priceRange).split('(')[0].trim()}</span>
                   <Link
                     href={`/servicios/${servicio.id}`}
                     className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-colors"
@@ -399,6 +400,7 @@ export default async function ServiciosPage({ params }: Props) {
         </div>
       </section>
 
+      <PricingReviewedNote isEn={isEn} />
       <Footer />
     </div>
   );

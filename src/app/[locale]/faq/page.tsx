@@ -58,7 +58,7 @@ const CATEGORIES_ES = [
     faqs: [
       {
         q: '¿Cuánto cuesta una landing page o sitio web en Colombia?',
-        a: 'Las landing pages profesionales van desde $1,500 USD (COP 1.2M–4M). Sitios corporativos desde $6,000 USD (COP 4M–14M). E-commerce desde $4,000 USD (COP 3.5M–12M). El precio final depende de funcionalidades: integraciones de pago, formularios avanzados, panel de administración, etc. Usa mi calculadora para obtener un estimado en 2 minutos.'
+        a: 'Las landing pages profesionales van desde $1.8M COP. Sitios corporativos desde $3.5M COP. E-commerce desde $6M COP. El precio final depende de funcionalidades: integraciones de pago, formularios avanzados, panel de administración, etc. Usa mi calculadora para obtener un estimado en 2 minutos.'
       },
       {
         q: '¿Qué métodos de pago aceptas para proyectos en Colombia y USA?',
@@ -66,7 +66,7 @@ const CATEGORIES_ES = [
       },
       {
         q: '¿Ofreces mantenimiento web después de entregar el proyecto?',
-        a: 'Sí. Tengo planes de mantenimiento mensual desde $500 USD. Incluyen actualizaciones de seguridad, backups semanales, monitoreo de uptime 24/7 y soporte técnico prioritario por email con respuesta en 24h.'
+        a: 'Sí. Tengo planes de mantenimiento mensual desde $250k COP. Incluyen actualizaciones de seguridad, backups semanales, monitoreo de uptime 24/7 y soporte técnico prioritario por email con respuesta en 24h.'
       },
       {
         q: '¿Cuánto cobra un desarrollador web freelance en Colombia vs una agencia?',
@@ -133,7 +133,7 @@ const CATEGORIES_EN = [
     faqs: [
       {
         q: 'How much does a landing page or website cost in Colombia?',
-        a: 'Professional landing pages start at $1,500 USD. Corporate websites start at $6,000 USD. E-commerce stores start at $4,000 USD. The final price depends on features: payment integrations, advanced forms, admin panels, etc. Use my calculator to get an estimate in 2 minutes.'
+        a: 'Professional landing pages start at $1,200 USD. Corporate websites start at $3,000 USD. E-commerce stores start at $8,000 USD. The final price depends on features: payment integrations, advanced forms, admin panels, etc. Use my calculator to get an estimate in 2 minutes.'
       },
       {
         q: 'What payment methods do you accept for projects in the US and abroad?',
@@ -141,7 +141,7 @@ const CATEGORIES_EN = [
       },
       {
         q: 'Do you offer web maintenance after delivering the project?',
-        a: 'Yes. I offer monthly maintenance plans starting at $500 USD. They include security updates, weekly backups, 24/7 uptime monitoring, and priority technical support by email with a 24h response time.'
+        a: 'Yes. I offer monthly maintenance plans starting at $300 USD. They include security updates, weekly backups, 24/7 uptime monitoring, and priority technical support by email with a 24h response time.'
       },
       {
         q: 'How much does a freelance web developer in Colombia charge vs. an agency?',

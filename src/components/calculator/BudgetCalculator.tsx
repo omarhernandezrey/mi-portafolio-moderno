@@ -2,14 +2,24 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CALCULATOR_STEPS, calculateBudget } from '@/lib/calculator/pricing';
+import { CALCULATOR_STEPS, calculateBudget, type Currency, type CalculatorOption } from '@/lib/calculator/pricing';
 import { useTranslation } from '@/hooks/useTranslation';
 import { ArrowRight, ArrowLeft, Check, Download, Info, Sparkles, Target, Wallet } from 'lucide-react';
 import { track } from '@vercel/analytics';
+import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 
 export default function BudgetCalculator() {
   const { language } = useTranslation();
   const lang = (language || 'es') as 'es' | 'en';
+  // /calculadora cotiza en COP (mercado colombiano); /en/calculadora en USD
+  // (mercado estadounidense). Nunca se mezclan ni una se deriva de la otra
+  // — ver src/data/pricing-sources.ts.
+  const currency: Currency = lang === 'es' ? 'cop' : 'usd';
+  const currencyLabel = currency === 'cop' ? 'COP' : 'USD';
+  const numberFormatter = useMemo(
+    () => new Intl.NumberFormat(currency === 'cop' ? 'es-CO' : 'en-US'),
+    [currency]
+  );
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<Record<string, string | string[]>>({});
@@ -17,13 +27,34 @@ export default function BudgetCalculator() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [visitorInfo, setVisitorInfo] = useState({ name: '', email: '', company: '' });
 
+  // Etiqueta de la esquina de cada tarjeta: precio base en la moneda
+  // vigente, o el porcentaje/multiplicador (adimensional, no mezcla monedas).
+  const getOptionBadge = (option: CalculatorOption): string | null => {
+    if (option.impactType === 'base') {
+      const amount = currency === 'cop' ? option.priceImpactCop : option.priceImpactUsd;
+      return amount ? `$${numberFormatter.format(amount)}` : null;
+    }
+    if (option.impactType === 'addPercent') {
+      return option.priceImpact ? `+${Math.round(option.priceImpact * 100)}%` : null;
+    }
+    if (option.impactType === 'multiplier') {
+      return option.priceImpact && option.priceImpact > 1
+        ? `+${Math.round((option.priceImpact - 1) * 100)}%`
+        : null;
+    }
+    return null;
+  };
+
   const currentStepData = CALCULATOR_STEPS[currentStep];
   const isLastStep = currentStep === CALCULATOR_STEPS.length - 1;
   const showLeadForm = currentStep === CALCULATOR_STEPS.length;
-  
+
   const progress = (currentStep / CALCULATOR_STEPS.length) * 100;
 
-  const currentBudget = useMemo(() => calculateBudget(selections), [selections]);
+  const currentBudget = useMemo(
+    () => calculateBudget(selections, currency),
+    [selections, currency]
+  );
 
   const handleSelect = (optionId: string) => {
     const stepId = currentStepData.id;
@@ -61,6 +92,7 @@ export default function BudgetCalculator() {
           selections,
           visitorInfo,
           budget: currentBudget,
+          currency,
           language: lang
         })
       });
@@ -102,8 +134,8 @@ export default function BudgetCalculator() {
           </span>
           <div className="text-4xl sm:text-5xl font-black text-white-custom tracking-tighter mt-1 flex items-baseline justify-end gap-2">
             <span className="text-xl text-primary opacity-40">$</span>
-            {currentBudget} 
-            <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">USD</span>
+            {numberFormatter.format(currentBudget)}
+            <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">{currencyLabel}</span>
           </div>
         </div>
       </div>
@@ -175,9 +207,9 @@ export default function BudgetCalculator() {
                         )}
                       </div>
 
-                      {option.priceImpact > 0 && (
+                      {getOptionBadge(option) && (
                         <div className="absolute top-8 right-8 font-black text-[10px] uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">
-                          {option.impactType === 'multiplier' ? `+${(option.priceImpact - 1) * 100}%` : `+$${option.priceImpact}`}
+                          {getOptionBadge(option)}
                         </div>
                       )}
                     </button>
@@ -312,11 +344,13 @@ export default function BudgetCalculator() {
       <div className="bg-white/5 border border-white/5 p-8 rounded-[32px] flex items-start gap-4 max-w-2xl mx-auto italic">
         <Info className="text-primary shrink-0 mt-1" size={20} />
         <p className="text-[11px] text-text-muted font-medium leading-relaxed opacity-60">
-          {lang === 'es' 
+          {lang === 'es'
             ? 'Esta estimación se deriva de parámetros de mercado estándar para arquitectura de software moderna (Next.js 15+, Supabase, AI Agents). El valor final se consolidará tras una sesión de descubrimiento técnico directa.'
             : 'This estimate is derived from standard market parameters for modern software architecture (Next.js 15+, Supabase, AI Agents). The final value will be consolidated after a direct technical discovery session.'}
         </p>
       </div>
+
+      <PricingReviewedNote isEn={lang === 'en'} />
     </div>
   );
 }
