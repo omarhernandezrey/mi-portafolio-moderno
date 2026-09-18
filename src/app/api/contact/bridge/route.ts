@@ -7,6 +7,11 @@ const contactSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres').max(100),
   email: z.string().email('Correo electrónico inválido').max(254),
   message: z.string().min(1, 'El mensaje no puede estar vacío').max(5000, 'El mensaje es demasiado largo'),
+  // Opcionales: selects del formulario. budget viene prefijado "cop:"/"usd:"
+  // (ver ContactForm.tsx) para que la moneda del lead nunca quede ambigua.
+  service: z.string().max(100).optional(),
+  budget: z.string().max(100).optional(),
+  timeline: z.string().max(100).optional(),
 });
 
 export async function POST(req: NextRequest) {

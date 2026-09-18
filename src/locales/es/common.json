@@ -205,7 +205,34 @@
       "send": "Enviar Mensaje",
       "sending": "Enviando...",
       "success": "¡Mensaje enviado exitosamente!",
-      "error": "Error al enviar el mensaje. Inténtalo de nuevo."
+      "error": "Error al enviar el mensaje. Inténtalo de nuevo.",
+      "servicePlaceholder": "Selecciona un servicio",
+      "serviceOptions": {
+        "landingPage": "Landing Page",
+        "fullWebsite": "Sitio Web Completo",
+        "ecommerce": "Tienda Online",
+        "webApp": "Aplicación Web",
+        "seo": "SEO Técnico",
+        "automation": "Automatización",
+        "other": "Otro"
+      },
+      "budgetPlaceholder": "¿Cuál es tu presupuesto?",
+      "budgetOptions": {
+        "tier1": "Menos de $1.8M COP",
+        "tier2": "$1.8M - $6M COP",
+        "tier3": "$6M - $18M COP",
+        "tier4": "Más de $18M COP"
+      },
+      "timelinePlaceholder": "¿Cuándo lo necesitas?",
+      "timelineOptions": {
+        "urgent": "Esta semana",
+        "month": "Este mes",
+        "quarter": "En 2-3 meses",
+        "flexible": "Sin prisa"
+      },
+      "trust": "Respondo en menos de 24 horas. Sin compromiso.",
+      "whatsappDirect": "WhatsApp Directo",
+      "whatsappMessage": "Hola Omar, vi tu portafolio y me interesa trabajar contigo. ¿Podemos hablar?"
     },
     "info": {
       "email": "Email",

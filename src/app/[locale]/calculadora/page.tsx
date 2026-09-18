@@ -74,7 +74,7 @@ export default async function CalculadoraPage({ params }: Props) {
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "isAccessibleForFree": true,
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": isEn ? "USD" : "COP" },
     "author": { "@id": `${BASE_URL}/#person` },
     "provider": { "@id": `${BASE_URL}/#organization` },
     "featureList": isEn
