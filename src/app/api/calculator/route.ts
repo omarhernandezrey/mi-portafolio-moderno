@@ -14,11 +14,16 @@ const calcSchema = z.object({
     email: z.string().email().max(254),
     company: z.string().max(100).optional().default(''),
   }),
+  // Tope amplio y agnóstico de moneda (solo anti-abuso): un presupuesto en
+  // COP es ~1000x el mismo presupuesto en USD, así que el límite tiene que
+  // cubrir ambas escalas sin ser específico de ninguna.
   budget: z.union([z.number(), z.string()]).transform(v => {
     const n = typeof v === 'number' ? v : parseFloat(String(v).replace(/[^\d.]/g, ''));
-    if (!Number.isFinite(n) || n < 0 || n > 10_000_000) throw new Error('invalid budget');
+    if (!Number.isFinite(n) || n < 0 || n > 1_000_000_000) throw new Error('invalid budget');
     return Math.round(n);
   }),
+  // Moneda del presupuesto: 'cop' en /calculadora, 'usd' en /en/calculadora.
+  currency: z.enum(['cop', 'usd']).default('usd'),
   language: z.enum(['es', 'en']).default('es'),
 });
 
@@ -43,7 +48,9 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
     }
-    const { selections, visitorInfo, budget, language } = parsed.data;
+    const { selections, visitorInfo, budget, currency, language } = parsed.data;
+    const currencyLabel = currency.toUpperCase();
+    const budgetLabel = `$${budget.toLocaleString(currency === 'cop' ? 'es-CO' : 'en-US')} ${currencyLabel}`;
 
     // 1. Guardar lead en Supabase
     const { data: conv } = await supabaseServer
@@ -54,7 +61,7 @@ export async function POST(req: NextRequest) {
         visitor_email: visitorInfo.email,
         language,
         intent: 'budget_calculator',
-        summary: `Presupuesto calculado: $${budget}. Empresa: ${visitorInfo.company}`
+        summary: `Presupuesto calculado: ${budgetLabel}. Empresa: ${visitorInfo.company}`
       })
       .select()
       .single();
@@ -65,7 +72,7 @@ export async function POST(req: NextRequest) {
         name: visitorInfo.name,
         email: visitorInfo.email,
         company: visitorInfo.company,
-        budget: `$${budget} USD`,
+        budget: budgetLabel,
         service_requested: 'Calculadora de Presupuesto',
         notes: `Selecciones: ${JSON.stringify(selections).slice(0, 1000)}`,
         status: 'new'
@@ -78,7 +85,7 @@ export async function POST(req: NextRequest) {
           name: visitorInfo.name,
           email: visitorInfo.email,
           company: visitorInfo.company,
-          budget: `$${budget} USD`,
+          budget: budgetLabel,
           service_requested: 'Calculadora de Presupuesto',
           notes: `Selecciones: ${JSON.stringify(selections).slice(0, 1000)}`,
           timeline: null,
@@ -117,7 +124,7 @@ export async function POST(req: NextRequest) {
     });
 
     page.drawText('TOTAL ESTIMADO:', { x: 50, y: yOffset - 40, size: 16, font });
-    page.drawText(`$${budget} USD`, { x: 200, y: yOffset - 40, size: 24, font, color: rgb(0, 0, 0.8) });
+    page.drawText(pdfSafe(budgetLabel), { x: 200, y: yOffset - 40, size: 24, font, color: rgb(0, 0, 0.8) });
 
     page.drawText('Este presupuesto es un estimado inicial. Hablemos para concretar detalles.', {
       x: 50,
@@ -158,7 +165,7 @@ export async function POST(req: NextRequest) {
 Nombre: ${visitorInfo.name}
 Email: ${visitorInfo.email}
 Empresa: ${visitorInfo.company}
-Presupuesto: *$${budget} USD*
+Presupuesto: *${budgetLabel}*
 Email enviado: ${emailSent ? '✅' : '❌ (Revisar Resend API Key)'}
     `.trim());
 
