@@ -125,7 +125,7 @@ jobs:
     name: Tests E2E (Cypress)
     runs-on: ubuntu-latest
     needs: build
-    # Requiere secrets reales de Supabase/Groq para funcionar
+    # Requiere secrets reales de Supabase para funcionar
     # Si no estan configurados, el job se salta (exit 0)
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
@@ -133,8 +133,8 @@ jobs:
       - name: Verificar secrets requeridos
         id: check_secrets
         run: |
-          if [ -z "${{ secrets.SUPABASE_URL }}" ] || [ -z "${{ secrets.GROQ_API_KEY }}" ]; then
-            echo "::warning::Faltan SUPABASE_URL o GROQ_API_KEY en GitHub Secrets."
+          if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
+            echo "::warning::Falta SUPABASE_URL en GitHub Secrets."
             echo "::warning::Los tests E2E requieren backend real. Saltando."
             echo "skip=true" >> $GITHUB_OUTPUT
           else
@@ -185,7 +185,7 @@ jobs:
 
       - name: Ejecutar Cypress
         if: steps.check_secrets.outputs.skip != 'true'
-        run: npx cypress run --spec "cypress/e2e/chatbot.cy.ts"
+        run: npx cypress run --spec "cypress/e2e/smoke.cy.ts"
 
       - name: Subir screenshots si fallan tests
         uses: actions/upload-artifact@v7
