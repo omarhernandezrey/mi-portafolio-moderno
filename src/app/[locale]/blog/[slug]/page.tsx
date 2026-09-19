@@ -1,5 +1,5 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { getPostBySlug, getAllPosts, getRelatedPosts, getFaqSection } from '@/lib/blog';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -95,7 +95,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params;
   const post = await getPostBySlug(slug);
-  if (!post || (post.lang === 'en') !== (locale === 'en')) return { title: 'Post no encontrado' };
+  if (!post) return { title: 'Post no encontrado' };
+  // El slug existe pero bajo el prefijo de idioma equivocado (cruce de la
+  // migración a i18n): la página redirige 301, así que el metadata de esta
+  // respuesta no se sirve — no hace falta calcularlo por completo.
+  if ((post.lang === 'en') !== (locale === 'en')) return { title: post.seoTitle ?? post.title };
 
   const isEnglish = post.lang === 'en';
   const path = isEnglish ? `${BASE_URL}/en/blog/${slug}` : `${BASE_URL}/blog/${slug}`;
@@ -141,7 +145,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
   const { locale, slug } = await params;
   const [post, allPosts] = await Promise.all([getPostBySlug(slug), getAllPosts()]);
 
-  if (!post || (post.lang === 'en') !== (locale === 'en')) notFound();
+  if (!post) notFound();
+
+  // 301: el slug existe pero bajo el prefijo de idioma equivocado (cruce de
+  // la migración a i18n, ej. /en/blog/<slug-es> o /blog/<slug-en>) —
+  // redirige a la ruta canónica en vez de dar 404.
+  if ((post.lang === 'en') !== (locale === 'en')) {
+    permanentRedirect(post.lang === 'en' ? `/en/blog/${slug}` : `/blog/${slug}`);
+  }
 
   const isEnglish = post.lang === 'en';
   const path = isEnglish ? `${BASE_URL}/en/blog/${slug}` : `${BASE_URL}/blog/${slug}`;
