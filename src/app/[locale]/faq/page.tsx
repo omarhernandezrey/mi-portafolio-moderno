@@ -6,6 +6,8 @@ import { HelpCircle, MessageCircle, ChevronRight, Zap, Shield, Wallet, Clock, Us
 import { Link } from '@/i18n/navigation';
 import Footer from '@/components/shared/Footer';
 import { buildWhatsAppUrl } from '@/config/whatsapp';
+import HeroImage from '@/components/shared/HeroImage';
+import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 const BASE_URL = 'https://omarhernandezrey.com';
 
@@ -259,6 +261,15 @@ export default async function FAQPage({ params }: Props) {
                 ? "Direct answers on pricing, timelines, technologies, and the work process. Freelance web developer available for Colombia and the US."
                 : "Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web freelance disponible para Colombia y USA."}
             </p>
+
+            <div className="relative w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl mt-6">
+              <HeroImage
+                src={unsplashUrl(pageHeroImages.faq.photoId)}
+                alt={isEn ? pageHeroImages.faq.alt.en : pageHeroImages.faq.alt.es}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
+                priority
+              />
+            </div>
           </div>
 
           {/* FAQ Grid */}

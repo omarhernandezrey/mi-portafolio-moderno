@@ -6,6 +6,8 @@ import { ArrowRight, GraduationCap, Briefcase, Code2, CheckCircle, Sparkles, Map
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { OMAR_PROFILE } from '@/data/omarProfile';
+import HeroImage from '@/components/shared/HeroImage';
+import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -387,6 +389,16 @@ export default async function SobreMiPage({ params }: Props) {
           </div>
         </header>
 
+        {/* ===== HERO IMAGE ===== */}
+        <div className="relative w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
+          <HeroImage
+            src={unsplashUrl(pageHeroImages.sobreMi.photoId)}
+            alt={isEn ? pageHeroImages.sobreMi.alt.en : pageHeroImages.sobreMi.alt.es}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
+            priority
+          />
+        </div>
+
         {/* ===== PROFESSIONAL EXPERIENCE ===== */}
         <section id="experiencia" className="space-y-12">
           <div className="space-y-4">
@@ -721,7 +733,7 @@ export default async function SobreMiPage({ params }: Props) {
               <span className="text-white/20">|</span>
               <span>{OMAR_PROFILE.addressLocality}, {OMAR_PROFILE.addressCountry}</span>
             </div>
-            <div className="flex justify-center gap-4 pt-4">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 pt-4">
               <Link href="/blog" className="text-sm text-text-muted/60 hover:text-primary transition-colors">
                 {isEn ? 'Technical Blog' : 'Blog Técnico'}
               </Link>

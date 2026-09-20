@@ -9,6 +9,8 @@ import { ArrowRight, CheckCircle, Clock, DollarSign, HelpCircle, MapPin } from '
 import Footer from '@/components/shared/Footer';
 import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
+import HeroImage from '@/components/shared/HeroImage';
+import { servicioHeroImages, unsplashUrl } from '@/data/heroImages';
 import { buildMetadata, withBrand, SITE_URL as BASE_URL } from '@/lib/seo';
 
 interface Props {
@@ -88,6 +90,8 @@ export default async function ServicioPilarPage({ params }: Props) {
   const priceRange = isEn ? servicio.priceRangeUsd ?? servicio.priceRange : servicio.priceRange;
   const deliveryTime = isEn ? servicio.deliveryTimeEn ?? servicio.deliveryTime : servicio.deliveryTime;
   const serviceName = isEn ? servicio.nameEn ?? servicio.name : servicio.name;
+
+  const servicioHero = servicioHeroImages[servicio.id];
 
   const ciudadesConPagina = ciudades.filter((c) =>
     (CIUDADES_INDEXABLES as readonly string[]).includes(c.id)
@@ -175,6 +179,17 @@ export default async function ServicioPilarPage({ params }: Props) {
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </WhatsAppCTA>
           </div>
+
+          {servicioHero && (
+            <div className="relative w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
+              <HeroImage
+                src={unsplashUrl(servicioHero.photoId)}
+                alt={isEn ? servicioHero.alt.en : servicioHero.alt.es}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
+                priority
+              />
+            </div>
+          )}
         </div>
       </section>
 

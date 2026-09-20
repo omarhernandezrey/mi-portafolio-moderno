@@ -7,6 +7,8 @@ import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import Footer from '@/components/shared/Footer';
 import { track } from '@vercel/analytics';
+import HeroImage from '@/components/shared/HeroImage';
+import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 const magnetsEs = [
   {
@@ -128,6 +130,15 @@ export default function RecursosContent() {
               ? 'Executive tools and technical guides designed to optimize decision-making in the modern digital ecosystem.'
               : 'Herramientas ejecutivas y guías técnicas diseñadas para optimizar la toma de decisiones en el ecosistema digital moderno.'}
           </motion.p>
+
+          <div className="relative w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl mt-4">
+            <HeroImage
+              src={unsplashUrl(pageHeroImages.recursos.photoId)}
+              alt={isEn ? pageHeroImages.recursos.alt.en : pageHeroImages.recursos.alt.es}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
+              priority
+            />
+          </div>
         </header>
 
         {/* Global Access Protocol */}

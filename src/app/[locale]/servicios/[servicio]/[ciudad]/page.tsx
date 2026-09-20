@@ -9,6 +9,8 @@ import { ArrowRight, Shield, Zap, Globe, Target, UserCheck, CheckCircle, Clock, 
 import Footer from '@/components/shared/Footer';
 import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
+import HeroImage from '@/components/shared/HeroImage';
+import { servicioHeroImages, unsplashUrl } from '@/data/heroImages';
 import { buildMetadata, withBrand } from '@/lib/seo';
 
 interface Props {
@@ -89,6 +91,8 @@ export default async function ServicioCiudadPage({ params }: Props) {
   if (!esCiudadIndexable(ciudadId)) {
     permanentRedirect(`/servicios/${servicioId}`);
   }
+
+  const servicioHero = servicioHeroImages[servicio.id];
 
   const isEn = locale === 'en';
 
@@ -302,6 +306,17 @@ export default async function ServicioCiudadPage({ params }: Props) {
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </WhatsAppCTA>
           </div>
+
+          {servicioHero && (
+            <div className="relative w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
+              <HeroImage
+                src={unsplashUrl(servicioHero.photoId)}
+                alt={isEn ? servicioHero.alt.en : servicioHero.alt.es}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
+                priority
+              />
+            </div>
+          )}
         </div>
       </section>
 
