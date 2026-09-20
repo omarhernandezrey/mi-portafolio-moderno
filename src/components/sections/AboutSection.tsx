@@ -33,7 +33,7 @@ const AboutSection: React.FC = () => {
   const cvDownloadPath = (
     currentLanguage === "en"
       ? "/files/Omar_Hernandez_Rey_English-ATS.pdf"
-      : "/files/Omar_Hernandez_Rey_Español-ATS.pdf"
+      : "/files/Omar_Hernandez_Rey_CV_ATS.pdf"
   );
   
   /* Estado para partículas flotantes (solo cliente) */
