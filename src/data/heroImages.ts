@@ -28,10 +28,10 @@ export const pageHeroImages: Record<
     },
   },
   sobreMi: {
-    photoId: '1521702813222-1943f3fb9c07',
+    photoId: '1542315192-1f61a1792f33',
     alt: {
-      es: 'Desarrollador de software sonriente trabajando con su laptop en una oficina moderna',
-      en: 'Smiling software developer working on his laptop in a modern office',
+      es: 'Escritorio de desarrollador con varios monitores mostrando código y una laptop, sin personas',
+      en: "A developer's desk with multiple monitors showing code and a laptop, no people",
     },
   },
   comunidad: {
