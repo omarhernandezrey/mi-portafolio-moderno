@@ -4,6 +4,8 @@ import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { getFeedPosts } from '@/lib/feed';
 import JsonLd from '@/components/seo/JsonLd';
 import FeedList from '@/components/feed/FeedList';
+import HeroImage from '@/components/shared/HeroImage';
+import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -82,6 +84,15 @@ export default async function ComunidadPage({ params }: Props) {
               : 'Cursos completados, nuevas skills, proyectos y postulaciones laborales — más tus propios comentarios y publicaciones.'}
           </p>
         </header>
+
+        <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] rounded-[28px] overflow-hidden border border-white/10 shadow-2xl mb-10">
+          <HeroImage
+            src={unsplashUrl(pageHeroImages.comunidad.photoId)}
+            alt={isEn ? pageHeroImages.comunidad.alt.en : pageHeroImages.comunidad.alt.es}
+            sizes="(max-width: 640px) 100vw, 672px"
+            priority
+          />
+        </div>
 
         <FeedList initialPosts={posts} initialHasMore={hasMore} />
       </div>

@@ -8,6 +8,8 @@ import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { breadcrumbList } from '@/lib/schemas';
 import BlogNewsletterCTA from '@/components/blog/BlogNewsletterCTA';
+import HeroImage from '@/components/shared/HeroImage';
+import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -90,11 +92,20 @@ export default async function BlogPage({ params }: Props) {
               {isEn ? `${posts.length} articles published` : `${posts.length} artículos publicados`}
             </span>
           </div>
+
+          <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
+            <HeroImage
+              src={unsplashUrl(pageHeroImages.blog.photoId)}
+              alt={isEn ? pageHeroImages.blog.alt.en : pageHeroImages.blog.alt.es}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
+              priority
+            />
+          </div>
         </header>
 
         {/* Blog Infrastructure Control */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 border-b border-white/5 pb-10">
-          <nav className="flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/40">
+          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 lg:gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/40">
             <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">{isEn ? 'All' : 'Todos'}</Link>
             <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Web Development' : 'Desarrollo Web'}</Link>
             <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Business' : 'Negocios'}</Link>
@@ -154,7 +165,7 @@ export default async function BlogPage({ params }: Props) {
                    <BookOpen size={160} strokeWidth={0.5} className="text-white-custom/5 group-hover:scale-110 transition-transform duration-1000" />
                 </div>
                 {/* Visual placeholder for post image if available */}
-                <div className="absolute top-10 right-10 flex gap-2">
+                <div className="absolute top-6 right-6 left-6 flex flex-wrap gap-2 justify-end sm:top-10 sm:right-10 sm:left-10">
                   {featuredPost.tags.map(tag => (
                     <span key={tag} className="bg-background/80 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-[8px] font-black uppercase tracking-widest text-primary italic">#{tag}</span>
                   ))}

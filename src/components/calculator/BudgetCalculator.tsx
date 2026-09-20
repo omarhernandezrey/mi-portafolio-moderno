@@ -7,6 +7,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { ArrowRight, ArrowLeft, Check, Download, Info, Sparkles, Target, Wallet } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
+import HeroImage from '@/components/shared/HeroImage';
+import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 export default function BudgetCalculator() {
   const { language } = useTranslation();
@@ -138,6 +140,16 @@ export default function BudgetCalculator() {
             <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">{currencyLabel}</span>
           </div>
         </div>
+      </div>
+
+      {/* Hero Image */}
+      <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
+        <HeroImage
+          src={unsplashUrl(pageHeroImages.calculadora.photoId)}
+          alt={lang === 'en' ? pageHeroImages.calculadora.alt.en : pageHeroImages.calculadora.alt.es}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 896px"
+          priority
+        />
       </div>
 
       {/* Progress Architecture */}

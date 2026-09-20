@@ -9,6 +9,8 @@ import JsonLd from '@/components/seo/JsonLd';
 import { serviciosProgramaticos } from '@/data/servicios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
+import HeroImage from '@/components/shared/HeroImage';
+import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -220,6 +222,16 @@ export default async function ServiciosPage({ params }: Props) {
                 {isEn ? 'View all services' : 'Ver todos los servicios'}
               </Link>
             </div>
+          </div>
+
+          {/* Hero Image */}
+          <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 mt-12 shadow-2xl">
+            <HeroImage
+              src={unsplashUrl(pageHeroImages.servicios.photoId)}
+              alt={isEn ? pageHeroImages.servicios.alt.en : pageHeroImages.servicios.alt.es}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
+              priority
+            />
           </div>
 
           {/* Stats Row */}
