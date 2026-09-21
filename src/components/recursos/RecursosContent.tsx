@@ -7,7 +7,10 @@ import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import Footer from '@/components/shared/Footer';
 import { track } from '@vercel/analytics';
-import HeroImage from '@/components/shared/HeroImage';
+import TiltImageCard from '@/components/shared/TiltImageCard';
+import HeroParallax from '@/components/shared/HeroParallax';
+import ParticleField from '@/components/shared/ParticleFieldLoader';
+import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 const magnetsEs = [
@@ -95,12 +98,18 @@ export default function RecursosContent() {
   };
 
   return (
+    <SmoothScrollProvider>
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
 
       <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16 md:space-y-32">
 
         {/* Header Architecture */}
-        <header className="max-w-4xl mx-auto text-center space-y-8">
+        <header className="relative overflow-hidden max-w-4xl mx-auto text-center space-y-8">
+          <HeroParallax className="absolute -inset-x-20 -inset-y-24 -z-10">
+            <div data-parallax-speed="0.3" className="absolute inset-0">
+              <ParticleField className="w-full h-full opacity-50" />
+            </div>
+          </HeroParallax>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -131,14 +140,13 @@ export default function RecursosContent() {
               : 'Herramientas ejecutivas y guías técnicas diseñadas para optimizar la toma de decisiones en el ecosistema digital moderno.'}
           </motion.p>
 
-          <div className="relative w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl mt-4">
-            <HeroImage
-              src={unsplashUrl(pageHeroImages.recursos.photoId)}
-              alt={isEn ? pageHeroImages.recursos.alt.en : pageHeroImages.recursos.alt.es}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
-              priority
-            />
-          </div>
+          <TiltImageCard
+            src={unsplashUrl(pageHeroImages.recursos.photoId)}
+            alt={isEn ? pageHeroImages.recursos.alt.en : pageHeroImages.recursos.alt.es}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
+            priority
+            className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl mt-4"
+          />
         </header>
 
         {/* Global Access Protocol */}
@@ -278,5 +286,6 @@ export default function RecursosContent() {
 
       <Footer />
     </div>
+    </SmoothScrollProvider>
   );
 }

@@ -8,7 +8,11 @@ import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { breadcrumbList } from '@/lib/schemas';
 import BlogNewsletterCTA from '@/components/blog/BlogNewsletterCTA';
-import HeroImage from '@/components/shared/HeroImage';
+import TiltImageCard from '@/components/shared/TiltImageCard';
+import HeroParallax from '@/components/shared/HeroParallax';
+import ParticleField from '@/components/shared/ParticleFieldLoader';
+import ScrollReveal from '@/components/shared/ScrollReveal';
+import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
@@ -62,6 +66,7 @@ export default async function BlogPage({ params }: Props) {
   const regularPosts = posts.filter(p => p.slug !== featuredPost?.slug);
 
   return (
+    <SmoothScrollProvider>
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
       <JsonLd data={breadcrumbList([
         { name: isEn ? 'Home' : 'Inicio', path: '' },
@@ -71,36 +76,54 @@ export default async function BlogPage({ params }: Props) {
       <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-12 md:space-y-24">
 
         {/* Journal Header */}
-        <header className="max-w-4xl space-y-8">
-          <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-            Knowledge Base &amp; Research
-          </div>
-          <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
-            {isEn ? (
-              <>Engineering <br /><span className="text-primary">Journal</span></>
-            ) : (
-              <>Journal de <br /><span className="text-primary">Ingeniería</span></>
-            )}
-          </h1>
+        <header className="relative overflow-hidden max-w-4xl space-y-8">
+          <HeroParallax className="absolute -inset-x-[var(--grid-margin)] -inset-y-24 -z-10">
+            <div data-parallax-speed="0.25" className="absolute inset-0 opacity-20">
+              <div className="absolute top-[10%] left-[10%] w-80 h-80 bg-primary/10 rounded-full blur-[120px]" />
+              <div className="absolute bottom-[10%] right-[10%] w-80 h-80 bg-accent/10 rounded-full blur-[120px]" />
+            </div>
+            <div data-parallax-speed="0.4" className="absolute inset-0">
+              <ParticleField className="w-full h-full opacity-50" />
+            </div>
+          </HeroParallax>
+          <ScrollReveal y={16}>
+            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
+              Knowledge Base &amp; Research
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
+              {isEn ? (
+                <>Engineering <br /><span className="text-primary">Journal</span></>
+              ) : (
+                <>Journal de <br /><span className="text-primary">Ingeniería</span></>
+              )}
+            </h1>
+          </ScrollReveal>
           <div className="flex flex-wrap items-center gap-4">
-            <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
-              {isEn
-                ? 'Technical articles and strategic reflections at the intersection of high-performance code and intelligent systems.'
-                : 'Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.'}
-            </p>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 text-primary text-xs font-black italic shrink-0">
-              {isEn ? `${posts.length} articles published` : `${posts.length} artículos publicados`}
-            </span>
+            <ScrollReveal delay={0.15}>
+              <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
+                {isEn
+                  ? 'Technical articles and strategic reflections at the intersection of high-performance code and intelligent systems.'
+                  : 'Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.'}
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 text-primary text-xs font-black italic shrink-0">
+                {isEn ? `${posts.length} articles published` : `${posts.length} artículos publicados`}
+              </span>
+            </ScrollReveal>
           </div>
 
-          <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
-            <HeroImage
+          <ScrollReveal delay={0.3} y={32}>
+            <TiltImageCard
               src={unsplashUrl(pageHeroImages.blog.photoId)}
               alt={isEn ? pageHeroImages.blog.alt.en : pageHeroImages.blog.alt.es}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
               priority
+              className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
             />
-          </div>
+          </ScrollReveal>
         </header>
 
         {/* Blog Infrastructure Control */}
@@ -130,6 +153,7 @@ export default async function BlogPage({ params }: Props) {
 
         {/* Featured Content Architecture */}
         {featuredPost && (
+          <ScrollReveal>
           <section className="group relative bg-card-bg rounded-[60px] border border-white/5 overflow-hidden shadow-2xl hover:border-primary/20 transition-all duration-700">
             <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
               <div className="p-6 sm:p-10 md:p-20 space-y-6 sm:space-y-10 relative z-10">
@@ -173,13 +197,15 @@ export default async function BlogPage({ params }: Props) {
               </div>
             </div>
           </section>
+          </ScrollReveal>
         )}
 
         {/* Post Repository Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-12">
           {regularPosts.length > 0 ? (
-            regularPosts.map((post) => (
-              <article key={post.slug} className="group flex flex-col bg-card-bg rounded-[28px] md:rounded-[40px] border border-white/5 p-6 md:p-10 shadow-xl hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
+            regularPosts.map((post, idx) => (
+              <ScrollReveal key={post.slug} delay={(idx % 3) * 0.1}>
+              <article className="group flex flex-col bg-card-bg rounded-[28px] md:rounded-[40px] border border-white/5 p-6 md:p-10 shadow-xl hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
                 <div className="absolute -right-4 -top-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
                   <Sparkles size={100} className="-rotate-12" />
                 </div>
@@ -218,6 +244,7 @@ export default async function BlogPage({ params }: Props) {
                   </Link>
                 </div>
               </article>
+              </ScrollReveal>
             ))
           ) : !featuredPost && (
             <div className="col-span-full py-40 text-center">
@@ -236,5 +263,6 @@ export default async function BlogPage({ params }: Props) {
 
       <Footer />
     </div>
+    </SmoothScrollProvider>
   );
 }
