@@ -5,7 +5,7 @@ import Particles from "@tsparticles/react";
 import type { Engine, ISourceOptions } from "@tsparticles/engine";
 import { loadFull } from "tsparticles";
 
-export default function ParticlesComponent() {
+function ParticlesComponent() {
   const [init, setInit] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [logosReady, setLogosReady] = useState(false);
@@ -20,8 +20,8 @@ export default function ParticlesComponent() {
       setPrefersReducedMotion(mq.matches);
 
       const nav = navigator as Navigator & { deviceMemory?: number };
-      const lowCpu = (nav.hardwareConcurrency ?? 8) <= 4;
-      const lowRam = (nav.deviceMemory ?? 8) <= 4;
+      const lowCpu = (nav.hardwareConcurrency ?? 8) <= 2;
+      const lowRam = (nav.deviceMemory ?? 8) <= 2;
       const isMobile = window.matchMedia("(max-width: 768px)").matches;
       setIsLowPowerDevice(lowCpu || lowRam || isMobile);
     }
@@ -99,7 +99,7 @@ export default function ParticlesComponent() {
     };
   }, []);
 
-  const particleCount = isLowPowerDevice ? 4 : 6;
+  const particleCount = isLowPowerDevice ? 6 : logos.length;
 
   const manualParticles = useMemo(() => {
     if (!logosReady || logos.length === 0) return [];
@@ -213,3 +213,5 @@ export default function ParticlesComponent() {
     />
   );
 }
+
+export default React.memo(ParticlesComponent);

@@ -57,10 +57,27 @@ function useTypewriterLoop(
   return text;
 }
 
+/**
+ * Componente hoja aislado: el estado del tipeo cambia cada 30-55ms, y si
+ * viviera en HeroSection cada tick re-renderizaría TODO el árbol (incluyendo
+ * <ParticlesComponent />, que no depende de este texto). Eso saturaba el hilo
+ * principal y le robaba frames al canvas de partículas, causando que
+ * parpadearan/se aquietaran justo mientras se tipeaba. Aislando el estado
+ * aquí, solo este nodo se vuelve a renderizar en cada letra.
+ */
+function TypedNameOrRole({ strings }: { strings: string[] }) {
+  const typedNameOrRole = useTypewriterLoop(strings);
+  return (
+    <>
+      {typedNameOrRole}
+      <span className="animate-pulse">_</span>
+    </>
+  );
+}
+
 export default function HeroSection() {
   const projectsRef = useRef<HTMLElement | null>(null);
   const { t } = useTranslation();
-  const typedNameOrRole = useTypewriterLoop([t("hero.name"), t("hero.title")]);
 
   const handleViewProjects = () => {
     if (!projectsRef.current) {
@@ -171,8 +188,7 @@ export default function HeroSection() {
             className="hero-reveal font-sans font-bold text-[clamp(1.05rem,5.5vw,3rem)] mb-6 text-left whitespace-nowrap tracking-tight"
             style={{ color: "var(--accent-color)", "--reveal-y": "16px", "--reveal-delay": "0.3s" } as React.CSSProperties}
           >
-            {typedNameOrRole}
-            <span className="animate-pulse">_</span>
+            <TypedNameOrRole strings={[t("hero.name"), t("hero.title")]} />
           </div>
 
           {/* Descripción orientada a resultados del cliente */}
