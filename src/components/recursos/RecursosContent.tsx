@@ -110,35 +110,30 @@ export default function RecursosContent() {
               <ParticleField className="w-full h-full opacity-50" />
             </div>
           </HeroParallax>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]"
+          <div
+            className="hero-reveal font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]"
+            style={{ '--reveal-y': '10px' } as React.CSSProperties}
           >
             {isEn ? 'Digital Assets & Intelligence' : 'Activos Digitales e Inteligencia'}
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="font-display italic text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]"
+          </div>
+          <h1
+            className="hero-reveal font-display italic text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]"
+            style={{ '--reveal-delay': '0.1s' } as React.CSSProperties}
           >
             {isEn ? (
               <>High-Fidelity <br /><span className="text-primary">Resources</span></>
             ) : (
               <>Recursos de <br /><span className="text-primary">Alta Fidelidad</span></>
             )}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-text-muted font-medium max-w-2xl mx-auto opacity-70 leading-relaxed italic"
+          </h1>
+          <p
+            className="hero-reveal text-lg md:text-xl text-text-muted font-medium max-w-2xl mx-auto opacity-70 leading-relaxed italic"
+            style={{ '--reveal-delay': '0.2s' } as React.CSSProperties}
           >
             {isEn
               ? 'Executive tools and technical guides designed to optimize decision-making in the modern digital ecosystem.'
               : 'Herramientas ejecutivas y guías técnicas diseñadas para optimizar la toma de decisiones en el ecosistema digital moderno.'}
-          </motion.p>
+          </p>
 
           <TiltImageCard
             src={unsplashUrl(pageHeroImages.recursos.photoId)}

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import { motion, MotionConfig } from "framer-motion";
 import ParticlesComponent from "@/components/ParticlesComponent";
 import "@/styles/advancedButton.css";
 import Image from "next/image";
@@ -84,11 +83,6 @@ export default function HeroSection() {
   }, []);
 
   return (
-    // El sitio apaga toda animación en <768px (ver ClientProvider.tsx,
-    // MotionConfig global reducedMotion="always" en móvil, por batería/perf).
-    // El hero es la primera impresión del portafolio — aquí sí queremos que
-    // se vea, incluso en móvil, así que este subárbol anula esa regla.
-    <MotionConfig reducedMotion="never">
     <section
       id="hero"
       className="
@@ -133,11 +127,9 @@ export default function HeroSection() {
         style={{ color: "var(--white-color)" }}
       >
         {/* Badge de confianza */}
-        <motion.h1
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+        <h1
           className="
+            hero-reveal
             col-span-12 font-mono-label text-[0.65rem] sm:text-xs mb-6 sm:mb-8
             inline-flex w-fit max-w-[calc(100vw-2.5rem)] items-start sm:items-center gap-2
             px-4 py-2 rounded-2xl sm:rounded-full border leading-relaxed sm:leading-normal
@@ -146,54 +138,48 @@ export default function HeroSection() {
             color: "var(--accent-color)",
             borderColor: "color-mix(in srgb, var(--accent-color) 35%, transparent)",
             backgroundColor: "color-mix(in srgb, var(--accent-color) 10%, transparent)",
-          }}
+            "--reveal-y": "-16px",
+          } as React.CSSProperties}
         >
           <span className="w-1.5 h-1.5 rounded-full mt-1 sm:mt-0 shrink-0" style={{ backgroundColor: "var(--accent-color)" }} />
           {t("hero.h1")}
-        </motion.h1>
+        </h1>
 
         {/* Columna principal: titular + descripción + CTA */}
         <div className="col-span-12 lg:col-span-7">
           {/* Saludo — estático, sin animación. */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+          <div
             className="
+              hero-reveal
               font-display italic
               text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem]
               font-medium mb-2 leading-[1.05] text-left
             "
           >
             {t("hero.greeting")}
-          </motion.div>
+          </div>
 
           {/* Nombre + rol — un solo máquina de escribir en loop infinito que
               nunca se detiene, alternando entre ambos. Fuente sans (no la
               cursiva del saludo, que no tipea limpio letra a letra: los
               anchos de carácter saltan y se ve tosco). */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-            className="font-sans font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 text-left min-h-[1.3em] tracking-tight"
-            style={{ color: "var(--accent-color)" }}
+          <div
+            className="hero-reveal font-sans font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 text-left min-h-[2.6em] tracking-tight"
+            style={{ color: "var(--accent-color)", "--reveal-y": "16px", "--reveal-delay": "0.3s" } as React.CSSProperties}
           >
             {typedNameOrRole}
             <span className="animate-pulse">_</span>
-          </motion.div>
+          </div>
 
           {/* Descripción orientada a resultados del cliente */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+          <p
             className="
+              hero-reveal
               max-w-xl text-base sm:text-lg md:text-xl
               mt-2 mb-8 leading-relaxed text-left
               [text-shadow:_0_2px_4px_rgba(0,0,0,0.5)]
             "
-            style={{ color: "rgba(255, 255, 255, 0.85)" }}
+            style={{ color: "rgba(255, 255, 255, 0.85)", "--reveal-delay": "0.3s" } as React.CSSProperties}
             dangerouslySetInnerHTML={{
               __html: t("hero.subtitle")
                 .replace(/\[\[b\]\](.*?)\[\[\/b\]\]/g, "<strong>$1</strong>")
@@ -202,11 +188,9 @@ export default function HeroSection() {
           />
 
           {/* Botones CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45, ease: "easeOut" }}
-            className="flex flex-wrap gap-4"
+          <div
+            className="hero-reveal flex flex-wrap gap-4"
+            style={{ "--reveal-delay": "0.45s" } as React.CSSProperties}
           >
             <button
               type="button"
@@ -241,15 +225,13 @@ export default function HeroSection() {
               {t("hero.viewProjects")}
               <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
             </button>
-          </motion.div>
+          </div>
         </div>
 
         {/* Panel lateral — datos rápidos de confianza */}
-        <motion.div
-          initial={{ opacity: 0, y: 24, x: 16 }}
-          animate={{ opacity: 1, y: 0, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
-          className="hidden lg:block lg:col-span-3 lg:col-start-10"
+        <div
+          className="hero-reveal hidden lg:block lg:col-span-3 lg:col-start-10"
+          style={{ "--reveal-y": "24px", "--reveal-delay": "0.4s" } as React.CSSProperties}
         >
           <div
             className="rounded-2xl border backdrop-blur-sm p-6 space-y-5"
@@ -311,9 +293,8 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
-    </MotionConfig>
   );
 }

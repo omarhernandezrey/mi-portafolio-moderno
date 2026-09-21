@@ -115,12 +115,12 @@ export default function ParticlesComponent() {
           options: {
             image: {
               src: logo,
-              width: 32,
-              height: 32,
+              width: 64,
+              height: 64,
             },
           },
         },
-        opacity: { value: 0.75 },
+        opacity: { value: 0.9 },
       },
     }));
   }, [logos, logosReady, particleCount]);
@@ -137,7 +137,7 @@ export default function ParticlesComponent() {
       pauseOnOutsideViewport: true,
       particles: {
         number: { value: 0 },
-        size: { value: 6 },
+        size: { value: isLowPowerDevice ? 18 : 22 },
         move: {
           enable: true,
           speed: 0.8,
@@ -149,9 +149,9 @@ export default function ParticlesComponent() {
         collisions: { enable: false },
         links: {
           enable: !isLowPowerDevice,
-          distance: 110,
+          distance: 140,
           color: colors.text,
-          opacity: 0.3,
+          opacity: 0.35,
           width: 1,
           triangles: { enable: false },
         },
@@ -160,12 +160,17 @@ export default function ParticlesComponent() {
           options: {
             image: logos.slice(0, particleCount).map((src) => ({
               src,
-              width: 32,
-              height: 32,
+              width: 64,
+              height: 64,
             })),
           },
         },
-        opacity: { value: 0.75 },
+        opacity: { value: 0.9 },
+        shadow: {
+          enable: true,
+          color: colors.primary,
+          blur: 12,
+        },
       },
       interactivity: {
         detectsOn: "canvas",
