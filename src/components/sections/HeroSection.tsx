@@ -160,11 +160,15 @@ export default function HeroSection() {
           </div>
 
           {/* Nombre + rol — un solo máquina de escribir en loop infinito que
-              nunca se detiene, alternando entre ambos. Fuente sans (no la
-              cursiva del saludo, que no tipea limpio letra a letra: los
-              anchos de carácter saltan y se ve tosco). */}
+              nunca se detiene, alternando entre ambos ("Omar Hernández Rey"
+              y "Desarrollador Web Full Stack", de largo muy distinto).
+              whitespace-nowrap + tamaño fluido con clamp(): si se permite el
+              salto de línea normal, cada palabra que justo no cabe al final
+              de la línea salta a la siguiente A MEDIDA que se tipea letra a
+              letra, y el texto ya colocado "parpadea"/reacomoda con cada
+              tecla — mismo texto, una sola línea siempre, sin reflow. */}
           <div
-            className="hero-reveal font-sans font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 text-left min-h-[2.6em] tracking-tight"
+            className="hero-reveal font-sans font-bold text-[clamp(1.05rem,5.5vw,3rem)] mb-6 text-left whitespace-nowrap tracking-tight"
             style={{ color: "var(--accent-color)", "--reveal-y": "16px", "--reveal-delay": "0.3s" } as React.CSSProperties}
           >
             {typedNameOrRole}
