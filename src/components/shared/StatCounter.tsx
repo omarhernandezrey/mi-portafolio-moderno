@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useInView, useReducedMotion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface StatCounterProps {
   value: number;
@@ -14,8 +15,10 @@ interface StatCounterProps {
 export default function StatCounter({ value, prefix = '', suffix = '', label, duration = 1.4 }: StatCounterProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
-  const shouldReduceMotion = useReducedMotion();
-  const [display, setDisplay] = useState(shouldReduceMotion ? value : 0);
+  const shouldReduceMotion = useReducedMotionSafe();
+  // Arranca en 0 siempre (igual que el SSR) — nunca en `value`, aunque
+  // shouldReduceMotion ya sea true, para no desajustar la hidratación.
+  const [display, setDisplay] = useState(0);
 
   useEffect(() => {
     if (!isInView || shouldReduceMotion) {
