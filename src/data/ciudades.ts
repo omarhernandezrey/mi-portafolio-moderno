@@ -131,6 +131,134 @@ export const CIUDAD_CONTEXTO: Record<string, CiudadContexto> = {
       },
     },
   },
+  austin: {
+    marketContext: {
+      es: 'Austin es uno de los polos tecnológicos de más rápido crecimiento en Estados Unidos, sede de startups y gigantes como Dell y Tesla, con un ecosistema emprendedor impulsado por eventos como SXSW.',
+      en: 'Austin is one of the fastest-growing tech hubs in the US, home to startups and giants like Dell and Tesla, with an entrepreneurial ecosystem fueled by events like SXSW.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  'san-francisco': {
+    marketContext: {
+      es: 'San Francisco y el área de la Bahía concentran la mayor densidad de startups y capital de riesgo del mundo, con estándares de producto y velocidad de ejecución que marcan la referencia global de la industria tech.',
+      en: "San Francisco and the Bay Area concentrate the world's highest density of startups and venture capital, with product standards and execution speed that set the global benchmark for the tech industry.",
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  chicago: {
+    marketContext: {
+      es: 'Chicago es el centro financiero y corporativo del Medio Oeste de Estados Unidos, con fuerte presencia de empresas Fortune 500 en finanzas, logística y manufactura que demandan soluciones digitales robustas.',
+      en: 'Chicago is the financial and corporate hub of the US Midwest, home to a strong concentration of Fortune 500 companies in finance, logistics, and manufacturing that demand robust digital solutions.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  'los-angeles': {
+    marketContext: {
+      es: 'Los Ángeles combina la industria del entretenimiento con un ecosistema tech en expansión y una de las poblaciones hispanas más grandes de Estados Unidos, lo que la convierte en un mercado bilingüe natural para negocios digitales.',
+      en: 'Los Angeles blends the entertainment industry with a growing tech ecosystem and one of the largest Hispanic populations in the US, making it a natural bilingual market for digital businesses.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  houston: {
+    marketContext: {
+      es: 'Houston es la capital energética de Estados Unidos y una de las ciudades más diversas del país, con una economía que combina petróleo y gas, salud y comercio internacional junto a una fuerte presencia hispana.',
+      en: "Houston is the US energy capital and one of the country's most diverse cities, with an economy spanning oil and gas, healthcare, and international trade alongside a strong Hispanic presence.",
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  seattle: {
+    marketContext: {
+      es: 'Seattle alberga la sede de gigantes tecnológicos como Amazon y Microsoft, lo que ha consolidado un ecosistema de talento e infraestructura cloud de primer nivel en la costa oeste de Estados Unidos.',
+      en: 'Seattle is home to tech giants like Amazon and Microsoft, which has built a world-class talent and cloud infrastructure ecosystem on the US West Coast.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  boston: {
+    marketContext: {
+      es: 'Boston combina algunas de las mejores universidades del mundo (MIT, Harvard) con un ecosistema de biotecnología y startups tech que atrae inversión y talento a nivel global.',
+      en: 'Boston combines some of the world\'s top universities (MIT, Harvard) with a biotech and tech startup ecosystem that attracts investment and talent globally.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
+  denver: {
+    marketContext: {
+      es: 'Denver se ha consolidado como el principal hub tecnológico de la región de las Montañas Rocosas, con un ecosistema de startups en crecimiento acelerado y una calidad de vida que atrae talento de otras ciudades de Estados Unidos.',
+      en: 'Denver has become the leading tech hub of the Rocky Mountain region, with a fast-growing startup ecosystem and quality of life that attracts talent relocating from other US cities.',
+    },
+    paymentFaq: {
+      es: {
+        q: '¿Cómo se maneja el pago desde Estados Unidos?',
+        a: 'Transferencia en USD, PayPal o Wise, facturado por hitos del proyecto. Es una relación de contratista independiente, sin nómina ni retenciones de empleado.',
+      },
+      en: {
+        q: 'How do I pay for the project from the US?',
+        a: 'Standard USD wire transfer, PayPal, or Wise — invoiced per milestone. This is an independent contractor engagement, with no payroll or employee tax involved.',
+      },
+    },
+  },
 };
 
 // Ciudades con página propia indexable. El resto de `ciudades` se conserva
@@ -145,6 +273,14 @@ export const CIUDADES_INDEXABLES = [
   'bucaramanga',
   'miami',
   'new-york',
+  'austin',
+  'san-francisco',
+  'chicago',
+  'los-angeles',
+  'houston',
+  'seattle',
+  'boston',
+  'denver',
 ] as const;
 
 export const ciudades: Ciudad[] = [
