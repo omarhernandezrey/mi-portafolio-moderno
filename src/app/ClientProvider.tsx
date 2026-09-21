@@ -5,6 +5,7 @@ import { MotionConfig } from 'framer-motion';
 import { I18nProvider } from '@/contexts/I18nContext';
 import { ToastProvider } from '@/components/ui/Toast';
 import { NotyfProvider } from '@/components/ui/NotyfProvider';
+import DomErrorGuard from '@/components/shared/DomErrorGuard';
 import dynamic from 'next/dynamic';
 
 // Botón flotante de WhatsApp (canal de contacto principal) — carga diferida
@@ -69,6 +70,7 @@ export default function ClientProvider({ children }: ClientProviderProps) {
       <ToastProvider>
         <NotyfProvider>
           <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
+            <DomErrorGuard />
             {children}
             <WhatsAppFloatingButton />
           </MotionConfig>
