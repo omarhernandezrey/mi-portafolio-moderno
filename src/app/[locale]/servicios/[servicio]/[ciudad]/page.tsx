@@ -10,8 +10,12 @@ import Footer from '@/components/shared/Footer';
 import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
 import HeroImage from '@/components/shared/HeroImage';
-import { servicioHeroImages, unsplashUrl } from '@/data/heroImages';
+import TiltImageCard from '@/components/shared/TiltImageCard';
+import ScrollReveal from '@/components/shared/ScrollReveal';
+import StatCounter from '@/components/shared/StatCounter';
+import { servicioHeroImages, servicioSecondaryImages, globalTechBanner, unsplashUrl } from '@/data/heroImages';
 import { buildMetadata, withBrand } from '@/lib/seo';
+import { Sparkles } from 'lucide-react';
 
 interface Props {
   params: Promise<{
@@ -93,6 +97,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
   }
 
   const servicioHero = servicioHeroImages[servicio.id];
+  const servicioSecondary = servicioSecondaryImages[servicio.id];
 
   const isEn = locale === 'en';
 
@@ -101,8 +106,8 @@ export default async function ServicioCiudadPage({ params }: Props) {
     : servicio.h1.replace('{ciudad}', ciudad.name);
 
   const h2 = isEn && servicio.h2En
-    ? servicio.h2En.replace('{city}', ciudad.name)
-    : servicio.h2.replace('{ciudad}', ciudad.name);
+    ? servicio.h2En.replace('{city}', ciudad.name).replace('{country}', ciudad.country)
+    : servicio.h2.replace('{ciudad}', ciudad.name).replace('{country}', ciudad.country);
 
   const description = isEn && servicio.descriptionEn
     ? servicio.descriptionEn.replace('{city}', ciudad.name).replace('{country}', ciudad.country)
@@ -220,6 +225,21 @@ export default async function ServicioCiudadPage({ params }: Props) {
     blog3Href: '/blog/build-mvp-nextjs-30-days-process',
   };
 
+  // Cifras ya usadas en /servicios (listado) — no se inventan datos nuevos.
+  const stats = isEn
+    ? [
+        { value: 30, prefix: '+', label: 'Projects delivered' },
+        { value: 5, suffix: '+', label: 'Years of experience' },
+        { value: 24, suffix: 'h', label: 'Response time' },
+        { value: 100, suffix: '%', label: 'Remote' },
+      ]
+    : [
+        { value: 30, prefix: '+', label: 'Proyectos entregados' },
+        { value: 5, suffix: '+', label: 'Años de experiencia' },
+        { value: 24, suffix: 'h', label: 'Tiempo de respuesta' },
+        { value: 100, suffix: '%', label: 'Remoto' },
+      ];
+
   const base = isEn ? 'https://omarhernandezrey.com/en' : 'https://omarhernandezrey.com';
 
   const localBusinessSchema = {
@@ -274,86 +294,121 @@ export default async function ServicioCiudadPage({ params }: Props) {
           <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
           <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
         </div>
+        <div className="bg-tech-grid absolute inset-0 -z-10 opacity-40 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,black,transparent)]" />
 
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] relative z-10 text-center space-y-12">
           <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-              Regional Engineering Hub • {ciudad.name}
-            </div>
-            <h1 className="font-display italic text-4xl sm:text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.9]">
-              {h1Parts[0]}{' '}
-              <span className="text-primary italic">{cityLabel}</span>
-            </h1>
-            <h2 className="text-xl md:text-2xl font-bold text-text-muted italic opacity-60 tracking-tight leading-relaxed max-w-2xl mx-auto">
-              {h2}
-            </h2>
-            <p className="text-lg text-text-muted/70 font-medium leading-relaxed max-w-2xl mx-auto italic">
-              {description}
-            </p>
-            {marketContext && (
-              <p className="text-sm text-text-muted/50 font-medium leading-relaxed max-w-2xl mx-auto">
-                {marketContext}
+            <ScrollReveal y={16}>
+              <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
+                </span>
+                Regional Engineering Hub • {ciudad.name}
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display italic text-4xl sm:text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.9]">
+                {h1Parts[0]}{' '}
+                <span className="text-primary italic">{cityLabel}</span>
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <h2 className="text-xl md:text-2xl font-bold text-text-muted italic opacity-60 tracking-tight leading-relaxed max-w-2xl mx-auto">
+                {h2}
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delay={0.3}>
+              <p className="text-lg text-text-muted/70 font-medium leading-relaxed max-w-2xl mx-auto italic">
+                {description}
               </p>
+            </ScrollReveal>
+            {marketContext && (
+              <ScrollReveal delay={0.35}>
+                <p className="text-sm text-text-muted/50 font-medium leading-relaxed max-w-2xl mx-auto">
+                  {marketContext}
+                </p>
+              </ScrollReveal>
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-            <WhatsAppCTA
-              message={ui.chatMsg}
-              className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
-            >
-              {ui.ctaAudit}
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </WhatsAppCTA>
-          </div>
+          <ScrollReveal delay={0.4}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+              <WhatsAppCTA
+                message={ui.chatMsg}
+                className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
+              >
+                {ui.ctaAudit}
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </WhatsAppCTA>
+            </div>
+          </ScrollReveal>
 
           {servicioHero && (
-            <div className="relative w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
-              <HeroImage
+            <ScrollReveal delay={0.5} y={32}>
+              <TiltImageCard
                 src={unsplashUrl(servicioHero.photoId)}
                 alt={isEn ? servicioHero.alt.en : servicioHero.alt.es}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
                 priority
+                className="w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
               />
-            </div>
+            </ScrollReveal>
           )}
+
+          <ScrollReveal delay={0.6}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-6 border-t border-white/5">
+              {stats.map((stat) => (
+                <StatCounter key={stat.label} value={stat.value} prefix={stat.prefix} suffix={stat.suffix} label={stat.label} />
+              ))}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Value Proposition */}
       <section className="py-32 bg-background relative overflow-hidden">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-24">
-          <div className="text-center space-y-4">
-            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">Methodology &amp; Performance</h2>
-            <h3 className="font-display italic text-3xl md:text-5xl font-medium text-white-custom tracking-tight">
-              {ui.infraTitle.split(ciudad.name)[0]}
-              <span className="text-primary text-outline-primary">{ciudad.name}</span>
-              {ui.infraTitle.split(ciudad.name)[1]}
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <ValueCard icon={<Globe size={32} />} title={ui.geoTitle} description={ui.geoDesc} />
-            <ValueCard icon={<Zap size={32} />} title={ui.effTitle} description={ui.effDesc} />
-          </div>
-
-          <div className="mt-12 md:mt-20 p-8 md:p-12 lg:p-20 rounded-[32px] md:rounded-[60px] bg-card-bg border border-white/5 text-center shadow-2xl relative group overflow-hidden">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[80px]" />
-            <div className="max-w-2xl mx-auto space-y-8 relative z-10">
-              <p className="text-lg md:text-xl text-text-muted font-medium italic opacity-70 leading-relaxed">
-                &ldquo;{ui.quote}&rdquo;
-              </p>
-              <div className="flex items-center justify-center gap-4 pt-6">
-                <div className="w-12 h-px bg-primary/30" />
-                <WhatsAppCTA
-                  message={ui.chatMsg}
-                  className="text-primary font-black text-[11px] uppercase tracking-[0.4em] hover:scale-105 transition-transform italic"
-                >
-                  {ui.ctaConsult}
-                </WhatsAppCTA>
-                <div className="w-12 h-px bg-primary/30" />
-              </div>
+          <ScrollReveal>
+            <div className="text-center space-y-4">
+              <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">Methodology &amp; Performance</h2>
+              <h3 className="font-display italic text-3xl md:text-5xl font-medium text-white-custom tracking-tight">
+                {ui.infraTitle.split(ciudad.name)[0]}
+                <span className="text-primary text-outline-primary">{ciudad.name}</span>
+                {ui.infraTitle.split(ciudad.name)[1]}
+              </h3>
             </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-center">
+            <div className="lg:col-span-2 space-y-8">
+              <ScrollReveal delay={0.1}>
+                <ValueCard icon={<Globe size={32} />} title={ui.geoTitle} description={ui.geoDesc} />
+              </ScrollReveal>
+              <ScrollReveal delay={0.2}>
+                <ValueCard icon={<Zap size={32} />} title={ui.effTitle} description={ui.effDesc} />
+              </ScrollReveal>
+            </div>
+
+            {servicioSecondary && (
+              <ScrollReveal delay={0.3} className="lg:col-span-3 relative">
+                <TiltImageCard
+                  src={unsplashUrl(servicioSecondary.photoId)}
+                  alt={isEn ? servicioSecondary.alt.en : servicioSecondary.alt.es}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 800px"
+                  className="w-full aspect-[4/3] md:aspect-[16/10] rounded-[32px] md:rounded-[48px] border border-white/5 shadow-2xl"
+                />
+                <div className="absolute -bottom-6 -left-6 hidden sm:flex items-center gap-3 bg-card-bg/90 backdrop-blur-xl border border-primary/20 rounded-2xl px-5 py-4 shadow-2xl">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-primary">{isEn ? 'Verified Stack' : 'Stack Verificado'}</p>
+                    <p className="text-[10px] text-text-muted/60 font-medium">{serviceName}</p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            )}
           </div>
         </div>
       </section>
@@ -361,18 +416,22 @@ export default async function ServicioCiudadPage({ params }: Props) {
       {/* Benefits */}
       <section className="py-24 border-t border-white/5 bg-background/50">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.benefitsLabel}</h2>
-            <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
-              {ui.benefitsTitle}
-            </h3>
-          </div>
+          <ScrollReveal>
+            <div className="text-center space-y-4 mb-16">
+              <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.benefitsLabel}</h2>
+              <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+                {ui.benefitsTitle}
+              </h3>
+            </div>
+          </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {benefits.map((benefit, idx) => (
-              <div key={idx} className="flex items-start gap-4 bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/20 transition-all">
-                <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-0.5" />
-                <p className="text-sm font-medium text-text-muted italic">{benefit}</p>
-              </div>
+              <ScrollReveal key={idx} delay={(idx % 3) * 0.1}>
+                <div className="flex items-start gap-4 bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+                  <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-0.5" />
+                  <p className="text-sm font-medium text-text-muted italic">{benefit}</p>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -381,18 +440,20 @@ export default async function ServicioCiudadPage({ params }: Props) {
       {/* Process */}
       <section className="py-24 bg-background relative overflow-hidden">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.processLabel}</h2>
-            <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
-              {ui.processTitle}
-            </h3>
-          </div>
+          <ScrollReveal>
+            <div className="text-center space-y-4 mb-16">
+              <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.processLabel}</h2>
+              <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+                {ui.processTitle}
+              </h3>
+            </div>
+          </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {process.map((step, idx) => {
               const [title, desc] = step.split(': ');
               return (
-                <div key={idx} className="relative">
-                  <div className="bg-card-bg rounded-2xl p-6 border border-white/5 h-full">
+                <ScrollReveal key={idx} delay={idx * 0.1} className="relative">
+                  <div className="bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/20 transition-colors h-full">
                     <div className="text-4xl font-black text-primary/20 mb-4">0{idx + 1}</div>
                     <h4 className="text-lg font-bold text-white-custom italic mb-2">{title}</h4>
                     <p className="text-sm text-text-muted/70 font-medium italic">{desc}</p>
@@ -400,27 +461,59 @@ export default async function ServicioCiudadPage({ params }: Props) {
                   {idx < 3 && (
                     <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/10" />
                   )}
-                </div>
+                </ScrollReveal>
               );
             })}
           </div>
         </div>
       </section>
 
+      {/* Global Reach Banner */}
+      <section className="relative isolate py-32 md:py-48 overflow-hidden border-y border-white/5">
+        <HeroImage
+          src={unsplashUrl(globalTechBanner.photoId)}
+          alt={isEn ? globalTechBanner.alt.en : globalTechBanner.alt.es}
+          sizes="100vw"
+          className="z-0"
+        />
+        <div className="absolute inset-0 z-0 bg-gradient-to-t from-background via-background/85 to-background/50" />
+        <ScrollReveal className="relative z-10">
+          <div className="max-w-3xl mx-auto px-[var(--grid-margin)] text-center space-y-8">
+            <p className="text-xl md:text-3xl text-white-custom font-medium italic leading-relaxed [text-shadow:0_2px_20px_rgba(0,0,0,0.6)]">
+              &ldquo;{ui.quote}&rdquo;
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-12 h-px bg-primary/50" />
+              <WhatsAppCTA
+                message={ui.chatMsg}
+                className="text-primary font-black text-[11px] uppercase tracking-[0.4em] hover:scale-105 transition-transform italic"
+              >
+                {ui.ctaConsult}
+              </WhatsAppCTA>
+              <div className="w-12 h-px bg-primary/50" />
+            </div>
+          </div>
+        </ScrollReveal>
+      </section>
+
       {/* Price & Time */}
       <section className="py-24 border-t border-white/5 bg-card-bg/30">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center">
-              <DollarSign className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">{ui.investLabel}</h3>
-              <p className="text-2xl font-black text-white-custom italic">{priceRange}</p>
-            </div>
-            <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center">
-              <Clock className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">{ui.deliveryLabel}</h3>
-              <p className="text-2xl font-black text-white-custom italic">{deliveryTime}</p>
-            </div>
+            <ScrollReveal>
+              <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center hover:border-primary/20 transition-colors">
+                <DollarSign className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">{ui.investLabel}</h3>
+                <p className="text-2xl font-black text-white-custom italic">{priceRange}</p>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center hover:border-primary/20 transition-colors">
+                <Clock className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">{ui.deliveryLabel}</h3>
+                <p className="text-2xl font-black text-white-custom italic">{deliveryTime}</p>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -428,18 +521,22 @@ export default async function ServicioCiudadPage({ params }: Props) {
       {/* FAQs */}
       <section className="py-24 bg-background">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
-          <div className="text-center space-y-4 mb-16">
-            <HelpCircle className="w-12 h-12 text-primary mx-auto" />
-            <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
-              {ui.faqTitle}
-            </h2>
-          </div>
+          <ScrollReveal>
+            <div className="text-center space-y-4 mb-16">
+              <HelpCircle className="w-12 h-12 text-primary mx-auto" />
+              <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+                {ui.faqTitle}
+              </h2>
+            </div>
+          </ScrollReveal>
           <div className="space-y-6">
             {faqs.map((faq, idx) => (
-              <div key={idx} className="bg-card-bg rounded-2xl p-6 border border-white/5">
-                <h3 className="text-lg font-bold text-white-custom italic mb-3">{faq.q}</h3>
-                <p className="text-sm text-text-muted/70 font-medium leading-relaxed italic">{faq.a}</p>
-              </div>
+              <ScrollReveal key={idx} delay={Math.min(idx * 0.08, 0.4)}>
+                <div className="bg-card-bg rounded-2xl p-6 border border-white/5">
+                  <h3 className="text-lg font-bold text-white-custom italic mb-3">{faq.q}</h3>
+                  <p className="text-sm text-text-muted/70 font-medium leading-relaxed italic">{faq.a}</p>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -448,20 +545,22 @@ export default async function ServicioCiudadPage({ params }: Props) {
       {/* Other Services */}
       <section className="py-24 bg-card-bg/30 border-t border-white/5">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.catalogLabel}</h2>
-            <h3 className="font-display italic text-2xl md:text-3xl font-medium text-white-custom tracking-tight">
-              {ui.otherTitle.split(ciudad.name)[0]}
-              <span className="text-primary">{ciudad.name}</span>
-            </h3>
-          </div>
+          <ScrollReveal>
+            <div className="text-center space-y-4 mb-12">
+              <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.catalogLabel}</h2>
+              <h3 className="font-display italic text-2xl md:text-3xl font-medium text-white-custom tracking-tight">
+                {ui.otherTitle.split(ciudad.name)[0]}
+                <span className="text-primary">{ciudad.name}</span>
+              </h3>
+            </div>
+          </ScrollReveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {serviciosProgramaticos
               .filter(s => s.id !== servicio.id)
               .slice(0, 6)
-              .map(s => (
+              .map((s, idx) => (
+                <ScrollReveal key={s.id} delay={(idx % 3) * 0.1}>
                 <Link
-                  key={s.id}
                   href={`/servicios/${s.id}/${ciudadId}`}
                   className="group bg-card-bg rounded-2xl p-5 border border-white/5 hover:border-primary/30 transition-all flex items-center justify-between"
                 >
@@ -475,6 +574,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
                   </div>
                   <ArrowRight size={14} className="text-text-muted/30 group-hover:text-primary transition-colors shrink-0" />
                 </Link>
+                </ScrollReveal>
               ))}
           </div>
           <div className="text-center mt-8 flex flex-col sm:flex-row gap-4 justify-center">
@@ -499,35 +599,45 @@ export default async function ServicioCiudadPage({ params }: Props) {
       {/* Blog Internal Linking */}
       <section className="py-16 bg-background border-t border-white/5">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
-          <div className="text-center space-y-3 mb-10">
-            <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.resourcesLabel}</h2>
-            <h3 className="font-display italic text-xl md:text-2xl font-medium text-white-custom tracking-tight">
-              {ui.resourcesTitle}
-            </h3>
-          </div>
+          <ScrollReveal>
+            <div className="text-center space-y-3 mb-10">
+              <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{ui.resourcesLabel}</h2>
+              <h3 className="font-display italic text-xl md:text-2xl font-medium text-white-custom tracking-tight">
+                {ui.resourcesTitle}
+              </h3>
+            </div>
+          </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link href={ui.blog1Href} className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
-              <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">{ui.blog1Title}</p>
-              <p className="text-xs text-text-muted/60">{ui.blog1Sub}</p>
-            </Link>
-            <Link href={ui.blog2Href} className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
-              <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">{ui.blog2Title}</p>
-              <p className="text-xs text-text-muted/60">{ui.blog2Sub}</p>
-            </Link>
-            <Link href={ui.blog3Href} className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all">
-              <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">{ui.blog3Title}</p>
-              <p className="text-xs text-text-muted/60">{ui.blog3Sub}</p>
-            </Link>
+            <ScrollReveal delay={0}>
+              <Link href={ui.blog1Href} className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all block">
+                <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">{ui.blog1Title}</p>
+                <p className="text-xs text-text-muted/60">{ui.blog1Sub}</p>
+              </Link>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <Link href={ui.blog2Href} className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all block">
+                <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">{ui.blog2Title}</p>
+                <p className="text-xs text-text-muted/60">{ui.blog2Sub}</p>
+              </Link>
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <Link href={ui.blog3Href} className="group bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 transition-all block">
+                <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-2">{ui.blog3Title}</p>
+                <p className="text-xs text-text-muted/60">{ui.blog3Sub}</p>
+              </Link>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* Trust Bar */}
-      <div className="flex flex-wrap justify-center gap-12 py-16 opacity-20 border-t border-white/5">
-        <TrustItem icon={<Shield size={14} />} text="Secure Deployment" />
-        <TrustItem icon={<UserCheck size={14} />} text="Verified Consultant" />
-        <TrustItem icon={<Target size={14} />} text="Data Driven Strategy" />
-      </div>
+      <ScrollReveal>
+        <div className="flex flex-wrap justify-center gap-12 py-16 opacity-20 border-t border-white/5">
+          <TrustItem icon={<Shield size={14} />} text="Secure Deployment" />
+          <TrustItem icon={<UserCheck size={14} />} text="Verified Consultant" />
+          <TrustItem icon={<Target size={14} />} text="Data Driven Strategy" />
+        </div>
+      </ScrollReveal>
 
       <PricingReviewedNote isEn={isEn} />
       <Footer />

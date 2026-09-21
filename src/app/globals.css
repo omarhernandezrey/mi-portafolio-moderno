@@ -141,6 +141,26 @@ body {
   }
 }
 
+/* Patrón de grid tipo circuito, deriva lentamente — usado en heroes con
+   estética "tech" (páginas servicio×ciudad). Cubierto por la regla de
+   prefers-reduced-motion más abajo (animation-duration: 0.01ms). */
+@keyframes grid-pan {
+  from {
+    background-position: 0px 0px;
+  }
+  to {
+    background-position: 64px 64px;
+  }
+}
+
+.bg-tech-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--primary-color) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--primary-color) 12%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: grid-pan 12s linear infinite;
+}
+
 /* Configuración para el cambio dinámico de colores */
 
 /* Paleta por defecto (palette1) */
