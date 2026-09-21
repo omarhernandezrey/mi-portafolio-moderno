@@ -6,7 +6,11 @@ import { HelpCircle, MessageCircle, ChevronRight, Zap, Shield, Wallet, Clock, Us
 import { Link } from '@/i18n/navigation';
 import Footer from '@/components/shared/Footer';
 import { buildWhatsAppUrl } from '@/config/whatsapp';
-import HeroImage from '@/components/shared/HeroImage';
+import TiltImageCard from '@/components/shared/TiltImageCard';
+import HeroParallax from '@/components/shared/HeroParallax';
+import ParticleField from '@/components/shared/ParticleFieldLoader';
+import ScrollReveal from '@/components/shared/ScrollReveal';
+import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 const BASE_URL = 'https://omarhernandezrey.com';
@@ -237,6 +241,7 @@ export default async function FAQPage({ params }: Props) {
   };
 
   return (
+    <SmoothScrollProvider>
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
       <main className="flex-1 py-32 px-[var(--grid-margin)]">
         <JsonLd data={faqSchema} />
@@ -245,37 +250,53 @@ export default async function FAQPage({ params }: Props) {
         <div className="max-w-5xl mx-auto space-y-24">
 
           {/* Section Header */}
-          <div className="text-center space-y-6">
-            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-              Customer Support Center
-            </div>
-            <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none">
-              {isEn ? (
-                <>Protocols & <br /><span className="text-primary">Inquiries</span></>
-              ) : (
-                <>Protocolos y <br /><span className="text-primary">Consultas</span></>
-              )}
-            </h1>
-            <p className="text-text-muted text-sm font-medium max-w-2xl mx-auto opacity-70 italic">
-              {isEn
-                ? "Direct answers on pricing, timelines, technologies, and the work process. Freelance web developer available for Colombia and the US."
-                : "Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web freelance disponible para Colombia y USA."}
-            </p>
+          <div className="relative overflow-hidden text-center space-y-6">
+            <HeroParallax className="absolute -inset-x-20 -inset-y-24 -z-10">
+              <div data-parallax-speed="0.25" className="absolute inset-0 opacity-20">
+                <div className="absolute top-[10%] left-[15%] w-80 h-80 bg-primary/10 rounded-full blur-[120px]" />
+              </div>
+              <div data-parallax-speed="0.4" className="absolute inset-0">
+                <ParticleField className="w-full h-full opacity-50" />
+              </div>
+            </HeroParallax>
+            <ScrollReveal y={16}>
+              <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
+                Customer Support Center
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none">
+                {isEn ? (
+                  <>Protocols & <br /><span className="text-primary">Inquiries</span></>
+                ) : (
+                  <>Protocolos y <br /><span className="text-primary">Consultas</span></>
+                )}
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="text-text-muted text-sm font-medium max-w-2xl mx-auto opacity-70 italic">
+                {isEn
+                  ? "Direct answers on pricing, timelines, technologies, and the work process. Freelance web developer available for Colombia and the US."
+                  : "Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web freelance disponible para Colombia y USA."}
+              </p>
+            </ScrollReveal>
 
-            <div className="relative w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl mt-6">
-              <HeroImage
+            <ScrollReveal delay={0.3} y={24}>
+              <TiltImageCard
                 src={unsplashUrl(pageHeroImages.faq.photoId)}
                 alt={isEn ? pageHeroImages.faq.alt.en : pageHeroImages.faq.alt.es}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
                 priority
+                className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl mt-6"
               />
-            </div>
+            </ScrollReveal>
           </div>
 
           {/* FAQ Grid */}
           <div className="grid grid-cols-1 gap-20">
             {CATEGORIES.map((category, idx) => (
-              <section key={idx} className="space-y-12">
+              <ScrollReveal key={idx} delay={Math.min(idx * 0.05, 0.3)}>
+              <section className="space-y-12">
                 <div className="flex items-center gap-4 border-b border-white/5 pb-6">
                   <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-inner">
                     {category.icon}
@@ -297,10 +318,12 @@ export default async function FAQPage({ params }: Props) {
                   ))}
                 </div>
               </section>
+              </ScrollReveal>
             ))}
           </div>
 
           {/* Global CTA */}
+          <ScrollReveal>
           <section className="bg-card-bg rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-20 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent opacity-30" />
             <div className="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
@@ -344,19 +367,23 @@ export default async function FAQPage({ params }: Props) {
               </div>
             </div>
           </section>
+          </ScrollReveal>
 
           {/* Global Trust Bar */}
-          <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
-            <TrustItem icon={<Shield size={14} />} text={isEn ? "Secure Protocol" : "Protocolo Seguro"} />
-            <TrustItem icon={<UserCheck size={14} />} text={isEn ? "Verified Identity" : "Identidad Verificada"} />
-            <TrustItem icon={<Clock size={14} />} text={isEn ? "High Availability" : "Alta Disponibilidad"} />
-          </div>
+          <ScrollReveal>
+            <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
+              <TrustItem icon={<Shield size={14} />} text={isEn ? "Secure Protocol" : "Protocolo Seguro"} />
+              <TrustItem icon={<UserCheck size={14} />} text={isEn ? "Verified Identity" : "Identidad Verificada"} />
+              <TrustItem icon={<Clock size={14} />} text={isEn ? "High Availability" : "Alta Disponibilidad"} />
+            </div>
+          </ScrollReveal>
 
         </div>
       </main>
 
       <Footer />
     </div>
+    </SmoothScrollProvider>
   );
 }
 

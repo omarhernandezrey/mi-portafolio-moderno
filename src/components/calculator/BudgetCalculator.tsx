@@ -7,7 +7,11 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { ArrowRight, ArrowLeft, Check, Download, Info, Sparkles, Target, Wallet } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
-import HeroImage from '@/components/shared/HeroImage';
+import TiltImageCard from '@/components/shared/TiltImageCard';
+import HeroParallax from '@/components/shared/HeroParallax';
+import ParticleField from '@/components/shared/ParticleFieldLoader';
+import ScrollReveal from '@/components/shared/ScrollReveal';
+import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 export default function BudgetCalculator() {
@@ -110,47 +114,58 @@ export default function BudgetCalculator() {
   };
 
   return (
+    <SmoothScrollProvider>
     <div className="mx-auto max-w-4xl px-4 py-12 space-y-12">
       {/* Header Intelligence */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
-          <Wallet size={160} className="rotate-12" />
-        </div>
-        
-        <div className="relative z-10 space-y-4">
-          <div className="font-mono-label flex items-center gap-2 text-primary text-[0.65rem]">
-            <span className="w-8 h-px bg-primary/30" />
-            Financial Estimator
+      <div className="relative overflow-hidden rounded-[32px] sm:rounded-[40px]">
+        <HeroParallax className="absolute -inset-10 -z-10">
+          <div data-parallax-speed="0.3" className="absolute inset-0">
+            <ParticleField className="w-full h-full opacity-45" />
           </div>
-          <h1 className="font-display italic text-4xl font-medium text-white-custom tracking-tight leading-tight">
-            {lang === 'es' ? 'Calculadora de Presupuesto' : lang === 'en' ? 'Budget Calculator' : 'Calculadora de Orçamento'}
-          </h1>
-          <p className="text-text-muted text-sm font-medium max-w-md opacity-70">
-            {lang === 'es' ? 'Precisión algorítmica para determinar la inversión necesaria en tu próximo hito digital.' : lang === 'en' ? 'Algorithmic precision to determine the necessary investment for your next digital milestone.' : 'Precisão algorítmica para determinar o investimento necessário para o seu próximo marco digital.'}
-          </p>
-        </div>
+        </HeroParallax>
+        <ScrollReveal>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+              <Wallet size={160} className="rotate-12" />
+            </div>
 
-        <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary opacity-60">
-            {lang === 'es' ? 'Presupuesto Base' : lang === 'en' ? 'Estimated Base' : 'Orçamento Base'}
-          </span>
-          <div className="text-4xl sm:text-5xl font-black text-white-custom tracking-tighter mt-1 flex items-baseline justify-end gap-2">
-            <span className="text-xl text-primary opacity-40">$</span>
-            {numberFormatter.format(currentBudget)}
-            <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">{currencyLabel}</span>
+            <div className="relative z-10 space-y-4">
+              <div className="font-mono-label flex items-center gap-2 text-primary text-[0.65rem]">
+                <span className="w-8 h-px bg-primary/30" />
+                Financial Estimator
+              </div>
+              <h1 className="font-display italic text-4xl font-medium text-white-custom tracking-tight leading-tight">
+                {lang === 'es' ? 'Calculadora de Presupuesto' : lang === 'en' ? 'Budget Calculator' : 'Calculadora de Orçamento'}
+              </h1>
+              <p className="text-text-muted text-sm font-medium max-w-md opacity-70">
+                {lang === 'es' ? 'Precisión algorítmica para determinar la inversión necesaria en tu próximo hito digital.' : lang === 'en' ? 'Algorithmic precision to determine the necessary investment for your next digital milestone.' : 'Precisão algorítmica para determinar o investimento necessário para o seu próximo marco digital.'}
+              </p>
+            </div>
+
+            <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary opacity-60">
+                {lang === 'es' ? 'Presupuesto Base' : lang === 'en' ? 'Estimated Base' : 'Orçamento Base'}
+              </span>
+              <div className="text-4xl sm:text-5xl font-black text-white-custom tracking-tighter mt-1 flex items-baseline justify-end gap-2">
+                <span className="text-xl text-primary opacity-40">$</span>
+                {numberFormatter.format(currentBudget)}
+                <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">{currencyLabel}</span>
+              </div>
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
 
       {/* Hero Image */}
-      <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
-        <HeroImage
+      <ScrollReveal delay={0.1} y={24}>
+        <TiltImageCard
           src={unsplashUrl(pageHeroImages.calculadora.photoId)}
           alt={lang === 'en' ? pageHeroImages.calculadora.alt.en : pageHeroImages.calculadora.alt.es}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 896px"
           priority
+          className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
         />
-      </div>
+      </ScrollReveal>
 
       {/* Progress Architecture */}
       <div className="px-4 sm:px-10">
@@ -364,5 +379,6 @@ export default function BudgetCalculator() {
 
       <PricingReviewedNote isEn={lang === 'en'} />
     </div>
+    </SmoothScrollProvider>
   );
 }

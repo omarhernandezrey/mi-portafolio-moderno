@@ -4,7 +4,11 @@ import { buildMetadata, SITE_URL } from '@/lib/seo';
 import { getFeedPosts } from '@/lib/feed';
 import JsonLd from '@/components/seo/JsonLd';
 import FeedList from '@/components/feed/FeedList';
-import HeroImage from '@/components/shared/HeroImage';
+import TiltImageCard from '@/components/shared/TiltImageCard';
+import HeroParallax from '@/components/shared/HeroParallax';
+import ParticleField from '@/components/shared/ParticleFieldLoader';
+import ScrollReveal from '@/components/shared/ScrollReveal';
+import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
@@ -67,35 +71,45 @@ export default async function ComunidadPage({ params }: Props) {
   };
 
   return (
+    <SmoothScrollProvider>
     <div className="min-h-screen bg-[var(--background-color)] text-[var(--text-color)]">
       <JsonLd data={collectionSchema} />
 
       <div className="container mx-auto px-4 py-16 max-w-2xl">
-        <header className="mb-8 text-center">
-          <span className="font-mono-label text-[0.65rem]" style={{ color: 'var(--primary-color)' }}>
-            {isEn ? 'Community' : 'Comunidad'}
-          </span>
-          <h1 className="font-display italic text-3xl md:text-4xl font-medium mt-2 mb-3">
-            {isEn ? 'Community' : 'Comunidad'}
-          </h1>
-          <p className="text-sm max-w-lg mx-auto" style={{ color: 'var(--muted-color)' }}>
-            {isEn
-              ? 'Course completions, new skills, projects, and job applications — plus your own comments and posts.'
-              : 'Cursos completados, nuevas skills, proyectos y postulaciones laborales — más tus propios comentarios y publicaciones.'}
-          </p>
+        <header className="relative overflow-hidden mb-8 text-center">
+          <HeroParallax className="absolute -inset-x-10 -inset-y-16 -z-10">
+            <div data-parallax-speed="0.3" className="absolute inset-0">
+              <ParticleField className="w-full h-full opacity-40" />
+            </div>
+          </HeroParallax>
+          <ScrollReveal>
+            <span className="font-mono-label text-[0.65rem]" style={{ color: 'var(--primary-color)' }}>
+              {isEn ? 'Community' : 'Comunidad'}
+            </span>
+            <h1 className="font-display italic text-3xl md:text-4xl font-medium mt-2 mb-3">
+              {isEn ? 'Community' : 'Comunidad'}
+            </h1>
+            <p className="text-sm max-w-lg mx-auto" style={{ color: 'var(--muted-color)' }}>
+              {isEn
+                ? 'Course completions, new skills, projects, and job applications — plus your own comments and posts.'
+                : 'Cursos completados, nuevas skills, proyectos y postulaciones laborales — más tus propios comentarios y publicaciones.'}
+            </p>
+          </ScrollReveal>
         </header>
 
-        <div className="relative w-full aspect-[3/2] sm:aspect-[16/9] rounded-[28px] overflow-hidden border border-white/10 shadow-2xl mb-10">
-          <HeroImage
+        <ScrollReveal delay={0.1} y={24}>
+          <TiltImageCard
             src={unsplashUrl(pageHeroImages.comunidad.photoId)}
             alt={isEn ? pageHeroImages.comunidad.alt.en : pageHeroImages.comunidad.alt.es}
             sizes="(max-width: 640px) 100vw, 672px"
             priority
+            className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[28px] border border-white/10 shadow-2xl mb-10"
           />
-        </div>
+        </ScrollReveal>
 
         <FeedList initialPosts={posts} initialHasMore={hasMore} />
       </div>
     </div>
+    </SmoothScrollProvider>
   );
 }

@@ -6,7 +6,11 @@ import { ArrowRight, GraduationCap, Briefcase, Code2, CheckCircle, Sparkles, Map
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { OMAR_PROFILE } from '@/data/omarProfile';
-import HeroImage from '@/components/shared/HeroImage';
+import TiltImageCard from '@/components/shared/TiltImageCard';
+import HeroParallax from '@/components/shared/HeroParallax';
+import ParticleField from '@/components/shared/ParticleFieldLoader';
+import ScrollReveal from '@/components/shared/ScrollReveal';
+import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
@@ -318,6 +322,7 @@ export default async function SobreMiPage({ params }: Props) {
   };
 
   return (
+    <SmoothScrollProvider>
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={personSchema} />
@@ -325,81 +330,104 @@ export default async function SobreMiPage({ params }: Props) {
       <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-16 space-y-24 md:space-y-32">
 
         {/* ===== HERO — grid editorial asimétrico ===== */}
-        <header className="grid grid-cols-12 gap-[var(--grid-gutter)]">
+        <header className="relative overflow-hidden grid grid-cols-12 gap-[var(--grid-gutter)]">
+          <HeroParallax className="absolute -inset-x-[var(--grid-margin)] -inset-y-24 -z-10">
+            <div data-parallax-speed="0.25" className="absolute inset-0 opacity-20">
+              <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
+              <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
+            </div>
+            <div data-parallax-speed="0.4" className="absolute inset-0">
+              <ParticleField className="w-full h-full opacity-55" />
+            </div>
+          </HeroParallax>
           <div className="col-span-12 lg:col-span-8 space-y-8">
-            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-              <MapPin size={12} />
-              Bogotá, Colombia
-            </div>
-            <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
-              Omar<br />
-              <span className="text-primary">Hernández Rey</span>
-            </h1>
-            <p className="font-display italic text-2xl md:text-3xl font-medium text-text-main/80">
-              {isEn ? 'Full Stack Web Developer' : 'Desarrollador Web Full Stack'}
-            </p>
-            <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
-              {isEn
-                ? "Freelance Full Stack Developer with 5+ years of experience building web solutions for businesses in Colombia and remote clients in the US. Specialized in React, Next.js, Node.js, and AI. Software Engineering student at Politécnico Grancolombiano."
-                : 'Desarrollador Full Stack freelance con más de 5 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.'}
-            </p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                href="/servicios"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white-custom font-bold rounded-lg hover:opacity-90 transition-opacity text-sm"
-              >
-                {isEn ? 'View Services' : 'Ver Servicios'}
-                <ArrowRight size={18} />
-              </Link>
-              <Link
-                href="/#projects"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 text-white-custom font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-sm"
-              >
-                {isEn ? 'View Projects' : 'Ver Proyectos'}
-              </Link>
-            </div>
+            <ScrollReveal y={16}>
+              <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
+                <MapPin size={12} />
+                Bogotá, Colombia
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
+                Omar<br />
+                <span className="text-primary">Hernández Rey</span>
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="font-display italic text-2xl md:text-3xl font-medium text-text-main/80">
+                {isEn ? 'Full Stack Web Developer' : 'Desarrollador Web Full Stack'}
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.3}>
+              <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
+                {isEn
+                  ? "Freelance Full Stack Developer with 5+ years of experience building web solutions for businesses in Colombia and remote clients in the US. Specialized in React, Next.js, Node.js, and AI. Software Engineering student at Politécnico Grancolombiano."
+                  : 'Desarrollador Full Stack freelance con más de 5 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.'}
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.4}>
+              <div className="flex flex-wrap gap-4 pt-2">
+                <Link
+                  href="/servicios"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white-custom font-bold rounded-lg hover:opacity-90 transition-opacity text-sm"
+                >
+                  {isEn ? 'View Services' : 'Ver Servicios'}
+                  <ArrowRight size={18} />
+                </Link>
+                <Link
+                  href="/#projects"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 text-white-custom font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-sm"
+                >
+                  {isEn ? 'View Projects' : 'Ver Proyectos'}
+                </Link>
+              </div>
+            </ScrollReveal>
           </div>
 
           {/* Panel lateral — datos rápidos, asimetría deliberada */}
           <div className="hidden lg:block lg:col-span-3 lg:col-start-10">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5 sticky top-32">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                </span>
-                <span className="text-sm font-semibold text-white-custom">{isEn ? 'Available for new projects' : 'Disponible para nuevos proyectos'}</span>
+            <ScrollReveal delay={0.3} y={16}>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5 sticky top-32">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                  </span>
+                  <span className="text-sm font-semibold text-white-custom">{isEn ? 'Available for new projects' : 'Disponible para nuevos proyectos'}</span>
+                </div>
+                <div className="h-px w-full bg-white/10" />
+                <dl className="space-y-3 text-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Experience' : 'Experiencia'}</dt>
+                    <dd className="text-white-custom">{isEn ? '5+ years' : '5+ años'}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Education' : 'Educación'}</dt>
+                    <dd className="text-white-custom text-right">{isEn ? 'Software Eng. (2026)' : 'Ing. Software (2026)'}</dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Zone' : 'Zona'}</dt>
+                    <dd className="text-white-custom text-right">{isEn ? 'CO · Remote US' : 'CO · Remoto USA'}</dd>
+                  </div>
+                </dl>
               </div>
-              <div className="h-px w-full bg-white/10" />
-              <dl className="space-y-3 text-sm">
-                <div className="flex items-center justify-between gap-3">
-                  <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Experience' : 'Experiencia'}</dt>
-                  <dd className="text-white-custom">{isEn ? '5+ years' : '5+ años'}</dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Education' : 'Educación'}</dt>
-                  <dd className="text-white-custom text-right">{isEn ? 'Software Eng. (2026)' : 'Ing. Software (2026)'}</dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Zone' : 'Zona'}</dt>
-                  <dd className="text-white-custom text-right">{isEn ? 'CO · Remote US' : 'CO · Remoto USA'}</dd>
-                </div>
-              </dl>
-            </div>
+            </ScrollReveal>
           </div>
         </header>
 
         {/* ===== HERO IMAGE ===== */}
-        <div className="relative w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] overflow-hidden border border-white/5 shadow-2xl">
-          <HeroImage
+        <ScrollReveal y={32}>
+          <TiltImageCard
             src={unsplashUrl(pageHeroImages.sobreMi.photoId)}
             alt={isEn ? pageHeroImages.sobreMi.alt.en : pageHeroImages.sobreMi.alt.es}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
             priority
+            className="w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
           />
-        </div>
+        </ScrollReveal>
 
         {/* ===== PROFESSIONAL EXPERIENCE ===== */}
+        <ScrollReveal>
         <section id="experiencia" className="space-y-12">
           <div className="space-y-4">
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
@@ -447,8 +475,10 @@ export default async function SobreMiPage({ params }: Props) {
             </div>
           </div>
         </section>
+        </ScrollReveal>
 
         {/* ===== EDUCATION ===== */}
+        <ScrollReveal>
         <section id="educacion" className="space-y-12">
           <div className="space-y-4">
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
@@ -502,8 +532,10 @@ export default async function SobreMiPage({ params }: Props) {
             </p>
           </div>
         </section>
+        </ScrollReveal>
 
         {/* ===== CORE TECHNOLOGIES ===== */}
+        <ScrollReveal>
         <section id="tecnologias" className="space-y-12">
           <div className="space-y-4">
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
@@ -548,8 +580,10 @@ export default async function SobreMiPage({ params }: Props) {
             ))}
           </div>
         </section>
+        </ScrollReveal>
 
         {/* ===== FEATURED PROJECTS ===== */}
+        <ScrollReveal>
         <section id="proyectos" className="space-y-12">
           <div className="space-y-4">
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
@@ -611,8 +645,10 @@ export default async function SobreMiPage({ params }: Props) {
             </Link>
           </div>
         </section>
+        </ScrollReveal>
 
         {/* ===== SERVICES ===== */}
+        <ScrollReveal>
         <section id="servicios" className="space-y-12">
           <div className="space-y-4">
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
@@ -658,8 +694,10 @@ export default async function SobreMiPage({ params }: Props) {
             </Link>
           </div>
         </section>
+        </ScrollReveal>
 
         {/* ===== TIMELINE ===== */}
+        <ScrollReveal>
         <section id="trayectoria" className="space-y-12">
           <div className="space-y-4">
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
@@ -692,8 +730,10 @@ export default async function SobreMiPage({ params }: Props) {
             </div>
           </div>
         </section>
+        </ScrollReveal>
 
         {/* ===== CONTACT CTA ===== */}
+        <ScrollReveal>
         <section id="contacto" className="space-y-12">
           <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-3xl p-10 md:p-16 text-center space-y-8">
             <div className="space-y-4">
@@ -760,10 +800,12 @@ export default async function SobreMiPage({ params }: Props) {
             </div>
           </div>
         </section>
+        </ScrollReveal>
 
       </main>
 
       <Footer />
     </div>
+    </SmoothScrollProvider>
   );
 }
