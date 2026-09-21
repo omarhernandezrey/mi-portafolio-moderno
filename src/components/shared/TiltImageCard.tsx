@@ -1,8 +1,9 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, useReducedMotion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import HeroImage from './HeroImage';
+import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface TiltImageCardProps {
   src: string;
@@ -14,7 +15,7 @@ interface TiltImageCardProps {
 
 export default function TiltImageCard({ src, alt, sizes, priority = false, className }: TiltImageCardProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useReducedMotionSafe();
 
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);

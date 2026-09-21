@@ -13,9 +13,13 @@ import HeroImage from '@/components/shared/HeroImage';
 import TiltImageCard from '@/components/shared/TiltImageCard';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import StatCounter from '@/components/shared/StatCounter';
+import HeroParallax from '@/components/shared/HeroParallax';
+import RevealText from '@/components/shared/RevealText';
+import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { servicioHeroImages, servicioSecondaryImages, globalTechBanner, unsplashUrl } from '@/data/heroImages';
 import { buildMetadata, withBrand } from '@/lib/seo';
 import { Sparkles } from 'lucide-react';
+import ParticleField from '@/components/shared/ParticleFieldLoader';
 
 interface Props {
   params: Promise<{
@@ -284,17 +288,23 @@ export default async function ServicioCiudadPage({ params }: Props) {
   };
 
   return (
+    <SmoothScrollProvider>
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
       <JsonLd data={localBusinessSchema} />
       <JsonLd data={breadcrumbSchema} />
 
       {/* Hero */}
       <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5 bg-card-bg/20 backdrop-blur-sm">
-        <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-20">
-          <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
-        </div>
-        <div className="bg-tech-grid absolute inset-0 -z-10 opacity-40 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,black,transparent)]" />
+        <HeroParallax className="absolute inset-0 -z-10">
+          <div data-parallax-speed="0.25" className="absolute top-0 left-0 w-full h-full opacity-20">
+            <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
+            <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
+          </div>
+          <div data-parallax-speed="0.4" className="absolute inset-0">
+            <ParticleField className="w-full h-full opacity-60" />
+          </div>
+          <div data-parallax-speed="0.12" className="bg-tech-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,black,transparent)]" />
+        </HeroParallax>
 
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] relative z-10 text-center space-y-12">
           <div className="space-y-6 max-w-4xl mx-auto">
@@ -479,9 +489,10 @@ export default async function ServicioCiudadPage({ params }: Props) {
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-background via-background/85 to-background/50" />
         <ScrollReveal className="relative z-10">
           <div className="max-w-3xl mx-auto px-[var(--grid-margin)] text-center space-y-8">
-            <p className="text-xl md:text-3xl text-white-custom font-medium italic leading-relaxed [text-shadow:0_2px_20px_rgba(0,0,0,0.6)]">
-              &ldquo;{ui.quote}&rdquo;
-            </p>
+            <RevealText
+              text={`“${ui.quote}”`}
+              className="text-xl md:text-3xl text-white-custom font-medium italic leading-relaxed [text-shadow:0_2px_20px_rgba(0,0,0,0.6)]"
+            />
             <div className="flex items-center justify-center gap-4">
               <div className="w-12 h-px bg-primary/50" />
               <WhatsAppCTA
@@ -642,6 +653,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
       <PricingReviewedNote isEn={isEn} />
       <Footer />
     </div>
+    </SmoothScrollProvider>
   );
 }
 
