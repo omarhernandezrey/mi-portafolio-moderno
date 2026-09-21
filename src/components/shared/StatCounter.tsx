@@ -10,11 +10,15 @@ interface StatCounterProps {
   suffix?: string;
   label: string;
   duration?: number;
+  // Stat above-the-fold (hero): cuenta al montar en vez de esperar a que
+  // useInView dispare — mismo motivo que ScrollReveal.immediate.
+  immediate?: boolean;
 }
 
-export default function StatCounter({ value, prefix = '', suffix = '', label, duration = 1.4 }: StatCounterProps) {
+export default function StatCounter({ value, prefix = '', suffix = '', label, duration = 1.4, immediate = false }: StatCounterProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
+  const inViewDetected = useInView(ref, { once: true, margin: '-10% 0px' });
+  const isInView = immediate || inViewDetected;
   const shouldReduceMotion = useReducedMotionSafe();
   // Arranca en 0 siempre (igual que el SSR) — nunca en `value`, aunque
   // shouldReduceMotion ya sea true, para no desajustar la hidratación.

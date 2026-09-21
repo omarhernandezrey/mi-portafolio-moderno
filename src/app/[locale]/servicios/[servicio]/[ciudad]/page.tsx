@@ -308,7 +308,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
 
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] relative z-10 text-center space-y-12">
           <div className="space-y-6 max-w-4xl mx-auto">
-            <ScrollReveal y={16}>
+            <ScrollReveal immediate y={16}>
               <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
@@ -317,24 +317,24 @@ export default async function ServicioCiudadPage({ params }: Props) {
                 Regional Engineering Hub • {ciudad.name}
               </div>
             </ScrollReveal>
-            <ScrollReveal delay={0.1}>
+            <ScrollReveal immediate delay={0.1}>
               <h1 className="font-display italic text-4xl sm:text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.9]">
                 {h1Parts[0]}{' '}
                 <span className="text-primary italic">{cityLabel}</span>
               </h1>
             </ScrollReveal>
-            <ScrollReveal delay={0.2}>
+            <ScrollReveal immediate delay={0.2}>
               <h2 className="text-xl md:text-2xl font-bold text-text-muted italic opacity-60 tracking-tight leading-relaxed max-w-2xl mx-auto">
                 {h2}
               </h2>
             </ScrollReveal>
-            <ScrollReveal delay={0.3}>
+            <ScrollReveal immediate delay={0.3}>
               <p className="text-lg text-text-muted/70 font-medium leading-relaxed max-w-2xl mx-auto italic">
                 {description}
               </p>
             </ScrollReveal>
             {marketContext && (
-              <ScrollReveal delay={0.35}>
+              <ScrollReveal immediate delay={0.35}>
                 <p className="text-sm text-text-muted/50 font-medium leading-relaxed max-w-2xl mx-auto">
                   {marketContext}
                 </p>
@@ -342,7 +342,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
             )}
           </div>
 
-          <ScrollReveal delay={0.4}>
+          <ScrollReveal immediate delay={0.4}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <WhatsAppCTA
                 message={ui.chatMsg}
@@ -355,7 +355,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
           </ScrollReveal>
 
           {servicioHero && (
-            <ScrollReveal delay={0.5} y={32}>
+            <ScrollReveal immediate delay={0.5} y={32}>
               <TiltImageCard
                 src={unsplashUrl(servicioHero.photoId)}
                 alt={isEn ? servicioHero.alt.en : servicioHero.alt.es}
@@ -366,10 +366,10 @@ export default async function ServicioCiudadPage({ params }: Props) {
             </ScrollReveal>
           )}
 
-          <ScrollReveal delay={0.6}>
+          <ScrollReveal immediate delay={0.6}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-6 border-t border-white/5">
               {stats.map((stat) => (
-                <StatCounter key={stat.label} value={stat.value} prefix={stat.prefix} suffix={stat.suffix} label={stat.label} />
+                <StatCounter immediate key={stat.label} value={stat.value} prefix={stat.prefix} suffix={stat.suffix} label={stat.label} />
               ))}
             </div>
           </ScrollReveal>

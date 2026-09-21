@@ -197,12 +197,12 @@ export default async function ServiciosPage({ params }: Props) {
         </HeroParallax>
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <div className="max-w-4xl space-y-8">
-            <ScrollReveal y={16}>
+            <ScrollReveal immediate y={16}>
               <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                 {isEn ? 'Freelance Web Developer · Colombia & Remote' : 'Desarrollador Web Freelance · Colombia & Remoto'}
               </div>
             </ScrollReveal>
-            <ScrollReveal delay={0.1}>
+            <ScrollReveal immediate delay={0.1}>
               <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-[0.9]">
                 {isEn ? (
                   <>Web Development<br /><span className="text-primary">& Software</span><br />Services</>
@@ -211,14 +211,14 @@ export default async function ServiciosPage({ params }: Props) {
                 )}
               </h1>
             </ScrollReveal>
-            <ScrollReveal delay={0.15}>
+            <ScrollReveal immediate delay={0.15}>
               <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed opacity-80">
                 {isEn
                   ? "I'm Omar Hernández, a freelance full stack developer in Colombia. I build custom websites and applications for companies and entrepreneurs looking to grow digitally. Available for projects in Colombia and remote for the US and LATAM."
                   : 'Soy Omar Hernández, desarrollador full stack freelance en Colombia. Creo webs y aplicaciones a medida para empresas y emprendedores que quieren crecer digitalmente. Disponible para proyectos en Colombia y remoto para USA y LATAM.'}
               </p>
             </ScrollReveal>
-            <ScrollReveal delay={0.2}>
+            <ScrollReveal immediate delay={0.2}>
               <div className="flex flex-wrap gap-3 pt-2">
                 {['React & Next.js', 'Node.js', 'PostgreSQL', isEn ? 'Technical SEO' : 'SEO Técnico', 'E-commerce'].map(tech => (
                   <span key={tech} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-text-muted">
@@ -227,7 +227,7 @@ export default async function ServiciosPage({ params }: Props) {
                 ))}
               </div>
             </ScrollReveal>
-            <ScrollReveal delay={0.3}>
+            <ScrollReveal immediate delay={0.3}>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <WhatsAppCTA
                   message={isEn ? "Hi Omar, I'm coming from the services page. I want to know more about what you offer." : "Hola Omar, vengo de la página de servicios. Quiero saber más sobre lo que ofreces."}
@@ -247,7 +247,7 @@ export default async function ServiciosPage({ params }: Props) {
           </div>
 
           {/* Hero Image */}
-          <ScrollReveal delay={0.4} y={32}>
+          <ScrollReveal immediate delay={0.4} y={32}>
             <TiltImageCard
               src={unsplashUrl(pageHeroImages.servicios.photoId)}
               alt={isEn ? pageHeroImages.servicios.alt.en : pageHeroImages.servicios.alt.es}
@@ -258,15 +258,15 @@ export default async function ServiciosPage({ params }: Props) {
           </ScrollReveal>
 
           {/* Stats Row */}
-          <ScrollReveal delay={0.5}>
+          <ScrollReveal immediate delay={0.5}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-16 border-t border-white/5">
-              <StatCounter value={30} prefix="+" label={isEn ? 'Projects delivered' : 'Proyectos entregados'} />
-              <StatCounter value={5} suffix="+" label={isEn ? 'Years of experience' : 'Años de experiencia'} />
+              <StatCounter immediate value={30} prefix="+" label={isEn ? 'Projects delivered' : 'Proyectos entregados'} />
+              <StatCounter immediate value={5} suffix="+" label={isEn ? 'Years of experience' : 'Años de experiencia'} />
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-black text-primary italic">{isEn ? '$1,200 USD' : '$1.8M COP'}</div>
                 <div className="text-xs text-text-muted/60 font-medium mt-1">{isEn ? 'Starting price' : 'Desde por proyecto'}</div>
               </div>
-              <StatCounter value={24} suffix="h" label={isEn ? 'Response time' : 'Tiempo de respuesta'} />
+              <StatCounter immediate value={24} suffix="h" label={isEn ? 'Response time' : 'Tiempo de respuesta'} />
             </div>
           </ScrollReveal>
         </div>

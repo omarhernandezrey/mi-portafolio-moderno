@@ -259,12 +259,12 @@ export default async function FAQPage({ params }: Props) {
                 <ParticleField className="w-full h-full opacity-50" />
               </div>
             </HeroParallax>
-            <ScrollReveal y={16}>
+            <ScrollReveal immediate y={16}>
               <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                 Customer Support Center
               </div>
             </ScrollReveal>
-            <ScrollReveal delay={0.1}>
+            <ScrollReveal immediate delay={0.1}>
               <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none">
                 {isEn ? (
                   <>Protocols & <br /><span className="text-primary">Inquiries</span></>
@@ -273,7 +273,7 @@ export default async function FAQPage({ params }: Props) {
                 )}
               </h1>
             </ScrollReveal>
-            <ScrollReveal delay={0.2}>
+            <ScrollReveal immediate delay={0.2}>
               <p className="text-text-muted text-sm font-medium max-w-2xl mx-auto opacity-70 italic">
                 {isEn
                   ? "Direct answers on pricing, timelines, technologies, and the work process. Freelance web developer available for Colombia and the US."
@@ -281,7 +281,7 @@ export default async function FAQPage({ params }: Props) {
               </p>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.3} y={24}>
+            <ScrollReveal immediate delay={0.3} y={24}>
               <TiltImageCard
                 src={unsplashUrl(pageHeroImages.faq.photoId)}
                 alt={isEn ? pageHeroImages.faq.alt.en : pageHeroImages.faq.alt.es}

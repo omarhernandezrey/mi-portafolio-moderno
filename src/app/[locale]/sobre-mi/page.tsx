@@ -341,31 +341,31 @@ export default async function SobreMiPage({ params }: Props) {
             </div>
           </HeroParallax>
           <div className="col-span-12 lg:col-span-8 space-y-8">
-            <ScrollReveal y={16}>
+            <ScrollReveal immediate y={16}>
               <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                 <MapPin size={12} />
                 Bogotá, Colombia
               </div>
             </ScrollReveal>
-            <ScrollReveal delay={0.1}>
+            <ScrollReveal immediate delay={0.1}>
               <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
                 Omar<br />
                 <span className="text-primary">Hernández Rey</span>
               </h1>
             </ScrollReveal>
-            <ScrollReveal delay={0.2}>
+            <ScrollReveal immediate delay={0.2}>
               <p className="font-display italic text-2xl md:text-3xl font-medium text-text-main/80">
                 {isEn ? 'Full Stack Web Developer' : 'Desarrollador Web Full Stack'}
               </p>
             </ScrollReveal>
-            <ScrollReveal delay={0.3}>
+            <ScrollReveal immediate delay={0.3}>
               <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
                 {isEn
                   ? "Freelance Full Stack Developer with 5+ years of experience building web solutions for businesses in Colombia and remote clients in the US. Specialized in React, Next.js, Node.js, and AI. Software Engineering student at Politécnico Grancolombiano."
                   : 'Desarrollador Full Stack freelance con más de 5 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.'}
               </p>
             </ScrollReveal>
-            <ScrollReveal delay={0.4}>
+            <ScrollReveal immediate delay={0.4}>
               <div className="flex flex-wrap gap-4 pt-2">
                 <Link
                   href="/servicios"
@@ -386,7 +386,7 @@ export default async function SobreMiPage({ params }: Props) {
 
           {/* Panel lateral — datos rápidos, asimetría deliberada */}
           <div className="hidden lg:block lg:col-span-3 lg:col-start-10">
-            <ScrollReveal delay={0.3} y={16}>
+            <ScrollReveal immediate delay={0.3} y={16}>
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5 sticky top-32">
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
@@ -416,7 +416,7 @@ export default async function SobreMiPage({ params }: Props) {
         </header>
 
         {/* ===== HERO IMAGE ===== */}
-        <ScrollReveal y={32}>
+        <ScrollReveal immediate y={32}>
           <TiltImageCard
             src={unsplashUrl(pageHeroImages.sobreMi.photoId)}
             alt={isEn ? pageHeroImages.sobreMi.alt.en : pageHeroImages.sobreMi.alt.es}

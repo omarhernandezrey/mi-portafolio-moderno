@@ -123,7 +123,7 @@ export default function BudgetCalculator() {
             <ParticleField className="w-full h-full opacity-45" />
           </div>
         </HeroParallax>
-        <ScrollReveal>
+        <ScrollReveal immediate>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
               <Wallet size={160} className="rotate-12" />
@@ -157,7 +157,7 @@ export default function BudgetCalculator() {
       </div>
 
       {/* Hero Image */}
-      <ScrollReveal delay={0.1} y={24}>
+      <ScrollReveal immediate delay={0.1} y={24}>
         <TiltImageCard
           src={unsplashUrl(pageHeroImages.calculadora.photoId)}
           alt={lang === 'en' ? pageHeroImages.calculadora.alt.en : pageHeroImages.calculadora.alt.es}

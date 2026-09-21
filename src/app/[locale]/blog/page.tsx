@@ -86,12 +86,12 @@ export default async function BlogPage({ params }: Props) {
               <ParticleField className="w-full h-full opacity-50" />
             </div>
           </HeroParallax>
-          <ScrollReveal y={16}>
+          <ScrollReveal immediate y={16}>
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               Knowledge Base &amp; Research
             </div>
           </ScrollReveal>
-          <ScrollReveal delay={0.1}>
+          <ScrollReveal immediate delay={0.1}>
             <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
               {isEn ? (
                 <>Engineering <br /><span className="text-primary">Journal</span></>
@@ -101,21 +101,21 @@ export default async function BlogPage({ params }: Props) {
             </h1>
           </ScrollReveal>
           <div className="flex flex-wrap items-center gap-4">
-            <ScrollReveal delay={0.15}>
+            <ScrollReveal immediate delay={0.15}>
               <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
                 {isEn
                   ? 'Technical articles and strategic reflections at the intersection of high-performance code and intelligent systems.'
                   : 'Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.'}
               </p>
             </ScrollReveal>
-            <ScrollReveal delay={0.2}>
+            <ScrollReveal immediate delay={0.2}>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 text-primary text-xs font-black italic shrink-0">
                 {isEn ? `${posts.length} articles published` : `${posts.length} artículos publicados`}
               </span>
             </ScrollReveal>
           </div>
 
-          <ScrollReveal delay={0.3} y={32}>
+          <ScrollReveal immediate delay={0.3} y={32}>
             <TiltImageCard
               src={unsplashUrl(pageHeroImages.blog.photoId)}
               alt={isEn ? pageHeroImages.blog.alt.en : pageHeroImages.blog.alt.es}

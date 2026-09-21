@@ -141,6 +141,32 @@ body {
   }
 }
 
+/* Reveal de entrada para contenido above-the-fold (hero) — puramente CSS,
+   sin depender de React/Framer Motion. Se usa en vez de whileInView/animate
+   de Framer Motion porque en la práctica, bajo carga inicial pesada
+   (Three.js + GSAP + Lenis montando a la vez), la animación JS de Framer
+   puede no llegar a dispararse nunca y el hero queda con opacidad 0
+   indefinidamente. Una animación CSS con animation-fill-mode:both arranca
+   en cuanto el navegador pinta el elemento, sin esperar a que React
+   hidrate ni a ningún observer — así siempre se completa.
+   La regla global de prefers-reduced-motion (más abajo) ya reduce
+   animation-duration a 0.01ms, así que no hace falta una excepción aparte. */
+@keyframes hero-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 24px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-reveal {
+  animation: hero-reveal-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
 /* Patrón de grid tipo circuito, deriva lentamente — usado en heroes con
    estética "tech" (páginas servicio×ciudad). Cubierto por la regla de
    prefers-reduced-motion más abajo (animation-duration: 0.01ms). */

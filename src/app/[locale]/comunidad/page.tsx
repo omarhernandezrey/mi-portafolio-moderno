@@ -82,7 +82,7 @@ export default async function ComunidadPage({ params }: Props) {
               <ParticleField className="w-full h-full opacity-40" />
             </div>
           </HeroParallax>
-          <ScrollReveal>
+          <ScrollReveal immediate>
             <span className="font-mono-label text-[0.65rem]" style={{ color: 'var(--primary-color)' }}>
               {isEn ? 'Community' : 'Comunidad'}
             </span>
@@ -97,7 +97,7 @@ export default async function ComunidadPage({ params }: Props) {
           </ScrollReveal>
         </header>
 
-        <ScrollReveal delay={0.1} y={24}>
+        <ScrollReveal immediate delay={0.1} y={24}>
           <TiltImageCard
             src={unsplashUrl(pageHeroImages.comunidad.photoId)}
             alt={isEn ? pageHeroImages.comunidad.alt.en : pageHeroImages.comunidad.alt.es}
