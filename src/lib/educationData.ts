@@ -178,6 +178,50 @@ export const educationData: EducationCategory[] = [
       en: "Online Courses (SENA),(Platzi) and more..."
     },
     items: [
+      // 91 - Fundamentos de programación (IBM SkillsBuild)
+      {
+        title: {
+          es: "Fundamentos de programación",
+          en: "Programming Fundamentals"
+        },
+        institution: {
+          es: "IBM SkillsBuild",
+          en: "IBM SkillsBuild"
+        },
+        duration: {
+          es: "5 horas (Finalizado el 22 de septiembre de 2026)",
+          en: "5 hours (Completed on September 22, 2026)"
+        },
+        description: {
+          es: "Certificado de IBM SkillsBuild que acredita el aprendizaje de los fundamentos de la programación: lógica, variables, estructuras de control y buenas prácticas para resolver problemas mediante código.",
+          en: "IBM SkillsBuild certificate accrediting foundational programming knowledge: logic, variables, control structures, and best practices for solving problems through code."
+        },
+        logo: "/images/education/IBM-skillsbuild/ibm-skillsbuild-icon.png",
+        certificate: "/images/education/IBM-skillsbuild/03 Fundamentos de programación-IBM-skills.png",
+        isNew: true
+      },
+      // 90 - Fundamentos de Internet (IBM SkillsBuild)
+      {
+        title: {
+          es: "Fundamentos de Internet",
+          en: "Internet Fundamentals"
+        },
+        institution: {
+          es: "IBM SkillsBuild",
+          en: "IBM SkillsBuild"
+        },
+        duration: {
+          es: "3 horas (Finalizado el 2 de septiembre de 2026)",
+          en: "3 hours (Completed on September 2, 2026)"
+        },
+        description: {
+          es: "Certificado de IBM SkillsBuild que acredita el aprendizaje de los fundamentos de Internet: funcionamiento de la red, protocolos, navegadores y conceptos esenciales para comprender la web.",
+          en: "IBM SkillsBuild certificate accrediting foundational internet knowledge: how the network works, protocols, browsers, and essential concepts for understanding the web."
+        },
+        logo: "/images/education/IBM-skillsbuild/ibm-skillsbuild-icon.png",
+        certificate: "/images/education/IBM-skillsbuild/02 Fundamentos-de-Internet-IBM-skills.png",
+        isNew: true
+      },
       // 89 - Agile Explorer (IBM SkillsBuild)
       {
         title: {
@@ -196,9 +240,8 @@ export const educationData: EducationCategory[] = [
           es: "Insignia digital de IBM SkillsBuild que certifica el aprendizaje de los fundamentos de las metodologías ágiles: mentalidad ágil, Scrum y prácticas de colaboración para equipos de desarrollo.",
           en: "IBM SkillsBuild digital badge certifying foundational knowledge of agile methodologies: agile mindset, Scrum, and collaboration practices for development teams."
         },
-        logo: "/images/education/IBM-skillsbuild/01agile-explorer-logo.png",
+        logo: "/images/education/IBM-skillsbuild/ibm-skillsbuild-icon.png",
         certificate: "/images/education/IBM-skillsbuild/01agile-explorer-certificado.jpg",
-        isNew: true
       },
       // 80 - Metodología de la Programación de Sistemas Informáticos
       {
