@@ -12,7 +12,7 @@ interface ProfileCardProps {
 export default function ProfileCard({
   name = 'Omar Hernández',
   tagline = 'Full-Stack Dev · React · Next.js',
-  cvPath = '/cv/CV-Omar-Hernandez.pdf',
+  cvPath = '/files/Omar_Hernandez_Rey_Full_Stack_Developer_CV.pdf',
 }: ProfileCardProps) {
   return (
     <div className={styles.cardWrapper}>

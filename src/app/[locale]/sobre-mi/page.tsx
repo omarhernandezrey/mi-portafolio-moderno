@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     isEn
       ? {
           title: 'About Me | Full Stack Developer Colombia',
-          description: 'Freelance Full Stack Developer with 5+ years of experience in React, Next.js, Node.js, and AI. Projects in Colombia and remote for US clients.',
+          description: 'Freelance Full Stack Developer with 3+ years of experience in React, Next.js, Node.js, and AI. Projects in Colombia and remote for US clients.',
           path: '/sobre-mi',
           locale: 'en',
           ogSubtitle: 'Full Stack Developer | Colombia',
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
       : {
           title: 'Sobre Mí | Desarrollador Full Stack Colombia',
-          description: 'Desarrollador Full Stack freelance con 5+ años de experiencia en React, Next.js, Node.js e IA. Proyectos en Colombia y remoto para clientes de USA.',
+          description: 'Desarrollador Full Stack freelance con 3+ años de experiencia en React, Next.js, Node.js e IA. Proyectos en Colombia y remoto para clientes de USA.',
           path: '/sobre-mi',
           locale: 'es',
           ogSubtitle: 'Desarrollador Full Stack | Colombia',
@@ -185,9 +185,9 @@ const coreSkillsEs = [
   { name: 'JavaScript', percentage: '98%', colorHex: '#F0DB4F', description: 'ES6+, patrones avanzados y optimización de performance.' },
   { name: 'TypeScript', percentage: '90%', colorHex: '#007ACC', description: 'Tipado estático para aplicaciones empresariales escalables.' },
   { name: 'React/Next.js', percentage: '96%', colorHex: '#61DAFB', description: 'Aplicaciones SSR, ISR y estáticas optimizadas.' },
-  { name: 'Node.js', percentage: '88%', colorHex: '#68A063', description: 'APIs REST/GraphQL, microservicios y autenticación JWT.' },
+  { name: 'Node.js', percentage: '88%', colorHex: '#68A063', description: 'APIs REST, microservicios y autenticación JWT.' },
   { name: 'Diseño UI/UX', percentage: '85%', colorHex: '#FF4081', description: 'Diseño de interfaces centrado en la experiencia de usuario.' },
-  { name: 'Arquitectura en la Nube', percentage: '82%', colorHex: '#4285F4', description: 'Infraestructura escalable en AWS, GCP y Azure.' },
+  { name: 'DevOps & CI/CD', percentage: '82%', colorHex: '#2496ED', description: 'Docker, GitHub Actions/Jenkins y despliegues en Vercel y Railway.' },
 ];
 
 const coreSkillsEn = [
@@ -196,9 +196,9 @@ const coreSkillsEn = [
   { name: 'JavaScript', percentage: '98%', colorHex: '#F0DB4F', description: 'ES6+, advanced patterns, and performance optimization.' },
   { name: 'TypeScript', percentage: '90%', colorHex: '#007ACC', description: 'Static typing for scalable enterprise applications.' },
   { name: 'React/Next.js', percentage: '96%', colorHex: '#61DAFB', description: 'SSR, ISR, and optimized static applications.' },
-  { name: 'Node.js', percentage: '88%', colorHex: '#68A063', description: 'REST/GraphQL APIs, microservices, and JWT authentication.' },
+  { name: 'Node.js', percentage: '88%', colorHex: '#68A063', description: 'REST APIs, microservices, and JWT authentication.' },
   { name: 'UI/UX Design', percentage: '85%', colorHex: '#FF4081', description: 'User-centered interface design.' },
-  { name: 'Cloud Architecture', percentage: '82%', colorHex: '#4285F4', description: 'Scalable infrastructure on AWS, GCP, and Azure.' },
+  { name: 'DevOps & CI/CD', percentage: '82%', colorHex: '#2496ED', description: 'Docker, GitHub Actions/Jenkins, and deployments on Vercel and Railway.' },
 ];
 
 const servicesEs = [
@@ -361,8 +361,8 @@ export default async function SobreMiPage({ params }: Props) {
             <ScrollReveal immediate delay={0.3}>
               <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
                 {isEn
-                  ? "Freelance Full Stack Developer with 5+ years of experience building web solutions for businesses in Colombia and remote clients in the US. Specialized in React, Next.js, Node.js, and AI. Software Engineering student at Politécnico Grancolombiano."
-                  : 'Desarrollador Full Stack freelance con más de 5 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.'}
+                  ? "Freelance Full Stack Developer with 3+ years of experience building web solutions for businesses in Colombia and remote clients in the US. Specialized in React, Next.js, Node.js, and AI. Software Engineering student at Politécnico Grancolombiano."
+                  : 'Desarrollador Full Stack freelance con más de 3 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.'}
               </p>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.4}>
@@ -399,7 +399,7 @@ export default async function SobreMiPage({ params }: Props) {
                 <dl className="space-y-3 text-sm">
                   <div className="flex items-center justify-between gap-3">
                     <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Experience' : 'Experiencia'}</dt>
-                    <dd className="text-white-custom">{isEn ? '5+ years' : '5+ años'}</dd>
+                    <dd className="text-white-custom">{isEn ? '3+ years' : '3+ años'}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Education' : 'Educación'}</dt>
@@ -432,7 +432,7 @@ export default async function SobreMiPage({ params }: Props) {
           <div className="space-y-4">
             <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
               <Briefcase size={12} />
-              {isEn ? '5+ Years of Experience' : '5+ Años de Experiencia'}
+              {isEn ? '3+ Years of Experience' : '3+ Años de Experiencia'}
             </div>
             <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
               {isEn ? <>Professional<br />Experience</> : <>Experiencia<br />Profesional</>}
@@ -445,8 +445,8 @@ export default async function SobreMiPage({ params }: Props) {
               </h3>
               <p className="text-text-muted leading-relaxed mb-6">
                 {isEn
-                  ? 'Since 2020, I\'ve been building custom web solutions for entrepreneurs and businesses. My core stack includes React, Next.js, TypeScript, and Node.js, with PostgreSQL and Supabase databases. I\'ve built e-commerce stores, landing pages, progressive web apps, and complex systems integrations.'
-                  : 'Desde 2020, he estado construyendo soluciones web a medida para emprendedores y negocios. Mi stack principal incluye React, Next.js, TypeScript y Node.js, con bases de datos PostgreSQL y Supabase. He desarrollado e-commerce, landing pages, aplicaciones web progresivas e integraciones de sistemas complejos.'}
+                  ? 'Since 2023, I\'ve been building custom web solutions for entrepreneurs and businesses. My core stack includes React, Next.js, TypeScript, and Node.js, with PostgreSQL and Supabase databases. I\'ve built e-commerce stores, landing pages, progressive web apps, and complex systems integrations.'
+                  : 'Desde 2023, he estado construyendo soluciones web a medida para emprendedores y negocios. Mi stack principal incluye React, Next.js, TypeScript y Node.js, con bases de datos PostgreSQL y Supabase. He desarrollado e-commerce, landing pages, aplicaciones web progresivas e integraciones de sistemas complejos.'}
               </p>
               <div className="flex flex-wrap gap-3">
                 {['React', 'Next.js', 'TypeScript', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind CSS', 'Prisma ORM'].map((tech) => (
@@ -455,6 +455,19 @@ export default async function SobreMiPage({ params }: Props) {
                   </span>
                 ))}
               </div>
+            </div>
+            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 md:p-10">
+              <h3 className="text-2xl font-black text-white-custom italic mb-4">
+                {isEn ? 'Software Developer — Tivit Colombia' : 'Software Developer — Tivit Colombia'}
+              </h3>
+              <p className="text-xs text-text-muted/60 font-mono mb-4">
+                {isEn ? 'May 2022 – Nov 2022' : 'May. 2022 – Nov. 2022'}
+              </p>
+              <p className="text-text-muted leading-relaxed mb-6">
+                {isEn
+                  ? 'Worked as part of the engineering team on the development and maintenance of software applications, contributing to the full development cycle alongside senior developers.'
+                  : 'Participé en el equipo de ingeniería en el desarrollo y mantenimiento de aplicaciones de software, colaborando en el ciclo completo de desarrollo junto a desarrolladores senior.'}
+              </p>
             </div>
             <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 md:p-10">
               <h3 className="text-2xl font-black text-white-custom italic mb-4">

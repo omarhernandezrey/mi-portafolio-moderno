@@ -279,11 +279,11 @@ export default function HeroSection() {
             <dl className="space-y-3 text-sm">
               <div className="flex items-center justify-between gap-3">
                 <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Proyectos</dt>
-                <dd className="text-right font-bold">+30 entregados</dd>
+                <dd className="text-right font-bold">6+ destacados en GitHub</dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Experiencia</dt>
-                <dd className="text-right font-bold">5+ años</dd>
+                <dd className="text-right font-bold">3+ años</dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="font-mono-label text-[0.6rem] tracking-widest" style={{ color: "var(--muted-color)" }}>Respuesta</dt>

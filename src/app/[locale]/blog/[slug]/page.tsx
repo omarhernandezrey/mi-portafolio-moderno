@@ -311,8 +311,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
               <p className="font-bold text-sm" itemProp="name">{post.author}</p>
               <p className="text-xs text-[var(--muted-color)] mt-1" itemProp="description">
                 {isEnglish
-                  ? 'Full Stack Web Developer freelance based in Colombia. 5+ years building web apps and e-commerce solutions for Colombia and USA clients. React, Next.js, Node.js specialist.'
-                  : 'Desarrollador web full stack freelance con más de 5 años entregando proyectos en Colombia y USA. Especialista en React, Next.js y Node.js.'}
+                  ? 'Full Stack Web Developer freelance based in Colombia. 3+ years building web apps and e-commerce solutions for Colombia and USA clients. React, Next.js, Node.js specialist.'
+                  : 'Desarrollador web full stack freelance con más de 3 años entregando proyectos en Colombia y USA. Especialista en React, Next.js y Node.js.'}
               </p>
             </div>
           </aside>

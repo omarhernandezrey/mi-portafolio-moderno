@@ -113,8 +113,8 @@ export const skillsData: Skill[] = [
     colorHex: "#68A063",
     icon: "/images/logos/nodejs.svg",
     description: {
-      es: "APIs REST/GraphQL, microservicios y autenticación JWT.",
-      en: "REST/GraphQL APIs, microservices and JWT authentication."
+      es: "APIs REST, microservicios y autenticación JWT.",
+      en: "REST APIs, microservices and JWT authentication."
     },
     category: {
       es: "Backend",
@@ -140,15 +140,15 @@ export const skillsData: Skill[] = [
   },
   {
     name: {
-      es: "Arquitectura en la Nube",
-      en: "Cloud Architecture"
+      es: "DevOps & CI/CD",
+      en: "DevOps & CI/CD"
     },
     percentage: "82%",
-    colorHex: "#4285F4",
-    icon: "/images/logos/aws.svg",
+    colorHex: "#2496ED",
+    icon: "/images/logos/docker.svg",
     description: {
-      es: "Infraestructura escalable en AWS, GCP y Azure.",
-      en: "Scalable infrastructure on AWS, GCP and Azure."
+      es: "Contenedores con Docker y pipelines de CI/CD (GitHub Actions, Jenkins), despliegues en Vercel y Railway.",
+      en: "Docker containers and CI/CD pipelines (GitHub Actions, Jenkins), deployments on Vercel and Railway."
     },
     category: {
       es: "DevOps",

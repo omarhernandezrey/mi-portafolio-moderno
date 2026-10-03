@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   FaUser,
-  FaCalendarAlt,
   FaMapMarkerAlt,
   FaPhoneAlt,
 } from "react-icons/fa";
@@ -28,14 +27,10 @@ const createFloatingElements = (count = 12) =>
   }));
 
 const AboutSection: React.FC = () => {
-  const { t, language } = useTranslation();
-  const currentLanguage = language === "en" ? "en" : "es";
-  const cvDownloadPath = (
-    currentLanguage === "en"
-      ? "/files/Omar_Hernandez_Rey_English-ATS.pdf"
-      : "/files/Omar_Hernandez_Rey_CV_ATS.pdf"
-  );
-  
+  const { t } = useTranslation();
+  // CV único (ES/EN): Omar la coloca en public/files/.
+  const cvDownloadPath = "/files/Omar_Hernandez_Rey_Full_Stack_Developer_CV.pdf";
+
   /* Estado para partículas flotantes (solo cliente) */
   const [floatingElements, setFloatingElements] = useState<
     ReturnType<typeof createFloatingElements>
@@ -70,11 +65,6 @@ const AboutSection: React.FC = () => {
       icon: FaUser, 
       label: t("about.personalData.name"), 
       value: t("about.personalInfo.fullName") 
-    },
-    {
-      icon: FaCalendarAlt,
-      label: t("about.personalData.birthDate"),
-      value: t("about.personalInfo.birth"),
     },
     {
       icon: FaMapMarkerAlt,

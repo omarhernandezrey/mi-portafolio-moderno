@@ -122,11 +122,11 @@ const CATEGORIES_ES = [
     faqs: [
       {
         q: '¿Puedes hacer proyectos para clientes fuera de Colombia, como en USA?',
-        a: 'Sí. Atiendo clientes en USA, Canadá, España y toda LATAM 100% en remoto. Trabajo cómodamente en zonas horarias EST, CST y PST. Me comunico en español e inglés por Slack, email y videollamadas. He entregado más de 10 proyectos para clientes en USA los últimos 3 años.'
+        a: 'Sí. Atiendo clientes en USA, Canadá, España y toda LATAM 100% en remoto. Trabajo cómodamente en horario UTC-5. Me comunico en español (nativo) e inglés (nivel intermedio B1) por Slack, email y videollamadas.'
       },
       {
         q: '¿Cuántos proyectos has entregado y cuánta experiencia tienes?',
-        a: 'Más de 30 proyectos entregados en 5+ años: landing pages, e-commerce, aplicaciones web y sistemas de automatización para empresas en Colombia, USA y LATAM. Graduado en Ingeniería de Software del Politécnico Grancolombiano con certificaciones adicionales en React, Node.js y Cloud Architecture.'
+        a: 'Más de 3 años de experiencia como Full Stack Developer freelance, con proyectos propios como FlexiCommerce (e-commerce con pagos reales vía Wompi) y JARVIS Local (asistente de IA por voz) para clientes en Colombia y remoto en LATAM y USA. Estoy cursando Ingeniería de Software en el Politécnico Grancolombiano (grado previsto noviembre 2026) y soy Tecnólogo en Análisis y Desarrollo de Sistemas de Información (SENA, 2022).'
       },
     ]
   },
@@ -197,11 +197,11 @@ const CATEGORIES_EN = [
     faqs: [
       {
         q: 'Can you take on projects for clients outside Colombia, like in the US?',
-        a: 'Yes. I work with clients in the US, Canada, Spain, and across LATAM, 100% remote. I work comfortably across EST, CST, and PST time zones, communicating in both English and Spanish via Slack, email, and video calls. I\'ve delivered 10+ projects for US-based clients over the last 3 years.'
+        a: 'Yes. I work with clients in the US, Canada, Spain, and across LATAM, 100% remote. I work comfortably in the UTC-5 time zone, communicating in Spanish (native) and English (intermediate, B1) via Slack, email, and video calls.'
       },
       {
         q: 'How many projects have you delivered, and how much experience do you have?',
-        a: '30+ projects delivered over 5+ years: landing pages, e-commerce stores, web applications, and automation systems for companies in Colombia, the US, and LATAM. I hold a Software Engineering degree from Politécnico Grancolombiano plus additional certifications in React, Node.js, and Cloud Architecture.'
+        a: 'More than 3 years of experience as a freelance Full Stack Developer, with projects of my own like FlexiCommerce (e-commerce with real payments via Wompi) and JARVIS Local (voice AI assistant) for clients in Colombia and remotely across LATAM and the US. I\'m completing a Software Engineering degree at Politécnico Grancolombiano (expected graduation November 2026) and hold a degree in Information Systems Analysis and Development from SENA (2022).'
       },
     ]
   },

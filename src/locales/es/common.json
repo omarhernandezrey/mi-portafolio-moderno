@@ -68,14 +68,12 @@
     "downloadCV": "Download CV",
     "personalData": {
       "name": "Nombre",
-      "birthDate": "Fecha de Nacimiento",
-      "address": "Dirección",
+      "address": "Ubicación",
       "phone": "Teléfono"
     },
     "personalInfo": {
       "fullName": "Omar Hernández Rey",
-      "birth": "14 de febrero de 1990",
-      "location": "Carrera 2N #39D-16 Sur, Bogotá",
+      "location": "Bogotá, Colombia",
       "phoneNumber": "(+57) 3219052878"
     },
     "interests": {
@@ -155,9 +153,9 @@
       "javascript": "ES6+, patrones avanzados y optimización de performance.",
       "typescript": "Tipado estático para aplicaciones empresariales escalables.",
       "react": "Aplicaciones SSR, ISR y estáticas optimizadas.",
-      "nodejs": "APIs REST/GraphQL, microservicios y autenticación JWT.",
+      "nodejs": "APIs REST, microservicios y autenticación JWT.",
       "uiux": "Diseño de interfaces centrado en la experiencia de usuario.",
-      "cloud": "Infraestructura escalable en AWS, GCP y Azure."
+      "cloud": "Contenedores con Docker y pipelines de CI/CD (GitHub Actions, Jenkins), despliegues en Vercel y Railway."
     }
   },
   "education": {
