@@ -84,7 +84,7 @@ export default async function PrivacidadPage({ params }: Props) {
                 <LegalBlock
                   number="01"
                   title="Data Controller"
-                  content="The entity responsible for the administration and custody of your data assets is Omar Hernández Rey, with operational residence in Bogotá, Colombia. For any rectification, inquiry, or deletion request, the following communication channel is enabled: hernandezreyomar@gmail.com."
+                  content="The entity responsible for the administration and custody of your data assets is Omar Hernández Rey, with operational residence in Bogotá, Colombia. For any rectification, inquiry, or deletion request, the following communication channel is enabled: omarhernandezrey@gmail.com."
                 />
 
                 <LegalBlock
@@ -153,7 +153,7 @@ export default async function PrivacidadPage({ params }: Props) {
                 <LegalBlock
                   number="01"
                   title="Responsable del Tratamiento"
-                  content="La entidad responsable de la administración y custodia de sus activos de información es Omar Hernández Rey, con residencia operativa en Bogotá, Colombia. Para cualquier requerimiento de rectificación, consulta o eliminación, se habilita el canal de comunicación: hernandezreyomar@gmail.com."
+                  content="La entidad responsable de la administración y custodia de sus activos de información es Omar Hernández Rey, con residencia operativa en Bogotá, Colombia. Para cualquier requerimiento de rectificación, consulta o eliminación, se habilita el canal de comunicación: omarhernandezrey@gmail.com."
                 />
 
                 <LegalBlock

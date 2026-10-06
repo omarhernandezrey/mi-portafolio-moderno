@@ -47,7 +47,7 @@ begin
     new.id, 
     new.email, 
     case 
-      when new.email = 'hernandezreyomar@gmail.com' then 'owner'::public.user_role
+      when new.email = 'omarhernandezrey@gmail.com' then 'owner'::public.user_role
       else 'viewer'::public.user_role
     end
   );

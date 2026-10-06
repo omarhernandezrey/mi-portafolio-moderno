@@ -596,7 +596,7 @@ Aquí el link directo: [PEGA EL LINK DE RESEÑAS DE GBP]
 
 **Reseña negativa — NUNCA te pongas a la defensiva:**
 ```
-Hola [Nombre], lamento mucho que tu experiencia no haya sido la esperada. Me gustaría entender mejor lo sucedido y buscar una solución. ¿Podrías escribirme a hernandezreyomar@gmail.com para revisarlo personalmente? Me importa mucho tu satisfacción.
+Hola [Nombre], lamento mucho que tu experiencia no haya sido la esperada. Me gustaría entender mejor lo sucedido y buscar una solución. ¿Podrías escribirme a omarhernandezrey@gmail.com para revisarlo personalmente? Me importa mucho tu satisfacción.
 ```
 
 ---

@@ -56,7 +56,7 @@ export async function generateInvoicePDF(data: InvoiceData): Promise<Uint8Array>
   y -= 25;
   drawText('Full Stack Web Developer / NIT: 123456789-0', { size: 10 });
   y -= 15;
-  drawText('Bogotá, Colombia | hernandezreyomar@gmail.com', { size: 10 });
+  drawText('Bogotá, Colombia | omarhernandezrey@gmail.com', { size: 10 });
   y -= 40;
 
   // Invoice Title & Info

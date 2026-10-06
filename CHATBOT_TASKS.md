@@ -926,7 +926,7 @@ Auto-arreglar un daño causado por violar este protocolo = doble sanción.
 
 **Pasos para Omar:**
 1. Abre: **https://cal.com/signup**
-2. Regístrate con Google (`hernandezreyomar@gmail.com`).
+2. Regístrate con Google (`omarhernandezrey@gmail.com`).
 3. Te pide un **username** → escribe `omar-hernandez` (si está ocupado, `omar-hr-dev`, `ohr-dev`).
 4. Te pide conectar calendario → conecta tu **Google Calendar** (recomendado para evitar choques).
 5. Te pide tu zona horaria → elige **America/Bogotá**.
@@ -4881,7 +4881,7 @@ Hacer commit de este cambio con mensaje: `chore(seo): agregar placeholder para v
 
 **Paso 2 — Omar obtiene el código de verificación:**
 1. Ir a: `https://search.google.com/search-console/`
-2. Iniciar sesión con `hernandezreyomar@gmail.com`.
+2. Iniciar sesión con `omarhernandezrey@gmail.com`.
 3. Click en "Agregar propiedad".
 4. Seleccionar "Prefijo de URL".
 5. Ingresar: `https://omarhernandezrey.com`.
@@ -5033,7 +5033,7 @@ export async function POST(req: NextRequest) {
 **🤖 COPILOTO CC — Pasos para Omar:**
 
 1. Ir a `https://business.google.com/`
-2. Iniciar sesión con `hernandezreyomar@gmail.com`.
+2. Iniciar sesión con `omarhernandezrey@gmail.com`.
 3. Click en "Agregar negocio" → "Agregar un negocio solo".
 4. **Nombre del negocio:** `Omar Hernández Rey — Desarrollador Web Freelance`
 5. **Categoría:** buscar y seleccionar "Empresa de desarrollo de software" o "Consultor de tecnología de la información".

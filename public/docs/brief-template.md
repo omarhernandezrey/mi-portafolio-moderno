@@ -39,4 +39,4 @@ Este documento tiene como objetivo entender mejor tus necesidades y objetivos pa
 - ¿Quién se encargará del mantenimiento posterior?
 
 ---
-*Una vez lleno, por favor envía este documento a **hernandezreyomar@gmail.com** o súbelo al chat.*
+*Una vez lleno, por favor envía este documento a **omarhernandezrey@gmail.com** o súbelo al chat.*

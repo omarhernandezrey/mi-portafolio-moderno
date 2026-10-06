@@ -314,5 +314,5 @@ Para actualizar educationData.ts:
 
 **Última actualización**: 2 de febrero de 2026  
 **Autor**: Omar Hernández Rey  
-**Email**: hernandezreyomar@gmail.com  
+**Email**: omarhernandezrey@gmail.com  
 **Repositorio**: github.com/omarhernandezrey/mi-portafolio-moderno

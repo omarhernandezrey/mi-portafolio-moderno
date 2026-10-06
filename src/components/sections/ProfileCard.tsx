@@ -18,7 +18,7 @@ export default function ProfileCard({
     <div className={styles.cardWrapper}>
     <div className={styles.card}>
       <a
-        href="mailto:hernandezreyomar@gmail.com"
+        href="mailto:omarhernandezrey@gmail.com"
         className={styles.mail}
         aria-label="Enviar correo"
       >

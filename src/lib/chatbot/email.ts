@@ -10,7 +10,7 @@ export async function sendContactNotification(name: string, email: string, messa
   try {
     await resend.emails.send({
       from: 'Omar Hernández <contacto@omarhernandezrey.com>',
-      to: ['hernandezreyomar@gmail.com'],
+      to: ['omarhernandezrey@gmail.com'],
       replyTo: email,
       subject: `📩 Nuevo mensaje de ${name} — Formulario de contacto`,
       html: `

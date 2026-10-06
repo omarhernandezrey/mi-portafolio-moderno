@@ -231,7 +231,7 @@ Este proyecto demuestra:
 ## 📞 Información de Contacto
 
 **Desarrollador**: Omar Hernández Rey  
-**Email**: hernandezreyomar@gmail.com  
+**Email**: omarhernandezrey@gmail.com  
 **GitHub**: [@omarhernandezrey](https://github.com/omarhernandezrey)  
 **Portafolio**: [mi-portafolio-moderno](https://github.com/omarhernandezrey/mi-portafolio-moderno)
 
