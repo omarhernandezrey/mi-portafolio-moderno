@@ -178,6 +178,28 @@ export const educationData: EducationCategory[] = [
       en: "Online Courses (SENA),(Platzi) and more..."
     },
     items: [
+      // 92 - Fundamentos de Git y GitHub (IBM SkillsBuild)
+      {
+        title: {
+          es: "Fundamentos de Git y GitHub",
+          en: "Git and GitHub Fundamentals"
+        },
+        institution: {
+          es: "IBM SkillsBuild",
+          en: "IBM SkillsBuild"
+        },
+        duration: {
+          es: "5 horas (Finalizado el 13 de octubre de 2026)",
+          en: "5 hours (Completed on October 13, 2026)"
+        },
+        description: {
+          es: "Curso de IBM SkillsBuild sobre los fundamentos del control de versiones con Git y la colaboración en proyectos de software mediante GitHub.",
+          en: "IBM SkillsBuild course covering version control fundamentals with Git and collaborating on software projects with GitHub."
+        },
+        logo: "/images/education/IBM-skillsbuild/ibm-skillsbuild-icon.png",
+        certificate: "/images/education/IBM-skillsbuild/04 Fundamentos_De_Git_&_Github_IBM.png",
+        isNew: true
+      },
       // 91 - Fundamentos de programación (IBM SkillsBuild)
       {
         title: {
@@ -198,7 +220,7 @@ export const educationData: EducationCategory[] = [
         },
         logo: "/images/education/IBM-skillsbuild/ibm-skillsbuild-icon.png",
         certificate: "/images/education/IBM-skillsbuild/03 Fundamentos de programación-IBM-skills.png",
-        isNew: true
+        isNew: false
       },
       // 90 - Fundamentos de Internet (IBM SkillsBuild)
       {
@@ -220,7 +242,7 @@ export const educationData: EducationCategory[] = [
         },
         logo: "/images/education/IBM-skillsbuild/ibm-skillsbuild-icon.png",
         certificate: "/images/education/IBM-skillsbuild/02 Fundamentos-de-Internet-IBM-skills.png",
-        isNew: true
+        isNew: false
       },
       // 89 - Agile Explorer (IBM SkillsBuild)
       {

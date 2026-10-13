@@ -25,6 +25,7 @@ export interface FeedPost {
   reaction_counts: Partial<Record<ReactionType, number>>;
   comments_count: number;
   created_at: string;
+  isNew?: boolean;
 }
 
 export interface FeedComment {
@@ -40,6 +41,26 @@ export interface FeedComment {
 const PUBLIC_POST_COLUMNS =
   "id, author_role, author_name, lang, category, title, body, image_urls, link_url, pinned, likes_count, reaction_counts, comments_count, created_at";
 const PUBLIC_COMMENT_COLUMNS = "id, post_id, author_name, body, created_at";
+
+async function getLatestCoursePostIds(): Promise<Set<string>> {
+  const newestByLanguage = await Promise.all((["es", "en"] as const).map((lang) =>
+    supabaseServer
+      .from("feed_posts")
+      .select("id, created_at")
+      .eq("status", "published")
+      .eq("author_role", "owner")
+      .eq("category", "curso")
+      .eq("lang", lang)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ));
+
+  return new Set(newestByLanguage.flatMap(({ data, error }) => {
+    if (error || !data) return [];
+    return [data.id];
+  }));
+}
 
 export async function getFeedPosts(opts: {
   page?: number;
@@ -63,30 +84,41 @@ export async function getFeedPosts(opts: {
   if (opts.lang) query = query.eq("lang", opts.lang);
   if (opts.category) query = query.eq("category", opts.category);
 
-  const { data, error } = await query;
+  const [{ data, error }, latestCoursePostIds] = await Promise.all([
+    query,
+    getLatestCoursePostIds(),
+  ]);
   if (error) {
     console.error("getFeedPosts error:", error);
     return { posts: [], hasMore: false };
   }
 
-  const rows = (data ?? []) as unknown as FeedPost[];
+  const rows = ((data ?? []) as unknown as FeedPost[]).map((post) => ({
+    ...post,
+    isNew: latestCoursePostIds.has(post.id),
+  }));
   const hasMore = rows.length > limit;
   return { posts: hasMore ? rows.slice(0, limit) : rows, hasMore };
 }
 
 export async function getFeedPostById(id: string): Promise<FeedPost | null> {
-  const { data, error } = await supabaseServer
-    .from("feed_posts")
-    .select(PUBLIC_POST_COLUMNS)
-    .eq("id", id)
-    .eq("status", "published")
-    .maybeSingle();
+  const [{ data, error }, latestCoursePostIds] = await Promise.all([
+    supabaseServer
+      .from("feed_posts")
+      .select(PUBLIC_POST_COLUMNS)
+      .eq("id", id)
+      .eq("status", "published")
+      .maybeSingle(),
+    getLatestCoursePostIds(),
+  ]);
 
   if (error) {
     console.error("getFeedPostById error:", error);
     return null;
   }
-  return (data as unknown as FeedPost) ?? null;
+  if (!data) return null;
+  const post = data as unknown as FeedPost;
+  return { ...post, isNew: latestCoursePostIds.has(post.id) };
 }
 
 export async function getFeedComments(

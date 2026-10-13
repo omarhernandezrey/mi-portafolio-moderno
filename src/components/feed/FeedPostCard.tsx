@@ -80,6 +80,11 @@ export default function FeedPostCard({
         <FeedBadge tone="accent">
           <span className="shrink-0">{t(`feed.category.${post.category}`)}</span>
         </FeedBadge>
+        {post.isNew && (
+          <FeedBadge tone="primary">
+            <span className="shrink-0">{t("feed.newBadge")}</span>
+          </FeedBadge>
+        )}
       </header>
 
       {variant === "full" ? (
