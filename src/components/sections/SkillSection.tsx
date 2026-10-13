@@ -356,7 +356,7 @@ export default function PremiumSkillsSection() {
           className="flex justify-center mb-16"
         >
           <div
-            className="flex flex-nowrap overflow-x-auto gap-2 p-2 backdrop-blur-lg rounded-2xl border scrollbar-hide max-w-full"
+            className="flex w-full max-w-4xl flex-wrap justify-center gap-2 p-2 backdrop-blur-lg rounded-2xl border"
             style={{
               backgroundColor: `color-mix(in srgb, var(--secondary-background-color) 50%, transparent)`,
               borderColor: `color-mix(in srgb, var(--muted-color) 30%, transparent)`,
@@ -583,7 +583,7 @@ function CategoryButton({ label, isActive, onClick }: CategoryButtonProps) {
       onClick={onClick}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      className="px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300"
+      className="min-h-11 touch-manipulation whitespace-nowrap rounded-xl px-3 py-2.5 text-xs font-medium transition-all duration-300 sm:px-6 sm:py-3 sm:text-sm"
       style={{
         backgroundColor: isActive ? "var(--primary-color)" : "transparent",
         color: isActive ? "var(--white-color)" : "var(--muted-color)",

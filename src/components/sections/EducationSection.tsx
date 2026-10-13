@@ -961,47 +961,125 @@ const EducationSection = () => {
           transform: scale(1.1);
         }
 
-        /* Mobile: single-column left-aligned timeline instead of a squeezed
-           50%-width zigzag — the desktop alternating layout has no room to
-           breathe under 768px and forces titles into 5-6 wrapped lines. */
+        /* Keep the alternating timeline on phones; tighten each half instead
+           of moving every item into a different, single-column layout. */
         @media (max-width: 767px) {
           .timeline-line {
-            left: 20px;
-            transform: none;
+            left: 50%;
+            transform: translateX(-50%);
           }
 
           .cap-icon {
-            left: 20px;
-            transform: none;
+            left: 50%;
+            transform: translateX(-50%);
           }
 
           .timeline-item,
           .timeline-item.left,
           .timeline-item.right {
-            width: 100%;
+            width: 50%;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+          }
+
+          .timeline-item.left {
             left: 0;
+            text-align: right;
+            padding-left: 4px;
+            padding-right: 12px;
+          }
+
+          .timeline-item.right {
+            left: 50%;
             text-align: left;
-            padding: 10px 10px 10px 45px;
+            padding-left: 12px;
+            padding-right: 4px;
           }
 
-          .timeline-item.left .timeline-icon,
+          .timeline-icon {
+            width: 30px;
+            height: 30px;
+            top: 12px;
+          }
+
+          .timeline-item.left .timeline-icon {
+            right: -15px;
+          }
+
           .timeline-item.right .timeline-icon {
-            left: 2px;
-            right: auto;
+            left: -15px;
           }
 
-          .timeline-item.left .timeline-content::after,
-          .timeline-item.right .timeline-content::after {
-            top: 15px;
-            left: -8px;
-            right: auto;
-            border-width: 8px 8px 8px 0;
-            border-color: transparent var(--card-bg-color) transparent transparent;
+          .timeline-content {
+            min-width: 0;
+            padding: 8px 7px;
+          }
+
+          .item-index {
+            min-width: 1.75rem;
+            height: 1.75rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.72rem;
+          }
+
+          .item-title {
+            font-size: clamp(0.72rem, 3vw, 0.88rem);
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+          }
+
+          .item-institution {
+            font-size: 0.68rem;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+          }
+
+          .item-duration {
+            font-size: 0.64rem;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+          }
+
+          .latest-badge {
+            display: flex;
+            width: fit-content;
+            margin: 0.35rem 0 0 auto;
+            padding: 0.2rem 0.45rem;
+            font-size: 0.55rem;
+            letter-spacing: 0.06em;
+          }
+
+          .timeline-item.right .latest-badge {
+            margin-right: auto;
+            margin-left: 0;
           }
 
           .timeline-end-point {
-            left: 20px;
-            transform: none;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+        }
+
+        @media (max-width: 359px) {
+          .timeline-item.left {
+            padding-right: 9px;
+          }
+
+          .timeline-item.right {
+            padding-left: 9px;
+          }
+
+          .timeline-content {
+            padding: 7px 5px;
+          }
+
+          .item-institution {
+            font-size: 0.64rem;
+          }
+
+          .item-duration {
+            font-size: 0.6rem;
           }
         }
 

@@ -133,6 +133,15 @@ const ProjectsSection: React.FC = () => {
     return pages;
   }, [totalPages, currentPage]);
 
+  const mobilePageNumbers = useMemo(() => {
+    const pageCount = Math.min(3, totalPages);
+    const start = Math.min(
+      Math.max(1, currentPage - 1),
+      Math.max(1, totalPages - pageCount + 1),
+    );
+    return Array.from({ length: pageCount }, (_, index) => start + index);
+  }, [totalPages, currentPage]);
+
   /* --------------------------------------------------------------------- */
   return (
     <>
@@ -386,7 +395,7 @@ const ProjectsSection: React.FC = () => {
               className="mt-10 sm:mt-14 flex flex-col items-center gap-3"
               aria-label={t('projects.paginationLabel')}
             >
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="hidden items-center gap-1.5 sm:flex sm:gap-2">
                 <button
                   type="button"
                   onClick={() => goToPage(currentPage - 1)}
@@ -448,6 +457,60 @@ const ProjectsSection: React.FC = () => {
                   disabled={currentPage === totalPages}
                   aria-label={t('projects.nextPage')}
                   className="flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 shrink-0"
+                  style={{
+                    backgroundColor: 'rgba(40,40,60,0.5)',
+                    borderColor: 'rgba(209,209,224,0.3)',
+                    color: 'var(--muted-color)',
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="9 6 15 12 9 18" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex items-center justify-center gap-1 sm:hidden">
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  aria-label={t('projects.previousPage')}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+                  style={{
+                    backgroundColor: 'rgba(40,40,60,0.5)',
+                    borderColor: 'rgba(209,209,224,0.3)',
+                    color: 'var(--muted-color)',
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+
+                {mobilePageNumbers.map((page) => (
+                  <button
+                    key={`mobile-${page}`}
+                    type="button"
+                    onClick={() => goToPage(page)}
+                    aria-current={page === currentPage ? 'page' : undefined}
+                    aria-label={t('projects.goToPage', { page })}
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-sm font-semibold transition-colors"
+                    style={{
+                      backgroundColor: page === currentPage ? 'var(--primary-color)' : 'rgba(40,40,60,0.5)',
+                      borderColor: page === currentPage ? 'var(--primary-color)' : 'rgba(209,209,224,0.3)',
+                      color: page === currentPage ? 'var(--white-color)' : 'var(--muted-color)',
+                      boxShadow: page === currentPage ? '0 8px 20px rgba(255,111,97,0.3)' : 'none',
+                    }}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  aria-label={t('projects.nextPage')}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
                   style={{
                     backgroundColor: 'rgba(40,40,60,0.5)',
                     borderColor: 'rgba(209,209,224,0.3)',
