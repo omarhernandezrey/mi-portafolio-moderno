@@ -72,11 +72,11 @@ const principalTech: TechItem[] = [
   { name: "NestJS", icon: <SiNestjs />, color: "#E0234E", category: "Backend" },
   { name: "Swagger / OpenAPI", icon: <SiSwagger />, color: "#85EA2D", category: "Backend" },
 
-  { name: "PostgreSQL", icon: <SiPostgresql />, color: "#4169E1", category: "Database" },
-  { name: "MongoDB", icon: <SiMongodb />, color: "#47A248", category: "Database" },
-  { name: "Redis", icon: <SiRedis />, color: "#DC382D", category: "Database" },
-  { name: "Prisma", icon: <SiPrisma />, color: "#2D3748", category: "Database" },
-  { name: "TypeORM", icon: <SiTypeorm />, color: "#E83524", category: "Database" },
+  { name: "PostgreSQL", icon: <SiPostgresql />, color: "#4169E1", category: "Base de datos" },
+  { name: "MongoDB", icon: <SiMongodb />, color: "#47A248", category: "Base de datos" },
+  { name: "Redis", icon: <SiRedis />, color: "#DC382D", category: "Base de datos" },
+  { name: "Prisma", icon: <SiPrisma />, color: "#2D3748", category: "Base de datos" },
+  { name: "TypeORM", icon: <SiTypeorm />, color: "#E83524", category: "Base de datos" },
 
   { name: "Docker", icon: <FaDocker />, color: "#2496ED", category: "DevOps" },
   { name: "GitHub Actions", icon: <SiGithubactions />, color: "#2088FF", category: "CI/CD" },
@@ -87,8 +87,8 @@ const principalTech: TechItem[] = [
   { name: "Railway", icon: <SiRailway />, color: "#0B0D0E", category: "Cloud" },
 
   { name: "Jest", icon: <SiJest />, color: "#C21325", category: "Testing" },
-  { name: "Git", icon: <FaGitAlt />, color: "#F05032", category: "Tools" },
-  { name: "Vite", icon: <SiVite />, color: "#646CFF", category: "Tools" },
+  { name: "Git", icon: <FaGitAlt />, color: "#F05032", category: "Herramientas" },
+  { name: "Vite", icon: <SiVite />, color: "#646CFF", category: "Herramientas" },
 ];
 
 // También he trabajado con: stack secundario (según mi CV) + herramientas
@@ -110,10 +110,10 @@ const secondaryTech: TechItem[] = [
   { name: "Supabase", icon: <SiSupabase />, color: "#3ECF8E", category: "Cloud" },
 
   { name: "Firebase", icon: <SiFirebase />, color: "#FFCA28", category: "Cloud" },
-  { name: "Nginx", icon: <SiNginx />, color: "#009639", category: "Server" },
-  { name: "Webpack", icon: <SiWebpack />, color: "#8DD6F9", category: "Tools" },
-  { name: "Storybook", icon: <SiStorybook />, color: "#FF4785", category: "Tools" },
-  { name: "Figma", icon: <SiFigma />, color: "#F24E1E", category: "Design" },
+  { name: "Nginx", icon: <SiNginx />, color: "#009639", category: "Servidor" },
+  { name: "Webpack", icon: <SiWebpack />, color: "#8DD6F9", category: "Herramientas" },
+  { name: "Storybook", icon: <SiStorybook />, color: "#FF4785", category: "Herramientas" },
+  { name: "Figma", icon: <SiFigma />, color: "#F24E1E", category: "Diseño" },
 ];
 
 interface TechCardProps {
@@ -193,9 +193,9 @@ const TechMarquee: React.FC = () => {
       </div>
 
       <div className="text-center mb-12 relative z-10">
-        <span className="font-mono-label text-[0.65rem] text-[var(--accent-color)]">Stack</span>
+        <span className="font-mono-label text-[0.65rem] text-[var(--accent-color)]">Tecnologías</span>
         <h2 className="font-display italic text-3xl md:text-4xl font-medium text-[var(--text-color)] mt-2 mb-3">
-          Tech Stack
+          Stack Tecnológico
         </h2>
         <p className="text-[var(--muted-color)] text-sm md:text-base">
           Tecnologías y herramientas con las que trabajo
@@ -222,7 +222,7 @@ const TechMarquee: React.FC = () => {
         </div>
         <div className="relative flex justify-center">
           <span className="px-6 bg-[var(--background-color)] text-[var(--muted-color)] text-sm font-medium">
-            Full Stack Development
+            Desarrollo Full Stack
           </span>
         </div>
       </div>
