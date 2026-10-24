@@ -134,7 +134,7 @@ const ProjectsSection: React.FC = () => {
   }, [totalPages, currentPage]);
 
   const mobilePageNumbers = useMemo(() => {
-    const pageCount = Math.min(3, totalPages);
+    const pageCount = Math.min(2, totalPages);
     const start = Math.min(
       Math.max(1, currentPage - 1),
       Math.max(1, totalPages - pageCount + 1),
@@ -468,20 +468,20 @@ const ProjectsSection: React.FC = () => {
                   </svg>
                 </button>
               </div>
-              <div className="flex items-center justify-center gap-1 sm:hidden">
+              <div className="flex items-center justify-center gap-2 sm:hidden">
                 <button
                   type="button"
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
                   aria-label={t('projects.previousPage')}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
                   style={{
                     backgroundColor: 'rgba(40,40,60,0.5)',
                     borderColor: 'rgba(209,209,224,0.3)',
                     color: 'var(--muted-color)',
                   }}
                 >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <polyline points="15 18 9 12 15 6" />
                   </svg>
                 </button>
@@ -493,7 +493,7 @@ const ProjectsSection: React.FC = () => {
                     onClick={() => goToPage(page)}
                     aria-current={page === currentPage ? 'page' : undefined}
                     aria-label={t('projects.goToPage', { page })}
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border text-base font-semibold transition-colors"
+                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border text-lg font-semibold transition-colors"
                     style={{
                       backgroundColor: page === currentPage ? 'var(--primary-color)' : 'rgba(40,40,60,0.5)',
                       borderColor: page === currentPage ? 'var(--primary-color)' : 'rgba(209,209,224,0.3)',
@@ -510,14 +510,14 @@ const ProjectsSection: React.FC = () => {
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
                   aria-label={t('projects.nextPage')}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
                   style={{
                     backgroundColor: 'rgba(40,40,60,0.5)',
                     borderColor: 'rgba(209,209,224,0.3)',
                     color: 'var(--muted-color)',
                   }}
                 >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <polyline points="9 6 15 12 9 18" />
                   </svg>
                 </button>
