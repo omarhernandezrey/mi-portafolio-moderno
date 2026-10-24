@@ -79,6 +79,8 @@ const StyledWrapper = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
   @media (max-width: 479px) {
@@ -104,15 +106,22 @@ const StyledWrapper = styled.div`
     }
 
     .content-box .card-title {
-      font-size: 20px;
+      font-size: 16px;
+    }
+
+    .content-box .card-content {
+      font-size: 11px;
     }
   }
 
   .content-box .card-title {
-    display: inline-block;
+    display: block;
+    width: 100%;
     color: var(--background-color);
     font-size: 25px;
     font-weight: 900;
+    word-break: break-word;
+    overflow-wrap: break-word;
     transition: all 0.5s ease-in-out;
     transform: translate3d(0px, 0px, 50px);
   }
