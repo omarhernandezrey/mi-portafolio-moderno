@@ -32,8 +32,14 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div className="relative w-full flex flex-col bg-transparent text-[var(--text-color)] rounded-lg z-10">
-      {/* Dispositivos - Escala progresiva por breakpoint */}
-      <div className="flex flex-col items-center justify-center scale-[0.55] xs:scale-75 sm:scale-90 md:scale-100 lg:scale-[1.15] xl:scale-[1.3] origin-center -mb-8 sm:-mb-12 md:-mb-16 lg:-mb-20">
+      {/* Dispositivos - Escala progresiva por breakpoint.
+          El wrapper exterior reserva solo el espacio visual ya escalado
+          (transform: scale no reduce el tamaño de layout), evitando que
+          el mockup (420px sin escalar) desborde el viewport en mobile. */}
+      <div
+        className="relative mx-auto w-[231px] h-[134px] xs:w-[315px] xs:h-[183px] sm:w-[378px] sm:h-[220px] md:w-[420px] md:h-[244px] lg:w-[483px] lg:h-[281px] xl:w-[546px] xl:h-[317px] -mb-8 sm:-mb-12 md:-mb-16 lg:-mb-20"
+      >
+      <div className="absolute inset-0 flex flex-col items-center justify-center scale-[0.55] xs:scale-75 sm:scale-90 md:scale-100 lg:scale-[1.15] xl:scale-[1.3] origin-center">
         {/* Desktop/Laptop */}
         <div
           className="relative flex-shrink-0"
@@ -132,6 +138,7 @@ const Card: React.FC<CardProps> = ({
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Contenido del proyecto */}
