@@ -83,37 +83,6 @@ const StyledWrapper = styled.div`
     overflow: hidden;
   }
 
-  @media (max-width: 479px) {
-    .parent {
-      padding: 10px;
-    }
-
-    .content-box {
-      padding: 50px 16px 16px 16px;
-      min-height: 240px;
-    }
-
-    .date-box {
-      top: 12px;
-      right: 12px;
-      height: 48px;
-      width: 48px;
-      padding: 6px;
-    }
-
-    .date-box .date {
-      font-size: 16px;
-    }
-
-    .content-box .card-title {
-      font-size: 16px;
-    }
-
-    .content-box .card-content {
-      font-size: 11px;
-    }
-  }
-
   .content-box .card-title {
     display: block;
     width: 100%;
@@ -192,6 +161,103 @@ const StyledWrapper = styled.div`
     font-size: 20px;
     font-weight: 900;
     color: var(--primary-color);
+  }
+
+  /* Grid de servicios: 2 columnas desde mobile hasta tablet (lg:grid-cols-4),
+     así que estas tarjetas son angostas (~150-500px) en un rango amplio.
+     IMPORTANTE: estos bloques @media van al final a propósito. Con la
+     misma especificidad de selector, en CSS gana la regla que aparece
+     después en el archivo, sin importar si está dentro de un @media o no
+     — si estuvieran antes de las reglas base de arriba (como estaban
+     originalmente), esas reglas base las pisarían y el override de
+     mobile nunca se aplicaría de verdad. */
+  @media (min-width: 480px) and (max-width: 1023px) {
+    .parent {
+      padding: 14px;
+    }
+
+    .card {
+      padding-top: 36px;
+    }
+
+    .content-box {
+      padding: 40px 18px 18px 18px;
+      min-height: 220px;
+    }
+
+    .content-box .card-title {
+      font-size: 19px;
+    }
+
+    .content-box .card-content {
+      font-size: 11.5px;
+    }
+
+    .content-box .see-more {
+      font-size: 8px;
+      padding: 0.4rem 0.6rem;
+    }
+
+    .date-box {
+      top: 18px;
+      right: 18px;
+      height: 52px;
+      width: 52px;
+      padding: 8px;
+    }
+
+    .date-box .month {
+      font-size: 8px;
+    }
+
+    .date-box .date {
+      font-size: 17px;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .parent {
+      padding: 6px;
+    }
+
+    .card {
+      padding-top: 22px;
+    }
+
+    .content-box {
+      padding: 26px 10px 10px 10px;
+      min-height: 168px;
+    }
+
+    .content-box .card-title {
+      font-size: 13px;
+    }
+
+    .content-box .card-content {
+      font-size: 9px;
+      margin-top: 6px;
+    }
+
+    .content-box .see-more {
+      font-size: 7px;
+      padding: 0.35rem 0.5rem;
+    }
+
+    .date-box {
+      top: 6px;
+      right: 6px;
+      height: 34px;
+      width: 34px;
+      padding: 4px;
+    }
+
+    .date-box .month {
+      font-size: 6px;
+    }
+
+    .date-box .date {
+      font-size: 13px;
+    }
   }
 `;
 
