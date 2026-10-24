@@ -187,8 +187,8 @@ export default function ServicesSection() {
           </p>
         </motion.div>
 
-        {/* Grid de servicios — móvil: 1 col · tablet: 2 col · desktop: 4 col */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 items-stretch">
+        {/* Grid de servicios — móvil: 2 col · desktop: 4 col */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 items-stretch">
           {localizedServices.map((service, index) => (
             <motion.div
               key={index}
