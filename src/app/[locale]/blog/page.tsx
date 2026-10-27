@@ -3,21 +3,20 @@ import { buildMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
 import { Link } from '@/i18n/navigation';
 import { getAllPosts } from '@/lib/blog';
-import { BookOpen, Calendar, Clock, ArrowRight, Search, Sparkles, ChevronRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import JsonLd from '@/components/seo/JsonLd';
 import { breadcrumbList } from '@/lib/schemas';
 import BlogNewsletterCTA from '@/components/blog/BlogNewsletterCTA';
-import TiltImageCard from '@/components/shared/TiltImageCard';
-import HeroParallax from '@/components/shared/HeroParallax';
-import ParticleField from '@/components/shared/ParticleFieldLoader';
+import BlogArchive from '@/components/blog/BlogArchive';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
-import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+const BASE_URL = 'https://omarhernandezrey.com';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -61,208 +60,239 @@ export default async function BlogPage({ params }: Props) {
   const allPosts = await getAllPosts();
   // Cada idioma solo lista su propio contenido — evita mezclar ES/EN en
   // una página que hreflang le promete a Google como monolingüe.
-  const posts = allPosts.filter(p => (isEn ? p.lang === 'en' : p.lang === 'es' || !p.lang));
-  const featuredPost = posts[0];
-  const regularPosts = posts.filter(p => p.slug !== featuredPost?.slug);
+  const posts = allPosts.filter((post) => (isEn ? post.lang === 'en' : post.lang === 'es' || !post.lang));
+  const base = isEn ? `${BASE_URL}/en` : BASE_URL;
+
+  const totalWords = posts.reduce((total, post) => total + (post.wordCount ?? 0), 0);
+  const averageReadingTime = posts.length
+    ? Math.round(posts.reduce((total, post) => total + (post.readingTime ?? 5), 0) / posts.length)
+    : 0;
+  const latestDate = posts[0]?.date;
+  const latestLabel = latestDate
+    ? new Date(`${latestDate}T12:00:00`).toLocaleDateString(isEn ? 'en-US' : 'es-CO', {
+        month: 'long',
+        year: 'numeric',
+      })
+    : '';
+  const wordCountLabel = new Intl.NumberFormat(isEn ? 'en-US' : 'es-CO').format(totalWords);
+
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    '@id': `${base}/blog#blog`,
+    name: 'The Engineering Journal — Omar Hernández Rey',
+    description: isEn
+      ? 'Technical essays on web development, SEO, and digital business for companies and founders in Colombia and LATAM.'
+      : 'Ensayos técnicos sobre desarrollo web, SEO y negocio digital para empresas y fundadores en Colombia y LATAM.',
+    url: `${base}/blog`,
+    inLanguage: isEn ? 'en' : 'es',
+    publisher: { '@id': `${BASE_URL}/#organization` },
+    author: { '@id': `${BASE_URL}/#person` },
+    blogPost: posts.map((post) => ({
+      '@type': 'BlogPosting',
+      headline: post.seoTitle ?? post.title,
+      description: post.description,
+      datePublished: post.date,
+      dateModified: post.updated ?? post.date,
+      url: `${base}/blog/${post.slug}`,
+      keywords: post.tags.join(', '),
+      wordCount: post.wordCount,
+      timeRequired: `PT${post.readingTime ?? 5}M`,
+      inLanguage: isEn ? 'en' : 'es',
+      author: {
+        '@type': 'Person',
+        '@id': `${BASE_URL}/#person`,
+        name: post.author,
+      },
+      image: `${BASE_URL}/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent(
+        isEn ? 'Omar Hernández Rey · Blog' : 'Blog · Omar Hernández Rey',
+      )}`,
+    })),
+  };
 
   return (
     <SmoothScrollProvider>
-    <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
-      <JsonLd data={breadcrumbList([
-        { name: isEn ? 'Home' : 'Inicio', path: '' },
-        { name: 'Blog', path: '/blog' },
-      ])} />
+      <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary">
+        <JsonLd
+          data={breadcrumbList([
+            { name: isEn ? 'Home' : 'Inicio', path: '' },
+            { name: 'Blog', path: '/blog' },
+          ])}
+        />
+        <JsonLd data={blogSchema} />
 
-      <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-12 md:space-y-24">
-
-        {/* Journal Header */}
-        <header className="relative overflow-hidden max-w-4xl space-y-8">
-          <HeroParallax className="absolute -inset-x-[var(--grid-margin)] -inset-y-24 -z-10">
-            <div data-parallax-speed="0.25" className="absolute inset-0 opacity-20">
-              <div className="absolute top-[10%] left-[10%] w-80 h-80 bg-primary/10 rounded-full blur-[120px]" />
-              <div className="absolute bottom-[10%] right-[10%] w-80 h-80 bg-accent/10 rounded-full blur-[120px]" />
+        <main className="flex-1 w-full min-w-0 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 md:pt-40 space-y-16 md:space-y-24">
+          <header className="relative overflow-hidden border-b border-white/10 pb-14">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+              <div className="absolute -right-40 -top-48 h-[520px] w-[520px] rounded-full bg-primary-7 blur-[130px]" />
+              <div className="absolute -left-32 bottom-0 h-[360px] w-[360px] rounded-full bg-accent-5 blur-[110px]" />
+              <div className="bg-tech-grid absolute inset-0 opacity-[0.08] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black,transparent)]" />
             </div>
-            <div data-parallax-speed="0.4" className="absolute inset-0">
-              <ParticleField className="w-full h-full opacity-50" />
-            </div>
-          </HeroParallax>
-          <ScrollReveal immediate y={16}>
-            <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-              Knowledge Base &amp; Research
-            </div>
-          </ScrollReveal>
-          <ScrollReveal immediate delay={0.1}>
-            <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
-              {isEn ? (
-                <>Engineering <br /><span className="text-primary">Journal</span></>
-              ) : (
-                <>Journal de <br /><span className="text-primary">Ingeniería</span></>
-              )}
-            </h1>
-          </ScrollReveal>
-          <div className="flex flex-wrap items-center gap-4">
-            <ScrollReveal immediate delay={0.15}>
-              <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl opacity-70 leading-relaxed italic">
-                {isEn
-                  ? 'Technical articles and strategic reflections at the intersection of high-performance code and intelligent systems.'
-                  : 'Artículos técnicos y reflexiones estratégicas sobre la intersección entre el código de alto rendimiento y los sistemas inteligentes.'}
-              </p>
-            </ScrollReveal>
-            <ScrollReveal immediate delay={0.2}>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 text-primary text-xs font-black italic shrink-0">
-                {isEn ? `${posts.length} articles published` : `${posts.length} artículos publicados`}
-              </span>
-            </ScrollReveal>
-          </div>
 
-          <ScrollReveal immediate delay={0.3} y={32}>
-            <TiltImageCard
-              src={unsplashUrl(pageHeroImages.blog.photoId)}
-              alt={isEn ? pageHeroImages.blog.alt.en : pageHeroImages.blog.alt.es}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
-              priority
-              className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
-            />
-          </ScrollReveal>
-        </header>
-
-        {/* Blog Infrastructure Control */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 border-b border-white/5 pb-10">
-          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 lg:gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted/40">
-            <Link href="/blog" className="text-primary border-b-2 border-primary pb-2 italic">{isEn ? 'All' : 'Todos'}</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Web Development' : 'Desarrollo Web'}</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Business' : 'Negocios'}</Link>
-            <Link href="/blog" className="hover:text-white-custom transition-colors pb-2">{isEn ? 'Technology' : 'Tecnología'}</Link>
-          </nav>
-
-          <div className="flex items-center gap-3 w-full lg:w-auto">
-            <div className="relative group w-full lg:w-72">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted/40 group-focus-within:text-primary transition-colors" size={16} />
-              <input
-                type="text"
-                placeholder={isEn ? 'Search article...' : 'Buscar artículo...'}
-                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold text-white-custom outline-none focus:border-primary/30 transition-all italic"
-              />
-            </div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full text-[9px] font-black uppercase tracking-widest text-primary/70 italic shrink-0">
-              {isEn ? 'EN' : 'ES'}
-              <span className="text-text-muted/30">{isEn ? 'English' : 'Español'}</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Featured Content Architecture */}
-        {featuredPost && (
-          <ScrollReveal>
-          <section className="group relative bg-card-bg rounded-[60px] border border-white/5 overflow-hidden shadow-2xl hover:border-primary/20 transition-all duration-700">
-            <div className="grid grid-cols-1 lg:grid-cols-2 items-center">
-              <div className="p-6 sm:p-10 md:p-20 space-y-6 sm:space-y-10 relative z-10">
-                <div className="flex items-center gap-4">
-                  <span className="px-3 py-1 rounded-md bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest italic">{isEn ? 'Featured' : 'Destacado'}</span>
-                  <div className="flex items-center gap-2 text-[10px] text-text-muted/40 font-black uppercase tracking-widest">
-                    <Calendar size={12} />
-                    {new Date(featuredPost.date).toLocaleDateString(isEn ? 'en-US' : 'es-CO', { day: '2-digit', month: 'long', year: 'numeric' })}
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-8">
+                <ScrollReveal immediate y={14}>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono-label text-[8px] text-muted-45">
+                    <span className="inline-flex items-center gap-2 text-primary">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      The Engineering Journal
+                    </span>
+                    <span className="hidden h-px w-10 bg-white/20 sm:block" />
+                    <span>Vol. 01 — {latestDate?.slice(0, 4) ?? '2026'}</span>
+                    <span className="hidden h-px w-10 bg-white/20 sm:block" />
+                    <span>Bogotá · CO</span>
                   </div>
-                </div>
+                </ScrollReveal>
 
-                <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight leading-tight group-hover:text-primary transition-colors">
-                  {featuredPost.title}
-                </h2>
+                <ScrollReveal immediate delay={0.08}>
+                  <h1 className="mt-8 font-display text-[clamp(3rem,7.5vw,6.5rem)] font-medium italic leading-[0.9] tracking-tight text-white-custom">
+                    {isEn ? (
+                      <>
+                        Code, judgment{' '}
+                        <br />&amp; <span className="text-primary">strategy</span>.
+                      </>
+                    ) : (
+                      <>
+                        Código, criterio{' '}
+                        <br />y <span className="text-primary">estrategia</span>.
+                      </>
+                    )}
+                  </h1>
+                </ScrollReveal>
 
-                <p className="text-lg text-text-muted font-medium italic opacity-60 leading-relaxed max-w-lg">
-                  {featuredPost.description}
-                </p>
-
-                <Link
-                  href={`/blog/${featuredPost.slug}`}
-                  className="group/btn inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
-                >
-                  {isEn ? 'Read Post' : 'Leer Publicación'}
-                  <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-
-              <div className="h-[400px] lg:h-full bg-background relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-card-bg to-transparent z-10 lg:block hidden" />
-                <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/10 transition-colors duration-700" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                   <BookOpen size={160} strokeWidth={0.5} className="text-white-custom/5 group-hover:scale-110 transition-transform duration-1000" />
-                </div>
-                {/* Visual placeholder for post image if available */}
-                <div className="absolute top-6 right-6 left-6 flex flex-wrap gap-2 justify-end sm:top-10 sm:right-10 sm:left-10">
-                  {featuredPost.tags.map(tag => (
-                    <span key={tag} className="bg-background/80 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-[8px] font-black uppercase tracking-widest text-primary italic">#{tag}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-          </ScrollReveal>
-        )}
-
-        {/* Post Repository Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-12">
-          {regularPosts.length > 0 ? (
-            regularPosts.map((post, idx) => (
-              <ScrollReveal key={post.slug} delay={(idx % 3) * 0.1}>
-              <article className="group flex flex-col bg-card-bg rounded-[28px] md:rounded-[40px] border border-white/5 p-6 md:p-10 shadow-xl hover:border-primary/30 transition-all duration-500 relative overflow-hidden">
-                <div className="absolute -right-4 -top-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-                  <Sparkles size={100} className="-rotate-12" />
-                </div>
-
-                <div className="flex items-center justify-between mb-8 relative z-10">
-                  <div className="text-[10px] font-black text-text-muted/40 uppercase tracking-widest flex items-center gap-2">
-                    <Clock size={12} className="text-primary" />
-                    {post.readingTime || 5} min
-                  </div>
-                  <div className="text-[10px] font-black text-primary/60 uppercase tracking-tighter italic">
-                    {new Date(post.date).toLocaleDateString(isEn ? 'en-US' : 'es-CO', { day: '2-digit', month: 'short' })}
-                  </div>
-                </div>
-
-                <div className="space-y-4 flex-1 relative z-10">
-                  <h3 className="text-2xl font-black text-white-custom leading-tight tracking-tight italic group-hover:text-primary transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-text-muted font-medium leading-relaxed opacity-60 italic line-clamp-3">
-                    {post.description}
+                <ScrollReveal immediate delay={0.16}>
+                  <p className="mt-8 max-w-xl text-base leading-relaxed text-muted-70 sm:text-lg">
+                    {isEn
+                      ? 'Technical essays and field notes on web development, SEO, and digital business. What I learn building real products for companies and founders in Colombia and beyond.'
+                      : 'Ensayos técnicos y notas de campo sobre desarrollo web, SEO y negocio digital. Lo que aprendo construyendo productos reales para empresas y fundadores en Colombia y el exterior.'}
                   </p>
-                </div>
+                </ScrollReveal>
 
-                <div className="mt-10 pt-8 border-t border-white/5 flex items-center justify-between relative z-10">
-                  <div className="flex gap-1">
-                    {post.tags.slice(0, 2).map(tag => (
-                      <span key={tag} className="text-[8px] font-black uppercase tracking-widest text-text-muted/30">#{tag}</span>
-                    ))}
+                <ScrollReveal immediate delay={0.24}>
+                  <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
+                    <div>
+                      <p className="font-display text-2xl font-medium italic text-white-custom sm:text-3xl">
+                        {posts.length.toString().padStart(2, '0')}
+                      </p>
+                      <p className="mt-1 font-mono-label text-[7px] text-muted-35">
+                        {isEn ? 'Essays' : 'Ensayos'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-display text-2xl font-medium italic text-white-custom sm:text-3xl">
+                        {wordCountLabel}
+                      </p>
+                      <p className="mt-1 font-mono-label text-[7px] text-muted-35">
+                        {isEn ? 'Words' : 'Palabras'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-display text-2xl font-medium italic text-white-custom sm:text-3xl">
+                        {averageReadingTime} min
+                      </p>
+                      <p className="mt-1 font-mono-label text-[7px] text-muted-35">
+                        {isEn ? 'Avg. read' : 'Lectura media'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-display text-base font-medium italic leading-tight text-white-custom sm:text-lg">
+                        {latestLabel}
+                      </p>
+                      <p className="mt-1 font-mono-label text-[7px] text-muted-35">
+                        {isEn ? 'Last update' : 'Última actualización'}
+                      </p>
+                    </div>
                   </div>
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted hover:text-white-custom transition-colors"
-                  >
-                    {isEn ? 'Read more' : 'Leer más'}
-                    <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </article>
-              </ScrollReveal>
-            ))
-          ) : !featuredPost && (
-            <div className="col-span-full py-40 text-center">
-              <div className="flex flex-col items-center gap-6 opacity-20">
-                <BookOpen size={80} strokeWidth={1} />
-                <p className="text-xl font-black uppercase tracking-[0.3em] italic">No Logs Found</p>
+                </ScrollReveal>
               </div>
+
+              <aside className="space-y-4 lg:col-span-4 lg:border-l lg:border-white/10 lg:pl-8">
+                <ScrollReveal immediate delay={0.2}>
+                  <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-card-40 p-6 sm:p-7">
+                    <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-10 blur-3xl" />
+                    <div className="relative">
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-primary-25 bg-primary-10 font-display text-2xl font-medium italic text-primary">
+                          OH
+                        </div>
+                        <div>
+                          <p className="font-mono-label text-[7px] text-muted-35">
+                            {isEn ? 'Written by' : 'Escrito por'}
+                          </p>
+                          <p className="mt-1 font-display text-xl font-medium italic text-white-custom">
+                            Omar Hernández Rey
+                          </p>
+                          <p className="mt-0.5 text-[11px] text-muted-55">
+                            Full Stack Developer · Bogotá
+                          </p>
+                        </div>
+                      </div>
+
+                      <p className="mt-6 text-sm leading-relaxed text-muted-60">
+                        {isEn
+                          ? 'I write to make technical decisions easier for founders and teams: real prices, real trade-offs, and code that ships.'
+                          : 'Escribo para que fundadores y equipos tomen mejores decisiones técnicas: precios reales, trade-offs reales y código que llega a producción.'}
+                      </p>
+
+                      <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
+                        <span className="font-mono-label text-[7px] text-muted-35">
+                          {isEn ? 'Available for projects' : 'Disponible para proyectos'}
+                        </span>
+                        <Link
+                          href="/sobre-mi"
+                          className="inline-flex items-center gap-1.5 font-mono-label text-[8px] text-primary-80 transition-colors hover:text-primary"
+                        >
+                          {isEn ? 'About' : 'Sobre mí'}
+                          <ArrowUpRight size={12} />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollReveal>
+
+                <ScrollReveal immediate delay={0.28}>
+                  <div className="rounded-[28px] border border-white/10 bg-card-25 p-6 sm:p-7">
+                    <div className="flex items-center justify-between">
+                      <p className="font-mono-label text-[7px] text-primary-60">
+                        {isEn ? 'In this issue' : 'En este número'}
+                      </p>
+                      <span className="font-mono-label text-[7px] text-muted-30">
+                        01—{posts.length.toString().padStart(2, '0')}
+                      </span>
+                    </div>
+                    <div className="mt-3 divide-y divide-white/5">
+                      {posts.slice(0, 3).map((post, index) => (
+                        <Link
+                          key={post.slug}
+                          href={`/blog/${post.slug}`}
+                          className="group flex items-start gap-3 py-3 first:pt-2 last:pb-1"
+                        >
+                          <span className="mt-0.5 font-mono-label text-[7px] text-primary-40">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <span className="line-clamp-2 flex-1 text-[13px] font-semibold leading-snug text-muted-60 transition-colors group-hover:text-white-custom">
+                            {post.title}
+                          </span>
+                          <ArrowUpRight
+                            size={11}
+                            className="mt-0.5 shrink-0 text-muted-20 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+                          />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </ScrollReveal>
+              </aside>
             </div>
-          )}
-        </div>
+          </header>
 
-        {/* Global Subscription Protocol */}
-        <BlogNewsletterCTA />
+          <BlogArchive posts={posts} locale={isEn ? 'en' : 'es'} />
 
-      </main>
+          <BlogNewsletterCTA />
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
     </SmoothScrollProvider>
   );
 }

@@ -552,6 +552,44 @@ body {
   text-transform: uppercase;
 }
 
+/* Opacidades para colores de paleta. Tailwind no puede aplicar el
+   modificador /alpha a colores definidos como var(--color), así que estas
+   utilidades cubren los pasos que usa la UI editorial del blog. */
+.text-muted-20 { color: color-mix(in srgb, var(--muted-color) 20%, transparent); }
+.text-muted-25 { color: color-mix(in srgb, var(--muted-color) 25%, transparent); }
+.text-muted-30 { color: color-mix(in srgb, var(--muted-color) 30%, transparent); }
+.text-muted-35 { color: color-mix(in srgb, var(--muted-color) 35%, transparent); }
+.text-muted-40 { color: color-mix(in srgb, var(--muted-color) 40%, transparent); }
+.text-muted-45 { color: color-mix(in srgb, var(--muted-color) 45%, transparent); }
+.text-muted-50 { color: color-mix(in srgb, var(--muted-color) 50%, transparent); }
+.text-muted-55 { color: color-mix(in srgb, var(--muted-color) 55%, transparent); }
+.text-muted-60 { color: color-mix(in srgb, var(--muted-color) 60%, transparent); }
+.text-muted-65 { color: color-mix(in srgb, var(--muted-color) 65%, transparent); }
+.text-muted-70 { color: color-mix(in srgb, var(--muted-color) 70%, transparent); }
+
+.text-primary-35 { color: color-mix(in srgb, var(--primary-color) 35%, transparent); }
+.text-primary-40 { color: color-mix(in srgb, var(--primary-color) 40%, transparent); }
+.text-primary-50 { color: color-mix(in srgb, var(--primary-color) 50%, transparent); }
+.text-primary-60 { color: color-mix(in srgb, var(--primary-color) 60%, transparent); }
+.text-primary-70 { color: color-mix(in srgb, var(--primary-color) 70%, transparent); }
+.text-primary-80 { color: color-mix(in srgb, var(--primary-color) 80%, transparent); }
+.text-background-60 { color: color-mix(in srgb, var(--background-color) 60%, transparent); }
+
+.bg-primary-7 { background-color: color-mix(in srgb, var(--primary-color) 7%, transparent); }
+.bg-primary-10 { background-color: color-mix(in srgb, var(--primary-color) 10%, transparent); }
+.bg-primary-30 { background-color: color-mix(in srgb, var(--primary-color) 30%, transparent); }
+.bg-accent-5 { background-color: color-mix(in srgb, var(--accent-color) 5%, transparent); }
+.bg-card-25 { background-color: color-mix(in srgb, var(--card-bg-color) 25%, transparent); }
+.bg-card-40 { background-color: color-mix(in srgb, var(--card-bg-color) 40%, transparent); }
+.bg-card-50 { background-color: color-mix(in srgb, var(--card-bg-color) 50%, transparent); }
+.bg-card-70 { background-color: color-mix(in srgb, var(--card-bg-color) 70%, transparent); }
+
+.border-primary-25 { border-color: color-mix(in srgb, var(--primary-color) 25%, transparent); }
+.border-primary-30 { border-color: color-mix(in srgb, var(--primary-color) 30%, transparent); }
+.border-primary-40 { border-color: color-mix(in srgb, var(--primary-color) 40%, transparent); }
+
+.decoration-primary-30 { text-decoration-color: color-mix(in srgb, var(--primary-color) 30%, transparent); }
+
 /* Grid editorial de 12 columnas reutilizable en toda página pública */
 .grid-editorial {
   display: grid;
