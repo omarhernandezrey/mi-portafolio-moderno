@@ -11,7 +11,7 @@ import {
   FaEnvelope,
   FaProjectDiagram,
   FaToolbox,
-  FaUsers,
+  FaGraduationCap,
 } from "react-icons/fa";
 import { MdColorLens } from "react-icons/md";
 import { usePalette } from "../../hooks/usePalette";
@@ -69,13 +69,8 @@ const NavbarDesktop = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLinkClick = (id: string, isPage?: boolean) => {
+  const handleLinkClick = (id: string) => {
     const prefix = locale === 'es' ? '' : `/${locale}`;
-
-    if (isPage) {
-      window.location.href = `${prefix}${id}`;
-      return;
-    }
 
     // Si estamos en otra página y es un link interno, redirigir al home con el ancla
     if (pathname !== "/" && id.startsWith("#")) {
@@ -93,18 +88,15 @@ const NavbarDesktop = () => {
     id: string;
     label: string;
     icon: React.ReactNode;
-    isPage?: boolean;
   }
 
   const navLinks = React.useMemo<NavLink[]>(() => [
     { id: "#hero", label: t("navigation.home"), icon: <FaHome /> },
     { id: "#about", label: t("navigation.about"), icon: <FaUserAlt /> },
+    { id: "#education", label: t("navigation.education"), icon: <FaGraduationCap /> },
     { id: "#skills", label: t("navigation.skills"), icon: <FaToolbox /> },
     { id: "#projects", label: t("navigation.projects"), icon: <FaProjectDiagram /> },
     { id: "#services", label: t("navigation.services"), icon: <FaCode /> },
-    { id: "/blog", label: t("navigation.blog"), icon: <FaCode />, isPage: true },
-    { id: "/comunidad", label: t("navigation.comunidad"), icon: <FaUsers />, isPage: true },
-    { id: "/calculadora", label: t("navigation.calculator"), icon: <FaToolbox />, isPage: true },
     { id: "#contact", label: t("navigation.contact"), icon: <FaEnvelope /> },
   ], [t]);
 
@@ -141,7 +133,7 @@ const NavbarDesktop = () => {
               {navLinks.map((link) => (
                 <button
                   key={link.id}
-                  onClick={() => handleLinkClick(link.id, link.isPage)}
+                  onClick={() => handleLinkClick(link.id)}
                   className={`relative flex items-center px-2 lg:px-3 xl:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 hover:scale-105 ${
                     activeSection === link.id
                       ? "text-[var(--accent-color)] bg-[var(--primary-color)]/10"

@@ -12,7 +12,6 @@ import {
   AiOutlineMail,
   AiOutlineClose,
   AiOutlineMenu,
-  AiOutlineTeam,
   AiFillGithub,
   AiFillLinkedin,
 } from "react-icons/ai";
@@ -64,14 +63,8 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
     };
   }, [isOpen, toggleMenu]);
 
-  const handleLinkClick = (id: string, isPage?: boolean) => {
+  const handleLinkClick = (id: string) => {
     const prefix = locale === 'es' ? '' : `/${locale}`;
-
-    if (isPage) {
-      window.location.href = `${prefix}${id}`;
-      toggleMenu();
-      return;
-    }
 
     // Si estamos en otra página y es un link interno, redirigir al home con el ancla
     if (pathname !== "/" && id.startsWith("#")) {
@@ -94,8 +87,6 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
     { id: "#skills", label: t("navigation.skills"), icon: <BiBrain size={20} /> },
     { id: "#projects", label: t("navigation.projects"), icon: <AiOutlineProject size={20} /> },
     { id: "#services", label: t("navigation.services"), icon: <FaTools size={20} /> },
-    { id: "/comunidad", label: t("navigation.comunidad"), icon: <AiOutlineTeam size={20} />, isPage: true },
-    { id: "/calculadora", label: t("navigation.calculator"), icon: <FaTools size={20} />, isPage: true },
     { id: "#contact", label: t("navigation.contact"), icon: <AiOutlineMail size={20} /> },
   ], [t]);
 
@@ -215,7 +206,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
               {navLinks.map((link) => (
                 <li key={link.id} className="w-full">
                   <button
-                    onClick={() => handleLinkClick(link.id, link.isPage)}
+                    onClick={() => handleLinkClick(link.id)}
                     className={`flex items-center gap-3 w-full px-3 py-3 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] hover:bg-[var(--background-color)] rounded-lg transition-all duration-300 menu-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] ${
                       activeSection === link.id
                         ? "bg-[var(--background-color)] text-[var(--accent-color)] font-semibold border-l-2 border-[var(--accent-color)]"
