@@ -7,8 +7,8 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/seo/JsonLd";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { clientEnv } from "@/config/env";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale } from "next-intl/server";
+import LocaleSync from "./LocaleSync";
 // SEO: Global schema graph — Person + Organization + WebSite with SearchAction
 const personData = {
   "@context": "https://schema.org",
@@ -164,13 +164,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // getLocale()/getMessages() resuelven el locale de la request actual
-  // (vía el header que setea el middleware de next-intl). Para rutas
-  // fuera de /[locale]/ (admin, api-adjacent) no hay locale en la URL,
-  // así que caen al default 'es' definido en src/i18n/request.ts — el
-  // provider queda disponible en TODA la app sin duplicar root layouts.
+  // getLocale() resuelve el locale de la request actual (vía el header que
+  // setea el middleware de next-intl) solo para el <html lang>. El resto de
+  // la app usa LocaleSync (client, deriva el locale de la URL en vivo) en
+  // vez de pasarle el locale al provider aquí — este layout no se
+  // vuelve a ejecutar en navegaciones client-side, así que un provider
+  // "congelado" con este valor se quedaría desactualizado tras cambiar de
+  // idioma con el selector. Ver LocaleSync.tsx.
   const locale = await getLocale();
-  const messages = await getMessages();
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -183,13 +184,13 @@ export default async function RootLayout({
         className={`${fraunces.variable} ${manrope.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <JsonLd data={personData} />
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <LocaleSync>
           <ClientProvider>
             <NavbarLogic />
             {children}
             <Analytics />
           </ClientProvider>
-        </NextIntlClientProvider>
+        </LocaleSync>
       </body>
     </html>
   );

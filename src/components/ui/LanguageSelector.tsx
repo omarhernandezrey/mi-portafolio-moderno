@@ -180,10 +180,11 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isMobile = false })
   }, [isOpen, isMobile, updateDropdownPosition]);
 
   const handleLanguageChange = async (langCode: string) => {
-    if (langCode === language || isAnimating) return;
+    if (isAnimating) return;
+    setIsOpen(false);
+    if (langCode === language) return;
 
     setIsAnimating(true);
-    setIsOpen(false);
 
     try {
       await setLanguage(langCode);
