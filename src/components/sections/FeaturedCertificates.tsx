@@ -379,11 +379,18 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
           </svg>
         </button>
 
-        <div className={styles.progress} aria-hidden="true">
-          <span
-            className={styles.progressFill}
-            style={{ width: `${progress}%` }}
-          />
+        <div className={styles.pager}>
+          <span className={styles.pagerCounter} aria-hidden="true">
+            <strong>{String(activeIndex + 1).padStart(2, "0")}</strong>
+            <span>/</span>
+            <span>{String(count).padStart(2, "0")}</span>
+          </span>
+          <div className={styles.progress} aria-hidden="true">
+            <span
+              className={styles.progressFill}
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
       </div>
 
