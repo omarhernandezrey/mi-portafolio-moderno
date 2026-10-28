@@ -168,7 +168,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
         ref={menuRef}
         className={`fixed top-0 left-0 bg-[var(--secondary-background-color)] text-[var(--text-color)] z-[100] transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-500 ease-in-out w-4/5 max-w-sm overflow-y-hidden mobile-menu-panel h-screen-dvh pt-safe pb-safe`}
+        } transition-transform duration-500 ease-in-out w-4/5 max-w-sm overflow-hidden mobile-menu-panel h-screen-dvh pt-safe pb-safe flex flex-col`}
         style={{
           overscrollBehavior: 'contain',
         }}
@@ -177,96 +177,94 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
         aria-modal="true"
         aria-label={t("navigation.menu")}
       >
-        <div className="flex flex-col min-h-full">
-          {/* Selector de idioma + botón Cerrar (sticky) */}
-          <div className="px-4 py-3 border-b border-[var(--accent-color)]/20 sticky top-0 bg-[var(--secondary-background-color)]/95 backdrop-blur z-50">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-2 flex-1">
-                <span className="text-sm text-[var(--text-color)]/70 font-medium">
-                  {t("navigation.language")}:
-                </span>
-                <div className="relative z-50">
-                  <LanguageSelector isMobile={true} />
-                </div>
+        {/* Selector de idioma + botón Cerrar */}
+        <div className="shrink-0 px-4 py-3 border-b border-[var(--accent-color)]/20 bg-[var(--secondary-background-color)]/95 backdrop-blur z-50">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 flex-1">
+              <span className="text-sm text-[var(--text-color)]/70 font-medium">
+                {t("navigation.language")}:
+              </span>
+              <div className="relative z-50">
+                <LanguageSelector isMobile={true} />
               </div>
-              <button
-                onClick={toggleMenu}
-                className="flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg px-2 py-1"
-                aria-label={`${t("actions.close")} menú`}
-              >
-                <AiOutlineClose size={22} />
-                <span className="text-sm hidden xs:inline">{t("actions.close")}</span>
-              </button>
             </div>
+            <button
+              onClick={toggleMenu}
+              className="flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg px-2 py-1"
+              aria-label={`${t("actions.close")} menú`}
+            >
+              <AiOutlineClose size={22} />
+              <span className="text-sm hidden xs:inline">{t("actions.close")}</span>
+            </button>
           </div>
+        </div>
 
-          {/* Enlaces de navegación */}
-          <div className="flex-1 px-4 py-6">
-            <ul className="flex flex-col space-y-4 menu-links">
-              {navLinks.map((link) => (
-                <li key={link.id} className="w-full">
-                  <button
-                    onClick={() => handleLinkClick(link.id)}
-                    className={`flex items-center gap-3 w-full px-3 py-3 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] hover:bg-[var(--background-color)] rounded-lg transition-all duration-300 menu-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] ${
-                      activeSection === link.id
-                        ? "bg-[var(--background-color)] text-[var(--accent-color)] font-semibold border-l-2 border-[var(--accent-color)]"
-                        : ""
-                    }`}
-                    aria-current={activeSection === link.id ? "page" : undefined}
-                    ref={link.id === "#hero" ? firstLinkRef : undefined}
-                    tabIndex={0}
-                    aria-label={`${t("navigation.go_to")} ${link.label}`}
-                  >
-                    {link.icon}
-                    <span className="text-sm font-medium">{link.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Enlaces de navegación */}
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-6">
+          <ul className="flex flex-col gap-4 menu-links">
+            {navLinks.map((link) => (
+              <li key={link.id} className="w-full">
+                <button
+                  onClick={() => handleLinkClick(link.id)}
+                  className={`flex items-center gap-3 w-full px-3 py-3 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] hover:bg-[var(--background-color)] rounded-lg transition-all duration-300 menu-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] ${
+                    activeSection === link.id
+                      ? "bg-[var(--background-color)] text-[var(--accent-color)] font-semibold border-l-2 border-[var(--accent-color)]"
+                      : ""
+                  }`}
+                  aria-current={activeSection === link.id ? "page" : undefined}
+                  ref={link.id === "#hero" ? firstLinkRef : undefined}
+                  tabIndex={0}
+                  aria-label={`${t("navigation.go_to")} ${link.label}`}
+                >
+                  {link.icon}
+                  <span className="text-sm font-medium">{link.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          {/* Sección Tema / Paleta de colores (debajo de los links) */}
-          <div className="flex-shrink-0 px-4 py-4 border-t border-[var(--accent-color)]/20">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-1">
-                <span className="text-sm text-[var(--text-color)]/70 font-medium">
-                  {t("theme.change")}
-                </span>
-              </div>
-              <button
-                onClick={togglePalette}
-                className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 active:scale-95 hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] p-2 rounded-lg hover:bg-[var(--background-color)] animate-pulse"
-                aria-label={t("actions.change_theme")}
-                title={t("actions.change_theme")}
-              >
-                <MdColorLens size={28} />
-              </button>
+        {/* Sección Tema / Paleta de colores (debajo de los links) */}
+        <div className="flex-shrink-0 px-4 py-4 border-t border-[var(--accent-color)]/20">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-1">
+              <span className="text-sm text-[var(--text-color)]/70 font-medium">
+                {t("theme.change")}
+              </span>
             </div>
+            <button
+              onClick={togglePalette}
+              className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 active:scale-95 hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] p-2 rounded-lg hover:bg-[var(--background-color)] animate-pulse"
+              aria-label={t("actions.change_theme")}
+              title={t("actions.change_theme")}
+            >
+              <MdColorLens size={28} />
+            </button>
           </div>
+        </div>
 
-          {/* Iconos sociales */}
-          <div className="flex-shrink-0 mt-auto">
-            <div className="border-t border-[var(--accent-color)] px-4 py-4">
-              <div className="flex items-center justify-center gap-8 social-icons">
-                <a
-                  href="https://github.com/omarhernandezrey"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
-                  aria-label="GitHub"
-                >
-                  <AiFillGithub size={32} />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/omarhernandezrey/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
-                  aria-label="LinkedIn"
-                >
-                  <AiFillLinkedin size={32} />
-                </a>
-              </div>
+        {/* Iconos sociales */}
+        <div className="shrink-0">
+          <div className="border-t border-[var(--accent-color)] px-4 py-4">
+            <div className="flex items-center justify-center gap-8 social-icons">
+              <a
+                href="https://github.com/omarhernandezrey"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
+                aria-label="GitHub"
+              >
+                <AiFillGithub size={32} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/omarhernandezrey/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
+                aria-label="LinkedIn"
+              >
+                <AiFillLinkedin size={32} />
+              </a>
             </div>
           </div>
         </div>
