@@ -1,5 +1,5 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
 import { ChevronLeft } from 'lucide-react';
 import { buildMetadata, SITE_URL } from '@/lib/seo';
@@ -38,7 +38,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ComunidadPostPage({ params }: Props) {
   const { locale, id } = await params;
   const post = await getFeedPostById(id);
-  if (!post || (post.lang === 'en') !== (locale === 'en')) notFound();
+  if (!post) notFound();
+
+  // El selector de idioma solo intercambia el prefijo de locale en la misma
+  // URL — no sabe que cada post de comunidad solo existe en un idioma. Sin
+  // esto, cambiar de idioma estando en un post daba 404 en vez de llevar a
+  // la versión correcta (mismo id, locale correcto).
+  if ((post.lang === 'en') !== (locale === 'en')) {
+    permanentRedirect(post.lang === 'en' ? `/en/comunidad/${id}` : `/comunidad/${id}`);
+  }
 
   const isEn = post.lang === 'en';
   const path = isEn ? `${SITE_URL}/en/comunidad/${id}` : `${SITE_URL}/comunidad/${id}`;
