@@ -26,32 +26,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMetadata(
     isEn
       ? {
-          title: 'FAQ | Freelance Web Developer Colombia',
-          description: 'How much does a website cost in Colombia? How long does it take? How do payments work? Clear answers on pricing, timelines, and the freelance process.',
+          title: 'FAQ | Full Stack Web Developer Colombia',
+          description: 'How much does a website cost in Colombia? How long does it take? How do payments work? Clear answers on pricing, timelines, and the development process.',
           path: '/faq',
           locale: 'en',
-          ogSubtitle: 'Freelance Web Developer Colombia',
+          ogSubtitle: 'Full Stack Web Developer Colombia',
           keywords: [
-            'freelance web developer colombia faq',
+            'full stack web developer colombia faq',
             'how much does a website cost colombia',
             'how long does a website take',
-            'how to hire a freelance developer',
+            'how to hire a web developer',
             'web development pricing 2026',
           ],
         }
       : {
           title: 'Preguntas Frecuentes | Desarrollador Web Colombia',
-          description: '¿Cuánto cuesta un sitio web en Colombia? ¿Cuánto tarda? ¿Cómo se paga? Respuestas claras sobre precios, tiempos y proceso de trabajo freelance.',
+          description: '¿Cuánto cuesta un sitio web en Colombia? ¿Cuánto tarda? ¿Cómo se paga? Respuestas claras sobre precios, tiempos y proceso de trabajo.',
           path: '/faq',
           locale: 'es',
-          ogSubtitle: 'Desarrollador Web Freelance Colombia',
+          ogSubtitle: 'Desarrollador Web Full Stack Colombia',
           keywords: [
             'preguntas frecuentes desarrollador web colombia',
             'cuanto cuesta sitio web colombia',
             'cuanto tarda pagina web',
-            'como contratar programador freelance',
+            'como contratar programador web',
             'precios desarrollo web 2026',
-            'desarrollador web freelance colombia preguntas',
+            'desarrollador web full stack colombia preguntas',
           ],
         }
   );
@@ -75,8 +75,8 @@ const CATEGORIES_ES = [
         a: 'Sí. Tengo planes de mantenimiento mensual desde $250k COP. Incluyen actualizaciones de seguridad, backups semanales, monitoreo de uptime 24/7 y soporte técnico prioritario por email con respuesta en 24h.'
       },
       {
-        q: '¿Cuánto cobra un desarrollador web freelance en Colombia vs una agencia?',
-        a: 'Un freelance senior en Colombia cobra un 30-50% menos que una agencia local, manteniendo la misma calidad técnica. La razón: sin costos de oficina, account managers ni estructura corporativa. Todo el presupuesto va al desarrollo real de tu proyecto.'
+        q: '¿Cuánto cobra un desarrollador web full stack independiente en Colombia vs una agencia?',
+        a: 'Un desarrollador full stack senior en Colombia cobra un 30-50% menos que una agencia local, manteniendo la misma calidad técnica. La razón: sin costos de oficina, account managers ni estructura corporativa. Todo el presupuesto va al desarrollo real de tu proyecto.'
       },
     ]
   },
@@ -126,7 +126,7 @@ const CATEGORIES_ES = [
       },
       {
         q: '¿Cuántos proyectos has entregado y cuánta experiencia tienes?',
-        a: 'Más de 3 años de experiencia como Full Stack Developer freelance, con proyectos propios como FlexiCommerce (e-commerce con pagos reales vía Wompi) y JARVIS Local (asistente de IA por voz) para clientes en Colombia y remoto en LATAM y USA. Estoy cursando Ingeniería de Software en el Politécnico Grancolombiano (grado previsto noviembre 2026) y soy Tecnólogo en Análisis y Desarrollo de Sistemas de Información (SENA, 2022).'
+        a: 'Más de 3 años de experiencia como Full Stack Developer, con proyectos propios como FlexiCommerce (e-commerce con pagos reales vía Wompi) y JARVIS Local (asistente de IA por voz) para clientes en Colombia y remoto en LATAM y USA. Estoy cursando Ingeniería de Software en el Politécnico Grancolombiano (grado previsto noviembre 2026) y soy Tecnólogo en Análisis y Desarrollo de Sistemas de Información (SENA, 2022).'
       },
     ]
   },
@@ -150,8 +150,8 @@ const CATEGORIES_EN = [
         a: 'Yes. I offer monthly maintenance plans starting at $300 USD. They include security updates, weekly backups, 24/7 uptime monitoring, and priority technical support by email with a 24h response time.'
       },
       {
-        q: 'How much does a freelance web developer in Colombia charge vs. an agency?',
-        a: 'A senior freelancer in Colombia charges 30-50% less than a local agency while maintaining the same technical quality. The reason: no office overhead, account managers, or corporate structure — the full budget goes into actually building your project.'
+        q: 'How much does an independent full stack web developer in Colombia charge vs. an agency?',
+        a: 'A senior full stack developer in Colombia charges 30-50% less than a local agency while maintaining the same technical quality. The reason: no office overhead, account managers, or corporate structure — the full budget goes into actually building your project.'
       },
     ]
   },
@@ -201,7 +201,7 @@ const CATEGORIES_EN = [
       },
       {
         q: 'How many projects have you delivered, and how much experience do you have?',
-        a: 'More than 3 years of experience as a freelance Full Stack Developer, with projects of my own like FlexiCommerce (e-commerce with real payments via Wompi) and JARVIS Local (voice AI assistant) for clients in Colombia and remotely across LATAM and the US. I\'m completing a Software Engineering degree at Politécnico Grancolombiano (expected graduation November 2026) and hold a degree in Information Systems Analysis and Development from SENA (2022).'
+        a: 'More than 3 years of experience as a Full Stack Developer, with projects of my own like FlexiCommerce (e-commerce with real payments via Wompi) and JARVIS Local (voice AI assistant) for clients in Colombia and remotely across LATAM and the US. I\'m completing a Software Engineering degree at Politécnico Grancolombiano (expected graduation November 2026) and hold a degree in Information Systems Analysis and Development from SENA (2022).'
       },
     ]
   },
@@ -219,7 +219,7 @@ export default async function FAQPage({ params }: Props) {
     "@type": "FAQPage",
     "@id": pageUrl,
     "url": pageUrl,
-    "name": isEn ? "FAQ — Freelance Web Developer Colombia" : "Preguntas Frecuentes — Desarrollador Web Freelance Colombia",
+    "name": isEn ? "FAQ — Full Stack Web Developer Colombia" : "Preguntas Frecuentes — Desarrollador Web Full Stack Colombia",
     "inLanguage": isEn ? "en" : "es",
     "mainEntity": allFaqs.map(faq => ({
       "@type": "Question",
@@ -276,8 +276,8 @@ export default async function FAQPage({ params }: Props) {
             <ScrollReveal immediate delay={0.2}>
               <p className="text-text-muted text-sm font-medium max-w-2xl mx-auto opacity-70 italic">
                 {isEn
-                  ? "Direct answers on pricing, timelines, technologies, and the work process. Freelance web developer available for Colombia and the US."
-                  : "Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web freelance disponible para Colombia y USA."}
+                  ? "Direct answers on pricing, timelines, technologies, and the work process. Full stack web developer available for Colombia and the US."
+                  : "Respuestas directas sobre precios, tiempos, tecnologías y proceso de trabajo. Desarrollador web full stack disponible para Colombia y USA."}
               </p>
             </ScrollReveal>
 

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     isEn
       ? {
           title: 'About Me | Full Stack Developer Colombia',
-          description: 'Freelance Full Stack Developer with 3+ years of experience in React, Next.js, Node.js, and AI. Projects in Colombia and remote for US clients.',
+          description: 'Full Stack Developer with 3+ years of experience in React, Next.js, Node.js, and AI. Projects in Colombia and remote for US clients.',
           path: '/sobre-mi',
           locale: 'en',
           ogSubtitle: 'Full Stack Developer | Colombia',
@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             'web developer bogota',
             'software engineer colombia',
             'react developer colombia',
-            'freelance web developer colombia',
             'next.js developer colombia',
             'node.js developer colombia',
             'remote web development colombia',
@@ -42,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
       : {
           title: 'Sobre Mí | Desarrollador Full Stack Colombia',
-          description: 'Desarrollador Full Stack freelance con 3+ años de experiencia en React, Next.js, Node.js e IA. Proyectos en Colombia y remoto para clientes de USA.',
+          description: 'Desarrollador Full Stack con 3+ años de experiencia en React, Next.js, Node.js e IA. Proyectos en Colombia y remoto para clientes de USA.',
           path: '/sobre-mi',
           locale: 'es',
           ogSubtitle: 'Desarrollador Full Stack | Colombia',
@@ -51,11 +50,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             'programador web bogotá',
             'ingeniero de software colombia',
             'desarrollador react colombia',
-            'desarrollador web freelance colombia',
             'desarrollador next.js colombia',
             'desarrollador node.js colombia',
             'desarrollo web colombia remoto',
-            'programador freelance bogotá',
           ],
         }
   );
@@ -221,7 +218,7 @@ const timelineEs = [
   {
     year: '2020 - 2022',
     title: 'Fundamentos y Formación Técnica',
-    description: 'Inicié mi camino en desarrollo con el SENA. Cursé y aprobé el tecnólogo en Análisis y Desarrollo de Sistemas de Información (ADSI), construyendo bases sólidas en análisis, diseño y desarrollo de software. Comencé a ofrecer servicios freelance de desarrollo web.',
+    description: 'Inicié mi camino en desarrollo con el SENA. Cursé y aprobé el tecnólogo en Análisis y Desarrollo de Sistemas de Información (ADSI), construyendo bases sólidas en análisis, diseño y desarrollo de software. Comencé a ofrecer servicios de desarrollo web.',
     icon: <GraduationCap size={20} />,
   },
   {
@@ -248,7 +245,7 @@ const timelineEn = [
   {
     year: '2020 - 2022',
     title: 'Foundations & Technical Training',
-    description: 'Started my development path with SENA. Completed the ADSI (Information Systems Analysis and Development) technologist program, building solid foundations in analysis, design, and software development. Began offering freelance web development services.',
+    description: 'Started my development path with SENA. Completed the ADSI (Information Systems Analysis and Development) technologist program, building solid foundations in analysis, design, and software development. Began offering web development services.',
     icon: <GraduationCap size={20} />,
   },
   {
@@ -361,8 +358,8 @@ export default async function SobreMiPage({ params }: Props) {
             <ScrollReveal immediate delay={0.3}>
               <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed">
                 {isEn
-                  ? "Freelance Full Stack Developer with 3+ years of experience building web solutions for businesses in Colombia and remote clients in the US. Specialized in React, Next.js, Node.js, and AI. Software Engineering student at Politécnico Grancolombiano."
-                  : 'Desarrollador Full Stack freelance con más de 3 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.'}
+                  ? "Full Stack Developer with 3+ years of experience building web solutions for businesses in Colombia and remote clients in the US. Specialized in React, Next.js, Node.js, and AI. Software Engineering student at Politécnico Grancolombiano."
+                  : 'Desarrollador Full Stack con más de 3 años de experiencia construyendo soluciones web para negocios en Colombia y clientes remotos en USA. Especializado en React, Next.js, Node.js e Inteligencia Artificial. Ingeniero de Software en formación en el Politécnico Grancolombiano.'}
               </p>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.4}>
@@ -441,7 +438,7 @@ export default async function SobreMiPage({ params }: Props) {
           <div className="grid gap-8">
             <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 md:p-10">
               <h3 className="text-2xl font-black text-white-custom italic mb-4">
-                {isEn ? 'Freelance Web Developer' : 'Desarrollador Web Freelance'}
+                {isEn ? 'Full Stack Web Developer' : 'Desarrollador Web Full Stack'}
               </h3>
               <p className="text-text-muted leading-relaxed mb-6">
                 {isEn

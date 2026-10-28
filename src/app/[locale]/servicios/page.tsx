@@ -35,7 +35,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           ogSubtitle: 'Colombia & Remote — From $1,200 USD',
           keywords: [
             'hire web developer colombia',
-            'freelance developer colombia',
             'full stack developer colombia',
             'professional web development colombia',
             'e-commerce colombia',
@@ -51,14 +50,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           ogSubtitle: 'Colombia & Remoto — Desde $1.8M COP',
           keywords: [
             'contratar desarrollador web colombia',
-            'programador freelance colombia',
             'desarrollador full stack colombia',
             'desarrollo web profesional colombia',
             'e-commerce colombia',
             'automatizacion de procesos colombia',
             'seo tecnico colombia',
             'full stack developer colombia',
-            'ingeniero de software freelance',
+            'ingeniero de software full stack',
             'aplicaciones web colombia',
             'react developer colombia',
           ],
@@ -143,7 +141,7 @@ export default async function ServiciosPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     '@id': `${base}/servicios#service-catalog`,
-    'name': isEn ? 'Omar Hernández Rey — Freelance Web Development Services' : 'Omar Hernández Rey — Servicios de Desarrollo Web Freelance',
+    'name': isEn ? 'Omar Hernández Rey — Full Stack Web Development Services' : 'Omar Hernández Rey — Servicios de Desarrollo Web Full Stack',
     'url': `${base}/servicios`,
     'telephone': '+573219052878',
     'priceRange': '$$-$$$',
@@ -199,7 +197,7 @@ export default async function ServiciosPage({ params }: Props) {
           <div className="max-w-4xl space-y-8">
             <ScrollReveal immediate y={16}>
               <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-                {isEn ? 'Freelance Web Developer · Colombia & Remote' : 'Desarrollador Web Freelance · Colombia & Remoto'}
+                {isEn ? 'Full Stack Web Developer · Colombia & Remote' : 'Desarrollador Web Full Stack · Colombia & Remoto'}
               </div>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.1}>
@@ -214,8 +212,8 @@ export default async function ServiciosPage({ params }: Props) {
             <ScrollReveal immediate delay={0.15}>
               <p className="text-lg md:text-xl text-text-muted font-medium max-w-2xl leading-relaxed opacity-80">
                 {isEn
-                  ? "I'm Omar Hernández, a freelance full stack developer in Colombia. I build custom websites and applications for companies and entrepreneurs looking to grow digitally. Available for projects in Colombia and remote for the US and LATAM."
-                  : 'Soy Omar Hernández, desarrollador full stack freelance en Colombia. Creo webs y aplicaciones a medida para empresas y emprendedores que quieren crecer digitalmente. Disponible para proyectos en Colombia y remoto para USA y LATAM.'}
+                  ? "I'm Omar Hernández, a full stack web developer in Colombia. I build custom websites and applications for companies and entrepreneurs looking to grow digitally. Available for projects in Colombia and remote for the US and LATAM."
+                  : 'Soy Omar Hernández, desarrollador web full stack en Colombia. Creo webs y aplicaciones a medida para empresas y emprendedores que quieren crecer digitalmente. Disponible para proyectos en Colombia y remoto para USA y LATAM.'}
               </p>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.2}>

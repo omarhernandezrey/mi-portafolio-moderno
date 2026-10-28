@@ -39,7 +39,7 @@ const TAG_SERVICE: Record<string, { href: string; label: string }> = {
   'wordpress': { href: '/servicios/desarrollo-web/bogota', label: 'Alternativa a WordPress' },
   'startup': { href: '/servicios/consultoria-tech/bogota', label: 'Consultoría Tecnológica' },
   'freelance developer': { href: '/servicios', label: 'Ver todos los Servicios' },
-  'freelance': { href: '/servicios', label: 'Servicios Freelance' },
+  'freelance': { href: '/servicios', label: 'Servicios de Desarrollo Web' },
   'agency': { href: '/servicios', label: 'Servicios de Desarrollo Web' },
   'hiring': { href: '/servicios', label: 'Contratar Desarrollador Web' },
   'contratar': { href: '/servicios', label: 'Contratar Desarrollador Web' },
@@ -649,8 +649,8 @@ export default async function BlogPostPage({
                       </p>
                       <p className="mt-2 text-sm leading-relaxed text-muted-60">
                         {isEnglish
-                          ? 'Full Stack Web Developer freelance based in Colombia. 3+ years building web apps and e-commerce solutions for Colombia and USA clients. React, Next.js, Node.js specialist.'
-                          : 'Desarrollador web full stack freelance con más de 3 años entregando proyectos en Colombia y USA. Especialista en React, Next.js y Node.js.'}
+                          ? 'Full Stack Web Developer based in Colombia. 3+ years building web apps and e-commerce solutions for Colombia and USA clients. React, Next.js, Node.js specialist.'
+                          : 'Desarrollador web full stack con más de 3 años entregando proyectos en Colombia y USA. Especialista en React, Next.js y Node.js.'}
                       </p>
                       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-4 font-mono-label text-[7px] text-muted-35">
                         <span>3+ {isEnglish ? 'years' : 'años'}</span>

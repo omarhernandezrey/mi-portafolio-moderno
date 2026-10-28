@@ -12,5 +12,5 @@ export const OMAR_PROFILE = {
     "https://twitter.com/omarhernandezrey"
   ],
   knowsAbout: ["React", "Next.js", "TypeScript", "Node.js", "PostgreSQL", "Supabase", "SEO Técnico", "E-commerce", "Automatización", "DevOps"],
-  description: "Desarrollador Web Full Stack freelance especializado en React, Next.js y Node.js. Proyectos para Colombia y clientes remotos en USA.",
+  description: "Desarrollador Web Full Stack especializado en React, Next.js y Node.js. Proyectos para Colombia y clientes remotos en USA.",
 } as const;

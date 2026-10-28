@@ -23,39 +23,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildMetadata(
     isEn
       ? {
-          title: withBrand("Freelance Web Developer Colombia"),
-          description: "Hire a freelance web developer in Colombia. Custom websites and apps in React and Next.js from $1,200 USD. Free consultation, 24h response.",
+          title: withBrand("Full Stack Web Developer Colombia"),
+          description: "Hire a full stack web developer in Colombia. Custom websites and apps in React and Next.js from $1,200 USD. Free consultation, 24h response.",
           path: "",
           locale: 'en',
           ogSubtitle: "React & Next.js | From $1,200 USD",
           keywords: [
             "hire web developer colombia",
-            "freelance developer colombia",
             "full stack developer colombia",
             "web developer bogota",
             "react developer colombia",
             "next.js developer colombia",
             "hire developer colombia remote",
-            "affordable freelance web developer",
+            "affordable full stack web developer",
             "software developer colombia",
           ],
         }
       : {
-          title: withBrand("Desarrollador Web Freelance Colombia"),
-          description: "Contrata un desarrollador web freelance en Colombia. Webs y aplicaciones a medida en React y Next.js desde $1.8M COP. Consulta gratis, respuesta en 24h.",
+          title: withBrand("Desarrollador Web Full Stack Colombia"),
+          description: "Contrata un desarrollador web full stack en Colombia. Webs y aplicaciones a medida en React y Next.js desde $1.8M COP. Consulta gratis, respuesta en 24h.",
           path: "",
           locale: 'es',
           ogSubtitle: "React & Next.js | Desde $1.8M COP",
           keywords: [
             "contratar desarrollador web colombia",
-            "programador freelance colombia",
             "desarrollador full stack colombia",
             "desarrollador web bogota",
             "full stack developer colombia",
             "react developer colombia",
             "next.js developer colombia",
             "hire developer colombia remote",
-            "freelance web developer affordable",
+            "desarrollador web full stack asequible",
             "software developer colombia",
             "ingeniero de software colombia",
             "desarrollador web profesional",
@@ -71,7 +69,7 @@ export default function Home() {
     "@graph": [
       {
         "@type": "ProfessionalService",
-        "name": "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
+        "name": "Omar Hernández Rey — Desarrollador Web Full Stack Colombia",
         "image": OMAR_PROFILE.image,
         "@id": "https://omarhernandezrey.com/#service",
         "url": OMAR_PROFILE.url,
@@ -87,7 +85,7 @@ export default function Home() {
           "latitude": 4.6097,
           "longitude": -74.0817
         },
-        "description": "Desarrollador Full Stack freelance en Colombia. React, Next.js, Node.js e IA. Proyectos desde $1.8M COP, remoto para USA y LATAM.",
+        "description": "Desarrollador Full Stack en Colombia. React, Next.js, Node.js e IA. Proyectos desde $1.8M COP, remoto para USA y LATAM.",
         "provider": {
           "@type": "Person",
           "@id": "https://omarhernandezrey.com/#person"

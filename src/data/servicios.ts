@@ -57,7 +57,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     h1En: 'Professional Web Development in {city}',
     h2En: 'High-Performance Websites for Businesses in {city}',
     descriptionEn: 'Custom web development with Next.js and React in {city}. Fast, SEO-ready sites that turn visitors into paying clients, from $3,000 USD.',
-    keywordsEn: ['web development {city}', 'web developer {city}', 'hire web developer {city}', 'website design {city}', 'freelance web developer {city}'],
+    keywordsEn: ['web development {city}', 'web developer {city}', 'hire web developer {city}', 'website design {city}', 'full stack web developer {city}'],
     benefitsEn: [
       'Ultra-fast Next.js & React websites',
       'Mobile-first responsive design for all devices',

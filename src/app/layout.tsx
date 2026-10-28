@@ -17,7 +17,7 @@ const personData = {
       "@type": "WebSite",
       "@id": "https://omarhernandezrey.com/#website",
       "url": "https://omarhernandezrey.com",
-      "name": "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
+      "name": "Omar Hernández Rey — Desarrollador Web Full Stack Colombia",
       "description": "Servicios de desarrollo web full stack, e-commerce y automatización. React, Next.js, Node.js. Colombia y USA remoto.",
       "publisher": { "@id": "https://omarhernandezrey.com/#organization" },
       "inLanguage": ["es", "en"],
@@ -46,7 +46,7 @@ const personData = {
     {
       "@type": "Organization",
       "@id": "https://omarhernandezrey.com/#organization",
-      "name": "Omar Hernández Rey — Desarrollo Web Freelance",
+      "name": "Omar Hernández Rey — Desarrollo Web Full Stack",
       "url": "https://omarhernandezrey.com",
       "logo": {
         "@type": "ImageObject",
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://omarhernandezrey.com"),
   title: {
     template: "%s | Omar Hernández Rey",
-    default: "Omar Hernández Rey · Desarrollador Web Freelance Colombia",
+    default: "Omar Hernández Rey · Desarrollador Web Full Stack Colombia",
   },
   description:
     "Desarrollo webs y aplicaciones a medida en React y Next.js. Proyectos desde $1.8M COP. Consulta gratis, respuesta en 24h.",
@@ -107,9 +107,9 @@ export const metadata: Metadata = {
     },
   },
   keywords: [
-    "desarrollador web freelance colombia",
+    "desarrollador web full stack colombia",
     "contratar desarrollador web colombia",
-    "programador freelance colombia",
+    "programador full stack colombia",
     "desarrollador full stack colombia",
     "full stack developer colombia",
     "react developer colombia",
@@ -130,24 +130,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_CO",
     url: "https://omarhernandezrey.com",
-    siteName: "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
-    title: "Desarrollador Web Freelance Colombia | React & Next.js | Omar Hernández Rey",
-    description: "Contratar desarrollador web freelance en Colombia. Webs y aplicaciones a medida. React, Next.js, Node.js. Desde $1.8M COP. Consulta gratis.",
+    siteName: "Omar Hernández Rey — Desarrollador Web Full Stack Colombia",
+    title: "Desarrollador Web Full Stack Colombia | React & Next.js | Omar Hernández Rey",
+    description: "Contratar desarrollador web full stack en Colombia. Webs y aplicaciones a medida. React, Next.js, Node.js. Desde $1.8M COP. Consulta gratis.",
     images: [
       {
-        url: "https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%241.8M%20COP",
-        secureUrl: "https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%241.8M%20COP",
+        url: "https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Full%20Stack%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%241.8M%20COP",
+        secureUrl: "https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Full%20Stack%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%241.8M%20COP",
         width: 1200,
         height: 630,
-        alt: "Omar Hernández Rey — Desarrollador Web Freelance Colombia",
+        alt: "Omar Hernández Rey — Desarrollador Web Full Stack Colombia",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Desarrollador Web Freelance Colombia | Omar Hernández Rey",
-    description: "Contratar desarrollador web en Colombia. React, Next.js, Node.js. Desde $1.8M COP. Consulta gratis.",
-    images: ["https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Freelance%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%241.8M%20COP"],
+    title: "Desarrollador Web Full Stack Colombia | Omar Hernández Rey",
+    description: "Contratar desarrollador web full stack en Colombia. React, Next.js, Node.js. Desde $1.8M COP. Consulta gratis.",
+    images: ["https://omarhernandezrey.com/api/og?title=Desarrollador%20Web%20Full%20Stack%20Colombia&subtitle=React%20%26%20Next.js%20%7C%20Desde%20%241.8M%20COP"],
   },
   robots: {
     index: true,
