@@ -114,9 +114,11 @@
 
 .bottomBottom {
   position: absolute;
-  bottom: 1rem;
+  top: 50%;
+  bottom: auto;
   left: 1.5rem;
   right: 1.5rem;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -181,6 +183,12 @@
   top: 20%;
   border-radius: 80px 29px 29px 29px;
   transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
+}
+
+.card:hover .bottomBottom {
+  top: auto;
+  bottom: 1rem;
+  transform: none;
 }
 
 .card:hover .profilePic {
