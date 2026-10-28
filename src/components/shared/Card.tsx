@@ -37,9 +37,9 @@ const Card: React.FC<CardProps> = ({
           (transform: scale no reduce el tamaño de layout), evitando que
           el mockup (420px sin escalar) desborde el viewport en mobile. */}
       <div
-        className="relative mx-auto w-[231px] h-[134px] xs:w-[315px] xs:h-[183px] sm:w-[378px] sm:h-[220px] md:w-[420px] md:h-[244px] lg:w-[483px] lg:h-[281px] xl:w-[546px] xl:h-[317px] -mb-8 sm:-mb-12 md:-mb-16 lg:-mb-20"
+        className="relative mx-auto w-[264px] h-[153px] xs:w-[300px] xs:h-[174px] sm:w-[378px] sm:h-[220px] md:w-[420px] md:h-[244px] lg:w-[483px] lg:h-[281px] xl:w-[546px] xl:h-[317px] mb-0 sm:-mb-12 md:-mb-16 lg:-mb-20"
       >
-      <div className="absolute inset-0 flex flex-col items-center justify-center scale-[0.55] xs:scale-75 sm:scale-90 md:scale-100 lg:scale-[1.15] xl:scale-[1.3] origin-center">
+      <div className="absolute inset-0 flex flex-col items-center justify-center scale-[0.63] xs:scale-[0.714] sm:scale-90 md:scale-100 lg:scale-[1.15] xl:scale-[1.3] origin-center">
         {/* Desktop/Laptop */}
         <div
           className="relative flex-shrink-0"
@@ -142,7 +142,7 @@ const Card: React.FC<CardProps> = ({
       </div>
 
       {/* Contenido del proyecto */}
-      <div className="mt-4 sm:mt-20 md:mt-24 lg:mt-32 xl:mt-44 text-center px-2 sm:px-4">
+      <div className="mt-8 sm:mt-20 md:mt-24 lg:mt-32 xl:mt-44 text-center px-2 sm:px-4">
         <h3 className="text-lg sm:text-xl font-bold text-[var(--accent-color)] leading-tight">
           {title}
         </h3>
@@ -160,17 +160,15 @@ const Card: React.FC<CardProps> = ({
                   className="group relative flex flex-col items-center cursor-pointer"
                 >
                   {technologyIcons[tech] ? (
-                    <div className="transform transition-transform group-hover:scale-110 w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center">
-                      <div className="scale-75 sm:scale-90 origin-center">
-                        {technologyIcons[tech]}
-                      </div>
+                    <div className="transform transition-transform group-hover:scale-110 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center [&>svg]:!w-full [&>svg]:!h-full">
+                      {technologyIcons[tech]}
                     </div>
                   ) : (
                     <span className="text-[var(--accent-color)] text-[0.65rem] sm:text-xs font-medium px-2 py-0.5 bg-[var(--secondary-background-color)] rounded">
                       {tech}
                     </span>
                   )}
-                  <span className="absolute bottom-[-24px] opacity-0 group-hover:opacity-100 group-hover:translate-y-[-5px] bg-[var(--secondary-background-color)] text-[var(--text-color)] text-[0.6rem] px-1.5 py-0.5 rounded transition-all whitespace-nowrap z-10">
+                  <span className="absolute bottom-[-24px] hidden sm:block opacity-0 group-hover:opacity-100 group-hover:translate-y-[-5px] bg-[var(--secondary-background-color)] text-[var(--text-color)] text-[0.6rem] px-1.5 py-0.5 rounded transition-all whitespace-nowrap z-10">
                     {tech}
                   </span>
                 </div>
