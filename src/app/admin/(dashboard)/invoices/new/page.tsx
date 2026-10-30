@@ -103,13 +103,13 @@ export default function NewInvoicePage() {
         <ArrowLeft size={18} /> Volver a Facturación
       </Link>
 
-      <div className="bg-card-bg p-4 sm:p-6 lg:p-8 rounded-[24px] sm:rounded-[40px] border border-white/5 shadow-2xl">
+      <div className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-6 lg:p-8">
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="p-2 sm:p-3 bg-primary/10 rounded-xl sm:rounded-2xl text-primary">
             <FileText size={28} />
           </div>
           <div>
-            <h1 className="font-display italic text-xl sm:text-2xl lg:text-3xl font-medium text-white-custom">Generar Factura</h1>
+            <h1 className="font-display italic text-xl sm:text-2xl lg:text-3xl font-medium text-admin-ink">Generar Factura</h1>
             <p className="text-xs sm:text-sm text-text-muted">Crea un documento de cobro profesional para tu cliente.</p>
           </div>
         </div>
@@ -117,10 +117,10 @@ export default function NewInvoicePage() {
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Cliente / Proyecto</label>
+              <label className="block text-xs sm:text-sm font-bold mb-2 text-admin-ink">Cliente / Proyecto</label>
               <select 
                 required
-                className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom text-sm"
+                className="w-full bg-admin-bg border border-admin-line rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-admin-ink text-sm"
                 value={formData.lead_id}
                 onChange={(e) => setFormData({...formData, lead_id: e.target.value})}
               >
@@ -131,11 +131,11 @@ export default function NewInvoicePage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Fecha Vencimiento</label>
+              <label className="block text-xs sm:text-sm font-bold mb-2 text-admin-ink">Fecha Vencimiento</label>
               <input 
                 type="date"
                 required
-                className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom text-sm"
+                className="w-full bg-admin-bg border border-admin-line rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-admin-ink text-sm"
                 value={formData.due_date}
                 onChange={(e) => setFormData({...formData, due_date: e.target.value})}
               />
@@ -144,7 +144,7 @@ export default function NewInvoicePage() {
 
           <div className="space-y-3 sm:space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-base sm:text-lg text-white-custom">Ítems / Servicios</h3>
+              <h3 className="font-bold text-base sm:text-lg text-admin-ink">Ítems / Servicios</h3>
               <button 
                 type="button" 
                 onClick={addItem}
@@ -156,60 +156,64 @@ export default function NewInvoicePage() {
 
             <div className="space-y-2 sm:space-y-3">
               {formData.items.map((item, idx) => (
-                <div key={idx} className="flex flex-col gap-2 sm:gap-3 p-3 sm:p-4 bg-background/50 rounded-xl sm:rounded-2xl border border-white/5">
-                  <div className="flex-1">
-                    <input 
-                      type="text"
-                      placeholder="Descripción del servicio"
-                      required
-                      className="w-full bg-transparent border-none focus:ring-0 p-0 text-xs sm:text-sm font-medium text-white-custom placeholder:text-text-muted/50"
-                      value={item.description}
-                      onChange={(e) => updateItem(idx, 'description', e.target.value)}
-                    />
-                  </div>
-                  <div className="flex gap-2 sm:gap-3 items-center flex-wrap">
-                    <input 
+                <div key={idx} className="grid grid-cols-2 items-center gap-3 rounded-xl border border-admin-line bg-admin-bg/50 p-3 sm:grid-cols-[minmax(0,1fr)_72px_116px_96px_28px] sm:rounded-2xl sm:p-4">
+                  <input
+                    type="text"
+                    placeholder="Descripción del servicio"
+                    required
+                    aria-label="Descripción del servicio"
+                    className="col-span-2 w-full border-b border-admin-line/60 bg-transparent p-0 pb-2 text-sm font-medium text-admin-ink outline-none placeholder:text-text-muted/50 focus:border-primary/50 sm:col-span-1 sm:border-b-0 sm:pb-0"
+                    value={item.description}
+                    onChange={(e) => updateItem(idx, 'description', e.target.value)}
+                  />
+                  <label className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-text-muted/60">Cant.</span>
+                    <input
                       type="number"
-                      placeholder="Cant"
-                      className="w-14 sm:w-16 bg-transparent border-none focus:ring-0 p-0 text-xs sm:text-sm text-center text-white-custom"
+                      className="w-11 bg-transparent p-0 text-center text-sm text-admin-ink outline-none"
                       value={item.quantity}
                       min="1"
+                      aria-label="Cantidad"
                       onChange={(e) => updateItem(idx, 'quantity', parseInt(e.target.value) || 1)}
                     />
-                    <div className="flex items-center gap-1">
-                      <span className="text-[10px] sm:text-xs text-text-muted">$</span>
-                      <input 
-                        type="number"
-                        placeholder="Precio"
-                        className="w-20 sm:w-24 bg-transparent border-none focus:ring-0 p-0 text-xs sm:text-sm text-right font-mono text-white-custom"
-                        value={item.price}
-                        step="0.01"
-                        onChange={(e) => updateItem(idx, 'price', parseFloat(e.target.value) || 0)}
-                      />
-                    </div>
-                    <div className="w-20 sm:w-24 text-right text-xs sm:text-sm font-black text-primary font-mono">
-                      ${(item.quantity * item.price).toFixed(2)}
-                    </div>
-                    {formData.items.length > 1 && (
-                      <button 
-                        type="button" 
-                        onClick={() => removeItem(idx)}
-                        className="text-red-400 hover:text-red-500 transition-colors ml-auto"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    )}
+                  </label>
+                  <label className="flex items-center gap-1.5">
+                    <span className="text-xs text-text-muted">$</span>
+                    <input
+                      type="number"
+                      placeholder="Precio"
+                      className="w-20 bg-transparent p-0 text-right font-mono text-sm text-admin-ink outline-none placeholder:text-text-muted/40"
+                      value={item.price}
+                      step="0.01"
+                      aria-label="Precio unitario"
+                      onChange={(e) => updateItem(idx, 'price', parseFloat(e.target.value) || 0)}
+                    />
+                  </label>
+                  <div className="col-span-2 text-right font-mono text-sm font-black text-primary sm:col-span-1">
+                    ${(item.quantity * item.price).toFixed(2)}
                   </div>
+                  {formData.items.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={() => removeItem(idx)}
+                      aria-label="Eliminar ítem"
+                      className="justify-self-end p-0 text-admin-danger transition-colors hover:text-admin-danger/70"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  ) : (
+                    <span aria-hidden className="hidden sm:block" />
+                  )}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-4 sm:gap-8 pt-6 sm:pt-8 border-t border-white/5">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-4 sm:gap-8 pt-6 sm:pt-8 border-t border-admin-line">
             <div className="flex-1 w-full">
-              <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Notas / Instrucciones de pago</label>
+              <label className="block text-xs sm:text-sm font-bold mb-2 text-admin-ink">Notas / Instrucciones de pago</label>
               <textarea 
-                className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[80px] sm:min-h-[100px] text-xs sm:text-sm text-white-custom placeholder:text-text-muted/50 resize-none"
+                className="w-full bg-admin-bg border border-admin-line rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[80px] sm:min-h-[100px] text-xs sm:text-sm text-admin-ink placeholder:text-text-muted/50 resize-none"
                 placeholder="Ej: Favor consignar a la cuenta Nequi..."
                 value={formData.notes}
                 onChange={(e) => setFormData({...formData, notes: e.target.value})}
@@ -218,14 +222,14 @@ export default function NewInvoicePage() {
             <div className="w-full lg:w-64 space-y-2 sm:space-y-3">
               <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-text-muted">Subtotal</span>
-                <span className="font-mono text-white-custom">${subtotal.toFixed(2)}</span>
+                <span className="font-mono text-admin-ink">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-text-muted">Impuestos (0%)</span>
-                <span className="font-mono text-white-custom">$0.00</span>
+                <span className="font-mono text-admin-ink">$0.00</span>
               </div>
-              <div className="flex justify-between text-lg sm:text-xl font-black pt-2 sm:pt-3 border-t border-white/5">
-                <span className="text-white-custom">TOTAL</span>
+              <div className="flex justify-between text-lg sm:text-xl font-black pt-2 sm:pt-3 border-t border-admin-line">
+                <span className="text-admin-ink">TOTAL</span>
                 <span className="text-primary font-mono">${subtotal.toFixed(2)}</span>
               </div>
             </div>

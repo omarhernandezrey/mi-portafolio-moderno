@@ -71,7 +71,7 @@ export default function StatusPage() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40 space-y-6">
             <div className="relative">
-              <div className="h-16 w-16 animate-spin rounded-[20px] border-2 border-primary/20 border-t-primary shadow-[0_0_20px_rgba(var(--primary-color-rgb),0.2)]"></div>
+              <div className="h-16 w-16 animate-spin rounded-[20px] border-2 border-primary/20 border-t-primary shadow-lg shadow-primary/20"></div>
               <Activity size={24} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary animate-pulse" />
             </div>
             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted/40 animate-pulse">Initializing Protocols...</p>
@@ -239,7 +239,7 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
         <div className={`flex items-center gap-2 text-[9px] font-black uppercase px-3 py-1.5 rounded-full border transition-all ${
           isOperational ? 'bg-primary/5 text-primary border-primary/20' : 'bg-accent/5 text-accent border-accent/20'
         }`}>
-          <div className={`h-1.5 w-1.5 rounded-full ${isOperational ? 'bg-primary animate-pulse' : 'bg-accent shadow-[0_0_10px_rgba(var(--accent-color-rgb),0.5)]'}`} />
+          <div className={`h-1.5 w-1.5 rounded-full ${isOperational ? 'bg-primary animate-pulse' : 'bg-accent shadow-lg shadow-accent/50'}`} />
           {status}
         </div>
       </div>

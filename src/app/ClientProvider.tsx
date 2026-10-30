@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { MotionConfig } from 'framer-motion';
 import { I18nProvider } from '@/contexts/I18nContext';
 import { ToastProvider } from '@/components/ui/Toast';
@@ -19,6 +20,8 @@ interface ClientProviderProps {
 }
 
 export default function ClientProvider({ children }: ClientProviderProps) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith('/admin') ?? false;
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window === 'undefined') return false;
     return window.matchMedia('(max-width: 768px)').matches;
@@ -72,7 +75,7 @@ export default function ClientProvider({ children }: ClientProviderProps) {
           <MotionConfig reducedMotion={isMobile ? 'always' : 'never'}>
             <DomErrorGuard />
             {children}
-            <WhatsAppFloatingButton />
+            {!isAdminRoute && <WhatsAppFloatingButton />}
           </MotionConfig>
         </NotyfProvider>
       </ToastProvider>

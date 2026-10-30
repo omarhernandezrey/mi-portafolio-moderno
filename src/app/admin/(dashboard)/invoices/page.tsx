@@ -5,12 +5,16 @@ import {
   FileText,
   Download,
   Calendar,
-  Plus
+  Plus,
+  DollarSign,
+  Clock,
+  CheckCircle2,
 } from 'lucide-react';
-import Link from 'next/link';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import StatCard from '@/components/admin/ui/StatCard';
+import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,161 +28,239 @@ async function getInvoices() {
   return data || [];
 }
 
+function formatMoney(value: number | string | null, currency = 'USD') {
+  const amount = Number(value) || 0;
+  return `$${amount.toLocaleString('es-CO', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })} ${currency}`;
+}
+
+function formatDate(value: string | null) {
+  if (!value) return '—';
+  return new Date(value).toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'America/Bogota',
+  });
+}
+
 export default async function AdminInvoicesPage() {
   const invoices = await getInvoices();
+  const activeInvoices = invoices.filter(
+    (invoice) => invoice.status !== 'cancelled'
+  );
+  const totalBilled = activeInvoices.reduce(
+    (sum, invoice) => sum + (Number(invoice.total) || 0),
+    0
+  );
+  const pending = invoices
+    .filter((invoice) => invoice.status === 'sent')
+    .reduce((sum, invoice) => sum + (Number(invoice.total) || 0), 0);
+  const collected = invoices
+    .filter((invoice) => invoice.status === 'paid')
+    .reduce((sum, invoice) => sum + (Number(invoice.total) || 0), 0);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-5 lg:space-y-6">
       <PageHeader
         overline="Finanzas"
         title="Facturación"
-        description="Gestión de facturas y cobros."
+        description="Gestión de facturas, cobros y documentos."
         actions={
-          <Link 
-            href="/admin/invoices/new" 
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
+          <AdminButtonLink
+            href="/admin/invoices/new"
+            variant="primary"
+            size="sm"
+            icon={<Plus size={15} />}
           >
-            <Plus size={16} />
-            Nueva Factura
-          </Link>
+            Nueva factura
+          </AdminButtonLink>
         }
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-[10px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Total Facturado</div>
-          <div className="text-2xl sm:text-3xl font-black text-emerald-400 truncate">
-            ${invoices.reduce((acc, inv) => acc + Number(inv.total), 0).toFixed(2)}
-          </div>
-        </div>
-        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-[10px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Pendiente de Cobro</div>
-          <div className="text-2xl sm:text-3xl font-black text-blue-400 truncate">
-            ${invoices.filter(i => i.status === 'sent').reduce((acc, inv) => acc + Number(inv.total), 0).toFixed(2)}
-          </div>
-        </div>
-        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-[10px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Facturas Emitidas</div>
-          <div className="text-2xl sm:text-3xl font-black text-primary">{invoices.length}</div>
-        </div>
-      </div>
+      <section
+        aria-label="Resumen de facturación"
+        className="grid grid-cols-2 gap-3 xl:grid-cols-4"
+      >
+        <StatCard
+          title="Total facturado"
+          value={formatMoney(totalBilled)}
+          icon={<DollarSign size={19} />}
+          color="primary"
+          description="Facturas vigentes emitidas"
+        />
+        <StatCard
+          title="Pendiente"
+          value={formatMoney(pending)}
+          icon={<Clock size={19} />}
+          color="warning"
+          description="Enviadas sin cobrar"
+        />
+        <StatCard
+          title="Cobrado"
+          value={formatMoney(collected)}
+          icon={<CheckCircle2 size={19} />}
+          color="success"
+          description="Pagos confirmados"
+        />
+        <StatCard
+          title="Emitidas"
+          value={invoices.length.toString()}
+          icon={<FileText size={19} />}
+          color="info"
+          description="Documentos registrados"
+        />
+      </section>
 
-      {/* Mobile Card View */}
-      <div className="block lg:hidden space-y-3">
-        {invoices.length > 0 ? invoices.map((inv) => (
-          <div key={inv.id} className="bg-card-bg rounded-2xl border border-white/5 p-4 shadow-xl">
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <div className="font-bold text-white-custom text-sm">{inv.number}</div>
-                <div className="text-[10px] text-text-muted/60 font-mono uppercase tracking-tighter">
-                  ID: {inv.id.substring(0, 8)}
+      <div className="space-y-3 lg:hidden">
+        {invoices.length > 0 ? (
+          invoices.map((invoice) => (
+            <article
+              key={invoice.id}
+              className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-bold text-admin-ink">
+                    {invoice.number}
+                  </p>
+                  <p className="font-mono-label text-[8px] text-text-muted/50">
+                    ID: {invoice.id.substring(0, 8)}
+                  </p>
                 </div>
+                <StatusBadge status={invoice.status} size="sm" />
               </div>
-              <StatusBadge status={inv.status} />
-            </div>
-            
-            <div className="space-y-2 mb-3">
-              <div className="text-sm">
-                <div className="font-medium text-white-custom">{inv.lead?.name || 'N/A'}</div>
-                {inv.lead?.company && (
-                  <div className="text-[10px] text-text-muted/60">{inv.lead.company}</div>
+
+              <div className="mt-3 rounded-xl border border-admin-line bg-admin-raised/40 p-3">
+                <p className="text-xs font-bold text-admin-ink">
+                  {invoice.lead?.name || 'Sin cliente'}
+                </p>
+                {invoice.lead?.company && (
+                  <p className="text-[10px] text-text-muted/60">
+                    {invoice.lead.company}
+                  </p>
                 )}
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1 text-text-muted">
-                  <Calendar size={12} />
-                  {inv.due_date}
-                </div>
-                <div className="font-black text-emerald-400 font-mono text-lg">
-                  {inv.total} {inv.currency}
-                </div>
-              </div>
-            </div>
 
-            {inv.pdf_url && (
-              <a 
-                href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${inv.pdf_url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-background transition-all text-xs font-bold"
-              >
-                <Download size={16} />
-                Descargar PDF
-              </a>
-            )}
-          </div>
-        )) : (
-          <div className="bg-card-bg rounded-2xl border border-white/5 p-8">
-            <EmptyState 
-              icon={<FileText size={32} />}
-              title="Sin facturas"
-              description="No hay facturas generadas aún"
-            />
-          </div>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <span className="flex items-center gap-1.5 font-mono-label text-[8px] text-text-muted/50">
+                  <Calendar size={10} />
+                  Vence {formatDate(invoice.due_date)}
+                </span>
+                <span className="text-sm font-black text-admin-success">
+                  {formatMoney(invoice.total, invoice.currency)}
+                </span>
+              </div>
+
+              {invoice.pdf_url && (
+                <a
+                  href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${invoice.pdf_url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-primary/20 bg-primary/10 px-3 py-2.5 text-[11px] font-bold text-primary transition-colors hover:bg-primary/15"
+                >
+                  <Download size={14} />
+                  Descargar PDF
+                </a>
+              )}
+            </article>
+          ))
+        ) : (
+          <EmptyState
+            icon={<FileText size={24} />}
+            title="Sin facturas"
+            description="No hay facturas generadas todavía."
+          />
         )}
       </div>
 
-      {/* Desktop Table View */}
-      <div className="hidden lg:block bg-card-bg rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-separate border-spacing-0 min-w-[700px]">
+          <table className="w-full min-w-[820px] text-left">
             <thead>
-              <tr className="bg-background/40">
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Nro Factura</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Cliente</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Fecha Venc.</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Total</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Estado</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">PDF</th>
+              <tr className="border-b border-admin-line bg-white/[0.02]">
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Nro. factura
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Cliente
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Vencimiento
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Total
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Estado
+                </th>
+                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                  PDF
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
-              {invoices.length > 0 ? invoices.map((inv) => (
-                <tr key={inv.id} className="group hover:bg-white/[0.02] transition-colors">
-                  <td className="px-4 xl:px-8 py-5">
-                    <div className="font-bold text-white-custom text-sm group-hover:text-primary transition-colors">
-                      {inv.number}
-                    </div>
-                    <div className="text-[10px] text-text-muted/60 font-mono uppercase tracking-tighter">
-                      ID: {inv.id.substring(0, 8)}
-                    </div>
-                  </td>
-                  <td className="px-4 xl:px-8 py-5 text-sm">
-                    <div className="font-medium text-white-custom">{inv.lead?.name || 'N/A'}</div>
-                    <div className="text-[10px] text-text-muted/60">{inv.lead?.company || ''}</div>
-                  </td>
-                  <td className="px-4 xl:px-8 py-5 text-xs text-text-muted">
-                    <div className="flex items-center gap-1">
-                      <Calendar size={12} />
-                      {inv.due_date}
-                    </div>
-                  </td>
-                  <td className="px-4 xl:px-8 py-5 text-sm font-black text-emerald-400 font-mono text-lg">
-                    {inv.total} {inv.currency}
-                  </td>
-                  <td className="px-4 xl:px-8 py-5">
-                    <StatusBadge status={inv.status} />
-                  </td>
-                  <td className="px-4 xl:px-8 py-5 text-right">
-                    {inv.pdf_url && (
-                      <a 
-                        href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${inv.pdf_url}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-background transition-all shadow-lg"
-                      >
-                        <Download size={18} />
-                      </a>
-                    )}
-                  </td>
-                </tr>
-              )) : (
+            <tbody className="divide-y divide-admin-line">
+              {invoices.length > 0 ? (
+                invoices.map((invoice) => (
+                  <tr
+                    key={invoice.id}
+                    className="group transition-colors hover:bg-white/[0.03]"
+                  >
+                    <td className="px-5 py-4">
+                      <p className="text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
+                        {invoice.number}
+                      </p>
+                      <p className="font-mono-label text-[8px] text-text-muted/50">
+                        ID: {invoice.id.substring(0, 8)}
+                      </p>
+                    </td>
+                    <td className="px-5 py-4">
+                      <p className="text-xs font-semibold text-admin-ink">
+                        {invoice.lead?.name || 'Sin cliente'}
+                      </p>
+                      <p className="text-[10px] text-text-muted/60">
+                        {invoice.lead?.company || '—'}
+                      </p>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4">
+                      <span className="flex items-center gap-1.5 text-[10px] font-medium text-text-muted">
+                        <Calendar size={10} />
+                        {formatDate(invoice.due_date)}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm font-black text-admin-success">
+                      {formatMoney(invoice.total, invoice.currency)}
+                    </td>
+                    <td className="px-5 py-4">
+                      <StatusBadge status={invoice.status} size="sm" />
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      {invoice.pdf_url ? (
+                        <a
+                          href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${invoice.pdf_url}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Descargar factura ${invoice.number}`}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary transition-colors hover:bg-primary/15"
+                        >
+                          <Download size={14} />
+                        </a>
+                      ) : (
+                        <span className="text-[10px] text-text-muted/30">—</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
-                  <td colSpan={6} className="px-8 py-24 text-center">
-                    <EmptyState 
-                      icon={<FileText size={40} />}
+                  <td colSpan={6} className="px-5 py-10">
+                    <EmptyState
+                      icon={<FileText size={24} />}
                       title="Sin facturas"
-                      description="No hay facturas generadas aún"
+                      description="No hay facturas generadas todavía."
+                      className="border-0 bg-transparent"
                     />
                   </td>
                 </tr>

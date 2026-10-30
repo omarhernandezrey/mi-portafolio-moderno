@@ -1,10 +1,16 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Activity, Search, RefreshCw, X, AlertTriangle,
-  CheckCircle, Clock, Zap, Hash, ChevronDown, ChevronUp
+  CheckCircle, Clock, Zap, Hash, ChevronDown, ChevronUp,
+  AlertCircle,
 } from 'lucide-react';
+import PageHeader from '@/components/admin/ui/PageHeader';
+import StatCard from '@/components/admin/ui/StatCard';
+import EmptyState from '@/components/admin/ui/EmptyState';
+import { AdminButton } from '@/components/admin/ui/AdminButton';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 interface ApiLog {
   id: string;
@@ -20,19 +26,19 @@ interface ApiLog {
 const PROVIDER_COLORS: Record<string, string> = {
   groq: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
   openrouter: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  cerebras: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  cerebras: 'bg-admin-info/10 text-admin-info border-admin-info/20',
   nvidia: 'bg-green-500/10 text-green-400 border-green-500/20',
   mistral: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
   deepseek: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-  openai: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  openai: 'bg-admin-success/10 text-admin-success border-admin-success/20',
   anthropic: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
 };
 
 function latencyColor(ms: number | null): string {
   if (!ms) return 'text-text-muted/40';
-  if (ms < 500) return 'text-emerald-400';
+  if (ms < 500) return 'text-admin-success';
   if (ms < 1500) return 'text-amber-400';
-  return 'text-red-400';
+  return 'text-admin-danger';
 }
 
 function formatLatency(ms: number | null): string {
@@ -45,19 +51,6 @@ function isError(log: ApiLog): boolean {
   return !!(log.error_message || (log.http_status && log.http_status >= 400) || log.status === 'error');
 }
 
-function StatBox({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: string | number; sub?: string }) {
-  return (
-    <div className="bg-card-bg rounded-[20px] border border-white/5 p-5 shadow-xl">
-      <div className="flex items-center gap-2 mb-3">
-        {icon}
-        <span className="text-[10px] uppercase tracking-widest font-black text-text-muted/60">{label}</span>
-      </div>
-      <div className="text-2xl font-black text-white-custom">{value}</div>
-      {sub && <div className="text-xs text-text-muted/40 mt-1">{sub}</div>}
-    </div>
-  );
-}
-
 export default function ApiLogsPage() {
   const [logs, setLogs] = useState<ApiLog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,15 +61,28 @@ export default function ApiLogsPage() {
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 50;
 
-  const load = () => {
-    setLoading(true);
-    fetch('/api/admin/logs?limit=500')
-      .then(r => r.json())
-      .then(data => { setLogs(data); setLoading(false); })
-      .catch(() => setLoading(false));
-  };
+  const [error, setError] = useState('');
 
-  useEffect(() => { load(); }, []);
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const data = await adminFetch<ApiLog[]>('/api/admin/logs?limit=500');
+      setLogs(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'No se pudieron cargar los logs.'
+      );
+      setLogs([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const providers = useMemo(() => [...new Set(logs.map(l => l.provider))].sort(), [logs]);
 
@@ -123,76 +129,94 @@ export default function ApiLogsPage() {
   const hasMore = paginated.length < filtered.length;
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <p className="font-mono-label text-[0.6rem] text-primary/60 mb-2">Observabilidad</p>
-          <h1 className="font-display italic text-3xl sm:text-4xl font-medium text-white-custom tracking-tight">Logs de API</h1>
-          <p className="text-text-muted text-sm font-medium mt-2">
-            Monitoreo de llamadas a proveedores de IA y latencia en tiempo real
-          </p>
-        </div>
-        <button
-          onClick={load}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-muted hover:text-white-custom transition-all self-start sm:self-auto"
-        >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          Actualizar
-        </button>
-      </div>
+    <div className="space-y-5 lg:space-y-6">
+      <PageHeader
+        overline="Observabilidad"
+        title="Logs de API"
+        description="Monitoreo de llamadas a proveedores de IA y latencia en tiempo real."
+        actions={
+          <AdminButton
+            onClick={load}
+            disabled={loading}
+            size="sm"
+            icon={
+              <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            }
+          >
+            Actualizar
+          </AdminButton>
+        }
+      />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatBox
-          icon={<Activity size={14} className="text-primary" />}
-          label="Total Llamadas"
-          value={stats.total}
-          sub="Últimas 500"
+      {error && (
+        <div
+          role="alert"
+          className="flex items-start gap-2.5 rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-3.5 text-xs font-medium text-admin-danger"
+        >
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <section
+        aria-label="Resumen de logs"
+        className="grid grid-cols-2 gap-3 xl:grid-cols-4"
+      >
+        <StatCard
+          title="Total llamadas"
+          value={stats.total.toString()}
+          icon={<Activity size={19} />}
+          color="primary"
+          description="Últimas 500 llamadas"
         />
-        <StatBox
-          icon={<AlertTriangle size={14} className="text-red-400" />}
-          label="Tasa de Error"
+        <StatCard
+          title="Tasa de error"
           value={`${stats.errorRate}%`}
-          sub={`${stats.errors} errores`}
+          icon={<AlertTriangle size={19} />}
+          color="danger"
+          description={`${stats.errors} errores`}
         />
-        <StatBox
-          icon={<Clock size={14} className="text-amber-400" />}
-          label="Latencia Media"
+        <StatCard
+          title="Latencia media"
           value={formatLatency(stats.avgLatency)}
-          sub="Promedio global"
+          icon={<Clock size={19} />}
+          color="warning"
+          description="Promedio global"
         />
-        <StatBox
-          icon={<Zap size={14} className="text-accent" />}
-          label="Proveedores"
-          value={providers.length}
-          sub="Activos"
+        <StatCard
+          title="Proveedores"
+          value={providers.length.toString()}
+          icon={<Zap size={19} />}
+          color="info"
+          description="Activos"
         />
-      </div>
+      </section>
 
       {/* Provider breakdown */}
       {Object.keys(stats.byProvider).length > 0 && (
-        <div className="bg-card-bg rounded-[24px] border border-white/5 p-6 shadow-xl">
-          <h2 className="text-sm font-bold text-white-custom mb-5 flex items-center gap-2">
+        <div className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-bold text-admin-ink">
             <Zap size={14} className="text-primary" />
-            Uso por Proveedor
+            Uso por proveedor
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {Object.entries(stats.byProvider).sort((a, b) => b[1].total - a[1].total).map(([provider, data]) => {
-              const color = PROVIDER_COLORS[provider.toLowerCase()] || 'bg-white/5 text-text-muted border-white/10';
+              const color = PROVIDER_COLORS[provider.toLowerCase()] || 'bg-white/[0.03] text-text-muted border-admin-line';
               const errorRate = ((data.errors / data.total) * 100).toFixed(0);
               return (
-                <div
+                <button
                   key={provider}
-                  className={`rounded-xl border px-4 py-3 cursor-pointer transition-all hover:scale-[1.02] ${color}`}
+                  type="button"
+                  aria-pressed={providerFilter === provider}
+                  className={`rounded-xl border px-4 py-3 text-left transition-colors hover:border-primary/30 ${color}`}
                   onClick={() => setProviderFilter(providerFilter === provider ? '' : provider)}
                 >
-                  <div className="font-black text-sm uppercase tracking-wider">{provider}</div>
-                  <div className="text-lg font-black mt-1">{data.total}</div>
-                  <div className="text-[10px] opacity-60 font-medium">
+                  <div className="font-mono-label text-[9px] uppercase">{provider}</div>
+                  <div className="mt-1 text-lg font-black">{data.total}</div>
+                  <div className="text-[10px] font-medium opacity-60">
                     {errorRate}% err · {formatLatency(data.avgLatency)} avg
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -208,40 +232,42 @@ export default function ApiLogsPage() {
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
             placeholder="Buscar por proveedor, session ID o error..."
-            className="w-full pl-11 pr-10 py-3 sm:py-4 bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] text-white-custom outline-none focus:border-primary/30 transition-all shadow-xl text-sm"
+            className="w-full pl-11 pr-10 py-3 sm:py-4 bg-card-bg border border-admin-line rounded-xl sm:rounded-[20px] text-admin-ink outline-none focus:border-primary/30 transition-all shadow-xl text-sm"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-white-custom">
+            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-admin-ink">
               <X size={14} />
             </button>
           )}
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <select
             value={providerFilter}
             onChange={e => { setProviderFilter(e.target.value); setPage(1); }}
-            className="bg-card-bg border border-white/5 rounded-[16px] px-4 py-3 sm:py-4 text-xs font-bold text-text-muted outline-none focus:border-primary/30 transition-all shadow-xl appearance-none min-w-[130px]"
+            className="w-full rounded-xl border border-admin-line bg-card-bg px-4 py-3 text-xs font-bold text-text-muted outline-none transition-all focus:border-primary/30 sm:w-auto sm:py-4"
           >
             <option value="">Todos los proveedores</option>
             {providers.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
-          {(['all', 'ok', 'error'] as const).map(f => (
-            <button
-              key={f}
-              onClick={() => { setStatusFilter(f); setPage(1); }}
-              className={`px-4 py-3 sm:py-4 rounded-[16px] text-xs font-black uppercase tracking-wider transition-all border ${
-                statusFilter === f
-                  ? f === 'error'
-                    ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                    : f === 'ok'
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-primary/10 border-primary/30 text-primary'
-                  : 'bg-card-bg border-white/5 text-text-muted hover:text-white-custom'
-              }`}
-            >
-              {f === 'all' ? 'Todo' : f === 'ok' ? '✓ OK' : '⚠ Errores'}
-            </button>
-          ))}
+          <div className="grid grid-cols-3 gap-2 sm:flex">
+            {(['all', 'ok', 'error'] as const).map(f => (
+              <button
+                key={f}
+                onClick={() => { setStatusFilter(f); setPage(1); }}
+                className={`rounded-xl border px-2 py-3 text-[10px] font-black uppercase tracking-wider transition-all sm:px-4 sm:py-4 sm:text-xs ${
+                  statusFilter === f
+                    ? f === 'error'
+                      ? 'bg-admin-danger/10 border-admin-danger/30 text-admin-danger'
+                      : f === 'ok'
+                      ? 'bg-admin-success/10 border-admin-success/30 text-admin-success'
+                      : 'bg-primary/10 border-primary/30 text-primary'
+                    : 'bg-card-bg border-admin-line text-text-muted hover:text-admin-ink'
+                }`}
+              >
+                {f === 'all' ? 'Todo' : f === 'ok' ? '✓ OK' : '⚠ Errores'}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -262,73 +288,85 @@ export default function ApiLogsPage() {
       </div>
 
       {/* Logs Table */}
-      <div className="bg-card-bg rounded-[28px] border border-white/5 shadow-2xl overflow-hidden">
+      <div className="bg-card-bg rounded-2xl border border-admin-line shadow-2xl overflow-hidden">
         {loading ? (
           <div className="p-12 flex items-center justify-center gap-3 text-text-muted">
             <RefreshCw size={18} className="animate-spin text-primary" />
             <span className="text-sm font-medium">Cargando logs...</span>
           </div>
         ) : paginated.length === 0 ? (
-          <div className="p-12 flex flex-col items-center justify-center gap-4 text-center">
-            <Activity size={48} strokeWidth={1} className="text-text-muted/20" />
-            <div>
-              <p className="font-bold text-white-custom text-sm">Sin logs</p>
-              <p className="text-text-muted text-xs mt-1">
-                {search || providerFilter || statusFilter !== 'all' ? 'Prueba con otros filtros.' : 'No hay logs de API registrados todavía.'}
-              </p>
-            </div>
+          <div className="p-6">
+            <EmptyState
+              icon={<Activity size={24} />}
+              title="Sin logs"
+              description={
+                search || providerFilter || statusFilter !== 'all'
+                  ? 'Prueba con otros filtros.'
+                  : 'No hay logs de API registrados todavía.'
+              }
+            />
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full text-left border-separate border-spacing-0 min-w-[600px]">
               <thead>
-                <tr className="bg-background/40">
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Estado</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Proveedor</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">HTTP</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Latencia</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Timestamp</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Session</th>
-                  <th className="px-5 py-4 border-b border-white/5 w-8"></th>
+                <tr className="bg-white/[0.02]">
+                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Estado</th>
+                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Proveedor</th>
+                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">HTTP</th>
+                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Latencia</th>
+                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Timestamp</th>
+                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Session</th>
+                  <th className="px-5 py-4 border-b border-admin-line w-8"></th>
                 </tr>
               </thead>
               <tbody>
                 {paginated.map(log => {
                   const error = isError(log);
-                  const pColor = PROVIDER_COLORS[log.provider?.toLowerCase()] || 'bg-white/5 text-text-muted border-white/10';
+                  const pColor = PROVIDER_COLORS[log.provider?.toLowerCase()] || 'bg-white/[0.04] text-text-muted border-admin-line';
                   const isOpen = expanded === log.id;
 
                   return (
                     <React.Fragment key={log.id}>
                       <tr
-                        className={`group transition-colors cursor-pointer ${
-                          error ? 'hover:bg-red-500/[0.03]' : 'hover:bg-white/[0.02]'
+                        tabIndex={0}
+                        role="button"
+                        aria-expanded={isOpen}
+                        className={`group cursor-pointer transition-colors focus-visible:bg-white/[0.03] focus-visible:outline-none ${
+                          error ? 'hover:bg-admin-danger/[0.03]' : 'hover:bg-white/[0.02]'
                         } ${isOpen ? 'bg-white/[0.02]' : ''}`}
                         onClick={() => setExpanded(isOpen ? null : log.id)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            setExpanded(isOpen ? null : log.id);
+                          }
+                        }}
                       >
-                        <td className="px-5 py-4 border-b border-white/5">
+                        <td className="px-5 py-4 border-b border-admin-line">
                           {error ? (
                             <div className="flex items-center gap-1.5">
-                              <AlertTriangle size={13} className="text-red-400" />
-                              <span className="text-[10px] font-black text-red-400 uppercase">Error</span>
+                              <AlertTriangle size={13} className="text-admin-danger" />
+                              <span className="text-[10px] font-black text-admin-danger uppercase">Error</span>
                             </div>
                           ) : (
                             <div className="flex items-center gap-1.5">
-                              <CheckCircle size={13} className="text-emerald-400" />
-                              <span className="text-[10px] font-black text-emerald-400 uppercase">OK</span>
+                              <CheckCircle size={13} className="text-admin-success" />
+                              <span className="text-[10px] font-black text-admin-success uppercase">OK</span>
                             </div>
                           )}
                         </td>
-                        <td className="px-5 py-4 border-b border-white/5">
+                        <td className="px-5 py-4 border-b border-admin-line">
                           <span className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase border ${pColor}`}>
                             {log.provider}
                           </span>
                         </td>
-                        <td className="px-5 py-4 border-b border-white/5">
+                        <td className="px-5 py-4 border-b border-admin-line">
                           {log.http_status ? (
                             <span className={`text-sm font-black ${
-                              log.http_status >= 400 ? 'text-red-400' :
-                              log.http_status >= 300 ? 'text-amber-400' : 'text-emerald-400'
+                              log.http_status >= 400 ? 'text-admin-danger' :
+                              log.http_status >= 300 ? 'text-amber-400' : 'text-admin-success'
                             }`}>
                               {log.http_status}
                             </span>
@@ -336,12 +374,12 @@ export default function ApiLogsPage() {
                             <span className="text-text-muted/30 text-sm">—</span>
                           )}
                         </td>
-                        <td className="px-5 py-4 border-b border-white/5">
+                        <td className="px-5 py-4 border-b border-admin-line">
                           <span className={`text-sm font-bold font-mono ${latencyColor(log.latency_ms)}`}>
                             {formatLatency(log.latency_ms)}
                           </span>
                         </td>
-                        <td className="px-5 py-4 border-b border-white/5">
+                        <td className="px-5 py-4 border-b border-admin-line">
                           <div className="text-xs font-medium text-text-muted">
                             {new Date(log.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
                           </div>
@@ -349,7 +387,7 @@ export default function ApiLogsPage() {
                             {new Date(log.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                           </div>
                         </td>
-                        <td className="px-5 py-4 border-b border-white/5">
+                        <td className="px-5 py-4 border-b border-admin-line">
                           {log.session_id ? (
                             <span className="font-mono text-[10px] text-text-muted/50 truncate max-w-[80px] block">
                               {log.session_id.slice(0, 8)}…
@@ -358,7 +396,7 @@ export default function ApiLogsPage() {
                             <span className="text-text-muted/20 text-xs">—</span>
                           )}
                         </td>
-                        <td className="px-5 py-4 border-b border-white/5">
+                        <td className="px-5 py-4 border-b border-admin-line">
                           {isOpen ? (
                             <ChevronUp size={14} className="text-primary" />
                           ) : (
@@ -368,10 +406,10 @@ export default function ApiLogsPage() {
                       </tr>
                       {isOpen && log.error_message && (
                         <tr>
-                          <td colSpan={7} className="px-5 pb-4 border-b border-white/5 bg-red-500/[0.03]">
-                            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
-                              <div className="text-[10px] uppercase tracking-widest font-black text-red-400/60 mb-1">Error</div>
-                              <p className="text-xs font-mono text-red-300 leading-relaxed break-all">
+                          <td colSpan={7} className="px-5 pb-4 border-b border-admin-line bg-admin-danger/[0.03]">
+                            <div className="p-4 rounded-xl bg-admin-danger/10 border border-admin-danger/20">
+                              <div className="text-[10px] uppercase tracking-widest font-black text-admin-danger/60 mb-1">Error</div>
+                              <p className="text-xs font-mono text-admin-danger leading-relaxed break-all">
                                 {log.error_message}
                               </p>
                             </div>
@@ -384,6 +422,95 @@ export default function ApiLogsPage() {
               </tbody>
             </table>
           </div>
+
+          <div className="divide-y divide-admin-line md:hidden">
+            {paginated.map((log) => {
+              const error = isError(log);
+              const pColor =
+                PROVIDER_COLORS[log.provider?.toLowerCase()] ||
+                'bg-white/[0.04] text-text-muted border-admin-line';
+              const isOpen = expanded === log.id;
+              const timestamp = new Date(log.created_at);
+
+              return (
+                <div key={log.id}>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setExpanded(isOpen ? null : log.id)}
+                    className="flex w-full items-start justify-between gap-3 p-4 text-left transition-colors hover:bg-white/[0.02]"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase ${
+                            error ? 'text-admin-danger' : 'text-admin-success'
+                          }`}
+                        >
+                          {error ? <AlertTriangle size={13} /> : <CheckCircle size={13} />}
+                          {error ? 'Error' : 'OK'}
+                        </span>
+                        <span className={`rounded-md border px-2 py-0.5 text-[10px] font-black uppercase ${pColor}`}>
+                          {log.provider}
+                        </span>
+                        {log.http_status && (
+                          <span
+                            className={`font-mono text-xs font-black ${
+                              log.http_status >= 400
+                                ? 'text-admin-danger'
+                                : log.http_status >= 300
+                                  ? 'text-amber-400'
+                                  : 'text-admin-success'
+                            }`}
+                          >
+                            HTTP {log.http_status}
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-text-muted">
+                        <span className={latencyColor(log.latency_ms)}>
+                          {formatLatency(log.latency_ms)}
+                        </span>
+                        <span>
+                          {timestamp.toLocaleDateString('es-CO', {
+                            day: '2-digit',
+                            month: 'short',
+                          })}{' '}
+                          {timestamp.toLocaleTimeString('es-CO', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                        {log.session_id && (
+                          <span className="font-mono text-[10px] text-text-muted/40">
+                            {log.session_id.slice(0, 8)}…
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {isOpen ? (
+                      <ChevronUp size={15} className="mt-0.5 shrink-0 text-primary" />
+                    ) : (
+                      <ChevronDown size={15} className="mt-0.5 shrink-0 text-text-muted/30" />
+                    )}
+                  </button>
+                  {isOpen && log.error_message && (
+                    <div className="px-4 pb-4">
+                      <div className="rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-3.5">
+                        <div className="mb-1 text-[10px] font-black uppercase tracking-widest text-admin-danger/60">
+                          Error
+                        </div>
+                        <p className="break-all font-mono text-xs leading-relaxed text-admin-danger">
+                          {log.error_message}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          </>
         )}
       </div>
 
@@ -391,7 +518,7 @@ export default function ApiLogsPage() {
         <div className="flex justify-center">
           <button
             onClick={() => setPage(p => p + 1)}
-            className="px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-white-custom hover:bg-white/10 transition-all"
+            className="px-8 py-3 rounded-2xl bg-white/[0.04] border border-admin-line text-[10px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-admin-ink hover:bg-white/[0.07] transition-all"
           >
             Mostrar {Math.min(PAGE_SIZE, filtered.length - paginated.length)} más
           </button>

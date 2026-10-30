@@ -1,6 +1,7 @@
 export const LEAD_STATUSES = [
   'new',
   'contacted',
+  'followed_up',
   'paid',
   'cold',
   'lost',
@@ -12,6 +13,7 @@ export type LeadStatus = (typeof LEAD_STATUSES)[number];
 export const LEAD_STATUS_OPTIONS: ReadonlyArray<{ value: LeadStatus; label: string }> = [
   { value: 'new', label: 'Pendiente' },
   { value: 'contacted', label: 'En Curso' },
+  { value: 'followed_up', label: 'En Seguimiento' },
   { value: 'paid', label: 'Completado' },
   { value: 'cold', label: 'Sin Acción' },
   { value: 'lost', label: 'Perdido' },

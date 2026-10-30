@@ -14,7 +14,9 @@ const schema = z.object({
   service_requested: z.string().optional(),
   notes: z.string().optional(),
   type: z.enum(['client', 'recruiter', 'other']).default('client'),
-  status: z.enum(['new', 'contacted', 'paid', 'cold', 'lost', 'archived']).default('new'),
+  status: z
+    .enum(['new', 'contacted', 'followed_up', 'paid', 'cold', 'lost', 'archived'])
+    .default('new'),
   industry: z.string().optional(),
 });
 

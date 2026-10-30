@@ -53,7 +53,23 @@ async function runSupabaseAuth(request: NextRequest) {
   }
 
   if (pathname === '/admin/login' && user) {
-    return NextResponse.redirect(new URL('/admin', request.url))
+    if (!isEmailAllowed(user.email, serverEnv.ADMIN_ALLOWED_EMAILS)) {
+      return response
+    }
+
+    const { data: loginRole } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    if (loginRole && isAdminRole(loginRole.role)) {
+      return NextResponse.redirect(new URL('/admin', request.url))
+    }
+
+    // Usuario autenticado sin rol: dejar ver el login con el error en vez de
+    // rebotarlo a /admin, que volvería a redirigir aquí (bucle).
+    return response
   }
 
   const isProtectedAdminPage = pathname.startsWith('/admin') && pathname !== '/admin/login'

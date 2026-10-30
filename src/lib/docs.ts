@@ -14,7 +14,7 @@ export interface Doc extends DocMetadata {
   content: string;
 }
 
-export async function getAllDocs(): Promise<DocMetadata[]> {
+export async function getAllDocs(): Promise<Doc[]> {
   if (!fs.existsSync(docsDirectory)) {
     return [];
   }
@@ -26,12 +26,13 @@ export async function getAllDocs(): Promise<DocMetadata[]> {
       const slug = fileName.replace(/\.mdx$/, '');
       const fullPath = path.join(docsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data } = matter(fileContents);
+      const { data, content } = matter(fileContents);
 
       return {
         slug,
         title: data.title || slug,
         description: data.description || '',
+        content,
       };
     });
 

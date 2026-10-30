@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Link as LinkIcon, CheckCircle, Loader2, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 const ALL_EVENTS = [
   { value: 'lead.created', label: 'Lead creado', desc: 'Cuando un nuevo lead se registra' },
@@ -48,22 +49,19 @@ export default function NewWebhookPage() {
     setError('');
     setLoading(true);
 
-    const res = await fetch('/api/admin/webhooks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, events: selectedEvents, secret }),
-    });
+    try {
+      await adminFetch('/api/admin/webhooks', {
+        method: 'POST',
+        body: JSON.stringify({ url, events: selectedEvents, secret }),
+      });
 
-    setLoading(false);
-
-    if (!res.ok) {
-      const data = await res.json();
-      setError(typeof data.error === 'string' ? data.error : 'Error al crear el webhook.');
-      return;
+      setDone(true);
+      setTimeout(() => router.push('/admin/webhooks'), 1200);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al crear el webhook.');
+    } finally {
+      setLoading(false);
     }
-
-    setDone(true);
-    setTimeout(() => router.push('/admin/webhooks'), 1200);
   };
 
   if (done) {
@@ -73,7 +71,7 @@ export default function NewWebhookPage() {
           <CheckCircle size={40} className="text-primary" />
         </div>
         <div>
-          <h2 className="font-display italic text-2xl font-medium text-white-custom">Webhook creado</h2>
+          <h2 className="font-display italic text-2xl font-medium text-admin-ink">Webhook creado</h2>
           <p className="text-text-muted text-sm mt-1">Redirigiendo a webhooks...</p>
         </div>
       </div>
@@ -81,29 +79,29 @@ export default function NewWebhookPage() {
   }
 
   return (
-    <div className="space-y-10 max-w-2xl">
+    <div className="mx-auto max-w-3xl space-y-10">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link
           href="/admin/webhooks"
-          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:text-white-custom transition-all"
+          className="p-2.5 rounded-xl bg-white/[0.04] border border-admin-line text-text-muted hover:text-admin-ink transition-all"
         >
           <ArrowLeft size={18} />
         </Link>
         <div>
           <p className="font-mono-label text-[0.6rem] text-primary/60">Integraciones</p>
-          <h1 className="font-display italic text-3xl font-medium text-white-custom tracking-tight">Nuevo Webhook</h1>
+          <h1 className="font-display italic text-3xl font-medium text-admin-ink tracking-tight">Nuevo Webhook</h1>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* URL */}
-        <div className="bg-card-bg rounded-[28px] border border-white/5 p-6 sm:p-8 shadow-xl space-y-5">
+        <div className="bg-card-bg rounded-2xl border border-admin-line p-6 sm:p-8 shadow-xl space-y-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-primary/10 text-primary">
               <LinkIcon size={18} />
             </div>
-            <h2 className="font-bold text-white-custom">Endpoint</h2>
+            <h2 className="font-bold text-admin-ink">Endpoint</h2>
           </div>
 
           <div className="space-y-2">
@@ -115,7 +113,7 @@ export default function NewWebhookPage() {
               value={url}
               onChange={e => setUrl(e.target.value)}
               placeholder="https://hooks.zapier.com/hooks/catch/..."
-              className="w-full bg-background/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white-custom placeholder:text-text-muted/30 outline-none focus:border-primary/40 transition-all font-mono"
+              className="w-full bg-admin-bg/60 border border-admin-line rounded-xl px-4 py-3 text-sm text-admin-ink placeholder:text-text-muted/30 outline-none focus:border-primary/40 transition-all font-mono"
               required
             />
             <p className="text-[10px] text-text-muted/40">
@@ -134,7 +132,7 @@ export default function NewWebhookPage() {
                   type={showSecret ? 'text' : 'password'}
                   value={secret}
                   onChange={e => setSecret(e.target.value)}
-                  className="w-full bg-background/60 border border-white/10 rounded-xl px-4 py-3 pr-10 text-sm text-white-custom font-mono outline-none focus:border-primary/40 transition-all"
+                  className="w-full bg-admin-bg/60 border border-admin-line rounded-xl px-4 py-3 pr-10 text-sm text-admin-ink font-mono outline-none focus:border-primary/40 transition-all"
                 />
                 <button
                   type="button"
@@ -147,7 +145,7 @@ export default function NewWebhookPage() {
               <button
                 type="button"
                 onClick={() => setSecret(generateSecret())}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-muted hover:text-white-custom transition-all"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/[0.04] border border-admin-line text-xs font-bold text-text-muted hover:text-admin-ink transition-all"
               >
                 <RefreshCw size={13} />
                 Regenerar
@@ -160,9 +158,9 @@ export default function NewWebhookPage() {
         </div>
 
         {/* Events */}
-        <div className="bg-card-bg rounded-[28px] border border-white/5 p-6 sm:p-8 shadow-xl space-y-5">
+        <div className="bg-card-bg rounded-2xl border border-admin-line p-6 sm:p-8 shadow-xl space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="font-bold text-white-custom">Eventos</h2>
+            <h2 className="font-bold text-admin-ink">Eventos</h2>
             <div className="flex gap-2">
               <button type="button" onClick={selectAll} className="text-[10px] uppercase tracking-widest font-black text-primary/60 hover:text-primary transition-colors">
                 Todos
@@ -181,7 +179,7 @@ export default function NewWebhookPage() {
                 <label
                   key={event.value}
                   className={`flex items-start gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
-                    checked ? 'bg-primary/5 border-primary/20' : 'bg-background/40 border-white/5 hover:border-white/10'
+                    checked ? 'bg-primary/5 border-primary/20' : 'bg-admin-bg/40 border-admin-line hover:border-admin-line'
                   }`}
                 >
                   <div className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-all ${
@@ -196,7 +194,7 @@ export default function NewWebhookPage() {
                     className="sr-only"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="font-bold text-sm text-white-custom">{event.label}</div>
+                    <div className="font-bold text-sm text-admin-ink">{event.label}</div>
                     <div className="text-[10px] text-text-muted/60 font-medium mt-0.5">{event.desc}</div>
                     <code className="text-[9px] text-primary/50 font-mono mt-1 block">{event.value}</code>
                   </div>
@@ -211,7 +209,7 @@ export default function NewWebhookPage() {
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-3 text-sm text-red-400">
+          <div role="alert" className="rounded-xl border border-admin-danger/20 bg-admin-danger/10 px-5 py-3 text-sm text-admin-danger">
             {error}
           </div>
         )}
@@ -219,7 +217,7 @@ export default function NewWebhookPage() {
         <div className="flex flex-col sm:flex-row gap-3 pb-8">
           <Link
             href="/admin/webhooks"
-            className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom transition-all"
+            className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/[0.04] border border-admin-line text-sm font-bold text-text-muted hover:text-admin-ink transition-all"
           >
             Cancelar
           </Link>

@@ -173,7 +173,7 @@ export default function BudgetCalculator() {
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            className="h-full bg-gradient-to-r from-primary to-accent shadow-[0_0_15px_rgba(var(--primary-color-rgb),0.3)]"
+            className="h-full bg-gradient-to-r from-primary to-accent shadow-lg shadow-primary/30"
           />
         </div>
         <div className="flex justify-between mt-4">

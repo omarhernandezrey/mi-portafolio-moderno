@@ -2,7 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Send, AlertCircle, CheckCircle, ArrowLeft, Shield } from 'lucide-react';
+import {
+  Mail,
+  Send,
+  AlertCircle,
+  CheckCircle,
+  ArrowLeft,
+  ShieldCheck,
+  LockKeyhole,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
@@ -20,33 +28,34 @@ export default function AdminLoginPage() {
       setError('El enlace de acceso expiró o es inválido. Solicita uno nuevo.');
     }
   }, []);
+
   let supabaseClient: ReturnType<typeof createClient> | null = null;
   const getSupabase = () => {
     if (!supabaseClient) supabaseClient = createClient();
     return supabaseClient;
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError('');
     setSuccess(false);
     setIsLoading(true);
 
     try {
-      const { error } = await getSupabase().auth.signInWithOtp({
-        email,
+      const { error: authError } = await getSupabase().auth.signInWithOtp({
+        email: email.trim(),
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
-      if (error) {
-        setError(error.message);
+      if (authError) {
+        setError(authError.message);
       } else {
         setSuccess(true);
       }
     } catch (err) {
-      setError('Error de conexión');
+      setError('No se pudo conectar con el servicio de autenticación.');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -54,95 +63,137 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-background p-4 overflow-hidden">
-      {/* Subtle Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-20">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px]" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-accent/20 blur-[120px]" />
+    <div className="admin-shell relative flex min-h-dvh items-center justify-center overflow-hidden p-4 sm:p-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="absolute -left-32 top-1/4 h-80 w-80 rounded-full bg-primary/10 blur-[130px]" />
+        <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-accent/10 blur-[120px]" />
       </div>
 
-      <div className="w-full max-w-md">
-        <Link 
-          href="/" 
-          className="mb-8 inline-flex items-center gap-2 text-sm text-text-muted hover:text-primary transition-colors group"
-        >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          Volver al Portafolio
-        </Link>
+      <div className="relative w-full max-w-md">
+        <div className="mb-7 flex items-center justify-between gap-4">
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-2 text-xs font-bold text-text-muted transition-colors hover:text-primary"
+          >
+            <ArrowLeft
+              size={15}
+              className="transition-transform group-hover:-translate-x-0.5"
+            />
+            Volver al portafolio
+          </Link>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-admin-line bg-white/[0.03] px-2.5 py-1 font-mono-label text-[8px] text-text-muted/70">
+            <LockKeyhole size={10} />
+            Acceso restringido
+          </span>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl bg-card-bg p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-primary/10 backdrop-blur-sm"
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="rounded-2xl border border-admin-line bg-admin-surface/90 p-6 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:p-8"
         >
-          <div className="mb-10 text-center">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10 shadow-[0_0_20px_rgba(var(--primary-color-rgb),0.1)]">
-              <Shield size={40} />
+          <div className="mb-8">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-custom-primary">
+              <ShieldCheck size={28} />
             </div>
-            <h1 className="font-display italic text-3xl font-medium text-white-custom tracking-tight mb-2">Admin Portal</h1>
-            <p className="text-text-muted text-sm leading-relaxed">
-              Autenticación segura para el panel de gestión.
+            <p className="font-mono-label mb-2 text-[9px] text-primary/80">
+              Panel de administración
+            </p>
+            <h1 className="font-display text-3xl font-semibold italic tracking-tight text-admin-ink">
+              Admin Suite
+            </h1>
+            <p className="mt-2 text-sm font-medium leading-relaxed text-text-muted">
+              Introduce tu correo autorizado y recibirás un enlace mágico para
+              acceder.
             </p>
           </div>
 
           <AnimatePresence mode="wait">
             {success ? (
-              <motion.div 
+              <motion.div
                 key="success"
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="rounded-2xl bg-primary/5 p-8 text-center border border-primary/20"
+                exit={{ opacity: 0, scale: 0.97 }}
+                role="status"
+                aria-live="polite"
+                className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center"
               >
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/20 text-primary">
-                  <CheckCircle size={28} />
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
+                  <CheckCircle size={24} />
                 </div>
-                <h2 className="font-display italic mb-3 text-xl font-medium text-white-custom">Enlace enviado</h2>
-                <p className="text-sm text-text-muted leading-relaxed">
-                  Hemos enviado un acceso mágico a <strong className="text-primary">{email}</strong>. 
-                  Revisa tu bandeja (y spam si es necesario).
+                <h2 className="font-display text-xl font-semibold italic text-admin-ink">
+                  Enlace enviado
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                  Hemos enviado un acceso a{' '}
+                  <strong className="font-bold text-primary">{email}</strong>.
+                  Revisa tu bandeja de entrada y la carpeta de spam.
                 </p>
-                <button 
-                  onClick={() => setSuccess(false)}
-                  className="mt-6 text-xs uppercase tracking-widest font-bold text-primary hover:text-accent transition-colors"
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSuccess(false);
+                    setEmail('');
+                  }}
+                  className="mt-5 text-xs font-bold text-primary transition-colors hover:text-accent"
                 >
                   Intentar con otro correo
                 </button>
               </motion.div>
             ) : (
-              <motion.form 
+              <motion.form
                 key="form"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onSubmit={handleLogin} 
-                className="space-y-6"
+                onSubmit={handleLogin}
+                className="space-y-5"
+                noValidate={false}
               >
                 <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-widest font-bold text-text-muted ml-1">
-                    Correo Profesional
+                  <label
+                    htmlFor="admin-email"
+                    className="ml-0.5 block text-xs font-bold text-text-muted"
+                  >
+                    Correo profesional
                   </label>
-                  <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors" size={18} />
+                  <div className="group relative">
+                    <Mail
+                      size={17}
+                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary"
+                    />
                     <input
+                      id="admin-email"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full rounded-2xl border border-white/10 bg-background/50 pl-12 pr-4 py-4 text-white-custom outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-text-muted/50"
+                      onChange={(event) => setEmail(event.target.value)}
+                      autoComplete="email"
+                      inputMode="email"
                       placeholder="admin@tuproyecto.com"
                       required
                       autoFocus
+                      aria-invalid={Boolean(error)}
+                      aria-describedby={error ? 'admin-login-error' : undefined}
+                      className="w-full rounded-xl border border-admin-line bg-admin-bg/60 py-3.5 pl-11 pr-4 text-sm font-medium text-admin-ink outline-none transition-colors placeholder:text-text-muted/40 focus:border-primary/45 focus:ring-4 focus:ring-primary/10"
                     />
                   </div>
                 </div>
 
                 {error && (
-                  <motion.div 
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center gap-3 rounded-xl bg-red-500/10 p-4 text-sm text-red-400 border border-red-500/20"
+                  <motion.div
+                    id="admin-login-error"
+                    role="alert"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start gap-2.5 rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-3.5 text-xs font-medium leading-relaxed text-admin-danger"
                   >
-                    <AlertCircle size={18} className="shrink-0" />
+                    <AlertCircle size={16} className="mt-0.5 shrink-0" />
                     <span>{error}</span>
                   </motion.div>
                 )}
@@ -150,26 +201,34 @@ export default function AdminLoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="relative flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-4 font-bold text-background shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] disabled:opacity-50 overflow-hidden group"
+                  className="group flex w-full items-center justify-center gap-2.5 rounded-xl border border-primary bg-primary px-5 py-3.5 text-sm font-black text-background shadow-custom-primary transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
                 >
-                  <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   {isLoading ? (
-                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                    <span
+                      aria-hidden="true"
+                      className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent"
+                    />
                   ) : (
-                    <>
-                      <Send size={18} />
-                      <span>Acceder ahora</span>
-                    </>
+                    <Send
+                      size={16}
+                      className="transition-transform group-hover:translate-x-0.5"
+                    />
                   )}
+                  <span>{isLoading ? 'Enviando...' : 'Acceder ahora'}</span>
                 </button>
 
-                <p className="text-center text-[10px] text-text-muted uppercase tracking-tighter opacity-50">
-                  Protegido por Supabase Auth & Portafolio Moderno Security
+                <p className="text-center text-[10px] font-medium leading-relaxed text-text-muted/50">
+                  Solo los correos incluidos en la lista de administradores
+                  pueden solicitar acceso.
                 </p>
               </motion.form>
             )}
           </AnimatePresence>
         </motion.div>
+
+        <p className="mt-5 text-center font-mono-label text-[8px] text-text-muted/40">
+          Supabase Auth · Acceso cifrado · Omar Hernández
+        </p>
       </div>
     </div>
   );

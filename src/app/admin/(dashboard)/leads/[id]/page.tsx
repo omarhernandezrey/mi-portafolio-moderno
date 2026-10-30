@@ -70,11 +70,11 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   return (
     <div className="space-y-10">
       {/* Header / Breadcrumbs */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card-bg/40 p-6 rounded-[32px] border border-white/5 backdrop-blur-xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card-bg/40 p-6 rounded-2xl border border-admin-line backdrop-blur-xl">
         <div className="flex items-center gap-6">
           <Link 
             href="/admin/leads" 
-            className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-primary hover:border-primary/30 transition-all group"
+            className="w-12 h-12 rounded-2xl bg-white/[0.04] border border-admin-line flex items-center justify-center text-text-muted hover:text-primary hover:border-primary/30 transition-all group"
           >
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           </Link>
@@ -82,7 +82,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-1">
               CRM Intelligence
             </div>
-            <h1 className="font-display italic text-2xl font-medium text-white-custom tracking-tight flex items-center gap-3">
+            <h1 className="font-display italic text-2xl font-medium text-admin-ink tracking-tight flex items-center gap-3">
               {lead.name || 'Entidad no identificada'}
               <StatusBadge status={lead.status} />
             </h1>
@@ -100,11 +100,11 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Data Intelligence */}
         <div className="lg:col-span-4 space-y-8">
           {/* Identity Card */}
-          <section className="bg-card-bg rounded-[40px] border border-white/5 p-8 shadow-2xl relative overflow-hidden group">
+          <section className="bg-card-bg rounded-2xl border border-admin-line p-5 shadow-2xl sm:p-7 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
               <User size={120} className="-rotate-12" />
             </div>
@@ -124,16 +124,16 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
               </div>
             </div>
 
-            <div className="mt-10 pt-8 border-t border-white/5">
-              <div className="p-6 rounded-[24px] bg-background/50 border border-white/5 group-hover:border-primary/10 transition-colors">
+            <div className="mt-10 pt-8 border-t border-admin-line">
+              <div className="p-6 rounded-2xl bg-admin-bg/50 border border-admin-line group-hover:border-primary/10 transition-colors">
                 <h4 className="text-[9px] font-black uppercase tracking-widest text-text-muted mb-3 opacity-40 italic">Servicio Prioritario</h4>
-                <p className="text-sm font-bold text-white-custom">{lead.service_requested || 'Consultoría General de Software'}</p>
+                <p className="text-sm font-bold text-admin-ink">{lead.service_requested || 'Consultoría General de Software'}</p>
               </div>
             </div>
           </section>
 
           {/* AI Insights & Actions */}
-          <section className="bg-background rounded-[40px] border border-white/5 p-8 shadow-xl">
+          <section className="bg-admin-bg rounded-2xl border border-admin-line p-5 shadow-xl sm:p-7">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-2">
               <Zap size={14} />
               AI Insights & Operaciones
@@ -153,7 +153,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
               {canWrite && <OnboardingLinkButton leadId={lead.id} />}
 
               {lead.notes && (
-                <div className="p-6 rounded-[24px] bg-primary/5 border border-primary/10">
+                <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Resumen de la IA</h4>
                   <p className="text-xs text-text-muted leading-relaxed font-medium italic opacity-80">
                     &ldquo;{lead.notes}&rdquo;
@@ -166,16 +166,16 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
 
         {/* Right Column: Interaction Intelligence */}
         <div className="lg:col-span-8">
-          <div className="bg-card-bg rounded-[48px] border border-white/5 h-full min-h-[800px] flex flex-col shadow-2xl overflow-hidden backdrop-blur-sm relative">
+          <div className="bg-card-bg rounded-2xl border border-admin-line h-full min-h-[520px] lg:min-h-[720px] flex flex-col shadow-2xl overflow-hidden backdrop-blur-sm relative">
             {/* Terminal Header */}
-            <div className="p-8 border-b border-white/5 flex items-center justify-between bg-background/30 backdrop-blur-md sticky top-0 z-20">
+            <div className="p-4 sm:p-6 border-b border-admin-line flex items-center justify-between bg-admin-bg/30 backdrop-blur-md sticky top-0 z-20">
               <div className="flex items-center gap-4">
                 <div className="flex gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-admin-success/20" />
                 </div>
-                <div className="h-4 w-px bg-white/10 mx-2" />
+                <div className="h-4 w-px bg-white/[0.07] mx-2" />
                 <h3 className="font-bold flex items-center gap-2 text-sm italic tracking-tight">
                   <MessageSquare size={18} className="text-primary" />
                   Transcripción de Seguridad
@@ -188,7 +188,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             {/* Chat Body */}
-            <div className="flex-1 p-8 space-y-10 overflow-y-auto scrollbar-hide">
+            <div className="flex-1 space-y-8 p-4 sm:p-6 overflow-y-auto scrollbar-hide">
               {messages.length > 0 ? messages.map((msg) => (
                 <ChatBubble
                   key={msg.id}
@@ -198,7 +198,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
                   timestamp={new Date(msg.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}
                 />
               )) : (
-                <div className="h-full flex flex-col items-center justify-center text-text-muted/10 py-40">
+                <div className="h-full flex flex-col items-center justify-center text-text-muted/10 py-24">
                   <EmptyState 
                     icon={<MessageSquare size={80} strokeWidth={0.5} />}
                     title="No Logs Found"
@@ -209,7 +209,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             {/* Terminal Footer */}
-            <div className="p-6 border-t border-white/5 bg-background/20 backdrop-blur-md">
+            <div className="p-6 border-t border-admin-line bg-admin-bg/20 backdrop-blur-md">
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/40">
                 <span>Capture Timestamp: {new Date(lead.created_at).toLocaleString()}</span>
                 <span>UUID: {lead.id.slice(0, 8)}...</span>

@@ -61,6 +61,8 @@ export default async function AdminFeedPage({
   const role = await getAdminRole();
   const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
   const canPin = hasMinRole(role ?? 'viewer', 'owner');
+  const canCreate = hasMinRole(role ?? 'viewer', 'owner');
+  const canDelete = hasMinRole(role ?? 'viewer', 'owner');
 
   return (
     <div className="space-y-6 sm:space-y-10">
@@ -69,7 +71,7 @@ export default async function AdminFeedPage({
         title="Comunidad"
         description="Moderación de publicaciones del feed de comunidad."
         actions={
-          canWrite && (
+          canCreate && (
             <Link
               href="/admin/feed/new"
               className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
@@ -86,7 +88,7 @@ export default async function AdminFeedPage({
         <Link
           href="/admin/feed"
           className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-            !statusFilter ? 'bg-primary text-background border-primary' : 'bg-white/5 border-white/10 text-text-muted hover:text-white-custom'
+            !statusFilter ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
           Todos
@@ -94,7 +96,7 @@ export default async function AdminFeedPage({
         <Link
           href="/admin/feed?status=published"
           className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-            statusFilter === 'published' ? 'bg-primary text-background border-primary' : 'bg-white/5 border-white/10 text-text-muted hover:text-white-custom'
+            statusFilter === 'published' ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
           Publicados
@@ -102,44 +104,44 @@ export default async function AdminFeedPage({
         <Link
           href="/admin/feed?status=hidden"
           className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-            statusFilter === 'hidden' ? 'bg-primary text-background border-primary' : 'bg-white/5 border-white/10 text-text-muted hover:text-white-custom'
+            statusFilter === 'hidden' ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
           Ocultos
         </Link>
         <Link
           href="/admin/feed/comments"
-          className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border bg-white/5 border-white/10 text-text-muted hover:text-white-custom transition-all"
+          className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
         >
           <MessageSquare size={13} />
           Ver comentarios
         </Link>
       </div>
 
-      <div className="bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+      <div className="bg-card-bg rounded-2xl border border-admin-line shadow-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-separate border-spacing-0 min-w-[720px]">
             <thead>
-              <tr className="bg-background/40">
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Autor</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Contenido</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Categoría</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-center">Likes / Comentarios</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-center">Estatus</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">Acciones</th>
+              <tr className="bg-white/[0.02]">
+                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Autor</th>
+                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Contenido</th>
+                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Categoría</th>
+                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Likes / Comentarios</th>
+                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estatus</th>
+                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-admin-line">
               {posts.length > 0 ? (
                 posts.map((post) => (
                   <tr key={post.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                        <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-admin-line flex items-center justify-center shrink-0">
                           <User size={14} className="opacity-50" />
                         </div>
                         <div>
-                          <div className="flex items-center gap-1.5 font-bold text-white-custom text-sm">
+                          <div className="flex items-center gap-1.5 font-bold text-admin-ink text-sm">
                             {post.author_name}
                             {post.pinned && <Pin size={11} className="text-primary" />}
                           </div>
@@ -150,7 +152,7 @@ export default async function AdminFeedPage({
                       </div>
                     </td>
                     <td className="px-6 py-5 max-w-xs">
-                      {post.title && <div className="text-sm font-bold text-white-custom truncate">{post.title}</div>}
+                      {post.title && <div className="text-sm font-bold text-admin-ink truncate">{post.title}</div>}
                       <div className="text-xs text-text-muted truncate">{post.body}</div>
                     </td>
                     <td className="px-6 py-5">
@@ -168,8 +170,8 @@ export default async function AdminFeedPage({
                       <span
                         className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
                           post.status === 'published'
-                            ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-                            : 'text-text-muted bg-white/5 border-white/10'
+                            ? 'text-admin-success bg-admin-success/10 border-admin-success/20'
+                            : 'text-text-muted bg-white/[0.04] border-admin-line'
                         }`}
                       >
                         {post.status === 'published' ? 'Publicado' : 'Oculto'}
@@ -182,6 +184,7 @@ export default async function AdminFeedPage({
                         pinned={post.pinned}
                         canWrite={canWrite}
                         canPin={canPin}
+                        canDelete={canDelete}
                       />
                     </td>
                   </tr>
@@ -198,7 +201,7 @@ export default async function AdminFeedPage({
         </div>
 
         {total > 0 && (
-          <div className="p-4 sm:p-6 border-t border-white/5 bg-background/20 flex items-center justify-between gap-3">
+          <div className="p-4 sm:p-6 border-t border-admin-line bg-white/[0.01] flex items-center justify-between gap-3">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/40">
               Página {page} / {totalPages} · {total} publicaciones
             </span>
@@ -206,7 +209,7 @@ export default async function AdminFeedPage({
               {page > 1 && (
                 <Link
                   href={`/admin/feed?${statusFilter ? `status=${statusFilter}&` : ''}page=${page - 1}`}
-                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10 text-text-muted hover:text-white-custom transition-all"
+                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
                 >
                   Anterior
                 </Link>
@@ -214,7 +217,7 @@ export default async function AdminFeedPage({
               {page < totalPages && (
                 <Link
                   href={`/admin/feed?${statusFilter ? `status=${statusFilter}&` : ''}page=${page + 1}`}
-                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10 text-text-muted hover:text-white-custom transition-all"
+                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
                 >
                   Siguiente
                 </Link>

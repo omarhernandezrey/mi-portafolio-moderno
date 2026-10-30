@@ -9,9 +9,12 @@ import {
   Clock,
   Filter,
   Shield,
+  AlertCircle,
 } from 'lucide-react';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import { AdminButton } from '@/components/admin/ui/AdminButton';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 interface AuditLog {
   id: string;
@@ -58,26 +61,28 @@ export default function AdminAuditPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [actionFilter, setActionFilter] = useState('');
+  const [error, setError] = useState('');
 
-  const load = useCallback(() => {
+  const load = useCallback(async () => {
     setLoading(true);
+    setError('');
     const params = new URLSearchParams({ limit: '200' });
     if (actionFilter) params.set('action', actionFilter);
     if (search.trim()) params.set('actor', search.trim());
 
-    fetch(`/api/admin/audit?${params}`)
-      .then(async (r) => {
-        if (!r.ok) throw new Error('Error al cargar auditoría');
-        return r.json();
-      })
-      .then((data) => {
-        setLogs(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLogs([]);
-        setLoading(false);
-      });
+    try {
+      const data = await adminFetch<AuditLog[]>(`/api/admin/audit?${params}`);
+      setLogs(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo cargar el registro de auditoría.'
+      );
+      setLogs([]);
+    } finally {
+      setLoading(false);
+    }
   }, [actionFilter, search]);
 
   useEffect(() => {
@@ -96,18 +101,30 @@ export default function AdminAuditPage() {
         title="Auditoría"
         description="Registro de acciones administrativas (quién, qué, cuándo)."
         actions={
-          <button
-            type="button"
+          <AdminButton
             onClick={load}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:bg-white/10 transition-all"
+            disabled={loading}
+            size="sm"
+            icon={
+              <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            }
           >
-            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             Actualizar
-          </button>
+          </AdminButton>
         }
       />
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      {error && (
+        <div
+          role="alert"
+          className="flex items-start gap-2.5 rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-3.5 text-xs font-medium text-admin-danger"
+        >
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1 group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
           <input
@@ -115,7 +132,7 @@ export default function AdminAuditPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Filtrar por email del actor..."
-            className="w-full pl-12 pr-4 py-3.5 bg-card-bg border border-white/5 rounded-2xl text-white-custom outline-none focus:border-primary/30 text-sm"
+            className="w-full pl-12 pr-4 py-3.5 bg-card-bg border border-admin-line rounded-2xl text-admin-ink outline-none focus:border-primary/30 text-sm"
           />
         </div>
         <div className="relative">
@@ -123,7 +140,7 @@ export default function AdminAuditPage() {
           <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            className="w-full sm:w-56 appearance-none pl-11 pr-8 py-3.5 bg-card-bg border border-white/5 rounded-2xl text-xs font-bold text-text-muted outline-none focus:border-primary/30"
+            className="w-full sm:w-56 appearance-none pl-11 pr-8 py-3.5 bg-card-bg border border-admin-line rounded-2xl text-xs font-bold text-text-muted outline-none focus:border-primary/30"
           >
             <option value="">Todas las acciones</option>
             {Object.entries(ACTION_LABELS).map(([key, label]) => (
@@ -136,7 +153,7 @@ export default function AdminAuditPage() {
         </div>
       </div>
 
-      <div className="bg-card-bg rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-2xl overflow-hidden">
+      <div className="bg-card-bg rounded-2xl border border-admin-line shadow-2xl overflow-hidden">
         {loading ? (
           <div className="p-16 flex justify-center">
             <RefreshCw className="animate-spin text-primary" size={28} />
@@ -150,7 +167,7 @@ export default function AdminAuditPage() {
             />
           </div>
         ) : (
-          <div className="divide-y divide-white/5">
+          <div className="divide-y divide-admin-line">
             {logs.map((log) => (
               <div
                 key={log.id}
@@ -161,8 +178,11 @@ export default function AdminAuditPage() {
                     <Shield size={18} />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-sm font-bold text-white-custom truncate flex items-center gap-1.5">
-                      <User size={12} className="text-text-muted shrink-0" />
+                    <div
+                      className="flex items-center gap-1.5 truncate text-sm font-bold text-admin-ink"
+                      title={log.actor_email}
+                    >
+                      <User size={12} className="shrink-0 text-text-muted" />
                       {log.actor_email}
                     </div>
                     <div className="text-[10px] uppercase tracking-widest font-black text-primary/70">
@@ -172,7 +192,7 @@ export default function AdminAuditPage() {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-bold text-white-custom">
+                  <div className="text-sm font-bold text-admin-ink">
                     {ACTION_LABELS[log.action] || log.action}
                   </div>
                   <div className="text-xs text-text-muted mt-1 font-mono">

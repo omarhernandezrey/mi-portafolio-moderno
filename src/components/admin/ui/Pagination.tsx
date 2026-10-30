@@ -18,12 +18,12 @@ function buildHref(
   query: Record<string, string | undefined>
 ): string {
   const params = new URLSearchParams();
-  for (const [k, v] of Object.entries(query)) {
-    if (v) params.set(k, v);
+  for (const [key, value] of Object.entries(query)) {
+    if (value) params.set(key, value);
   }
   if (page > 1) params.set('page', String(page));
-  const qs = params.toString();
-  return qs ? `${basePath}?${qs}` : basePath;
+  const queryString = params.toString();
+  return queryString ? `${basePath}?${queryString}` : basePath;
 }
 
 export default function Pagination({
@@ -41,49 +41,50 @@ export default function Pagination({
   const hasPrev = page > 1;
   const hasNext = page < totalPages;
 
-  const btnBase =
-    'px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest transition-all inline-flex items-center gap-1';
+  const buttonBase =
+    'inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[10px] font-bold transition-colors';
   const enabled =
-    'bg-white/5 border-white/10 text-text-muted hover:text-white-custom hover:border-primary/30';
-  const disabled = 'bg-white/5 border-white/10 text-text-muted cursor-not-allowed opacity-40';
+    'border-admin-line bg-white/[0.03] text-text-muted hover:border-primary/30 hover:text-primary';
+  const disabled =
+    'cursor-not-allowed border-admin-line bg-white/[0.02] text-text-muted/30';
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 border-t border-white/5 bg-background/20 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/40">
+    <div className="flex flex-col items-center justify-between gap-3 border-t border-admin-line bg-white/[0.01] p-4 sm:flex-row sm:px-5">
+      <span className="font-mono-label text-[9px] text-text-muted/50">
         Mostrando {from}–{to} de {total}
       </span>
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         {hasPrev ? (
           <Link
             href={buildHref(basePath, page - 1, query)}
-            className={`${btnBase} ${enabled}`}
+            className={`${buttonBase} ${enabled}`}
             prefetch={false}
           >
-            <ChevronLeft size={14} />
+            <ChevronLeft size={13} />
             Anterior
           </Link>
         ) : (
-          <span className={`${btnBase} ${disabled}`}>
-            <ChevronLeft size={14} />
+          <span className={`${buttonBase} ${disabled}`}>
+            <ChevronLeft size={13} />
             Anterior
           </span>
         )}
-        <span className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-text-muted/60 self-center">
+        <span className="px-2 font-mono-label text-[9px] text-text-muted/60">
           {page} / {totalPages || 1}
         </span>
         {hasNext ? (
           <Link
             href={buildHref(basePath, page + 1, query)}
-            className={`${btnBase} ${enabled}`}
+            className={`${buttonBase} ${enabled}`}
             prefetch={false}
           >
             Siguiente
-            <ChevronRight size={14} />
+            <ChevronRight size={13} />
           </Link>
         ) : (
-          <span className={`${btnBase} ${disabled}`}>
+          <span className={`${buttonBase} ${disabled}`}>
             Siguiente
-            <ChevronRight size={14} />
+            <ChevronRight size={13} />
           </span>
         )}
       </div>

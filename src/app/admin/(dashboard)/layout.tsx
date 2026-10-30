@@ -40,12 +40,21 @@ export default async function AdminLayout({
 
   return (
     <AdminClientWrapper>
-      <div className="min-h-screen bg-background text-white-custom font-main selection:bg-primary/30 overflow-x-hidden">
+      <div className="admin-shell min-h-dvh overflow-x-hidden font-main text-text-main">
+        <a
+          href="#admin-content"
+          className="sr-only z-[100] rounded-lg bg-primary px-4 py-2 text-sm font-bold text-background focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Saltar al contenido
+        </a>
         <AdminNav role={role} userEmail={email} />
-        <div className="lg:pl-72 pt-16 lg:pt-0 transition-all duration-300 min-h-screen">
-          <div className="p-3 sm:p-4 md:p-6 lg:p-8 xl:p-12 max-w-[1600px] mx-auto w-full">
+        <div className="min-h-dvh pt-16 transition-[padding] duration-300 lg:pl-72 lg:pt-0">
+          <main
+            id="admin-content"
+            className="mx-auto w-full max-w-[1600px] p-3 sm:p-4 md:p-6 lg:p-8 xl:p-10"
+          >
             {children}
-          </div>
+          </main>
         </div>
       </div>
     </AdminClientWrapper>

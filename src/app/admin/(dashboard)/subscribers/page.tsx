@@ -1,11 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Mail, Search, Trash2, CheckCircle, XCircle, Clock,
   Users, X, RefreshCw, Download, Hash, MoreVertical,
-  Send, UserMinus, Filter
+  Send, UserMinus, Filter, AlertCircle
 } from 'lucide-react';
+import { adminFetch } from '@/lib/admin/client-fetch';
+import PageHeader from '@/components/admin/ui/PageHeader';
+import StatCard from '@/components/admin/ui/StatCard';
+import { AdminButton } from '@/components/admin/ui/AdminButton';
 
 interface Subscriber {
   id: string;
@@ -17,18 +21,6 @@ interface Subscriber {
   confirmed: boolean;
   confirmation_token: string | null;
   unsubscribed_at: string | null;
-}
-
-function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: number; color: string }) {
-  return (
-    <div className={`bg-card-bg rounded-[20px] border border-white/5 p-5 shadow-xl flex items-center gap-4`}>
-      <div className={`p-3 rounded-xl ${color}`}>{icon}</div>
-      <div>
-        <div className="text-2xl font-black text-white-custom">{value}</div>
-        <div className="text-[10px] uppercase tracking-widest font-black text-text-muted/60">{label}</div>
-      </div>
-    </div>
-  );
 }
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -45,16 +37,29 @@ export default function SubscribersPage() {
   const [filter, setFilter] = useState<'all' | 'confirmed' | 'pending' | 'unsubscribed'>('all');
   const [deleting, setDeleting] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [error, setError] = useState('');
 
-  const load = () => {
+  const load = useCallback(async () => {
     setLoading(true);
-    fetch('/api/admin/subscribers')
-      .then(r => r.json())
-      .then(data => { setSubscribers(data); setLoading(false); })
-      .catch(() => setLoading(false));
-  };
+    setError('');
+    try {
+      const data = await adminFetch<Subscriber[]>('/api/admin/subscribers');
+      setSubscribers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo cargar la lista de suscriptores.'
+      );
+      setSubscribers([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const filtered = useMemo(() => {
     return subscribers.filter(s => {
@@ -79,20 +84,39 @@ export default function SubscribersPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('¿Eliminar este suscriptor definitivamente?')) return;
     setDeleting(id);
-    await fetch(`/api/admin/subscribers/${id}`, { method: 'DELETE' });
-    setSubscribers(prev => prev.filter(s => s.id !== id));
-    setDeleting(null);
-    setOpenMenu(null);
+    setError('');
+    try {
+      await adminFetch(`/api/admin/subscribers/${id}`, { method: 'DELETE' });
+      setSubscribers(prev => prev.filter(s => s.id !== id));
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'No se pudo eliminar el suscriptor.'
+      );
+    } finally {
+      setDeleting(null);
+      setOpenMenu(null);
+    }
   };
 
   const handleMarkConfirmed = async (id: string, confirmed: boolean) => {
-    await fetch(`/api/admin/subscribers/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ confirmed }),
-    });
-    setSubscribers(prev => prev.map(s => s.id === id ? { ...s, confirmed } : s));
-    setOpenMenu(null);
+    setError('');
+    try {
+      await adminFetch(`/api/admin/subscribers/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ confirmed }),
+      });
+      setSubscribers(prev =>
+        prev.map(s => (s.id === id ? { ...s, confirmed } : s))
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo actualizar el suscriptor.'
+      );
+    } finally {
+      setOpenMenu(null);
+    }
   };
 
   const exportCSV = () => {
@@ -106,8 +130,16 @@ export default function SubscribersPage() {
         s.unsubscribed_at ? new Date(s.unsubscribed_at).toLocaleDateString('es-CO') : 'No',
       ]),
     ];
-    const csv = rows.map(r => r.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const csv = rows
+      .map(row =>
+        row
+          .map(value => `"${String(value).replace(/"/g, '""')}"`)
+          .join(',')
+      )
+      .join('\n');
+    const blob = new Blob([`\uFEFF${csv}`], {
+      type: 'text/csv;charset=utf-8;',
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -118,40 +150,76 @@ export default function SubscribersPage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <p className="font-mono-label text-[0.6rem] text-primary/60 mb-2">Newsletter</p>
-          <h1 className="font-display italic text-3xl sm:text-4xl font-medium text-white-custom tracking-tight">Suscriptores</h1>
-          <p className="text-text-muted text-sm font-medium mt-2">
-            Gestión de la lista de email marketing y lead magnets
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={exportCSV}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-muted hover:text-white-custom transition-all"
-          >
-            <Download size={14} />
-            Exportar CSV
-          </button>
-          <button
-            onClick={load}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-text-muted hover:text-white-custom transition-all"
-          >
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-            Actualizar
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        overline="Newsletter"
+        title="Suscriptores"
+        description="Gestión de la lista de email marketing y lead magnets."
+        actions={
+          <>
+            <AdminButton
+              onClick={exportCSV}
+              size="sm"
+              icon={<Download size={14} />}
+            >
+              Exportar CSV
+            </AdminButton>
+            <AdminButton
+              onClick={load}
+              disabled={loading}
+              size="sm"
+              icon={
+                <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+              }
+            >
+              Actualizar
+            </AdminButton>
+          </>
+        }
+      />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatCard icon={<Users size={18} />} label="Total" value={stats.total} color="bg-white/5 text-text-muted" />
-        <StatCard icon={<CheckCircle size={18} />} label="Confirmados" value={stats.confirmed} color="bg-emerald-500/10 text-emerald-400" />
-        <StatCard icon={<Clock size={18} />} label="Pendientes" value={stats.pending} color="bg-amber-500/10 text-amber-400" />
-        <StatCard icon={<UserMinus size={18} />} label="Bajas" value={stats.unsubscribed} color="bg-red-500/10 text-red-400" />
-      </div>
+      {error && (
+        <div
+          role="alert"
+          className="flex items-start gap-2.5 rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-3.5 text-xs font-medium text-admin-danger"
+        >
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <section
+        aria-label="Resumen de suscriptores"
+        className="grid grid-cols-2 gap-3 xl:grid-cols-4"
+      >
+        <StatCard
+          title="Total"
+          value={stats.total.toString()}
+          icon={<Users size={19} />}
+          color="primary"
+          description="Registros en la lista"
+        />
+        <StatCard
+          title="Confirmados"
+          value={stats.confirmed.toString()}
+          icon={<CheckCircle size={19} />}
+          color="success"
+          description="Con consentimiento activo"
+        />
+        <StatCard
+          title="Pendientes"
+          value={stats.pending.toString()}
+          icon={<Clock size={19} />}
+          color="warning"
+          description="Sin confirmar todavía"
+        />
+        <StatCard
+          title="Bajas"
+          value={stats.unsubscribed.toString()}
+          icon={<UserMinus size={19} />}
+          color="danger"
+          description="Suscriptores dados de baja"
+        />
+      </section>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -162,23 +230,23 @@ export default function SubscribersPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar por email o fuente..."
-            className="w-full pl-11 pr-10 py-3 sm:py-4 bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] text-white-custom outline-none focus:border-primary/30 transition-all shadow-xl text-sm"
+            className="w-full pl-11 pr-10 py-3 sm:py-4 bg-card-bg border border-admin-line rounded-xl text-admin-ink outline-none focus:border-primary/30 transition-all shadow-xl text-sm"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-white-custom transition-colors">
+            <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-admin-ink transition-colors">
               <X size={14} />
             </button>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex">
           {(['all', 'confirmed', 'pending', 'unsubscribed'] as const).map(f => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-3 sm:py-4 rounded-[16px] text-xs font-black uppercase tracking-wider transition-all border ${
+              className={`w-full rounded-xl border px-4 py-3 text-xs font-black uppercase tracking-wider transition-all sm:w-auto sm:py-4 ${
                 filter === f
                   ? 'bg-primary/10 border-primary/30 text-primary'
-                  : 'bg-card-bg border-white/5 text-text-muted hover:text-white-custom'
+                  : 'bg-card-bg border-admin-line text-text-muted hover:text-admin-ink'
               }`}
             >
               {f === 'all' ? 'Todos' : f === 'confirmed' ? 'Confirmados' : f === 'pending' ? 'Pendientes' : 'Bajas'}
@@ -195,7 +263,7 @@ export default function SubscribersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-card-bg rounded-[28px] border border-white/5 shadow-2xl overflow-hidden">
+      <div className="bg-card-bg rounded-2xl border border-admin-line shadow-2xl overflow-hidden">
         {loading ? (
           <div className="p-12 flex items-center justify-center gap-3 text-text-muted">
             <RefreshCw size={18} className="animate-spin text-primary" />
@@ -205,7 +273,7 @@ export default function SubscribersPage() {
           <div className="p-12 flex flex-col items-center justify-center gap-4 text-center">
             <Mail size={48} strokeWidth={1} className="text-text-muted/20" />
             <div>
-              <p className="font-bold text-white-custom text-sm">Sin resultados</p>
+              <p className="font-bold text-admin-ink text-sm">Sin resultados</p>
               <p className="text-text-muted text-xs mt-1">
                 {search || filter !== 'all' ? 'Prueba con otros filtros.' : 'Aún no hay suscriptores registrados.'}
               </p>
@@ -214,26 +282,27 @@ export default function SubscribersPage() {
         ) : (
           <>
             {/* Mobile */}
-            <div className="block sm:hidden divide-y divide-white/5">
+            <div className="block sm:hidden divide-y divide-admin-line">
               {filtered.map(s => (
                 <div key={s.id} className="p-4 space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <div className="font-bold text-white-custom text-sm truncate">{s.email}</div>
+                      <div className="font-bold text-admin-ink text-sm truncate">{s.email}</div>
                       <div className="text-[10px] text-text-muted/60 font-medium">{SOURCE_LABELS[s.source] || s.source}</div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {s.unsubscribed_at ? (
-                        <span className="px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 text-[9px] font-black uppercase">Baja</span>
+                        <span className="px-2 py-0.5 rounded-md bg-admin-danger/10 text-admin-danger text-[9px] font-black uppercase">Baja</span>
                       ) : s.confirmed ? (
-                        <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase">Confirmado</span>
+                        <span className="px-2 py-0.5 rounded-md bg-admin-success/10 text-admin-success text-[9px] font-black uppercase">Confirmado</span>
                       ) : (
                         <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 text-[9px] font-black uppercase">Pendiente</span>
                       )}
                       <button
                         onClick={() => handleDelete(s.id)}
                         disabled={deleting === s.id}
-                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-red-400/60 hover:text-red-400 transition-all disabled:opacity-50"
+                        aria-label={`Eliminar ${s.email}`}
+                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-admin-line bg-white/[0.03] p-0 text-admin-danger/60 transition-colors hover:bg-admin-danger/10 hover:text-admin-danger disabled:opacity-50"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -254,15 +323,15 @@ export default function SubscribersPage() {
               <table className="w-full text-left border-separate border-spacing-0">
                 <thead>
                   <tr className="bg-background/40">
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Email</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Fuente</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-center">Estado</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Registro</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-center">Follow-up</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">Acciones</th>
+                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Email</th>
+                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Fuente</th>
+                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estado</th>
+                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Registro</th>
+                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Follow-up</th>
+                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-admin-line">
                   {filtered.map(s => (
                     <tr key={s.id} className="group hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-5">
@@ -271,9 +340,9 @@ export default function SubscribersPage() {
                             <Mail size={14} className="text-primary/60" />
                           </div>
                           <div>
-                            <div className="font-bold text-white-custom text-sm group-hover:text-primary transition-colors">{s.email}</div>
+                            <div className="font-bold text-admin-ink text-sm group-hover:text-primary transition-colors">{s.email}</div>
                             {s.unsubscribed_at && (
-                              <div className="text-[9px] text-red-400/70 font-medium">
+                              <div className="text-[9px] text-admin-danger/70 font-medium">
                                 Baja: {new Date(s.unsubscribed_at).toLocaleDateString('es-CO')}
                               </div>
                             )}
@@ -281,20 +350,20 @@ export default function SubscribersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-bold text-text-muted uppercase tracking-wider">
+                        <span className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-admin-line text-[10px] font-bold text-text-muted uppercase tracking-wider">
                           {SOURCE_LABELS[s.source] || s.source}
                         </span>
                       </td>
                       <td className="px-6 py-5 text-center">
                         {s.unsubscribed_at ? (
                           <div className="flex items-center justify-center gap-1.5">
-                            <XCircle size={14} className="text-red-400" />
-                            <span className="text-[10px] font-black text-red-400 uppercase">Baja</span>
+                            <XCircle size={14} className="text-admin-danger" />
+                            <span className="text-[10px] font-black text-admin-danger uppercase">Baja</span>
                           </div>
                         ) : s.confirmed ? (
                           <div className="flex items-center justify-center gap-1.5">
-                            <CheckCircle size={14} className="text-emerald-400" />
-                            <span className="text-[10px] font-black text-emerald-400 uppercase">Confirmado</span>
+                            <CheckCircle size={14} className="text-admin-success" />
+                            <span className="text-[10px] font-black text-admin-success uppercase">Confirmado</span>
                           </div>
                         ) : (
                           <div className="flex items-center justify-center gap-1.5">
@@ -326,7 +395,7 @@ export default function SubscribersPage() {
                           {!s.confirmed && !s.unsubscribed_at && (
                             <button
                               onClick={() => handleMarkConfirmed(s.id, true)}
-                              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-admin-success/10 border border-admin-success/20 text-[10px] font-bold text-admin-success hover:bg-admin-success/20 transition-all"
                               title="Marcar como confirmado"
                             >
                               <CheckCircle size={12} />
@@ -335,16 +404,18 @@ export default function SubscribersPage() {
                           )}
                           <button
                             onClick={() => setOpenMenu(openMenu === s.id ? null : s.id)}
-                            className="p-2 rounded-lg hover:bg-white/5 text-text-muted/40 hover:text-white-custom transition-all"
+                            aria-label={`Más acciones para ${s.email}`}
+                            aria-expanded={openMenu === s.id}
+                            className="flex h-9 w-9 items-center justify-center rounded-lg p-0 text-text-muted/50 transition-colors hover:bg-white/[0.04] hover:text-admin-ink"
                           >
                             <MoreVertical size={16} />
                           </button>
                           {openMenu === s.id && (
-                            <div className="absolute right-0 top-full mt-1 w-44 bg-card-bg border border-white/10 rounded-xl shadow-2xl z-10 overflow-hidden">
+                            <div className="absolute right-0 top-full mt-1 w-44 bg-card-bg border border-admin-line rounded-xl shadow-2xl z-10 overflow-hidden">
                               {s.confirmed ? (
                                 <button
                                   onClick={() => handleMarkConfirmed(s.id, false)}
-                                  className="flex items-center gap-2 w-full px-4 py-3 text-xs font-bold text-text-muted hover:bg-white/5 hover:text-white-custom transition-all text-left"
+                                  className="flex items-center gap-2 w-full px-4 py-3 text-xs font-bold text-text-muted hover:bg-white/[0.04] hover:text-admin-ink transition-all text-left"
                                 >
                                   <XCircle size={13} />
                                   Marcar pendiente
@@ -353,7 +424,7 @@ export default function SubscribersPage() {
                               <button
                                 onClick={() => handleDelete(s.id)}
                                 disabled={deleting === s.id}
-                                className="flex items-center gap-2 w-full px-4 py-3 text-xs font-bold text-red-400 hover:bg-red-500/10 transition-all text-left disabled:opacity-50"
+                                className="flex items-center gap-2 w-full px-4 py-3 text-xs font-bold text-admin-danger hover:bg-admin-danger/10 transition-all text-left disabled:opacity-50"
                               >
                                 <Trash2 size={13} />
                                 Eliminar suscriptor

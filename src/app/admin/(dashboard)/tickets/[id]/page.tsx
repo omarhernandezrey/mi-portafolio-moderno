@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, use } from 'react';
-import { 
-  ArrowLeft, 
-  Send, 
-  Loader2, 
-  User, 
-  ShieldCheck, 
+import {
   AlertCircle,
+  ArrowLeft,
+  ArrowUpRight,
   CheckCircle2,
+  Loader2,
+  MessageSquare,
+  Send,
+  ShieldCheck,
+  User,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAdminToast } from '@/hooks/useAdminToast';
 import { adminFetch } from '@/lib/admin/client-fetch';
+import StatusBadge from '@/components/admin/ui/StatusBadge';
 import type { Ticket, TicketMessage } from '@/lib/admin/types';
 
 type TicketDetail = Ticket;
@@ -20,6 +23,25 @@ type TicketDetail = Ticket;
 interface Props {
   params: Promise<{ id: string }>;
 }
+
+const PRIORITY_CONFIG: Record<string, { label: string; className: string }> = {
+  low: {
+    label: 'Baja',
+    className: 'border-admin-success/20 bg-admin-success/10 text-admin-success',
+  },
+  medium: {
+    label: 'Media',
+    className: 'border-admin-warning/20 bg-admin-warning/10 text-admin-warning',
+  },
+  high: {
+    label: 'Alta',
+    className: 'border-accent/20 bg-accent/10 text-accent',
+  },
+  urgent: {
+    label: 'Urgente',
+    className: 'border-admin-danger/20 bg-admin-danger/10 text-admin-danger',
+  },
+};
 
 export default function TicketDetailPage({ params }: Props) {
   const { id } = use(params);
@@ -92,181 +114,283 @@ export default function TicketDetailPage({ params }: Props) {
     }
   };
 
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <Loader2 className="animate-spin text-primary" size={48} />
-    </div>
-  );
-
-  if (error || !ticket) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-      <h1 className="text-2xl font-bold text-red-500 mb-4">Error</h1>
-      <p className="text-text-muted mb-8">{error || 'Ticket no encontrado'}</p>
-      <Link href="/admin/tickets" className="px-6 py-2 bg-primary text-background rounded-full font-bold">Volver a tickets</Link>
-    </div>
-  );
-
-  const statusColors: Record<string, string> = {
-    open: 'bg-blue-500/20 text-blue-400',
-    in_progress: 'bg-amber-500/20 text-amber-400',
-    waiting_client: 'bg-purple-500/20 text-purple-400',
-    closed: 'bg-emerald-500/20 text-emerald-400',
-  };
-
-  const priorityColors: Record<string, string> = {
-    urgent: 'text-red-500 font-bold',
-    high: 'text-orange-400',
-    medium: 'text-amber-300',
-    low: 'text-emerald-400',
-  };
-
-  return (
-    <div className="space-y-10">
-      {/* Top nav */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card-bg/40 p-6 rounded-[32px] border border-white/5 backdrop-blur-xl">
-        <div className="flex items-center gap-4">
-          <Link href="/admin/tickets" className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-primary hover:border-primary/30 transition-all">
-            <ArrowLeft size={20} />
-          </Link>
-          <div>
-            <h1 className="font-display italic font-medium text-xl text-white-custom leading-none">{ticket.title}</h1>
-            <span className="text-[10px] text-text-muted uppercase tracking-widest font-mono">ID: {ticket.id}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          {canWrite && (ticket.status !== 'closed' ? (
-            <button
-              onClick={() => handleUpdateStatus('closed')}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl text-xs font-bold hover:bg-emerald-500/20 transition-all border border-emerald-500/20"
-            >
-              <CheckCircle2 size={14} /> Cerrar Ticket
-            </button>
-          ) : (
-            <button
-              onClick={() => handleUpdateStatus('open')}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 text-blue-400 rounded-xl text-xs font-bold hover:bg-blue-500/20 transition-all border border-blue-500/20"
-            >
-              Reabrir Ticket
-            </button>
-          ))}
+  if (loading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <div className="flex items-center gap-3 rounded-2xl border border-admin-line bg-card-bg px-6 py-5 text-sm text-text-muted">
+          <Loader2 className="animate-spin text-primary" size={22} />
+          Cargando ticket...
         </div>
       </div>
+    );
+  }
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Chat Area */}
-        <div className="lg:col-span-2 flex flex-col h-[70vh] bg-card-bg rounded-[40px] border border-white/5 overflow-hidden shadow-2xl">
-          <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-[2rem] p-5 shadow-lg ${
-                  msg.sender === 'admin' 
-                    ? 'bg-primary text-background rounded-tr-none' 
-                    : 'bg-background border border-white/10 rounded-tl-none'
-                }`}>
-                  <div className="flex items-center gap-2 mb-2 opacity-60 text-[10px] uppercase font-bold tracking-widest">
-                    {msg.sender === 'admin' ? <ShieldCheck size={12} /> : <User size={12} />}
-                    {msg.sender === 'admin' ? 'Omar Hernández' : ticket.lead?.name || 'Cliente'}
-                  </div>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
-                  <div className="mt-2 text-[9px] opacity-40 text-right">
-                    {new Date(msg.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}
-                  </div>
-                </div>
-              </div>
-            ))}
+  if (error || !ticket) {
+    return (
+      <div className="mx-auto flex min-h-[50vh] max-w-lg flex-col items-center justify-center text-center">
+        <div className="w-full rounded-2xl border border-admin-line bg-card-bg p-8 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-admin-danger/20 bg-admin-danger/10 text-admin-danger">
+            <AlertCircle size={26} />
+          </div>
+          <h1 className="mt-5 text-xl font-black text-admin-ink">No se pudo abrir el ticket</h1>
+          <p className="mt-2 text-sm text-text-muted">{error || 'Ticket no encontrado'}</p>
+          <Link
+            href="/admin/tickets"
+            className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-black text-background transition-all hover:scale-[1.02]"
+          >
+            Volver a tickets
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const priority = PRIORITY_CONFIG[ticket.priority] || {
+    label: ticket.priority,
+    className: 'border-admin-line bg-white/[0.04] text-text-muted',
+  };
+  const createdLabel = new Date(ticket.created_at).toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'America/Bogota',
+  });
+  const updatedLabel = new Date(ticket.updated_at).toLocaleString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'America/Bogota',
+  });
+
+  return (
+    <div className="space-y-6 sm:space-y-8">
+      <header className="flex flex-col gap-5 rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex min-w-0 items-start gap-4">
+          <Link
+            href="/admin/tickets"
+            aria-label="Volver a tickets"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-admin-line bg-white/[0.04] p-0 text-text-muted transition-all hover:border-primary/30 hover:text-primary"
+          >
+            <ArrowLeft size={19} />
+          </Link>
+          <div className="min-w-0">
+            <p className="font-mono-label text-[9px] text-text-muted/50">
+              Soporte · #{ticket.id.slice(0, 8)}
+            </p>
+            <h1 className="mt-2 font-display text-2xl font-semibold italic leading-tight tracking-tight text-admin-ink sm:text-3xl">
+              {ticket.title}
+            </h1>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <StatusBadge status={ticket.status} size="sm" />
+              <span
+                className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${priority.className}`}
+              >
+                {priority.label}
+              </span>
+              <span className="text-[11px] font-medium text-text-muted/60">
+                Actualizado {updatedLabel}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {canWrite && (
+          <button
+            type="button"
+            onClick={() => handleUpdateStatus(ticket.status === 'closed' ? 'open' : 'closed')}
+            className={`inline-flex items-center justify-center gap-2 self-start rounded-xl border px-4 py-2.5 text-xs font-bold transition-all ${
+              ticket.status === 'closed'
+                ? 'border-admin-info/20 bg-admin-info/10 text-admin-info hover:bg-admin-info/20'
+                : 'border-admin-success/20 bg-admin-success/10 text-admin-success hover:bg-admin-success/20'
+            }`}
+          >
+            {ticket.status === 'closed' ? (
+              <>
+                <ArrowUpRight size={14} /> Reabrir ticket
+              </>
+            ) : (
+              <>
+                <CheckCircle2 size={14} /> Cerrar ticket
+              </>
+            )}
+          </button>
+        )}
+      </header>
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <section className="flex h-[68vh] min-h-[520px] max-h-[760px] flex-col overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <div className="flex items-center justify-between border-b border-admin-line px-4 py-3.5 sm:px-5">
+            <div className="flex items-center gap-2 text-sm font-bold text-admin-ink">
+              <MessageSquare size={16} className="text-primary" />
+              Conversación
+              <span className="rounded-full border border-admin-line bg-white/[0.04] px-2 py-0.5 font-mono-label text-[9px] text-text-muted/60">
+                {messages.length}
+              </span>
+            </div>
+            <span className="hidden font-mono-label text-[9px] text-text-muted/50 sm:block">
+              Hilo de soporte
+            </span>
           </div>
 
-          {ticket.status !== 'closed' && canWrite && (
-            <div className="p-4 border-t border-white/5 bg-background/50">
-              <form onSubmit={handleSendMessage} className="flex gap-2">
-                <div className="flex-1 relative">
-                  <textarea
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Escribe tu respuesta..."
-                    className="w-full bg-card-bg border border-white/10 rounded-2xl p-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none min-h-[60px] max-h-[200px] text-sm resize-none text-white-custom"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage(e);
-                      }
-                    }}
-                  />
-                </div>
+          <div
+            className="flex-1 space-y-5 overflow-y-auto p-4 sm:p-6"
+            role="log"
+            aria-live="polite"
+            aria-label="Mensajes del ticket"
+          >
+            {messages.length === 0 ? (
+              <div className="flex h-full min-h-[240px] flex-col items-center justify-center gap-3 text-center">
+                <MessageSquare size={32} className="text-text-muted/25" />
+                <p className="text-sm font-bold text-admin-ink">Sin mensajes todavía</p>
+                <p className="max-w-xs text-xs font-medium leading-relaxed text-text-muted">
+                  La conversación con el cliente aparecerá aquí.
+                </p>
+              </div>
+            ) : (
+              messages.map((msg) => {
+                const isAdmin = msg.sender === 'admin';
+                return (
+                  <div key={msg.id} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
+                    <div
+                      className={`max-w-[85%] rounded-2xl border px-4 py-3 ${
+                        isAdmin
+                          ? 'rounded-br-md border-primary/20 bg-primary/10'
+                          : 'rounded-bl-md border-admin-line bg-admin-bg'
+                      }`}
+                    >
+                      <div
+                        className={`mb-1.5 flex items-center gap-1.5 font-mono-label text-[9px] ${
+                          isAdmin ? 'text-primary' : 'text-text-muted/60'
+                        }`}
+                      >
+                        {isAdmin ? <ShieldCheck size={12} /> : <User size={12} />}
+                        {isAdmin ? 'Omar Hernández' : ticket.lead?.name || 'Cliente'}
+                      </div>
+                      <p className="whitespace-pre-wrap text-sm leading-relaxed text-admin-ink">
+                        {msg.content}
+                      </p>
+                      <div className="mt-2 text-right font-mono text-[9px] text-text-muted/40">
+                        {new Date(msg.created_at).toLocaleTimeString('es-CO', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          timeZone: 'America/Bogota',
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {ticket.status !== 'closed' && canWrite ? (
+            <div className="border-t border-admin-line bg-admin-bg/40 p-3 sm:p-4">
+              <form onSubmit={handleSendMessage} className="flex items-end gap-2">
+                <textarea
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Escribe una respuesta..."
+                  aria-label="Escribe una respuesta"
+                  className="min-h-[52px] max-h-[160px] flex-1 resize-none rounded-xl border border-admin-line bg-card-bg px-3.5 py-3 text-sm text-admin-ink outline-none transition-colors placeholder:text-text-muted/40 focus:border-primary/40 focus:ring-4 focus:ring-primary/10"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage(e);
+                    }
+                  }}
+                />
                 <button
                   type="submit"
                   disabled={sending || !newMessage.trim()}
-                  className="p-4 bg-primary text-background rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 font-bold"
+                  aria-label="Enviar respuesta"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary p-0 font-bold text-background transition-all hover:scale-[1.03] active:scale-95 disabled:pointer-events-none disabled:opacity-50"
                 >
-                  {sending ? <Loader2 className="animate-spin" size={24} /> : <Send size={24} />}
+                  {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
                 </button>
               </form>
             </div>
-          )}
-        </div>
-
-        {/* Sidebar Info */}
-        <div className="space-y-6">
-          <div className="bg-card-bg p-8 rounded-[32px] border border-white/5 shadow-xl">
-            <h3 className="font-bold mb-6 flex items-center gap-2 text-white-custom">
-              <AlertCircle size={18} className="text-primary" />
-              Detalles del Ticket
-            </h3>
-            <div className="space-y-4 text-sm">
-              <div className="flex justify-between items-center">
-                <span className="text-text-muted">Estado</span>
-                <span className={`font-bold uppercase text-[10px] px-2 py-0.5 rounded-md ${statusColors[ticket.status] || 'bg-white/5 text-text-muted'}`}>
-                  {ticket.status.replace('_', ' ')}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-text-muted">Prioridad</span>
-                <span className={`font-bold uppercase text-[10px] ${priorityColors[ticket.priority] || 'text-text-muted'}`}>{ticket.priority}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-muted">Creado</span>
-                <span className="text-white-custom">{new Date(ticket.created_at).toLocaleDateString('es-CO', { timeZone: 'America/Bogota' })}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-muted">Última act.</span>
-                <span className="text-white-custom">{new Date(ticket.updated_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}</span>
-              </div>
+          ) : (
+            <div className="border-t border-admin-line px-5 py-3 text-center text-[11px] font-medium text-text-muted/60">
+              {ticket.status === 'closed'
+                ? 'Este ticket está cerrado. Reábrelo para responder.'
+                : 'No tienes permisos para responder en este ticket.'}
             </div>
-          </div>
+          )}
+        </section>
+
+        <aside className="space-y-4">
+          <section className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+            <h2 className="flex items-center gap-2 text-sm font-bold text-admin-ink">
+              <AlertCircle size={16} className="text-primary" />
+              Detalles del ticket
+            </h2>
+            <dl className="mt-5 space-y-3 text-xs">
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-text-muted">Estado</dt>
+                <dd>
+                  <StatusBadge status={ticket.status} size="sm" />
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-text-muted">Prioridad</dt>
+                <dd>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${priority.className}`}
+                  >
+                    {priority.label}
+                  </span>
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-text-muted">Creado</dt>
+                <dd className="text-right font-medium text-admin-ink">{createdLabel}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-text-muted">Actualizado</dt>
+                <dd className="text-right font-medium text-admin-ink">{updatedLabel}</dd>
+              </div>
+            </dl>
+          </section>
 
           {ticket.lead && (
-            <div className="bg-card-bg p-8 rounded-[32px] border border-white/5 shadow-xl">
-              <h3 className="font-bold mb-6 flex items-center gap-2 text-white-custom">
-                <User size={18} className="text-primary" />
-                Información del Cliente
-              </h3>
-              <div className="space-y-4 text-sm">
-                <div>
-                  <div className="font-bold text-white-custom">{ticket.lead.name}</div>
-                  <div className="text-xs text-text-muted">{ticket.lead.email}</div>
-                </div>
+            <section className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+              <h2 className="flex items-center gap-2 text-sm font-bold text-admin-ink">
+                <User size={16} className="text-primary" />
+                Cliente
+              </h2>
+              <div className="mt-5">
+                <p className="font-bold text-admin-ink">{ticket.lead.name || 'Sin nombre'}</p>
+                {ticket.lead.email && (
+                  <p className="mt-1 break-all text-xs text-text-muted">{ticket.lead.email}</p>
+                )}
+              </div>
+              <div className="mt-4 space-y-3 text-xs">
                 {ticket.lead.company && (
                   <div>
-                    <span className="text-text-muted block text-xs">Empresa</span>
-                    <span className="text-white-custom">{ticket.lead.company}</span>
+                    <span className="block text-text-muted/60">Empresa</span>
+                    <span className="mt-0.5 block font-medium text-admin-ink">{ticket.lead.company}</span>
                   </div>
                 )}
                 {ticket.lead.service_requested && (
                   <div>
-                    <span className="text-text-muted block text-xs">Servicio contratado</span>
-                    <span className="text-primary font-medium">{ticket.lead.service_requested}</span>
+                    <span className="block text-text-muted/60">Servicio contratado</span>
+                    <span className="mt-0.5 block font-medium text-primary">{ticket.lead.service_requested}</span>
                   </div>
                 )}
-                <Link 
-                  href={`/admin/leads/${ticket.lead.id}`}
-                  className="block text-center py-3 bg-white/5 rounded-xl text-xs font-bold hover:bg-primary/10 transition-all border border-white/10 text-white-custom hover:text-primary mt-4"
-                >
-                  Ver Perfil Completo
-                </Link>
               </div>
-            </div>
+              {ticket.lead.id && (
+                <Link
+                  href={`/admin/leads/${ticket.lead.id}`}
+                  className="mt-5 flex items-center justify-center gap-2 rounded-xl border border-admin-line bg-white/[0.04] py-2.5 text-xs font-bold text-admin-ink transition-all hover:border-primary/30 hover:text-primary"
+                >
+                  Ver perfil completo
+                  <ArrowUpRight size={14} />
+                </Link>
+              )}
+            </section>
           )}
-        </div>
+        </aside>
       </div>
     </div>
   );

@@ -12,12 +12,14 @@ export default function FeedPostRowActions({
   pinned,
   canWrite,
   canPin,
+  canDelete,
 }: {
   postId: string;
   status: "published" | "hidden";
   pinned: boolean;
   canWrite: boolean;
   canPin: boolean;
+  canDelete: boolean;
 }) {
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
@@ -69,7 +71,8 @@ export default function FeedPostRowActions({
         }
         disabled={loading !== null}
         title={status === "published" ? "Ocultar" : "Publicar"}
-        className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white-custom hover:border-primary/30 transition-all disabled:opacity-50"
+        aria-label={status === "published" ? "Ocultar publicación" : "Publicar publicación"}
+        className="w-9 h-9 rounded-lg p-0 bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white-custom hover:border-primary/30 transition-all disabled:opacity-50"
       >
         {loading === "status" ? <Loader2 size={14} className="animate-spin" /> : status === "published" ? <EyeOff size={14} /> : <Eye size={14} />}
       </button>
@@ -79,7 +82,8 @@ export default function FeedPostRowActions({
           onClick={() => patch({ pinned: !pinned }, "pin", pinned ? "Publicación desfijada" : "Publicación fijada")}
           disabled={loading !== null}
           title={pinned ? "Desfijar" : "Fijar"}
-          className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all disabled:opacity-50 ${
+          aria-label={pinned ? "Desfijar publicación" : "Fijar publicación"}
+          className={`w-9 h-9 rounded-lg p-0 border flex items-center justify-center transition-all disabled:opacity-50 ${
             pinned ? "bg-primary/10 border-primary/30 text-primary" : "bg-white/5 border-white/10 text-text-muted hover:text-white-custom hover:border-primary/30"
           }`}
         >
@@ -87,14 +91,17 @@ export default function FeedPostRowActions({
         </button>
       )}
 
-      <button
-        onClick={handleDelete}
-        disabled={loading !== null}
-        title="Eliminar"
-        className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-50"
-      >
-        {loading === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-      </button>
+      {canDelete && (
+        <button
+          onClick={handleDelete}
+          disabled={loading !== null}
+          title="Eliminar"
+          aria-label="Eliminar publicación"
+          className="w-9 h-9 rounded-lg p-0 bg-white/5 border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-50"
+        >
+          {loading === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+        </button>
+      )}
     </div>
   );
 }

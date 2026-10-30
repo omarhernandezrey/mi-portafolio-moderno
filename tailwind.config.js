@@ -1,4 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+
+// Tailwind 3 no puede aplicar `/alpha` directamente a colores definidos como
+// `var(--color)`. `color-mix()` sí permite generar variantes translúcidas sin
+// duplicar canales RGB por cada paleta.
+const withAlpha = (variable) =>
+  `color-mix(in srgb, var(${variable}) calc(<alpha-value> * 100%), transparent)`;
+
 module.exports = {
   darkMode: "class", // Habilita el modo oscuro basado en una clase
   content: [
@@ -16,15 +23,26 @@ module.exports = {
     extend: {
       // Colores personalizados para trabajar con las variables CSS
       colors: {
-        // Variables CSS dinámicas
-        primary: "var(--primary-color)",
-        accent: "var(--accent-color)",
-        background: "var(--background-color)",
-        "secondary-bg": "var(--secondary-background-color)",
-        "text-main": "var(--text-color)",
-        "text-muted": "var(--muted-color)",
-        "card-bg": "var(--card-bg-color)",
-        "white-custom": "var(--white-color)",
+        // Variables CSS dinámicas (con soporte real para /alpha)
+        primary: withAlpha("--primary-color"),
+        accent: withAlpha("--accent-color"),
+        background: withAlpha("--background-color"),
+        "secondary-bg": withAlpha("--secondary-background-color"),
+        "text-main": withAlpha("--text-color"),
+        "text-muted": withAlpha("--muted-color"),
+        "card-bg": withAlpha("--card-bg-color"),
+        "white-custom": withAlpha("--white-color"),
+        // Superficies semánticas exclusivas del panel admin
+        "admin-bg": withAlpha("--admin-bg"),
+        "admin-surface": withAlpha("--admin-surface"),
+        "admin-raised": withAlpha("--admin-raised"),
+        "admin-line": withAlpha("--admin-line"),
+        "admin-ink": withAlpha("--admin-ink"),
+        "admin-muted": withAlpha("--admin-muted"),
+        "admin-success": withAlpha("--admin-success"),
+        "admin-warning": withAlpha("--admin-warning"),
+        "admin-danger": withAlpha("--admin-danger"),
+        "admin-info": withAlpha("--admin-info"),
       },
       // Fuentes optimizadas
       fontFamily: {

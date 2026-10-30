@@ -78,22 +78,22 @@ export default function NewTicketPage() {
         <ArrowLeft size={18} /> Volver a Tickets
       </Link>
 
-      <div className="bg-card-bg p-4 sm:p-6 lg:p-8 rounded-[24px] sm:rounded-[40px] border border-white/5 shadow-2xl">
+      <div className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-6 lg:p-8">
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="p-2 sm:p-3 bg-primary/10 rounded-xl sm:rounded-2xl text-primary">
             <Ticket size={28} />
           </div>
           <div>
-            <h1 className="font-display italic text-xl sm:text-2xl lg:text-3xl font-medium text-white-custom">Nuevo Ticket</h1>
+            <h1 className="font-display italic text-xl sm:text-2xl lg:text-3xl font-medium text-admin-ink">Nuevo Ticket</h1>
             <p className="text-xs sm:text-sm text-text-muted">Registra un nuevo requerimiento de soporte.</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
-            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Cliente / Lead (Opcional)</label>
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-admin-ink">Cliente / Lead (Opcional)</label>
             <select 
-              className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom text-sm"
+              className="w-full bg-admin-bg border border-admin-line rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-admin-ink text-sm"
               value={formData.lead_id}
               onChange={(e) => setFormData({...formData, lead_id: e.target.value})}
             >
@@ -105,11 +105,11 @@ export default function NewTicketPage() {
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Asunto / Título *</label>
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-admin-ink">Asunto / Título *</label>
             <input 
               type="text"
               required
-              className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-white-custom text-sm placeholder:text-text-muted/50"
+              className="w-full bg-admin-bg border border-admin-line rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 text-admin-ink text-sm placeholder:text-text-muted/50"
               placeholder="Ej: Error en pasarela de pagos"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
@@ -117,7 +117,7 @@ export default function NewTicketPage() {
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Prioridad</label>
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-admin-ink">Prioridad</label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {['low', 'medium', 'high', 'urgent'].map((p) => (
                 <button
@@ -127,7 +127,7 @@ export default function NewTicketPage() {
                   className={`py-2 sm:py-3 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold uppercase transition-all border ${
                     formData.priority === p 
                       ? 'bg-primary text-background border-primary' 
-                      : 'bg-transparent text-text-muted border-white/10 hover:border-primary/50'
+                      : 'bg-transparent text-text-muted border-admin-line hover:border-primary/50'
                   }`}
                 >
                   {p === 'low' ? 'Baja' : p === 'medium' ? 'Media' : p === 'high' ? 'Alta' : 'Urgente'}
@@ -137,10 +137,10 @@ export default function NewTicketPage() {
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-bold mb-2 text-white-custom">Descripción del problema *</label>
+            <label className="block text-xs sm:text-sm font-bold mb-2 text-admin-ink">Descripción del problema *</label>
             <textarea 
               required
-              className="w-full bg-background border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[120px] sm:min-h-[150px] text-white-custom text-sm placeholder:text-text-muted/50 resize-none"
+              className="w-full bg-admin-bg border border-admin-line rounded-xl sm:rounded-2xl p-3 sm:p-4 outline-none focus:ring-2 focus:ring-primary/50 min-h-[120px] sm:min-h-[150px] text-admin-ink text-sm placeholder:text-text-muted/50 resize-none"
               placeholder="Describe detalladamente el requerimiento..."
               value={formData.content}
               onChange={(e) => setFormData({...formData, content: e.target.value})}

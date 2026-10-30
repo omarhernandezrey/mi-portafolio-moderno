@@ -6,7 +6,10 @@ import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 
 const ticketSchema = z.object({
-  lead_id: z.string().uuid().optional(),
+  lead_id: z.preprocess(
+    (value) => (value === '' || value === null ? undefined : value),
+    z.string().uuid().optional()
+  ),
   title: z.string().min(3),
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
   content: z.string().min(10),

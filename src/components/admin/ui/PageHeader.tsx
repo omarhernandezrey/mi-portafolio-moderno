@@ -8,26 +8,38 @@ interface PageHeaderProps {
   className?: string;
 }
 
-export default function PageHeader({ overline, title, description, actions, className = '' }: PageHeaderProps) {
+export default function PageHeader({
+  overline,
+  title,
+  description,
+  actions,
+  className = '',
+}: PageHeaderProps) {
   return (
-    <div className={`flex flex-col md:flex-row md:items-end justify-between gap-6 ${className}`}>
-      <div>
+    <header
+      className={`flex flex-col gap-5 border-b border-admin-line pb-6 md:flex-row md:items-end md:justify-between md:gap-8 ${className}`}
+    >
+      <div className="min-w-0">
         {overline && (
-          <div className="font-mono-label flex items-center gap-2 text-primary text-[0.65rem] mb-3">
-            <span className="w-8 h-px bg-primary/30" />
+          <div className="mb-2.5 flex items-center gap-2.5 font-mono-label text-[10px] text-primary">
+            <span className="h-px w-6 bg-primary/40" />
             {overline}
           </div>
         )}
-        <h1 className="font-display italic text-4xl font-medium text-white-custom tracking-tight mb-2">{title}</h1>
+        <h1 className="font-display text-3xl font-semibold italic leading-[1.05] tracking-tight text-admin-ink sm:text-4xl">
+          {title}
+        </h1>
         {description && (
-          <p className="text-text-muted text-sm font-medium">{description}</p>
+          <div className="mt-2 max-w-2xl text-sm font-medium leading-relaxed text-text-muted">
+            {description}
+          </div>
         )}
       </div>
       {actions && (
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex shrink-0 flex-wrap items-center gap-2.5">
           {actions}
         </div>
       )}
-    </div>
+    </header>
   );
 }

@@ -7,6 +7,7 @@ import {
   Briefcase, FileText, ArrowLeft, CheckCircle, Loader2, Tag
 } from 'lucide-react';
 import Link from 'next/link';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 const SERVICE_OPTIONS = [
   'Desarrollo Web Full Stack',
@@ -82,7 +83,7 @@ function Field({ label, children, required }: { label: string; children: React.R
   );
 }
 
-const inputClass = "w-full bg-background/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white-custom placeholder:text-text-muted/30 outline-none focus:border-primary/40 transition-all";
+const inputClass = "w-full bg-admin-bg/60 border border-admin-line rounded-xl px-4 py-3 text-sm text-admin-ink placeholder:text-text-muted/30 outline-none focus:border-primary/40 transition-all";
 
 export default function NewLeadPage() {
   const router = useRouter();
@@ -103,32 +104,28 @@ export default function NewLeadPage() {
     setError('');
     setLoading(true);
 
-    const res = await fetch('/api/admin/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...form,
-        phone: form.phone || undefined,
-        company: form.company || undefined,
-        budget: form.budget || undefined,
-        timeline: form.timeline || undefined,
-        service_requested: form.service_requested || undefined,
-        notes: form.notes || undefined,
-        industry: form.industry || undefined,
-      }),
-    });
+    try {
+      const lead = await adminFetch<{ id: string }>('/api/admin/leads', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...form,
+          phone: form.phone || undefined,
+          company: form.company || undefined,
+          budget: form.budget || undefined,
+          timeline: form.timeline || undefined,
+          service_requested: form.service_requested || undefined,
+          notes: form.notes || undefined,
+          industry: form.industry || undefined,
+        }),
+      });
 
-    setLoading(false);
-
-    if (!res.ok) {
-      const data = await res.json();
-      setError(typeof data.error === 'string' ? data.error : 'Error al crear el lead.');
-      return;
+      setDone(true);
+      setTimeout(() => router.push(`/admin/leads/${lead.id}`), 1200);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al crear el lead.');
+    } finally {
+      setLoading(false);
     }
-
-    const lead = await res.json();
-    setDone(true);
-    setTimeout(() => router.push(`/admin/leads/${lead.id}`), 1200);
   };
 
   if (done) {
@@ -138,7 +135,7 @@ export default function NewLeadPage() {
           <CheckCircle size={40} className="text-primary" />
         </div>
         <div>
-          <h2 className="font-display italic text-2xl font-medium text-white-custom">Lead creado</h2>
+          <h2 className="font-display italic text-2xl font-medium text-admin-ink">Lead creado</h2>
           <p className="text-text-muted text-sm mt-1">Redirigiendo al perfil...</p>
         </div>
       </div>
@@ -146,29 +143,29 @@ export default function NewLeadPage() {
   }
 
   return (
-    <div className="space-y-10 max-w-3xl">
+    <div className="mx-auto max-w-3xl space-y-10">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link
           href="/admin/leads"
-          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:text-white-custom transition-all"
+          className="p-2.5 rounded-xl bg-white/[0.04] border border-admin-line text-text-muted hover:text-admin-ink transition-all"
         >
           <ArrowLeft size={18} />
         </Link>
         <div>
           <p className="font-mono-label text-[0.6rem] text-primary/60">CRM Pipeline</p>
-          <h1 className="font-display italic text-3xl font-medium text-white-custom tracking-tight">Nuevo Lead</h1>
+          <h1 className="font-display italic text-3xl font-medium text-admin-ink tracking-tight">Nuevo Lead</h1>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Identidad */}
-        <div className="bg-card-bg rounded-[28px] border border-white/5 p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="bg-card-bg rounded-2xl border border-admin-line p-6 sm:p-8 shadow-xl space-y-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-xl bg-primary/10 text-primary">
               <User size={18} />
             </div>
-            <h2 className="font-bold text-white-custom">Identidad</h2>
+            <h2 className="font-bold text-admin-ink">Identidad</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -236,7 +233,7 @@ export default function NewLeadPage() {
                     className={`flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider border transition-all ${
                       form.type === t
                         ? 'bg-primary/10 border-primary/40 text-primary'
-                        : 'bg-background/50 border-white/10 text-text-muted hover:border-white/20'
+                        : 'bg-admin-bg/50 border-admin-line text-text-muted hover:border-white/20'
                     }`}
                   >
                     {t === 'client' ? 'Cliente' : t === 'recruiter' ? 'Reclutador' : 'Otro'}
@@ -255,12 +252,12 @@ export default function NewLeadPage() {
         </div>
 
         {/* Proyecto */}
-        <div className="bg-card-bg rounded-[28px] border border-white/5 p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="bg-card-bg rounded-2xl border border-admin-line p-6 sm:p-8 shadow-xl space-y-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-xl bg-accent/10 text-accent">
               <Briefcase size={18} />
             </div>
-            <h2 className="font-bold text-white-custom">Proyecto</h2>
+            <h2 className="font-bold text-admin-ink">Proyecto</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -304,12 +301,12 @@ export default function NewLeadPage() {
         </div>
 
         {/* Notas */}
-        <div className="bg-card-bg rounded-[28px] border border-white/5 p-6 sm:p-8 shadow-xl space-y-4">
+        <div className="bg-card-bg rounded-2xl border border-admin-line p-6 sm:p-8 shadow-xl space-y-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-white/5 text-text-muted">
+            <div className="p-2 rounded-xl bg-white/[0.04] text-text-muted">
               <FileText size={18} />
             </div>
-            <h2 className="font-bold text-white-custom">Notas internas</h2>
+            <h2 className="font-bold text-admin-ink">Notas internas</h2>
           </div>
           <textarea
             value={form.notes}
@@ -321,7 +318,7 @@ export default function NewLeadPage() {
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-3 text-sm text-red-400">
+          <div role="alert" className="rounded-xl border border-admin-danger/20 bg-admin-danger/10 px-5 py-3 text-sm text-admin-danger">
             {error}
           </div>
         )}
@@ -329,7 +326,7 @@ export default function NewLeadPage() {
         <div className="flex flex-col sm:flex-row gap-3 pb-8">
           <Link
             href="/admin/leads"
-            className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom transition-all text-center"
+            className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/[0.04] border border-admin-line text-sm font-bold text-text-muted hover:text-admin-ink transition-all text-center"
           >
             Cancelar
           </Link>

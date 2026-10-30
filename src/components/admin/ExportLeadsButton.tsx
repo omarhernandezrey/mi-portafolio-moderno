@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { useAdminToast } from '@/hooks/useAdminToast';
+import { adminButtonClasses } from '@/components/admin/ui/AdminButton';
 import type { Lead } from '@/lib/admin/types';
 
 interface ExportLeadsButtonProps {
@@ -69,7 +70,7 @@ export default function ExportLeadsButton({ leads }: ExportLeadsButtonProps) {
     <button 
       onClick={exportToCSV}
       disabled={isExporting}
-      className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl hover:bg-primary/20 transition-all text-sm font-bold disabled:opacity-50"
+      className={adminButtonClasses({ size: 'sm' })}
     >
       <Download size={16} />
       <span>{isExporting ? 'Exportando...' : `Exportar CSV (${leads.length})`}</span>

@@ -4,21 +4,33 @@ interface EmptyStateProps {
   icon: React.ReactNode;
   title: string;
   description?: string;
+  action?: React.ReactNode;
   className?: string;
 }
 
-export default function EmptyState({ icon, title, description, className = '' }: EmptyStateProps) {
+export default function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+  className = '',
+}: EmptyStateProps) {
   return (
-    <div className={`flex flex-col items-center gap-6 ${className}`}>
-      <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-text-muted/20">
+    <div
+      className={`flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-admin-line bg-admin-raised/30 px-6 py-10 text-center ${className}`}
+    >
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-admin-line bg-white/[0.03] text-text-muted/60">
         {icon}
       </div>
-      <div className="space-y-1 text-center">
-        <p className="text-white-custom font-bold text-lg tracking-tight">{title}</p>
+      <div className="space-y-1">
+        <p className="text-sm font-bold text-admin-ink">{title}</p>
         {description && (
-          <p className="text-text-muted text-sm font-medium italic opacity-60">{description}</p>
+          <p className="mx-auto max-w-sm text-xs font-medium leading-relaxed text-text-muted">
+            {description}
+          </p>
         )}
       </div>
+      {action}
     </div>
   );
 }

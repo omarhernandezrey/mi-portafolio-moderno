@@ -15,7 +15,15 @@ export async function PATCH(
   try {
     const { status } = await req.json();
 
-    const validStatuses = ['new', 'contacted', 'paid', 'cold', 'lost', 'archived'];
+    const validStatuses = [
+      'new',
+      'contacted',
+      'followed_up',
+      'paid',
+      'cold',
+      'lost',
+      'archived',
+    ];
     if (!status || !validStatuses.includes(status)) {
       return NextResponse.json(
         { error: `Estado inválido. Válidos: ${validStatuses.join(', ')}` },

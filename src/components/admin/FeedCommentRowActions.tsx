@@ -61,7 +61,7 @@ export default function FeedCommentRowActions({
         onClick={toggleStatus}
         disabled={loading !== null}
         title={status === "published" ? "Ocultar" : "Publicar"}
-        className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white-custom hover:border-primary/30 transition-all disabled:opacity-50"
+        className="w-9 h-9 rounded-lg p-0 bg-white/5 border border-white/10 flex items-center justify-center text-text-muted hover:text-white-custom hover:border-primary/30 transition-all disabled:opacity-50"
       >
         {loading === "status" ? <Loader2 size={14} className="animate-spin" /> : status === "published" ? <EyeOff size={14} /> : <Eye size={14} />}
       </button>
@@ -71,7 +71,7 @@ export default function FeedCommentRowActions({
           onClick={handleDelete}
           disabled={loading !== null}
           title="Eliminar"
-          className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-50"
+          className="w-9 h-9 rounded-lg p-0 bg-white/5 border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-50"
         >
           {loading === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
         </button>

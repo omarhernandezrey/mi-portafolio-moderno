@@ -1,9 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { TrendingUp, DollarSign, Clock, User, Building2 } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  DollarSign,
+  Clock,
+  User,
+  Building2,
+  RefreshCw,
+  AlertCircle,
+} from 'lucide-react';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import StatCard from '@/components/admin/ui/StatCard';
+import { AdminButton } from '@/components/admin/ui/AdminButton';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 interface ReportRow {
   id: string;
@@ -13,176 +23,305 @@ interface ReportRow {
   total_seconds: number;
 }
 
+function formatHours(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}h ${minutes}m`;
+}
+
+function parseBudget(budget: string | null | undefined) {
+  const raw = String(budget ?? '').replace(/[^0-9.,]/g, '');
+  if (!raw) return 0;
+
+  const lastComma = raw.lastIndexOf(',');
+  const lastDot = raw.lastIndexOf('.');
+  let normalized = raw;
+
+  if (lastComma > lastDot) {
+    normalized = raw.replace(/\./g, '').replace(',', '.');
+  } else if (lastDot > lastComma) {
+    const decimals = raw.length - lastDot - 1;
+    const dotCount = (raw.match(/\./g) || []).length;
+    normalized =
+      dotCount > 1 || decimals === 3
+        ? raw.replace(/\./g, '')
+        : raw.replace(/,/g, '');
+  } else {
+    normalized = raw.replace(/,/g, '');
+  }
+
+  return parseFloat(normalized) || 0;
+}
+
+function formatMoney(value: number) {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export default function TimeReportPage() {
   const [report, setReport] = useState<ReportRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchReport();
-  }, []);
+  const fetchReport = useCallback(async () => {
+    setIsLoading(true);
+    setError('');
 
-  const fetchReport = async () => {
     try {
-      const r = await fetch('/api/admin/timer/report');
-      const data = await r.json();
-      setReport(data);
-    } catch (e) {
-      console.error(e);
+      const data = await adminFetch<ReportRow[]>('/api/admin/timer/report');
+      setReport(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo cargar el reporte de horas.'
+      );
+      setReport([]);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const formatHours = (seconds: number) => {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    return `${h}h ${m}m`;
-  };
+  useEffect(() => {
+    fetchReport();
+  }, [fetchReport]);
 
-  const totalHours = report.reduce((acc, curr) => acc + (curr.total_seconds || 0), 0);
+  const totalSeconds = report.reduce(
+    (sum, row) => sum + (row.total_seconds || 0),
+    0
+  );
+  const totalBudget = report.reduce(
+    (sum, row) => sum + parseBudget(row.budget),
+    0
+  );
+  const averagePerHour =
+    totalSeconds > 0 ? totalBudget / (totalSeconds / 3600) : 0;
 
   return (
-    <div className="space-y-6 sm:space-y-10">
+    <div className="space-y-5 lg:space-y-6">
       <PageHeader
         overline="Analytics"
-        title="Reporte de Rentabilidad"
+        title="Reporte de rentabilidad"
+        description="Horas registradas y retorno por proyecto."
         actions={
-          <button 
+          <AdminButton
             onClick={fetchReport}
-            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:bg-white/10 transition-all"
+            disabled={isLoading}
+            size="sm"
+            icon={<RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />}
           >
-            <TrendingUp size={16} />
-            <span className="hidden sm:inline">Actualizar</span>
-          </button>
+            Actualizar
+          </AdminButton>
         }
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <p className="text-[10px] sm:text-xs font-black text-text-muted uppercase tracking-widest">Total Horas</p>
-          <div className="text-2xl sm:text-3xl font-black text-white-custom mt-2">
-            {formatHours(totalHours)}
-          </div>
-        </div>
-        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <p className="text-[10px] sm:text-xs font-black text-text-muted uppercase tracking-widest">Proyectos</p>
-          <div className="text-2xl sm:text-3xl font-black text-primary mt-2">
-            {report.length}
-          </div>
-        </div>
-        <div className="bg-card-bg p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl sm:col-span-2 lg:col-span-1">
-          <p className="text-[10px] sm:text-xs font-black text-text-muted uppercase tracking-widest">Promedio $/hora</p>
-          <div className="text-2xl sm:text-3xl font-black text-emerald-400 mt-2">
-            ${totalHours > 0 
-              ? (report.reduce((acc, row) => acc + parseFloat(row.budget?.replace(/[^0-9.]/g, '') || '0'), 0) / (totalHours / 3600)).toFixed(2)
-              : '0.00'}
-          </div>
-        </div>
-      </div>
+      <section
+        aria-label="Resumen de rentabilidad"
+        className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+      >
+        <StatCard
+          title="Horas totales"
+          value={formatHours(totalSeconds)}
+          icon={<Clock size={19} />}
+          color="primary"
+          description="Tiempo registrado en proyectos"
+        />
+        <StatCard
+          title="Proyectos"
+          value={report.length.toString()}
+          icon={<User size={19} />}
+          color="info"
+          description="Clientes con tiempo registrado"
+        />
+        <StatCard
+          title="Promedio/hora"
+          value={formatMoney(averagePerHour)}
+          icon={<DollarSign size={19} />}
+          color="success"
+          description="Ingreso medio por hora"
+        />
+      </section>
 
-      {/* Mobile Card View */}
-      <div className="block lg:hidden space-y-3">
+      {error && (
+        <div
+          role="alert"
+          className="flex items-start gap-2.5 rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-3.5 text-xs font-medium text-admin-danger"
+        >
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <div className="space-y-3 lg:hidden">
         {isLoading ? (
-          <div className="bg-card-bg rounded-2xl border border-white/5 p-8 text-center">
-            <div className="animate-pulse text-text-muted text-sm">Cargando datos...</div>
+          <div className="rounded-2xl border border-admin-line bg-card-bg p-8 text-center">
+            <p className="animate-pulse text-xs font-medium text-text-muted">
+              Cargando datos...
+            </p>
           </div>
         ) : report.length === 0 ? (
-          <div className="bg-card-bg rounded-2xl border border-white/5 p-8">
-            <EmptyState 
-              icon={<Clock size={32} />}
-              title="Sin registros"
-              description="No hay registros de tiempo."
-            />
-          </div>
+          <EmptyState
+            icon={<Clock size={24} />}
+            title="Sin registros"
+            description="No hay registros de tiempo todavía."
+          />
         ) : (
-          report.map((row, i) => {
-            const budgetNum = parseFloat(row.budget?.replace(/[^0-9.]/g, '') || '0');
-            const hours = row.total_seconds / 3600;
-            const ratio = hours > 0 ? (budgetNum / hours).toFixed(2) : '0';
+          report.map((row) => {
+            const ratio =
+              row.total_seconds > 0
+                ? parseBudget(row.budget) / (row.total_seconds / 3600)
+                : 0;
 
             return (
-              <div key={i} className="bg-card-bg rounded-2xl border border-white/5 p-4 shadow-xl">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                    <User size={18} className="text-text-muted/60" />
+              <article
+                key={row.id}
+                className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04]">
+                    <User size={16} className="text-text-muted/60" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-bold text-white-custom text-sm truncate">{row.name}</div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-admin-ink">
+                      {row.name}
+                    </p>
                     {row.company && (
-                      <div className="flex items-center gap-1 text-[10px] text-text-muted/60">
-                        <Building2 size={10} />
-                        <span className="truncate">{row.company}</span>
-                      </div>
+                      <p className="flex items-center gap-1 truncate text-[10px] text-text-muted/60">
+                        <Building2 size={9} />
+                        {row.company}
+                      </p>
                     )}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-background/40 rounded-lg p-2 text-center">
-                    <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Horas</div>
-                    <div className="text-xs font-black text-white-custom font-mono">{formatHours(row.total_seconds)}</div>
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5 text-center">
+                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                      Horas
+                    </p>
+                    <p className="mt-1 text-xs font-black text-admin-ink">
+                      {formatHours(row.total_seconds)}
+                    </p>
                   </div>
-                  <div className="bg-background/40 rounded-lg p-2 text-center">
-                    <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Presupuesto</div>
-                    <div className="text-xs font-black text-emerald-400 font-mono truncate">{row.budget || 'N/A'}</div>
+                  <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5 text-center">
+                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                      Budget
+                    </p>
+                    <p className="mt-1 truncate text-xs font-black text-admin-success">
+                      {row.budget || 'N/A'}
+                    </p>
                   </div>
-                  <div className="bg-background/40 rounded-lg p-2 text-center">
-                    <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">$/hora</div>
-                    <div className={`text-xs font-black font-mono ${parseFloat(ratio) < 20 ? 'text-red-500' : 'text-white-custom'}`}>
-                      ${ratio}
-                    </div>
+                  <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5 text-center">
+                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                      $/hora
+                    </p>
+                    <p
+                      className={`mt-1 text-xs font-black ${
+                        averagePerHour > 0 && ratio < averagePerHour * 0.5
+                          ? 'text-admin-danger'
+                          : 'text-admin-ink'
+                      }`}
+                    >
+                      {formatMoney(ratio)}
+                    </p>
                   </div>
                 </div>
-              </div>
+              </article>
             );
           })
         )}
       </div>
 
-      {/* Desktop Table View */}
-      <div className="hidden lg:block bg-card-bg rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-separate border-spacing-0 min-w-[600px]">
+          <table className="w-full min-w-[700px] text-left">
             <thead>
-              <tr className="bg-background/40">
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Cliente / Proyecto</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Horas Totales</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Ingreso (Budget)</th>
-                <th className="px-4 xl:px-8 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">Ratio $/hora</th>
+              <tr className="border-b border-admin-line bg-white/[0.02]">
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Cliente / Proyecto
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Horas totales
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Ingreso (budget)
+                </th>
+                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                  Ratio $/hora
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-admin-line">
               {isLoading ? (
-                <tr><td colSpan={4} className="px-8 py-12 text-center text-text-muted italic">Cargando datos...</td></tr>
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="px-5 py-10 text-center text-xs font-medium text-text-muted"
+                  >
+                    Cargando datos...
+                  </td>
+                </tr>
               ) : report.length === 0 ? (
-                <tr><td colSpan={4} className="px-8 py-12 text-center text-text-muted italic">No hay registros de tiempo.</td></tr>
-              ) : report.map((row, i) => {
-                const budgetNum = parseFloat(row.budget?.replace(/[^0-9.]/g, '') || '0');
-                const hours = row.total_seconds / 3600;
-                const ratio = hours > 0 ? (budgetNum / hours).toFixed(2) : '0';
+                <tr>
+                  <td colSpan={4} className="px-5 py-10">
+                    <EmptyState
+                      icon={<Clock size={24} />}
+                      title="Sin registros"
+                      description="No hay registros de tiempo todavía."
+                      className="border-0 bg-transparent"
+                    />
+                  </td>
+                </tr>
+              ) : (
+                report.map((row) => {
+                  const ratio =
+                    row.total_seconds > 0
+                      ? parseBudget(row.budget) / (row.total_seconds / 3600)
+                      : 0;
 
-                return (
-                  <tr key={i} className="group hover:bg-white/[0.02] transition-colors">
-                    <td className="px-4 xl:px-8 py-5">
-                      <div className="font-bold text-white-custom text-sm">{row.name}</div>
-                      <div className="text-xs text-text-muted/60">{row.company}</div>
-                    </td>
-                    <td className="px-4 xl:px-8 py-5 font-mono text-sm text-text-muted">
-                      {formatHours(row.total_seconds)}
-                    </td>
-                    <td className="px-4 xl:px-8 py-5">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-400 px-3 py-1 text-xs font-black">
-                        <DollarSign size={10} /> {row.budget || 'N/A'}
-                      </span>
-                    </td>
-                    <td className="px-4 xl:px-8 py-5 text-right">
-                      <span className={`font-black ${parseFloat(ratio) < 20 ? 'text-red-500' : 'text-white-custom'}`}>
-                        ${ratio}<span className="text-[10px] font-normal text-text-muted/60">/h</span>
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
+                  return (
+                    <tr
+                      key={row.id}
+                      className="group transition-colors hover:bg-white/[0.03]"
+                    >
+                      <td className="px-5 py-4">
+                        <p className="text-sm font-bold text-admin-ink">
+                          {row.name}
+                        </p>
+                        <p className="text-[10px] text-text-muted/60">
+                          {row.company || '—'}
+                        </p>
+                      </td>
+                      <td className="px-5 py-4 text-xs font-medium text-text-muted">
+                        {formatHours(row.total_seconds)}
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-admin-success/20 bg-admin-success/10 px-2.5 py-1 text-xs font-black text-admin-success">
+                          <DollarSign size={10} />
+                          {row.budget || 'N/A'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 text-right">
+                        <span
+                          className={`text-sm font-black ${
+                            averagePerHour > 0 && ratio < averagePerHour * 0.5
+                              ? 'text-admin-danger'
+                              : 'text-admin-ink'
+                          }`}
+                        >
+                          {formatMoney(ratio)}
+                          <span className="text-[9px] font-normal text-text-muted/60">
+                            /h
+                          </span>
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

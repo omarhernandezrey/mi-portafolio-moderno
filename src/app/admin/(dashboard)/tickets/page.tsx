@@ -1,22 +1,50 @@
 import React from 'react';
 import { supabaseServer } from '@/lib/supabaseServer';
-import { 
-  ChevronRight, 
+import {
+  ChevronRight,
   Ticket,
   AlertCircle,
   Clock,
   Plus,
   User,
-  Building2
+  Building2,
 } from 'lucide-react';
 import Link from 'next/link';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import StatCard from '@/components/admin/ui/StatCard';
+import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import { getAdminRole } from '@/lib/admin/auth';
 import { hasMinRole } from '@/lib/admin/roles';
 
 export const dynamic = 'force-dynamic';
+
+const PRIORITY_META: Record<
+  string,
+  { label: string; className: string; dot: string }
+> = {
+  urgent: {
+    label: 'Urgente',
+    className: 'text-admin-danger bg-admin-danger/10 border-admin-danger/20',
+    dot: 'bg-admin-danger',
+  },
+  high: {
+    label: 'Alta',
+    className: 'text-admin-warning bg-admin-warning/10 border-admin-warning/20',
+    dot: 'bg-admin-warning',
+  },
+  medium: {
+    label: 'Media',
+    className: 'text-admin-info bg-admin-info/10 border-admin-info/20',
+    dot: 'bg-admin-info',
+  },
+  low: {
+    label: 'Baja',
+    className: 'text-text-muted bg-white/[0.04] border-admin-line',
+    dot: 'bg-text-muted',
+  },
+};
 
 async function getTickets() {
   const { data, error } = await supabaseServer
@@ -28,216 +56,296 @@ async function getTickets() {
   return data || [];
 }
 
+function isOverSLA(updatedAt: string, status: string) {
+  if (status === 'closed') return false;
+  const diffHours =
+    (Date.now() - new Date(updatedAt).getTime()) / (1000 * 60 * 60);
+  return diffHours > 24;
+}
+
+function formatDateTime(value: string) {
+  return new Date(value).toLocaleString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'America/Bogota',
+  });
+}
+
 export default async function AdminTicketsPage() {
   const tickets = await getTickets();
   const role = await getAdminRole();
   const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
 
-  const getPriorityStyle = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return 'text-red-500 font-bold';
-      case 'high': return 'text-orange-400';
-      case 'medium': return 'text-amber-300';
-      case 'low': return 'text-emerald-400';
-      default: return 'text-gray-400';
-    }
-  };
-
-  const getPriorityLabel = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return 'Urgente';
-      case 'high': return 'Alta';
-      case 'medium': return 'Media';
-      case 'low': return 'Baja';
-      default: return priority;
-    }
-  };
-
-  const isOverSLA = (updatedAt: string, status: string) => {
-    if (status === 'closed') return false;
-    const lastUpdate = new Date(updatedAt);
-    const now = new Date();
-    const diffHours = (now.getTime() - lastUpdate.getTime()) / (1000 * 60 * 60);
-    return diffHours > 24;
+  const counts = {
+    open: tickets.filter((ticket) => ticket.status === 'open').length,
+    in_progress: tickets.filter((ticket) => ticket.status === 'in_progress')
+      .length,
+    waiting_client: tickets.filter(
+      (ticket) => ticket.status === 'waiting_client'
+    ).length,
+    closed: tickets.filter((ticket) => ticket.status === 'closed').length,
   };
 
   return (
-    <div className="space-y-6 sm:space-y-10">
+    <div className="space-y-5 lg:space-y-6">
       <PageHeader
         overline="Soporte Técnico"
         title="Tickets"
         description="Seguimiento de incidencias y soporte al cliente."
         actions={
           canWrite ? (
-            <Link
+            <AdminButtonLink
               href="/admin/tickets/new"
-              className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
+              variant="primary"
+              size="sm"
+              icon={<Plus size={15} />}
             >
-              <Plus size={16} />
-              <span className="hidden sm:inline">Nuevo Ticket</span>
-              <span className="sm:hidden">Nuevo</span>
-            </Link>
+              Nuevo ticket
+            </AdminButtonLink>
           ) : undefined
         }
       />
 
-      {/* Stats summary */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-4">
-        <div className="bg-card-bg p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-[9px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Abiertos</div>
-          <div className="text-xl sm:text-3xl font-black text-blue-400">{tickets.filter(t => t.status === 'open').length}</div>
-        </div>
-        <div className="bg-card-bg p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-[9px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">En Proceso</div>
-          <div className="text-xl sm:text-3xl font-black text-amber-400">{tickets.filter(t => t.status === 'in_progress').length}</div>
-        </div>
-        <div className="bg-card-bg p-3 sm:p-6 rounded-xl sm:rounded-2xl border border-white/5 shadow-xl">
-          <div className="text-text-muted text-[9px] sm:text-xs uppercase font-black tracking-widest mb-1 sm:mb-2">Pendiente</div>
-          <div className="text-xl sm:text-3xl font-black text-purple-400">{tickets.filter(t => t.status === 'waiting_client').length}</div>
-        </div>
-      </div>
+      <section
+        aria-label="Resumen de tickets"
+        className="grid grid-cols-2 gap-3 xl:grid-cols-4"
+      >
+        <StatCard
+          title="Abiertos"
+          value={counts.open.toString()}
+          icon={<Ticket size={19} />}
+          color="info"
+          description="Sin atender todavía"
+        />
+        <StatCard
+          title="En proceso"
+          value={counts.in_progress.toString()}
+          icon={<Clock size={19} />}
+          color="warning"
+          description="Trabajo en curso"
+        />
+        <StatCard
+          title="Esperando cliente"
+          value={counts.waiting_client.toString()}
+          icon={<User size={19} />}
+          color="accent"
+          description="Pendientes de respuesta"
+        />
+        <StatCard
+          title="Cerrados"
+          value={counts.closed.toString()}
+          icon={<Ticket size={19} />}
+          color="success"
+          description="Resueltos"
+        />
+      </section>
 
-      {/* Mobile Card View */}
-      <div className="block lg:hidden space-y-3">
-        {tickets.length > 0 ? tickets.map((ticket) => (
-          <div key={ticket.id} className="bg-card-bg rounded-2xl border border-white/5 p-4 shadow-xl">
-            {/* Header: Title + Alert + Status */}
-            <div className="flex items-start gap-3 mb-3">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  {isOverSLA(ticket.updated_at, ticket.status) && (
-                    <AlertCircle size={14} className="text-red-500 animate-pulse shrink-0" />
-                  )}
-                  <div className="font-bold text-white-custom text-sm truncate">{ticket.title}</div>
-                </div>
-                <div className="text-[10px] text-text-muted/60 font-mono uppercase tracking-tighter mt-0.5">
-                  ID: {ticket.id.substring(0, 8)}
-                </div>
-              </div>
-              <StatusBadge status={ticket.status} />
-            </div>
-            
-            {/* Client Info */}
-            <div className="flex items-center gap-2 mb-3 p-2 bg-background/40 rounded-lg">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                <User size={14} className="text-text-muted/60" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-white-custom truncate">{ticket.lead?.name || 'N/A'}</div>
-                {ticket.lead?.company && (
-                  <div className="text-[10px] text-text-muted/60 flex items-center gap-1">
-                    <Building2 size={9} />
-                    <span className="truncate">{ticket.lead.company}</span>
+      <div className="space-y-3 lg:hidden">
+        {tickets.length > 0 ? (
+          tickets.map((ticket) => {
+            const priority = PRIORITY_META[ticket.priority] || PRIORITY_META.low;
+            const overSLA = isOverSLA(ticket.updated_at, ticket.status);
+
+            return (
+              <article
+                key={ticket.id}
+                className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      {overSLA && (
+                        <AlertCircle
+                          size={13}
+                          className="shrink-0 animate-pulse text-admin-danger"
+                        />
+                      )}
+                      <p className="truncate text-sm font-bold text-admin-ink">
+                        {ticket.title}
+                      </p>
+                    </div>
+                    <p className="mt-0.5 font-mono-label text-[8px] text-text-muted/50">
+                      ID: {ticket.id.substring(0, 8)}
+                    </p>
                   </div>
-                )}
-              </div>
-            </div>
-            
-            {/* Details Grid */}
-            <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="bg-background/40 rounded-lg p-2">
-                <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Prioridad</div>
-                <span className={`text-xs uppercase font-black tracking-wider ${getPriorityStyle(ticket.priority)}`}>
-                  {getPriorityLabel(ticket.priority)}
-                </span>
-              </div>
-              <div className="bg-background/40 rounded-lg p-2">
-                <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">Actualizado</div>
-                <div className="text-[10px] text-text-muted flex items-center gap-1">
-                  <Clock size={10} />
-                  {new Date(ticket.updated_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' })}
+                  <StatusBadge status={ticket.status} size="sm" />
                 </div>
-              </div>
-            </div>
-            
-            {/* Action Button */}
-            <Link 
-              href={`/admin/tickets/${ticket.id}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-wider text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all"
-            >
-              Ver Ticket
-              <ChevronRight size={16} />
-            </Link>
-          </div>
-        )) : (
-          <div className="bg-card-bg rounded-2xl border border-white/5 p-8">
-            <EmptyState 
-              icon={<Ticket size={32} />}
-              title="No hay tickets activos"
-              description="Crea un nuevo ticket para comenzar"
-            />
-          </div>
+
+                <div className="mt-3 flex items-center gap-2 rounded-xl border border-admin-line bg-admin-raised/40 p-2.5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-admin-line bg-white/[0.03]">
+                    <User size={13} className="text-text-muted/60" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-bold text-admin-ink">
+                      {ticket.lead?.name || 'Sin cliente'}
+                    </p>
+                    {ticket.lead?.company && (
+                      <p className="flex items-center gap-1 truncate text-[9px] text-text-muted/60">
+                        <Building2 size={8} />
+                        {ticket.lead.company}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
+                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                      Prioridad
+                    </p>
+                    <span
+                      className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold ${priority.className}`}
+                    >
+                      <span
+                        className={`h-1 w-1 rounded-full ${priority.dot}`}
+                      />
+                      {priority.label}
+                    </span>
+                  </div>
+                  <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
+                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                      Actualizado
+                    </p>
+                    <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-text-muted">
+                      <Clock size={9} />
+                      {formatDateTime(ticket.updated_at)}
+                    </p>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/admin/tickets/${ticket.id}`}
+                  className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2.5 text-[11px] font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
+                >
+                  Ver ticket
+                  <ChevronRight size={14} />
+                </Link>
+              </article>
+            );
+          })
+        ) : (
+          <EmptyState
+            icon={<Ticket size={24} />}
+            title="No hay tickets activos"
+            description="Crea un nuevo ticket para comenzar."
+          />
         )}
       </div>
 
-      {/* Desktop Table View */}
-      <div className="hidden lg:block bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
-        <table className="w-full text-left border-separate border-spacing-0">
-          <thead>
-            <tr className="bg-background/40">
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Ticket / Asunto</th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Cliente</th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Prioridad</th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Estado</th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">Última Actividad</th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5">
-            {tickets.length > 0 ? tickets.map((ticket) => (
-              <tr key={ticket.id} className="group hover:bg-white/[0.02] transition-colors">
-                <td className="px-8 py-6">
-                  <div className="flex items-center gap-3">
-                    {isOverSLA(ticket.updated_at, ticket.status) && (
-                      <AlertCircle size={16} className="text-red-500 animate-pulse shrink-0" />
-                    )}
-                    <div>
-                      <div className="font-bold text-white-custom text-sm group-hover:text-primary transition-colors">
-                        {ticket.title}
-                      </div>
-                      <div className="text-[10px] text-text-muted/60 font-mono uppercase tracking-tighter">
-                        ID: {ticket.id.substring(0, 8)}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-8 py-6 text-sm text-text-muted">
-                  <div className="font-medium text-white-custom">{ticket.lead?.name || 'N/A'}</div>
-                  <div className="text-[10px] text-text-muted/60">{ticket.lead?.company || ''}</div>
-                </td>
-                <td className="px-8 py-6">
-                  <span className={`text-xs uppercase font-black tracking-wider ${getPriorityStyle(ticket.priority)}`}>
-                    {ticket.priority}
-                  </span>
-                </td>
-                <td className="px-8 py-6">
-                  <StatusBadge status={ticket.status} />
-                </td>
-                <td className="px-8 py-6 text-xs text-text-muted">
-                  <div className="flex items-center gap-1">
-                    <Clock size={12} />
-                    {new Date(ticket.updated_at).toLocaleString()}
-                  </div>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <Link href={`/admin/tickets/${ticket.id}`} className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all">
-                    <ChevronRight size={18} />
-                  </Link>
-                </td>
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[900px] text-left">
+            <thead>
+              <tr className="border-b border-admin-line bg-white/[0.02]">
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Ticket / Asunto
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Cliente
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Prioridad
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Estado
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Última actividad
+                </th>
+                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                  Acción
+                </th>
               </tr>
-            )) : (
-              <tr>
-                <td colSpan={6} className="px-8 py-24 text-center">
-                  <EmptyState 
-                    icon={<Ticket size={40} />}
-                    title="No hay tickets activos"
-                    description="Crea un nuevo ticket para comenzar"
-                  />
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-admin-line">
+              {tickets.length > 0 ? (
+                tickets.map((ticket) => {
+                  const priority =
+                    PRIORITY_META[ticket.priority] || PRIORITY_META.low;
+                  const overSLA = isOverSLA(
+                    ticket.updated_at,
+                    ticket.status
+                  );
+
+                  return (
+                    <tr
+                      key={ticket.id}
+                      className="group transition-colors hover:bg-white/[0.03]"
+                    >
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2.5">
+                          {overSLA && (
+                            <AlertCircle
+                              size={14}
+                              className="shrink-0 animate-pulse text-admin-danger"
+                            />
+                          )}
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
+                              {ticket.title}
+                            </p>
+                            <p className="font-mono-label text-[8px] text-text-muted/50">
+                              ID: {ticket.id.substring(0, 8)}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <p className="text-xs font-semibold text-admin-ink">
+                          {ticket.lead?.name || 'Sin cliente'}
+                        </p>
+                        <p className="text-[10px] text-text-muted/60">
+                          {ticket.lead?.company || '—'}
+                        </p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold ${priority.className}`}
+                        >
+                          <span
+                            className={`h-1 w-1 rounded-full ${priority.dot}`}
+                          />
+                          {priority.label}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <StatusBadge status={ticket.status} size="sm" />
+                      </td>
+                      <td className="whitespace-nowrap px-5 py-4">
+                        <span className="flex items-center gap-1.5 text-[10px] font-medium text-text-muted">
+                          <Clock size={10} />
+                          {formatDateTime(ticket.updated_at)}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 text-right">
+                        <Link
+                          href={`/admin/tickets/${ticket.id}`}
+                          aria-label={`Ver ticket ${ticket.title}`}
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-admin-line bg-white/[0.03] text-text-muted transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+                        >
+                          <ChevronRight size={14} />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={6} className="px-5 py-10">
+                    <EmptyState
+                      icon={<Ticket size={24} />}
+                      title="No hay tickets activos"
+                      description="Crea un nuevo ticket para comenzar."
+                      className="border-0 bg-transparent"
+                    />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

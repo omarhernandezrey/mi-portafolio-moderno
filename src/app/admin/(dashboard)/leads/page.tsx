@@ -4,7 +4,6 @@ import {
   Filter,
   Plus,
   Mail,
-  User,
   Calendar,
   Briefcase,
   ChevronRight,
@@ -15,6 +14,7 @@ import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
 import Pagination from '@/components/admin/ui/Pagination';
 import ExportLeadsButton from '@/components/admin/ExportLeadsButton';
+import { AdminButton, AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import {
   DEFAULT_PAGE_SIZE,
   LEAD_STATUS_OPTIONS,
@@ -69,6 +69,15 @@ async function getLeads(
   };
 }
 
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'America/Bogota',
+  });
+}
+
 export default async function AdminLeadsPage({
   searchParams,
 }: {
@@ -89,7 +98,7 @@ export default async function AdminLeadsPage({
   };
 
   return (
-    <div className="space-y-6 sm:space-y-10">
+    <div className="space-y-5 lg:space-y-6">
       <PageHeader
         overline="CRM Pipeline"
         title="Leads"
@@ -98,138 +107,126 @@ export default async function AdminLeadsPage({
           <>
             <ExportLeadsButton leads={leads} />
             {canWrite && (
-              <Link
+              <AdminButtonLink
                 href="/admin/leads/new"
-                className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
+                variant="primary"
+                size="sm"
+                icon={<Plus size={15} />}
               >
-                <Plus size={16} />
-                <span className="hidden sm:inline">Añadir Lead</span>
-                <span className="sm:hidden">Añadir</span>
-              </Link>
+                Añadir lead
+              </AdminButtonLink>
             )}
           </>
         }
       />
 
-      <form method="GET" action="/admin/leads" className="flex flex-col xl:flex-row gap-3 sm:gap-4">
-        <div className="relative flex-1 group">
+      <form
+        method="GET"
+        action="/admin/leads"
+        className="flex flex-col gap-2.5 rounded-2xl border border-admin-line bg-card-bg p-3 sm:flex-row sm:items-center"
+      >
+        <div className="group relative flex-1">
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors"
-            size={18}
+            size={16}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary"
           />
           <input
             type="text"
             name="q"
             defaultValue={search}
             placeholder="Buscar por nombre, correo o empresa..."
-            className="w-full pl-12 pr-4 py-3 sm:py-4 bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] text-white-custom outline-none focus:border-primary/30 transition-all shadow-xl text-sm"
+            className="w-full rounded-xl border border-transparent bg-transparent py-2.5 pl-9 pr-3 text-sm font-medium text-admin-ink outline-none transition-colors placeholder:text-text-muted/50 focus:border-admin-line focus:bg-white/[0.03]"
           />
         </div>
-        <div className="flex gap-2 sm:gap-3">
+        <div className="flex items-center gap-2">
           <select
             name="status"
             defaultValue={statusFilter}
-            className="bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] px-4 sm:px-6 py-3 sm:py-4 text-xs font-bold text-text-muted outline-none focus:border-primary/30 transition-all shadow-xl appearance-none flex-1 sm:flex-none"
+            aria-label="Filtrar por estado"
+            className="min-w-0 flex-1 rounded-xl border border-admin-line bg-admin-bg/60 px-3 py-2.5 text-xs font-bold text-text-muted outline-none transition-colors focus:border-primary/40 sm:w-44 sm:flex-none"
           >
-            <option value="">Todos los Estados</option>
-            {LEAD_STATUS_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
+            <option value="">Todos los estados</option>
+            {LEAD_STATUS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>
-          <button
-            type="submit"
-            className="flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-card-bg border border-white/5 rounded-[16px] sm:rounded-[20px] text-xs font-bold text-text-muted hover:text-white-custom transition-all shadow-xl"
-          >
-            <Filter size={16} />
-            <span className="hidden sm:inline">Buscar</span>
-          </button>
+          <AdminButton type="submit" size="sm" icon={<Filter size={14} />}>
+            Filtrar
+          </AdminButton>
         </div>
       </form>
 
-      <div className="block lg:hidden space-y-3">
+      <div className="space-y-3 lg:hidden">
         {leads.length > 0 ? (
           leads.map((lead) => (
-            <div key={lead.id} className="bg-card-bg rounded-2xl border border-white/5 p-4 shadow-xl">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white-custom shadow-inner shrink-0">
-                  <User size={18} className="opacity-60" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-bold text-white-custom text-sm truncate">
-                    {lead.name || 'Sin identificar'}
+            <article
+              key={lead.id}
+              className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04] text-xs font-black text-admin-ink">
+                    {lead.name?.[0]?.toUpperCase() || '?'}
                   </div>
-                  <div className="flex items-center gap-1 text-[10px] text-text-muted/60 font-medium tracking-tight">
-                    <Mail size={10} />
-                    <span className="truncate">{lead.email}</span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-admin-ink">
+                      {lead.name || 'Sin identificar'}
+                    </p>
+                    <p className="flex items-center gap-1 truncate text-[10px] text-text-muted">
+                      <Mail size={10} className="shrink-0" />
+                      {lead.email || 'Sin correo'}
+                    </p>
                   </div>
                 </div>
-                <StatusBadge status={lead.status || 'new'} />
+                <StatusBadge status={lead.status || 'new'} size="sm" />
               </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                {lead.company && (
-                  <div className="bg-background/40 rounded-lg p-2">
-                    <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">
-                      Empresa
-                    </div>
-                    <div className="text-xs font-bold text-white-custom/80 truncate">
-                      {lead.company}
-                    </div>
-                  </div>
-                )}
-                <div className="bg-background/40 rounded-lg p-2">
-                  <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">
-                    Presupuesto
-                  </div>
-                  <div className="text-xs font-black text-white-custom font-mono">
-                    {lead.budget || 'N/D'}
-                  </div>
-                </div>
-                <div className="bg-background/40 rounded-lg p-2 col-span-2">
-                  <div className="text-[9px] uppercase tracking-wider text-text-muted/40 font-black">
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
+                  <p className="font-mono-label text-[8px] text-text-muted/50">
                     Servicio
-                  </div>
-                  <div className="text-xs font-bold text-text-muted flex items-center gap-1">
-                    <Briefcase size={12} className="text-primary/40 shrink-0" />
-                    <span className="truncate">
-                      {lead.service_requested || 'Consulta Directa'}
-                    </span>
-                  </div>
+                  </p>
+                  <p className="mt-1 truncate text-[11px] font-bold text-text-muted">
+                    {lead.service_requested || 'Consulta general'}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
+                  <p className="font-mono-label text-[8px] text-text-muted/50">
+                    Presupuesto
+                  </p>
+                  <p className="mt-1 truncate text-[11px] font-black text-admin-ink">
+                    {lead.budget || 'N/D'}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                <div className="text-[10px] text-text-muted/40 font-black uppercase tracking-wider flex items-center gap-1">
+              <div className="mt-3 flex items-center justify-between border-t border-admin-line pt-3">
+                <span className="flex items-center gap-1.5 font-mono-label text-[8px] text-text-muted/50">
                   <Calendar size={10} />
-                  {new Date(lead.created_at).toLocaleDateString('es-CO', {
-                    day: '2-digit',
-                    month: 'short',
-                    timeZone: 'America/Bogota',
-                  })}
-                </div>
+                  {formatDate(lead.created_at)}
+                </span>
                 <Link
                   href={`/admin/leads/${lead.id}`}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-wider text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all"
+                  className="inline-flex items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-[10px] font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
                 >
-                  Ver Perfil
-                  <ChevronRight size={14} />
+                  Ver perfil
+                  <ChevronRight size={13} />
                 </Link>
               </div>
-            </div>
+            </article>
           ))
         ) : (
-          <div className="bg-card-bg rounded-2xl border border-white/5 p-8">
-            <EmptyState
-              icon={<Search size={32} />}
-              title="Sin resultados"
-              description="No se encontraron oportunidades registradas."
-            />
-          </div>
+          <EmptyState
+            icon={<Search size={24} />}
+            title="Sin resultados"
+            description="No se encontraron oportunidades con esos filtros."
+          />
         )}
+
         {leads.length > 0 && (
-          <div className="bg-card-bg rounded-2xl border border-white/5 overflow-hidden">
+          <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg">
             <Pagination
               page={page}
               totalPages={totalPages}
@@ -242,106 +239,106 @@ export default async function AdminLeadsPage({
         )}
       </div>
 
-      <div className="hidden lg:block bg-card-bg rounded-[32px] border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm">
-        <table className="w-full text-left border-separate border-spacing-0">
-          <thead>
-            <tr className="bg-background/40">
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">
-                Identidad
-              </th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">
-                Contexto
-              </th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">
-                Requerimiento
-              </th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5">
-                Presupuesto
-              </th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-center">
-                Estatus
-              </th>
-              <th className="px-8 py-6 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-white/5 text-right">
-                Acción
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5">
-            {leads.length > 0 ? (
-              leads.map((lead) => (
-                <tr key={lead.id} className="group hover:bg-white/[0.02] transition-colors">
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white-custom shadow-inner group-hover:border-primary/20 transition-colors">
-                        <User
-                          size={18}
-                          className="opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all"
-                        />
-                      </div>
-                      <div>
-                        <div className="font-bold text-white-custom text-[15px] tracking-tight group-hover:text-primary transition-colors">
-                          {lead.name || 'Sin identificar'}
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[860px] text-left">
+            <thead>
+              <tr className="border-b border-admin-line bg-white/[0.02]">
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Identidad
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Contexto
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Requerimiento
+                </th>
+                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                  Presupuesto
+                </th>
+                <th className="px-5 py-3 text-center font-mono-label text-[9px] text-text-muted/60">
+                  Estado
+                </th>
+                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                  Acción
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-admin-line">
+              {leads.length > 0 ? (
+                leads.map((lead) => (
+                  <tr
+                    key={lead.id}
+                    className="group transition-colors hover:bg-white/[0.03]"
+                  >
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04] text-[11px] font-black text-admin-ink transition-colors group-hover:border-primary/30 group-hover:text-primary">
+                          {lead.name?.[0]?.toUpperCase() || '?'}
                         </div>
-                        <div className="flex items-center gap-1 text-[10px] text-text-muted/60 font-medium tracking-tight mt-0.5">
-                          <Mail size={10} />
-                          {lead.email}
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
+                            {lead.name || 'Sin identificar'}
+                          </p>
+                          <p className="flex items-center gap-1 truncate text-[10px] text-text-muted/70">
+                            <Mail size={9} />
+                            {lead.email || 'Sin correo'}
+                          </p>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="text-sm font-bold text-white-custom/80 italic">
-                      {lead.company || 'N/A'}
-                    </div>
-                    <div className="text-[10px] text-primary font-black uppercase tracking-widest mt-1 opacity-60 italic">
-                      {lead.type}
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-2 text-sm font-bold text-text-muted group-hover:text-white-custom transition-colors">
-                      <Briefcase size={14} className="text-primary/40" />
-                      {lead.service_requested || 'Consulta Directa'}
-                    </div>
-                    <div className="text-[10px] text-text-muted/40 font-black uppercase mt-1 tracking-[0.15em] flex items-center gap-1">
-                      <Calendar size={10} />
-                      {new Date(lead.created_at).toLocaleDateString('es-CO', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </div>
-                  </td>
-                  <td className="px-8 py-6">
-                    <div className="text-sm font-black text-white-custom font-mono bg-white/5 inline-block px-3 py-1 rounded-lg border border-white/5 group-hover:border-primary/20 transition-colors">
-                      {lead.budget || 'N/D'}
-                    </div>
-                  </td>
-                  <td className="px-8 py-6 text-center">
-                    <StatusBadge status={lead.status || 'new'} />
-                  </td>
-                  <td className="px-8 py-6 text-right">
-                    <Link
-                      href={`/admin/leads/${lead.id}`}
-                      className="inline-flex items-center justify-center h-10 px-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-text-muted hover:bg-primary hover:text-background hover:border-primary transition-all"
-                    >
-                      Perfil
-                    </Link>
+                    </td>
+                    <td className="px-5 py-4">
+                      <p className="text-xs font-bold italic text-text-muted">
+                        {lead.company || 'N/A'}
+                      </p>
+                      <p className="mt-0.5 font-mono-label text-[8px] text-primary/60">
+                        {lead.type || 'other'}
+                      </p>
+                    </td>
+                    <td className="max-w-[240px] px-5 py-4">
+                      <p className="flex items-center gap-1.5 truncate text-xs font-semibold text-text-muted">
+                        <Briefcase size={12} className="shrink-0 text-primary/50" />
+                        {lead.service_requested || 'Consulta general'}
+                      </p>
+                      <p className="mt-1 flex items-center gap-1 font-mono-label text-[8px] text-text-muted/40">
+                        <Calendar size={9} />
+                        {formatDate(lead.created_at)}
+                      </p>
+                    </td>
+                    <td className="px-5 py-4">
+                      <span className="inline-flex rounded-lg border border-admin-line bg-white/[0.04] px-2.5 py-1 text-xs font-black text-admin-ink">
+                        {lead.budget || 'N/D'}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 text-center">
+                      <StatusBadge status={lead.status || 'new'} size="sm" />
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <Link
+                        href={`/admin/leads/${lead.id}`}
+                        className="inline-flex items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-[10px] font-bold text-text-muted transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+                      >
+                        Perfil
+                        <ChevronRight size={12} />
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="px-5 py-10">
+                    <EmptyState
+                      icon={<Search size={24} />}
+                      title="Sin resultados"
+                      description="No se encontraron oportunidades con esos filtros."
+                      className="border-0 bg-transparent"
+                    />
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} className="px-8 py-24 text-center">
-                  <EmptyState
-                    icon={<Search size={40} />}
-                    title="Sin resultados"
-                    description="No se encontraron oportunidades registradas en la base de datos."
-                  />
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
 
         <Pagination
           page={page}

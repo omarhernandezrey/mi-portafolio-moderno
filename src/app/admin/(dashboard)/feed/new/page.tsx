@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle, Loader2, FileText, Link2, Image as ImageIcon, Pin } from 'lucide-react';
+import { adminFetch } from '@/lib/admin/client-fetch';
 
 const CATEGORY_OPTIONS = [
   { value: 'general', label: 'General' },
@@ -47,7 +48,7 @@ function Field({ label, children, required }: { label: string; children: React.R
 }
 
 const inputClass =
-  'w-full bg-background/60 border border-white/10 rounded-xl px-4 py-3 text-sm text-white-custom placeholder:text-text-muted/30 outline-none focus:border-primary/40 transition-all';
+  'w-full bg-admin-bg/60 border border-admin-line rounded-xl px-4 py-3 text-sm text-admin-ink placeholder:text-text-muted/30 outline-none focus:border-primary/40 transition-all';
 
 export default function NewFeedPostPage() {
   const router = useRouter();
@@ -73,30 +74,27 @@ export default function NewFeedPostPage() {
       .map((u) => u.trim())
       .filter(Boolean);
 
-    const res = await fetch('/api/admin/feed/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        lang: form.lang,
-        category: form.category,
-        title: form.title || undefined,
-        body: form.body,
-        link_url: form.link_url || undefined,
-        image_urls,
-        pinned: form.pinned,
-      }),
-    });
+    try {
+      await adminFetch('/api/admin/feed/posts', {
+        method: 'POST',
+        body: JSON.stringify({
+          lang: form.lang,
+          category: form.category,
+          title: form.title || undefined,
+          body: form.body,
+          link_url: form.link_url || undefined,
+          image_urls,
+          pinned: form.pinned,
+        }),
+      });
 
-    setLoading(false);
-
-    if (!res.ok) {
-      const data = await res.json();
-      setError(typeof data.error === 'string' ? data.error : 'Error al crear la publicación.');
-      return;
+      setDone(true);
+      setTimeout(() => router.push('/admin/feed'), 1200);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al crear la publicación.');
+    } finally {
+      setLoading(false);
     }
-
-    setDone(true);
-    setTimeout(() => router.push('/admin/feed'), 1200);
   };
 
   if (done) {
@@ -106,7 +104,7 @@ export default function NewFeedPostPage() {
           <CheckCircle size={40} className="text-primary" />
         </div>
         <div>
-          <h2 className="font-display italic text-2xl font-medium text-white-custom">Publicación creada</h2>
+          <h2 className="font-display italic text-2xl font-medium text-admin-ink">Publicación creada</h2>
           <p className="text-text-muted text-sm mt-1">Redirigiendo a Comunidad...</p>
         </div>
       </div>
@@ -114,27 +112,27 @@ export default function NewFeedPostPage() {
   }
 
   return (
-    <div className="space-y-10 max-w-3xl">
+    <div className="mx-auto max-w-3xl space-y-10">
       <div className="flex items-center gap-4">
         <Link
           href="/admin/feed"
-          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-text-muted hover:text-white-custom transition-all"
+          className="p-2.5 rounded-xl bg-white/[0.04] border border-admin-line text-text-muted hover:text-admin-ink transition-all"
         >
           <ArrowLeft size={18} />
         </Link>
         <div>
           <p className="font-mono-label text-[0.6rem] text-primary/60">Feed Público</p>
-          <h1 className="font-display italic text-3xl font-medium text-white-custom tracking-tight">Nueva publicación</h1>
+          <h1 className="font-display italic text-3xl font-medium text-admin-ink tracking-tight">Nueva publicación</h1>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="bg-card-bg rounded-[28px] border border-white/5 p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="bg-card-bg rounded-2xl border border-admin-line p-6 sm:p-8 shadow-xl space-y-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-xl bg-primary/10 text-primary">
               <FileText size={18} />
             </div>
-            <h2 className="font-bold text-white-custom">Contenido</h2>
+            <h2 className="font-bold text-admin-ink">Contenido</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -219,7 +217,7 @@ export default function NewFeedPostPage() {
         </div>
 
         {error && (
-          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>
+          <div role="alert" className="rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-4 text-sm text-admin-danger">{error}</div>
         )}
 
         <button

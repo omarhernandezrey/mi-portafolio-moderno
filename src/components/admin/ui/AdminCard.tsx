@@ -8,14 +8,28 @@ interface AdminCardProps {
   glow?: boolean;
 }
 
-export default function AdminCard({ children, className = '', padding = 'normal', radius = '3xl', glow = true }: AdminCardProps) {
-  const paddingClass = padding === 'none' ? '' : padding === 'large' ? 'p-8 md:p-10' : 'p-6 md:p-8';
-  const radiusClass = radius === '2xl' ? 'rounded-2xl' : radius === '4xl' ? 'rounded-[40px]' : 'rounded-[32px]';
+export default function AdminCard({
+  children,
+  className = '',
+  padding = 'normal',
+  radius = '2xl',
+  glow = false,
+}: AdminCardProps) {
+  const paddingClass =
+    padding === 'none' ? '' : padding === 'large' ? 'p-8 md:p-10' : 'p-5 md:p-7';
+  const radiusClass =
+    radius === '2xl'
+      ? 'rounded-2xl'
+      : radius === '4xl'
+        ? 'rounded-[32px]'
+        : 'rounded-3xl';
 
   return (
-    <div className={`bg-card-bg border border-white/5 shadow-2xl overflow-hidden backdrop-blur-sm relative ${paddingClass} ${radiusClass} ${className}`}>
+    <div
+      className={`relative overflow-hidden border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] ${paddingClass} ${radiusClass} ${className}`}
+    >
       {glow && (
-        <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary/5 blur-[80px] rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-primary/10 blur-[80px]" />
       )}
       {children}
     </div>
