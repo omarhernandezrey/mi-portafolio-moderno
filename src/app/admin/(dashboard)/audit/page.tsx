@@ -179,11 +179,11 @@ export default function AdminAuditPage() {
                   </div>
                   <div className="min-w-0">
                     <div
-                      className="flex items-center gap-1.5 truncate text-sm font-bold text-admin-ink"
+                      className="flex items-center gap-1.5 text-sm font-bold text-admin-ink"
                       title={log.actor_email}
                     >
                       <User size={12} className="shrink-0 text-text-muted" />
-                      {log.actor_email}
+                      <span className="truncate">{log.actor_email}</span>
                     </div>
                     <div className="text-[10px] uppercase tracking-widest font-black text-primary/70">
                       {log.actor_role}

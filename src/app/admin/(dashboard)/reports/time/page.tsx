@@ -189,9 +189,9 @@ export default function TimeReportPage() {
                       {row.name}
                     </p>
                     {row.company && (
-                      <p className="flex items-center gap-1 truncate text-[10px] text-text-muted/60">
-                        <Building2 size={9} />
-                        {row.company}
+                      <p className="flex items-center gap-1 text-[10px] text-text-muted/60">
+                        <Building2 size={9} className="shrink-0" />
+                        <span className="truncate">{row.company}</span>
                       </p>
                     )}
                   </div>

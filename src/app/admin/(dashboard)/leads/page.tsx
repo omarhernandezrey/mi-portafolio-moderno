@@ -174,9 +174,9 @@ export default async function AdminLeadsPage({
                     <p className="truncate text-sm font-bold text-admin-ink">
                       {lead.name || 'Sin identificar'}
                     </p>
-                    <p className="flex items-center gap-1 truncate text-[10px] text-text-muted">
+                    <p className="flex items-center gap-1 text-[10px] text-text-muted">
                       <Mail size={10} className="shrink-0" />
-                      {lead.email || 'Sin correo'}
+                      <span className="truncate">{lead.email || 'Sin correo'}</span>
                     </p>
                   </div>
                 </div>
@@ -280,9 +280,9 @@ export default async function AdminLeadsPage({
                           <p className="truncate text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
                             {lead.name || 'Sin identificar'}
                           </p>
-                          <p className="flex items-center gap-1 truncate text-[10px] text-text-muted/70">
-                            <Mail size={9} />
-                            {lead.email || 'Sin correo'}
+                          <p className="flex items-center gap-1 text-[10px] text-text-muted/70">
+                            <Mail size={9} className="shrink-0" />
+                            <span className="truncate">{lead.email || 'Sin correo'}</span>
                           </p>
                         </div>
                       </div>
@@ -296,9 +296,9 @@ export default async function AdminLeadsPage({
                       </p>
                     </td>
                     <td className="max-w-[240px] px-5 py-4">
-                      <p className="flex items-center gap-1.5 truncate text-xs font-semibold text-text-muted">
+                      <p className="flex items-center gap-1.5 text-xs font-semibold text-text-muted">
                         <Briefcase size={12} className="shrink-0 text-primary/50" />
-                        {lead.service_requested || 'Consulta general'}
+                        <span className="truncate">{lead.service_requested || 'Consulta general'}</span>
                       </p>
                       <p className="mt-1 flex items-center gap-1 font-mono-label text-[8px] text-text-muted/40">
                         <Calendar size={9} />

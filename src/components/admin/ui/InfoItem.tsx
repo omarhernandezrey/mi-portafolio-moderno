@@ -19,10 +19,10 @@ export default function InfoItem({ icon, label, value, isLink, href }: InfoItemP
             href={href} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-sm font-bold text-white-custom hover:text-primary transition-colors flex items-center gap-1 group/link truncate"
+            className="text-sm font-bold text-white-custom hover:text-primary transition-colors flex items-center gap-1 group/link min-w-0"
           >
-            {value}
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-0 group-hover/link:opacity-100 transition-opacity">
+            <span className="truncate">{value}</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 opacity-0 group-hover/link:opacity-100 transition-opacity">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
             </svg>
           </a>

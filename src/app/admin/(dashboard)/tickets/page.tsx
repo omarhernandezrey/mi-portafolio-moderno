@@ -182,9 +182,9 @@ export default async function AdminTicketsPage() {
                       {ticket.lead?.name || 'Sin cliente'}
                     </p>
                     {ticket.lead?.company && (
-                      <p className="flex items-center gap-1 truncate text-[9px] text-text-muted/60">
-                        <Building2 size={8} />
-                        {ticket.lead.company}
+                      <p className="flex items-center gap-1 text-[9px] text-text-muted/60">
+                        <Building2 size={8} className="shrink-0" />
+                        <span className="truncate">{ticket.lead.company}</span>
                       </p>
                     )}
                   </div>
