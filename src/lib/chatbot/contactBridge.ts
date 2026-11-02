@@ -2,6 +2,7 @@ import { supabaseServer } from '../supabaseServer';
 import { notifyTelegram } from './telegram';
 import { sendContactNotification } from './email';
 import { Lead } from '@/lib/leads/types';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 /**
  * Registra un lead proveniente del formulario de contacto tradicional.
@@ -43,13 +44,15 @@ export async function registerContactFormLead(data: {
       notes: data.message
     };
 
-    const { error: leadError } = await supabaseServer
+    const { data: insertedLead, error: leadError } = await supabaseServer
       .from('leads')
       .insert({
         conversation_id: conv.id,
         ...lead,
         status: 'new'
-      });
+      })
+      .select('id')
+      .single();
 
     if (leadError) throw leadError;
 
@@ -66,6 +69,18 @@ Mensaje: "${data.message}"
 
     // 4. Notificar por email (si hay RESEND_API_KEY configurada)
     await sendContactNotification(data.name, data.email, data.message);
+
+    // 5. Disparar webhooks del admin (best-effort)
+    await dispatchEvent('lead.created', {
+      id: insertedLead?.id,
+      name: data.name,
+      email: data.email,
+      service: data.service ?? null,
+      budget: data.budget ?? null,
+      timeline: data.timeline ?? null,
+      source: data.source ?? 'contact_form',
+      status: 'new',
+    }).catch((error) => console.error('dispatchEvent lead.created error:', error));
 
     return { success: true };
   } catch (error) {

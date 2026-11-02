@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Actualizar lead
-    const { error: updateError } = await supabaseServer
+    const { data: updated, error: updateError } = await supabaseServer
       .from('leads')
       .update({
         onboarding_step: 3,
@@ -67,10 +67,16 @@ export async function POST(req: NextRequest) {
         contract_url: uploadData.path
       })
       .eq('id', lead.id)
-      .is('contract_signed_at', null); // doble seguro contra carreras
+      .is('contract_signed_at', null) // doble seguro contra carreras
+      .select('id')
+      .maybeSingle();
 
     if (updateError) {
       return NextResponse.json({ error: 'Error al actualizar el lead' }, { status: 500 });
+    }
+
+    if (!updated) {
+      return NextResponse.json({ success: true, alreadySigned: true });
     }
 
     // 4. Notificar a Omar

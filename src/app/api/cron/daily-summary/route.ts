@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireCronAuth } from '@/lib/cronAuth';
-import { parseBudgetAmount } from '@/lib/budget';
+import { parseBudget, type BudgetCurrency } from '@/lib/budget';
 
 export const maxDuration = 30;
 
@@ -54,10 +54,29 @@ export async function GET(req: NextRequest) {
       .lt('paid_at', startOfToday);
     if (paidErr) throw paidErr;
 
-    const totalPaid = paidLeads?.reduce(
-      (acc, lead) => acc + parseBudgetAmount(lead.budget),
-      0
-    ) || 0;
+    const paidTotals = (paidLeads || []).reduce<Record<string, number>>(
+      (acc, lead) => {
+        const { amount, currency } = parseBudget(lead.budget);
+        const key = currency ?? 'USD';
+        acc[key] = (acc[key] || 0) + amount;
+        return acc;
+      },
+      {}
+    );
+    const paidLabel =
+      Object.entries(paidTotals)
+        .filter(([, total]) => total > 0)
+        .map(([currency, total]) =>
+          new Intl.NumberFormat(
+            currency === 'COP' ? 'es-CO' : 'en-US',
+            {
+              style: 'currency',
+              currency: currency as BudgetCurrency,
+              maximumFractionDigits: 0,
+            }
+          ).format(total)
+        )
+        .join(' · ') || 'Sin pagos confirmados';
 
     // 5. Top servicio consultado de ayer
     const { data: topServiceData, error: serviceErr } = await supabaseServer
@@ -80,7 +99,7 @@ export async function GET(req: NextRequest) {
       'Ayer:',
       `- 🎯 ${leadsCount || 0} leads nuevos`,
       `- ⏳ ${pendingCount || 0} pendientes de tu respuesta`,
-      `- 💰 ${totalPaid} USD en pagos confirmados`,
+      `- 💰 ${paidLabel} en pagos confirmados`,
       `Top servicio consultado: ${topService}`,
     ].join('\n');
 

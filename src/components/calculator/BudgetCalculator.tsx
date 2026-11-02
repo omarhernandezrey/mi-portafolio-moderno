@@ -31,6 +31,8 @@ export default function BudgetCalculator() {
   const [selections, setSelections] = useState<Record<string, string | string[]>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [visitorInfo, setVisitorInfo] = useState({ name: '', email: '', company: '' });
 
   // Etiqueta de la esquina de cada tarjeta: precio base en la moneda
@@ -90,6 +92,7 @@ export default function BudgetCalculator() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError('');
     try {
       const response = await fetch('/api/calculator', {
         method: 'POST',
@@ -101,12 +104,30 @@ export default function BudgetCalculator() {
           language: lang
         })
       });
-      if (response.ok) {
-        setIsSuccess(true);
-        track('lead_created', { source: 'calculator' });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data?.error ||
+            (lang === 'es'
+              ? 'No se pudo procesar tu solicitud. Intenta de nuevo.'
+              : 'We could not process your request. Please try again.')
+        );
       }
+
+      setEmailSent(Boolean(data.emailSent));
+      setIsSuccess(true);
+      track('lead_created', { source: 'calculator' });
     } catch (error) {
       console.error('Submission failed:', error);
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : lang === 'es'
+            ? 'No se pudo procesar tu solicitud. Intenta de nuevo.'
+            : 'We could not process your request. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -279,9 +300,13 @@ export default function BudgetCalculator() {
                   {lang === 'es' ? 'Estrategia Generada' : 'Strategy Generated'}
                 </h2>
                 <p className="max-w-md text-text-muted text-sm font-medium leading-relaxed italic opacity-70">
-                  {lang === 'es' 
-                    ? 'Hemos desplegado tu propuesta técnica personalizada en formato PDF directamente a tu bandeja de entrada corporativa.' 
-                    : 'We have deployed your personalized technical proposal in PDF format directly to your corporate inbox.'}
+                  {emailSent
+                    ? lang === 'es'
+                      ? 'Hemos enviado tu propuesta técnica personalizada en formato PDF a tu correo.'
+                      : 'We have sent your personalized technical proposal in PDF format to your email.'
+                    : lang === 'es'
+                      ? 'Hemos registrado tu propuesta técnica. Te contactaré por correo con el PDF.'
+                      : 'We have registered your technical proposal. I will email you the PDF.'}
                 </p>
               </div>
               <button
@@ -344,6 +369,14 @@ export default function BudgetCalculator() {
                 </div>
 
                 <div className="md:col-span-2 pt-6">
+                  {submitError && (
+                    <p
+                      role="alert"
+                      className="mb-4 rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-center text-xs font-bold text-red-400"
+                    >
+                      {submitError}
+                    </p>
+                  )}
                   <button
                     disabled={isSubmitting}
                     type="submit"

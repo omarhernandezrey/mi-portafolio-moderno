@@ -8,7 +8,7 @@ import Footer from '@/components/shared/Footer';
 import Link from 'next/link';
 import { useNotyf } from '@/components/ui/NotyfProvider';
 import { getPaymentOptions } from '@/lib/chatbot/payments';
-import { parseBudgetAmount } from '@/lib/budget';
+import { parseBudget } from '@/lib/budget';
 
 interface OnboardingPageProps {
   params: Promise<{ token: string }>;
@@ -103,7 +103,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
         body: JSON.stringify({ token }),
       });
       if (!res.ok) throw new Error('Error al procesar el pago');
-      notyf.success('Pago procesado correctamente');
+      notyf.success('Confirmación recibida. Verificaremos el pago.');
       setStep(4);
     } catch (err: unknown) {
       notyf.error(err instanceof Error ? err.message : 'Error al procesar el pago');
@@ -136,6 +136,17 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
   // (CO es superset: PayPal internacional + Wompi/Nequi/Bancolombia) y el cliente
   // elige el que le aplique, igual que en la respuesta del FAQ.
   const paymentOptions = getPaymentOptions('USD', 'CO');
+
+  const budget = parseBudget(lead.budget);
+  const budgetCurrency = budget.currency ?? 'USD';
+  const depositAmount = budget.amount / 2;
+  const hasDeposit = depositAmount > 0;
+  const formatMoney = (value: number) =>
+    new Intl.NumberFormat(budgetCurrency === 'COP' ? 'es-CO' : 'en-US', {
+      style: 'currency',
+      currency: budgetCurrency,
+      maximumFractionDigits: 0,
+    }).format(value);
 
   const steps = [
     { n: 1, label: 'Briefing', icon: <FileText size={20} /> },
@@ -286,11 +297,11 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl text-center"
             >
               <h2 className="font-display italic text-3xl font-medium mb-2">Paso 3: Anticipo</h2>
-              <p className="text-[var(--muted-color)] mb-8">Para reservar el cupo y dar inicio al desarrollo, se requiere un anticipo del 50% ({parseBudgetAmount(lead.budget) > 0 ? `${(parseBudgetAmount(lead.budget) / 2).toFixed(2)}` : '---'} USD).</p>
+              <p className="text-[var(--muted-color)] mb-8">Para reservar el cupo y dar inicio al desarrollo, se requiere un anticipo del 50% ({hasDeposit ? formatMoney(depositAmount) : '---'}).</p>
 
               <div className="p-8 border-2 border-dashed border-[var(--primary-color)]/30 rounded-[2rem] bg-[var(--primary-color)]/5 mb-8">
                 <div className="text-4xl font-black text-[var(--primary-color)] mb-2">
-                  ${parseBudgetAmount(lead.budget) > 0 ? (parseBudgetAmount(lead.budget) / 2).toFixed(2) : '---'} <span className="text-sm font-normal">USD</span>
+                  {hasDeposit ? formatMoney(depositAmount) : '---'}
                 </div>
                 <p className="text-sm text-[var(--muted-color)] uppercase tracking-widest font-bold">Elige tu método de pago</p>
               </div>
@@ -349,28 +360,31 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               <div className="w-24 h-24 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-500/30">
                 <Rocket size={48} />
               </div>
-              <h2 className="font-display italic text-4xl font-medium mb-4">¡Todo listo, {lead.name}!</h2>
+              <h2 className="font-display italic text-4xl font-medium mb-4">¡Recibido, {lead.name}!</h2>
               <p className="text-xl text-[var(--muted-color)] mb-8">
-                Ya recibí el pago y el contrato firmado. Oficialmente hemos iniciado tu proyecto de <strong>{lead.service_requested}</strong>.
+                Recibí tu confirmación de pago y el contrato firmado. Estamos verificando el anticipo; en cuanto quede confirmado te escribiré para iniciar el proyecto de <strong>{lead.service_requested}</strong>.
               </p>
               
               <div className="grid gap-4 text-left mb-12">
                 <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
                   <CheckCircle className="text-green-500" size={24} />
-                  <span>Contrato enviado a <strong>{lead.email}</strong></span>
+                  <span>Contrato firmado y guardado</span>
+                </div>
+                <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                  <CheckCircle className="text-yellow-500" size={24} />
+                  <span>Pago en verificación manual</span>
                 </div>
                 <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
                   <CheckCircle className="text-green-500" size={24} />
-                  <span>Slack del proyecto creado</span>
+                  <span>Te escribiré a <strong>{lead.email}</strong> para el kickoff</span>
                 </div>
               </div>
 
               <a
-                href="https://t.me/omar_hernandez" // Link a canal de Telegram o Slack
+                href="https://t.me/omar_hernandez"
                 className="inline-flex items-center gap-3 bg-[var(--primary-color)] text-white px-10 py-5 rounded-3xl font-black text-lg hover:scale-105 transition-all shadow-xl shadow-[var(--primary-color)]/20"
               >
-                Unirme al Canal del Proyecto
-                <ArrowRight size={24} />
+                Hablar con Omar por Telegram
               </a>
             </motion.div>
           )}

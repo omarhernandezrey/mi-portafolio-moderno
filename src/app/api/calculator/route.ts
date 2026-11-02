@@ -8,6 +8,7 @@ import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { checkRateLimit, clientIp } from '@/lib/rateLimit';
 import { pdfSafe } from '@/lib/pdf/sanitize';
 import { calculateBudget } from '@/lib/calculator/pricing';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 const calcSchema = z.object({
   selections: z.record(z.string(), z.union([z.string(), z.array(z.string())])).default({}),
@@ -80,6 +81,17 @@ export async function POST(req: NextRequest) {
           timeline: null,
           phone: null
         }, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
+
+        await dispatchEvent('lead.created', {
+          id: insertedLead.id,
+          name: visitorInfo.name,
+          email: visitorInfo.email,
+          company: visitorInfo.company,
+          budget: budgetLabel,
+          service: 'Calculadora de Presupuesto',
+          source: 'calculator',
+          status: 'new',
+        }).catch((error) => console.error('dispatchEvent lead.created error:', error));
       }
     }
 
@@ -130,7 +142,7 @@ export async function POST(req: NextRequest) {
     if (serverEnv.RESEND_API_KEY) {
       try {
         const resend = new Resend(serverEnv.RESEND_API_KEY);
-        await resend.emails.send({
+        const { error: sendError } = await resend.emails.send({
           from: 'Omar Hernández <contacto@omarhernandezrey.com>',
           to: visitorInfo.email,
           subject: 'Tu Presupuesto Estimado - Omar Hernández',
@@ -142,7 +154,12 @@ export async function POST(req: NextRequest) {
             },
           ],
         });
-        emailSent = true;
+
+        if (sendError) {
+          console.error('Resend error:', sendError);
+        } else {
+          emailSent = true;
+        }
       } catch (err) {
         console.error('Resend error:', err);
       }

@@ -25,12 +25,14 @@ import LanguageSelector from "./LanguageSelector";
 interface NavbarMobileProps {
   isOpen: boolean;
   toggleMenu: () => void;
+  closeMenu: () => void;
 }
 
-const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
+const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMenu }) => {
   const pathname = usePathname();
   const locale = useLocale();
   const menuRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const [activeSection, setActiveSection] = useState<string>("#hero");
   const { togglePalette } = usePalette();
   const { t } = useTranslation();
@@ -38,8 +40,14 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        toggleMenu();
+      const target = e.target as Node;
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target) &&
+        navRef.current &&
+        !navRef.current.contains(target)
+      ) {
+        closeMenu();
       }
     };
 
@@ -61,7 +69,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
       document.removeEventListener("mousedown", handleOutsideClick);
       document.body.style.overflow = "unset";
     };
-  }, [isOpen, toggleMenu]);
+  }, [isOpen, closeMenu]);
 
   const handleLinkClick = (id: string) => {
     const prefix = locale === 'es' ? '' : `/${locale}`;
@@ -69,14 +77,14 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
     // Si estamos en otra página y es un link interno, redirigir al home con el ancla
     if (pathname !== "/" && id.startsWith("#")) {
       window.location.href = `${prefix}/${id}`;
-      toggleMenu();
+      closeMenu();
       return;
     }
 
     const element = document.querySelector(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
-      toggleMenu();
+      closeMenu();
     }
   };
 
@@ -95,12 +103,12 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
         e.preventDefault();
-        toggleMenu();
+        closeMenu();
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [isOpen, toggleMenu]);
+  }, [isOpen, closeMenu]);
 
   useEffect(() => {
     const sections = [
@@ -138,7 +146,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
   return (
     <div className="relative">
       {/* Navbar */}
-  <nav className="flex justify-between items-center px-6 py-4 bg-[var(--background-color)] text-[var(--text-color)] border-b border-[var(--accent-color)] fixed top-0 left-0 w-full z-[90] shadow-md">
+  <nav ref={navRef} className="flex justify-between items-center px-6 py-4 bg-[var(--background-color)] text-[var(--text-color)] border-b border-[var(--accent-color)] fixed top-0 left-0 w-full z-[90] shadow-md">
         <button
           onClick={toggleMenu}
           className="text-[var(--primary-color)] text-3xl rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] hover:text-[var(--primary-hover-color)] transition-colors duration-300"
@@ -189,7 +197,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
               </div>
             </div>
             <button
-              onClick={toggleMenu}
+              onClick={closeMenu}
               className="flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg px-2 py-1"
               aria-label={`${t("actions.close")} menú`}
             >
@@ -272,7 +280,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu }) => {
 
       {/* Fondo nublado */}
       {isOpen && (
-        <div onClick={toggleMenu} aria-hidden="true" className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[95]"></div>
+        <div onClick={closeMenu} aria-hidden="true" className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 z-[95]"></div>
       )}
     </div>
   );

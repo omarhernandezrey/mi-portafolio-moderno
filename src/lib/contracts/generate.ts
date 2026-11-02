@@ -1,5 +1,6 @@
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, type PDFFont } from 'pdf-lib';
 import { pdfSafe } from '@/lib/pdf/sanitize';
+import { wrapText } from '@/lib/pdf/layout';
 
 interface ContractData {
   clientName: string;
@@ -9,33 +10,60 @@ interface ContractData {
   timeline: string;
 }
 
+const PAGE_WIDTH = 600;
+const PAGE_HEIGHT = 800;
+const MARGIN = 50;
+const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
+
 export async function generateContractPDF(data: ContractData): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create();
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const timesRomanBoldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
 
-  const page = pdfDoc.addPage([600, 800]);
-  const { height } = page.getSize();
-  const fontSize = 12;
+  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+  let currentY = PAGE_HEIGHT - MARGIN;
 
-  let currentY = height - 50;
-
-  const drawText = (text: string, font = timesRomanFont, size = fontSize) => {
-    page.drawText(text, {
-      x: 50,
-      y: currentY,
-      size,
-      font,
-      color: rgb(0, 0, 0),
-    });
-    currentY -= size + 5;
+  const addPage = () => {
+    page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+    currentY = PAGE_HEIGHT - MARGIN;
   };
 
-  drawText('CONTRATO DE PRESTACIÓN DE SERVICIOS DE DESARROLLO', timesRomanBoldFont, 16);
-  currentY -= 20;
+  const ensureSpace = (needed: number) => {
+    if (currentY - needed < MARGIN) addPage();
+  };
 
-  drawText(`FECHA: ${new Date().toLocaleDateString('es-CO')}`);
-  currentY -= 10;
+  const drawParagraph = (
+    text: string,
+    font: PDFFont = timesRomanFont,
+    size = 12,
+    after = 5
+  ) => {
+    const lines = wrapText(pdfSafe(text), CONTENT_WIDTH, font, size);
+    const lineHeight = size + after;
+
+    for (const line of lines) {
+      ensureSpace(lineHeight);
+      page.drawText(line, {
+        x: MARGIN,
+        y: currentY,
+        size,
+        font,
+        color: rgb(0, 0, 0),
+      });
+      currentY -= lineHeight;
+    }
+  };
+
+  drawParagraph(
+    'CONTRATO DE PRESTACIÓN DE SERVICIOS DE DESARROLLO',
+    timesRomanBoldFont,
+    16,
+    8
+  );
+  currentY -= 15;
+
+  drawParagraph(`FECHA: ${new Date().toLocaleDateString('es-CO')}`);
+  currentY -= 5;
 
   const clientName = pdfSafe(data.clientName, 100);
   const clientEmail = pdfSafe(data.clientEmail, 254);
@@ -43,37 +71,39 @@ export async function generateContractPDF(data: ContractData): Promise<Uint8Arra
   const budget = pdfSafe(data.budget, 100);
   const timeline = pdfSafe(data.timeline, 100);
 
-  drawText('PARTES:', timesRomanBoldFont);
-  drawText(`PRESTADOR: OMAR HERNÁNDEZ REY (en adelante "El Desarrollador")`);
-  drawText(`CLIENTE: ${clientName} (${clientEmail}) (en adelante "El Cliente")`);
+  drawParagraph('PARTES:', timesRomanBoldFont);
+  drawParagraph('PRESTADOR: OMAR HERNÁNDEZ REY (en adelante "El Desarrollador")');
+  drawParagraph(`CLIENTE: ${clientName} (${clientEmail}) (en adelante "El Cliente")`);
+  currentY -= 10;
+
+  drawParagraph('CLÁUSULAS:', timesRomanBoldFont);
+  drawParagraph('1. OBJETO: El Desarrollador se compromete a realizar el servicio de:');
+  drawParagraph(service, timesRomanBoldFont);
+  currentY -= 5;
+
+  drawParagraph(`2. INVERSIÓN: El valor total del proyecto es de ${budget}.`);
+  drawParagraph('Se requiere un anticipo del 50% para iniciar el desarrollo.');
+  currentY -= 5;
+
+  drawParagraph(`3. PLAZO: El tiempo estimado de entrega es de ${timeline}.`);
+  currentY -= 5;
+
+  drawParagraph(
+    '4. PROPIEDAD INTELECTUAL: Los derechos sobre el código final se transfieren al Cliente una vez se complete el pago del 100%.'
+  );
   currentY -= 15;
 
-  drawText('CLÁUSULAS:', timesRomanBoldFont);
-  drawText('1. OBJETO: El Desarrollador se compromete a realizar el servicio de:');
-  drawText(service, timesRomanBoldFont);
-  currentY -= 10;
-
-  drawText(`2. INVERSIÓN: El valor total del proyecto es de ${budget}.`);
-  drawText('Se requiere un anticipo del 50% para iniciar el desarrollo.');
-  currentY -= 10;
-
-  drawText(`3. PLAZO: El tiempo estimado de entrega es de ${timeline}.`);
-  currentY -= 10;
-
-  drawText('4. PROPIEDAD INTELECTUAL: Los derechos sobre el código final se transfieren');
-  drawText('al Cliente una vez se complete el pago del 100%.');
-  currentY -= 20;
-
-  drawText('FIRMAS:', timesRomanBoldFont);
-  currentY -= 40;
+  ensureSpace(110);
+  drawParagraph('FIRMAS:', timesRomanBoldFont);
+  currentY -= 30;
 
   page.drawLine({
-    start: { x: 50, y: currentY },
+    start: { x: MARGIN, y: currentY },
     end: { x: 250, y: currentY },
     thickness: 1,
     color: rgb(0, 0, 0),
   });
-  
+
   page.drawLine({
     start: { x: 350, y: currentY },
     end: { x: 550, y: currentY },
@@ -82,9 +112,18 @@ export async function generateContractPDF(data: ContractData): Promise<Uint8Arra
   });
 
   currentY -= 15;
-  page.drawText('Por El Desarrollador', { x: 50, y: currentY, size: 10, font: timesRomanFont });
-  page.drawText('Por El Cliente (Firma Digital)', { x: 350, y: currentY, size: 10, font: timesRomanFont });
+  page.drawText('Por El Desarrollador', {
+    x: MARGIN,
+    y: currentY,
+    size: 10,
+    font: timesRomanFont,
+  });
+  page.drawText('Por El Cliente (Firma Digital)', {
+    x: 350,
+    y: currentY,
+    size: 10,
+    font: timesRomanFont,
+  });
 
-  // Guardar PDF
   return await pdfDoc.save();
 }

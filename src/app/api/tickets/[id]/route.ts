@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 const updateSchema = z.object({
   status: z.enum(['open', 'in_progress', 'waiting_client', 'closed']).optional(),
@@ -54,10 +55,12 @@ export async function PATCH(
       return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
     }
 
-    const { error } = await supabaseServer
+    const { data: ticket, error } = await supabaseServer
       .from('tickets')
       .update({ ...result.data, updated_at: new Date().toISOString() })
-      .eq('id', id);
+      .eq('id', id)
+      .select()
+      .single();
 
     if (error) throw error;
 
@@ -67,6 +70,18 @@ export async function PATCH(
       resourceId: id,
       metadata: result.data,
     });
+
+    if (result.data.status === 'closed') {
+      await dispatchEvent('ticket.closed', {
+        id: ticket.id,
+        title: ticket.title,
+        priority: ticket.priority,
+        lead_id: ticket.lead_id,
+        status: 'closed',
+      }).catch((error) =>
+        console.error('dispatchEvent ticket.closed error:', error)
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

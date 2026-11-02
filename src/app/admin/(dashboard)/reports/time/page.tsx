@@ -14,6 +14,7 @@ import EmptyState from '@/components/admin/ui/EmptyState';
 import StatCard from '@/components/admin/ui/StatCard';
 import { AdminButton } from '@/components/admin/ui/AdminButton';
 import { adminFetch } from '@/lib/admin/client-fetch';
+import { parseBudget, type BudgetCurrency } from '@/lib/budget';
 
 interface ReportRow {
   id: string;
@@ -29,34 +30,10 @@ function formatHours(seconds: number) {
   return `${hours}h ${minutes}m`;
 }
 
-function parseBudget(budget: string | null | undefined) {
-  const raw = String(budget ?? '').replace(/[^0-9.,]/g, '');
-  if (!raw) return 0;
-
-  const lastComma = raw.lastIndexOf(',');
-  const lastDot = raw.lastIndexOf('.');
-  let normalized = raw;
-
-  if (lastComma > lastDot) {
-    normalized = raw.replace(/\./g, '').replace(',', '.');
-  } else if (lastDot > lastComma) {
-    const decimals = raw.length - lastDot - 1;
-    const dotCount = (raw.match(/\./g) || []).length;
-    normalized =
-      dotCount > 1 || decimals === 3
-        ? raw.replace(/\./g, '')
-        : raw.replace(/,/g, '');
-  } else {
-    normalized = raw.replace(/,/g, '');
-  }
-
-  return parseFloat(normalized) || 0;
-}
-
-function formatMoney(value: number) {
+function formatMoney(value: number, currency: BudgetCurrency) {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',
-    currency: 'COP',
+    currency,
     maximumFractionDigits: 0,
   }).format(value);
 }
@@ -93,12 +70,29 @@ export default function TimeReportPage() {
     (sum, row) => sum + (row.total_seconds || 0),
     0
   );
-  const totalBudget = report.reduce(
-    (sum, row) => sum + parseBudget(row.budget),
-    0
-  );
+  const budgetTotals = report.reduce<Record<string, number>>((acc, row) => {
+    const { amount, currency } = parseBudget(row.budget);
+    const key = currency ?? 'USD';
+    acc[key] = (acc[key] || 0) + amount;
+    return acc;
+  }, {});
+  const budgetEntries = Object.entries(budgetTotals);
+  const singleCurrency =
+    budgetEntries.length === 1
+      ? (budgetEntries[0][0] as BudgetCurrency)
+      : null;
+  const totalBudgetLabel =
+    budgetEntries.length > 0
+      ? budgetEntries
+          .map(([currency, total]) =>
+            formatMoney(total, currency as BudgetCurrency)
+          )
+          .join(' · ')
+      : formatMoney(0, 'USD');
   const averagePerHour =
-    totalSeconds > 0 ? totalBudget / (totalSeconds / 3600) : 0;
+    singleCurrency && totalSeconds > 0
+      ? budgetTotals[singleCurrency] / (totalSeconds / 3600)
+      : null;
 
   return (
     <div className="space-y-5 lg:space-y-6">
@@ -138,10 +132,20 @@ export default function TimeReportPage() {
         />
         <StatCard
           title="Promedio/hora"
-          value={formatMoney(averagePerHour)}
+          value={
+            report.length === 0
+              ? '—'
+              : averagePerHour === null
+                ? totalBudgetLabel
+                : formatMoney(averagePerHour, singleCurrency as BudgetCurrency)
+          }
           icon={<DollarSign size={19} />}
           color="success"
-          description="Ingreso medio por hora"
+          description={
+            singleCurrency
+              ? 'Ingreso medio por hora'
+              : 'Totales por moneda (no comparables)'
+          }
         />
       </section>
 
@@ -170,10 +174,11 @@ export default function TimeReportPage() {
           />
         ) : (
           report.map((row) => {
+            const parsedBudget = parseBudget(row.budget);
             const ratio =
               row.total_seconds > 0
-                ? parseBudget(row.budget) / (row.total_seconds / 3600)
-                : 0;
+                ? parsedBudget.amount / (row.total_seconds / 3600)
+                : null;
 
             return (
               <article
@@ -220,12 +225,19 @@ export default function TimeReportPage() {
                     </p>
                     <p
                       className={`mt-1 text-xs font-black ${
-                        averagePerHour > 0 && ratio < averagePerHour * 0.5
+                        averagePerHour !== null &&
+                        ratio !== null &&
+                        ratio < averagePerHour * 0.5
                           ? 'text-admin-danger'
                           : 'text-admin-ink'
                       }`}
                     >
-                      {formatMoney(ratio)}
+                      {ratio === null
+                        ? '—'
+                        : formatMoney(
+                            ratio,
+                            parsedBudget.currency ?? 'USD'
+                          )}
                     </p>
                   </div>
                 </div>
@@ -277,10 +289,11 @@ export default function TimeReportPage() {
                 </tr>
               ) : (
                 report.map((row) => {
+                  const parsedBudget = parseBudget(row.budget);
                   const ratio =
                     row.total_seconds > 0
-                      ? parseBudget(row.budget) / (row.total_seconds / 3600)
-                      : 0;
+                      ? parsedBudget.amount / (row.total_seconds / 3600)
+                      : null;
 
                   return (
                     <tr
@@ -307,12 +320,19 @@ export default function TimeReportPage() {
                       <td className="px-5 py-4 text-right">
                         <span
                           className={`text-sm font-black ${
-                            averagePerHour > 0 && ratio < averagePerHour * 0.5
+                            averagePerHour !== null &&
+                            ratio !== null &&
+                            ratio < averagePerHour * 0.5
                               ? 'text-admin-danger'
                               : 'text-admin-ink'
                           }`}
                         >
-                          {formatMoney(ratio)}
+                          {ratio === null
+                            ? '—'
+                            : formatMoney(
+                                ratio,
+                                parsedBudget.currency ?? 'USD'
+                              )}
                           <span className="text-[9px] font-normal text-text-muted/60">
                             /h
                           </span>

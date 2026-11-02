@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
     // Buscar suscriptor con ese token
     const { data: subscriber, error: fetchError } = await supabaseServer
       .from('subscribers')
-      .select('id')
+      .select('id, email')
       .eq('confirmation_token', token)
       .single();
 
@@ -30,6 +31,13 @@ export async function GET(req: NextRequest) {
     if (updateError) {
       return NextResponse.json({ error: 'Error al confirmar suscripción' }, { status: 500 });
     }
+
+    await dispatchEvent('subscriber.confirmed', {
+      id: subscriber.id,
+      email: subscriber.email,
+    }).catch((error) =>
+      console.error('dispatchEvent subscriber.confirmed error:', error)
+    );
 
     // Redirigir a una página de éxito (usaremos la home con un param por ahora)
     const successUrl = new URL('/', req.url);

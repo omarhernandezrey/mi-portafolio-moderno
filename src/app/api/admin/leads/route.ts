@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 const schema = z.object({
   name: z.string().min(1, 'Nombre requerido'),
@@ -46,6 +47,18 @@ export async function POST(req: NextRequest) {
       resourceId: lead.id,
       metadata: { email: lead.email, name: lead.name },
     });
+
+    await dispatchEvent('lead.created', {
+      id: lead.id,
+      name: lead.name,
+      email: lead.email,
+      company: lead.company,
+      service: lead.service_requested,
+      budget: lead.budget,
+      timeline: lead.timeline,
+      status: lead.status,
+      source: 'admin',
+    }).catch((error) => console.error('dispatchEvent lead.created error:', error));
 
     return NextResponse.json(lead, { status: 201 });
   } catch (err) {

@@ -51,6 +51,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
         'X-Webhook-Signature': `sha256=${signature}`,
         'X-Webhook-Event': 'ping',
         'X-Webhook-ID': id,
+        'X-Webhook-Timestamp': Date.now().toString(),
       },
       body,
       signal: AbortSignal.timeout(10000),

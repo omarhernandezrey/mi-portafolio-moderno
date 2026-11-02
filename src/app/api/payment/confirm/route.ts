@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireAdmin } from '@/lib/admin/auth';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 /**
  * Confirmación manual de pago (por ejemplo desde el admin tras verificar Wompi/Nequi).
@@ -61,6 +62,16 @@ El estado del lead ha sido actualizado a 'paid'.
     `.trim();
 
     await notifyTelegram(notificationText);
+
+    await dispatchEvent('lead.paid', {
+      id: leadId,
+      name: data?.name ?? null,
+      email: data?.email ?? null,
+      amount,
+      method,
+      status: 'paid',
+      confirmed_by: auth.email,
+    }).catch((error) => console.error('dispatchEvent lead.paid error:', error));
 
     return NextResponse.json({
       success: true,

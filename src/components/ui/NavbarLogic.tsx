@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import NavbarDesktop from "./NavbarDesktop";
 import NavbarMobile from "./NavbarMobile";
@@ -11,25 +11,23 @@ const NavbarLogic = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
   useEffect(() => {
     setMounted(true);
-    
+
     const handleResize = () => {
       const width = window.innerWidth;
       setIsMobile(width <= 1024);
-
-      if (width > 1024 && isMenuOpen) {
-        setIsMenuOpen(false);
-      }
+      if (width > 1024) setIsMenuOpen(false);
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [isMenuOpen]);
+  }, []);
 
   // No renderizar el navbar principal en el panel de administración
   if (pathname?.startsWith('/admin')) {
@@ -41,7 +39,7 @@ const NavbarLogic = () => {
     return (
       <>
         <div className="lg:hidden">
-          <NavbarMobile isOpen={isMenuOpen} toggleMenu={toggleMenu} />
+          <NavbarMobile isOpen={isMenuOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
         </div>
         <div className="hidden lg:block">
           <NavbarDesktop />
@@ -53,7 +51,7 @@ const NavbarLogic = () => {
   return (
     <>
       {isMobile ? (
-        <NavbarMobile isOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        <NavbarMobile isOpen={isMenuOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
       ) : (
         <NavbarDesktop />
       )}

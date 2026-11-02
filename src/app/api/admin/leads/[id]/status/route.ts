@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 export async function PATCH(
   req: NextRequest,
@@ -31,6 +32,12 @@ export async function PATCH(
       );
     }
 
+    const { data: existing } = await supabaseServer
+      .from('leads')
+      .select('status')
+      .eq('id', id)
+      .maybeSingle();
+
     const { data, error } = await supabaseServer
       .from('leads')
       .update({ status })
@@ -58,6 +65,25 @@ export async function PATCH(
       resourceId: id,
       metadata: { status },
     });
+
+    const lead = data[0];
+    const payload = {
+      id: lead.id,
+      name: lead.name,
+      email: lead.email,
+      status,
+      previous_status: existing?.status ?? null,
+    };
+
+    await dispatchEvent('lead.updated', payload).catch((error) =>
+      console.error('dispatchEvent lead.updated error:', error)
+    );
+
+    if (status === 'paid') {
+      await dispatchEvent('lead.paid', payload).catch((error) =>
+        console.error('dispatchEvent lead.paid error:', error)
+      );
+    }
 
     return NextResponse.json({ success: true, status, data });
   } catch (error) {

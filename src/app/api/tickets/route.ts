@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { dispatchEvent } from '@/lib/events/dispatcher';
 
 const ticketSchema = z.object({
   lead_id: z.preprocess(
@@ -69,6 +70,14 @@ export async function POST(req: NextRequest) {
       resourceId: ticket.id,
       metadata: { title, priority, lead_id },
     });
+
+    await dispatchEvent('ticket.created', {
+      id: ticket.id,
+      title,
+      priority,
+      lead_id: lead_id ?? null,
+      status: ticket.status,
+    }).catch((error) => console.error('dispatchEvent ticket.created error:', error));
 
     return NextResponse.json(ticket);
   } catch (error) {

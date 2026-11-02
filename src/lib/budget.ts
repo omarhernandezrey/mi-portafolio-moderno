@@ -70,6 +70,28 @@ function parseNumber(fragment: string): number {
   return toFloat(cleaned);
 }
 
+export type BudgetCurrency = 'COP' | 'USD';
+
+export interface ParsedBudget {
+  amount: number;
+  currency: BudgetCurrency | null;
+}
+
+/**
+ * Igual que parseBudgetAmount, pero además detecta la moneda.
+ * Formatos: "cop:1800000-6000000", "usd:1200-8000", "$500 USD", "1500000 COP".
+ * Si no hay marca de moneda devuelve null para que el llamador decida.
+ */
+export function parseBudget(raw: string | null | undefined): ParsedBudget {
+  const text = String(raw ?? '').trim();
+  const amount = parseBudgetAmount(text);
+
+  const match = text.match(/\b(cop|usd)\b/i);
+  const currency = match ? (match[1].toUpperCase() as BudgetCurrency) : null;
+
+  return { amount, currency };
+}
+
 function toFloat(s: string): number {
   const n = parseFloat(s);
   return Number.isFinite(n) ? n : 0;

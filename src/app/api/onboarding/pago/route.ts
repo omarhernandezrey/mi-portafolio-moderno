@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, alreadyConfirmed: true });
     }
 
-    const { error: updateError } = await supabaseServer
+    const { data: updated, error: updateError } = await supabaseServer
       .from('leads')
       .update({
         onboarding_step: 4,
@@ -41,10 +41,16 @@ export async function POST(req: NextRequest) {
         payment_id: paymentId || 'manual_confirm'
       })
       .eq('id', lead.id)
-      .is('payment_id', null); // Doble seguro contra carreras
+      .is('payment_id', null) // Doble seguro contra carreras
+      .select('id')
+      .maybeSingle();
 
     if (updateError) {
       return NextResponse.json({ error: 'Error al actualizar el lead' }, { status: 500 });
+    }
+
+    if (!updated) {
+      return NextResponse.json({ success: true, alreadyConfirmed: true });
     }
 
     await notifyTelegram(

@@ -5,10 +5,11 @@ import crypto from 'crypto';
 import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
+import { WEBHOOK_EVENTS } from '@/lib/webhooks/events';
 
 const schema = z.object({
   url: z.string().url('URL inválida'),
-  events: z.array(z.string()).min(1, 'Selecciona al menos un evento'),
+  events: z.array(z.enum(WEBHOOK_EVENTS)).min(1, 'Selecciona al menos un evento'),
   secret: z.string().optional(),
 });
 

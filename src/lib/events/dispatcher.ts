@@ -1,13 +1,9 @@
 import { supabaseServer } from '@/lib/supabaseServer';
 import crypto from 'crypto';
 import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
+import type { WebhookEvent } from '@/lib/webhooks/events';
 
-export type WebhookEvent = 
-  | 'lead.created' 
-  | 'lead.contacted' 
-  | 'payment.received' 
-  | 'project.started' 
-  | 'ticket.opened';
+export type { WebhookEvent } from '@/lib/webhooks/events';
 
 export async function dispatchEvent(event: WebhookEvent, payload: Record<string, unknown>) {
   // 1. Buscar webhooks activos suscritos a este evento
@@ -45,7 +41,6 @@ async function sendWebhookRequest(webhook: { id: string; url: string; secret: st
     .createHmac('sha256', webhook.secret)
     .update(body)
     .digest('hex');
-
   const safety = await assertSafeWebhookUrl(webhook.url);
   if (!safety.ok) {
     console.error(`Webhook ${webhook.id} bloqueado por SSRF: ${safety.error}`);
@@ -64,8 +59,10 @@ async function sendWebhookRequest(webhook: { id: string; url: string; secret: st
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Webhook-Signature': signature,
+        'X-Webhook-Signature': `sha256=${signature}`,
         'X-Webhook-Timestamp': timestamp.toString(),
+        'X-Webhook-Event': event,
+        'X-Webhook-ID': webhook.id,
         'User-Agent': 'OmarPortafolio-Webhook/1.0'
       },
       body,

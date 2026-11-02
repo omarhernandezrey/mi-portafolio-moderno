@@ -4,11 +4,12 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
+import { WEBHOOK_EVENTS } from '@/lib/webhooks/events';
 
 const updateSchema = z.object({
   active: z.boolean().optional(),
   url: z.string().url('URL inválida').optional(),
-  events: z.array(z.string()).min(1, 'Selecciona al menos un evento').optional(),
+  events: z.array(z.enum(WEBHOOK_EVENTS)).min(1, 'Selecciona al menos un evento').optional(),
 });
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

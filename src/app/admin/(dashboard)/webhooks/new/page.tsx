@@ -10,7 +10,6 @@ const ALL_EVENTS = [
   { value: 'lead.created', label: 'Lead creado', desc: 'Cuando un nuevo lead se registra' },
   { value: 'lead.updated', label: 'Lead actualizado', desc: 'Cambio de estado o datos del lead' },
   { value: 'lead.paid', label: 'Lead pagado', desc: 'Cuando un lead marca pago completado' },
-  { value: 'conversation.started', label: 'Conversación iniciada', desc: 'Nuevo chat con el bot' },
   { value: 'ticket.created', label: 'Ticket creado', desc: 'Nuevo ticket de soporte' },
   { value: 'ticket.closed', label: 'Ticket cerrado', desc: 'Cuando se cierra un ticket' },
   { value: 'invoice.created', label: 'Factura generada', desc: 'Nueva factura emitida' },
