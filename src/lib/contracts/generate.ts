@@ -1,4 +1,5 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { pdfSafe } from '@/lib/pdf/sanitize';
 
 interface ContractData {
   clientName: string;
@@ -36,21 +37,27 @@ export async function generateContractPDF(data: ContractData): Promise<Uint8Arra
   drawText(`FECHA: ${new Date().toLocaleDateString('es-CO')}`);
   currentY -= 10;
 
+  const clientName = pdfSafe(data.clientName, 100);
+  const clientEmail = pdfSafe(data.clientEmail, 254);
+  const service = pdfSafe(data.service, 200);
+  const budget = pdfSafe(data.budget, 100);
+  const timeline = pdfSafe(data.timeline, 100);
+
   drawText('PARTES:', timesRomanBoldFont);
   drawText(`PRESTADOR: OMAR HERNÁNDEZ REY (en adelante "El Desarrollador")`);
-  drawText(`CLIENTE: ${data.clientName} (${data.clientEmail}) (en adelante "El Cliente")`);
+  drawText(`CLIENTE: ${clientName} (${clientEmail}) (en adelante "El Cliente")`);
   currentY -= 15;
 
   drawText('CLÁUSULAS:', timesRomanBoldFont);
   drawText('1. OBJETO: El Desarrollador se compromete a realizar el servicio de:');
-  drawText(`${data.service}`, timesRomanBoldFont);
+  drawText(service, timesRomanBoldFont);
   currentY -= 10;
 
-  drawText(`2. INVERSIÓN: El valor total del proyecto es de ${data.budget}.`);
+  drawText(`2. INVERSIÓN: El valor total del proyecto es de ${budget}.`);
   drawText('Se requiere un anticipo del 50% para iniciar el desarrollo.');
   currentY -= 10;
 
-  drawText(`3. PLAZO: El tiempo estimado de entrega es de ${data.timeline}.`);
+  drawText(`3. PLAZO: El tiempo estimado de entrega es de ${timeline}.`);
   currentY -= 10;
 
   drawText('4. PROPIEDAD INTELECTUAL: Los derechos sobre el código final se transfieren');

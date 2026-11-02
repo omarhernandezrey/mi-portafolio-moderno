@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
+
+const updateSchema = z.object({
+  active: z.boolean().optional(),
+  url: z.string().url('URL inválida').optional(),
+  events: z.array(z.string()).min(1, 'Selecciona al menos un evento').optional(),
+});
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin('owner');
@@ -10,14 +18,22 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { id } = await params;
   const body = await req.json();
 
-  const allowed = ['active', 'url', 'events'];
-  const update: Record<string, unknown> = {};
-  for (const key of allowed) {
-    if (key in body) update[key] = body[key];
+  const result = updateSchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json({ error: result.error.flatten().fieldErrors }, { status: 400 });
   }
+
+  const update: Record<string, unknown> = result.data;
 
   if (Object.keys(update).length === 0) {
     return NextResponse.json({ error: 'No hay campos para actualizar' }, { status: 400 });
+  }
+
+  if (typeof update.url === 'string') {
+    const safety = await assertSafeWebhookUrl(update.url);
+    if (!safety.ok) {
+      return NextResponse.json({ error: safety.error }, { status: 400 });
+    }
   }
 
   const { data, error } = await supabaseServer

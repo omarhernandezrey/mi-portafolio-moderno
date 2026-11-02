@@ -97,7 +97,6 @@ export default function BudgetCalculator() {
         body: JSON.stringify({
           selections,
           visitorInfo,
-          budget: currentBudget,
           currency,
           language: lang
         })

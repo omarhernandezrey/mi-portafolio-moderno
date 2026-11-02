@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import crypto from 'crypto';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
 
 export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin('owner');
@@ -18,6 +19,11 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
 
   if (error || !webhook) {
     return NextResponse.json({ error: 'Webhook no encontrado' }, { status: 404 });
+  }
+
+  const safety = await assertSafeWebhookUrl(webhook.url);
+  if (!safety.ok) {
+    return NextResponse.json({ error: `Destino bloqueado: ${safety.error}` }, { status: 400 });
   }
 
   const payload = {

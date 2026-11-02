@@ -1,5 +1,6 @@
 import { supabaseServer } from '@/lib/supabaseServer';
 import crypto from 'crypto';
+import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
 
 export type WebhookEvent = 
   | 'lead.created' 
@@ -44,6 +45,19 @@ async function sendWebhookRequest(webhook: { id: string; url: string; secret: st
     .createHmac('sha256', webhook.secret)
     .update(body)
     .digest('hex');
+
+  const safety = await assertSafeWebhookUrl(webhook.url);
+  if (!safety.ok) {
+    console.error(`Webhook ${webhook.id} bloqueado por SSRF: ${safety.error}`);
+    await supabaseServer.from('webhook_logs').insert({
+      webhook_id: webhook.id,
+      event_type: event,
+      payload,
+      error: `Destino bloqueado: ${safety.error}`,
+      attempt,
+    });
+    return;
+  }
 
   try {
     const res = await fetch(webhook.url, {

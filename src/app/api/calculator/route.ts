@@ -6,6 +6,8 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { Resend } from 'resend';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { checkRateLimit, clientIp } from '@/lib/rateLimit';
+import { pdfSafe } from '@/lib/pdf/sanitize';
+import { calculateBudget } from '@/lib/calculator/pricing';
 
 const calcSchema = z.object({
   selections: z.record(z.string(), z.union([z.string(), z.array(z.string())])).default({}),
@@ -14,27 +16,13 @@ const calcSchema = z.object({
     email: z.string().email().max(254),
     company: z.string().max(100).optional().default(''),
   }),
-  // Tope amplio y agnóstico de moneda (solo anti-abuso): un presupuesto en
-  // COP es ~1000x el mismo presupuesto en USD, así que el límite tiene que
-  // cubrir ambas escalas sin ser específico de ninguna.
-  budget: z.union([z.number(), z.string()]).transform(v => {
-    const n = typeof v === 'number' ? v : parseFloat(String(v).replace(/[^\d.]/g, ''));
-    if (!Number.isFinite(n) || n < 0 || n > 1_000_000_000) throw new Error('invalid budget');
-    return Math.round(n);
-  }),
   // Moneda del presupuesto: 'cop' en /calculadora, 'usd' en /en/calculadora.
+  // El presupuesto en sí NUNCA se confía del cliente — se recalcula server-side
+  // a partir de `selections` + `currency` (ver abajo) para que un cliente no
+  // pueda enviar un número en la escala de la otra moneda ni inventar un total.
   currency: z.enum(['cop', 'usd']).default('usd'),
   language: z.enum(['es', 'en']).default('es'),
 });
-
-// drawText falla con caracteres fuera de WinAnsi — sanear para el PDF
-function pdfSafe(text: string): string {
-  return text
-    .replace(/[^\x20-\x7EáéíóúÁÉÍÓÚñÑüÜ¿¡]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .slice(0, 80)
-    .trim();
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,7 +36,8 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
     }
-    const { selections, visitorInfo, budget, currency, language } = parsed.data;
+    const { selections, visitorInfo, currency, language } = parsed.data;
+    const budget = calculateBudget(selections, currency);
     const currencyLabel = currency.toUpperCase();
     const budgetLabel = `$${budget.toLocaleString(currency === 'cop' ? 'es-CO' : 'en-US')} ${currencyLabel}`;
 

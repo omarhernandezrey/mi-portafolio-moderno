@@ -4,6 +4,7 @@ import { z } from 'zod';
 import crypto from 'crypto';
 import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
 
 const schema = z.object({
   url: z.string().url('URL inválida'),
@@ -36,6 +37,12 @@ export async function POST(req: NextRequest) {
   }
 
   const { url, events, secret } = result.data;
+
+  const safety = await assertSafeWebhookUrl(url);
+  if (!safety.ok) {
+    return NextResponse.json({ error: safety.error }, { status: 400 });
+  }
+
   const finalSecret = secret || crypto.randomBytes(32).toString('hex');
 
   const { data, error } = await supabaseServer
