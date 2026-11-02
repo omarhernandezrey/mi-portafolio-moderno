@@ -22,7 +22,7 @@ if grep -rEn '"[A-Z][a-záéíóú ]{8,}"' src/components/whatsapp/ | grep -v "t
 fi
 
 echo "→ Buscando URLs o claves hardcoded..."
-if grep -rEn "(AIza|\bAQ\.[A-Za-z0-9_-]{15,}|sk-|https://[a-z]+\.supabase\.co)" src/ --exclude-dir=node_modules --exclude=env.ts --exclude="*Data.ts"; then
+if grep -rEn "(AIza|\bAQ\.[A-Za-z0-9_-]{15,}|\bsk-[A-Za-z0-9_-]{20,}|https://[a-z]+\.supabase\.co)" src/ --exclude-dir=node_modules --exclude=env.ts --exclude="*Data.ts"; then
   echo "❌ Error: Se encontraron URLs o claves sensibles fijas. Usa src/config/env.ts."
   ERR=1
 fi
