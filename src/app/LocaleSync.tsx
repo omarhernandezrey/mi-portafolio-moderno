@@ -30,7 +30,7 @@ export default function LocaleSync({ children }: { children: React.ReactNode }) 
   const locale = pathname === "/en" || pathname?.startsWith("/en/") ? "en" : "es";
 
   return (
-    <NextIntlClientProvider locale={locale} messages={MESSAGES[locale]}>
+    <NextIntlClientProvider locale={locale} messages={MESSAGES[locale]} timeZone="America/Bogota">
       {children}
     </NextIntlClientProvider>
   );
