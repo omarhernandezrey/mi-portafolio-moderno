@@ -23,7 +23,11 @@ export async function POST(req: Request) {
     // Telegram reenvía el secret_token configurado en setWebhook en este header.
     // Sin esta validación, cualquiera que conozca la URL podría falsificar updates.
     const secret = serverEnv.TELEGRAM_WEBHOOK_SECRET;
-    if (secret && req.headers.get('x-telegram-bot-api-secret-token') !== secret) {
+    if (!secret) {
+      console.error('TELEGRAM_WEBHOOK_SECRET no configurado — webhook deshabilitado');
+      return NextResponse.json({ error: 'Webhook disabled' }, { status: 503 });
+    }
+    if (req.headers.get('x-telegram-bot-api-secret-token') !== secret) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
     }
 

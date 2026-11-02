@@ -10,10 +10,12 @@ interface JsonLdProps {
  * Se debe usar dentro de etiquetas <head> o al inicio de páginas.
  */
 export default function JsonLd({ data }: JsonLdProps) {
+  const json = JSON.stringify(data).replace(/</g, '\\u003c');
+
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: json }}
     />
   );
 }
