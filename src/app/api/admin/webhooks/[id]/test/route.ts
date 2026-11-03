@@ -26,11 +26,14 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: `Destino bloqueado: ${safety.error}` }, { status: 400 });
   }
 
+  const timestamp = Date.now();
   const payload = {
     event: 'ping',
-    timestamp: new Date().toISOString(),
-    webhook_id: id,
-    message: 'Test ping from Admin Suite — Omar Hernández Portfolio',
+    payload: {
+      webhook_id: id,
+      message: 'Test ping from Admin Suite — Omar Hernández Portfolio',
+    },
+    timestamp,
   };
 
   const body = JSON.stringify(payload);
@@ -51,7 +54,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
         'X-Webhook-Signature': `sha256=${signature}`,
         'X-Webhook-Event': 'ping',
         'X-Webhook-ID': id,
-        'X-Webhook-Timestamp': Date.now().toString(),
+        'X-Webhook-Timestamp': timestamp.toString(),
       },
       body,
       signal: AbortSignal.timeout(10000),

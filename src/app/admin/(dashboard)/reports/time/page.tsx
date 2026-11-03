@@ -72,6 +72,7 @@ export default function TimeReportPage() {
   );
   const budgetTotals = report.reduce<Record<string, number>>((acc, row) => {
     const { amount, currency } = parseBudget(row.budget);
+    if (amount <= 0) return acc;
     const key = currency ?? 'USD';
     acc[key] = (acc[key] || 0) + amount;
     return acc;
@@ -88,7 +89,7 @@ export default function TimeReportPage() {
             formatMoney(total, currency as BudgetCurrency)
           )
           .join(' · ')
-      : formatMoney(0, 'USD');
+      : '—';
   const averagePerHour =
     singleCurrency && totalSeconds > 0
       ? budgetTotals[singleCurrency] / (totalSeconds / 3600)
@@ -133,7 +134,7 @@ export default function TimeReportPage() {
         <StatCard
           title="Promedio/hora"
           value={
-            report.length === 0
+            report.length === 0 || budgetEntries.length === 0
               ? '—'
               : averagePerHour === null
                 ? totalBudgetLabel
@@ -142,9 +143,11 @@ export default function TimeReportPage() {
           icon={<DollarSign size={19} />}
           color="success"
           description={
-            singleCurrency
-              ? 'Ingreso medio por hora'
-              : 'Totales por moneda (no comparables)'
+            budgetEntries.length === 0
+              ? 'Sin presupuestos registrados'
+              : singleCurrency
+                ? 'Ingreso medio por hora'
+                : 'Totales por moneda (no comparables)'
           }
         />
       </section>
@@ -176,7 +179,7 @@ export default function TimeReportPage() {
           report.map((row) => {
             const parsedBudget = parseBudget(row.budget);
             const ratio =
-              row.total_seconds > 0
+              row.total_seconds > 0 && parsedBudget.amount > 0
                 ? parsedBudget.amount / (row.total_seconds / 3600)
                 : null;
 
@@ -291,7 +294,7 @@ export default function TimeReportPage() {
                 report.map((row) => {
                   const parsedBudget = parseBudget(row.budget);
                   const ratio =
-                    row.total_seconds > 0
+                    row.total_seconds > 0 && parsedBudget.amount > 0
                       ? parsedBudget.amount / (row.total_seconds / 3600)
                       : null;
 

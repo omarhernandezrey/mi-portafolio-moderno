@@ -32,6 +32,18 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const { reaction } = result.data;
     const fingerprint = hashClientId(req.headers);
 
+    // Solo posts publicados: evita reacciones en posts ocultos/borrados.
+    const { data: post } = await supabaseServer
+      .from("feed_posts")
+      .select("id")
+      .eq("id", postId)
+      .eq("status", "published")
+      .maybeSingle();
+
+    if (!post) {
+      return NextResponse.json({ error: "Publicación no encontrada" }, { status: 404 });
+    }
+
     const { data: existing } = await supabaseServer
       .from("feed_likes")
       .select("id, reaction")

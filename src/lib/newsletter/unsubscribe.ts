@@ -19,12 +19,12 @@ export function signUnsubscribeId(id: string): string {
 
 export function verifyUnsubscribeSignature(id: string, signature: string): boolean {
   const expected = signUnsubscribeId(id);
-  if (signature.length !== expected.length) return false;
+  const providedBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expected);
 
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expected)
-  );
+  if (providedBuffer.length !== expectedBuffer.length) return false;
+
+  return crypto.timingSafeEqual(providedBuffer, expectedBuffer);
 }
 
 export function buildUnsubscribeUrl(id: string): string {

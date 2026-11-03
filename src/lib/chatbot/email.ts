@@ -24,7 +24,7 @@ export async function sendContactNotification(name: string, email: string, messa
   const safeEmail = singleLine(email);
 
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: ['omarhernandezrey@gmail.com'],
       replyTo: safeEmail,
@@ -42,6 +42,10 @@ export async function sendContactNotification(name: string, email: string, messa
         </div>
       `,
     });
+
+    if (error) {
+      console.error('Error sending contact notification:', error);
+    }
   } catch (err) {
     console.error('Error sending contact notification:', err);
   }
@@ -111,12 +115,18 @@ export async function sendLeadMagnetFollowUp(to: string, source: string) {
   `;
 
   try {
-    const { data } = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: [to],
       subject,
       html,
     });
+
+    if (error) {
+      console.error('Error sending magnet follow-up via Resend:', error);
+      return null;
+    }
+
     return data;
   } catch (err) {
     console.error('Error sending magnet follow-up:', err);
@@ -143,12 +153,18 @@ export async function sendNewsletterConfirmation(to: string, token: string) {
   `;
 
   try {
-    const { data } = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: [to],
       subject: 'Confirma tu suscripción — Omar Hernández',
       html,
     });
+
+    if (error) {
+      console.error('Error sending confirmation email via Resend:', error);
+      return null;
+    }
+
     return data;
   } catch (err) {
     console.error('Error sending confirmation email:', err);
@@ -174,12 +190,18 @@ export async function sendNewsletterEdition(to: string, subject: string, htmlCon
   `;
 
   try {
-    const { data } = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: [to],
       subject,
       html: finalHtml,
     });
+
+    if (error) {
+      console.error(`Error sending newsletter to ${to} via Resend:`, error);
+      return null;
+    }
+
     return data;
   } catch (err) {
     console.error(`Error sending newsletter to ${to}:`, err);

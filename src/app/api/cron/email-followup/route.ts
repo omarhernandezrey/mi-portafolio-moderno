@@ -35,6 +35,7 @@ export async function GET(req: NextRequest) {
       .select('*')
       .is('followup_sent_at', null)
       .eq('confirmed', true)
+      .is('unsubscribed_at', null)
       .lt('created_at', oneDayAgo)
       .limit(50);
 

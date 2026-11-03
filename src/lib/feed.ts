@@ -68,8 +68,14 @@ export async function getFeedPosts(opts: {
   lang?: "es" | "en";
   category?: FeedCategory;
 } = {}): Promise<{ posts: FeedPost[]; hasMore: boolean }> {
-  const page = Math.max(opts.page ?? 1, 1);
-  const limit = Math.min(Math.max(opts.limit ?? 10, 1), 50);
+  const requestedPage = opts.page ?? 1;
+  const requestedLimit = opts.limit ?? 10;
+  const page = Number.isFinite(requestedPage)
+    ? Math.min(Math.max(Math.trunc(requestedPage), 1), 10_000)
+    : 1;
+  const limit = Number.isFinite(requestedLimit)
+    ? Math.min(Math.max(Math.trunc(requestedLimit), 1), 50)
+    : 10;
   const from = (page - 1) * limit;
   const to = from + limit; // pedimos uno de más para saber si hay más páginas
 
@@ -125,8 +131,14 @@ export async function getFeedComments(
   postId: string,
   opts: { page?: number; limit?: number } = {}
 ): Promise<{ comments: FeedComment[]; hasMore: boolean }> {
-  const page = Math.max(opts.page ?? 1, 1);
-  const limit = Math.min(Math.max(opts.limit ?? 20, 1), 50);
+  const requestedPage = opts.page ?? 1;
+  const requestedLimit = opts.limit ?? 20;
+  const page = Number.isFinite(requestedPage)
+    ? Math.min(Math.max(Math.trunc(requestedPage), 1), 10_000)
+    : 1;
+  const limit = Number.isFinite(requestedLimit)
+    ? Math.min(Math.max(Math.trunc(requestedLimit), 1), 50)
+    : 20;
   const from = (page - 1) * limit;
   const to = from + limit;
 

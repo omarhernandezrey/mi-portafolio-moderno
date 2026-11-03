@@ -55,6 +55,7 @@ async function handleSend(req: NextRequest) {
       .from('subscribers')
       .select('id, email')
       .eq('confirmed', true)
+      .is('unsubscribed_at', null)
       .or(`last_edition_slug.is.null,last_edition_slug.neq.${editionSlug}`)
       .limit(MAX_PER_RUN);
 
