@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { useAdminToast } from '@/hooks/useAdminToast';
 import { adminButtonClasses } from '@/components/admin/ui/AdminButton';
+import { toCSV } from '@/lib/csv';
 import type { Lead } from '@/lib/admin/types';
 
 interface ExportLeadsButtonProps {
@@ -41,10 +42,7 @@ export default function ExportLeadsButton({ leads }: ExportLeadsButtonProps) {
       ]);
 
       // Unir todo en formato CSV (usando punto y coma para mejor compatibilidad con Excel en regiones latinas)
-      const csvContent = [
-        headers.join(";"),
-        ...rows.map(e => e.map(val => `"${val}"`).join(";"))
-      ].join("\n");
+      const csvContent = `\uFEFF${toCSV([headers, ...rows], ';')}`;
 
       // Crear el archivo y descargar
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
     // ¿Ya existe y está confirmado? No lo "desconfirmamos" ni reseteamos su fecha
     const { data: existing } = await supabaseServer
       .from('subscribers')
-      .select('id, confirmed')
+      .select('id, confirmed, unsubscribed_at')
       .eq('email', email)
       .maybeSingle();
 
-    if (existing?.confirmed) {
+    if (existing?.confirmed && !existing.unsubscribed_at) {
       // Respuesta genérica OK sin cambiar estado (anti enumeration + anti sabotaje)
       return NextResponse.json({ success: true });
     }
@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
         source: 'newsletter_form',
         confirmed: false,
         confirmation_token: token,
+        unsubscribed_at: null,
         // Solo setear created_at en inserts nuevos — no pisar la fecha original
         ...(existing ? {} : { created_at: new Date().toISOString() }),
       }, { onConflict: 'email' });

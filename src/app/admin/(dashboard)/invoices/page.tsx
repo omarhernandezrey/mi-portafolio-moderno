@@ -46,21 +46,35 @@ function formatDate(value: string | null) {
   });
 }
 
+function totalsByCurrency(
+  invoices: Array<{ total: number | string | null; currency: string | null }>
+): Record<string, number> {
+  return invoices.reduce<Record<string, number>>((acc, invoice) => {
+    const currency = invoice.currency || 'USD';
+    acc[currency] = (acc[currency] || 0) + (Number(invoice.total) || 0);
+    return acc;
+  }, {});
+}
+
+function formatTotals(totals: Record<string, number>): string {
+  const entries = Object.entries(totals).filter(([, value]) => value > 0);
+  return entries.length > 0
+    ? entries.map(([currency, value]) => formatMoney(value, currency)).join(' · ')
+    : formatMoney(0);
+}
+
 export default async function AdminInvoicesPage() {
   const invoices = await getInvoices();
   const activeInvoices = invoices.filter(
     (invoice) => invoice.status !== 'cancelled'
   );
-  const totalBilled = activeInvoices.reduce(
-    (sum, invoice) => sum + (Number(invoice.total) || 0),
-    0
+  const totalBilled = formatTotals(totalsByCurrency(activeInvoices));
+  const pending = formatTotals(
+    totalsByCurrency(invoices.filter((invoice) => invoice.status === 'sent'))
   );
-  const pending = invoices
-    .filter((invoice) => invoice.status === 'sent')
-    .reduce((sum, invoice) => sum + (Number(invoice.total) || 0), 0);
-  const collected = invoices
-    .filter((invoice) => invoice.status === 'paid')
-    .reduce((sum, invoice) => sum + (Number(invoice.total) || 0), 0);
+  const collected = formatTotals(
+    totalsByCurrency(invoices.filter((invoice) => invoice.status === 'paid'))
+  );
 
   return (
     <div className="space-y-5 lg:space-y-6">
@@ -86,21 +100,21 @@ export default async function AdminInvoicesPage() {
       >
         <StatCard
           title="Total facturado"
-          value={formatMoney(totalBilled)}
+          value={totalBilled}
           icon={<DollarSign size={19} />}
           color="primary"
           description="Facturas vigentes emitidas"
         />
         <StatCard
           title="Pendiente"
-          value={formatMoney(pending)}
+          value={pending}
           icon={<Clock size={19} />}
           color="warning"
           description="Enviadas sin cobrar"
         />
         <StatCard
           title="Cobrado"
-          value={formatMoney(collected)}
+          value={collected}
           icon={<CheckCircle2 size={19} />}
           color="success"
           description="Pagos confirmados"

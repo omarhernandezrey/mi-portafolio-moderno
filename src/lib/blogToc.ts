@@ -35,10 +35,19 @@ export function slugifyHeading(text: string): string {
  */
 export function extractHeadings(content: string): BlogHeading[] {
   const headings: BlogHeading[] = [];
-  const headingPattern = /^(#{2,3})\s+(.+?)\s*#*\s*$/gm;
-  let match: RegExpExecArray | null;
+  const headingPattern = /^(#{2,3})\s+(.+?)\s*#*\s*$/;
+  let inFence = false;
 
-  while ((match = headingPattern.exec(content)) !== null) {
+  for (const line of content.split(/\r?\n/)) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+
+    const match = line.match(headingPattern);
+    if (!match) continue;
+
     const level = match[1].length as 2 | 3;
     const text = cleanHeadingText(match[2]);
     if (!text || SKIPPED_HEADINGS.test(text)) continue;

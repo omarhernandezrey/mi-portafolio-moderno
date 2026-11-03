@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+
+const patchSchema = z.object({
+  confirmed: z.boolean().optional(),
+  unsubscribed_at: z.string().datetime().nullable().optional(),
+}).strict();
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin('owner');
@@ -31,10 +37,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   const { id } = await params;
   const body = await req.json();
+  const result = patchSchema.safeParse(body);
+
+  if (!result.success || Object.keys(result.data).length === 0) {
+    return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
+  }
 
   const { data, error } = await supabaseServer
     .from('subscribers')
-    .update(body)
+    .update(result.data)
     .eq('id', id)
     .select()
     .single();
@@ -45,7 +56,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     action: 'subscriber.update',
     resourceType: 'subscriber',
     resourceId: id,
-    metadata: { keys: Object.keys(body) },
+    metadata: { keys: Object.keys(result.data) },
   });
 
   return NextResponse.json(data);

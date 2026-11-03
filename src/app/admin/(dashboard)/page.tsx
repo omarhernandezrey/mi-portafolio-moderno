@@ -98,29 +98,58 @@ function getBogotaDateKey(date: Date): string {
   }).format(date);
 }
 
-function formatCurrency(value: number): string {
-  return `$${value.toLocaleString('es-CO')}`;
+const BOGOTA_OFFSET_MS = -5 * 60 * 60 * 1000;
+
+function bogotaStartOfDay(daysAgo = 0): Date {
+  const nowBogota = new Date(Date.now() + BOGOTA_OFFSET_MS);
+  const date = new Date(nowBogota);
+  date.setUTCDate(date.getUTCDate() - daysAgo);
+  date.setUTCHours(0, 0, 0, 0);
+  return new Date(date.getTime() - BOGOTA_OFFSET_MS);
+}
+
+function bogotaStartOfMonth(monthsAgo = 0): Date {
+  const nowBogota = new Date(Date.now() + BOGOTA_OFFSET_MS);
+  const date = new Date(nowBogota);
+  date.setUTCDate(1);
+  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCMonth(date.getUTCMonth() - monthsAgo);
+  return new Date(date.getTime() - BOGOTA_OFFSET_MS);
+}
+
+function formatMoney(value: number, currency: string): string {
+  try {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0,
+    }).format(value);
+  } catch {
+    return `${currency} ${value.toLocaleString('es-CO')}`;
+  }
+}
+
+function formatTotals(totals: Record<string, number>): string {
+  const entries = Object.entries(totals).filter(([, value]) => value > 0);
+  return entries.length > 0
+    ? entries.map(([currency, value]) => formatMoney(value, currency)).join(' · ')
+    : formatMoney(0, 'USD');
+}
+
+function addTotals(
+  rows: Array<{ total: number | null; currency: string | null }>
+): Record<string, number> {
+  return rows.reduce<Record<string, number>>((acc, row) => {
+    const currency = row.currency || 'USD';
+    acc[currency] = (acc[currency] || 0) + (row.total || 0);
+    return acc;
+  }, {});
 }
 
 async function getStats(includeRevenue: boolean) {
-  const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-  const firstDayOfPrevMonth = new Date(
-    now.getFullYear(),
-    now.getMonth() - 1,
-    1
-  ).toISOString();
-  const lastDayOfPrevMonth = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    0,
-    23,
-    59,
-    59
-  ).toISOString();
-  const sevenDaysAgo = new Date(now);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-  sevenDaysAgo.setHours(0, 0, 0, 0);
+  const firstDayOfMonth = bogotaStartOfMonth(0);
+  const firstDayOfPrevMonth = bogotaStartOfMonth(1);
+  const firstDayOfMonthIso = firstDayOfMonth.toISOString();
 
   const [
     { count: monthLeads },
@@ -130,23 +159,21 @@ async function getStats(includeRevenue: boolean) {
     { count: urgentTickets },
     { data: recentTickets },
     { data: recentLeads },
-    { data: leadStatuses },
-    { data: activityLeads },
   ] = await Promise.all([
     supabaseServer
       .from('leads')
       .select('*', { count: 'exact', head: true })
-      .gte('created_at', firstDayOfMonth),
+      .gte('created_at', firstDayOfMonthIso),
     supabaseServer
       .from('leads')
       .select('*', { count: 'exact', head: true })
-      .gte('created_at', firstDayOfPrevMonth)
-      .lte('created_at', lastDayOfPrevMonth),
+      .gte('created_at', firstDayOfPrevMonth.toISOString())
+      .lt('created_at', firstDayOfMonthIso),
     supabaseServer
       .from('leads')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'paid')
-      .gte('created_at', firstDayOfMonth),
+      .gte('paid_at', firstDayOfMonthIso),
     supabaseServer
       .from('tickets')
       .select('*', { count: 'exact', head: true })
@@ -167,29 +194,23 @@ async function getStats(includeRevenue: boolean) {
       .select('id, name, email, service_requested, status, created_at')
       .order('created_at', { ascending: false })
       .limit(5),
-    supabaseServer.from('leads').select('status').limit(1000),
-    supabaseServer
-      .from('leads')
-      .select('created_at')
-      .gte('created_at', sevenDaysAgo.toISOString())
-      .limit(1000),
   ]);
 
-  let invoiceData: Array<{ total: number | null }> = [];
-  let prevInvoiceData: Array<{ total: number | null }> = [];
+  let invoiceData: Array<{ total: number | null; currency: string | null }> = [];
+  let prevInvoiceData: Array<{ total: number | null; currency: string | null }> = [];
 
   if (includeRevenue) {
     const [currentInvoices, previousInvoices] = await Promise.all([
       supabaseServer
         .from('invoices')
-        .select('total')
-        .gte('created_at', firstDayOfMonth)
+        .select('total, currency')
+        .gte('created_at', firstDayOfMonthIso)
         .eq('status', 'paid'),
       supabaseServer
         .from('invoices')
-        .select('total')
-        .gte('created_at', firstDayOfPrevMonth)
-        .lte('created_at', lastDayOfPrevMonth)
+        .select('total, currency')
+        .gte('created_at', firstDayOfPrevMonth.toISOString())
+        .lt('created_at', firstDayOfMonthIso)
         .eq('status', 'paid'),
     ]);
 
@@ -197,50 +218,65 @@ async function getStats(includeRevenue: boolean) {
     prevInvoiceData = previousInvoices.data ?? [];
   }
 
-  const statusCounts = (leadStatuses ?? []).reduce<Record<string, number>>(
-    (acc, lead) => {
-      const key = lead.status || 'new';
-      acc[key] = (acc[key] || 0) + 1;
-      return acc;
-    },
-    {}
+  const statusCounts = Object.fromEntries(
+    await Promise.all(
+      PIPELINE_STAGES.map(async (stage) => {
+        const { count } = await supabaseServer
+          .from('leads')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', stage.key);
+        return [stage.key, count || 0] as const;
+      })
+    )
   );
 
-  const activityDays = Array.from({ length: 7 }, (_, index) => {
-    const date = new Date(sevenDaysAgo);
-    date.setDate(sevenDaysAgo.getDate() + index);
+  const activityRanges = Array.from({ length: 7 }, (_, index) => {
+    const start = bogotaStartOfDay(6 - index);
+    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
     return {
-      key: getBogotaDateKey(date),
-      label: date
+      start,
+      end,
+      key: getBogotaDateKey(start),
+      label: start
         .toLocaleDateString('es-CO', {
           weekday: 'short',
           timeZone: 'America/Bogota',
         })
         .replace('.', ''),
-      count: 0,
     };
   });
 
-  for (const lead of activityLeads ?? []) {
-    const key = getBogotaDateKey(new Date(lead.created_at));
-    const day = activityDays.find((entry) => entry.key === key);
-    if (day) day.count += 1;
-  }
+  const activityDays = await Promise.all(
+    activityRanges.map(async (range) => {
+      const { count } = await supabaseServer
+        .from('leads')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', range.start.toISOString())
+        .lt('created_at', range.end.toISOString());
+      return { key: range.key, label: range.label, count: count || 0 };
+    })
+  );
 
-  const monthRevenue = invoiceData.reduce(
-    (sum, invoice) => sum + (invoice.total || 0),
-    0
+  const revenueByCurrency = addTotals(invoiceData);
+  const prevRevenueByCurrency = addTotals(prevInvoiceData);
+  const revenueCurrencies = Object.keys(revenueByCurrency).filter(
+    (currency) => revenueByCurrency[currency] > 0
   );
-  const prevRevenue = prevInvoiceData.reduce(
-    (sum, invoice) => sum + (invoice.total || 0),
-    0
-  );
+  const singleCurrency =
+    revenueCurrencies.length === 1 ? revenueCurrencies[0] : null;
+  const revenueIsMixed = revenueCurrencies.length > 1;
+  const monthRevenue = singleCurrency ? revenueByCurrency[singleCurrency] : 0;
+  const prevRevenue = singleCurrency
+    ? prevRevenueByCurrency[singleCurrency] || 0
+    : 0;
   const leadsDelta =
     prevLeads && prevLeads > 0
       ? ((monthLeads || 0) - prevLeads) / prevLeads * 100
       : null;
   const revenueDelta =
-    prevRevenue > 0 ? ((monthRevenue - prevRevenue) / prevRevenue) * 100 : null;
+    singleCurrency && prevRevenue > 0
+      ? ((monthRevenue - prevRevenue) / prevRevenue) * 100
+      : null;
   const conversionRate =
     monthLeads && monthLeads > 0 ? ((monthPaid || 0) / monthLeads) * 100 : 0;
 
@@ -254,8 +290,14 @@ async function getStats(includeRevenue: boolean) {
     statusCounts,
     activityDays,
     activityTotal: activityDays.reduce((sum, day) => sum + day.count, 0),
-    monthRevenue,
+    revenueByCurrency,
+    revenueLabel: formatTotals(revenueByCurrency),
+    revenueIsMixed,
     invoiceCount: invoiceData.length,
+    averageTicketLabel:
+      singleCurrency && invoiceData.length > 0
+        ? formatMoney(monthRevenue / invoiceData.length, singleCurrency)
+        : null,
     leadsDelta,
     revenueDelta,
     conversionRate,
@@ -281,8 +323,6 @@ export default async function AdminDashboardPage() {
     (sum, stage) => sum + (stats.statusCounts[stage.key] || 0),
     0
   );
-  const averageTicket =
-    stats.invoiceCount > 0 ? stats.monthRevenue / stats.invoiceCount : 0;
   const leadsTrend =
     stats.leadsDelta === null
       ? {
@@ -380,25 +420,30 @@ export default async function AdminDashboardPage() {
         {canSeeRevenue ? (
           <StatCard
             title="Ingresos del mes"
-            value={formatCurrency(stats.monthRevenue)}
+            value={stats.revenueLabel}
             icon={<DollarSign size={20} />}
             trend={
-              stats.revenueDelta === null
+              stats.revenueIsMixed
                 ? {
-                    value: 'Sin base',
-                    direction: 'neutral',
-                    label: 'Primer mes con datos',
+                    value: 'Multimoneda',
+                    direction: 'neutral' as const,
+                    label: 'Totales separados por moneda',
                   }
-                : {
-                    value: `${stats.revenueDelta >= 0 ? '+' : ''}${stats.revenueDelta.toFixed(1)}%`,
-                    direction:
-                      stats.revenueDelta >= 0 ? 'up' : 'down',
-                    label: 'vs mes anterior',
-                  }
+                : stats.revenueDelta === null
+                  ? {
+                      value: 'Sin base',
+                      direction: 'neutral' as const,
+                      label: 'Primer mes con datos',
+                    }
+                  : {
+                      value: `${stats.revenueDelta >= 0 ? '+' : ''}${stats.revenueDelta.toFixed(1)}%`,
+                      direction:
+                        stats.revenueDelta >= 0 ? ('up' as const) : ('down' as const),
+                      label: 'vs mes anterior',
+                    }
             }
             color="accent"
             description="Facturación cobrada durante el mes"
-            sparkline={stats.activityDays.map((day) => day.count)}
           />
         ) : (
           <StatCard
@@ -781,11 +826,11 @@ export default async function AdminDashboardPage() {
                 <>
                   <MetricItem
                     label="Ingresos"
-                    value={formatCurrency(stats.monthRevenue)}
+                    value={stats.revenueLabel}
                   />
                   <MetricItem
                     label="Ticket promedio"
-                    value={formatCurrency(averageTicket)}
+                    value={stats.averageTicketLabel ?? '—'}
                   />
                 </>
               )}

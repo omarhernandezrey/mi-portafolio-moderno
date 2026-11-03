@@ -14,15 +14,25 @@ const createPostSchema = z.object({
   category: z.enum(CATEGORIES).optional().default("general"),
   title: z.string().trim().max(120).optional(),
   body: z.string().trim().min(1).max(5000),
-  link_url: z.string().trim().url().max(500).optional().or(z.literal("")),
+  link_url: z
+    .string()
+    .trim()
+    .url()
+    .max(500)
+    .refine((value) => /^https?:\/\//i.test(value), 'Solo se permiten enlaces http/https')
+    .optional()
+    .or(z.literal("")),
   image_data_urls: z.array(z.string()).max(6).optional(), // hasta 6 imágenes "data:image/png;base64,...."
   website: z.string().optional(), // honeypot
 });
 
 const IMAGE_DATA_URL_RE = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/;
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 1024 * 1024;
+const MAX_TOTAL_IMAGE_LENGTH = 4_000_000;
 
 async function uploadPostImage(dataUrl: string): Promise<string | null> {
+  if (dataUrl.length > 1_500_000) return null;
+
   const match = dataUrl.match(IMAGE_DATA_URL_RE);
   if (!match) return null;
 
@@ -80,6 +90,15 @@ export async function POST(req: NextRequest) {
 
     const { author_name, author_email, lang, category, title, body: content, link_url, image_data_urls, website } =
       result.data;
+
+    const totalImageLength =
+      image_data_urls?.reduce((sum, dataUrl) => sum + dataUrl.length, 0) ?? 0;
+    if (totalImageLength > MAX_TOTAL_IMAGE_LENGTH) {
+      return NextResponse.json(
+        { error: "Las imágenes superan el tamaño máximo permitido (4 MB)." },
+        { status: 413 }
+      );
+    }
 
     // Honeypot: si el campo oculto viene relleno, es un bot — respondemos
     // éxito falso sin insertar nada, para no delatar la detección.

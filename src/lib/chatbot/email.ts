@@ -1,27 +1,43 @@
 import { Resend } from 'resend';
 import { serverEnv, clientEnv } from '@/config/env';
 import { buildWhatsAppUrl } from '@/config/whatsapp';
+import { buildUnsubscribeUrl } from '@/lib/newsletter/unsubscribe';
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function singleLine(value: string): string {
+  return value.replace(/[\r\n]+/g, ' ').trim();
+}
 
 export async function sendContactNotification(name: string, email: string, message: string) {
   if (!serverEnv.RESEND_API_KEY) return null;
 
   const resend = new Resend(serverEnv.RESEND_API_KEY);
+  const safeName = singleLine(name);
+  const safeEmail = singleLine(email);
 
   try {
     await resend.emails.send({
       from: 'Omar Hernández <contacto@omarhernandezrey.com>',
       to: ['omarhernandezrey@gmail.com'],
-      replyTo: email,
-      subject: `📩 Nuevo mensaje de ${name} — Formulario de contacto`,
+      replyTo: safeEmail,
+      subject: `📩 Nuevo mensaje de ${safeName} — Formulario de contacto`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px;">
           <h2 style="color: #00cba9;">Nuevo mensaje desde el formulario</h2>
-          <p><strong>Nombre:</strong> ${name}</p>
-          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+          <p><strong>Nombre:</strong> ${escapeHtml(name)}</p>
+          <p><strong>Email:</strong> <a href="mailto:${escapeHtml(safeEmail)}">${escapeHtml(email)}</a></p>
           <hr style="border:none; border-top:1px solid #eee; margin: 20px 0;" />
           <p><strong>Mensaje:</strong></p>
           <blockquote style="border-left: 4px solid #00cba9; padding-left: 16px; margin: 8px 0; color: #555;">
-            ${message.replace(/\n/g, '<br/>')}
+            ${escapeHtml(message).replace(/\n/g, '<br/>')}
           </blockquote>
         </div>
       `,
@@ -38,16 +54,16 @@ export async function sendFollowUpEmail(to: string, name: string, service: strin
   }
 
   const resend = new Resend(serverEnv.RESEND_API_KEY);
-
-  const subject = `¿En qué más puedo ayudarte con ${service}? — Omar Hernández`;
+  const safeService = singleLine(service || 'desarrollo web');
+  const subject = `¿En qué más puedo ayudarte con ${safeService}? — Omar Hernández`;
   
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
-      <p>Hola ${name || 'allí'},</p>
-      <p>Hace unos días nos escribiste sobre tu proyecto de <strong>${service || 'desarrollo web'}</strong>.</p>
+      <p>Hola ${escapeHtml(name || 'allí')},</p>
+      <p>Hace unos días nos escribiste sobre tu proyecto de <strong>${escapeHtml(service || 'desarrollo web')}</strong>.</p>
       <p>Me paso por aquí personalmente para saber si tienes alguna duda adicional o si te gustaría que agendemos una llamada corta de 15 minutos para concretar detalles.</p>
-      <p>Puedes agendar directamente aquí: <a href="${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}">${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}</a></p>
-      <p>O si prefieres, escríbeme por WhatsApp: <a href="${buildWhatsAppUrl('Hola Omar, te escribo por el seguimiento de mi proyecto de ' + (service || 'desarrollo web') + '.')}">Chat directo</a></p>
+      <p>Puedes agendar directamente aquí: <a href="${escapeHtml(clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL)}">${escapeHtml(clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL)}</a></p>
+      <p>O si prefieres, escríbeme por WhatsApp: <a href="${escapeHtml(buildWhatsAppUrl('Hola Omar, te escribo por el seguimiento de mi proyecto de ' + (service || 'desarrollo web') + '.'))}">Chat directo</a></p>
       <br/>
       <p>¡Quedo atento!</p>
       <p>—<br/><strong>Omar Hernández Rey</strong><br/>Full Stack Developer</p>
@@ -78,12 +94,13 @@ export async function sendLeadMagnetFollowUp(to: string, source: string) {
   if (!serverEnv.RESEND_API_KEY) return null;
 
   const resend = new Resend(serverEnv.RESEND_API_KEY);
-  const subject = `¿Te sirvió el recurso sobre ${source}? — Omar Hernández`;
+  const safeSource = singleLine(source);
+  const subject = `¿Te sirvió el recurso sobre ${safeSource}? — Omar Hernández`;
 
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
       <p>Hola de nuevo,</p>
-      <p>Ayer descargaste el recurso: <strong>${source}</strong>.</p>
+      <p>Ayer descargaste el recurso: <strong>${escapeHtml(source)}</strong>.</p>
       <p>Me paso por aquí solo para saber si pudiste leerlo y si te generó alguna duda que quieras resolver conmigo.</p>
       <p>Si estás pensando en arrancar un proyecto digital este año, me encantaría escucharte y ver si puedo aportarte valor.</p>
       <p>Puedes agendar una sesión de 15 minutos aquí: <a href="${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}">${clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL}</a></p>
@@ -111,7 +128,7 @@ export async function sendNewsletterConfirmation(to: string, token: string) {
   if (!serverEnv.RESEND_API_KEY) return null;
 
   const resend = new Resend(serverEnv.RESEND_API_KEY);
-  const confirmUrl = `${clientEnv.NEXT_PUBLIC_SITE_URL}/api/newsletter/confirm?token=${token}`;
+  const confirmUrl = `${clientEnv.NEXT_PUBLIC_SITE_URL}/api/newsletter/confirm?token=${encodeURIComponent(token)}`;
 
   const html = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
@@ -143,7 +160,7 @@ export async function sendNewsletterEdition(to: string, subject: string, htmlCon
   if (!serverEnv.RESEND_API_KEY) return null;
 
   const resend = new Resend(serverEnv.RESEND_API_KEY);
-  const unsubscribeUrl = `${clientEnv.NEXT_PUBLIC_SITE_URL}/api/newsletter/unsubscribe?id=${subscriberId}`;
+  const unsubscribeUrl = buildUnsubscribeUrl(subscriberId);
 
   const finalHtml = `
     <div style="font-family: sans-serif; line-height: 1.6; color: #333;">

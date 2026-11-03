@@ -30,15 +30,17 @@ export async function POST(req: NextRequest) {
     const { email, reason } = result.data;
 
     // 1. Conversaciones asociadas: por visitor_email O por email dentro de facts
-    const { data: convsByVisitor } = await supabaseServer
+    const { data: convsByVisitor, error: convsVisitorError } = await supabaseServer
       .from('conversations')
       .select('id')
       .eq('visitor_email', email);
+    if (convsVisitorError) throw convsVisitorError;
 
-    const { data: convsByFacts } = await supabaseServer
+    const { data: convsByFacts, error: convsFactsError } = await supabaseServer
       .from('conversations')
       .select('id')
       .filter('facts->>email', 'eq', email);
+    if (convsFactsError) throw convsFactsError;
 
     const convIds = Array.from(new Set([
       ...(convsByVisitor || []).map(c => c.id),
@@ -47,13 +49,16 @@ export async function POST(req: NextRequest) {
 
     // 2. Leads: por conversation_id O directamente por email (localizar antes de borrar,
     // para poder limpiar también sus tickets de soporte).
-    const { data: leadsByConv } = convIds.length > 0
+    const { data: leadsByConv, error: leadsConvError } = convIds.length > 0
       ? await supabaseServer.from('leads').select('id').in('conversation_id', convIds)
-      : { data: [] as { id: string }[] };
-    const { data: leadsByEmail } = await supabaseServer
+      : { data: [] as { id: string }[], error: null };
+    if (leadsConvError) throw leadsConvError;
+
+    const { data: leadsByEmail, error: leadsEmailError } = await supabaseServer
       .from('leads')
       .select('id')
       .eq('email', email);
+    if (leadsEmailError) throw leadsEmailError;
 
     const leadIds = Array.from(new Set([
       ...(leadsByConv || []).map(l => l.id),
@@ -65,11 +70,12 @@ export async function POST(req: NextRequest) {
     // ticket_messages tiene ON DELETE CASCADE sobre tickets, un solo delete basta.
     let deletedTickets = 0;
     if (leadIds.length > 0) {
-      const { data: delTickets } = await supabaseServer
+      const { data: delTickets, error: ticketsError } = await supabaseServer
         .from('tickets')
         .delete()
         .in('lead_id', leadIds)
         .select('id');
+      if (ticketsError) throw ticketsError;
       deletedTickets = delTickets?.length || 0;
     }
 
@@ -84,7 +90,12 @@ export async function POST(req: NextRequest) {
 
     // 3. Mensajes y conversaciones
     if (convIds.length > 0) {
-      await supabaseServer.from('messages').delete().in('conversation_id', convIds);
+      const { error: messagesError } = await supabaseServer
+        .from('messages')
+        .delete()
+        .in('conversation_id', convIds);
+      if (messagesError) throw messagesError;
+
       const { error: delError } = await supabaseServer
         .from('conversations')
         .delete()
@@ -93,7 +104,11 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Suscriptores (newsletter + lead magnets) — GDPR exige borrar TODOS los datos
-    await supabaseServer.from('subscribers').delete().eq('email', email);
+    const { error: subscribersError } = await supabaseServer
+      .from('subscribers')
+      .delete()
+      .eq('email', email);
+    if (subscribersError) throw subscribersError;
 
     if (convIds.length === 0 && deletedLeads === 0) {
       // Respuesta genérica: no revelamos si el email existe en la DB

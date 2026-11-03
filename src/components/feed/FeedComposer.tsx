@@ -6,8 +6,42 @@ import { Image as ImageIcon, Link2, Send, X } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { FeedPost } from "@/lib/feed";
 
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 12 * 1024 * 1024;
+const MAX_DATA_URL_LENGTH = 600_000;
 const MAX_IMAGES = 6;
+
+async function compressImage(file: File): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+
+  try {
+    let scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    let quality = 0.82;
+
+    for (let attempt = 0; attempt < 6; attempt++) {
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Canvas no disponible");
+
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL("image/webp", quality);
+
+      if (dataUrl.length <= MAX_DATA_URL_LENGTH) return dataUrl;
+
+      if (attempt % 2 === 0) {
+        quality = Math.max(0.55, quality - 0.12);
+      } else {
+        scale *= 0.85;
+      }
+    }
+
+    throw new Error("La imagen sigue siendo demasiado grande");
+  } finally {
+    bitmap.close();
+  }
+}
 
 export default function FeedComposer({
   onPosted,
@@ -21,19 +55,45 @@ export default function FeedComposer({
   const [linkUrl, setLinkUrl] = useState("");
   const [showLink, setShowLink] = useState(false);
   const [imageDataUrls, setImageDataUrls] = useState<string[]>([]);
+  const [imageError, setImageError] = useState("");
+  const [isProcessingImages, setIsProcessingImages] = useState(false);
   const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error" | "rateLimited">("idle");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []).slice(0, MAX_IMAGES - imageDataUrls.length);
-    for (const file of files) {
-      if (file.size > MAX_IMAGE_BYTES) continue;
-      const reader = new FileReader();
-      reader.onload = () => setImageDataUrls((prev) => [...prev, reader.result as string].slice(0, MAX_IMAGES));
-      reader.readAsDataURL(file);
-    }
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []).slice(
+      0,
+      MAX_IMAGES - imageDataUrls.length
+    );
     e.target.value = "";
+
+    if (files.length === 0) return;
+
+    setImageError("");
+    setIsProcessingImages(true);
+
+    try {
+      for (const file of files) {
+        if (!file.type.startsWith("image/") || file.size > MAX_IMAGE_BYTES) {
+          setImageError(
+            "Alguna imagen no es válida o supera el límite de 12 MB."
+          );
+          continue;
+        }
+
+        try {
+          const dataUrl = await compressImage(file);
+          setImageDataUrls((prev) =>
+            [...prev, dataUrl].slice(0, MAX_IMAGES)
+          );
+        } catch {
+          setImageError("No se pudo procesar una de las imágenes.");
+        }
+      }
+    } finally {
+      setIsProcessingImages(false);
+    }
   };
 
   const removeImage = (index: number) => {
@@ -47,12 +107,13 @@ export default function FeedComposer({
     setLinkUrl("");
     setShowLink(false);
     setImageDataUrls([]);
+    setImageError("");
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !body.trim() || status === "submitting") return;
+    if (!name.trim() || !email.trim() || !body.trim() || status === "submitting" || isProcessingImages) return;
 
     setStatus("submitting");
     try {
@@ -198,6 +259,12 @@ export default function FeedComposer({
         </div>
       )}
 
+      {imageError && (
+        <p className="mb-3 text-xs font-medium" style={{ color: "#dc2626" }}>
+          {imageError}
+        </p>
+      )}
+
       {/* Honeypot anti-spam: campo oculto, invisible para humanos */}
       <input
         type="text"
@@ -244,7 +311,7 @@ export default function FeedComposer({
 
         <motion.button
           type="submit"
-          disabled={status === "submitting" || !name.trim() || !email.trim() || !body.trim()}
+          disabled={status === "submitting" || isProcessingImages || !name.trim() || !email.trim() || !body.trim()}
           whileTap={{ scale: 0.96 }}
           className="inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-bold transition-opacity disabled:opacity-40"
           style={{ backgroundColor: "var(--primary-color)", color: "#fff" }}

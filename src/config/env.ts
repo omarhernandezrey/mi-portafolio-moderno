@@ -28,6 +28,7 @@ export const serverEnv = {
   /** Lista opcional separada por comas. Si está vacía, cualquier usuario con rol en user_roles puede entrar. */
   get ADMIN_ALLOWED_EMAILS() { return process.env.ADMIN_ALLOWED_EMAILS || ""; },
   get CRON_SECRET() { return process.env.CRON_SECRET || ""; },
+  get NEWSLETTER_UNSUBSCRIBE_SECRET() { return process.env.NEWSLETTER_UNSUBSCRIBE_SECRET || ""; },
   get RESEND_API_KEY() { return process.env.RESEND_API_KEY || ""; },
   get NOTION_API_KEY() { return process.env.NOTION_API_KEY || ""; },
   get NOTION_DATABASE_ID() { return process.env.NOTION_DATABASE_ID || ""; },

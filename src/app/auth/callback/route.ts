@@ -8,7 +8,14 @@ import { isEmailAllowed } from '@/lib/admin/access'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/admin'
+  const nextParam = searchParams.get('next') ?? '/admin'
+  // Solo rutas internas: evita //evil.com o /\evil.com como open redirect.
+  const next =
+    nextParam.startsWith('/') &&
+    !nextParam.startsWith('//') &&
+    !nextParam.startsWith('/\\')
+      ? nextParam
+      : '/admin'
 
   if (code) {
     const cookieStore = await cookies()

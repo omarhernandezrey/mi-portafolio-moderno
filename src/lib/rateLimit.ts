@@ -31,5 +31,19 @@ export function checkRateLimit(
 }
 
 export function clientIp(headers: Headers): string {
-  return headers.get('x-forwarded-for')?.split(',')[0].trim() || 'anonymous';
+  // Vercel/proxies confiables setean x-real-ip; el primer valor de
+  // x-forwarded-for lo controla el cliente y es spoofeable.
+  const realIp = headers.get('x-real-ip')?.trim();
+  if (realIp) return realIp;
+
+  const forwarded = headers.get('x-forwarded-for');
+  if (forwarded) {
+    const parts = forwarded
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
+
+  return 'anonymous';
 }

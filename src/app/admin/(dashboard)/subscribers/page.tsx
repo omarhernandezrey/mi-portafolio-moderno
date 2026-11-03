@@ -7,6 +7,7 @@ import {
   Send, UserMinus, Filter, AlertCircle
 } from 'lucide-react';
 import { adminFetch } from '@/lib/admin/client-fetch';
+import { toCSV } from '@/lib/csv';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import StatCard from '@/components/admin/ui/StatCard';
 import { AdminButton } from '@/components/admin/ui/AdminButton';
@@ -27,6 +28,7 @@ const SOURCE_LABELS: Record<string, string> = {
   'checklist-pdf': 'Checklist PDF',
   'guia-precios-pdf': 'Guía de Precios',
   'newsletter': 'Newsletter',
+  'newsletter_form': 'Newsletter',
   'lead-magnet': 'Lead Magnet',
 };
 
@@ -130,13 +132,7 @@ export default function SubscribersPage() {
         s.unsubscribed_at ? new Date(s.unsubscribed_at).toLocaleDateString('es-CO') : 'No',
       ]),
     ];
-    const csv = rows
-      .map(row =>
-        row
-          .map(value => `"${String(value).replace(/"/g, '""')}"`)
-          .join(',')
-      )
-      .join('\n');
+    const csv = toCSV(rows);
     const blob = new Blob([`\uFEFF${csv}`], {
       type: 'text/csv;charset=utf-8;',
     });

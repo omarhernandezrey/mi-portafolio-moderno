@@ -121,25 +121,6 @@ const nextConfig = {
       },
     ];
   },
-
-  // Configuración de webpack para SVGs
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
-    return config;
-  },
-
-  // Configuración de Turbopack
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
 };
 
 export default withNextIntl(nextConfig);
