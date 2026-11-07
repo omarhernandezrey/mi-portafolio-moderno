@@ -279,8 +279,8 @@ export const projectsData: Project[] = [
       en: "React.js Project - Interactive Web Application"
     },
     description: {
-      es: "Proyecto práctico desarrollado durante el Curso de React.js en Platzi. Implementa componentes funcionales, hooks, enrutamiento, manejo de estado y diseño responsive. Desplegado en Vercel como demostración de una aplicación moderna y escalable.",
-      en: "Practical project developed during the React.js Course at Platzi. Implements functional components, hooks, routing, state management, and responsive design. Deployed on Vercel as a demonstration of a modern and scalable application."
+      es: "Proyecto práctico de React.js. Implementa componentes funcionales, hooks, enrutamiento, manejo de estado y diseño responsive. Desplegado en Vercel como demostración de una aplicación moderna y escalable.",
+      en: "Practical React.js project. Implements functional components, hooks, routing, state management, and responsive design. Deployed on Vercel as a demonstration of a modern and scalable application."
     },
     technologies: [
       "React",

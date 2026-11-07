@@ -8,7 +8,6 @@ import {
   FaBoxOpen,
   FaCode,
   FaRobot,
-  FaGraduationCap,
   FaGithub,
   FaMicrophone,
   FaLock,
@@ -197,11 +196,6 @@ const technologyIcons: Record<string, JSX.Element> = {
   ),
 
   // Intereses personales
-  "Platzi Learning": (
-    <FaGraduationCap
-      style={{ color: "#c084fc", width: "48px", height: "48px" }}
-    />
-  ),
   "Open Source": (
     <FaGithub style={{ color: "#a3a3a3", width: "48px", height: "48px" }} />
   ),

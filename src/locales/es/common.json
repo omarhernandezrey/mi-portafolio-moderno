@@ -64,7 +64,7 @@
     "backend": "Back-End",
     "degree": "Ingeniería de Software",
     "university": "Politécnico Grancolombiano",
-    "platform": "Platzi",
+    "platform": "IBM SkillsBuild",
     "downloadCV": "Download CV",
     "personalData": {
       "name": "Nombre",
@@ -188,7 +188,7 @@
       "technical": "Formación Técnica (SENA)",
       "talentTech": "Talento Tech Bogotá",
       "itCertificate": "ITCertificate",
-      "onlineCourses": "Cursos en Línea (SENA),(Platzi) y mas..."
+      "onlineCourses": "Cursos en Línea (SENA) y mas..."
     }
   },
   "contact": {

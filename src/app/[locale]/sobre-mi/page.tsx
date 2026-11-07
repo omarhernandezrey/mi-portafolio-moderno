@@ -224,7 +224,7 @@ const timelineEs = [
   {
     year: '2023',
     title: 'Expansión a Desarrollo Web Moderno',
-    description: 'Ingresé al Politécnico Grancolombiano para estudiar Ingeniería de Software. Inicié formación intensiva en React.js, Vite.js, TailwindCSS y JavaScript avanzado con Platzi. Comencé a construir proyectos full stack con tecnologías modernas.',
+    description: 'Ingresé al Politécnico Grancolombiano para estudiar Ingeniería de Software. Inicié formación intensiva en React.js, Vite.js, TailwindCSS y JavaScript avanzado. Comencé a construir proyectos full stack con tecnologías modernas.',
     icon: <Code2 size={20} />,
   },
   {
@@ -251,7 +251,7 @@ const timelineEn = [
   {
     year: '2023',
     title: 'Expansion into Modern Web Development',
-    description: 'Enrolled at Politécnico Grancolombiano to study Software Engineering. Started intensive training in React.js, Vite.js, TailwindCSS, and advanced JavaScript with Platzi. Began building full stack projects with modern technologies.',
+    description: 'Enrolled at Politécnico Grancolombiano to study Software Engineering. Started intensive training in React.js, Vite.js, TailwindCSS, and advanced JavaScript. Began building full stack projects with modern technologies.',
     icon: <Code2 size={20} />,
   },
   {
@@ -305,7 +305,6 @@ export default async function SobreMiPage({ params }: Props) {
       { '@type': 'CollegeOrUniversity', 'name': 'Politécnico Grancolombiano' },
       { '@type': 'EducationalOrganization', 'name': 'Servicio Nacional de Aprendizaje (SENA)' },
       { '@type': 'EducationalOrganization', 'name': 'Talento Tech Bogotá - Ministerio TIC' },
-      { '@type': 'EducationalOrganization', 'name': 'Platzi' },
     ],
     'address': {
       '@type': 'PostalAddress',
@@ -534,8 +533,8 @@ export default async function SobreMiPage({ params }: Props) {
           <div className="text-center pt-2">
             <p className="text-text-muted/60 text-sm">
               {isEn
-                ? <>55+ courses completed on Platzi, SENA, and other platforms.{' '}</>
-                : <>Más de 55 cursos completados en Platzi, SENA y otras plataformas.{' '}</>}
+                ? <>Courses and certifications completed with SENA, IBM SkillsBuild, and other platforms.{' '}</>
+                : <>Cursos y certificaciones completados con SENA, IBM SkillsBuild y otras plataformas.{' '}</>}
               <Link href="/#education" className="text-primary font-bold hover:underline">
                 {isEn ? 'View all certificates' : 'Ver todos los certificados'}
               </Link>

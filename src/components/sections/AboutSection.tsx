@@ -11,7 +11,7 @@ import {
 import { useTranslation } from "@/hooks/useTranslation";
 import ProfileCard from "./ProfileCard";
 import ModernInterestCard from "../ui/ModernInterestCard";
-import { Code2, BrainCircuit, Rocket, Coffee, Globe } from "lucide-react";
+import { Code2, BrainCircuit, Coffee, Globe } from "lucide-react";
 
 /* ──────────────────────────────────────────────────────────
    Función para crear partículas aleatorias (solo en cliente) */
@@ -52,7 +52,6 @@ const AboutSection: React.FC = () => {
 
   /* Datos de intereses y enlaces (Actualizados con nueva librería de UI) */
   const interestsData = [
-    { title: "Platzi Learning", href: "https://platzi.com/", icon: <Rocket size={40} strokeWidth={1.5} /> },
     { title: "Open Source", href: "https://opensource.org/", icon: <Globe size={40} strokeWidth={1.5} /> },
     { title: "AI & ML", href: "https://ai.google/", icon: <BrainCircuit size={40} strokeWidth={1.5} /> },
     { title: "Clean Code", href: "https://www.codecademy.com/", icon: <Code2 size={40} strokeWidth={1.5} /> },
