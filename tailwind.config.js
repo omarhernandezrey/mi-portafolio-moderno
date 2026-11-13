@@ -43,6 +43,19 @@ module.exports = {
         "admin-warning": withAlpha("--admin-warning"),
         "admin-danger": withAlpha("--admin-danger"),
         "admin-info": withAlpha("--admin-info"),
+        // Paleta de datos. Fija a propósito (ver globals.css): un color de
+        // serie que se mueve con la paleta activa no puede garantizar
+        // contraste ni separación bajo daltonismo.
+        "chart-1": withAlpha("--chart-1"),
+        "chart-2": withAlpha("--chart-2"),
+        "chart-3": withAlpha("--chart-3"),
+        "chart-4": withAlpha("--chart-4"),
+        "chart-5": withAlpha("--chart-5"),
+        "chart-6": withAlpha("--chart-6"),
+        "chart-7": withAlpha("--chart-7"),
+        "chart-8": withAlpha("--chart-8"),
+        "chart-grid": withAlpha("--chart-grid"),
+        "chart-axis": withAlpha("--chart-axis"),
       },
       // Fuentes optimizadas
       fontFamily: {

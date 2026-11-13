@@ -158,8 +158,10 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 ### Fase 0 — Fundaciones de diseño y datos
 - [x] **T-01** Tokens de dashboard: `borderRadius` nombrado (`field/chip/card/panel/canvas`), elevación (`e1..e4`, con `e3` canonizando la sombra que estaba suelta en `AdminCard`), `fontSize` por rol (`kicker/label/metric/metric-sm/section`, las métricas con `clamp()` para no desbordar a 375 px), duraciones (`fast/base/slow`), easings (`out-expo/in-out-soft`) y radios de glow (`glow-sm/md/lg`). Rama `feat/design-tokens`.
   *Validado:* typecheck 0 errores · lint limpio · 93 tests (33 nuevos en `__tests__/unit/design-tokens.test.ts`) · Tailwind compila y genera las 6 clases probadas · cero hex en el bloque de tokens · las 10 paletas verificadas por test.
-- [ ] **T-02** Paleta categórica de datos para gráficas (`--chart-1..8`, secuencial y divergente) derivada de `primary`/`accent`, validada en contraste sobre `--admin-bg` y sobre `palette4` (clara). Rama `feat/chart-palette`.
-  *Aceptación:* 8 series distinguibles, contraste AA, se adapta al cambio de paleta.
+- [x] **T-02** Paleta de datos: categórica `--chart-1..8`, secuencial `--chart-seq-1..7` (un solo tono, teal) y divergente `--chart-div-*` (teal ← gris neutro → magenta). Rama `feat/chart-palette`.
+  *Decisión de diseño:* la paleta de datos es **la única parte del sistema con color fijo**, a propósito. Un color de serie derivado de `--primary-color` cambiaría con cada una de las 10 paletas y entonces no habría forma de garantizar que dos series sigan distinguiéndose: ni el contraste contra la superficie ni la separación bajo daltonismo sobreviven a un tono que se mueve. Los 8 tonos están calculados en OKLCH con **lightness alternada** (0.50–0.665) para que los pares vecinos se separen también en luminosidad, no solo en tono.
+  *Validado:* los 6 chequeos pasan en superficie oscura (`#070c11`) **y** clara (`#fff`) — banda de lightness, piso de croma, CVD (peor par adyacente ΔE 8.4 deutan / 11.5 tritan), piso de visión normal (peor par ΔE 22.5), contraste ≥ 3:1. Rampa secuencial monótona en lightness con 0.8° de dispersión de tono; divergente simétrica con gris real en el centro (croma 0.032). Los colores de estado (`success/warning/danger/info`) quedan reservados y no se usan como serie. 114 tests verdes (21 nuevos), typecheck y lint limpios, CSS compila.
+  *Pendiente al usarla:* en superficie clara `--chart-8` queda en 2.88:1 → ahí es obligatorio etiqueta visible o vista de tabla. Y `src/lib/charts/palette.ts` expone `assignSeriesColors`, que asigna en orden fijo y agrupa de la 9ª serie en adelante en «Otros» en vez de ciclar tonos.
 - [ ] **T-03** Primitivos faltantes: `Input`, `Select`, `Textarea`, `Checkbox`, `Switch`, `Tabs`, `Tooltip`, `Skeleton`, `Dialog`, `DataTable`. Rama `feat/admin-primitives`.
   *Aceptación:* todos con foco accesible, estados de error, y usados por el resto de fases. Sin romper los 9 primitivos existentes.
 
@@ -216,3 +218,4 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 | 2026-11-12 | Análisis completo | — | — | ✅ |
 | 2026-11-12 | Plan maestro | `docs/plan-maestro-dashboard` | — | ✅ |
 | 2026-11-12 | T-01 Tokens de diseño | `feat/design-tokens` | typecheck · lint · 93 tests · CSS compilado | ✅ |
+| 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |

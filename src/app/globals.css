@@ -536,6 +536,66 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   PALETA DE DATOS — series, magnitud y polaridad
+   Única parte del sistema con color fijo, y es a propósito. Un color de
+   serie derivado de --primary-color cambiaría con cada una de las 10
+   paletas, y entonces no habría forma de garantizar que dos series sigan
+   distinguiéndose: ni el contraste contra la superficie ni la separación
+   bajo daltonismo sobreviven a un tono que se mueve. Estos valores están
+   calculados en OKLCH (lightness alternada para que los pares vecinos se
+   separen también en luminosidad) y verificados: banda de lightness,
+   piso de croma, separación protan/deutan/tritan ΔE ≥ 8, piso de visión
+   normal ΔE ≥ 15 y contraste ≥ 3:1, en superficie oscura (#070c11, la del
+   panel) y clara (#fff, para palette4).
+
+   Reglas de uso:
+   - Los tonos se asignan en orden fijo, nunca en ciclo. Una 9ª serie se
+     agrupa en «Otros» o se separa en múltiplos pequeños; no se inventa
+     un tono nuevo.
+   - --admin-success/warning/danger/info están reservados para estado y
+     no se reutilizan como serie.
+   - --chart-seq-* es un solo tono de claro a oscuro (magnitud).
+   - --chart-div-* son dos tonos con gris neutro en el centro (polaridad).
+     Nunca un tono en el punto medio, nunca arcoíris.
+   - En superficie clara, --chart-8 queda en 2.88:1: ahí es obligatorio
+     etiqueta visible o vista de tabla, no basta el color.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  /* Categórica — identidad. Orden fijo. Slot 1 ancla el teal de marca. */
+  --chart-1: #059583; /* teal      L .600 h 180 */
+  --chart-2: #6559c3; /* violeta   L .530 h 285 */
+  --chart-3: #ac9008; /* oliva     L .660 h  95 */
+  --chart-4: #ab448e; /* magenta   L .550 h 340 */
+  --chart-5: #0897be; /* cian      L .630 h 225 */
+  --chart-6: #c64e31; /* terracota L .580 h  35 */
+  --chart-7: #7f42a6; /* púrpura   L .500 h 310 */
+  --chart-8: #48ac51; /* verde     L .665 h 145 */
+
+  /* Secuencial — magnitud. Un solo tono (180), lightness monótona. */
+  --chart-seq-1: #024e44;
+  --chart-seq-2: #05675a;
+  --chart-seq-3: #008171;
+  --chart-seq-4: #0f9b89;
+  --chart-seq-5: #3bb5a1;
+  --chart-seq-6: #59ceba;
+  --chart-seq-7: #76e9d4;
+
+  /* Divergente — polaridad. Teal ← gris neutro → magenta. */
+  --chart-div-1: #05675a;
+  --chart-div-2: #078e7d;
+  --chart-div-3: #08b7a1;
+  --chart-div-mid: #6b7b8c;
+  --chart-div-4: #d37db8;
+  --chart-div-5: #ac5892;
+  --chart-div-6: #85356e;
+
+  /* Soporte del lienzo: rejilla y ejes recesivos, hueco entre rellenos. */
+  --chart-grid: color-mix(in srgb, var(--admin-line, #1e2c38) 70%, transparent);
+  --chart-axis: color-mix(in srgb, var(--admin-muted, #8ea0b5) 55%, transparent);
+  --chart-gap: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
    TOKENS ESTRUCTURALES — radio, elevación, glow y movimiento
    Deliberadamente sin color propio: se derivan de --primary-color, así
    que acompañan a las 10 paletas sin duplicar un solo valor por paleta.
