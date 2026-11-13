@@ -3,15 +3,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  FaUser,
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-} from "react-icons/fa";
 import { useTranslation } from "@/hooks/useTranslation";
 import ProfileCard from "./ProfileCard";
 import ModernInterestCard from "../ui/ModernInterestCard";
-import { Code2, BrainCircuit, Coffee, Globe } from "lucide-react";
+import { resolveIcon } from "@/lib/portfolio/source/icon-registry";
+import { interestsData, personalData as personalDataFields } from "@/lib/portfolio/source/about";
 
 /* ──────────────────────────────────────────────────────────
    Función para crear partículas aleatorias (solo en cliente) */
@@ -50,32 +46,18 @@ const AboutSection: React.FC = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
-  /* Datos de intereses y enlaces (Actualizados con nueva librería de UI) */
-  const interestsData = [
-    { title: "Open Source", href: "https://opensource.org/", icon: <Globe size={40} strokeWidth={1.5} /> },
-    { title: "AI & ML", href: "https://ai.google/", icon: <BrainCircuit size={40} strokeWidth={1.5} /> },
-    { title: "Clean Code", href: "https://www.codecademy.com/", icon: <Code2 size={40} strokeWidth={1.5} /> },
-    { title: "Tech Coffee", href: "https://confs.tech/", icon: <Coffee size={40} strokeWidth={1.5} /> },
-  ];
+  /* Datos de intereses y enlaces: los datos vienen de
+     src/lib/portfolio/source/about.ts (antes estaban inline aquí). El icono es
+     una clave que resuelve el registro; las props de tamaño siguen puestas en
+     el render, idénticas a antes. */
 
-  /* Datos personales */
-  const personalData = [
-    { 
-      icon: FaUser, 
-      label: t("about.personalData.name"), 
-      value: t("about.personalInfo.fullName") 
-    },
-    {
-      icon: FaMapMarkerAlt,
-      label: t("about.personalData.address"),
-      value: t("about.personalInfo.location"),
-    },
-    { 
-      icon: FaPhoneAlt, 
-      label: t("about.personalData.phone"), 
-      value: t("about.personalInfo.phoneNumber") 
-    },
-  ];
+  /* Datos personales: el módulo guarda las CLAVES de i18n, el texto lo sigue
+     resolviendo t() aquí mismo, como antes. */
+  const personalData = personalDataFields.map((field) => ({
+    icon: resolveIcon(field.iconKey),
+    label: t(field.labelKey),
+    value: t(field.valueKey),
+  }));
 
   /* Efecto: genera partículas tras montar (evita discrepancia SSR/CSR) */
   useEffect(() => {
@@ -258,7 +240,7 @@ const AboutSection: React.FC = () => {
                   whileHover={{ x: 5 }}
                 >
                   <div className="w-10 h-10 rounded-full bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 flex items-center justify-center text-[var(--primary-color)] shadow-lg">
-                    <item.icon size={16} />
+                    {item.icon ? <item.icon size={16} /> : null}
                   </div>
                   <div>
                     <p className="font-mono-label text-[10px] text-[var(--accent-color)]/70">
@@ -304,14 +286,17 @@ const AboutSection: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-8">
-            {interestsData.map((item) => (
-              <ModernInterestCard
-                key={item.title}
-                title={item.title}
-                href={item.href}
-                icon={item.icon}
-              />
-            ))}
+            {interestsData.map((item) => {
+              const Icon = resolveIcon(item.iconKey);
+              return (
+                <ModernInterestCard
+                  key={item.title}
+                  title={item.title}
+                  href={item.href}
+                  icon={Icon ? <Icon size={40} strokeWidth={1.5} /> : undefined}
+                />
+              );
+            })}
           </div>
         </motion.div>
       </motion.div>

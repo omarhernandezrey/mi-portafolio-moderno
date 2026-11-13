@@ -193,13 +193,17 @@ describe('invariantes del esquema', () => {
 
 describe('conteos del contenido original', () => {
   it('quedan registrados para que el seed verifique que no se pierde nada', () => {
+    // Medidos importando los módulos y leyendo .length, no contando a ojo
+    // sobre el archivo: el `interface` de cabecera y los objetos anidados
+    // inflan cualquier grep. Ver la nota en src/lib/portfolio/types.ts.
     expect(CONTENIDO_ORIGINAL).toEqual({
-      proyectos: 24,
-      educacion_items: 173,
-      educacion_certificados: 163,
-      insignias_destacadas: 15,
-      skills: 10,
-      servicios: 6,
+      proyectos: 22,
+      educacion_categorias: 7,
+      educacion_items: 172,
+      educacion_certificados: 171,
+      insignias_destacadas: 7,
+      skills: 8,
+      servicios: 4,
       tecnologias: 42,
       timeline: 4,
     });

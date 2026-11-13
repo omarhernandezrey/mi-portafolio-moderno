@@ -269,14 +269,26 @@ export type PortfolioTableName = keyof typeof PORTFOLIO_TABLES;
 /**
  * Conteos del contenido que había hardcodeado antes de la migración.
  * El seed (T-05) verifica contra estos números que no se perdió nada.
+ *
+ * OBTENIDOS EJECUTANDO EL CÓDIGO, no leyéndolo: se importaron los módulos y se
+ * midió `.length` de cada array, y se imprimió cada registro para confirmarlo.
+ * Un recuento a ojo sobre el archivo da cifras distintas —el `interface` de
+ * cabecera y los objetos anidados inflan cualquier `grep`— y aquí un número
+ * equivocado arruina justamente la garantía que estos valores existen para dar.
+ *
+ * Nota sobre `insignias_destacadas`: el array tiene 7 entradas, pero el
+ * carrusel muestra 8 porque `EducationSection` antepone en runtime una entrada
+ * calculada (`latest-course`, el curso más reciente de `educationData`). Lo que
+ * se migra son las 7 de datos; la octava se sigue derivando.
  */
 export const CONTENIDO_ORIGINAL = {
-  proyectos: 24,
-  educacion_items: 173,
-  educacion_certificados: 163,
-  insignias_destacadas: 15,
-  skills: 10,
-  servicios: 6,
+  proyectos: 22,
+  educacion_categorias: 7,
+  educacion_items: 172,
+  educacion_certificados: 171,
+  insignias_destacadas: 7,
+  skills: 8,
+  servicios: 4,
   tecnologias: 42,
   timeline: 4,
 } as const;

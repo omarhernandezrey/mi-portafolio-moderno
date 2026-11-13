@@ -12,6 +12,7 @@ import ParticleField from '@/components/shared/ParticleFieldLoader';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
+import { timelineEs, timelineEn } from '@/lib/portfolio/source/timeline';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -214,59 +215,9 @@ const servicesEn = [
   { name: 'Landing Pages', icon: <Target size={20} />, href: '/servicios/landing-page', description: 'Conversion-optimized landing pages with A/B testing and behavior analysis.' },
 ];
 
-const timelineEs = [
-  {
-    year: '2020 - 2022',
-    title: 'Fundamentos y Formación Técnica',
-    description: 'Inicié mi camino en desarrollo con el SENA. Cursé y aprobé el tecnólogo en Análisis y Desarrollo de Sistemas de Información (ADSI), construyendo bases sólidas en análisis, diseño y desarrollo de software. Comencé a ofrecer servicios de desarrollo web.',
-    icon: <GraduationCap size={20} />,
-  },
-  {
-    year: '2023',
-    title: 'Expansión a Desarrollo Web Moderno',
-    description: 'Ingresé al Politécnico Grancolombiano para estudiar Ingeniería de Software. Inicié formación intensiva en React.js, Vite.js, TailwindCSS y JavaScript avanzado. Comencé a construir proyectos full stack con tecnologías modernas.',
-    icon: <Code2 size={20} />,
-  },
-  {
-    year: '2024',
-    title: 'Certificaciones y Bootcamps',
-    description: 'Completé el Bootcamp Full Stack de Talento Tech (159 horas, Ministerio TIC). Obtuve certificación ITCertificate como Full Stack Developer Certified Specialist. Desarrollé proyectos complejos como Shopi (e-commerce full stack) y Diccionario Dev (plataforma de aprendizaje con 200+ términos, PostgreSQL y Redis).',
-    icon: <Sparkles size={20} />,
-  },
-  {
-    year: '2025 - Presente',
-    title: 'Especialización Full Stack y Automatización',
-    description: 'Enfoque en automatización de procesos empresariales y arquitecturas escalables. Próximo a graduarme como Ingeniero de Software. Desarrollo de soluciones full stack para clientes en Colombia y remoto USA, con stack React, Next.js, Node.js y PostgreSQL.',
-    icon: <Briefcase size={20} />,
-  },
-];
-
-const timelineEn = [
-  {
-    year: '2020 - 2022',
-    title: 'Foundations & Technical Training',
-    description: 'Started my development path with SENA. Completed the ADSI (Information Systems Analysis and Development) technologist program, building solid foundations in analysis, design, and software development. Began offering web development services.',
-    icon: <GraduationCap size={20} />,
-  },
-  {
-    year: '2023',
-    title: 'Expansion into Modern Web Development',
-    description: 'Enrolled at Politécnico Grancolombiano to study Software Engineering. Started intensive training in React.js, Vite.js, TailwindCSS, and advanced JavaScript. Began building full stack projects with modern technologies.',
-    icon: <Code2 size={20} />,
-  },
-  {
-    year: '2024',
-    title: 'Certifications & Bootcamps',
-    description: 'Completed the Talento Tech Full Stack Bootcamp (159 hours, Ministerio TIC). Earned ITCertificate certification as a Full Stack Developer Certified Specialist. Built complex projects like Shopi (full stack e-commerce) and Diccionario Dev (a learning platform with 200+ terms, PostgreSQL, and Redis).',
-    icon: <Sparkles size={20} />,
-  },
-  {
-    year: '2025 - Present',
-    title: 'Full Stack Specialization & Automation',
-    description: 'Focused on business process automation and scalable architectures. About to graduate as a Software Engineer. Building full stack solutions for clients in Colombia and remote in the US, with a React, Next.js, Node.js, and PostgreSQL stack.',
-    icon: <Briefcase size={20} />,
-  },
-];
+// Los 4 hitos del timeline (ES y EN) vivían aquí inline, con el icono en JSX.
+// Ahora son datos puros en src/lib/portfolio/source/timeline.ts, con `iconKey`
+// en vez del componente. La página nunca pintaba ese icono: el render no cambia.
 
 export default async function SobreMiPage({ params }: Props) {
   const { locale } = await params;

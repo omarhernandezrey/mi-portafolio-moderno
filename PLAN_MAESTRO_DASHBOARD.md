@@ -15,14 +15,16 @@ El panel en `/admin` es un **CRM de agencia freelance**: leads, tickets, factura
 
 | Contenido | Archivo | Registros |
 |---|---|---|
-| Proyectos | `src/lib/projectsData.ts` | **24** |
-| Educación / certificados | `src/lib/educationData.ts` | **173** (163 con certificado) |
-| Certificados destacados | inline en `src/components/sections/EducationSection.tsx` | 15 |
-| Skills | `src/lib/skillsData.ts` | 10 |
-| Tecnologías (marquee) | inline en `src/components/sections/TechMarquee.tsx` | 42 |
-| Servicios | `src/lib/servicesData.ts` + `src/data/servicios.ts` | 6 + 10 |
-| Intereses / datos personales | inline en `src/components/sections/AboutSection.tsx` | 4 + 3 |
-| Experiencia (timeline) | inline en `src/app/[locale]/sobre-mi/page.tsx` | 4 |
+| Proyectos | `src/lib/projectsData.ts` | **22** |
+| Educación / certificados | `src/lib/educationData.ts` | **172** en 7 categorías (171 con certificado) |
+| Certificados destacados | `src/lib/portfolio/source/badges.ts` (antes inline en `EducationSection.tsx`) | 7 |
+| Skills | `src/lib/skillsData.ts` | 8 |
+| Tecnologías (marquee) | `src/lib/portfolio/source/technologies.ts` (antes inline en `TechMarquee.tsx`) | 42 |
+| Servicios | `src/lib/servicesData.ts` | 4 (+ 10 programáticos en `src/data/servicios.ts`) |
+| Intereses / datos personales | `src/lib/portfolio/source/about.ts` (antes inline en `AboutSection.tsx`) | 4 + 3 |
+| Experiencia (timeline) | `src/lib/portfolio/source/timeline.ts` (antes inline en `sobre-mi/page.tsx`) | 4 (es) + 4 (en) |
+
+> **Corrección de cifras (T-05).** La primera versión de esta tabla decía 24 proyectos, 173 ítems de educación, 163 certificados, 15 insignias, 10 skills y 6 servicios. Esas cifras venían de un recuento sobre el texto de los archivos y eran **erróneas**: al importar los módulos y medir `.length`, e imprimir cada registro para confirmarlo, salen 22, 172, 171, 7, 8 y 4. El `interface` de cabecera y los objetos anidados inflan cualquier recuento hecho leyendo. Las cifras reales viven ahora en `CONTENIDO_ORIGINAL` (`src/lib/portfolio/types.ts`) y `__tests__/unit/portfolio-content-counts.test.ts` las compara **en vivo** contra los módulos, así que no pueden volver a desviarse en silencio. Detalle: el carrusel de insignias muestra 8 porque `EducationSection` antepone en runtime una entrada calculada (el curso más reciente de `educationData`); lo que se migra son las 7 de datos y la octava se sigue derivando.
 
 Consecuencia: cada insignia, skill o proyecto nuevo exige programar y desplegar. Eso es exactamente lo que hay que eliminar.
 
@@ -94,7 +96,7 @@ Deuda menor detectada: `src/components/ui/Button.tsx` hardcodea `bg-blue-500` (f
 
 ## 2. Restricciones críticas — violarlas invalida la tarea
 
-1. **NO SE BORRA NADA.** Ni un proyecto, ni una insignia, ni un certificado, ni un módulo del CRM. Migrar ≠ eliminar. Todo contenido actual se traslada a la base de datos **verificando conteos exactos**: 24 proyectos, 173 ítems de educación, 163 certificados, 10 skills, 6 servicios, 42 tecnologías, 4 hitos de timeline.
+1. **NO SE BORRA NADA.** Ni un proyecto, ni una insignia, ni un certificado, ni un módulo del CRM. Migrar ≠ eliminar. Todo contenido actual se traslada a la base de datos **verificando conteos exactos** contra `CONTENIDO_ORIGINAL`: 22 proyectos, 172 ítems de educación en 7 categorías (171 con certificado), 7 insignias destacadas, 8 skills, 4 servicios, 42 tecnologías, 4 hitos de timeline (×2 idiomas).
 2. **EL VISOR DE PROYECTOS NO SE TOCA.** Es `src/components/shared/Card.tsx` (puro CSS + PNG + 3 iframes superpuestos; **no** es `src/components/DeviceFrame.tsx`, que está huérfano). Su geometría es artesanal: laptop `1570×1050 scale(0.15)` con offsets `top:20px/left:8px/right:4px/bottom:4px` sobre `/images/laptop.png`, tablet `1180×761 scale(0.13)`, móvil `334×640 scale(0.1)`, más una cadena de `scale-[0.63]…xl:1.3` acoplada a márgenes negativos. **Solo se le cambia la fuente de datos, nunca el markup ni el CSS.** Contrato de entrada intacto:
    ```ts
    { title: string; description: string; technologies: string[]; repository: string; demo: string; category?: string }
@@ -189,8 +191,14 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
   - `portfolio_profile` es la única tabla sin `position`: se lee por `section`, de una en una.
   *Validado contra un PostgreSQL 16.15 real, no solo revisado:* dos pasadas sin error (idempotente) · 9 tablas, 8 índices `(is_published, position)`, 9 triggers de `updated_at`, 9 políticas, RLS activo en las 9 · con el rol `anon`: ve 1 de 2 filas (oculta el borrador), su `INSERT` es rechazado por la política y su `UPDATE`/`DELETE` afectan 0 filas · el `check` de `percentage` rechaza 150 · `technologies` conserva `{Next.js,React}` sin normalizar · el trigger de `updated_at` dispara.
   *Guardarraíl:* `__tests__/unit/portfolio-schema.test.ts` parsea el SQL y compara columna por columna con los tipos TS. Ya encontró una deriva real durante la propia tarea (el tipo declaraba `position` en `portfolio_profile`, que la tabla no tiene). 169 tests verdes, typecheck y lint limpios.
-- [ ] **T-05** Script de seed que traslada el contenido actual **sin pérdida** desde los 8 archivos del §1.1, resolviendo la duplicación de `/sobre-mi`. Rama `feat/portfolio-seed`.
-  *Aceptación:* conteos exactos verificados por test (24/173/163/10/6/42/4); `features`, `highlights` y `architecture` en JSONB; nombres de tecnología sin normalizar; rutas de certificado preservadas tal cual.
+- [~] **T-05** Trasladar el contenido actual **sin pérdida**. Partido en dos porque la extracción tiene valor por sí sola.
+  - [x] **T-05a** Arrays inline → módulos de datos puros en `src/lib/portfolio/source/`: `badges.ts` (7), `technologies.ts` (42), `timeline.ts` (4+4), `about.ts` (4+3), más `icon-registry.tsx` con 52 claves y `resolveIcon()`. Rama `feat/portfolio-source-modules`.
+    *Por qué hacía falta antes del seed:* el contenido estaba incrustado en componentes y, peor, con **iconos en JSX** (lucide y react-icons), que no son serializables. Ahora cada icono es una clave de cadena que el registro resuelve al mismo componente de antes; `PortfolioIconKey` es la unión literal de claves, así que un typo no compila. Los componentes renderizan exactamente lo mismo: solo cambia de dónde vienen los datos.
+    *Hallazgos durante la extracción:* (1) el `year` del 4.º hito está traducido (`2025 - Presente` / `2025 - Present`) pero `portfolio_timeline.year` es `text` sin idioma — el seed debe decidir o pasarlo a jsonb; (2) el `icon` del timeline **nunca se renderizaba** (el punto es un `div`), así que pasarlo a clave no cambia un pixel; (3) `personalData` no guardaba texto sino claves i18n (`t("about.personalData.name")`), así que se conservaron las claves y no el texto, para no desincronizarlo de `locales/{es,en}/common.json`.
+    *Validado:* typecheck 0 errores · lint limpio · **257 tests** (74 de la extracción + 14 de conteos en vivo).
+    *Deuda preexistente detectada, ajena a esta tarea:* `npx tsc -p tsconfig.jest.json` arroja 816 errores (`jsx: "react"` sin `import React`), idénticos antes y después. Jest no usa ese config (va por `next/jest` + SWC), así que no afecta a los tests, pero está anotado en T-24.
+  - [ ] **T-05b** Script de seed que inserta en Supabase y verifica conteos contra `CONTENIDO_ORIGINAL`, resolviendo la duplicación de `/sobre-mi`. Rama `feat/portfolio-seed`.
+    *Aceptación:* conteos exactos (22/7/172/171/7/8/4/42/4); `features`, `highlights` y `architecture` en JSONB; nombres de tecnología sin normalizar; rutas de certificado preservadas tal cual. **Requiere credenciales reales de Supabase**, que hoy no están disponibles en el entorno (el `.env` vive solo en el PC de Omar): el script se escribe y se prueba contra el PostgreSQL local, y la carga real queda pendiente de validación.
 
 ### Fase 2 — El portafolio público lee de la base de datos
 - [ ] **T-06** Capa de lectura con caché (`unstable_cache` / ISR) y **fallback a los archivos actuales** si la BD no responde. Rama `feat/portfolio-data-layer`.
@@ -242,3 +250,4 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-12 | T-05a Módulos de datos | `feat/portfolio-source-modules` | typecheck · lint · 257 tests · conteos medidos en vivo | ✅ |

@@ -1,121 +1,26 @@
 "use client";
 
 import React from "react";
+import { resolveIcon } from "@/lib/portfolio/source/icon-registry";
 import {
-  FaReact,
-  FaNodeJs,
-  FaCss3Alt,
-  FaHtml5,
-  FaJs,
-  FaPython,
-  FaDocker,
-  FaGitAlt,
-  FaJava,
-} from "react-icons/fa";
-import {
-  SiTailwindcss,
-  SiTypescript,
-  SiNextdotjs,
-  SiPrisma,
-  SiTypeorm,
-  SiPostgresql,
-  SiMongodb,
-  SiRedis,
-  SiExpress,
-  SiNestjs,
-  SiVuedotjs,
-  SiAngular,
-  SiWebpack,
-  SiVite,
-  SiJest,
-  SiStorybook,
-  SiFigma,
-  SiJenkins,
-  SiCircleci,
-  SiGitlab,
-  SiGithubactions,
-  SiVercel,
-  SiRailway,
-  SiFirebase,
-  SiSupabase,
-  SiNginx,
-  SiSwagger,
-  SiSpringboot,
-  SiKotlin,
-  SiJetpackcompose,
-  SiExpo,
-  SiFlutter,
-} from "react-icons/si";
-import { TbBrandThreejs } from "react-icons/tb";
+  marqueeTechnologies,
+  type MarqueeTechnology,
+} from "@/lib/portfolio/source/technologies";
 import styles from "./TechMarquee.module.css";
 
-interface TechItem {
-  name: string;
-  icon: React.ReactNode;
-  color: string;
-  category: string;
-}
-
-// Stack completo: una sola cintilla con todas las tecnologías que uso
-// (frontend, backend, bases de datos, DevOps, mobile, herramientas, etc.).
-const allTech: TechItem[] = [
-  { name: "React", icon: <FaReact />, color: "#61DAFB", category: "Frontend" },
-  { name: "Next.js", icon: <SiNextdotjs />, color: "#000000", category: "Frontend" },
-  { name: "TypeScript", icon: <SiTypescript />, color: "#3178C6", category: "Frontend" },
-  { name: "JavaScript", icon: <FaJs />, color: "#F7DF1E", category: "Frontend" },
-  { name: "HTML5", icon: <FaHtml5 />, color: "#E34F26", category: "Frontend" },
-  { name: "CSS3", icon: <FaCss3Alt />, color: "#1572B6", category: "Frontend" },
-  { name: "Tailwind", icon: <SiTailwindcss />, color: "#06B6D4", category: "Frontend" },
-  { name: "Angular", icon: <SiAngular />, color: "#DD0031", category: "Frontend" },
-  { name: "Vue.js", icon: <SiVuedotjs />, color: "#4FC08D", category: "Frontend" },
-
-  { name: "Node.js", icon: <FaNodeJs />, color: "#339933", category: "Backend" },
-  { name: "Express", icon: <SiExpress />, color: "#000000", category: "Backend" },
-  { name: "NestJS", icon: <SiNestjs />, color: "#E0234E", category: "Backend" },
-  { name: "Swagger / OpenAPI", icon: <SiSwagger />, color: "#85EA2D", category: "Backend" },
-  { name: "Java", icon: <FaJava />, color: "#007396", category: "Backend" },
-  { name: "Spring Boot", icon: <SiSpringboot />, color: "#6DB33F", category: "Backend" },
-  { name: "Python", icon: <FaPython />, color: "#3776AB", category: "Backend" },
-
-  { name: "PostgreSQL", icon: <SiPostgresql />, color: "#4169E1", category: "Base de datos" },
-  { name: "MongoDB", icon: <SiMongodb />, color: "#47A248", category: "Base de datos" },
-  { name: "Redis", icon: <SiRedis />, color: "#DC382D", category: "Base de datos" },
-  { name: "Prisma", icon: <SiPrisma />, color: "#2D3748", category: "Base de datos" },
-  { name: "TypeORM", icon: <SiTypeorm />, color: "#E83524", category: "Base de datos" },
-
-  { name: "Docker", icon: <FaDocker />, color: "#2496ED", category: "DevOps" },
-  { name: "GitHub Actions", icon: <SiGithubactions />, color: "#2088FF", category: "CI/CD" },
-  { name: "Jenkins", icon: <SiJenkins />, color: "#D24939", category: "CI/CD" },
-  { name: "CircleCI", icon: <SiCircleci />, color: "#343434", category: "CI/CD" },
-  { name: "GitLab CI", icon: <SiGitlab />, color: "#FC6D26", category: "CI/CD" },
-  { name: "Vercel", icon: <SiVercel />, color: "#000000", category: "Cloud" },
-  { name: "Railway", icon: <SiRailway />, color: "#0B0D0E", category: "Cloud" },
-  // Verificado en este repo: backend real de auth/admin/leads de este mismo sitio
-  { name: "Supabase", icon: <SiSupabase />, color: "#3ECF8E", category: "Cloud" },
-  { name: "Firebase", icon: <SiFirebase />, color: "#FFCA28", category: "Cloud" },
-  { name: "Nginx", icon: <SiNginx />, color: "#009639", category: "Servidor" },
-
-  { name: "Kotlin", icon: <SiKotlin />, color: "#7F52FF", category: "Mobile" },
-  { name: "Jetpack Compose", icon: <SiJetpackcompose />, color: "#4285F4", category: "Mobile" },
-  { name: "React Native (Expo)", icon: <SiExpo />, color: "#000020", category: "Mobile" },
-  { name: "Flutter", icon: <SiFlutter />, color: "#02569B", category: "Mobile" },
-
-  // Verificado en este repo: componente 3D "Lanyard" (github.com/omarhernandezrey/lanyard-project)
-  { name: "Three.js", icon: <TbBrandThreejs />, color: "#000000", category: "3D" },
-
-  { name: "Jest", icon: <SiJest />, color: "#C21325", category: "Testing" },
-  { name: "Git", icon: <FaGitAlt />, color: "#F05032", category: "Herramientas" },
-  { name: "Vite", icon: <SiVite />, color: "#646CFF", category: "Herramientas" },
-  { name: "Webpack", icon: <SiWebpack />, color: "#8DD6F9", category: "Herramientas" },
-  { name: "Storybook", icon: <SiStorybook />, color: "#FF4785", category: "Herramientas" },
-  { name: "Figma", icon: <SiFigma />, color: "#F24E1E", category: "Diseño" },
-];
+// El stack completo (42 tecnologías) vivía aquí inline, con el icono en JSX.
+// Ahora son datos puros en src/lib/portfolio/source/technologies.ts: el icono
+// es una clave (`iconKey`) que resuelve el registro. Mismo orden, mismos
+// nombres, mismos colores; el icono se sigue pintando sin props.
 
 interface TechCardProps {
-  tech: TechItem;
+  tech: MarqueeTechnology;
 }
 
-const TechCard: React.FC<TechCardProps> = ({ tech }) => (
+const TechCard: React.FC<TechCardProps> = ({ tech }) => {
+  const Icon = resolveIcon(tech.iconKey);
+
+  return (
   <div className="flex-shrink-0 group relative">
     <div className="relative flex flex-col items-center justify-center w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-[var(--card-bg-color)] to-[var(--secondary-background-color)] border border-[var(--muted-color)]/20 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-out will-change-transform group-hover:-translate-y-2 group-hover:scale-[1.12] group-hover:shadow-2xl group-hover:border-[var(--accent-color)]/50">
       <div
@@ -128,7 +33,7 @@ const TechCard: React.FC<TechCardProps> = ({ tech }) => (
         className="text-5xl md:text-6xl relative z-10"
         style={{ color: tech.color }}
       >
-        {tech.icon}
+        {Icon ? <Icon /> : null}
       </div>
       <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg">
@@ -143,10 +48,11 @@ const TechCard: React.FC<TechCardProps> = ({ tech }) => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 interface TechRowProps {
-  technologies: TechItem[];
+  technologies: MarqueeTechnology[];
   rowIdPrefix: string;
   ariaLabel: string;
 }
@@ -182,7 +88,7 @@ const TechMarquee: React.FC = () => {
         </p>
       </div>
 
-      <TechRow technologies={allTech} rowIdPrefix="stack" ariaLabel="Tech stack" />
+      <TechRow technologies={marqueeTechnologies} rowIdPrefix="stack" ariaLabel="Tech stack" />
 
       <div className="relative mt-12">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
