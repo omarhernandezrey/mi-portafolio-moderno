@@ -94,6 +94,13 @@ module.exports = {
           "0 8px 25px color-mix(in srgb, var(--primary-color) 30%, transparent)",
         "custom-accent":
           "0 4px 15px color-mix(in srgb, var(--accent-color) 25%, transparent)",
+        // Escala de elevación. `e3` canoniza la sombra que estaba escrita a
+        // mano en AdminCard; el spread negativo es intencional: la tarjeta se
+        // hunde en la superficie en vez de flotar con un halo duro.
+        e1: "var(--elev-1)",
+        e2: "var(--elev-2)",
+        e3: "var(--elev-3)",
+        e4: "var(--elev-4)",
       },
       // Gradientes dinámicos
       backgroundImage: {
@@ -104,6 +111,53 @@ module.exports = {
         "gradient-gold":
           "var(--gold-gradient, linear-gradient(135deg, #c5961f, #ffd65a))",
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      },
+      // Radio nombrado — evita el `rounded-[32px]` arbitrario que había
+      // suelto y da una escala con intención semántica.
+      borderRadius: {
+        field: "var(--radius-field)",
+        chip: "var(--radius-chip)",
+        card: "var(--radius-card)",
+        panel: "var(--radius-panel)",
+        canvas: "var(--radius-canvas)",
+      },
+      // Escala tipográfica por rol. El dashboard necesita cifras grandes que
+      // respiren en móvil y no desborden: de ahí los clamp().
+      fontSize: {
+        kicker: [
+          "0.6875rem",
+          { lineHeight: "1", letterSpacing: "0.2em", fontWeight: "600" },
+        ],
+        label: ["0.8125rem", { lineHeight: "1.2", letterSpacing: "0.01em" }],
+        metric: [
+          "clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem)",
+          { lineHeight: "0.95", letterSpacing: "-0.03em", fontWeight: "700" },
+        ],
+        "metric-sm": [
+          "clamp(1.25rem, 1rem + 1.2vw, 1.75rem)",
+          { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" },
+        ],
+        section: [
+          "clamp(1.125rem, 1rem + 0.6vw, 1.5rem)",
+          { lineHeight: "1.15", letterSpacing: "-0.015em", fontWeight: "600" },
+        ],
+      },
+      // Duraciones y easings tokenizados (antes: 0.3s en body y un
+      // cubic-bezier suelto en el hero).
+      transitionDuration: {
+        fast: "var(--dur-fast)",
+        base: "var(--dur-base)",
+        slow: "var(--dur-slow)",
+      },
+      transitionTimingFunction: {
+        "out-expo": "var(--ease-out-expo)",
+        "in-out-soft": "var(--ease-in-out-soft)",
+      },
+      // Radios de glow: el portafolio ilumina con blur, no con box-shadow.
+      blur: {
+        "glow-sm": "var(--glow-sm)",
+        "glow-md": "var(--glow-md)",
+        "glow-lg": "var(--glow-lg)",
       },
       // Espaciado personalizado
       spacing: {

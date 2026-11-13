@@ -118,7 +118,7 @@ Deuda menor detectada: `src/components/ui/Button.tsx` hardcodea `bg-blue-500` (f
      npm run typecheck      → 0 errores
      npm run lint           → 0 errores
      npm test               → verde
-     npm run build          → compila
+     npm run build          → ver nota abajo
      revisión visual 375px  → captura o descripción
 4. Solo si TODO pasa: marcar la tarea completada en este documento
 5. git merge a main (fast-forward o merge commit) y push
@@ -126,6 +126,12 @@ Deuda menor detectada: `src/components/ui/Button.tsx` hardcodea `bg-blue-500` (f
 ```
 
 Si una validación falla, la tarea **sigue abierta**. No se marca completada ni se mergea.
+
+> **Nota sobre `npm run build` en el entorno cloud.** `src/app/layout.tsx` carga Fraunces, Manrope y JetBrains Mono con `next/font/google`, que descarga las fuentes **en tiempo de build**. El entorno de trabajo en la nube tiene `fonts.googleapis.com` fuera de su allowlist (`CONNECT tunnel failed, 403`), así que el build falla ahí por red, no por código. Sustitutos usados en cada tarea:
+> - `npx tailwindcss -i src/app/globals.css -o /tmp/out.css` → prueba que el CSS y los tokens compilan.
+> - `npm run typecheck` + `npm run lint` + `npm test` → cubren el código.
+> - **El build real lo valida Vercel** en cada push a `main`, y Omar en local donde sí tiene red y el `.env` verdadero.
+> Ninguna tarea se declara completada afirmando un build que no se ejecutó.
 
 ---
 
@@ -150,8 +156,8 @@ Hasta tener respuesta: **se implementa el endurecimiento compatible con ambos ca
 Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 
 ### Fase 0 — Fundaciones de diseño y datos
-- [ ] **T-01** Tokens de dashboard: `borderRadius` nombrado, escala de elevación, `fontSize` por rol (metric/kpi/label), duraciones y easings. Rama `feat/design-tokens`.
-  *Aceptación:* tokens en `tailwind.config.js` + `globals.css`; cero hex nuevos; las 10 paletas siguen funcionando.
+- [x] **T-01** Tokens de dashboard: `borderRadius` nombrado (`field/chip/card/panel/canvas`), elevación (`e1..e4`, con `e3` canonizando la sombra que estaba suelta en `AdminCard`), `fontSize` por rol (`kicker/label/metric/metric-sm/section`, las métricas con `clamp()` para no desbordar a 375 px), duraciones (`fast/base/slow`), easings (`out-expo/in-out-soft`) y radios de glow (`glow-sm/md/lg`). Rama `feat/design-tokens`.
+  *Validado:* typecheck 0 errores · lint limpio · 93 tests (33 nuevos en `__tests__/unit/design-tokens.test.ts`) · Tailwind compila y genera las 6 clases probadas · cero hex en el bloque de tokens · las 10 paletas verificadas por test.
 - [ ] **T-02** Paleta categórica de datos para gráficas (`--chart-1..8`, secuencial y divergente) derivada de `primary`/`accent`, validada en contraste sobre `--admin-bg` y sobre `palette4` (clara). Rama `feat/chart-palette`.
   *Aceptación:* 8 series distinguibles, contraste AA, se adapta al cambio de paleta.
 - [ ] **T-03** Primitivos faltantes: `Input`, `Select`, `Textarea`, `Checkbox`, `Switch`, `Tabs`, `Tooltip`, `Skeleton`, `Dialog`, `DataTable`. Rama `feat/admin-primitives`.
@@ -209,3 +215,4 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 |---|---|---|---|---|
 | 2026-11-12 | Análisis completo | — | — | ✅ |
 | 2026-11-12 | Plan maestro | `docs/plan-maestro-dashboard` | — | ✅ |
+| 2026-11-12 | T-01 Tokens de diseño | `feat/design-tokens` | typecheck · lint · 93 tests · CSS compilado | ✅ |

@@ -536,6 +536,43 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   TOKENS ESTRUCTURALES — radio, elevación, glow y movimiento
+   Deliberadamente sin color propio: se derivan de --primary-color, así
+   que acompañan a las 10 paletas sin duplicar un solo valor por paleta.
+   Viven en :root (no en .admin-shell) para que el sitio público y el
+   panel compartan el mismo vocabulario de superficie.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  /* Radio — escala corta y con intención: campo < chip < tarjeta < panel < lienzo */
+  --radius-field: 0.75rem;
+  --radius-chip: 0.625rem;
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
+  --radius-canvas: 2rem;
+
+  /* Elevación — sombras de spread negativo (el lenguaje ya presente en
+     AdminCard): difusas, hundidas, nunca un halo duro. e3 canoniza el
+     valor que estaba suelto en línea. */
+  --elev-1: 0 6px 18px -14px rgb(0 0 0 / 85%);
+  --elev-2: 0 12px 32px -22px rgb(0 0 0 / 90%);
+  --elev-3: 0 18px 45px -32px rgb(0 0 0 / 95%);
+  --elev-4: 0 28px 70px -40px rgb(0 0 0 / 95%);
+
+  /* Glow — el portafolio ilumina con blur sobre un blob, no con box-shadow.
+     Estos tokens fijan los tres radios que ya se usaban a mano. */
+  --glow-sm: 40px;
+  --glow-md: 80px;
+  --glow-lg: 140px;
+
+  /* Movimiento */
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
    ADMIN SUITE — tema aislado del sitio público
    El panel usa su propia superficie de tinta para que las paletas del
    portafolio (incluida la clara) no rompan la legibilidad ni el contraste.
