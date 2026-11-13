@@ -175,8 +175,20 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
   *Validado:* typecheck 0 errores · lint limpio · **148 tests** (34 nuevos, de comportamiento y accesibilidad, no de clases CSS) · las 4 utilidades de riesgo (`min-h-11`, `pb-safe`, `z-80`, `rounded-t-panel`) verificadas contra el CSS compilado.
 
 ### Fase 1 — Modelo de datos del portafolio
-- [ ] **T-04** Migración SQL: `portfolio_projects`, `portfolio_skills`, `portfolio_education_categories`, `portfolio_education_items`, `portfolio_badges`, `portfolio_services`, `portfolio_technologies`, `portfolio_timeline`, `portfolio_profile`, con `id`, `order`, `is_published`, `locale_data jsonb`, timestamps, RLS y **políticas reales** (lectura pública de publicados, escritura solo owner). Rama `feat/portfolio-schema`.
-  *Aceptación:* migración idempotente en `supabase/migrations/`; tipos TS a mano en `src/lib/admin/types.ts`; `order` explícito; `title` único por proyecto.
+- [x] **T-04** Migración `supabase/migrations/20261112_portfolio_content.sql` con 9 tablas: `portfolio_projects`, `portfolio_skills`, `portfolio_education_categories`, `portfolio_education_items`, `portfolio_badges`, `portfolio_services`, `portfolio_technologies`, `portfolio_timeline`, `portfolio_profile`. Tipos en `src/lib/portfolio/types.ts`. Rama `feat/portfolio-schema`.
+  *Decisiones de modelado:*
+  - Campos bilingües como `jsonb {"es":…,"en":…}` — es la forma que ya tenían los archivos, así que el adaptador puede reproducir el fallback a `es` de `getLocalizedProjectsData` sin inventar nada, y añadir un idioma no obliga a migrar columnas.
+  - `position` explícito: el orden lo daba la posición en el array y eso se pierde al pasar a filas.
+  - `slug` único: hoy `Card.tsx` usa el **título** como clave de React, y dos títulos iguales rompían el render.
+  - `technologies text[]` con los nombres **tal cual**: los ~105 iconos de `technologyIcons.tsx` se resuelven por coincidencia literal de cadena; normalizar a slugs los borraría.
+  - Los iconos que eran JSX (timeline y marquee usaban componentes de lucide) pasan a `icon_key`, una cadena que el código resuelve contra su registro. JSX no se persiste.
+  - `percentage` de skills: de `"95%"` a entero 0..100 con `check`. El símbolo es presentación.
+  - `demo_embeddable` + `demo_checked_at`: el visor incrusta `demo` en tres iframes y un sitio con `X-Frame-Options` deja el «computador» en blanco **sin error visible**; ahora se puede detectar y avisar en el panel en vez de publicar una tarjeta rota.
+  - `certificate` (ruta en `public/`, las 163 actuales) **y** `certificate_url` (Storage o URL externa) — lo segundo es lo que permite añadir insignias desde el panel sin subir archivos al repo.
+  - RLS con políticas **de verdad**, a diferencia de `schema.sql` (que habilita RLS sin crear ninguna): `anon` y `authenticated` solo leen lo publicado, y la ausencia de política de escritura es deliberada, así que solo `service_role` escribe.
+  - `portfolio_profile` es la única tabla sin `position`: se lee por `section`, de una en una.
+  *Validado contra un PostgreSQL 16.15 real, no solo revisado:* dos pasadas sin error (idempotente) · 9 tablas, 8 índices `(is_published, position)`, 9 triggers de `updated_at`, 9 políticas, RLS activo en las 9 · con el rol `anon`: ve 1 de 2 filas (oculta el borrador), su `INSERT` es rechazado por la política y su `UPDATE`/`DELETE` afectan 0 filas · el `check` de `percentage` rechaza 150 · `technologies` conserva `{Next.js,React}` sin normalizar · el trigger de `updated_at` dispara.
+  *Guardarraíl:* `__tests__/unit/portfolio-schema.test.ts` parsea el SQL y compara columna por columna con los tipos TS. Ya encontró una deriva real durante la propia tarea (el tipo declaraba `position` en `portfolio_profile`, que la tabla no tiene). 169 tests verdes, typecheck y lint limpios.
 - [ ] **T-05** Script de seed que traslada el contenido actual **sin pérdida** desde los 8 archivos del §1.1, resolviendo la duplicación de `/sobre-mi`. Rama `feat/portfolio-seed`.
   *Aceptación:* conteos exactos verificados por test (24/173/163/10/6/42/4); `features`, `highlights` y `architecture` en JSONB; nombres de tecnología sin normalizar; rutas de certificado preservadas tal cual.
 
@@ -229,3 +241,4 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 | 2026-11-12 | T-01 Tokens de diseño | `feat/design-tokens` | typecheck · lint · 93 tests · CSS compilado | ✅ |
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
+| 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
