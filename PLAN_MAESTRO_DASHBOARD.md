@@ -42,9 +42,10 @@ El orden no es arbitrario: T-05b a T-07 cierran la columna vertebral de datos; T
 
 | Bloqueo | Afecta a | Mientras tanto |
 |---|---|---|
-| El `.env` real y las credenciales de Supabase no están en el entorno de trabajo | Aplicar la migración y cargar el seed en la base real; pruebas con datos vivos | Todo se escribe y se prueba contra PostgreSQL local (receta en §3.5). Lo no verificable en real se marca **«pendiente de validación con credenciales»**, nunca como hecho |
+| ~~Credenciales de Supabase~~ · **Resuelto el 2026-11-14**: los conectores de Supabase y Vercel están activos | — | La base real es accesible: se aplican migraciones, se consulta y se cargan datos. El `.env` del PC de Omar sigue siendo el único sitio con las claves para `npm run dev` en local |
 | Decisión D-1 (§4): proveedor de autenticación | T-20 | T-19 se ejecuta igual: sirve para ambos caminos |
-| Aplicar migraciones | Toda tabla nueva | Omar las aplica a mano en el SQL Editor de Supabase. Cada migración debe poder pegarse tal cual y correr dos veces sin error |
+| Aplicar migraciones | — | Ya no es un bloqueo: se aplican con el conector. Cada migración debe seguir siendo idempotente, estar validada antes en PostgreSQL local (§3.5), y el archivo del repositorio debe quedar idéntico a lo aplicado |
+| **Borrar datos de la base** | D-2 (restos del chatbot) | No se borra nada sin respuesta explícita de Omar |
 
 ---
 
@@ -93,10 +94,36 @@ Supabase Auth con **magic link / OTP por email** (sin contraseña) + defensa en 
 Riesgos concretos encontrados:
 
 - **`src/lib/admin/access.ts:17`: si `ADMIN_ALLOWED_EMAILS` está vacío, `isEmailAllowed()` devuelve `true`.** La allowlist se desactiva en silencio. *Severidad alta.*
-- `src/lib/supabaseServer.ts` usa **service_role (bypass RLS)** en casi todos los handlers. `supabase/schema.sql:88` habilita RLS **sin crear políticas**: la seguridad depende por completo de la capa de aplicación.
+- `src/lib/supabaseServer.ts` usa **service_role (bypass RLS)** en casi todos los handlers, y 14 de las 16 tablas antiguas tienen RLS **sin ninguna política**: la seguridad depende por completo de la capa de aplicación. Verificado contra la base real (§1.6).
 - Endpoints nuevos bajo `/api/admin` heredan el mínimo por omisión (`viewer`/`assistant`).
 - Sin MFA. Sin rate limiting propio en el login.
 - El middleware consulta el rol a Supabase en cada request (latencia y coste), y repite `getUser()` en 3 capas.
+
+### 1.6 Estado real de Supabase (auditado el 2026-11-14 con el conector)
+
+Proyecto `ozftxfwkhomnbvicjtae`, región `sa-east-1`, PostgreSQL 17.6, `ACTIVE_HEALTHY`. Antes de esta auditoría el estado de la base era una suposición; esto es lo medido.
+
+**El chatbot está muerto y dejó restos.** Omar retiró el chatbot porque no funcionaba, y el código ya no está (no existe ninguna ruta `/api/chat*`). Pero en la base quedó todo:
+
+| Resto | Dato |
+|---|---|
+| `conversations` | 519 filas · de 2026-04-16 a **2026-08-29** · 0 en los últimos 30 días |
+| `messages` | 2 000 filas · última 2026-08-29 |
+| `api_logs` | 2 007 filas · última 2026-08-29 (el estimador de Supabase decía 164: es `reltuples`, no un conteo) |
+| `match_projects()` | Existe y **está rota**: consulta `project_embeddings`, tabla que no existe |
+| Extensión `vector` | Instalada en el esquema `public`; el linter la marca |
+
+**Consecuencia para los leads, y para T-16.** Los 41 leads tienen `conversation_id`: **todos nacieron del chatbot**, así que hoy no entra ninguno nuevo por esa vía. Su reparto es `followed_up:35, archived:4, cold:1, contacted:1`. El cron `daily-summary` cuenta como pendientes los leads en estado `new` o `cold`: hay **0 nuevos y 1 frío**. Ahí está la prueba directa de por qué el mensaje diario es idéntico: `pendingCount` vale 1 y no se moverá nunca. Confirma el diagnóstico de §1.3 con datos reales.
+
+**RLS y permisos.** De las 16 tablas antiguas, solo `admin_audit_logs` y `user_roles` tienen política (una cada una); las otras 14 tienen RLS activo y **cero políticas**, que es fallo cerrado y por tanto seguro hoy, pero deja la autorización entera en manos de la aplicación. Además `anon` y `authenticated` tienen concedidos `INSERT`, `UPDATE`, `DELETE` y `TRUNCATE` sobre todas las tablas de `public`: es la concesión por defecto de Supabase y RLS frena las tres primeras, pero **`TRUNCATE` no pasa por RLS**. No es alcanzable con la clave anónima porque PostgREST no expone esa operación, así que no hay fuga abierta; es deuda de defensa en profundidad, anotada en T-19 para las tablas antiguas y ya revocada en las del portafolio.
+
+**Avisos del linter de Supabase** (ninguno de nivel ERROR): 14 × `rls_enabled_no_policy` (INFO), 7 × `function_search_path_mutable` (WARN), `extension_in_public` por `vector` (WARN), 4 × función `SECURITY DEFINER` ejecutable por `anon`/`authenticated` (WARN, sobre `get_auth_role` y `handle_new_user_role`), y protección de contraseñas filtradas desactivada (WARN). Revisadas las dos funciones marcadas: `get_auth_role()` devuelve el rol de `auth.uid()`, que para `anon` es nulo, y `handle_new_user_role()` es una función de trigger que falla si se la llama directamente. **No hay fuga de datos por ahí**, pero conviene revocar su `EXECUTE` en T-19.
+
+**Resto del inventario.** Historial de migraciones vacío (coherente con aplicarlas a mano). Storage: `contracts` y `invoices` privados, `feed-images` público; 5 objetos. 1 usuario en `auth.users`, con `hernandezreyomar@gmail.com` = `owner`. `feed_posts`: 101 filas, todas `published`, última 2026-10-13 — el feed sí se usa, y `src/lib/feed.ts` lo lee con `supabaseServer` (service_role), que es por lo que `/comunidad` funciona aunque la tabla no tenga política.
+
+**Correcciones al análisis original.** La columna de rol se llama `role`, no `rol`. `project_embeddings` figuraba como tabla existente y no existe. Y las políticas de `webhooks`, `webhook_logs` y `admin_audit_logs` que el análisis daba por hechas: solo existe la de `admin_audit_logs`.
+
+**Decisión pendiente de Omar: D-2 (§4).** Qué hacer con los restos del chatbot.
 
 ### 1.5 Sistema de diseño (a respetar, no reinventar)
 
@@ -305,6 +332,22 @@ Omar pidió AWS. Antes de ejecutar algo irreversible, los números:
 
 Hasta tener respuesta: **se implementa el endurecimiento compatible con ambos caminos** (fix de allowlist, rate limiting, políticas RLS, auditoría). Ningún trabajo se pierde con cualquiera de las dos decisiones.
 
+### D-2 · Qué hacer con los restos del chatbot retirado
+
+El chatbot se retiró del código, pero su rastro sigue en la base (§1.6): 519 conversaciones, 2 000 mensajes, 2 007 registros de API, la función rota `match_projects()` y la extensión `vector` en `public`. Nada de eso se usa.
+
+**Borrar datos es irreversible y §2 prohíbe eliminar contenido, así que no se toca sin respuesta de Omar.** Las opciones:
+
+| Opción | Qué implica |
+|---|---|
+| **A. Conservar todo** | No se toca nada. El coste es ruido: ~4 500 filas muertas, avisos del linter y tablas que confunden a quien lea el esquema. Es lo que pasa hoy. |
+| **B. Archivar y limpiar** | Exportar las tres tablas a JSON (entregado a Omar y guardado fuera de la base) y solo entonces vaciar `conversations`, `messages` y `api_logs`. Los 41 leads **se conservan siempre**: son contactos reales, aunque llegaran por el chatbot. Además se borra `match_projects()` y se mueve `vector` fuera de `public`. |
+| **C. Limpiar solo lo roto** | Borrar `match_projects()` y mover la extensión; dejar los datos. Quita avisos del linter sin perder nada. |
+
+**Recomendación: C ahora, B cuando Omar confirme.** C no destruye nada. Los leads no se tocan en ninguna opción.
+
+Hay una consecuencia que va más allá de la limpieza: **si los leads solo entraban por el chatbot, el CRM del panel ya no recibe nada nuevo.** Eso afecta a qué sentido tiene el área «Negocio» de T-08 y a qué debería notificar el bot en T-16 y T-17. Conviene decidirlo antes de T-08.
+
 ---
 
 ## 5. Tareas
@@ -343,7 +386,8 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
   - `certificate` (ruta en `public/`, las 163 actuales) **y** `certificate_url` (Storage o URL externa) — lo segundo es lo que permite añadir insignias desde el panel sin subir archivos al repo.
   - RLS con políticas **de verdad**, a diferencia de `schema.sql` (que habilita RLS sin crear ninguna): `anon` y `authenticated` solo leen lo publicado, y la ausencia de política de escritura es deliberada, así que solo `service_role` escribe.
   - `portfolio_profile` es la única tabla sin `position`: se lee por `section`, de una en una.
-  *Validado contra un PostgreSQL 16.15 real, no solo revisado:* dos pasadas sin error (idempotente) · 9 tablas, 8 índices `(is_published, position)`, 9 triggers de `updated_at`, 9 políticas, RLS activo en las 9 · con el rol `anon`: ve 1 de 2 filas (oculta el borrador), su `INSERT` es rechazado por la política y su `UPDATE`/`DELETE` afectan 0 filas · el `check` de `percentage` rechaza 150 · `technologies` conserva `{Next.js,React}` sin normalizar · el trigger de `updated_at` dispara.
+  *Aplicada en Supabase el 2026-11-14* (proyecto `ozftxfwkhomnbvicjtae`, PostgreSQL 17.6): 9 tablas, 9 políticas, 9 triggers, 8 índices, `year` como `jsonb`, función con `search_path` fijo y escritura revocada a `anon`/`authenticated`. Tipos generados desde la base real en `src/types/database.types.ts`.
+  *Validado antes contra un PostgreSQL 16.15 local:* dos pasadas sin error (idempotente) · 9 tablas, 8 índices `(is_published, position)`, 9 triggers de `updated_at`, 9 políticas, RLS activo en las 9 · con el rol `anon`: ve 1 de 2 filas (oculta el borrador), su `INSERT` es rechazado por la política y su `UPDATE`/`DELETE` afectan 0 filas · el `check` de `percentage` rechaza 150 · `technologies` conserva `{Next.js,React}` sin normalizar · el trigger de `updated_at` dispara.
   *Guardarraíl:* `__tests__/unit/portfolio-schema.test.ts` parsea el SQL y compara columna por columna con los tipos TS. Ya encontró una deriva real durante la propia tarea (el tipo declaraba `position` en `portfolio_profile`, que la tabla no tiene). 169 tests verdes, typecheck y lint limpios.
 - [~] **T-05** Trasladar el contenido actual **sin pérdida**. Partido en dos porque la extracción tiene valor por sí sola.
   - [x] **T-05a** Arrays inline → módulos de datos puros en `src/lib/portfolio/source/`: `badges.ts` (7), `technologies.ts` (42), `timeline.ts` (4+4), `about.ts` (4+3), más `icon-registry.tsx` con 52 claves y `resolveIcon()`. Rama `feat/portfolio-source-modules`.
@@ -395,7 +439,9 @@ Cada ficha es autosuficiente: contexto, pasos, trampas ya conocidas, criterios d
 - [ ] **Ida y vuelta:** se leen las filas de proyectos de la base local y, reconstruidas a la forma original, son idénticas (`deep equal`) a `projectsData`. Lo mismo para skills y servicios. Esta es la prueba real de «no se perdió nada».
 - [ ] Con `set role anon` se leen las mismas cantidades (todo se publica por defecto).
 
-**Evidencia en §6:** salida de los `count(*)` tras cada pasada y resultado de la comparación de ida y vuelta. **Pendiente de validación con credenciales:** la carga en la base real.
+**Evidencia en §6:** salida de los `count(*)` tras cada pasada y resultado de la comparación de ida y vuelta.
+
+**Ya no está bloqueada:** el conector de Supabase está activo desde el 2026-11-14 y el esquema está aplicado, así que el seed se prueba primero en PostgreSQL local y después se carga en la base real, verificando ahí los `count(*)` y la ida y vuelta.
 
 #### T-06 · Capa de lectura con respaldo
 **Rama:** `feat/portfolio-data-layer` · **Depende de:** T-05b · **Estado:** `[ ]`
@@ -471,6 +517,8 @@ Se queda en Supabase Auth. **No se instala ningún SDK de AWS** (eso es T-20, co
 3. **Caché del rol** en `src/middleware.ts` con TTL corto: hoy cada petición a `/admin/*` consulta el rol en Supabase y `getUser()` se repite en tres capas. El TTL es el coste aceptado; se documenta.
 4. **Auditoría completa:** revisar cada endpoint de escritura de `/api/admin/**` (lista en §1.4 del análisis original y con `grep -rn "requireAdmin" src/app/api`) y registrar los que no llamen a `src/lib/admin/audit.ts`.
 5. **MFA TOTP** con `supabase.auth.mfa.*` para el rol `owner`: alta y verificación. Interfaz con los primitivos del panel y la skill `impeccable`.
+6. **Deuda de la base, medida en §1.6** (migración nueva, idempotente, validada antes en PostgreSQL local): revocar `insert, update, delete, truncate` a `anon` y `authenticated` en las 16 tablas antiguas —comprobando primero con `grep` que ningún código cliente escriba con la clave anónima—; revocar `execute` de `get_auth_role()` y `handle_new_user_role()` a esos roles; y añadir `set search_path = ''` a las 7 funciones que el linter marca. Al terminar, volver a pedir los avisos del linter y anotar en §6 cuántos quedan.
+7. Activar en la consola de Supabase la **protección de contraseñas filtradas**. Lo hace Omar: es un ajuste de consola, no código.
 
 **Trampas.** Tres capas comprueban el acceso (middleware, `layout.tsx` del panel, `requireAdmin`): un cambio en una sola deja las otras con la lógica vieja. El login actual por enlace mágico tiene que seguir funcionando.
 
@@ -641,6 +689,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-14 | Auditoría de Supabase + T-04 aplicada en la base real | `fix/timeline-year-jsonb` | 9 tablas/políticas/triggers verificadas en Supabase · linter sin ningún ERROR · 275 tests · tipos generados |  ✅ |
 | 2026-11-14 | Plan de ejecución: manual de trabajo, fichas por tarea, `npm run verify` y bloqueo de paletas | `docs/plan-ejecucion` | verify en verde · 269 tests · la puerta falla al tocar el visor o una paleta (probado) · hechos de las fichas comprobados con grep |  ✅ |
 | 2026-11-14 | Skills de diseño + PRODUCT.md + DESIGN.md | `chore/design-skills` | doctor sin deriva · detector operativo · tests | ✅ |
 | 2026-11-12 | T-05a Módulos de datos | `feat/portfolio-source-modules` | typecheck · lint · 257 tests · conteos medidos en vivo | ✅ |

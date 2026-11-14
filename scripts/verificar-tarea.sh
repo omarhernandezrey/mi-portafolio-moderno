@@ -77,9 +77,20 @@ fi
 # 6 ── La tarea añadió tests ─────────────────────────────────────────────────
 # Código nuevo sin test nuevo es una afirmación sin evidencia. Se avisa (no se
 # bloquea) porque una tarea de pura documentación no los necesita.
+#
+# `git diff` solo ve lo que git ya sigue, así que un archivo de test recién
+# creado y sin `git add` no aparecía y el aviso saltaba en falso. Se suman los
+# archivos sin seguimiento de `git status`.
+tocados() {
+  {
+    git diff --name-only "$base" -- "$@"
+    git status --porcelain --untracked-files=all -- "$@" | awk '{print $NF}'
+  } | sort -u | grep -v '^$' || true
+}
+
 paso "Tests nuevos en esta rama"
-if git diff --name-only "$base" -- src | grep -q .; then
-  if git diff --name-only "$base" -- __tests__ cypress | grep -q .; then
+if [ -n "$(tocados src)" ]; then
+  if [ -n "$(tocados __tests__ cypress)" ]; then
     ok "la rama toca src/ y también añade o cambia tests"
   else
     printf '%s  ⚠ La rama cambia src/ pero no toca ningún test. Justifícalo en el registro de avance.%s\n' "$ROJO" "$FIN"

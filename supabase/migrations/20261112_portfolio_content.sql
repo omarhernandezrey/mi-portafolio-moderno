@@ -48,13 +48,22 @@
 -- ════════════════════════════════════════════════════════════════════════════
 
 -- ── Utilidad compartida: updated_at automático ──────────────────────────────
+-- `set search_path = ''` no es decorativo: sin él el linter de Supabase marca
+-- la función como «search path mutable», porque un rol con un search_path
+-- propio podría resolver nombres no cualificados a sus propios objetos. Aquí
+-- no se referencia ninguna tabla, pero la regla se cumple igual para no sumar
+-- un hallazgo nuevo a los 7 que ya arrastran las funciones antiguas.
 create or replace function public.portfolio_touch_updated_at()
-returns trigger as $$
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
 begin
   new.updated_at = now();
   return new;
 end;
-$$ language plpgsql;
+$$;
 
 -- ── Proyectos ───────────────────────────────────────────────────────────────
 create table if not exists public.portfolio_projects (
@@ -291,6 +300,30 @@ begin
          to anon, authenticated
          using ( is_published = true )',
       t
+    );
+  end loop;
+end $$;
+
+-- ── Permisos: anon y authenticated solo leen ────────────────────────────────
+-- Supabase concede por defecto insert, update, delete y TRUNCATE a anon y
+-- authenticated sobre toda tabla nueva del esquema public, y confía en RLS
+-- para frenarlas. Para insert, update y delete eso basta. Para TRUNCATE no:
+-- **TRUNCATE no pasa por RLS**. Hoy no es alcanzable con la clave anónima
+-- (PostgREST no expone esa operación), pero el panel escribe con service_role,
+-- que no depende de estos permisos, así que aquí no hacen falta: se revocan.
+-- Defensa en profundidad, no parche de una fuga.
+do $$
+declare
+  t text;
+begin
+  foreach t in array array[
+    'portfolio_projects','portfolio_skills','portfolio_education_categories',
+    'portfolio_education_items','portfolio_badges','portfolio_services',
+    'portfolio_technologies','portfolio_timeline','portfolio_profile'
+  ]
+  loop
+    execute format(
+      'revoke insert, update, delete, truncate on public.%I from anon, authenticated', t
     );
   end loop;
 end $$;
