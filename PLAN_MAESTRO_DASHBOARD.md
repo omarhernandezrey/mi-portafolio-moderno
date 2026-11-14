@@ -113,7 +113,17 @@ Proyecto `ozftxfwkhomnbvicjtae`, región `sa-east-1`, PostgreSQL 17.6, `ACTIVE_H
 | `match_projects()` | Existe y **está rota**: consulta `project_embeddings`, tabla que no existe |
 | Extensión `vector` | Instalada en el esquema `public`; el linter la marca |
 
-**Consecuencia para los leads, y para T-16.** Los 41 leads tienen `conversation_id`: **todos nacieron del chatbot**, así que hoy no entra ninguno nuevo por esa vía. Su reparto es `followed_up:35, archived:4, cold:1, contacted:1`. El cron `daily-summary` cuenta como pendientes los leads en estado `new` o `cold`: hay **0 nuevos y 1 frío**. Ahí está la prueba directa de por qué el mensaje diario es idéntico: `pendingCount` vale 1 y no se moverá nunca. Confirma el diagnóstico de §1.3 con datos reales.
+**De dónde vienen los 41 leads.** Los 41 tienen `conversation_id`, y la primera lectura de ese dato fue equivocada: no significa que todos vinieran del chatbot. `src/lib/chatbot/contactBridge.ts` crea una fila en `conversations` por cada envío del formulario y de la calculadora, aunque no haya habido ninguna conversación. Agrupando por `intent`:
+
+| Origen (`conversations.intent`) | Conversaciones | Con lead | Última |
+|---|---|---|---|
+| Chatbot (`null`) | 522 | **34** | 2026-08-26 |
+| Calculadora (`budget_calculator`) | 4 | **4** | 2026-07-17 |
+| Formulario (`contact_form`) | 3 | **3** | 2026-08-29 |
+
+Así que el CRM **no se quedó sin entrada**: el formulario y la calculadora siguen registrando leads en el código. Lo que se perdió es la vía que más aportaba, 34 de 41. El ritmo del formulario es de 3 en cuatro meses, de modo que el hueco desde el 29 de agosto no prueba por sí mismo que esté roto; queda por comprobar de punta a punta (ver T-25).
+
+**Y para T-16.** El cron `daily-summary` cuenta como pendientes los leads en estado `new` o `cold`: hay **0 nuevos y 1 frío** (reparto completo: `followed_up:35, archived:4, cold:1, contacted:1`). Ahí está la prueba directa de por qué el mensaje diario es idéntico: `pendingCount` vale 1 y no se moverá. Confirma el diagnóstico de §1.3 con datos reales.
 
 **RLS y permisos.** De las 16 tablas antiguas, solo `admin_audit_logs` y `user_roles` tienen política (una cada una); las otras 14 tienen RLS activo y **cero políticas**, que es fallo cerrado y por tanto seguro hoy, pero deja la autorización entera en manos de la aplicación. Además `anon` y `authenticated` tienen concedidos `INSERT`, `UPDATE`, `DELETE` y `TRUNCATE` sobre todas las tablas de `public`: es la concesión por defecto de Supabase y RLS frena las tres primeras, pero **`TRUNCATE` no pasa por RLS**. No es alcanzable con la clave anónima porque PostgREST no expone esa operación, así que no hay fuga abierta; es deuda de defensa en profundidad, anotada en T-19 para las tablas antiguas y ya revocada en las del portafolio.
 
@@ -346,7 +356,9 @@ El chatbot se retiró del código, pero su rastro sigue en la base (§1.6): 519 
 
 **Recomendación: C ahora, B cuando Omar confirme.** C no destruye nada. Los leads no se tocan en ninguna opción.
 
-Hay una consecuencia que va más allá de la limpieza: **si los leads solo entraban por el chatbot, el CRM del panel ya no recibe nada nuevo.** Eso afecta a qué sentido tiene el área «Negocio» de T-08 y a qué debería notificar el bot en T-16 y T-17. Conviene decidirlo antes de T-08.
+**Respondido por Omar el 2026-11-14: opción C.** Se limpia solo lo roto; ningún dato se borra. La migración `limpiar_restos_chatbot` queda **pendiente de que Omar confirme el diálogo del conector de Supabase**, que pide aprobación para sentencias destructivas (`drop function`). Hasta entonces `match_projects()` sigue ahí y `vector` sigue en `public`.
+
+Sobre la entrada de leads, Omar eligió **reconectarla**: ver T-25.
 
 ---
 
@@ -664,6 +676,24 @@ CV en PDF generado desde los datos reales (`pdf-lib` ya está instalado). Sirve 
 
 Capturas de referencia de la home (incluido el visor de proyectos) y del panel a 375 y 1280 px, con Cypress, que ya está en el repo. El visor es el caso más importante.
 
+#### T-25 · Comprobar y reforzar la entrada de leads
+**Rama:** `feat/entrada-leads` · **Depende de:** nada · **Estado:** `[ ]` · **Decidido por Omar el 2026-11-14**
+
+**Punto de partida, medido (§1.6).** El formulario (`src/components/sections/ContactForm.tsx` → `src/app/api/contact/bridge/route.ts` → `registerContactFormLead` en `src/lib/chatbot/contactBridge.ts`) y la calculadora **sí crean leads**; aportaron 7 de los 41. El chatbot aportaba 34 y ya no existe. El último lead del formulario es del 2026-08-29, pero con un ritmo de 3 en cuatro meses ese hueco no demuestra avería: **lo primero es comprobarlo, no suponerlo**.
+
+**Pasos.**
+1. **Reproducir antes de cambiar.** Enviar el formulario contra la base real y ver si aparece el lead. Si falla, leer el log de Vercel (`get_runtime_logs`) para esa ruta y arreglar la causa. Si funciona, decirlo en el informe: el problema era solo que nadie escribió.
+2. **Quitar la conversación falsa.** `contactBridge` inserta una fila en `conversations` por cada envío solo para colgar de ella el lead. Eso deja el origen del lead escondido en `intent` y ensucia una tabla de chatbot que ya no se usa. Añadir a `leads` una columna `source text` (valores `contact_form`, `budget_calculator`, `chatbot`, `manual`) con migración idempotente, rellenarla desde `conversations.intent` para las 41 filas existentes, y dejar de crear conversaciones sintéticas. `conversation_id` se conserva por histórico.
+3. **Notificación que sirva.** El aviso de lead nuevo a Telegram debe traer nombre, correo, servicio pedido y origen. Coordinado con T-16.
+4. **Revisar la calculadora** (`/api/calculator`) con el mismo criterio.
+
+**Aceptación.**
+- [ ] Prueba de punta a punta del formulario contra la base real, con el lead verificado por `select`. Se anota en §6 si funcionaba ya o qué estaba roto.
+- [ ] Migración de `source` validada en PostgreSQL local y aplicada; las 41 filas existentes quedan clasificadas (34 `chatbot`, 4 `budget_calculator`, 3 `contact_form`), verificado con un `group by`.
+- [ ] Tests: carga útil válida crea lead con el `source` correcto; carga inválida responde 400 sin crear nada; un fallo de Telegram no impide guardar el lead.
+- [ ] Ya no se insertan filas en `conversations` al enviar el formulario.
+- [ ] Ningún dato existente se modifica más allá de rellenar `source`.
+
 #### T-24 · Deuda técnica
 **Rama:** `chore/tech-debt` — una rama por punto si el cambio es grande.
 
@@ -689,6 +719,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-14 | Corrección del origen de los leads (34 chatbot / 4 calculadora / 3 formulario) + T-25 | `fix/correccion-origen-leads` | agrupación por `intent` en la base real · 275 tests |  ✅ |
 | 2026-11-14 | Auditoría de Supabase + T-04 aplicada en la base real | `fix/timeline-year-jsonb` | 9 tablas/políticas/triggers verificadas en Supabase · linter sin ningún ERROR · 275 tests · tipos generados |  ✅ |
 | 2026-11-14 | Plan de ejecución: manual de trabajo, fichas por tarea, `npm run verify` y bloqueo de paletas | `docs/plan-ejecucion` | verify en verde · 269 tests · la puerta falla al tocar el visor o una paleta (probado) · hechos de las fichas comprobados con grep |  ✅ |
 | 2026-11-14 | Skills de diseño + PRODUCT.md + DESIGN.md | `chore/design-skills` | doctor sin deriva · detector operativo · tests | ✅ |
