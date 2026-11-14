@@ -137,6 +137,21 @@ Si una validación falla, la tarea **sigue abierta**. No se marca completada ni 
 
 ---
 
+## 3.1 Herramientas de diseño del proyecto
+
+Instaladas y versionadas el 2026-11-14 (ver `CLAUDE.md` para cómo se usan):
+
+- **Impeccable** (`.claude/skills/impeccable`, Apache 2.0, motor 0.1.24) con sus 4 agentes en `.claude/agents/`. Lee `PRODUCT.md` (verdad de producto) y `DESIGN.md` + `.impeccable/design.json` (sistema visual existente, norte creativo «El Taller del Ingeniero»). Hook de detección activado en `.impeccable/config.json`.
+- **kpi-dashboard-design** (`.claude/skills/kpi-dashboard-design`, MIT), para T-14 y T-15.
+
+Decisiones confirmadas por Omar ese día y recogidas en `PRODUCT.md`: el objetivo del portafolio es **que lo contraten** (el visitante clave es un reclutador o líder técnico), y el CRM actual se conserva como **área secundaria «Negocio»**.
+
+Línea base del detector sobre `src/app/admin` y `src/components/admin` (2026-11-14): 0 antipatrones bloqueantes; **1 aviso real** (`side-tab`: `border-l-4` en `src/app/admin/(dashboard)/docs/[slug]/page.tsx:27`) y **224 notas** de tamaños de letra literales fuera de la escala (`text-[9px]`, `text-[10px]`, `text-[11px]`), incluidos algunos de los primitivos de T-03. Se corrigen dentro de T-08 y T-24, no como efecto lateral.
+
+Las gráficas no figuran entre los colores declarados en `DESIGN.md` a propósito: declararlas apagaba la comprobación de violetas y cian «de plantilla» del detector, que interesa mantener activa para la interfaz. La paleta de datos sigue definida y verificada en `src/app/globals.css` y `src/lib/charts/palette.ts`.
+
+---
+
 ## 4. Decisión pendiente de Omar
 
 ### D-1 · Autenticación: AWS Cognito vs. Supabase Auth endurecido
@@ -250,4 +265,5 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-14 | Skills de diseño + PRODUCT.md + DESIGN.md | `chore/design-skills` | doctor sin deriva · detector operativo · tests | ✅ |
 | 2026-11-12 | T-05a Módulos de datos | `feat/portfolio-source-modules` | typecheck · lint · 257 tests · conteos medidos en vivo | ✅ |

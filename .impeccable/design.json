@@ -1,0 +1,534 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T19:32:33.690Z",
+  "title": "Design System: Portafolio de Omar Hernández Rey",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Teal de Instrumento",
+        "canonical": "#00cba9",
+        "tonalRamp": [
+          "#000f0a",
+          "#002e25",
+          "#005243",
+          "#027863",
+          "#07a085",
+          "#0fcaa9",
+          "#a5dfce",
+          "#c2fdec"
+        ]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Teal Profundo",
+        "canonical": "#00a086",
+        "tonalRamp": [
+          "#000f0b",
+          "#012e25",
+          "#025143",
+          "#067764",
+          "#00a086",
+          "#48c6ab",
+          "#adddcf",
+          "#cafbed"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Tinta de Taller",
+        "canonical": "#0d131a",
+        "tonalRamp": [
+          "#090b0e",
+          "#21272f",
+          "#3f464e",
+          "#5f6770",
+          "#828a94",
+          "#a6afb9",
+          "#cdd1d6",
+          "#ebeff4"
+        ]
+      },
+      "secondary-background": {
+        "role": "neutral",
+        "displayName": "Banco",
+        "canonical": "#1c2731",
+        "tonalRamp": [
+          "#080c10",
+          "#1d2832",
+          "#3b4752",
+          "#5b6873",
+          "#7e8b97",
+          "#a2b0bd",
+          "#cbd2d8",
+          "#e9eff6"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Banco",
+        "canonical": "#1c2731",
+        "tonalRamp": [
+          "#080c10",
+          "#1d2832",
+          "#3b4752",
+          "#5b6873",
+          "#7e8b97",
+          "#a2b0bd",
+          "#cbd2d8",
+          "#e9eff6"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "#e5e7eb",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#252629",
+          "#434548",
+          "#646669",
+          "#87898d",
+          "#acaeb2",
+          "#d0d1d3",
+          "#edeef0"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "#b8bfca",
+        "tonalRamp": [
+          "#090b0e",
+          "#21272f",
+          "#40454f",
+          "#606670",
+          "#838a94",
+          "#a8aeb9",
+          "#ced1d6",
+          "#ebeff4"
+        ]
+      },
+      "admin-primary": {
+        "role": "primary",
+        "displayName": "Teal de Instrumento (panel)",
+        "canonical": "#2dd4bf",
+        "tonalRamp": [
+          "#000f0c",
+          "#002e28",
+          "#045148",
+          "#04776a",
+          "#039f8e",
+          "#11c9b4",
+          "#a6ded4",
+          "#c3fcf1"
+        ]
+      },
+      "admin-accent": {
+        "role": "secondary",
+        "displayName": "Cielo Tenue",
+        "canonical": "#7dd3fc",
+        "tonalRamp": [
+          "#000d16",
+          "#002b3c",
+          "#024c66",
+          "#037095",
+          "#3c94bb",
+          "#64bae2",
+          "#b4d7ea",
+          "#dbf3ff"
+        ]
+      },
+      "admin-bg": {
+        "role": "neutral",
+        "displayName": "Tinta de Taller (panel)",
+        "canonical": "#070c11",
+        "tonalRamp": [
+          "#090b0e",
+          "#21272d",
+          "#3f464c",
+          "#60676e",
+          "#838a91",
+          "#a7afb6",
+          "#ced1d5",
+          "#ebeff2"
+        ]
+      },
+      "admin-surface": {
+        "role": "neutral",
+        "displayName": "Banco",
+        "canonical": "#0b131a",
+        "tonalRamp": [
+          "#080c0f",
+          "#1f282f",
+          "#3d464f",
+          "#5d6770",
+          "#808b94",
+          "#a5afb9",
+          "#cdd2d6",
+          "#eaeff4"
+        ]
+      },
+      "admin-raised": {
+        "role": "neutral",
+        "displayName": "Banco",
+        "canonical": "#101c26",
+        "tonalRamp": [
+          "#070c10",
+          "#1c2832",
+          "#394752",
+          "#5a6874",
+          "#7c8b98",
+          "#a1b0be",
+          "#cbd2d8",
+          "#e8f0f6"
+        ]
+      },
+      "admin-card": {
+        "role": "neutral",
+        "displayName": "Banco",
+        "canonical": "#0f1922",
+        "tonalRamp": [
+          "#080c0f",
+          "#1d2831",
+          "#3b4651",
+          "#5c6873",
+          "#7e8b97",
+          "#a3b0bc",
+          "#ccd2d8",
+          "#e9eff5"
+        ]
+      },
+      "admin-line": {
+        "role": "neutral",
+        "displayName": "Hilo",
+        "canonical": "#1e2c38",
+        "tonalRamp": [
+          "#070c10",
+          "#1a2834",
+          "#384754",
+          "#586876",
+          "#7b8b9a",
+          "#9fb0c0",
+          "#cad2d9",
+          "#e7f0f7"
+        ]
+      },
+      "admin-ink": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "#f1f6fa",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#23272a",
+          "#424649",
+          "#62676a",
+          "#858a8d",
+          "#aaafb2",
+          "#cfd1d3",
+          "#eceff0"
+        ]
+      },
+      "admin-muted": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "#8ea0b5",
+        "tonalRamp": [
+          "#060c12",
+          "#192838",
+          "#374659",
+          "#57687b",
+          "#798b9f",
+          "#9eb0c5",
+          "#c9d2dc",
+          "#e7effa"
+        ]
+      },
+      "admin-success": {
+        "role": "status",
+        "displayName": "admin-success",
+        "canonical": "#34d399",
+        "tonalRamp": [
+          "#001007",
+          "#002f1e",
+          "#015338",
+          "#017954",
+          "#01a271",
+          "#27cb92",
+          "#a8e0c4",
+          "#c5fee2"
+        ]
+      },
+      "admin-warning": {
+        "role": "status",
+        "displayName": "admin-warning",
+        "canonical": "#fbbf24",
+        "tonalRamp": [
+          "#120900",
+          "#332400",
+          "#594100",
+          "#826001",
+          "#ad8104",
+          "#dba409",
+          "#e8ce99",
+          "#ffecc8"
+        ]
+      },
+      "admin-danger": {
+        "role": "status",
+        "displayName": "admin-danger",
+        "canonical": "#fb7185",
+        "tonalRamp": [
+          "#200004",
+          "#4e0016",
+          "#84002b",
+          "#b12c49",
+          "#db546b",
+          "#ff8191",
+          "#ffbdc2",
+          "#fee8ea"
+        ]
+      },
+      "admin-info": {
+        "role": "status",
+        "displayName": "admin-info",
+        "canonical": "#60a5fa",
+        "tonalRamp": [
+          "#000a23",
+          "#002550",
+          "#004487",
+          "#1f66b5",
+          "#468bdd",
+          "#73b1fe",
+          "#b5d4fb",
+          "#e5f0fe"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titulares del sitio público y títulos de página."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Títulos de sección y de diálogo en el panel."
+      },
+      "metric": {
+        "displayName": "Metric",
+        "purpose": "La cifra protagonista de una tarjeta."
+      },
+      "metric-sm": {
+        "displayName": "Metric small",
+        "purpose": "Cifras secundarias."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texto corrido y campos."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Etiquetas de campo y texto de interfaz."
+      },
+      "kicker": {
+        "displayName": "Kicker",
+        "purpose": "Rótulos en mono y mayúsculas sobre títulos y datos."
+      }
+    },
+    "shadows": [
+      {
+        "name": "e1",
+        "value": "0 6px 18px -14px rgb(0 0 0 / 85%)",
+        "purpose": "Controles pequeños."
+      },
+      {
+        "name": "e2",
+        "value": "0 12px 32px -22px rgb(0 0 0 / 90%)",
+        "purpose": "Burbujas y menús."
+      },
+      {
+        "name": "e3",
+        "value": "0 18px 45px -32px rgb(0 0 0 / 95%)",
+        "purpose": "Tarjetas. Sombra canónica."
+      },
+      {
+        "name": "e4",
+        "value": "0 28px 70px -40px rgb(0 0 0 / 95%)",
+        "purpose": "Diálogos y hojas."
+      }
+    ],
+    "motion": [
+      {
+        "name": "dur-fast",
+        "value": "120ms",
+        "purpose": "Respuesta inmediata a hover y pulsación."
+      },
+      {
+        "name": "dur-base",
+        "value": "220ms",
+        "purpose": "Transiciones de estado por defecto."
+      },
+      {
+        "name": "dur-slow",
+        "value": "420ms",
+        "purpose": "Entradas de superficie."
+      },
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Entradas y desplazamientos."
+      },
+      {
+        "name": "ease-in-out-soft",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Cambios de color y borde."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "xs",
+        "value": "475px"
+      },
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      },
+      {
+        "name": "3xl",
+        "value": "1600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "La acción principal de la vista. Una por pantalla.",
+      "html": "<button class=\"ds-btn-primary\">Guardar cambios</button>",
+      "css": ".ds-btn-primary { font-family: Manrope, 'Segoe UI', Arial, sans-serif; background:#2dd4bf; color:#070c11; border:1px solid #2dd4bf; border-radius:0.75rem; padding:10px 16px; font-size:0.875rem; font-weight:700; cursor:pointer; transition:background-color 220ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background:rgb(45 212 191 / 90%); } .ds-btn-primary:focus-visible { outline:none; box-shadow:0 0 0 2px rgb(45 212 191 / 40%); }"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acciones de apoyo junto a la principal.",
+      "html": "<button class=\"ds-btn-secondary\">Vista previa</button>",
+      "css": ".ds-btn-secondary { font-family: Manrope, 'Segoe UI', Arial, sans-serif; background:rgb(255 255 255 / 4%); color:#f1f6fa; border:1px solid #1e2c38; border-radius:0.75rem; padding:10px 16px; font-size:0.875rem; font-weight:700; cursor:pointer; transition:border-color 220ms, background-color 220ms; } .ds-btn-secondary:hover { border-color:rgb(45 212 191 / 30%); background:rgb(255 255 255 / 7%); } .ds-btn-secondary:focus-visible { outline:none; box-shadow:0 0 0 2px rgb(45 212 191 / 40%); }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Entrada con etiqueta y pista. 16px en móvil para evitar el zoom de iOS.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Título del proyecto</span><input class=\"ds-input\" placeholder=\"Ej. Tienda Lizz\" /><span class=\"ds-field-hint\">Se muestra en el visor de proyectos.</span></label>",
+      "css": ".ds-field { font-family: Manrope, 'Segoe UI', Arial, sans-serif; display:flex; flex-direction:column; gap:8px; } .ds-field-label { font-size:0.8125rem; font-weight:600; color:#f1f6fa; } .ds-field-hint { font-size:0.75rem; color:#8ea0b5; } .ds-input { font-family: Manrope, 'Segoe UI', Arial, sans-serif; min-height:44px; background:rgb(7 12 17 / 60%); color:#f1f6fa; border:1px solid #1e2c38; border-radius:0.75rem; padding:10px 14px; font-size:1rem; transition:border-color 220ms; } .ds-input::placeholder { color:rgb(142 160 181 / 70%); } .ds-input:hover { border-color:rgb(45 212 191 / 30%); } .ds-input:focus-visible { outline:none; border-color:rgb(45 212 191 / 50%); box-shadow:0 0 0 2px rgb(45 212 191 / 40%); }"
+    },
+    {
+      "name": "Insignia de estado",
+      "kind": "chip",
+      "refersTo": "status-badge",
+      "description": "Estado con punto y etiqueta: texto, borde al 20 % y fondo al 10 % del mismo color.",
+      "html": "<span class=\"ds-badge\"><span class=\"ds-badge-dot\"></span>Publicado</span>",
+      "css": ".ds-badge { font-family: Manrope, 'Segoe UI', Arial, sans-serif; display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9999px; font-size:0.75rem; font-weight:600; color:#34d399; border:1px solid rgb(52 211 153 / 20%); background:rgb(52 211 153 / 10%); } .ds-badge-dot { width:6px; height:6px; border-radius:9999px; background:#34d399; }"
+    },
+    {
+      "name": "Tarjeta de métrica",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Una cifra real con su rótulo en mono y su contexto.",
+      "html": "<div class=\"ds-card\"><span class=\"ds-card-kicker\">Commits · 30 días</span><span class=\"ds-card-metric\">412</span><span class=\"ds-card-note\">en 6 repositorios</span></div>",
+      "css": ".ds-card { font-family: Manrope, 'Segoe UI', Arial, sans-serif; display:flex; flex-direction:column; gap:12px; background:#0f1922; color:#f1f6fa; border:1px solid #1e2c38; border-radius:1.25rem; padding:20px; box-shadow:0 18px 45px -32px rgb(0 0 0 / 95%); } .ds-card-kicker { font-family:'JetBrains Mono','Courier New',monospace; font-size:0.6875rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:#8ea0b5; } .ds-card-metric { font-size:clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem); font-weight:700; line-height:0.95; letter-spacing:-0.03em; font-variant-numeric:tabular-nums; } .ds-card-note { font-size:0.75rem; color:#8ea0b5; }"
+    },
+    {
+      "name": "Pestañas",
+      "kind": "nav",
+      "description": "Navegación entre secciones; se desplaza en horizontal en móvil.",
+      "html": "<div class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">Proyectos <span class=\"ds-tab-count\">22</span></button><button class=\"ds-tab\">Skills <span class=\"ds-tab-count\">8</span></button><button class=\"ds-tab\">Insignias <span class=\"ds-tab-count\">7</span></button></div>",
+      "css": ".ds-tabs { font-family: Manrope, 'Segoe UI', Arial, sans-serif; display:flex; gap:4px; border-bottom:1px solid #1e2c38; overflow-x:auto; } .ds-tab { font-family: Manrope, 'Segoe UI', Arial, sans-serif; position:relative; display:flex; align-items:center; gap:8px; min-height:44px; padding:10px 14px 12px; background:none; border:none; color:#8ea0b5; font-size:0.8125rem; font-weight:600; white-space:nowrap; cursor:pointer; transition:color 220ms; } .ds-tab:hover { color:#f1f6fa; } .ds-tab:focus-visible { outline:none; box-shadow:0 0 0 2px rgb(45 212 191 / 40%); } .ds-tab-active { color:#f1f6fa; } .ds-tab-active::after { content:''; position:absolute; left:8px; right:8px; bottom:-1px; height:2px; border-radius:9999px; background:#2dd4bf; } .ds-tab-count { font-family:'JetBrains Mono',monospace; font-size:11px; padding:2px 6px; border-radius:9999px; background:rgb(255 255 255 / 6%); } .ds-tab-active .ds-tab-count { background:rgb(45 212 191 / 15%); color:#2dd4bf; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Taller del Ingeniero",
+    "overview": "Un banco de trabajo ordenado: superficie oscura, herramientas precisas a la vista y etiquetas técnicas que dicen exactamente qué es cada cosa. Nada está de adorno. El carácter no viene de efectos, sino de la precisión: un titular serif con peso, una etiqueta monoespaciada con tracking amplio, una línea fina teñida que separa sin gritar.\n\nEl sistema es denso sin ser apretado. La información manda y el color se reserva para lo que es acción o estado. El panel de administración es la versión más sobria de este mundo: componentes contenidos, de líneas finas, donde el acento aparece solo cuando algo se puede hacer o algo cambió.\n\nEl trabajo debe leerse como hecho a mano por un equipo de diseño. Composición, jerarquía y ritmo se deciden caso por caso; no se aplican recetas de plantilla.",
+    "keyCharacteristics": [
+      "Superficie oscura con profundidad dada por dos gradientes radiales fijos y muy tenues, no por imágenes.",
+      "Tres voces tipográficas con papeles separados: serif para titulares, sans para cuerpo y cifras, mono en mayúsculas para etiquetas.",
+      "Separación por líneas finas teñidas del acento, no por cajas pesadas.",
+      "Luz por desenfoque detrás de la superficie, nunca por halo alrededor.",
+      "Diez paletas conmutables; el panel vive aislado en la suya."
+    ],
+    "rules": [
+      {
+        "name": "La Regla de las Diez Paletas",
+        "body": "Los valores de este archivo son los de la paleta por defecto. El sitio tiene diez, conmutables en tiempo real, y todas viven como variables CSS en `src/app/globals.css`. Todo componente consume el token (`primary`, `accent`, `card-bg`, `admin-*`), nunca un hex literal: un hex quemado rompe las otras nueve.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla de la Paleta Intocable",
+        "body": "Los valores de las diez paletas no se modifican, no se «mejoran» y no se sustituyen. Son una decisión del propietario.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla del Color de Datos Fijo",
+        "body": "La paleta de gráficas es la única parte del sistema con color fijo, a propósito: fue calculada y verificada para distinguirse bajo daltonismo y contra la superficie. Las series se asignan en orden, nunca en ciclo; de la novena en adelante se agrupan en «Otros». Los colores de estado no se usan como serie.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla del Panel Aislado",
+        "body": "Todo lo que vive en `/admin` va dentro de `.admin-shell`, que redefine sus propias variables para que la única paleta clara del sitio no rompa su contraste.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla de los 16 Píxeles",
+        "body": "Ningún campo editable baja de 16px en móvil. Por debajo, Safari en iOS hace zoom al enfocar y descoloca la pantalla.",
+        "section": "typography"
+      },
+      {
+        "name": "La Regla de la Cifra en Tinta",
+        "body": "Los números y las etiquetas van en color de texto, nunca en el color de la serie. La identidad la da la marca de color que los acompaña.",
+        "section": "typography"
+      },
+      {
+        "name": "La Regla de la Luz por Detrás",
+        "body": "La luz se hace con una mancha del acento al 10 % desenfocada (40, 80 o 140px) colocada detrás de la superficie. No se usan sombras de color ni halos alrededor de los elementos.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do consumir siempre tokens de color (`primary`, `accent`, `card-bg`, `admin-*`, `chart-*`).",
+      "Do componer primero a 375 px y validar ahí antes de pensar en escritorio.",
+      "Do usar los primitivos de `src/components/admin/ui/` (importados desde su `index.ts`) antes de crear uno nuevo.",
+      "Do usar la escala nombrada de radio (`rounded-card`, `rounded-field`…) y de elevación (`shadow-e1`…`shadow-e4`).",
+      "Do dar a cada objetivo táctil al menos 44px.",
+      "Do mostrar solo cifras que vengan de la base de datos o de GitHub.",
+      "Do acompañar todo color de estado o de serie con una etiqueta de texto."
+    ],
+    "donts": [
+      "Don't escribir un hex literal en un componente.",
+      "Don't cambiar ningún valor de las diez paletas.",
+      "Don't tocar `src/components/shared/Card.tsx` más allá de su fuente de datos.",
+      "Don't usar `src/components/ui/Button.tsx`: fija un azul ajeno al sistema.",
+      "Don't usar halos ni sombras de color para iluminar.",
+      "Don't mostrar tablas con desplazamiento horizontal en móvil.",
+      "Don't ciclar los colores de serie ni reutilizar un color de estado como serie.",
+      "Don't mostrar datos de ejemplo, inventados o de relleno."
+    ]
+  }
+}

@@ -48,9 +48,17 @@ next-env.d.ts
 .env*.local
 mis-claves-chatbot.txt*
 
-# Claude Code local state (memory + scheduled tasks)
-.claude/
+# Claude Code: el estado local (memoria, tareas, settings.local.json) no se
+# versiona, pero las skills y agentes del proyecto sí, para que cualquier
+# sesión —local o en la nube— diseñe con el mismo criterio.
+.claude/*
+!.claude/skills/
+!.claude/agents/
 
 # Coordinación entre IAs concurrentes (sección O del documento)
 .claim-lock
 .ia-bitacora.log
+
+# Impeccable: estado por desarrollador y cachés (lo compartido sí se versiona)
+.impeccable/config.local.json
+.impeccable/hook.cache.json
