@@ -125,7 +125,8 @@ export interface PortfolioTechnologyRow extends BaseRow {
 
 export interface PortfolioTimelineRow extends BaseRow {
   readonly slug: string;
-  readonly year: string;
+  /** Bilingüe: el 4.º hito tiene el año traducido («2025 - Presente» / «2025 - Present»). */
+  readonly year: Localized;
   readonly title: Localized;
   readonly description: Localized | null;
   readonly icon_key: string | null;

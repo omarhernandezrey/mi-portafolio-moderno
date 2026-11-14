@@ -190,7 +190,9 @@ create table if not exists public.portfolio_technologies (
 create table if not exists public.portfolio_timeline (
   id uuid primary key default gen_random_uuid(),
   slug text not null unique,
-  year text not null,
+  -- jsonb y no text: el 4.º hito tiene el año traducido («2025 - Presente» /
+  -- «2025 - Present»), así que el año es contenido bilingüe como el resto.
+  year jsonb not null,
   title jsonb not null,
   description jsonb,
   -- Era un componente de lucide-react embebido en el array. Ahora, su nombre.
