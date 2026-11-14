@@ -1,9 +1,50 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Estado: **Fase 0 en curso**
+> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas salvo el seed; siguiente tarea: T-05b**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
+
+**Si eres un agente que retoma este trabajo, lee en este orden:** §0 (dónde está todo), §3 (cómo se trabaja aquí: es obligatorio, no orientativo), §2 (lo que no se puede romper) y luego la ficha de tu tarea en §5. `CLAUDE.md`, `PRODUCT.md` y `DESIGN.md` completan el contexto.
+
+---
+
+## 0. Estado actual y cómo retomar
+
+### Hecho y en `main`
+
+| Tarea | Resultado |
+|---|---|
+| Análisis | §1 de este documento |
+| T-01 | Tokens de radio, elevación, tipografía por rol, movimiento y glow |
+| T-02 | Paleta de datos verificada (`--chart-*`, `src/lib/charts/palette.ts`) |
+| T-03 | 11 primitivos de UI mobile-first en `src/components/admin/ui/` |
+| T-04 | Esquema de 9 tablas `portfolio_*` con RLS real, ejecutado en PostgreSQL 16 |
+| T-05a | Contenido inline extraído a `src/lib/portfolio/source/` |
+| Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
+
+### En curso, en ramas ya subidas a `origin`
+
+| Rama | Tarea | Qué contiene | Qué falta |
+|---|---|---|---|
+| `feat/portfolio-seed` | T-05b | Un commit: la columna `year` de `portfolio_timeline` pasa a `jsonb` (validado en PostgreSQL) | Todo el script de seed. Ver ficha T-05b |
+| `fix/telegram-bot` | T-16 | Un commit `wip`: `sendTelegramMessage` con `chatId` y resultado tipado en `src/lib/chatbot/telegram.ts`; `TELEGRAM_WEBHOOK_SECRET` en el schema de `src/config/env.ts`. Compila | `daily-summary`, webhook, adaptar llamadores y **todos** los tests. Ver ficha T-16 |
+
+Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> && git rebase origin/main`, y lee su diff completo (`git diff origin/main...HEAD`). No asumas qué hace: compruébalo.
+
+### Orden de ejecución recomendado
+
+`T-05b → T-06 → T-07 → T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-24`. T-20 solo si Omar confirma D-1.
+
+El orden no es arbitrario: T-05b a T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
+
+### Bloqueos que solo Omar puede resolver
+
+| Bloqueo | Afecta a | Mientras tanto |
+|---|---|---|
+| El `.env` real y las credenciales de Supabase no están en el entorno de trabajo | Aplicar la migración y cargar el seed en la base real; pruebas con datos vivos | Todo se escribe y se prueba contra PostgreSQL local (receta en §3.5). Lo no verificable en real se marca **«pendiente de validación con credenciales»**, nunca como hecho |
+| Decisión D-1 (§4): proveedor de autenticación | T-20 | T-19 se ejecuta igual: sirve para ambos caminos |
+| Aplicar migraciones | Toda tabla nueva | Omar las aplica a mano en el SQL Editor de Supabase. Cada migración debe poder pegarse tal cual y correr dos veces sin error |
 
 ---
 
@@ -111,33 +152,131 @@ Deuda menor detectada: `src/components/ui/Button.tsx` hardcodea `bg-blue-500` (f
 
 ---
 
-## 3. Reglas de ejecución (ciclo obligatorio por tarea)
+## 3. Manual de ejecución — cómo se trabaja en este proyecto
+
+Este manual existe para que cualquier agente ejecute las tareas con el mismo estándar con el que se hicieron las fases 0 y 1. No describe un estilo: describe los hábitos que evitaron errores concretos en este mismo repositorio. Cada regla trae el incidente que la justifica.
+
+### 3.1 Los hábitos
+
+**1. Mide, no estimes.** Toda cifra que escribas —en código, en un test, en este plan, en un commit— sale de un comando que ejecutaste, no de leer un archivo ni de un resumen ajeno.
+*Incidente:* el primer análisis contó a ojo 24 proyectos, 173 ítems de educación, 15 insignias, 10 skills y 6 servicios. Al importar los módulos y medir `.length` eran 22, 172, 7, 8 y 4. El plan entero garantizaba «no perder nada» contra una base falsa. *Práctica:* para contar registros, importa el módulo con `npx tsx` y mide; si dos métodos discrepan, imprime los registros y zanja.
+
+**2. Verifica contra el sistema real, no contra tu lectura.** SQL se ejecuta en PostgreSQL; un color se pasa por el validador; una clase de Tailwind se busca en el CSS compilado; un endpoint se llama.
+*Incidente:* la migración de T-04 se ejecutó dos veces en PostgreSQL 16 y las políticas se probaron entrando con el rol `anon`. Leerla no habría demostrado que RLS bloquea de verdad.
+
+**3. Cuando un test falla, decide primero quién se equivoca: el código o el test.** Nunca aflojes un umbral, borres una aserción o añadas una excepción para que pase.
+*Incidentes:* un test de `Tabs` falló porque `scrollIntoView` no existe en jsdom: se arregló el componente (comprobar que existe), porque tampoco existe en algunos webviews. Un test de `Input` reveló que `aria-describedby` apuntaba a un elemento ausente: defecto real de accesibilidad, corregido en el componente. En cambio, dos umbrales puestos a ojo en el test de paleta estaban mal: se midió el valor real y se corrigió el test, explicando por qué.
+
+**4. Los tests comprueban comportamiento, no implementación.** Qué pasa al pulsar, qué se anuncia a un lector de pantalla, qué devuelve la función con entradas límite. No clases CSS ni estructura interna.
+
+**5. Deja un guardarraíl donde algo puede desviarse en silencio.** Si dos cosas deben coincidir (SQL y tipos, cifra declarada y contenido real, paleta y su valor), escribe el test que las compara.
+*Existentes:* `portfolio-schema.test.ts` (SQL ↔ tipos), `portfolio-content-counts.test.ts` (conteos en vivo), `palette-lock.test.ts` (valores de las diez paletas), `visor-lock.test.ts` (huella de `Card.tsx`), `design-tokens.test.ts`, `chart-palette.test.ts`.
+
+**6. Lee antes de escribir.** Antes de crear un archivo, abre uno vecino y copia sus convenciones: nombres, idioma de los comentarios, cómo se importa, cómo se manejan errores. Antes de tocar una función, busca quién la llama (`grep -rn`).
+
+**7. El alcance de la tarea es el alcance del cambio.** Si encuentras otro problema, anótalo en T-24 o en el registro; no lo arregles de paso. Un diff que hace dos cosas no se puede revisar ni revertir.
+
+**8. Explica el porqué, no el qué.** Comentarios y mensajes de commit dicen la razón de la decisión y el fallo que evita. «Entero 0..100: el símbolo % es presentación» sirve; «guarda el porcentaje» no.
+
+**9. Informa con honestidad lo que no verificaste.** Si algo no pudo probarse (sin credenciales, sin red), se escribe así, con el motivo y con qué se sustituyó. Jamás «debería funcionar». Una afirmación sin evidencia se redacta como pendiente.
+
+**10. Lo irreversible o ambiguo se pregunta; lo demás se decide y se anota.** Ver §3.7.
+
+### 3.2 Ciclo obligatorio de una tarea
 
 ```
-1. git checkout -b <tipo>/<slug-tarea>        # una rama por tarea
-2. Implementar en commits pequeños y descriptivos
-3. Validar — TODO debe pasar:
-     npm run typecheck      → 0 errores
-     npm run lint           → 0 errores
-     npm test               → verde
-     npm run build          → ver nota abajo
-     revisión visual 375px  → captura o descripción
-4. Solo si TODO pasa: marcar la tarea completada en este documento
-5. git merge a main (fast-forward o merge commit) y push
-6. Siguiente tarea
+ 1. git fetch origin && git checkout main && git pull --ff-only
+ 2. git checkout -b <rama indicada en la ficha>
+ 3. Lee la ficha completa (§5) y los archivos que nombra. Reproduce el
+    problema o mide el estado inicial ANTES de cambiar nada.
+ 4. Si la tarea toca interfaz: carga la skill impeccable (ver CLAUDE.md).
+ 5. Implementa en commits pequeños. Escribe el test junto al código.
+ 6. npm run verify                     ← debe terminar en «TODO EN VERDE»
+ 7. Comprueba uno por uno los criterios de aceptación de la ficha.
+ 8. Si tocó interfaz: revísala a 375 px, luego 475, luego ≥1024.
+ 9. Marca la tarea [x] en §5, añade su fila en §6 con la evidencia
+    y actualiza §0. Va en el mismo commit o en uno final de la rama.
+10. git checkout main && git merge --ff-only <rama> && git push origin main
+11. gh run watch                       ← el build real corre en GitHub Actions
+12. Si CI falla: se arregla en una rama nueva. No se sigue con otra tarea.
 ```
 
-Si una validación falla, la tarea **sigue abierta**. No se marca completada ni se mergea.
+Una tarea a medias se deja en su rama, subida a `origin`, con un commit `wip(...)` que diga qué está hecho y qué falta, y con su fila en la tabla «En curso» de §0. Nunca se mergea a medias.
 
-> **Nota sobre `npm run build` en el entorno cloud.** `src/app/layout.tsx` carga Fraunces, Manrope y JetBrains Mono con `next/font/google`, que descarga las fuentes **en tiempo de build**. El entorno de trabajo en la nube tiene `fonts.googleapis.com` fuera de su allowlist (`CONNECT tunnel failed, 403`), así que el build falla ahí por red, no por código. Sustitutos usados en cada tarea:
-> - `npx tailwindcss -i src/app/globals.css -o /tmp/out.css` → prueba que el CSS y los tokens compilan.
-> - `npm run typecheck` + `npm run lint` + `npm test` → cubren el código.
-> - **El build real lo valida Vercel** en cada push a `main`, y Omar en local donde sí tiene red y el `.env` verdadero.
-> Ninguna tarea se declara completada afirmando un build que no se ejecutó.
+### 3.3 Definición de terminado
 
----
+Una tarea está terminada solo si **todo** esto es cierto:
 
-## 3.1 Herramientas de diseño del proyecto
+- [ ] `npm run verify` termina en «TODO EN VERDE».
+- [ ] Cada criterio de aceptación de la ficha se comprobó y su resultado consta en §6.
+- [ ] Hay tests nuevos que fallarían si se revirtiera el cambio.
+- [ ] Ninguna restricción de §2 fue tocada.
+- [ ] Lo no verificado está escrito como pendiente, con su motivo.
+- [ ] §5, §6 y §0 de este documento reflejan el estado real.
+- [ ] Tras el merge, el workflow «Test Suite» de GitHub Actions pasó (tests y build).
+
+### 3.4 Evidencia en el registro (§6)
+
+Cada fila de §6 dice qué se ejecutó y qué salió, con números. Bien: «migración ejecutada 2 veces en PostgreSQL 16 · 9 tablas · anon ve 1 de 2 filas · 169 tests». Mal: «validado», «funciona», «todo correcto».
+
+### 3.5 Recetas del entorno
+
+**`npm run build` sin red.** `next/font` descarga de `fonts.googleapis.com` al construir. En el entorno cloud ese dominio está bloqueado y el build falla por red, no por código. No lo arregles ni lo declares hecho: `npm run verify` cubre typecheck, lint, tests y la compilación de Tailwind, y el build real lo ejecuta GitHub Actions en cada push a `main` (`gh run watch`, o `gh run list --workflow "Test Suite" --limit 3`).
+
+**PostgreSQL local para validar SQL** (los binarios del servidor están en `/usr/lib/postgresql/16/bin`; `initdb` no corre como root):
+
+```bash
+PGBIN=/usr/lib/postgresql/16/bin
+id -u pgtest >/dev/null 2>&1 || useradd -m pgtest
+mkdir -p /tmp/pgdata /tmp/pgrun && chown pgtest /tmp/pgdata /tmp/pgrun
+su pgtest -c "$PGBIN/initdb -D /tmp/pgdata -A trust"
+su pgtest -c "$PGBIN/pg_ctl -D /tmp/pgdata -o '-k /tmp/pgrun -p 5433 -c listen_addresses=' -l /tmp/pg.log start"
+su pgtest -c "$PGBIN/createdb -h /tmp/pgrun -p 5433 portafolio"
+# Supabase trae estos roles; en local hay que crearlos para probar RLS:
+su pgtest -c "$PGBIN/psql -h /tmp/pgrun -p 5433 -d portafolio -c 'create role anon nologin; create role authenticated nologin;'"
+# Ejecutar una migración (copia a /tmp: pgtest no lee el repo):
+cp supabase/migrations/ARCHIVO.sql /tmp/m.sql && chmod 644 /tmp/m.sql
+su pgtest -c "$PGBIN/psql -h /tmp/pgrun -p 5433 -d portafolio -v ON_ERROR_STOP=1 -f /tmp/m.sql"
+```
+
+Toda migración se ejecuta **dos veces** (idempotencia) y sus políticas se prueban con `set role anon;`.
+
+**Contar o inspeccionar datos del repo:** `npx tsx --tsconfig tsconfig.json script.ts` con imports `@/lib/...`.
+
+**API de GitHub:** `gh api ...` está autenticado como `omarhernandezrey`.
+
+**Tests de componentes:** el entorno por defecto de Jest es `node`. Un test que renderiza React empieza con el docblock `/** @jest-environment jsdom */` e importa `@testing-library/jest-dom`.
+
+**Verificar que una clase de Tailwind existe:** escribe un HTML de prueba con la clase y compílalo con `npx tailwindcss -i src/app/globals.css -o /tmp/x.css --content /tmp/prueba.html`; luego `grep` en el resultado.
+
+**Paleta de datos:** no se eligen colores nuevos. Si alguna vez hiciera falta, se recalculan en OKLCH y se pasan por el validador de la skill `dataviz` en modo oscuro (`#070c11`) y claro; nunca a ojo.
+
+### 3.6 Delegar en subagentes
+
+Sirve para trabajo independiente y bien delimitado. Reglas, aprendidas aquí:
+
+- **Cada subagente en su propio clon**, no en el mismo directorio: las ramas de git comparten árbol de trabajo. `git clone --shared <repo> /ruta/clon && ln -s <repo>/node_modules /ruta/clon/node_modules`.
+- **Archivos disjuntos.** Si dos tareas tocan el mismo archivo (p. ej. `src/config/env.ts`), solo una lo edita; la otra lee `process.env` con un `TODO` y lo reporta.
+- **El encargo incluye:** ruta exacta de trabajo, rama, diagnóstico ya hecho, qué debe quedar, reglas duras, tests obligatorios, validación y formato del informe. Y que **no** haga merge ni push.
+- **No confíes en su informe: verifícalo.** Vuelve a correr los tests tú, y comprueba las cifras que afirme. El subagente de análisis fue quien dio los conteos erróneos; el de extracción fue quien detectó que las insignias eran 7.
+- Pídele que reporte sorpresas y lo que no pudo hacer, en vez de forzarlo.
+
+### 3.7 Cuándo parar y preguntar a Omar
+
+Se pregunta, y se espera, solo si se cumple alguna:
+
+- La acción no se puede deshacer con `git revert` (borrar datos reales, rotar credenciales, cambiar de proveedor de auth).
+- Contradice `PRODUCT.md`, `DESIGN.md` o una restricción de §2.
+- Hay dos lecturas razonables del encargo que llevan a trabajos distintos y costosos.
+- Requiere un secreto o un acceso que no está en el entorno.
+
+En cualquier otro caso se elige la opción más conservadora, se anota la decisión y su razón en la ficha o en el commit, y se sigue. No se pide permiso para lo que el plan ya ordena.
+
+### 3.8 Commits
+
+Mensaje en español: `tipo(ámbito): qué cambia`, un cuerpo que explique **por qué** y qué fallo evita, y una línea final `Validado: ...` con lo ejecutado. Un commit `wip(...)` lista lo hecho y lo pendiente. Nunca se commitea un `.env`, una clave ni `.claude/settings.local.json`.
+
+### 3.9 Herramientas de diseño del proyecto
 
 Instaladas y versionadas el 2026-11-14 (ver `CLAUDE.md` para cómo se usan):
 
@@ -168,7 +307,7 @@ Hasta tener respuesta: **se implementa el endurecimiento compatible con ambos ca
 
 ---
 
-## 5. Backlog por fases
+## 5. Tareas
 
 Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 
@@ -212,46 +351,283 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
     *Hallazgos durante la extracción:* (1) el `year` del 4.º hito está traducido (`2025 - Presente` / `2025 - Present`) pero `portfolio_timeline.year` es `text` sin idioma — el seed debe decidir o pasarlo a jsonb; (2) el `icon` del timeline **nunca se renderizaba** (el punto es un `div`), así que pasarlo a clave no cambia un pixel; (3) `personalData` no guardaba texto sino claves i18n (`t("about.personalData.name")`), así que se conservaron las claves y no el texto, para no desincronizarlo de `locales/{es,en}/common.json`.
     *Validado:* typecheck 0 errores · lint limpio · **257 tests** (74 de la extracción + 14 de conteos en vivo).
     *Deuda preexistente detectada, ajena a esta tarea:* `npx tsc -p tsconfig.jest.json` arroja 816 errores (`jsx: "react"` sin `import React`), idénticos antes y después. Jest no usa ese config (va por `next/jest` + SWC), así que no afecta a los tests, pero está anotado en T-24.
-  - [ ] **T-05b** Script de seed que inserta en Supabase y verifica conteos contra `CONTENIDO_ORIGINAL`, resolviendo la duplicación de `/sobre-mi`. Rama `feat/portfolio-seed`.
-    *Aceptación:* conteos exactos (22/7/172/171/7/8/4/42/4); `features`, `highlights` y `architecture` en JSONB; nombres de tecnología sin normalizar; rutas de certificado preservadas tal cual. **Requiere credenciales reales de Supabase**, que hoy no están disponibles en el entorno (el `.env` vive solo en el PC de Omar): el script se escribe y se prueba contra el PostgreSQL local, y la carga real queda pendiente de validación.
+  - [~] **T-05b** Seed del contenido. **En curso en `feat/portfolio-seed`.** Ficha completa abajo, en «Fichas de las tareas pendientes».
 
-### Fase 2 — El portafolio público lee de la base de datos
-- [ ] **T-06** Capa de lectura con caché (`unstable_cache` / ISR) y **fallback a los archivos actuales** si la BD no responde. Rama `feat/portfolio-data-layer`.
-  *Aceptación:* home y `/sobre-mi` idénticas píxel a píxel a hoy; sin degradación de LCP; fallback probado.
-- [ ] **T-07** Conectar el visor de proyectos a la BD **sin tocar `Card.tsx`**. El adaptador replica `getLocalizedProjectsData` (fallback a `es`) y entrega el contrato del §2.2. Rama `feat/projects-from-db`.
-  *Aceptación:* los 24 proyectos se ven igual; los 3 iframes cargan; interacción táctil intacta; test visual a 375 px y en desktop; validación de `demo` embebible con aviso en el dashboard si el sitio bloquea iframes.
+---
 
-### Fase 3 — Dashboard editable (el motor)
-- [ ] **T-08** Rediseño del shell del dashboard **mobile-first**, con dos áreas: **Portafolio** (nuevo) y **Negocio** (el CRM actual, intacto). Rama `feat/dashboard-shell`.
-  *Aceptación:* navegación usable con una mano a 375 px; los 12 ítems actuales siguen accesibles; `AdminNav` conserva focus-trap, Escape y `aria-expanded`.
-- [ ] **T-09** Módulo **Proyectos**: CRUD + reordenar (drag o botones) + publicar/despublicar + vista previa. Rama `feat/module-projects`.
-- [ ] **T-10** Módulo **Skills** (nombre, %, categoría, color, icono). Rama `feat/module-skills`.
-- [ ] **T-11** Módulo **Educación e insignias**: categorías, ítems, subida de imagen a Supabase Storage **y** soporte de URL externa (requiere `remotePatterns` en `next.config.mjs`). Rama `feat/module-education`.
-- [ ] **T-12** Módulo **Servicios, tecnologías, timeline y perfil/hero**. Rama `feat/module-content`.
-  *Aceptación (T-09…T-12):* cada módulo crea, edita, elimina y reordena; el cambio se refleja en la home; test E2E del ciclo completo por módulo; el borrado pide confirmación y es recuperable (§Fase 5, T-18).
+### Fichas de las tareas pendientes
 
-### Fase 4 — Métricas reales
-- [ ] **T-13** Cliente de GitHub (`src/lib/github.ts`) + tabla `github_metrics` + cron `/api/cron/github-metrics` + workflow en `.github/workflows/`. Ingesta por repo: commits, líneas añadidas/eliminadas, lenguajes, stars, forks, PRs, actividad diaria, rachas. Rama `feat/github-metrics`.
-  *Aceptación:* `GITHUB_TOKEN` en `.env.example` y en el schema de `src/config/env.ts`; respeta rate limit; **el dashboard lee de Supabase, nunca de la API en vivo** (carga instantánea); histórico acumulable.
-- [ ] **T-14** Panel de métricas con **gráficas reales**: actividad diaria, mapa de calor de contribuciones con rachas, lenguajes por bytes, commits por repo, velocidad de entrega. Rama `feat/metrics-dashboard`.
-  *Aceptación:* librería de gráficas elegida y justificada; cero datos de ejemplo; usa la paleta de T-02; legible a 375 px; accesible (no solo color).
-- [ ] **T-15** Core Web Vitals reales (`web-vitals` → tabla de eventos) + embudo de visitas → vista de proyecto → descarga de CV → clic en contacto. Rama `feat/analytics-real`.
+Cada ficha es autosuficiente: contexto, pasos, trampas ya conocidas, criterios de aceptación comprobables y la evidencia que debe quedar en §6. Los pasos son el camino recomendado, no una camisa de fuerza; los criterios de aceptación y las restricciones de §2 sí son obligatorios.
 
-### Fase 5 — Bot de Telegram y confiabilidad
-- [ ] **T-16** Arreglo real del bot: ventana temporal en `pendingCount`, **no enviar si no hay nada que reportar**, `TELEGRAM_WEBHOOK_SECRET` en el schema zod con error visible, responder al `chat.id` del update, fallo ruidoso en vez de `console.warn`. Rama `fix/telegram-bot`.
-  *Aceptación:* test por tipo de notificación; prueba de "día sin actividad" → **no** se envía mensaje; comandos `/leads`, `/conv`, `/reply`, `/auto`, `/help` respondidos; validación final contra credenciales reales marcada como pendiente de Omar.
-- [ ] **T-17** Notificaciones nuevas con sentido: proyecto publicado, racha de commits en riesgo, caída de Core Web Vitals, lead real entrante. Rama `feat/telegram-events`.
-- [ ] **T-18** Historial de versiones y restauración de contenido + modo borrador con vista previa. Rama `feat/content-versioning`.
+#### T-05b · Seed del contenido a la base de datos
+**Rama:** `feat/portfolio-seed` (existe, 1 commit) · **Depende de:** T-04, T-05a · **Estado:** `[~]`
 
-### Fase 6 — Seguridad
-- [ ] **T-19** Endurecimiento compatible con D-1: fix del bug de allowlist (`access.ts:17`), rate limiting en login, políticas RLS reales, caché de rol en middleware, MFA TOTP, auditoría de toda acción del panel. Rama `feat/auth-hardening`.
-- [ ] **T-20** *(condicional a D-1)* Migración a AWS Cognito con puente de JWT. Rama `feat/cognito-auth`.
+**Objetivo.** Trasladar todo el contenido de los módulos TypeScript a las tablas `portfolio_*` sin perder un registro ni un carácter, de forma repetible.
 
-### Fase 7 — Extras profesionales
-- [ ] **T-21** Sync GitHub → proyectos: repo nuevo detectado se propone como proyecto con stack ya identificado. Rama `feat/github-sync`.
-- [ ] **T-22** Modo reclutador: CV en PDF generado desde los datos reales + registro de visitas por empresa. Rama `feat/recruiter-mode`.
-- [ ] **T-23** Tests de regresión visual para que ningún cambio del dashboard rompa el portafolio público. Rama `test/visual-regression`.
-- [ ] **T-24** Deuda técnica: `src/components/ui/Button.tsx` fuera del sistema de diseño; fuentes inexistentes en 7 paletas; `src/data/` vs `src/lib/` sin criterio; `(dashboard)/page.tsx` con 864 líneas y ~16 queries; `DeviceFrame.tsx` huérfano (decidir: borrar o recuperar). Rama `chore/tech-debt`.
+**Diseño decidido.** El seed **genera un archivo SQL** (`supabase/seed/portfolio_seed.sql`) que Omar pega en el SQL Editor, igual que las migraciones. Así no depende de credenciales y se puede validar entero en PostgreSQL local. Tres piezas:
+1. `src/lib/portfolio/seed/build.ts`: funciones **puras** que transforman los módulos fuente en filas (`buildSeedRows()`), sin E/S. Es lo que se testea.
+2. `src/lib/portfolio/seed/sql.ts`: convierte filas en `insert ... on conflict (...) do update`, escapando literales y serializando `jsonb` y `text[]`.
+3. `scripts/seed-portfolio.ts` (+ `npm run seed:portfolio`): escribe el `.sql`.
+
+**Fuentes** (todas se importan, ninguna se transcribe): `src/lib/projectsData.ts`, `skillsData.ts`, `educationData.ts`, `servicesData.ts` y `src/lib/portfolio/source/{badges,technologies,timeline,about}.ts`.
+
+**Transformaciones.**
+- `slug`: derivado del texto en español, minúsculas, sin tildes, guiones; **con desambiguación determinista** (sufijo `-2`, `-3`…) porque entre 172 ítems de educación habrá colisiones. Las insignias ya traen `id`: úsalo como slug.
+- `position`: el índice en el array original (para ítems de educación, índice dentro de su categoría).
+- `percentage`: `"95%"` → `95`.
+- Educación: `title`, `institution`, `duration`, `description` vienen unas veces como `{es,en}` y otras como cadena plana; normaliza la cadena plana a `{es: x, en: x}`.
+- Timeline: hay dos arrays (`timelineEs`, `timelineEn`) alineados por índice; se funden en una fila con `year`, `title`, `description` bilingües e `icon_key`.
+- Servicios: `priceRange` → `price_min`, `price_max`, `price_currency`.
+- Tecnologías: `iconKey` → `icon_key`; conflicto por `name`.
+- `interestsData` y `personalData` → dos filas de `portfolio_profile` (`section`: `interests`, `personal_data`). `personalData` guarda **claves i18n**, no texto: se conservan como claves.
+- `technologies` de cada proyecto: el array tal cual, sin normalizar.
+
+**Trampas.**
+- No leas los archivos de datos para contar o copiar: impórtalos (hábito 1).
+- `on conflict` debe usar la clave única real de cada tabla (`slug`, `name` en tecnologías, `section` en perfil); los ítems de educación necesitan el `id` de su categoría: resuélvelo en SQL con un `select` por slug de categoría, no con un UUID inventado en TypeScript.
+- Las comillas simples dentro de los textos rompen el SQL si no se escapan. Prueba con un texto que las contenga.
+
+**Aceptación.**
+- [ ] Test unitario: `buildSeedRows()` produce exactamente los conteos de `CONTENIDO_ORIGINAL` (22 / 7 / 172 / 171 con certificado / 7 / 8 / 4 / 42 / 4).
+- [ ] Test unitario: todos los slugs son únicos dentro de su tabla; el generador es determinista (dos ejecuciones, misma salida).
+- [ ] El `.sql` generado corre en PostgreSQL local sobre la migración de T-04, y `select count(*)` de cada tabla coincide con los conteos.
+- [ ] Corre **dos veces** y los conteos no cambian (idempotente).
+- [ ] **Ida y vuelta:** se leen las filas de proyectos de la base local y, reconstruidas a la forma original, son idénticas (`deep equal`) a `projectsData`. Lo mismo para skills y servicios. Esta es la prueba real de «no se perdió nada».
+- [ ] Con `set role anon` se leen las mismas cantidades (todo se publica por defecto).
+
+**Evidencia en §6:** salida de los `count(*)` tras cada pasada y resultado de la comparación de ida y vuelta. **Pendiente de validación con credenciales:** la carga en la base real.
+
+#### T-06 · Capa de lectura con respaldo
+**Rama:** `feat/portfolio-data-layer` · **Depende de:** T-05b · **Estado:** `[ ]`
+
+**Objetivo.** Que el sitio público pueda leer su contenido de Supabase sin dejar de funcionar si la base no responde o está vacía.
+
+**Pasos.**
+1. `src/lib/portfolio/repository.ts`: una función por tipo de contenido (`getProjects()`, `getSkills()`, `getEducation()`, `getBadges()`, `getServices()`, `getTechnologies()`, `getTimeline()`, `getProfileSection()`). Leen con el cliente de `src/lib/supabase/server.ts` (clave anónima: RLS ya limita a lo publicado), ordenan por `position` y **devuelven la misma forma que hoy exportan los módulos TypeScript** (`Project`, etc.), para que ningún componente tenga que cambiar.
+2. Respaldo: si la consulta falla, o devuelve cero filas, se devuelve el contenido de los módulos fuente y se registra un `console.error` con el motivo. El sitio nunca queda en blanco por la base de datos.
+3. Caché con `unstable_cache` y una etiqueta por tipo (`portfolio:projects`, …), para que el panel pueda invalidar con `revalidateTag` al guardar.
+4. Resolver la duplicación de `src/app/[locale]/sobre-mi/page.tsx`, que repite proyectos, skills, servicios y educación en arrays propios: que consuma el repositorio. Mide antes cuántos registros muestra hoy cada bloque para no cambiar lo que se ve.
+
+**Trampas.** Los componentes de sección son en su mayoría de cliente con `useMemo` sobre el array completo: los datos se obtienen en un componente de servidor padre y se pasan por props. No conviertas componentes de cliente a servidor de paso. No toques `Card.tsx`.
+
+**Aceptación.**
+- [ ] Tests del repositorio con Supabase simulado: fila → forma original correcta; error → respaldo; cero filas → respaldo; orden por `position`.
+- [ ] Test que compara, para proyectos, la salida del repositorio con base poblada (datos del seed) contra `projectsData`: idénticas.
+- [ ] Sin variables de Supabase, la home renderiza con el respaldo (test de integración o prueba manual documentada).
+- [ ] Ninguna consulta nueva usa `service_role` para leer contenido público.
+
+**Evidencia en §6:** conteo de tests nuevos y resultado de la comparación.
+
+#### T-07 · El visor de proyectos lee de la base
+**Rama:** `feat/projects-from-db` · **Depende de:** T-06 · **Estado:** `[ ]`
+
+**Objetivo.** Los proyectos del visor salen de `getProjects()`. **`src/components/shared/Card.tsx` no cambia ni una línea** (`npm run verify` lo comprueba).
+
+**Pasos.**
+1. Lee `src/components/sections/ProjectsSection.tsx` entero: paginación de 4, búsqueda sobre título + descripción + tecnologías, y la `key` de React (hoy basada en el título).
+2. La página de servidor obtiene los proyectos y los pasa a `ProjectsSection`. Se sigue usando `getLocalizedProjectsData` (respaldo a `es`) para entregar a `Card` exactamente `{ title, description, technologies, repository, demo, category? }` con cadenas ya localizadas.
+3. Cambia la `key` a `slug` (en `ProjectsSection`, no en `Card`).
+4. Comprobador de embebido: una función de servidor que hace `fetch` al `demo` y lee `X-Frame-Options` y la directiva `frame-ancestors` de `Content-Security-Policy`; el resultado se guarda en `demo_embeddable` y `demo_checked_at`. Se ejecutará desde el panel (T-09); aquí solo la función y sus tests.
+
+**Aceptación.**
+- [ ] `git diff origin/main -- src/components/shared/Card.tsx` vacío.
+- [ ] Test: los 22 proyectos llegan a `Card` con las mismas props que antes del cambio (compara contra `getLocalizedProjectsData(projectsData, 'es')` y `'en'`).
+- [ ] Test: búsqueda y paginación devuelven lo mismo que antes para tres consultas de ejemplo.
+- [ ] Tests del comprobador: `X-Frame-Options: DENY`, `SAMEORIGIN`, `frame-ancestors 'none'`, sin cabeceras, y error de red (este último **no** marca el demo como no embebible: marca «sin comprobar»).
+- [ ] Revisión visual a 375 px y en escritorio: el visor se ve y se toca igual. Si el entorno no puede levantar el sitio, se declara pendiente de validación visual.
+
+#### T-16 · Bot de Telegram que solo avisa de lo real
+**Rama:** `fix/telegram-bot` (existe, 1 commit `wip`) · **Depende de:** nada · **Estado:** `[~]`
+
+**Diagnóstico** (§1.3): plantilla fija con ceros en `daily-summary`, `pendingCount` acumulativo sin ventana, y webhook entrante en 503 mudo.
+
+**Ya hecho en la rama** (léelo y verifícalo antes de seguir): `sendTelegramMessage(text, chatId?)` con resultado `{ sent, reason }` y motivos estables en `src/lib/chatbot/telegram.ts`; `TELEGRAM_WEBHOOK_SECRET` en el schema zod con aviso explícito en `src/config/env.ts`.
+
+**Falta.**
+1. Confirmar que `notifyTelegram` sigue existiendo con una firma compatible: hay **26 llamadas en 15 rutas** (`grep -rn "notifyTelegram" src`). Ninguna debe cambiar de comportamiento.
+2. `src/app/api/cron/daily-summary/route.ts`: si ayer no hubo leads nuevos, ni pagos, ni pendientes que hayan cruzado un umbral, **no se envía nada** y la ruta responde `{ skipped: true, reason }`. Si hay algo, el mensaje se arma por secciones condicionales; no aparecen `N/A`, `0 leads` ni `Sin pagos confirmados`.
+3. `pendingCount` con ventana temporal; los antiguos se informan con contexto («3 llevan más de 48 h»), no como un número suelto que se repite a diario.
+4. `src/app/api/telegram/webhook/route.ts`: responder al `chat.id` del update; sin `TELEGRAM_WEBHOOK_SECRET`, error registrado y distinguible.
+5. Revisar los otros crons que notifican (`email-followup`, `cleanup-cold-leads`, `check-limits`, `database-cleanup`) con la misma pregunta: ¿envían aunque no haya nada que decir?
+
+**Aceptación** (tests con `fetch` y Supabase simulados; nunca se llama a Telegram de verdad):
+- [ ] Día sin actividad → cero llamadas a la API de Telegram.
+- [ ] Día con leads → se envía y el texto contiene los números reales.
+- [ ] Día con pagos y sin leads → sección de pagos presente, sección de leads ausente.
+- [ ] Sin credenciales → `sent: false` con motivo; no lanza.
+- [ ] Respuesta 400 de Telegram → reintento en texto plano (comportamiento actual, se conserva).
+- [ ] Webhook sin secreto → error identificable. Webhook con update → responde a ese `chat.id`.
+- [ ] `grep` de `N/A` y `Sin pagos confirmados` en `src/app/api/cron` no devuelve plantillas fijas.
+
+**Pendiente de validación con credenciales:** un envío real y los comandos `/leads`, `/conv`, `/reply`, `/auto`, `/help` desde Telegram.
+
+#### T-19 · Endurecimiento de la autenticación
+**Rama:** `feat/auth-hardening` · **Depende de:** nada · **Estado:** `[ ]`
+
+Se queda en Supabase Auth. **No se instala ningún SDK de AWS** (eso es T-20, condicional). Por orden de gravedad:
+
+1. **Fallo de seguridad, lo primero.** `src/lib/admin/access.ts` (~L17): con `ADMIN_ALLOWED_EMAILS` vacío, `isEmailAllowed()` devuelve `true`. Debe fallar **cerrado**. Como eso puede dejar fuera a Omar si la variable falta, el error tiene que ser explícito en logs («ADMIN_ALLOWED_EMAILS no configurada: el panel queda cerrado») y la variable, documentada en `.env.example`. Reproduce el fallo con un test **antes** de corregirlo.
+2. **Límite de intentos en el login** por IP + correo, ventana corta. Si se implementa en memoria, un comentario debe decir por qué no basta en serverless con varias instancias y qué haría falta (tabla en Supabase).
+3. **Caché del rol** en `src/middleware.ts` con TTL corto: hoy cada petición a `/admin/*` consulta el rol en Supabase y `getUser()` se repite en tres capas. El TTL es el coste aceptado; se documenta.
+4. **Auditoría completa:** revisar cada endpoint de escritura de `/api/admin/**` (lista en §1.4 del análisis original y con `grep -rn "requireAdmin" src/app/api`) y registrar los que no llamen a `src/lib/admin/audit.ts`.
+5. **MFA TOTP** con `supabase.auth.mfa.*` para el rol `owner`: alta y verificación. Interfaz con los primitivos del panel y la skill `impeccable`.
+
+**Trampas.** Tres capas comprueban el acceso (middleware, `layout.tsx` del panel, `requireAdmin`): un cambio en una sola deja las otras con la lógica vieja. El login actual por enlace mágico tiene que seguir funcionando.
+
+**Aceptación.**
+- [ ] Test: allowlist vacía → `false`. Con correo presente → `true`; ausente → `false`; mayúsculas y espacios normalizados.
+- [ ] Test: N intentos permitidos, el N+1 bloqueado, se libera al pasar la ventana (con reloj simulado).
+- [ ] Test: segunda lectura de rol dentro del TTL no consulta Supabase; pasado el TTL, sí.
+- [ ] Test: `viewer` no puede escribir; un endpoint no listado cae al mínimo.
+- [ ] Lista, en el commit, de los endpoints a los que se añadió auditoría.
+
+**Pendiente de validación con credenciales:** el flujo completo de MFA contra Supabase real. Se dice así; no se da por hecho.
+
+#### T-13 · Métricas reales de GitHub
+**Rama:** `feat/github-metrics` · **Depende de:** nada (T-14 depende de esta) · **Estado:** `[ ]`
+
+**Decisión de arquitectura, obligatoria.** El panel lee **de Supabase**, nunca de la API de GitHub en vivo. La ingesta la hace un trabajo programado. Así la carga es instantánea y no hay límite de peticiones a la vista del usuario.
+
+**Construir.**
+1. `src/lib/github.ts`: cliente tipado, sin `any`. Por repositorio: commits, líneas añadidas y eliminadas, lenguajes por bytes, estrellas, forks, PR abiertos y cerrados, actividad diaria, rachas.
+2. Migración `supabase/migrations/AAAAMMDD_github_metrics.sql` con el patrón de T-04: minúsculas, idempotente, RLS **con política real** de lectura y sin política de escritura. Histórico acumulable: una fila por repositorio y fecha de captura, índice por fecha.
+3. `src/app/api/cron/github-metrics/route.ts` protegido con `requireCronAuth` (`src/lib/cronAuth.ts`), que escribe con `supabaseServer`.
+4. `.github/workflows/github-metrics.yml`. Este repo **no usa Vercel Cron**: los trabajos programados son workflows que hacen `curl -H "Authorization: Bearer $CRON_SECRET"`. Copia el patrón de uno existente y elige una hora que no choque con las ya usadas (13:00, 14:00, 00:00 UTC y cada 6 h).
+5. `GITHUB_TOKEN` en `.env.example` (con los permisos mínimos que necesita) y en el schema de `src/config/env.ts`.
+
+**Trampas de la API, verificadas en su documentación; compruébalas con `gh api`:**
+- Los endpoints `/stats/commit_activity`, `/stats/code_frequency` y `/stats/contributors` responden **202 con cuerpo vacío** la primera vez, mientras GitHub calcula. Eso **no** es «cero commits»: se reintenta con espera.
+- Paginación por cabecera `Link`; no todo cabe en una página.
+- Cabeceras `x-ratelimit-remaining` y `x-ratelimit-reset`: parar antes de agotar el cupo, con un error claro.
+
+**Aceptación** (tests con `fetch` simulado):
+- [ ] 202 con cuerpo vacío → reintenta; nunca devuelve cero.
+- [ ] Cupo casi agotado → se detiene con error claro.
+- [ ] Dos páginas se concatenan bien.
+- [ ] Lenguajes: bytes → porcentajes que suman 100.
+- [ ] Rachas: días consecutivos cuentan; un hueco corta la racha; se respeta la zona horaria `America/Bogota`.
+- [ ] El cron sin `CRON_SECRET` válido responde como el resto de crons.
+- [ ] Migración ejecutada dos veces en PostgreSQL local; RLS probada con `anon`.
+- [ ] **Una verificación real fuera de Jest:** un script que llama a la API con `gh` para un repositorio y comprueba que el parser da las mismas cifras. Las cifras obtenidas se anotan en §6.
+
+#### T-08 · Nuevo shell del panel, mobile-first
+**Rama:** `feat/dashboard-shell` · **Depende de:** nada · **Skills:** `impeccable` (obligatoria) · **Estado:** `[ ]`
+
+**Objetivo.** Reorganizar la navegación del panel en dos áreas: **Portafolio** (el motor: contenido y métricas) y **Negocio** (el CRM actual, completo e intacto). Decisión de Omar recogida en `PRODUCT.md`.
+
+**Antes de escribir código.** Ejecuta `impeccable context`, luego `/impeccable shape` sobre el shell para planear la navegación a 375 px, y lee `reference/craft-floor.md` justo antes de editar. Es una superficie **Operate**: precisión y sobriedad. No se crea un mundo visual nuevo; se extiende el de `DESIGN.md`.
+
+**Archivos.** `src/lib/admin/permissions.ts` (`NAV_ITEMS`, ~L84-104, y la matriz de permisos), `src/components/admin/AdminNav.tsx`, `src/app/admin/(dashboard)/layout.tsx`, `src/app/admin/(dashboard)/page.tsx` (864 líneas y ~16 consultas: es el resumen actual del CRM).
+
+**Requisitos.**
+- A 375 px el panel se maneja con una mano: los destinos principales al alcance del pulgar.
+- Los 12 destinos actuales siguen existiendo y accesibles bajo «Negocio»; ninguna ruta cambia de URL.
+- `AdminNav` conserva lo que ya hace bien: foco atrapado en el cajón, cierre con Escape, `aria-expanded`, enlace de salto.
+- El resumen actual del CRM pasa a ser la portada de «Negocio»; la portada del panel será el resumen del portafolio (se rellena en T-14; aquí puede quedar un estado vacío honesto, sin cifras de ejemplo).
+- Se corrigen los tamaños de letra fuera de escala **solo en los archivos que esta tarea toque** (el detector los señala).
+
+**Aceptación.**
+- [ ] Tests: los 12 destinos siguen en la navegación; el filtrado por rol no cambió (`viewer`, `assistant`, `owner`).
+- [ ] Tests de `AdminNav`: abrir y cerrar el cajón, Escape, foco.
+- [ ] Detector sin antipatrones nuevos (`npm run verify`).
+- [ ] `/impeccable critique` sobre el resultado, y sus hallazgos materiales resueltos o anotados.
+- [ ] Revisión a 375, 475 y ≥1024 px.
+
+#### T-09 a T-12 · Módulos de edición de contenido
+**Ramas:** `feat/module-projects` (T-09), `feat/module-skills` (T-10), `feat/module-education` (T-11), `feat/module-content` (T-12: servicios, tecnologías, timeline, perfil) · **Dependen de:** T-06, T-08 · **Skills:** `impeccable` · **Estado:** `[ ]`
+
+Los cuatro siguen el mismo patrón; **T-09 lo establece y los demás lo copian**. Haz T-09 completo y con cuidado antes de empezar otro.
+
+**Patrón por módulo.**
+1. **API** en `src/app/api/admin/portfolio/<recurso>/route.ts` y `.../[id]/route.ts`: `GET` (lista, incluye borradores), `POST`, `PATCH`, `DELETE`, y `PATCH .../reorder`. Cada handler: `requireAdmin('owner')` para escribir, validación con **zod** de todo el cuerpo, escritura con `supabaseServer`, registro en `src/lib/admin/audit.ts`, y `revalidateTag` de la etiqueta de T-06. Añade las rutas a la matriz de `src/lib/admin/permissions.ts`: por omisión una ruta nueva hereda el permiso mínimo.
+2. **Validación compartida** en `src/lib/portfolio/schemas.ts` (zod), usada por la API y por el formulario.
+3. **Interfaz** con los primitivos de `src/components/admin/ui/`: `DataTable` para la lista (tarjetas en móvil), `Dialog` para crear y editar, `ConfirmDialog` con tono `danger` para borrar, `Switch` para publicar, `Tabs` para alternar español e inglés en los campos bilingües.
+4. **Reordenar** con botones subir/bajar (accesibles y fiables en táctil). El arrastre es opcional y nunca el único camino.
+5. **Estados:** cargando (`Skeleton`), vacío, error de red con reintento, y guardado optimista que se revierte si falla.
+
+**Específico.**
+- **T-09 Proyectos:** al guardar un `demo`, ejecutar el comprobador de embebido de T-07 y avisar si el sitio bloquea iframes, antes de publicar. `technologies` se elige de una lista con las claves de `src/config/technologyIcons.tsx`, para garantizar la coincidencia literal que necesitan los iconos; se puede añadir una tecnología sin icono, pero avisando de que saldrá como texto.
+- **T-10 Skills:** `percentage` entero 0–100; el color es un campo del registro (`color_hex`), dato del contenido, no un color de la interfaz.
+- **T-11 Educación e insignias:** categorías e ítems; imagen por **archivo** (Supabase Storage) o por **URL**. Para una URL externa hay que añadir su dominio a `remotePatterns` en `next.config.mjs`: decide una lista cerrada de dominios y documenta cómo ampliarla. Borrar una categoría arrastra sus ítems (`on delete cascade`): el diálogo debe decir cuántos.
+- **T-12:** servicios, tecnologías del marquee (el `name` debe coincidir con una clave de icono; `icon_key` se elige del registro `src/lib/portfolio/source/icon-registry.tsx`), timeline y secciones de perfil.
+
+**Aceptación por módulo.**
+- [ ] Tests de API: sin sesión → 401; `viewer` → 403 al escribir; cuerpo inválido → 400 con el campo señalado; alta, edición, borrado y reordenación correctos; cada escritura deja registro de auditoría e invalida la caché.
+- [ ] Tests de interfaz: crear, editar, publicar/despublicar, reordenar, cancelar un borrado, confirmar un borrado.
+- [ ] Un borrador no aparece en el sitio público (lo garantiza RLS; se comprueba con el rol `anon` en PostgreSQL local).
+- [ ] Ningún hex literal en los componentes nuevos; detector sin antipatrones nuevos.
+- [ ] Revisión a 375 px: todo el flujo se completa con el pulgar.
+
+**Pendiente de validación con credenciales:** el ciclo completo contra la base real y la subida de archivos a Storage.
+
+#### T-14 · Resumen del portafolio con gráficas reales
+**Rama:** `feat/metrics-dashboard` · **Depende de:** T-13 (con datos ya ingeridos), T-08 · **Skills:** `kpi-dashboard-design`, `dataviz`, `impeccable` · **Estado:** `[ ]`
+
+**Antes de escribir código.** Con `kpi-dashboard-design`, define y anota en esta ficha los **4 a 6 KPI de cabecera** y qué contexto lleva cada uno (comparación con el periodo anterior, tendencia u objetivo). Candidatos reales: commits de los últimos 30 días, racha actual, repositorios activos, lenguaje principal, despliegues, y —cuando exista T-15— visitas y clics de contacto. Con `dataviz`, elige la forma de cada gráfica **antes** que el color.
+
+**Decisiones a tomar y justificar en el commit.**
+- Librería de gráficas. Criterios: SVG (para usar `var(--chart-n)` y heredar la paleta), peso en el bundle, accesibilidad, y que funcione con componentes de servidor o se cargue de forma diferida. Mide el peso real añadido; no lo supongas.
+
+**Gráficas previstas.** Actividad diaria (línea o barras, un solo eje), mapa de calor de contribuciones con rachas (rampa secuencial `sequentialStep`), lenguajes por bytes (barras ordenadas; nunca tarta de muchas porciones), commits por repositorio (`assignSeriesColors`, de la novena serie en adelante «Otros»).
+
+**Reglas.** Cero datos de ejemplo: si no hay datos ingeridos, estado vacío que lo dice y explica cómo se llenará. Un solo eje por gráfica. Cifras y etiquetas en color de texto, no en el de la serie. Leyenda siempre que haya dos o más series. Capa de hover y alternativa en tabla. Legible a 375 px. En superficie clara `--chart-8` exige etiqueta visible.
+
+**Aceptación.**
+- [ ] Los KPI y su contexto quedaron anotados aquí antes de implementar.
+- [ ] Tests: transformaciones de datos (agregación diaria, rachas, porcentajes) y estado vacío.
+- [ ] `grep` sin datos de ejemplo en los componentes de métricas.
+- [ ] `/impeccable critique` y `audit` sobre la vista; hallazgos resueltos o anotados.
+- [ ] Peso añadido al bundle, medido y anotado en §6.
+
+#### T-15 · Rendimiento real y embudo
+**Rama:** `feat/analytics-real` · **Depende de:** T-14 · **Estado:** `[ ]`
+
+`web-vitals` en el cliente → endpoint propio → tabla de eventos (migración con el patrón de T-04; aquí la escritura anónima necesita una política de `insert` muy acotada o pasar por un endpoint con límite de tasa: decide y justifica). Embudo: visita → vista de proyecto → descarga de CV → clic de contacto, reutilizando los `track()` de `@vercel/analytics` que ya existen en 5 componentes. LCP, INP y CLS separados por móvil y escritorio. **No se recoge ningún dato personal**: ni IP en claro ni identificadores persistentes; se documenta qué se guarda.
+**Aceptación:** tests del endpoint (carga útil válida e inválida, límite de tasa) y de la agregación; migración validada dos veces en PostgreSQL local.
+
+#### T-17 · Notificaciones con sentido
+**Rama:** `feat/telegram-events` · **Depende de:** T-16, T-13 · **Estado:** `[ ]`
+
+Eventos nuevos: proyecto publicado desde el panel, racha de commits a punto de romperse, caída sostenida de un Core Web Vital, lead real entrante. Misma regla que T-16: **sin novedad no hay mensaje**; cada evento con su test de «se envía» y de «no se envía», y con protección contra duplicados.
+
+#### T-18 · Borradores, vista previa e historial
+**Rama:** `feat/content-versioning` · **Depende de:** T-09 a T-12 · **Skills:** `impeccable` · **Estado:** `[ ]`
+
+Tabla de versiones (quién, cuándo, antes y después en `jsonb`) escrita en cada guardado; restaurar una versión es un guardado más y queda auditado. Vista previa de un borrador mediante el modo borrador de Next.js, accesible solo con sesión de `owner`.
+**Aceptación:** tests de crear versión, restaurar y que un `anon` no puede leer versiones ni borradores.
+
+#### T-20 · Migración a AWS Cognito *(condicional a D-1)*
+**Rama:** `feat/cognito-auth` · **Estado:** bloqueada hasta que Omar decida.
+
+No se empieza sin confirmación explícita. Si se confirma: fase aislada, con plan de reversión escrito antes de tocar código, y sin romper `user_roles` ni `admin_audit_logs`.
+
+#### T-21 · Sincronización GitHub → proyectos
+**Rama:** `feat/github-sync` · **Depende de:** T-13, T-09
+
+Un repositorio nuevo detectado en la ingesta se **propone** en el panel como borrador de proyecto, con el stack deducido de sus lenguajes. Nunca se publica solo.
+
+#### T-22 · Modo reclutador
+**Rama:** `feat/recruiter-mode` · **Depende de:** T-06 · **Skills:** `impeccable`
+
+CV en PDF generado desde los datos reales (`pdf-lib` ya está instalado). Sirve directamente al objetivo de `PRODUCT.md`: que lo contraten. Titular: «Ingeniero de Software» primero. El registro de visitas por empresa solo si puede hacerse sin datos personales; si no, se descarta y se anota por qué.
+
+#### T-23 · Regresión visual
+**Rama:** `test/visual-regression` · **Depende de:** T-07
+
+Capturas de referencia de la home (incluido el visor de proyectos) y del panel a 375 y 1280 px, con Cypress, que ya está en el repo. El visor es el caso más importante.
+
+#### T-24 · Deuda técnica
+**Rama:** `chore/tech-debt` — una rama por punto si el cambio es grande.
+
+- [ ] `border-l-4` en `src/app/admin/(dashboard)/docs/[slug]/page.tsx:27` (único antipatrón de la línea base). Al corregirlo, bajar `LINEA_BASE_ANTIPATRONES` a `0` en `scripts/verificar-tarea.sh`.
+- [ ] 224 tamaños de letra literales fuera de escala en el panel (`text-[9px]`, `text-[10px]`, `text-[11px]`), incluidos los de los primitivos de T-03. Decidir con Omar si 10–11 px entra en la escala como token o se sube a `text-kicker`/`text-label`.
+- [ ] `AdminCard` usa radios escritos a mano (16, 24, 32 px) en vez de la escala nombrada.
+- [ ] `src/components/ui/Button.tsx` fija `bg-blue-500`, fuera del sistema.
+- [ ] 7 de las 10 paletas apuntan `--main-font-family` a fuentes que `next/font` no carga. **No tocar los colores**; esto es solo tipografía y requiere decisión de Omar.
+- [ ] `src/data/` y `src/lib/` conviven sin criterio.
+- [ ] `src/components/DeviceFrame.tsx` y su CSS están huérfanos: confirmar con `grep` y preguntar a Omar antes de borrar.
+- [ ] `npx tsc -p tsconfig.jest.json` da 816 errores (`jsx: "react"` sin `import React`). Jest no usa ese config, pero confunde.
+- [ ] `src/app/admin/(dashboard)/page.tsx`: 864 líneas y ~16 consultas.
 
 ---
 
@@ -265,5 +641,6 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-14 | Plan de ejecución: manual de trabajo, fichas por tarea, `npm run verify` y bloqueo de paletas | `docs/plan-ejecucion` | verify en verde · 269 tests · la puerta falla al tocar el visor o una paleta (probado) · hechos de las fichas comprobados con grep |  ✅ |
 | 2026-11-14 | Skills de diseño + PRODUCT.md + DESIGN.md | `chore/design-skills` | doctor sin deriva · detector operativo · tests | ✅ |
 | 2026-11-12 | T-05a Módulos de datos | `feat/portfolio-source-modules` | typecheck · lint · 257 tests · conteos medidos en vivo | ✅ |

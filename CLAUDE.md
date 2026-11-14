@@ -4,7 +4,7 @@ Portafolio de Omar Hernández Rey (Next.js 15, TypeScript, Tailwind, Supabase) y
 
 ## Antes de cualquier trabajo
 
-1. Lee `PLAN_MAESTRO_DASHBOARD.md`: fases, tareas, restricciones y el ciclo obligatorio por tarea (rama propia → commits → validación → marcar la tarea → merge a `main`).
+1. Lee `PLAN_MAESTRO_DASHBOARD.md`, en este orden: §0 (estado y ramas en curso), §3 (manual de ejecución: es obligatorio), §2 (restricciones) y la ficha de tu tarea en §5.
 2. `PRODUCT.md` es la verdad de producto y `DESIGN.md` la del sistema visual. Si un cambio los contradice, se detiene y se pregunta; no se editan de paso.
 
 ## Skills de diseño instaladas en `.claude/skills/`
@@ -45,10 +45,10 @@ Antes de escribir cualquier gráfica, carga también la skill `dataviz` si está
 ## Validación de cada tarea
 
 ```
-npm run typecheck   # 0 errores
-npm run lint        # 0 errores
-npm test            # todo en verde
+npm run verify      # puerta de calidad: debe terminar en «TODO EN VERDE»
 ```
+
+Ejecuta rama propia, visor intacto, typecheck, lint, tests (con los guardarraíles de paletas, tokens, esquema y conteos), compilación de Tailwind y detector de diseño. Una tarea no se marca completada ni se mergea sin eso, sin sus criterios de aceptación comprobados y sin su fila de evidencia en §6 del plan. Tras el merge: `gh run watch`.
 
 `npm run build` necesita acceso a `fonts.googleapis.com` (por `next/font`). En entornos sin esa red se valida con typecheck, lint, tests y la compilación de Tailwind; el build real lo confirma Vercel. No se declara un build que no se ejecutó.
 
