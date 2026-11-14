@@ -7,6 +7,13 @@ const serverSchema = z.object({
   TELEGRAM_BOT_TOKEN: z.string().min(1),
   TELEGRAM_CHAT_ID: z.string().min(1),
   TELEGRAM_BOT_USERNAME: z.string().optional(),
+  /**
+   * Secret que Telegram reenvía en `x-telegram-bot-api-secret-token`.
+   * Opcional en el schema (el portafolio público funciona sin bot), pero sin
+   * ella el webhook entrante queda deshabilitado y los comandos no responden,
+   * así que `validate()` lo avisa aparte en vez de dejarlo pasar en silencio.
+   */
+  TELEGRAM_WEBHOOK_SECRET: z.string().min(1).optional(),
   ADMIN_ALLOWED_EMAILS: z.string().optional(),
   CRON_SECRET: z.string().min(10),
   RESEND_API_KEY: z.string().optional(),
@@ -47,6 +54,13 @@ export const serverEnv = {
     const result = serverSchema.safeParse(process.env);
     if (!result.success) {
       console.error("❌ Faltan variables de entorno en el servidor:", result.error.format());
+    }
+    // Opcional en el schema, pero su ausencia apaga una función completa:
+    // sin ella el webhook de Telegram rechaza todos los updates.
+    if (!process.env.TELEGRAM_WEBHOOK_SECRET) {
+      console.error(
+        "❌ TELEGRAM_WEBHOOK_SECRET sin configurar: el webhook de Telegram queda deshabilitado y los comandos (/leads, /conv, /reply, /auto, /help) no responderán."
+      );
     }
   }
 };
