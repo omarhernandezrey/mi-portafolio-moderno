@@ -52,4 +52,6 @@ Ejecuta rama propia, visor intacto, typecheck, lint, tests (con los guardarraíl
 
 `npm run build` necesita acceso a `fonts.googleapis.com` (por `next/font`). En entornos sin esa red se valida con typecheck, lint, tests y la compilación de Tailwind; el build real lo confirma Vercel. No se declara un build que no se ejecutó.
 
+El entorno se audita con `npm run env:check`: cruza el `.env` local con lo que el código lee y con el proyecto de Supabase esperado, e imprime **solo nombres**. Los valores de un `.env` no se muestran, no se copian al chat y no se commitean; para usarlos en una orden se cargan con `set -a; . ./.env.local; set +a`.
+
 Las migraciones de `supabase/migrations/` se aplican a mano en el SQL Editor de Supabase; deben ser idempotentes.

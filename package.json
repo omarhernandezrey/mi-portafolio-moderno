@@ -17,7 +17,8 @@
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
     "verify": "bash scripts/verificar-tarea.sh",
-    "seed:portfolio": "tsx --tsconfig tsconfig.json scripts/seed-portfolio.ts"
+    "seed:portfolio": "tsx --tsconfig tsconfig.json scripts/seed-portfolio.ts",
+    "env:check": "tsx --tsconfig tsconfig.json scripts/check-env.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

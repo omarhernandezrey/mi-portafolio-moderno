@@ -28,13 +28,10 @@ jobs:
         run: npm run test:ci
         env:
           # Variables mínimas para que los mocks no fallen por schema de zod
-          GROQ_API_KEY: test-key
           SUPABASE_URL: https://test.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: test-service-role-key
           TELEGRAM_BOT_TOKEN: 0000000000:AAtest
           TELEGRAM_CHAT_ID: '12345'
-          ADMIN_PASSWORD: testpassword
-          ADMIN_SECRET: test-admin-secret-long
           CRON_SECRET: test-cron-secret-long
 
       - name: Subir reporte de cobertura
@@ -66,13 +63,10 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          GROQ_API_KEY: test-key
           SUPABASE_URL: https://test.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: test-service-role-key
           TELEGRAM_BOT_TOKEN: 0000000000:AAtest
           TELEGRAM_CHAT_ID: '12345'
-          ADMIN_PASSWORD: testpassword
-          ADMIN_SECRET: test-admin-secret-long
           CRON_SECRET: test-cron-secret-long
           NEXT_PUBLIC_CALCOM_INTERVIEW_URL: https://cal.com/test/entrevista
           NEXT_PUBLIC_CALCOM_CONSULT_URL: https://cal.com/test/consulta
@@ -159,14 +153,11 @@ jobs:
         if: steps.check_secrets.outputs.skip != 'true'
         run: npm run build
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           NEXT_PUBLIC_CALCOM_INTERVIEW_URL: ${{ secrets.NEXT_PUBLIC_CALCOM_INTERVIEW_URL }}
           NEXT_PUBLIC_CALCOM_CONSULT_URL: ${{ secrets.NEXT_PUBLIC_CALCOM_CONSULT_URL }}
