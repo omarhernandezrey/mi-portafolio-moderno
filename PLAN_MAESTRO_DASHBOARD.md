@@ -50,6 +50,7 @@ El orden no es arbitrario: T-05c necesita la máquina de Omar (su `.env` y red s
 | Decisión D-1 (§4): proveedor de autenticación | T-20 | T-19 se ejecuta igual: sirve para ambos caminos |
 | Aplicar migraciones | — | Ya no es un bloqueo: se aplican con el conector. Cada migración debe seguir siendo idempotente, estar validada antes en PostgreSQL local (§3.5), y el archivo del repositorio debe quedar idéntico a lo aplicado |
 | **Borrar datos de la base** | D-2 (restos del chatbot) | No se borra nada sin respuesta explícita de Omar |
+| **Respaldo semanal roto** desde el 2026-10-25: falta el secreto `BACKUPS_REPO` en GitHub (ver T-05c) | Cualquier tarea que modifique o borre datos existentes | Las tareas que solo añaden (seed, tablas nuevas) siguen. Omar pone los secretos y se relanza el workflow |
 
 ---
 
@@ -500,6 +501,12 @@ Con el informe delante:
 5. Repetir `npm run env:check` hasta «sin bloqueos».
 6. Mismo cruce, solo por nombres, con Vercel (`vercel env ls` o el conector) y con los secretos de GitHub (`gh secret list`): lo que el código lee debe existir en producción, y lo que nadie lee se propone retirar. Borrar un secreto remoto es decisión de Omar.
 
+**Ya medido en GitHub Actions (2026-11-15), para no redescubrirlo:**
+- **El respaldo semanal lleva roto desde al menos el 2026-10-25** (cuatro ejecuciones seguidas en rojo): `scripts/backup-supabase.sh` aborta en la línea 24 con «`BACKUPS_REPO` no está definido». Falta ese secreto en GitHub; el workflow también pide `BACKUPS_REPO_TOKEN`, `BACKUP_PUBLIC_KEY`, `SUPABASE_DB_URL` y los de Cloudflare R2. Es lo más grave de esta auditoría: **hoy la base no tiene copia reciente**. Solo Omar puede poner los secretos; hasta que el workflow pase en verde (`gh workflow run backup-weekly.yml` y `gh run watch`), no se ejecuta ninguna tarea que modifique o borre datos existentes.
+- `check-limits.yml` llama cada 6 horas a `/api/cron/check-limits`, que vigila cuotas de proveedores de LLM (Groq, OpenRouter, Cerebras) leyendo `api_logs`. Es un resto del chatbot retirado: no hay tráfico que vigilar. Se le propone a Omar retirar el workflow y la ruta; si acepta, entra en T-16 (comparte `notifyTelegram`). No se borra sin su respuesta.
+- Los otros cinco workflows programados apuntan a rutas que existen (`daily-summary`, `email-followup`, `cleanup-cold-leads`, `database-cleanup`, `health`).
+- `test.yml` ya no pasa `GROQ_API_KEY`, `ADMIN_PASSWORD` ni `ADMIN_SECRET`. Los secretos con esos nombres siguen en GitHub sin que nada los use: se le propone a Omar borrarlos (`gh secret delete`).
+
 **Paso 3 · Comprobar que el entorno sirve.** `npm run build` completo (aquí sí hay red) y `npm run dev`: la portada carga, `/admin` deja entrar a Omar y una lectura con la clave `anon` devuelve los 22 proyectos publicados. Si el build falla por algo que la nube no podía ver, se arregla aquí o se abre su tarea.
 
 **Paso 4 · Cabos sueltos.**
@@ -519,6 +526,7 @@ Con el informe delante:
 - [ ] `npm run build` real ejecutado y en verde; `npm run dev` sirve la portada y `/admin`.
 - [ ] Ningún valor del `.env` aparece en el chat, en el diff ni en §6. `git status` no muestra ningún `.env*` salvo `.env.example`.
 - [ ] Rama `feat/portfolio-seed` borrada de `origin`; tipos regenerados.
+- [ ] El respaldo semanal pasa en verde, o Omar ha dicho expresamente que lo deja para después y queda anotado como bloqueo en §0.
 
 **Evidencia en §6.** Conteos medidos en la base, resumen del informe **por número de variables en cada categoría** (sin valores), resultado del build y lo que Omar decidió retirar.
 
@@ -786,6 +794,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-15 | Auditoría de workflows: respaldo semanal roto (secreto ausente), cron de cuotas LLM huérfano, rutas de cron verificadas | `docs/hallazgos-ci-entorno` | `gh run view --log-failed` · cruce workflow ↔ rutas existentes · verify en verde | ✅ |
 | 2026-11-14 | Auditoría del entorno (`npm run env:check`) + estado del plan al día + T-05c | `chore/env-audit-y-estado` | verify en verde · 333 tests (23 nuevos) · el informe no arrastra valores (probado) · `.env.example` = lo que lee el código (28) · 3 variables muertas fuera de CI | ✅ |
 | 2026-11-14 | T-05b Seed del contenido | `feat/portfolio-seed` | generador puro + SQL idempotente · migración y seed 2× en PostgreSQL 16 con conteos exactos · ida y vuelta idéntica a los módulos · 8/9 tablas cargadas en Supabase · 310 tests |  ✅ |
 | 2026-11-14 | D-2 limpieza del chatbot | `feat/portfolio-seed` | `match_projects()` borrada · extensión `vector` movida a `extensions` · linter: `extension_in_public` resuelto y `search_path` de 7 a 6 · datos intactos (519/2000/2007/41) |  ✅ |
