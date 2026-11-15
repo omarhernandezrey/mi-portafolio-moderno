@@ -356,7 +356,7 @@ El chatbot se retiró del código, pero su rastro sigue en la base (§1.6): 519 
 
 **Recomendación: C ahora, B cuando Omar confirme.** C no destruye nada. Los leads no se tocan en ninguna opción.
 
-**Respondido por Omar el 2026-11-14: opción C.** Se limpia solo lo roto; ningún dato se borra. La migración `limpiar_restos_chatbot` queda **pendiente de que Omar confirme el diálogo del conector de Supabase**, que pide aprobación para sentencias destructivas (`drop function`). Hasta entonces `match_projects()` sigue ahí y `vector` sigue en `public`.
+**Resuelto el 2026-11-14 (opción C).** `match_projects()` borrada y la extensión `vector` movida de `public` a `extensions`. Ningún dato se tocó: conversations 519, messages 2 000, api_logs 2 007 y leads 41, igual que antes. El linter lo confirma: `extension_in_public` desapareció y las funciones con `search_path` mutable bajaron de 7 a 6. Las dos sentencias se aplicaron por separado porque el conector pide aprobación interactiva para un `drop`, y un lote grande agota el tiempo de espera: **conviene aplicar lo destructivo en una sentencia suelta.** Vaciar las tablas del chatbot (opción B) sigue sin hacerse y sin decidirse.
 
 Sobre la entrada de leads, Omar eligió **reconectarla**: ver T-25.
 
@@ -407,7 +407,7 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
     *Hallazgos durante la extracción:* (1) el `year` del 4.º hito está traducido (`2025 - Presente` / `2025 - Present`) pero `portfolio_timeline.year` es `text` sin idioma — el seed debe decidir o pasarlo a jsonb; (2) el `icon` del timeline **nunca se renderizaba** (el punto es un `div`), así que pasarlo a clave no cambia un pixel; (3) `personalData` no guardaba texto sino claves i18n (`t("about.personalData.name")`), así que se conservaron las claves y no el texto, para no desincronizarlo de `locales/{es,en}/common.json`.
     *Validado:* typecheck 0 errores · lint limpio · **257 tests** (74 de la extracción + 14 de conteos en vivo).
     *Deuda preexistente detectada, ajena a esta tarea:* `npx tsc -p tsconfig.jest.json` arroja 816 errores (`jsx: "react"` sin `import React`), idénticos antes y después. Jest no usa ese config (va por `next/jest` + SWC), así que no afecta a los tests, pero está anotado en T-24.
-  - [~] **T-05b** Seed del contenido. **En curso en `feat/portfolio-seed`.** Ficha completa abajo, en «Fichas de las tareas pendientes».
+  - [x] **T-05b** Seed del contenido, en `feat/portfolio-seed`. Generador puro + SQL idempotente, validado en PostgreSQL y cargado en Supabase. Ver su ficha para el detalle y el único paso que queda.
 
 ---
 
@@ -416,7 +416,7 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
 Cada ficha es autosuficiente: contexto, pasos, trampas ya conocidas, criterios de aceptación comprobables y la evidencia que debe quedar en §6. Los pasos son el camino recomendado, no una camisa de fuerza; los criterios de aceptación y las restricciones de §2 sí son obligatorios.
 
 #### T-05b · Seed del contenido a la base de datos
-**Rama:** `feat/portfolio-seed` (existe, 1 commit) · **Depende de:** T-04, T-05a · **Estado:** `[~]`
+**Rama:** `feat/portfolio-seed` · **Depende de:** T-04, T-05a · **Estado:** `[x]` salvo una pegada pendiente (ver «Lo que queda»)
 
 **Objetivo.** Trasladar todo el contenido de los módulos TypeScript a las tablas `portfolio_*` sin perder un registro ni un carácter, de forma repetible.
 
@@ -451,9 +451,19 @@ Cada ficha es autosuficiente: contexto, pasos, trampas ya conocidas, criterios d
 - [ ] **Ida y vuelta:** se leen las filas de proyectos de la base local y, reconstruidas a la forma original, son idénticas (`deep equal`) a `projectsData`. Lo mismo para skills y servicios. Esta es la prueba real de «no se perdió nada».
 - [ ] Con `set role anon` se leen las mismas cantidades (todo se publica por defecto).
 
-**Evidencia en §6:** salida de los `count(*)` tras cada pasada y resultado de la comparación de ida y vuelta.
+**Resultado (2026-11-14).**
 
-**Ya no está bloqueada:** el conector de Supabase está activo desde el 2026-11-14 y el esquema está aplicado, así que el seed se prueba primero en PostgreSQL local y después se carga en la base real, verificando ahí los `count(*)` y la ida y vuelta.
+Implementado tal como se diseñó: `src/lib/portfolio/seed/build.ts` (puro, sin E/S), `src/lib/portfolio/seed/sql.ts` (generación de SQL) y `scripts/seed-portfolio.ts` (`npm run seed:portfolio`), que escribe `supabase/seed/portfolio_seed.sql` (176 KiB) y **falla si los conteos no cuadran** con `CONTENIDO_ORIGINAL` en vez de escribir un seed incompleto.
+
+Validado en PostgreSQL 16 local: migración + seed **dos veces** sin error, con conteos exactos tras ambas pasadas (22 / 8 / 7 / 172 / 171 con certificado / 7 / 4 / 42 / 4 / 2 de perfil). RLS probada: con un proyecto en borrador, `anon` ve 21 de 22 y su `insert` lo rechaza la política.
+
+**Ida y vuelta sin pérdida.** Se leyeron las filas de la base y se reconstruyó la forma original: proyectos, skills, servicios y los 172 ítems de educación resultan **idénticos** a `projectsData`, `skillsData`, `servicesData` y `educationData`. Un detalle que apareció aquí y conviene recordar: **`jsonb` de PostgreSQL no conserva el orden de las claves**, así que `{es,en}` vuelve como `{en,es}`. El dato es el mismo y el código accede por nombre, pero una comparación con `JSON.stringify` da falso negativo: la verificación tiene que ser canónica.
+
+**Cargado en Supabase real:** 8 de las 9 tablas (22 proyectos, 8 skills, 7 categorías, 7 insignias, 4 servicios, 42 tecnologías, 4 hitos, 2 secciones de perfil). Verificado en la base: los 22 proyectos conservan su stack sin normalizar y el año del 4.º hito sigue bilingüe.
+
+**Lo que queda: una sola pegada.** Los 172 ítems de educación son 130 KiB de SQL, demasiado para moverlos por esta conversación sin gastar contexto a lo tonto. Están en `supabase/seed/portfolio_seed_educacion.sql`, listos para pegar en el SQL Editor de Supabase. El archivo se validó en PostgreSQL local sobre la migración y las categorías ya cargadas: **172 ítems, 171 con certificado, 0 sin categoría, idempotente en dos pasadas**. Requiere que `portfolio_education_categories` esté poblada, y en la base real ya lo está. Alternativa equivalente: pegar `portfolio_seed.sql` completo, que al ser todo `on conflict do update` simplemente reescribe con los mismos valores lo ya cargado.
+
+**Nota de proceso.** Al cargar las tablas en Supabase se omitieron los servicios en el primer lote y la verificación posterior lo detectó (`servicios 0`). Se corrigió en el acto. Es el argumento del hábito 2 del §3: la comprobación después de escribir no es ceremonia.
 
 #### T-06 · Capa de lectura con respaldo
 **Rama:** `feat/portfolio-data-layer` · **Depende de:** T-05b · **Estado:** `[ ]`
@@ -719,6 +729,8 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-14 | T-05b Seed del contenido | `feat/portfolio-seed` | generador puro + SQL idempotente · migración y seed 2× en PostgreSQL 16 con conteos exactos · ida y vuelta idéntica a los módulos · 8/9 tablas cargadas en Supabase · 310 tests |  ✅ |
+| 2026-11-14 | D-2 limpieza del chatbot | `feat/portfolio-seed` | `match_projects()` borrada · extensión `vector` movida a `extensions` · linter: `extension_in_public` resuelto y `search_path` de 7 a 6 · datos intactos (519/2000/2007/41) |  ✅ |
 | 2026-11-14 | Corrección del origen de los leads (34 chatbot / 4 calculadora / 3 formulario) + T-25 | `fix/correccion-origen-leads` | agrupación por `intent` en la base real · 275 tests |  ✅ |
 | 2026-11-14 | Auditoría de Supabase + T-04 aplicada en la base real | `fix/timeline-year-jsonb` | 9 tablas/políticas/triggers verificadas en Supabase · linter sin ningún ERROR · 275 tests · tipos generados |  ✅ |
 | 2026-11-14 | Plan de ejecución: manual de trabajo, fichas por tarea, `npm run verify` y bloqueo de paletas | `docs/plan-ejecucion` | verify en verde · 269 tests · la puerta falla al tocar el visor o una paleta (probado) · hechos de las fichas comprobados con grep |  ✅ |

@@ -16,7 +16,8 @@
     "test:coverage": "jest --coverage",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
-    "verify": "bash scripts/verificar-tarea.sh"
+    "verify": "bash scripts/verificar-tarea.sh",
+    "seed:portfolio": "tsx --tsconfig tsconfig.json scripts/seed-portfolio.ts"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
