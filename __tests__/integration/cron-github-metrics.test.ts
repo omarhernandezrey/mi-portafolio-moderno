@@ -93,19 +93,28 @@ describe('GET /api/cron/github-metrics', () => {
     expect(body.saltados).toEqual([{ repo: 'omarhernandezrey/rota', motivo: '404: repo renombrado' }]);
   });
 
-  it('el cupo agotado detiene toda la corrida (no sigue gastando lo poco que quede)', async () => {
-    mockObtenerRepos.mockResolvedValue(['omarhernandezrey/a', 'omarhernandezrey/b', 'omarhernandezrey/c']);
-    mockObtenerMetricas
-      .mockResolvedValueOnce(metricasDe('omarhernandezrey/a'))
-      .mockImplementationOnce(async () => {
+  it('el cupo agotado detiene toda la corrida: no empieza repos nuevos (los 5 workers concurrentes ya en vuelo sí terminan)', async () => {
+    // 7 repos con CONCURRENCIA=5: los primeros 5 arrancan a la vez (uno de
+    // ellos agota el cupo); el 6.º y 7.º solo los tomaría un worker que
+    // volviera por más, y para entonces ya está "detener" en true.
+    const repos = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6'];
+    mockObtenerRepos.mockResolvedValue(repos);
+    mockObtenerMetricas.mockImplementation(async (repo: string) => {
+      if (repo === 'r0') {
         throw new CupoAgotadoError('Cupo de la API de GitHub casi agotado (10 peticiones restantes). Se reinicia: luego.');
-      });
+      }
+      return metricasDe(repo);
+    });
 
     const res = await GET(peticion());
     const body = await res.json();
 
-    expect(body.procesados).toBe(1);
-    expect(mockObtenerMetricas).toHaveBeenCalledTimes(2); // no llegó a "c"
+    expect(body.completo).toBe(false);
+    expect(body.procesados).toBe(4); // r1..r4
+    expect(body.saltados).toEqual([{ repo: 'r0', motivo: expect.stringContaining('Cupo') }]);
+    expect(body.pendientes).toEqual(['r5', 'r6']);
+    expect(mockObtenerMetricas).not.toHaveBeenCalledWith('r5');
+    expect(mockObtenerMetricas).not.toHaveBeenCalledWith('r6');
   });
 
   it('sin GITHUB_TOKEN configurado, responde 503 identificable', async () => {
