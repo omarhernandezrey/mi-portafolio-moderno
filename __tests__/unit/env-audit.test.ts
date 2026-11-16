@@ -89,6 +89,11 @@ describe('lectura de nombres en el código', () => {
     expect(nombresLeidosPorElCodigo(codigo)).toEqual(['OTRA_CLAVE', 'TERCERA', 'UNA_CLAVE']);
   });
 
+  it('GITHUB_TOKEN (una variable de la app) no se confunde con las que inyecta el runner (T-13)', () => {
+    expect(nombresLeidosPorElCodigo('const t = process.env.GITHUB_TOKEN;')).toEqual(['GITHUB_TOKEN']);
+    expect(nombresLeidosPorElCodigo('const s = process.env.GITHUB_SHA;')).toEqual([]);
+  });
+
   it('reconoce las expansiones de shell', () => {
     expect(nombresExpandidosEnShell('curl -H "Bearer $CRON_SECRET" "${SITE_URL}/api" $x')).toEqual([
       'CRON_SECRET',

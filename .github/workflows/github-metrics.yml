@@ -1,0 +1,23 @@
+name: GitHub Metrics
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # 06:00 UTC (01:00 Colombia) — hora libre, sin chocar con los demás cron
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Trigger GitHub Metrics API
+        run: |
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          CRON_SECRET="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::Secrets no configurados. Saltando github-metrics."
+            exit 0
+          fi
+          curl -X GET "${SITE_URL}/api/cron/github-metrics" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -f

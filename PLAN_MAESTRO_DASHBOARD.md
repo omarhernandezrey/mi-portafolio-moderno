@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16 y T-19 hechas; siguiente tarea: T-13**
+> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16, T-19 y T-13 hechas; siguiente tarea: T-08**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -27,6 +27,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-07 | El visor de proyectos (`ProjectsSection` + home) lee de `getProjects()`; `Card.tsx` sin tocar. Comprobador de embebido (`embedCheck.ts`) listo para que T-09 lo use |
 | T-16 | Resumen diario de Telegram condicional (sin plantillas con ceros), pendientes con ventana de 48h, webhook responde al `chat.id` real, `database-cleanup` ya no avisa sin haber limpiado nada |
 | T-19 | Allowlist falla cerrado, login con límite de intentos, caché de rol, MFA TOTP para `owner`, auditoría en los 2 endpoints que faltaban, grants de las 16 tablas antiguas revocados en la base real (0 avisos WARN del linter) |
+| T-13 | `src/lib/github.ts` + tabla `github_metrics` + cron diario: commits, lenguajes, estrellas, PRs, rachas por repositorio, verificado contra la API real de GitHub |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -41,7 +42,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-`T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -647,31 +648,35 @@ Se queda en Supabase Auth. No se instaló ningún SDK de AWS (eso es T-20, condi
 **Pendiente de validación con credenciales (no se puede probar sin la cuenta real de Telegram ni una sesión real de Supabase con MFA):** el flujo completo de MFA — enrolar con una app de autenticación real, escanear el QR, completar el desafío — contra Supabase real, desde el navegador. Tampoco se pudo forzar un viewport de 375px real con la herramienta de navegador disponible en esta sesión (mismo límite que en T-06/T-07); `/admin/security` y `/admin/mfa-challenge` usan los mismos primitivos y clases que el resto del panel, así que el riesgo es bajo pero no nulo.
 
 #### T-13 · Métricas reales de GitHub
-**Rama:** `feat/github-metrics` · **Depende de:** nada (T-14 depende de esta) · **Estado:** `[ ]`
+**Rama:** `feat/github-metrics` · **Depende de:** nada (T-14 depende de esta) · **Estado:** `[x]`
 
-**Decisión de arquitectura, obligatoria.** El panel lee **de Supabase**, nunca de la API de GitHub en vivo. La ingesta la hace un trabajo programado. Así la carga es instantánea y no hay límite de peticiones a la vista del usuario.
+**Decisión de arquitectura, cumplida.** El panel leerá de Supabase (T-14), nunca de la API de GitHub en vivo. La ingesta la hace el cron.
 
-**Construir.**
-1. `src/lib/github.ts`: cliente tipado, sin `any`. Por repositorio: commits, líneas añadidas y eliminadas, lenguajes por bytes, estrellas, forks, PR abiertos y cerrados, actividad diaria, rachas.
-2. Migración `supabase/migrations/AAAAMMDD_github_metrics.sql` con el patrón de T-04: minúsculas, idempotente, RLS **con política real** de lectura y sin política de escritura. Histórico acumulable: una fila por repositorio y fecha de captura, índice por fecha.
-3. `src/app/api/cron/github-metrics/route.ts` protegido con `requireCronAuth` (`src/lib/cronAuth.ts`), que escribe con `supabaseServer`.
-4. `.github/workflows/github-metrics.yml`. Este repo **no usa Vercel Cron**: los trabajos programados son workflows que hacen `curl -H "Authorization: Bearer $CRON_SECRET"`. Copia el patrón de uno existente y elige una hora que no choque con las ya usadas (13:00, 14:00, 00:00 UTC y cada 6 h).
-5. `GITHUB_TOKEN` en `.env.example` (con los permisos mínimos que necesita) y en el schema de `src/config/env.ts`.
+**Hecho.**
+1. `src/lib/github.ts`: sin `any`. `obtenerMetricasDeRepositorio()` da por repositorio commits, additions/deletions, lenguajes (ya en porcentajes), estrellas, forks, PRs abiertas/cerradas, actividad diaria y rachas. `obtenerReposDelUsuario()` lista los repos propios (sin forks) de `omarhernandezrey` (`PRODUCT.md`: "las métricas provienen de los repositorios de GitHub del usuario omarhernandezrey").
+2. `supabase/migrations/20261117_github_metrics.sql`: tabla `github_metrics`, una fila por `(repo, captured_at)`, índice por fecha, RLS con política real de lectura (`anon`/`authenticated`) y sin política de escritura (`revoke` explícito). Aplicada y verificada 2 veces en la base real (sin PostgreSQL local disponible en esta máquina — igual que en T-19 ítem 6, se validó contra Supabase real con el conector en su lugar). `anon` probado: lee, y un `insert` de prueba fue rechazado (`insufficient_privilege`).
+3. `src/app/api/cron/github-metrics/route.ts`, con `requireCronAuth`: procesa cada repo con `supabaseServer.upsert` (`onConflict: 'repo,captured_at'`). Un repo que falla por un motivo normal (renombrado, sin stats aún) se salta y sigue con los demás; si el cupo se agota, la corrida entera se detiene — seguir solo gastaría lo poco que quede.
+4. `.github/workflows/github-metrics.yml`: diario a las 06:00 UTC (01:00 Colombia), hora libre (las usadas eran 13:00, 14:00, 00:00 y cada 6h).
+5. `GITHUB_TOKEN` en `.env.example` y en el schema de `env.ts` (opcional: sin él, el cron responde 503 identificable en vez de fallar a medias).
 
-**Trampas de la API, verificadas en su documentación; compruébalas con `gh api`:**
-- Los endpoints `/stats/commit_activity`, `/stats/code_frequency` y `/stats/contributors` responden **202 con cuerpo vacío** la primera vez, mientras GitHub calcula. Eso **no** es «cero commits»: se reintenta con espera.
-- Paginación por cabecera `Link`; no todo cabe en una página.
-- Cabeceras `x-ratelimit-remaining` y `x-ratelimit-reset`: parar antes de agotar el cupo, con un error claro.
+**Hallazgo real, no estaba en la ficha:** el audit de entorno de T-05c excluía `GITHUB_.+` entero como "variable de plataforma" (pensado para las que inyecta GitHub Actions), así que `GITHUB_TOKEN` —una variable de la app, no del runner— quedaba invisible para `npm run env:check` y el guardarraíl de `.env.example`. Corregido: la exclusión ahora es la lista exacta de nombres que GitHub Actions inyecta, con un test que fija el caso (`GITHUB_TOKEN` sí se cuenta; `GITHUB_SHA` no).
 
-**Aceptación** (tests con `fetch` simulado):
-- [ ] 202 con cuerpo vacío → reintenta; nunca devuelve cero.
-- [ ] Cupo casi agotado → se detiene con error claro.
-- [ ] Dos páginas se concatenan bien.
-- [ ] Lenguajes: bytes → porcentajes que suman 100.
-- [ ] Rachas: días consecutivos cuentan; un hueco corta la racha; se respeta la zona horaria `America/Bogota`.
-- [ ] El cron sin `CRON_SECRET` válido responde como el resto de crons.
-- [ ] Migración ejecutada dos veces en PostgreSQL local; RLS probada con `anon`.
-- [ ] **Una verificación real fuera de Jest:** un script que llama a la API con `gh` para un repositorio y comprueba que el parser da las mismas cifras. Las cifras obtenidas se anotan en §6.
+**Trampas de la API, confirmadas con el repo real además de con la documentación:**
+- `/stats/commit_activity`, `/stats/code_frequency`: `obtenerConReintento202` reintenta ante un `202`; nunca lo confunde con cero.
+- Paginación por `Link` (`rel="next"`), probada con PRs reales.
+- `x-ratelimit-remaining`: `comprobarCupoDesdeCabeceras` para — y el bug real que encontró su propio test: `Number(null)` da `0`, que es finito, así que sin la cabecera presente se disparaba un falso "cupo agotado". Corregido distinguiendo "falta la cabecera" de "la cabecera dice cero".
+
+**Aceptación — comprobado el 2026-11-17.**
+- [x] 202 con cuerpo vacío → reintenta; nunca devuelve cero (y si GitHub nunca termina, lanza en vez de simular un resultado).
+- [x] Cupo casi agotado → se detiene con error claro, con la hora de reinicio.
+- [x] Dos páginas se concatenan en el orden correcto.
+- [x] Lenguajes: bytes → porcentajes que suman 100 (ajustando el redondeo en el de más bytes).
+- [x] Rachas: días consecutivos cuentan; un hueco corta la racha actual pero no borra la máxima histórica; si ayer hubo actividad y hoy el día no ha terminado, la racha sigue viva. Respeta `America/Bogota` (documentado como aproximación: GitHub agrega por día UTC, no por commit exacto — se explica en el código).
+- [x] El cron sin `CRON_SECRET` válido responde 401, igual que el resto de crons (y sin tocar la API de GitHub).
+- [x] Migración aplicada y verificada 2 veces en la base real; RLS probada con `anon` (lee, no escribe).
+- [x] **Verificación real fuera de Jest** (`npm run verify:github-metrics -- omarhernandezrey/mi-portafolio-moderno`, token real vía `gh auth token`): el parser coincidió exactamente con `gh api` llamado por separado — `stars: 0`, `forks: 0`, `openPrs: 1`, `closedPrs: 3`, `languages: {"TypeScript":57.3,"JavaScript":17.7,"MDX":11.6,"PLpgSQL":9.9,"CSS":1.8,"Shell":1.3,"Batchfile":0.4}`. Lo que el script no puede contrastar por una segunda vía independiente (`commits: 545`, `additions: 180835`, `deletions: 56990`, `racha actual: 3`, `racha máxima: 11`, 66 de 364 días con actividad) queda anotado para que quien lo revise pueda recalcularlo a mano si quiere.
+
+**Pendiente de validación con credenciales:** la corrida real del cron contra todos los repos de `omarhernandezrey` (el script solo probó uno) y el workflow disparado de verdad en GitHub Actions — necesita `GITHUB_TOKEN` configurado como secreto en el repositorio, que no está entre los que ya existen (`gh secret list`, medido en T-05c).
 
 #### T-08 · Nuevo shell del panel, mobile-first
 **Rama:** `feat/dashboard-shell` · **Depende de:** nada · **Skills:** `impeccable` (obligatoria) · **Estado:** `[ ]`
@@ -822,6 +827,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-17 | T-13: métricas reales de GitHub | `feat/github-metrics` | 21 tests de github.ts + 5 del cron · verificación real contra la API: stars/forks/PRs/lenguajes idénticos a `gh api` para mi-portafolio-moderno (545 commits, racha máxima 11) · migración aplicada 2x en la base real, RLS probada con anon · hallazgo real: GITHUB_TOKEN quedaba invisible para env:check por una exclusión demasiado amplia, corregida con test · 448 tests totales | ✅ |
 | 2026-11-16 | T-19: endurecimiento de la autenticación | `feat/auth-hardening` | tests nuevos: rateLimit (6), roleCache (8), mfa (4), admin-auth actualizado (11), auth-request-login (5), admin-audit-coverage (3) · build real OK (/admin/security y /admin/mfa-challenge compilan) · migración aplicada 2 veces en la base real: 16 tablas sin escritura anon/authenticated, 2 funciones sin EXECUTE público, 6 funciones con search_path fijo · linter de seguridad: 6+2+2 avisos WARN → 0 · 421 tests totales | ✅ |
 | 2026-11-16 | T-16: bot de Telegram que solo avisa de lo real | `fix/telegram-bot` | rebase sin conflictos sobre main · 33 tests nuevos (telegram.ts, resumen diario con sus helpers puros, webhook) · database-cleanup corregido (avisaba con 0/0) · build real OK tras mover los helpers fuera de route.ts (Next no deja exportar nada que no sea un handler) · 395 tests totales | ✅ |
 | 2026-11-16 | T-07: el visor de proyectos lee de la base | `feat/projects-from-db` | 7 tests del comprobador de embebido · los 22 proyectos de getProjects() idénticos a projectsData en es/en · 3 búsquedas de ejemplo medidas y comprobadas (react=5, zzz=0, vercel=8) · paginación de 4 · git diff de Card.tsx vacío · build real + navegación real: portada 200, visor intacto, búsqueda "vercel" en vivo mostró 8 de 22 · 371 tests totales · pendiente confirmar 375px real | ✅ |

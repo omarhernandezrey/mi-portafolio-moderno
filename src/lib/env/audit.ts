@@ -9,8 +9,17 @@
 /** Proyecto de Supabase que gobierna el portafolio (ver PLAN_MAESTRO_DASHBOARD.md §1.6). */
 export const PROYECTO_SUPABASE_ESPERADO = 'ozftxfwkhomnbvicjtae';
 
-/** Variables que pone la plataforma, no el `.env`. */
-const DE_PLATAFORMA = /^(NODE_ENV|CI|PORT|TZ|NEXT_RUNTIME|NEXT_PHASE|VERCEL(_.+)?|GITHUB_.+|RUNNER_.+)$/;
+/**
+ * Variables que pone la plataforma, no el `.env`.
+ *
+ * El bloque `GITHUB_(...)` es la lista exacta que GitHub Actions inyecta
+ * solo: https://docs.github.com/actions/learn-github-actions/variables.
+ * Un `GITHUB_.+` genérico se probó en T-05c y se corrigió en T-13: atrapaba
+ * también `GITHUB_TOKEN` (una variable de la app, no del runner), así que
+ * `env:check` nunca lo veía como leído y lo marcaba como huérfano.
+ */
+const DE_PLATAFORMA =
+  /^(NODE_ENV|CI|PORT|TZ|NEXT_RUNTIME|NEXT_PHASE|VERCEL(_.+)?|RUNNER_.+|GITHUB_(ACTION|ACTIONS|ACTOR|API_URL|BASE_REF|ENV|EVENT_NAME|EVENT_PATH|GRAPHQL_URL|HEAD_REF|JOB|OUTPUT|PATH|REF|REF_NAME|REF_PROTECTED|REF_TYPE|REPOSITORY|REPOSITORY_OWNER|RETENTION_DAYS|RUN_ATTEMPT|RUN_ID|RUN_NUMBER|SERVER_URL|SHA|STEP_SUMMARY|WORKFLOW|WORKSPACE))$/;
 
 /** El código acepta cualquiera de las dos formas (`src/config/env.ts`). */
 const ALIAS: Readonly<Record<string, string>> = {

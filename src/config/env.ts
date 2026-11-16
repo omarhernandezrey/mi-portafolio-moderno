@@ -16,6 +16,8 @@ const serverSchema = z.object({
   TELEGRAM_WEBHOOK_SECRET: z.string().min(1).optional(),
   ADMIN_ALLOWED_EMAILS: z.string().optional(),
   CRON_SECRET: z.string().min(10),
+  /** Solo lectura pública (`public_repo` o, si hay repos privados que contar, `repo`). Lo usa únicamente el cron de T-13. */
+  GITHUB_TOKEN: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
   NOTION_API_KEY: z.string().optional(),
   NOTION_DATABASE_ID: z.string().optional(),
@@ -35,6 +37,7 @@ export const serverEnv = {
   /** Lista opcional separada por comas. Si está vacía, cualquier usuario con rol en user_roles puede entrar. */
   get ADMIN_ALLOWED_EMAILS() { return process.env.ADMIN_ALLOWED_EMAILS || ""; },
   get CRON_SECRET() { return process.env.CRON_SECRET || ""; },
+  get GITHUB_TOKEN() { return process.env.GITHUB_TOKEN || ""; },
   get NEWSLETTER_UNSUBSCRIBE_SECRET() { return process.env.NEWSLETTER_UNSUBSCRIBE_SECRET || ""; },
   get RESEND_API_KEY() { return process.env.RESEND_API_KEY || ""; },
   get NOTION_API_KEY() { return process.env.NOTION_API_KEY || ""; },
