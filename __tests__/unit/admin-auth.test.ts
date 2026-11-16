@@ -69,16 +69,25 @@ describe('admin path permissions', () => {
 });
 
 describe('admin allowlist y secrets', () => {
-  it('permite todos si allowlist vacía', () => {
-    expect(isEmailAllowed('a@b.com', '')).toBe(true);
-    expect(isEmailAllowed('a@b.com', '  ')).toBe(true);
+  // Hasta T-19, una ADMIN_ALLOWED_EMAILS vacía dejaba pasar a cualquiera con
+  // sesión de Supabase (fallaba ABIERTO). Este test reproducía ese fallo de
+  // seguridad como si fuera el comportamiento esperado; ahora documenta el
+  // arreglo: falla CERRADO, y además avisa en logs por qué.
+  it('con allowlist vacía, falla cerrado: nadie entra, y queda un aviso en logs', () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(isEmailAllowed('a@b.com', '')).toBe(false);
+    expect(isEmailAllowed('a@b.com', '  ')).toBe(false);
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('ADMIN_ALLOWED_EMAILS no configurada'));
+    errorSpy.mockRestore();
   });
 
-  it('restringe por allowlist', () => {
+  it('restringe por allowlist, normalizando mayúsculas y espacios', () => {
     expect(isEmailAllowed('omar@test.com', 'omar@test.com, other@x.com')).toBe(true);
     expect(isEmailAllowed('OMAR@TEST.COM', 'omar@test.com')).toBe(true);
+    expect(isEmailAllowed('  omar@test.com  ', 'omar@test.com')).toBe(true);
     expect(isEmailAllowed('hacker@evil.com', 'omar@test.com')).toBe(false);
     expect(isEmailAllowed(null, 'omar@test.com')).toBe(false);
+    expect(isEmailAllowed('omar@test.com', ' Omar@Test.com , Otro@X.com ')).toBe(true);
   });
 
   it('enmascara secrets de webhooks', () => {

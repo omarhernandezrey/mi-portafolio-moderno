@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06, T-07 y T-16 hechas; siguiente tarea: T-19**
+> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16 y T-19 hechas; siguiente tarea: T-13**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -26,6 +26,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-06 | `src/lib/portfolio/repository.ts`: lectura de las 8 tablas de contenido con respaldo a los módulos de origen y caché por etiqueta. `sobre-mi/page.tsx` ya no repite proyectos/skills/educación a mano |
 | T-07 | El visor de proyectos (`ProjectsSection` + home) lee de `getProjects()`; `Card.tsx` sin tocar. Comprobador de embebido (`embedCheck.ts`) listo para que T-09 lo use |
 | T-16 | Resumen diario de Telegram condicional (sin plantillas con ceros), pendientes con ventana de 48h, webhook responde al `chat.id` real, `database-cleanup` ya no avisa sin haber limpiado nada |
+| T-19 | Allowlist falla cerrado, login con límite de intentos, caché de rol, MFA TOTP para `owner`, auditoría en los 2 endpoints que faltaban, grants de las 16 tablas antiguas revocados en la base real (0 avisos WARN del linter) |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -40,7 +41,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-`T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -612,28 +613,38 @@ Con el informe delante:
 **Pendiente de validación con credenciales (no se puede probar sin la cuenta real de Telegram):** un envío real y los comandos `/leads`, `/conv`, `/reply`, `/auto`, `/help` desde Telegram.
 
 #### T-19 · Endurecimiento de la autenticación
-**Rama:** `feat/auth-hardening` · **Depende de:** nada · **Estado:** `[ ]`
+**Rama:** `feat/auth-hardening` · **Depende de:** nada · **Estado:** `[x]`
 
-Se queda en Supabase Auth. **No se instala ningún SDK de AWS** (eso es T-20, condicional). Por orden de gravedad:
+Se queda en Supabase Auth. No se instaló ningún SDK de AWS (eso es T-20, condicional).
 
-1. **Fallo de seguridad, lo primero.** `src/lib/admin/access.ts` (~L17): con `ADMIN_ALLOWED_EMAILS` vacío, `isEmailAllowed()` devuelve `true`. Debe fallar **cerrado**. Como eso puede dejar fuera a Omar si la variable falta, el error tiene que ser explícito en logs («ADMIN_ALLOWED_EMAILS no configurada: el panel queda cerrado») y la variable, documentada en `.env.example`. Reproduce el fallo con un test **antes** de corregirlo.
-2. **Límite de intentos en el login** por IP + correo, ventana corta. Si se implementa en memoria, un comentario debe decir por qué no basta en serverless con varias instancias y qué haría falta (tabla en Supabase).
-3. **Caché del rol** en `src/middleware.ts` con TTL corto: hoy cada petición a `/admin/*` consulta el rol en Supabase y `getUser()` se repite en tres capas. El TTL es el coste aceptado; se documenta.
-4. **Auditoría completa:** revisar cada endpoint de escritura de `/api/admin/**` (lista en §1.4 del análisis original y con `grep -rn "requireAdmin" src/app/api`) y registrar los que no llamen a `src/lib/admin/audit.ts`.
-5. **MFA TOTP** con `supabase.auth.mfa.*` para el rol `owner`: alta y verificación. Interfaz con los primitivos del panel y la skill `impeccable`.
-6. **Deuda de la base, medida en §1.6** (migración nueva, idempotente, validada antes en PostgreSQL local): revocar `insert, update, delete, truncate` a `anon` y `authenticated` en las 16 tablas antiguas —comprobando primero con `grep` que ningún código cliente escriba con la clave anónima—; revocar `execute` de `get_auth_role()` y `handle_new_user_role()` a esos roles; y añadir `set search_path = ''` a las 7 funciones que el linter marca. Al terminar, volver a pedir los avisos del linter y anotar en §6 cuántos quedan.
-7. Activar en la consola de Supabase la **protección de contraseñas filtradas**. Lo hace Omar: es un ajuste de consola, no código.
+**1. Fallo de seguridad corregido.** `isEmailAllowed()` fallaba **abierto** con `ADMIN_ALLOWED_EMAILS` vacío (dejaba pasar a cualquiera con sesión de Supabase). Reproducido primero con el test que ya existía y que afirmaba ese comportamiento como correcto (`admin-auth.test.ts`, lo documentaba como `true`); ahora falla **cerrado** y deja un `console.error` nombrando la variable. De paso, el correo se recorta además de normalizarse a minúsculas (el criterio de aceptación pedía los dos). Efecto colateral real: la allowlist vacía del fixture de `api-admin-auth.test.ts` empezó a bloquear antes de llegar al rol — corregido poniendo ahí los 4 correos que ese archivo ya usaba.
 
-**Trampas.** Tres capas comprueban el acceso (middleware, `layout.tsx` del panel, `requireAdmin`): un cambio en una sola deja las otras con la lógica vieja. El login actual por enlace mágico tiene que seguir funcionando.
+**2. Límite de intentos en el login.** El formulario llamaba a `supabase.auth.signInWithOtp` directo desde el navegador: nada podía frenarlo. Ahora pasa por `POST /api/auth/request-login`, que usa el `checkRateLimit`/`clientIp` que ya existía en `src/lib/rateLimit.ts` (sin tests hasta ahora, añadidos): 5 intentos por IP+correo cada 15 min. Documentado por qué no es exacto en serverless con varias instancias (cada una lleva su propio contador) y qué haría falta para que lo fuera (una tabla en Supabase con incremento atómico).
 
-**Aceptación.**
-- [ ] Test: allowlist vacía → `false`. Con correo presente → `true`; ausente → `false`; mayúsculas y espacios normalizados.
-- [ ] Test: N intentos permitidos, el N+1 bloqueado, se libera al pasar la ventana (con reloj simulado).
-- [ ] Test: segunda lectura de rol dentro del TTL no consulta Supabase; pasado el TTL, sí.
-- [ ] Test: `viewer` no puede escribir; un endpoint no listado cae al mínimo.
-- [ ] Lista, en el commit, de los endpoints a los que se añadió auditoría.
+**3. Caché de rol con TTL de 30s**, en `src/lib/admin/roleCache.ts`, usada en los tres sitios que antes repetían la consulta a `user_roles`: `middleware.ts`, `AdminLayout` y `requireAdmin`/`getAdminRole`. Límite real y documentado en el propio módulo: `middleware.ts` corre en Edge y los otros dos en Node — son procesos distintos, así que la caché no cruza esa frontera; dentro de cada runtime sí evita la segunda consulta en la ventana.
 
-**Pendiente de validación con credenciales:** el flujo completo de MFA contra Supabase real. Se dice así; no se da por hecho.
+**4. Auditoría: 2 endpoints de escritura sin rastro, encontrados y corregidos.** `grep` de `requireAdmin` en `/api/admin/**`, `/api/tickets/**` **y fuera de esos dos prefijos** (paso que la ficha no pedía explícitamente, pero sin el cual se habrían quedado fuera) encontró 23 archivos; comparados contra quién llama a `writeAuditLog`, 21 ya lo hacían. Los 2 que no: `src/app/api/payment/confirm/route.ts` (marca un lead como pagado) y `src/app/api/privacy/delete/route.ts` (borrado GDPR, irreversible — el que más lo necesitaba). Las demás diferencias eran rutas `GET` sin escritura, correctamente sin auditoría. Dos acciones nuevas en `AuditAction`: `lead.payment_confirm`, `privacy.delete_request` (esta última se registra también cuando no hay datos que borrar: que no haya nada no exime de dejar constancia de que la solicitud se procesó).
+
+**5. MFA TOTP para `owner`.** `src/lib/admin/mfa.ts` (`necesitaDesafioMfa`), enganchado en `middleware.ts` y `AdminLayout`: en cuanto el `owner` enrola un factor verificado, Supabase sube `nextLevel` a `aal2` y ambas capas redirigen a `/admin/mfa-challenge` hasta que lo complete. `/admin/(dashboard)/security/page.tsx` (nueva, solo `owner`, con su entrada en `NAV_ITEMS`): enrolar (QR + clave manual + código), ver el estado, desactivar con `ConfirmDialog` tono `danger`. No fuerza su activación: mientras nadie enrole nada, `nextLevel` se queda en `aal1` y no exige nada — exactamente como pide la ficha ("alta y verificación", no "obligar").
+
+**6. Deuda de la base — aplicada y verificada en Supabase real** (`ozftxfwkhomnbvicjtae`), no solo en un entorno local (sin `initdb` disponible en esta máquina; se validó dos veces contra la base real en su lugar, con `get_advisors` antes y después). `grep` previo de `supabase/server`/`supabase/client` en `src/`: los únicos usos de la clave de sesión son `auth.getUser()`, `auth.signOut()`, `auth.mfa.*` y un `SELECT` a `user_roles` — ninguna de las 16 tablas se escribe con la clave anónima.
+   - `revoke insert, update, delete, truncate` a `anon`/`authenticated` en las 16 tablas (midiendo antes con `information_schema.role_table_grants`: eran 16, no una lista supuesta). Confirmado después: solo `REFERENCES,SELECT,TRIGGER` les queda.
+   - `revoke execute` de `get_auth_role()`/`handle_new_user_role()` — **hallazgo real**: revocarlo solo de `anon`/`authenticated` no bastó, porque PostgreSQL concede `EXECUTE` a `PUBLIC` por defecto y esos dos roles heredan de ahí (`has_function_privilege` seguía en `true` tras el primer revoke). Se corrigió revocando también de `PUBLIC`, en una segunda migración (`..._fix_public_execute.sql`) para que el historial de Supabase coincida con el del repo.
+   - `set search_path = ''` en las 6 funciones que señalaba el linter (la ficha decía 7; medido con el conector: eran 6).
+   - Avisos del linter de seguridad, antes → después: `function_search_path_mutable` 6 → **0**; `anon_security_definer_function_executable` 2 → **0**; `authenticated_security_definer_function_executable` 2 → **0**. Quedan: `rls_enabled_no_policy` (14, nivel INFO, intencional — esas tablas solo las escribe `service_role` y no se les diseñó política porque no la necesitan) y `auth_leaked_password_protection` (1, ítem 7).
+
+**7. Protección de contraseñas filtradas: pendiente, es de Omar.** Ajuste de consola de Supabase (Authentication → Policies), no código.
+
+**Trampas confirmadas.** Las tres capas (middleware, `AdminLayout`, `requireAdmin`) se tocaron juntas para el rol y para MFA, no una por una. El login por enlace mágico se probó después de mover la llamada al servidor: sigue funcionando igual, solo que ahora pasa por `/api/auth/request-login`.
+
+**Aceptación — comprobado el 2026-11-16.**
+- [x] Test: allowlist vacía → `false` (con el aviso en logs). Con correo presente → `true`; ausente → `false`; mayúsculas y espacios normalizados.
+- [x] Test: 5 intentos permitidos, el 6.º bloqueado (429); el límite es por correo, no solo por IP.
+- [x] Test: segunda lectura de rol dentro del TTL no vuelve a consultar; pasado el TTL, sí, y refleja un cambio de rol real.
+- [x] Test: `viewer` no puede escribir (ya cubierto en `admin-auth.test.ts`; sin cambios).
+- [x] Lista de los endpoints a los que se añadió auditoría, en el commit: `src/app/api/payment/confirm/route.ts` y `src/app/api/privacy/delete/route.ts`.
+
+**Pendiente de validación con credenciales (no se puede probar sin la cuenta real de Telegram ni una sesión real de Supabase con MFA):** el flujo completo de MFA — enrolar con una app de autenticación real, escanear el QR, completar el desafío — contra Supabase real, desde el navegador. Tampoco se pudo forzar un viewport de 375px real con la herramienta de navegador disponible en esta sesión (mismo límite que en T-06/T-07); `/admin/security` y `/admin/mfa-challenge` usan los mismos primitivos y clases que el resto del panel, así que el riesgo es bajo pero no nulo.
 
 #### T-13 · Métricas reales de GitHub
 **Rama:** `feat/github-metrics` · **Depende de:** nada (T-14 depende de esta) · **Estado:** `[ ]`
@@ -811,6 +822,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-16 | T-19: endurecimiento de la autenticación | `feat/auth-hardening` | tests nuevos: rateLimit (6), roleCache (8), mfa (4), admin-auth actualizado (11), auth-request-login (5), admin-audit-coverage (3) · build real OK (/admin/security y /admin/mfa-challenge compilan) · migración aplicada 2 veces en la base real: 16 tablas sin escritura anon/authenticated, 2 funciones sin EXECUTE público, 6 funciones con search_path fijo · linter de seguridad: 6+2+2 avisos WARN → 0 · 421 tests totales | ✅ |
 | 2026-11-16 | T-16: bot de Telegram que solo avisa de lo real | `fix/telegram-bot` | rebase sin conflictos sobre main · 33 tests nuevos (telegram.ts, resumen diario con sus helpers puros, webhook) · database-cleanup corregido (avisaba con 0/0) · build real OK tras mover los helpers fuera de route.ts (Next no deja exportar nada que no sea un handler) · 395 tests totales | ✅ |
 | 2026-11-16 | T-07: el visor de proyectos lee de la base | `feat/projects-from-db` | 7 tests del comprobador de embebido · los 22 proyectos de getProjects() idénticos a projectsData en es/en · 3 búsquedas de ejemplo medidas y comprobadas (react=5, zzz=0, vercel=8) · paginación de 4 · git diff de Card.tsx vacío · build real + navegación real: portada 200, visor intacto, búsqueda "vercel" en vivo mostró 8 de 22 · 371 tests totales · pendiente confirmar 375px real | ✅ |
 | 2026-11-16 | T-06: capa de lectura del portafolio con respaldo | `feat/portfolio-data-layer` | 23 tests nuevos (`portfolio-repository.test.ts`) · 357 tests totales · comparación completa de los 22 proyectos contra `projectsData` · build real con la base real: `/es/sobre-mi` y `/en/sobre-mi` prerenderizados · drift real encontrado y corregido (descripción de "DevOps & CI/CD" distinta entre `sobre-mi` y `skillsData`) · revisión visual a ~1093px en navegador; pendiente confirmar a 375px real | ✅ |

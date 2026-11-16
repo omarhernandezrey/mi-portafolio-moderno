@@ -42,6 +42,7 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   '/admin/webhooks': Webhook,
   '/admin/logs': Activity,
   '/admin/audit': ScrollText,
+  '/admin/security': ShieldCheck,
   '/admin/docs': BookOpen,
 };
 

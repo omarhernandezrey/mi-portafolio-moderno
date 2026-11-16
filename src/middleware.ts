@@ -3,8 +3,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 import createIntlMiddleware from 'next-intl/middleware'
 import { serverEnv } from './config/env'
 import { canAccessAdminPath, minRoleForApiRequest } from './lib/admin/permissions'
-import { hasMinRole, isAdminRole } from './lib/admin/roles'
+import { hasMinRole } from './lib/admin/roles'
 import { isEmailAllowed } from './lib/admin/access'
+import { resolverRolDeUsuario } from './lib/admin/roleCache'
+import { necesitaDesafioMfa } from './lib/admin/mfa'
 import { routing } from './i18n/routing'
 
 const intlMiddleware = createIntlMiddleware(routing)
@@ -57,13 +59,11 @@ async function runSupabaseAuth(request: NextRequest) {
       return response
     }
 
-    const { data: loginRole } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('id', user.id)
-      .maybeSingle()
+    const loginRole = await resolverRolDeUsuario(user.id, () =>
+      supabase.from('user_roles').select('role').eq('id', user.id).maybeSingle()
+    )
 
-    if (loginRole && isAdminRole(loginRole.role)) {
+    if (loginRole) {
       return NextResponse.redirect(new URL('/admin', request.url))
     }
 
@@ -88,17 +88,13 @@ async function runSupabaseAuth(request: NextRequest) {
     return unauthorized(403, 'Acceso no autorizado')
   }
 
-  const { data: userRole } = await supabase
-    .from('user_roles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle()
+  const role = await resolverRolDeUsuario(user.id, () =>
+    supabase.from('user_roles').select('role').eq('id', user.id).maybeSingle()
+  )
 
-  if (!userRole || !isAdminRole(userRole.role)) {
+  if (!role) {
     return unauthorized(403, 'Sin rol de administración')
   }
-
-  const role = userRole.role
 
   if (isProtectedAdminApi) {
     const minRole = minRoleForApiRequest(pathname, request.method)
@@ -106,6 +102,16 @@ async function runSupabaseAuth(request: NextRequest) {
       return unauthorized(403, 'Permisos insuficientes')
     }
     return response
+  }
+
+  // MFA (T-19): solo para `owner`, y solo si ya enroló un factor — Supabase
+  // sube `nextLevel` a aal2 únicamente en ese caso. No bloquea la propia
+  // página del desafío (sería un bucle de redirección).
+  if (role === 'owner' && pathname !== '/admin/mfa-challenge') {
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    if (aal && necesitaDesafioMfa(aal)) {
+      return NextResponse.redirect(new URL('/admin/mfa-challenge', request.url))
+    }
   }
 
   if (!canAccessAdminPath(pathname, role)) {

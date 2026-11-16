@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 import { z } from 'zod';
 
 const deleteSchema = z.object({
@@ -111,6 +112,14 @@ export async function POST(req: NextRequest) {
     if (subscribersError) throw subscribersError;
 
     if (convIds.length === 0 && deletedLeads === 0) {
+      // Se audita igual: que no haya datos que borrar no exime de dejar
+      // constancia de que la solicitud se procesó y quién la ejecutó.
+      await writeAuditLog(auth.actor, {
+        action: 'privacy.delete_request',
+        resourceType: 'privacy_request',
+        resourceId: email,
+        metadata: { reason: reason ?? null, found: false },
+      });
       // Respuesta genérica: no revelamos si el email existe en la DB
       return NextResponse.json({
         success: true,
@@ -121,6 +130,19 @@ export async function POST(req: NextRequest) {
     await notifyTelegram(
       `🗑️ *Derecho al olvido ejecutado*\nEmail: ${email}\nMotivo: ${reason || 'No especificado'}\nEjecutado por: ${auth.email}\nAcción: ${convIds.length} conversaciones, ${deletedLeads} leads, ${deletedTickets} tickets y suscripciones eliminadas.`
     );
+
+    await writeAuditLog(auth.actor, {
+      action: 'privacy.delete_request',
+      resourceType: 'privacy_request',
+      resourceId: email,
+      metadata: {
+        reason: reason ?? null,
+        found: true,
+        conversationsDeleted: convIds.length,
+        leadsDeleted: deletedLeads,
+        ticketsDeleted: deletedTickets,
+      },
+    });
 
     return NextResponse.json({
       success: true,

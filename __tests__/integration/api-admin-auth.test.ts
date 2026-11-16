@@ -18,7 +18,11 @@ jest.mock('@/lib/supabase/server', () => ({
 
 jest.mock('@/config/env', () => ({
   serverEnv: {
-    ADMIN_ALLOWED_EMAILS: '',
+    // T-19: una allowlist vacía ahora falla CERRADO (antes dejaba pasar a
+    // cualquiera). Este archivo prueba el rol, no la allowlist — esa prueba
+    // vive en admin-auth.test.ts —, así que necesita los 4 correos que usa
+    // listados aquí para no tropezar con esa barrera antes de llegar al rol.
+    ADMIN_ALLOWED_EMAILS: 'owner@test.com,asst@test.com,viewer@test.com,stranger@test.com',
     SUPABASE_URL: 'https://test.supabase.co',
     SUPABASE_ANON_KEY: 'anon',
     SUPABASE_SERVICE_ROLE_KEY: 'service',
@@ -55,6 +59,7 @@ import { GET as getTickets } from '@/app/api/tickets/route';
 import { POST as postTicket } from '@/app/api/tickets/route';
 import { GET as getAudit } from '@/app/api/admin/audit/route';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { limpiarCacheDeRoles } from '@/lib/admin/roleCache';
 
 function asUser(email = 'owner@test.com', id = 'user-1') {
   return { id, email };
@@ -117,6 +122,11 @@ function resetDataMocks() {
 beforeEach(() => {
   jest.clearAllMocks();
   resetDataMocks();
+  // T-19: requireAdmin() ahora cachea el rol por userId. Todas las pruebas
+  // de aquí reutilizan el mismo id por omisión de asUser() ('user-1'), así
+  // que sin este reinicio el rol de una prueba se filtra a la siguiente
+  // dentro del TTL (30s, muy por encima de lo que tarda en correr el archivo).
+  limpiarCacheDeRoles();
 });
 
 describe('API admin auth — sin sesión', () => {

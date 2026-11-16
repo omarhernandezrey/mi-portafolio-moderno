@@ -14,8 +14,19 @@ export function isEmailAllowed(
 ): boolean {
   if (!email) return false;
   const allowlist = parseAllowedEmails(allowlistRaw);
-  if (allowlist.length === 0) return true;
-  return allowlist.includes(email.toLowerCase());
+  // Falla CERRADO: una allowlist vacía solía dejar pasar a cualquiera con
+  // sesión de Supabase, que es exactamente lo contrario de lo que una
+  // allowlist promete. Si la variable falta de verdad (no es un error
+  // transitorio), el panel se queda cerrado para todos, Omar incluido — por
+  // eso el error queda en logs con el nombre exacto de la variable a poner.
+  if (allowlist.length === 0) {
+    console.error(
+      'ADMIN_ALLOWED_EMAILS no configurada: el panel queda cerrado para todos. ' +
+        'Define la variable (lista de correos separados por coma) para recuperar el acceso.'
+    );
+    return false;
+  }
+  return allowlist.includes(email.trim().toLowerCase());
 }
 
 export function maskSecret(secret: string | null | undefined): string {

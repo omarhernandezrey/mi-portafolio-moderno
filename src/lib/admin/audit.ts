@@ -5,6 +5,8 @@ export type AuditAction =
   | 'lead.create'
   | 'lead.status_update'
   | 'lead.industry_update'
+  | 'lead.payment_confirm'
+  | 'privacy.delete_request'
   | 'ticket.create'
   | 'ticket.update'
   | 'ticket.message'

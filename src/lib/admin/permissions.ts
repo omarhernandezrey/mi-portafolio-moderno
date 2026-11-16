@@ -14,6 +14,7 @@ export const ADMIN_PATH_PERMISSIONS: ReadonlyArray<{
   { prefix: '/admin/webhooks', minRole: 'owner' },
   { prefix: '/admin/logs', minRole: 'owner' },
   { prefix: '/admin/audit', minRole: 'owner' },
+  { prefix: '/admin/security', minRole: 'owner' },
   { prefix: '/admin/reports', minRole: 'owner' },
   { prefix: '/admin/timer', minRole: 'assistant' },
   { prefix: '/admin/docs', minRole: 'assistant' },
@@ -98,5 +99,6 @@ export const NAV_ITEMS: ReadonlyArray<{
   { label: 'Webhooks', href: '/admin/webhooks', roles: ['owner'], group: 'system' },
   { label: 'Logs de API', href: '/admin/logs', roles: ['owner'], group: 'system' },
   { label: 'Auditoría', href: '/admin/audit', roles: ['owner'], group: 'system' },
+  { label: 'Seguridad', href: '/admin/security', roles: ['owner'], group: 'system' },
   { label: 'Docs', href: '/admin/docs', roles: ['owner', 'assistant'], group: 'system' },
 ];

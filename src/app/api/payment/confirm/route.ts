@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireAdmin } from '@/lib/admin/auth';
+import { writeAuditLog } from '@/lib/admin/audit';
 import { dispatchEvent } from '@/lib/events/dispatcher';
 
 /**
@@ -62,6 +63,13 @@ El estado del lead ha sido actualizado a 'paid'.
     `.trim();
 
     await notifyTelegram(notificationText);
+
+    await writeAuditLog(auth.actor, {
+      action: 'lead.payment_confirm',
+      resourceType: 'lead',
+      resourceId: leadId,
+      metadata: { amount, method },
+    });
 
     await dispatchEvent('lead.paid', {
       id: leadId,

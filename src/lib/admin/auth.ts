@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import type { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
 import { serverEnv } from '@/config/env';
-import { type AdminRole, hasMinRole, isAdminRole } from './roles';
+import { type AdminRole, hasMinRole } from './roles';
 import { minRoleForApiRequest } from './permissions';
 import { isEmailAllowed, maskSecret, sanitizeWebhook } from './access';
+import { resolverRolDeUsuario } from './roleCache';
 import type { AuditActor } from './audit';
 
 export type AdminAuthSuccess = {
@@ -50,20 +51,16 @@ export async function requireAdmin(minRole: AdminRole = 'viewer'): Promise<Admin
     };
   }
 
-  const { data: userRole, error } = await supabase
-    .from('user_roles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle();
+  const role = await resolverRolDeUsuario(user.id, () =>
+    supabase.from('user_roles').select('role').eq('id', user.id).maybeSingle()
+  );
 
-  if (error || !userRole || !isAdminRole(userRole.role)) {
+  if (!role) {
     return {
       ok: false,
       response: NextResponse.json({ error: 'Sin rol de administración' }, { status: 403 }),
     };
   }
-
-  const role = userRole.role;
 
   if (!hasMinRole(role, minRole)) {
     return {
@@ -104,13 +101,7 @@ export async function getAdminRole(): Promise<AdminRole | null> {
 
   if (!user) return null;
 
-  const { data: userRole } = await supabase
-    .from('user_roles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  if (!userRole || !isAdminRole(userRole.role)) return null;
-
-  return userRole.role;
+  return resolverRolDeUsuario(user.id, () =>
+    supabase.from('user_roles').select('role').eq('id', user.id).maybeSingle()
+  );
 }

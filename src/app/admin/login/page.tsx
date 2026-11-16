@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   LockKeyhole,
 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 
 export default function AdminLoginPage() {
@@ -29,12 +28,6 @@ export default function AdminLoginPage() {
     }
   }, []);
 
-  let supabaseClient: ReturnType<typeof createClient> | null = null;
-  const getSupabase = () => {
-    if (!supabaseClient) supabaseClient = createClient();
-    return supabaseClient;
-  };
-
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setError('');
@@ -42,15 +35,17 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const { error: authError } = await getSupabase().auth.signInWithOtp({
-        email: email.trim(),
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
+      // Vía la API propia, no directo a Supabase: así hay un sitio donde
+      // limitar los intentos antes de pedir el enlace (T-19).
+      const response = await fetch('/api/auth/request-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
       });
+      const data = await response.json().catch(() => ({}));
 
-      if (authError) {
-        setError(authError.message);
+      if (!response.ok) {
+        setError(data.error || 'No se pudo enviar el enlace de acceso.');
       } else {
         setSuccess(true);
       }
