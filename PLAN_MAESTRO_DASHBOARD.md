@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas, incluido T-05c; siguiente tarea: T-06**
+> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06 hecha; siguiente tarea: T-07**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -23,6 +23,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-05a | Contenido inline extraído a `src/lib/portfolio/source/` |
 | T-05b | Seed generado, validado en PostgreSQL y cargado en Supabase: 8 de 9 tablas |
 | T-05c | Los 172 ítems de educación cargados en Supabase; `.env.local` auditado por nombres (sin bloqueos); tipos regenerados; respaldo semanal roto detectado |
+| T-06 | `src/lib/portfolio/repository.ts`: lectura de las 8 tablas de contenido con respaldo a los módulos de origen y caché por etiqueta. `sobre-mi/page.tsx` ya no repite proyectos/skills/educación a mano |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -37,7 +38,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-`T-06 → T-07 → T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-07 → T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -534,23 +535,27 @@ Con el informe delante:
 **Evidencia en §6.** Conteos medidos en la base, resumen del informe **por número de variables en cada categoría** (sin valores), resultado del build y lo que Omar decidió retirar.
 
 #### T-06 · Capa de lectura con respaldo
-**Rama:** `feat/portfolio-data-layer` · **Depende de:** T-05b · **Estado:** `[ ]`
+**Rama:** `feat/portfolio-data-layer` · **Depende de:** T-05b · **Estado:** `[x]`
 
 **Objetivo.** Que el sitio público pueda leer su contenido de Supabase sin dejar de funcionar si la base no responde o está vacía.
 
-**Pasos.**
-1. `src/lib/portfolio/repository.ts`: una función por tipo de contenido (`getProjects()`, `getSkills()`, `getEducation()`, `getBadges()`, `getServices()`, `getTechnologies()`, `getTimeline()`, `getProfileSection()`). Leen con el cliente de `src/lib/supabase/server.ts` (clave anónima: RLS ya limita a lo publicado), ordenan por `position` y **devuelven la misma forma que hoy exportan los módulos TypeScript** (`Project`, etc.), para que ningún componente tenga que cambiar.
-2. Respaldo: si la consulta falla, o devuelve cero filas, se devuelve el contenido de los módulos fuente y se registra un `console.error` con el motivo. El sitio nunca queda en blanco por la base de datos.
-3. Caché con `unstable_cache` y una etiqueta por tipo (`portfolio:projects`, …), para que el panel pueda invalidar con `revalidateTag` al guardar.
-4. Resolver la duplicación de `src/app/[locale]/sobre-mi/page.tsx`, que repite proyectos, skills, servicios y educación en arrays propios: que consuma el repositorio. Mide antes cuántos registros muestra hoy cada bloque para no cambiar lo que se ve.
+**Hecho.** `src/lib/portfolio/repository.ts`: `getProjects()`, `getSkills()`, `getEducation()`, `getBadges()`, `getServices()`, `getTechnologies()`, `getTimeline()`, `getProfileSection()`. Cada una tiene una función `leerX(cliente)` testeable con un cliente simulado (sin `unstable_cache`, que necesita el runtime de Next y no existe en Jest) y una `getX()` pública sin argumentos que la envuelve en caché con etiqueta `portfolio:x`.
 
-**Trampas.** Los componentes de sección son en su mayoría de cliente con `useMemo` sobre el array completo: los datos se obtienen en un componente de servidor padre y se pasan por props. No conviertas componentes de cliente a servidor de paso. No toques `Card.tsx`.
+**Desviación consciente del paso 1 original:** no se lee con el cliente de `src/lib/supabase/server.ts` porque ese cliente llama a `cookies()` (sesión del admin), y Next marca como dinámica — y revienta — cualquier función envuelta en `unstable_cache` que llame a `cookies()`. Se creó `src/lib/supabase/public.ts`: la misma clave `anon`, sin cookies ni sesión, segura dentro de la caché. Documentado aquí para que quien lea el paso 1 y el código no los encuentre contradictorios sin explicación.
+
+**Red de seguridad añadida, no pedida por la ficha pero necesaria para cumplir "el sitio nunca queda en blanco":** si ni siquiera se puede *construir* el cliente (p. ej. sin variables de Supabase, `createClient('', '')` lanza de forma síncrona antes de poder fallar como un error de consulta normal), cada `getX()` lo atrapa (`conProteccion`) y cae al mismo respaldo. Sin esto, la ausencia total de variables habría tirado la página en vez de mostrar el contenido de origen.
+
+**Paso 4 (sobre-mi): dedup parcial, razonada.** `educationDataEs/En`, `projectsEs/En` y `coreSkillsEs/En` ya no retecleaban el contenido — y ya habían empezado a desviarse: la descripción de "DevOps & CI/CD" decía algo distinto ahí que en `skillsData` (confirmado y corregido: ahora sale la de `skillsData` en los dos idiomas). Ahora los hechos (título, institución, fechas, certificado, tecnologías, demo, repositorio, porcentaje, color) se leen con `getEducation()`/`getProjects()`/`getSkills()`/`getTimeline()`; las descripciones de educación y de proyectos, que en esta página son un resumen más corto que el de la ficha completa, se dejaron como prosa propia (reescribirlas por el texto largo habría sido cambiar contenido sin que Omar lo pidiera). `servicesEs/En` **no se tocó**: no es el mismo contenido que `servicesData` (es un menú de 5 categorías con icono JSX y `href` a `/servicios/*`, no las 4 tarjetas con precio), así que no había duplicación real que resolver ahí.
+
+**Trampas confirmadas.** Los componentes de sección (`SkillSection`, `ServicesSection`, etc.) siguen con sus arrays estáticos — T-06 no los tocó; solo `sobre-mi/page.tsx`, que es la duplicación que la ficha nombraba explícitamente. Si una tarea futura (T-09 a T-12 invalidan con `revalidateTag`) necesita que esas secciones también reflejen ediciones del panel, hace falta wirearlas al repositorio: no estaba en esta ficha y queda anotado para no perderlo.
 
 **Aceptación.**
-- [ ] Tests del repositorio con Supabase simulado: fila → forma original correcta; error → respaldo; cero filas → respaldo; orden por `position`.
-- [ ] Test que compara, para proyectos, la salida del repositorio con base poblada (datos del seed) contra `projectsData`: idénticas.
-- [ ] Sin variables de Supabase, la home renderiza con el respaldo (test de integración o prueba manual documentada).
-- [ ] Ninguna consulta nueva usa `service_role` para leer contenido público.
+- [x] Tests del repositorio con Supabase simulado: fila → forma original correcta; error → respaldo; cero filas → respaldo; orden por `position`. 23 tests en `__tests__/unit/portfolio-repository.test.ts`, uno por tipo de contenido más los guardarraíles de `service_role`.
+- [x] Test que compara, para proyectos, la salida del repositorio con base poblada (datos del seed, vía `construirProyectos()`) contra `projectsData`: los 22, idénticos (`toEqual`).
+- [x] Sin variables de Supabase, la home (y `/sobre-mi`) no se queda en blanco: `crearClientePublico` mockeado para lanzar como lo haría sin URL, las 8 `getX()` caen a su contenido de origen — probado, no solo documentado.
+- [x] Ninguna consulta nueva usa `service_role`: `src/lib/supabase/public.ts` usa `NEXT_PUBLIC_SUPABASE_ANON_KEY`; guardarraíl que falla si alguien importa `supabaseServer` en el repositorio.
+
+**Validado además:** `npm run build` real contra la base real generó `/es/sobre-mi` y `/en/sobre-mi` como HTML estático (●), o sea que la cadena completa — repositorio, caché, Supabase — funciona de punta a punta, no solo en los mocks de Jest. Revisión visual: confirmado en el navegador a tamaño de escritorio (~1093 px) que las tres secciones muestran el contenido correcto (la descripción de DevOps corregida, el título de "Shopi" y "Diccionario Dev" con el guion normal de `projectsData` en vez del guion largo que tenía el duplicado). **Pendiente de validación:** no se pudo forzar un viewport de 375 px real en esta sesión (`resize_window` no cambió `window.innerWidth` en este entorno); no se tocó ninguna clase ni el JSX de la página — el cambio es solo de dónde salen los datos —, así que el riesgo de ruptura en móvil es bajo, pero queda pendiente confirmarlo a simple vista en un teléfono o en el DevTools de un navegador normal.
 
 **Evidencia en §6:** conteo de tests nuevos y resultado de la comparación.
 
@@ -797,6 +802,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-16 | T-06: capa de lectura del portafolio con respaldo | `feat/portfolio-data-layer` | 23 tests nuevos (`portfolio-repository.test.ts`) · 357 tests totales · comparación completa de los 22 proyectos contra `projectsData` · build real con la base real: `/es/sobre-mi` y `/en/sobre-mi` prerenderizados · drift real encontrado y corregido (descripción de "DevOps & CI/CD" distinta entre `sobre-mi` y `skillsData`) · revisión visual a ~1093px en navegador; pendiente confirmar a 375px real | ✅ |
 | 2026-11-16 | T-05c: carga de educación + entorno coherente en la máquina de Omar | `chore/t05c-cierre-entorno` | 172/171/0 medidos 2× con psql + confirmado con clave anon · env:check sin bloqueos (proyecto Supabase correcto) · hueco de auditoría corregido (.mcp.json) + test nuevo · build real OK · dev: portada 200, /admin 307, 22 proyectos anon · feat/portfolio-seed borrada · tipos regenerados sin match_projects · 334 tests | ✅ |
 | 2026-11-15 | Auditoría de workflows: respaldo semanal roto (secreto ausente), cron de cuotas LLM huérfano, rutas de cron verificadas | `docs/hallazgos-ci-entorno` | `gh run view --log-failed` · cruce workflow ↔ rutas existentes · verify en verde | ✅ |
 | 2026-11-14 | Auditoría del entorno (`npm run env:check`) + estado del plan al día + T-05c | `chore/env-audit-y-estado` | verify en verde · 333 tests (23 nuevos) · el informe no arrastra valores (probado) · `.env.example` = lo que lee el código (28) · 3 variables muertas fuera de CI | ✅ |

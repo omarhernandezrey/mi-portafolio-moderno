@@ -1,6 +1,6 @@
 // /lib/educationData.ts
 
-interface EducationItem {
+export interface EducationItem {
   title: {
     es: string;
     en: string;
@@ -22,7 +22,7 @@ interface EducationItem {
   isNew?: boolean;
 }
 
-interface EducationCategory {
+export interface EducationCategory {
   category: {
     es: string;
     en: string;

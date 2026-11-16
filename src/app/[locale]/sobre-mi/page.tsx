@@ -12,7 +12,7 @@ import ParticleField from '@/components/shared/ParticleFieldLoader';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
-import { timelineEs, timelineEn } from '@/lib/portfolio/source/timeline';
+import { getEducation, getProjects, getSkills, getTimeline } from '@/lib/portfolio/repository';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -59,145 +59,76 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 }
 
-const educationDataEs = [
+/**
+ * Resúmenes de esta página (T-06): antes `educationDataEs/En`, `projectsEs/En`
+ * y `coreSkillsEs/En` retecleaban a mano el contenido de `educationData`,
+ * `projectsData` y `skillsData` — y ya se habían desviado (la descripción de
+ * "DevOps & CI/CD" decía algo distinto aquí que en `skillsData`). Ahora los
+ * HECHOS (título, institución, fechas, certificado, tecnologías, demo,
+ * repositorio, porcentaje, color) se leen con `getEducation()`/`getProjects()`/
+ * `getSkills()` más abajo, la misma fuente que usa el resto del sitio. Lo que
+ * queda aquí es solo la prosa: el resumen de educación y de proyectos es más
+ * corto que el de la ficha completa (/#educacion, /#proyectos), así que esas
+ * dos descripciones SÍ son propias de esta página, no una copia. Las de
+ * habilidades, en cambio, resultaron ser literalmente iguales a las de
+ * `skillsData` (solo había 8, y `skillsData` también tiene 8): esas ya no se
+ * repiten en ningún lado.
+ */
+
+// Un resumen por cada una de las 4 primeras categorías de getEducation()
+// (Universidad, SENA, Talento Tech, ITCertificate), en ese orden.
+const RESUMEN_EDUCACION_DESTACADA: { es: string; en: string }[] = [
   {
-    title: 'Ingeniero de Software',
-    institution: 'Politécnico Grancolombiano',
-    duration: '2023 - 2026',
-    description: 'Próximo a graduarme como Ingeniero de Software del Politécnico Grancolombiano, donde he desarrollado sólidas competencias en desarrollo de software, arquitectura de sistemas y metodologías ágiles.',
-    category: 'Universidad',
-    certificate: null,
+    es: 'Próximo a graduarme como Ingeniero de Software del Politécnico Grancolombiano, donde he desarrollado sólidas competencias en desarrollo de software, arquitectura de sistemas y metodologías ágiles.',
+    en: 'About to graduate as a Software Engineer from Politécnico Grancolombiano, where I built solid skills in software development, systems architecture, and agile methodologies.',
   },
   {
-    title: 'Tecnólogo ADSI (SENA)',
-    institution: 'Servicio Nacional de Aprendizaje (SENA)',
-    duration: 'Finalizado el 29 de noviembre de 2022',
-    description: 'Cursé y aprobé el programa de formación profesional integral en Análisis y Desarrollo de Sistemas de Información, donde desarrollé competencias en análisis, diseño, desarrollo, implementación y mantenimiento de sistemas informáticos.',
-    category: 'Formación Técnica (SENA)',
-    certificate: '/images/education/sena/01tecnologoEnTituloAnalisisYDesarrolloDeSistemasDeInformacion.png',
+    es: 'Cursé y aprobé el programa de formación profesional integral en Análisis y Desarrollo de Sistemas de Información, donde desarrollé competencias en análisis, diseño, desarrollo, implementación y mantenimiento de sistemas informáticos.',
+    en: 'Completed the comprehensive professional training program in Information Systems Analysis and Development, building skills in analysis, design, development, implementation, and maintenance of software systems.',
   },
   {
-    title: 'Bootcamp en Desarrollo Web Full Stack',
-    institution: 'Talento Tech Bogotá - Ministerio TIC',
-    duration: '159 horas (Finalizado el 27 de agosto de 2024)',
-    description: 'Participé en el bootcamp de nivel avanzado en Desarrollo Web Full Stack, enfocado en adquirir competencias prácticas en tecnologías modernas para el desarrollo de aplicaciones web completas.',
-    category: 'Talento Tech Bogotá',
-    certificate: '/images/education/talento-tech/desarrolloWebFullStack_page-0001.jpg',
+    es: 'Participé en el bootcamp de nivel avanzado en Desarrollo Web Full Stack, enfocado en adquirir competencias prácticas en tecnologías modernas para el desarrollo de aplicaciones web completas.',
+    en: 'Took part in the advanced-level Full Stack Web Development bootcamp, focused on gaining hands-on skills in modern technologies for building complete web applications.',
   },
   {
-    title: 'Full Stack Developer Certified Specialist',
-    institution: 'ITCertificate',
-    duration: 'Finalizado el 31 de octubre de 2024',
-    description: 'Obtuve la certificación como especialista certificado en desarrollo web Full Stack, demostrando habilidades avanzadas en el desarrollo y gestión de aplicaciones web completas.',
-    category: 'ITCertificate',
-    certificate: '/images/education/ITCertificate/fullStackDeveloperCertifiedSpecialist_page-0001.jpg',
+    es: 'Obtuve la certificación como especialista certificado en desarrollo web Full Stack, demostrando habilidades avanzadas en el desarrollo y gestión de aplicaciones web completas.',
+    en: 'Earned certification as a Full Stack Developer Certified Specialist, demonstrating advanced skills in building and managing complete web applications.',
   },
 ];
 
-const educationDataEn = [
+// Proyectos destacados aquí, identificados por su repositorio (no por
+// posición, para no depender del orden en que getProjects() los devuelva).
+// El orden de este array es el orden en que se muestran.
+const PROYECTOS_DESTACADOS: { repository: string; resumen: { es: string; en: string } }[] = [
   {
-    title: 'Software Engineering',
-    institution: 'Politécnico Grancolombiano',
-    duration: '2023 - 2026',
-    description: 'About to graduate as a Software Engineer from Politécnico Grancolombiano, where I built solid skills in software development, systems architecture, and agile methodologies.',
-    category: 'University',
-    certificate: null,
-  },
-  {
-    title: 'ADSI Technologist (SENA)',
-    institution: 'Servicio Nacional de Aprendizaje (SENA)',
-    duration: 'Completed November 29, 2022',
-    description: 'Completed the comprehensive professional training program in Information Systems Analysis and Development, building skills in analysis, design, development, implementation, and maintenance of software systems.',
-    category: 'Technical Training (SENA)',
-    certificate: '/images/education/sena/01tecnologoEnTituloAnalisisYDesarrolloDeSistemasDeInformacion.png',
-  },
-  {
-    title: 'Full Stack Web Development Bootcamp',
-    institution: 'Talento Tech Bogotá - Ministerio TIC',
-    duration: '159 hours (Completed August 27, 2024)',
-    description: 'Took part in the advanced-level Full Stack Web Development bootcamp, focused on gaining hands-on skills in modern technologies for building complete web applications.',
-    category: 'Talento Tech Bogotá',
-    certificate: '/images/education/talento-tech/desarrolloWebFullStack_page-0001.jpg',
-  },
-  {
-    title: 'Full Stack Developer Certified Specialist',
-    institution: 'ITCertificate',
-    duration: 'Completed October 31, 2024',
-    description: 'Earned certification as a Full Stack Developer Certified Specialist, demonstrating advanced skills in building and managing complete web applications.',
-    category: 'ITCertificate',
-    certificate: '/images/education/ITCertificate/fullStackDeveloperCertifiedSpecialist_page-0001.jpg',
-  },
-];
-
-const projectsEs = [
-  {
-    title: 'Gestor de Tareas Profesional — TODO App con Patrones Avanzados de React',
-    description: 'Aplicación moderna y completa de gestión de tareas construida con React 18 y Zustand. Incluye sistema avanzado de recordatorios con alertas de audio, dashboard estadístico, subtareas anidadas, etiquetado por colores, notas enriquecidas, timer Pomodoro, persistencia en localStorage, temas claro/oscuro, animaciones suaves y diseño responsive Mobile-First.',
-    technologies: ['React', 'JavaScript', 'HTML', 'CSS', 'Vercel'],
-    demo: 'https://57-curso-react-patrones-render.vercel.app',
     repository: 'https://github.com/omarhernandezrey/57-curso-react-patrones-render',
+    resumen: {
+      es: 'Aplicación moderna y completa de gestión de tareas construida con React 18 y Zustand. Incluye sistema avanzado de recordatorios con alertas de audio, dashboard estadístico, subtareas anidadas, etiquetado por colores, notas enriquecidas, timer Pomodoro, persistencia en localStorage, temas claro/oscuro, animaciones suaves y diseño responsive Mobile-First.',
+      en: 'A modern, full-featured task management app built with React 18 and Zustand. Includes an advanced reminder system with audio alerts, a stats dashboard, nested subtasks, color tagging, rich notes, a Pomodoro timer, localStorage persistence, light/dark themes, smooth animations, and a Mobile-First responsive design.',
+    },
   },
   {
-    title: 'Shopi — E-Commerce Full Stack con Autenticación Profesional',
-    description: 'Plataforma e-commerce completa construida con React 18, Context API, React Router v6 y Tailwind CSS. Incluye sistema de autenticación JWT con validaciones profesionales, carrito de compras persistente, catálogo dinámico integrado con API pública, gestión de órdenes, panel de cuenta de usuario, y backend escalable con Express, Prisma ORM y PostgreSQL.',
-    technologies: ['React 18', 'TypeScript', 'Tailwind CSS 3', 'React Router v6', 'Context API', 'Express.js', 'Prisma ORM', 'PostgreSQL', 'JWT', 'Zod', 'Jest', 'Vite', 'Vercel'],
-    demo: 'https://56-curso-react-practico-clase-21.vercel.app/',
     repository: 'https://github.com/omarhernandezrey/56-curso-react-practico-clase-21',
+    resumen: {
+      es: 'Plataforma e-commerce completa construida con React 18, Context API, React Router v6 y Tailwind CSS. Incluye sistema de autenticación JWT con validaciones profesionales, carrito de compras persistente, catálogo dinámico integrado con API pública, gestión de órdenes, panel de cuenta de usuario, y backend escalable con Express, Prisma ORM y PostgreSQL.',
+      en: 'A complete e-commerce platform built with React 18, Context API, React Router v6, and Tailwind CSS. Includes JWT authentication with professional-grade validation, a persistent shopping cart, a dynamic catalog integrated with a public API, order management, a user account panel, and a scalable backend with Express, Prisma ORM, and PostgreSQL.',
+    },
   },
   {
-    title: 'Diccionario Dev — Diccionario Técnico Web en Español',
-    description: 'Plataforma completa de aprendizaje para desarrollo web con más de 200 términos técnicos en español. Incluye búsqueda inteligente, preview interactivo de código, módulos de entrenamiento (quizzes, entrevistas en vivo), sistema de autenticación JWT, panel de administración, API REST documentada con OpenAPI, extensiones para navegador y VS Code. Desplegado en Vercel con PostgreSQL, Redis y arquitectura escalable.',
-    technologies: ['Next.js 14', 'React 18', 'TypeScript', 'Prisma ORM', 'PostgreSQL', 'Redis', 'Tailwind CSS 4', 'Zod', 'JWT', 'Vitest', 'OpenAPI', 'Vercel'],
-    demo: 'https://diccionario-dev-xi.vercel.app/',
     repository: 'https://github.com/omarhernandezrey/diccionario-dev',
+    resumen: {
+      es: 'Plataforma completa de aprendizaje para desarrollo web con más de 200 términos técnicos en español. Incluye búsqueda inteligente, preview interactivo de código, módulos de entrenamiento (quizzes, entrevistas en vivo), sistema de autenticación JWT, panel de administración, API REST documentada con OpenAPI, extensiones para navegador y VS Code. Desplegado en Vercel con PostgreSQL, Redis y arquitectura escalable.',
+      en: 'A complete learning platform for web development with 200+ technical terms in Spanish. Includes smart search, interactive code previews, training modules (quizzes, live interviews), JWT authentication, an admin panel, an OpenAPI-documented REST API, and browser/VS Code extensions. Deployed on Vercel with PostgreSQL, Redis, and a scalable architecture.',
+    },
   },
 ];
 
-const projectsEn = [
-  {
-    title: 'Professional Task Manager — TODO App with Advanced React Patterns',
-    description: 'A modern, full-featured task management app built with React 18 and Zustand. Includes an advanced reminder system with audio alerts, a stats dashboard, nested subtasks, color tagging, rich notes, a Pomodoro timer, localStorage persistence, light/dark themes, smooth animations, and a Mobile-First responsive design.',
-    technologies: ['React', 'JavaScript', 'HTML', 'CSS', 'Vercel'],
-    demo: 'https://57-curso-react-patrones-render.vercel.app',
-    repository: 'https://github.com/omarhernandezrey/57-curso-react-patrones-render',
-  },
-  {
-    title: 'Shopi — Full Stack E-Commerce with Professional Authentication',
-    description: 'A complete e-commerce platform built with React 18, Context API, React Router v6, and Tailwind CSS. Includes JWT authentication with professional-grade validation, a persistent shopping cart, a dynamic catalog integrated with a public API, order management, a user account panel, and a scalable backend with Express, Prisma ORM, and PostgreSQL.',
-    technologies: ['React 18', 'TypeScript', 'Tailwind CSS 3', 'React Router v6', 'Context API', 'Express.js', 'Prisma ORM', 'PostgreSQL', 'JWT', 'Zod', 'Jest', 'Vite', 'Vercel'],
-    demo: 'https://56-curso-react-practico-clase-21.vercel.app/',
-    repository: 'https://github.com/omarhernandezrey/56-curso-react-practico-clase-21',
-  },
-  {
-    title: 'Diccionario Dev — Spanish Technical Web Dictionary',
-    description: 'A complete learning platform for web development with 200+ technical terms in Spanish. Includes smart search, interactive code previews, training modules (quizzes, live interviews), JWT authentication, an admin panel, an OpenAPI-documented REST API, and browser/VS Code extensions. Deployed on Vercel with PostgreSQL, Redis, and a scalable architecture.',
-    technologies: ['Next.js 14', 'React 18', 'TypeScript', 'Prisma ORM', 'PostgreSQL', 'Redis', 'Tailwind CSS 4', 'Zod', 'JWT', 'Vitest', 'OpenAPI', 'Vercel'],
-    demo: 'https://diccionario-dev-xi.vercel.app/',
-    repository: 'https://github.com/omarhernandezrey/diccionario-dev',
-  },
-];
-
-const coreSkillsEs = [
-  { name: 'HTML5', percentage: '95%', colorHex: '#FF6D00', description: 'Estructuras semánticas y optimizadas para SEO y accesibilidad.' },
-  { name: 'CSS3/Sass', percentage: '92%', colorHex: '#2965F1', description: 'Diseños responsive, animaciones CSS y arquitectura escalable.' },
-  { name: 'JavaScript', percentage: '98%', colorHex: '#F0DB4F', description: 'ES6+, patrones avanzados y optimización de performance.' },
-  { name: 'TypeScript', percentage: '90%', colorHex: '#007ACC', description: 'Tipado estático para aplicaciones empresariales escalables.' },
-  { name: 'React/Next.js', percentage: '96%', colorHex: '#61DAFB', description: 'Aplicaciones SSR, ISR y estáticas optimizadas.' },
-  { name: 'Node.js', percentage: '88%', colorHex: '#68A063', description: 'APIs REST, microservicios y autenticación JWT.' },
-  { name: 'Diseño UI/UX', percentage: '85%', colorHex: '#FF4081', description: 'Diseño de interfaces centrado en la experiencia de usuario.' },
-  { name: 'DevOps & CI/CD', percentage: '82%', colorHex: '#2496ED', description: 'Docker, GitHub Actions/Jenkins y despliegues en Vercel y Railway.' },
-];
-
-const coreSkillsEn = [
-  { name: 'HTML5', percentage: '95%', colorHex: '#FF6D00', description: 'Semantic structures optimized for SEO and accessibility.' },
-  { name: 'CSS3/Sass', percentage: '92%', colorHex: '#2965F1', description: 'Responsive designs, CSS animations, and scalable architecture.' },
-  { name: 'JavaScript', percentage: '98%', colorHex: '#F0DB4F', description: 'ES6+, advanced patterns, and performance optimization.' },
-  { name: 'TypeScript', percentage: '90%', colorHex: '#007ACC', description: 'Static typing for scalable enterprise applications.' },
-  { name: 'React/Next.js', percentage: '96%', colorHex: '#61DAFB', description: 'SSR, ISR, and optimized static applications.' },
-  { name: 'Node.js', percentage: '88%', colorHex: '#68A063', description: 'REST APIs, microservices, and JWT authentication.' },
-  { name: 'UI/UX Design', percentage: '85%', colorHex: '#FF4081', description: 'User-centered interface design.' },
-  { name: 'DevOps & CI/CD', percentage: '82%', colorHex: '#2496ED', description: 'Docker, GitHub Actions/Jenkins, and deployments on Vercel and Railway.' },
-];
+/** `{es,en}` o cadena plana (así llega `educationData` cuando la base no responde); nunca null. */
+function elegirIdioma(valor: { es: string; en: string } | string | null | undefined, isEn: boolean): string {
+  if (valor == null) return '';
+  if (typeof valor === 'string') return valor;
+  return (isEn ? valor.en : valor.es) || valor.es;
+}
 
 const servicesEs = [
   { name: 'Desarrollo Web', icon: <Code2 size={20} />, href: '/servicios/desarrollo-web', description: 'Sitios web profesionales con Next.js y React. Diseño responsive, SEO incluido y panel de administración.' },
@@ -223,11 +154,53 @@ export default async function SobreMiPage({ params }: Props) {
   const { locale } = await params;
   const isEn = locale === 'en';
 
-  const educationData = isEn ? educationDataEn : educationDataEs;
-  const projects = isEn ? projectsEn : projectsEs;
-  const coreSkills = isEn ? coreSkillsEn : coreSkillsEs;
+  const [educacionCanonica, proyectosCanonicos, skillsCanonicas, timelineCanonico] = await Promise.all([
+    getEducation(),
+    getProjects(),
+    getSkills(),
+    getTimeline(),
+  ]);
+
+  const pick = (v: { es: string; en: string } | string | null | undefined) => elegirIdioma(v, isEn);
+
+  const educationData = educacionCanonica.slice(0, 4).map((categoria, i) => {
+    const item = categoria.items[0];
+    if (!item) {
+      throw new Error(`sobre-mi: la categoría de educación en la posición ${i} no tiene ítems`);
+    }
+    return {
+      title: pick(item.title),
+      institution: pick(item.institution),
+      duration: pick(item.duration),
+      description: pick(RESUMEN_EDUCACION_DESTACADA[i] ?? { es: '', en: '' }),
+      category: pick(categoria.category),
+      certificate: item.certificate ?? null,
+    };
+  });
+
+  const projects = PROYECTOS_DESTACADOS.map(({ repository, resumen }) => {
+    const proyecto = proyectosCanonicos.find((p) => p.repository === repository);
+    if (!proyecto) {
+      throw new Error(`sobre-mi: proyecto destacado no encontrado en getProjects(): ${repository}`);
+    }
+    return {
+      title: pick(proyecto.title),
+      description: pick(resumen),
+      technologies: proyecto.technologies,
+      demo: proyecto.demo,
+      repository: proyecto.repository,
+    };
+  });
+
+  const coreSkills = skillsCanonicas.map((skill) => ({
+    name: pick(skill.name),
+    percentage: skill.percentage,
+    colorHex: skill.colorHex,
+    description: pick(skill.description),
+  }));
+
   const services = isEn ? servicesEn : servicesEs;
-  const timeline = isEn ? timelineEn : timelineEs;
+  const timeline = isEn ? timelineCanonico.en : timelineCanonico.es;
 
   const pageUrl = isEn ? 'https://omarhernandezrey.com/en/sobre-mi' : 'https://omarhernandezrey.com/sobre-mi';
 
