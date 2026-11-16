@@ -49,12 +49,22 @@ export function comprobarCupoDesdeCabeceras(headers: { get(name: string): string
   );
 }
 
-/** `espera` es inyectable para que los tests no duerman de verdad. */
+/**
+ * `espera` es inyectable para que los tests no duerman de verdad.
+ *
+ * `vacio` es el valor a devolver ante un `204 No Content` — GitHub lo
+ * responde en `/stats/commit_activity` y `/stats/code_frequency` cuando el
+ * repositorio no tiene ningún commit (confirmado con un repo real de Omar:
+ * `27-02-2024-drinksReact`). Sin un valor explícito, un `204` es un error:
+ * en `/repos/{repo}` o `/languages` no debería pasar nunca, y confundirlo
+ * con "repo vacío" ahí ocultaría una anomalía real.
+ */
 export async function obtenerConReintento202<T>(
   url: string,
   fetchImpl: FetchGitHub,
   headers: Record<string, string>,
-  espera: (ms: number) => Promise<void> = (ms) => new Promise((r) => setTimeout(r, ms))
+  espera: (ms: number) => Promise<void> = (ms) => new Promise((r) => setTimeout(r, ms)),
+  vacio?: T
 ): Promise<T> {
   for (let intento = 0; intento < REINTENTOS_202; intento++) {
     const res = await fetchImpl(url, { headers });
@@ -62,6 +72,10 @@ export async function obtenerConReintento202<T>(
     if (res.status === 202) {
       await espera(ESPERA_BASE_MS * (intento + 1));
       continue;
+    }
+    if (res.status === 204) {
+      if (vacio !== undefined) return vacio;
+      throw new Error(`GitHub API respondió 204 sin contenido en ${url}`);
     }
     if (!res.ok) {
       throw new Error(`GitHub API respondió ${res.status} en ${url}`);
@@ -273,8 +287,10 @@ export async function obtenerMetricasDeRepositorio(
   const [repoInfo, lenguajesBytes, semanasActividad, semanasCodigo, prsAbiertas, prsCerradas] = await Promise.all([
     obtenerConReintento202<RepoGitHub>(base, fetchImpl, headers),
     obtenerConReintento202<Record<string, number>>(`${base}/languages`, fetchImpl, headers),
-    obtenerConReintento202<SemanaDeActividad[]>(`${base}/stats/commit_activity`, fetchImpl, headers),
-    obtenerConReintento202<Array<[number, number, number]>>(`${base}/stats/code_frequency`, fetchImpl, headers),
+    // El `vacio` ([]) solo va aquí: un repo sin commits responde 204 en
+    // estos dos, y 0 actividad/0 líneas es, en ese caso, el dato real.
+    obtenerConReintento202<SemanaDeActividad[]>(`${base}/stats/commit_activity`, fetchImpl, headers, undefined, []),
+    obtenerConReintento202<Array<[number, number, number]>>(`${base}/stats/code_frequency`, fetchImpl, headers, undefined, []),
     obtenerTodasLasPaginas<PullRequestGitHub>(`${base}/pulls?state=open&per_page=100`, fetchImpl, headers),
     obtenerTodasLasPaginas<PullRequestGitHub>(`${base}/pulls?state=closed&per_page=100`, fetchImpl, headers),
   ]);

@@ -21,7 +21,13 @@ function respuesta(status: number, cuerpo: unknown, cabeceras: Record<string, st
     status,
     ok: status >= 200 && status < 300,
     headers: { get: (nombre) => cabeceras[nombre.toLowerCase()] ?? null },
-    json: async () => cuerpo,
+    // Un 204 real no tiene cuerpo: `.json()` lanzaría "Unexpected end of
+    // JSON input". Si el código llamara a `.json()` en un 204 por error,
+    // este mock lo delataría en vez de disimularlo con un cuerpo falso.
+    json: async () => {
+      if (status === 204) throw new SyntaxError('Unexpected end of JSON input');
+      return cuerpo;
+    },
   };
 }
 
@@ -50,6 +56,23 @@ describe('obtenerConReintento202', () => {
   it('un error HTTP real (no 202) no se reintenta: se propaga', async () => {
     const fetchImpl: FetchGitHub = jest.fn().mockResolvedValue(respuesta(404, {}));
     await expect(obtenerConReintento202('https://x/stats', fetchImpl, {})).rejects.toThrow(/404/);
+  });
+
+  it('204 (repo sin commits) con un valor vacío dado: lo devuelve, sin llamar a .json()', async () => {
+    const fetchImpl: FetchGitHub = jest.fn().mockResolvedValue(respuesta(204, null));
+    const resultado = await obtenerConReintento202<number[]>(
+      'https://x/stats/commit_activity',
+      fetchImpl,
+      {},
+      undefined,
+      []
+    );
+    expect(resultado).toEqual([]);
+  });
+
+  it('204 sin un valor vacío dado: es un error (no se confunde un repo vacío con una anomalía)', async () => {
+    const fetchImpl: FetchGitHub = jest.fn().mockResolvedValue(respuesta(204, null));
+    await expect(obtenerConReintento202('https://x/repos/algo', fetchImpl, {})).rejects.toThrow(/204/);
   });
 
   it('cupo casi agotado: se detiene con un error claro, incluso en un 202', async () => {
