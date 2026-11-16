@@ -22,6 +22,7 @@ export const ADMIN_PATH_PERMISSIONS: ReadonlyArray<{
   { prefix: '/admin/feed', minRole: 'viewer' },
   { prefix: '/admin/tickets', minRole: 'viewer' },
   { prefix: '/admin/leads', minRole: 'viewer' },
+  { prefix: '/admin/negocio', minRole: 'viewer' },
   { prefix: '/admin', minRole: 'viewer' },
 ];
 
@@ -82,23 +83,32 @@ export function minRoleForApiRequest(pathname: string, method: string): AdminRol
   return match.read;
 }
 
+/**
+ * `area` es la reorganización de T-08: **Portafolio** (el motor: contenido y
+ * métricas, que T-09 a T-14 van llenando) y **Negocio** (el CRM de siempre,
+ * completo e intacto). Ningún destino cambia de URL al introducir `area`;
+ * solo `/admin` cambia de contenido (pasa a ser el resumen del portafolio) y
+ * lo que mostraba pasa a vivir en `/admin/negocio`.
+ */
 export const NAV_ITEMS: ReadonlyArray<{
   label: string;
   href: string;
   roles: readonly AdminRole[];
   group: 'core' | 'ops' | 'system';
+  area: 'portfolio' | 'negocio';
 }> = [
-  { label: 'Dashboard', href: '/admin', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-  { label: 'Leads', href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-  { label: 'Tickets', href: '/admin/tickets', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-  { label: 'Comunidad', href: '/admin/feed', roles: ['owner', 'assistant', 'viewer'], group: 'core' },
-  { label: 'Timer', href: '/admin/timer', roles: ['owner', 'assistant'], group: 'ops' },
-  { label: 'Facturación', href: '/admin/invoices', roles: ['owner'], group: 'ops' },
-  { label: 'Reportes', href: '/admin/reports/time', roles: ['owner'], group: 'ops' },
-  { label: 'Suscriptores', href: '/admin/subscribers', roles: ['owner'], group: 'ops' },
-  { label: 'Webhooks', href: '/admin/webhooks', roles: ['owner'], group: 'system' },
-  { label: 'Logs de API', href: '/admin/logs', roles: ['owner'], group: 'system' },
-  { label: 'Auditoría', href: '/admin/audit', roles: ['owner'], group: 'system' },
-  { label: 'Seguridad', href: '/admin/security', roles: ['owner'], group: 'system' },
-  { label: 'Docs', href: '/admin/docs', roles: ['owner', 'assistant'], group: 'system' },
+  { label: 'Resumen', href: '/admin', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
+  { label: 'Resumen', href: '/admin/negocio', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
+  { label: 'Leads', href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
+  { label: 'Tickets', href: '/admin/tickets', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
+  { label: 'Comunidad', href: '/admin/feed', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
+  { label: 'Timer', href: '/admin/timer', roles: ['owner', 'assistant'], group: 'ops', area: 'negocio' },
+  { label: 'Facturación', href: '/admin/invoices', roles: ['owner'], group: 'ops', area: 'negocio' },
+  { label: 'Reportes', href: '/admin/reports/time', roles: ['owner'], group: 'ops', area: 'negocio' },
+  { label: 'Suscriptores', href: '/admin/subscribers', roles: ['owner'], group: 'ops', area: 'negocio' },
+  { label: 'Webhooks', href: '/admin/webhooks', roles: ['owner'], group: 'system', area: 'negocio' },
+  { label: 'Logs de API', href: '/admin/logs', roles: ['owner'], group: 'system', area: 'negocio' },
+  { label: 'Auditoría', href: '/admin/audit', roles: ['owner'], group: 'system', area: 'negocio' },
+  { label: 'Seguridad', href: '/admin/security', roles: ['owner'], group: 'system', area: 'negocio' },
+  { label: 'Docs', href: '/admin/docs', roles: ['owner', 'assistant'], group: 'system', area: 'negocio' },
 ];

@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   LogOut,
   LayoutDashboard,
+  Briefcase,
   Users,
   Clock,
   Menu,
@@ -32,6 +33,7 @@ import { ADMIN_ROLE_LABELS, type AdminRole } from '@/lib/admin/roles';
 
 const NAV_ICONS: Record<string, LucideIcon> = {
   '/admin': LayoutDashboard,
+  '/admin/negocio': Briefcase,
   '/admin/leads': Users,
   '/admin/tickets': Ticket,
   '/admin/feed': MessagesSquare,
@@ -46,11 +48,19 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   '/admin/docs': BookOpen,
 };
 
-const GROUP_LABELS = {
-  core: 'CRM',
-  ops: 'Operaciones',
-  system: 'Sistema',
-} as const;
+/** Las dos áreas de T-08. El orden aquí es el orden en que se muestran las pestañas. */
+const AREAS = [
+  { id: 'portfolio', label: 'Portafolio', href: '/admin' },
+  { id: 'negocio', label: 'Negocio', href: '/admin/negocio' },
+] as const;
+
+// Indexado por área: el mismo `group` ('core'…) significa cosas distintas en
+// cada área, así que la etiqueta no puede ser compartida (si no, el día que
+// Portafolio tenga su propio grupo "core", vería el rótulo "CRM" encima).
+const GROUP_LABELS: Record<(typeof AREAS)[number]['id'], Record<'core' | 'ops' | 'system', string>> = {
+  negocio: { core: 'CRM', ops: 'Operaciones', system: 'Sistema' },
+  portfolio: { core: 'Contenido', ops: 'Operaciones', system: 'Sistema' },
+};
 
 interface AdminNavProps {
   role: AdminRole;
@@ -75,7 +85,26 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
     icon: NAV_ICONS[item.href] || LayoutDashboard,
   }));
 
+  // Misma regla que ya usaba cada NavLink para "activo": '/admin' sin más
+  // no debe encenderse para '/admin/negocio' ni ningún otro destino que
+  // también empiece por ese prefijo.
+  const esRutaActiva = (href: string) =>
+    href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+
   const visibleItems = navItems.filter((item) => item.roles.includes(role));
+  // El área activa la decide la URL, no un estado aparte: así un enlace
+  // directo o el botón atrás del navegador siempre abren en la pestaña que
+  // corresponde, sin desincronizarse.
+  const itemActivo = visibleItems.find((item) => esRutaActiva(item.href));
+  const areaActiva: (typeof AREAS)[number]['id'] = itemActivo?.area === 'negocio' ? 'negocio' : 'portfolio';
+  const itemsDelArea = visibleItems.filter((item) => item.area === areaActiva);
+  // Con una sola área presente (hoy, Portafolio) el encabezado de grupo
+  // ("CRM"…) sería ruido redundante con la pestaña de arriba: se oculta.
+  const gruposConContenido = (['core', 'ops', 'system'] as const).filter((g) =>
+    itemsDelArea.some((item) => item.group === g)
+  );
+  const mostrarEncabezadosDeGrupo = gruposConContenido.length > 1;
+
   const roleLabel = ADMIN_ROLE_LABELS[role];
   const userInitial = userEmail?.[0]?.toUpperCase() || '?';
 
@@ -145,10 +174,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
     item: (typeof navItems)[0];
     onClick?: () => void;
   }) => {
-    const isActive =
-      item.href === '/admin'
-        ? pathname === '/admin'
-        : pathname.startsWith(item.href);
+    const isActive = esRutaActiva(item.href);
     const Icon = item.icon;
 
     return (
@@ -183,17 +209,44 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
     );
   };
 
+  // Enlaces entre rutas, no pestañas que cambian de panel en la misma
+  // página: por eso no llevan role="tablist"/"tab" (que promete flechas de
+  // teclado que esto no tiene), sino el mismo patrón aria-current que ya usa
+  // NavLink justo debajo.
+  const AreaSwitch = () => (
+    <div className="mb-4 flex gap-5 border-b border-admin-line px-1">
+      {AREAS.map((area) => {
+        const activa = area.id === areaActiva;
+        return (
+          <Link
+            key={area.id}
+            href={area.href}
+            aria-current={activa ? 'page' : undefined}
+            className={`relative flex min-h-11 items-end pb-2.5 text-sm font-bold outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary/40 ${
+              activa ? 'text-admin-ink' : 'text-text-muted/60 hover:text-text-muted'
+            }`}
+          >
+            {area.label}
+            {activa && <span aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />}
+          </Link>
+        );
+      })}
+    </div>
+  );
+
   const NavGroups = ({ onNavigate }: { onNavigate?: () => void }) => (
     <div className="space-y-6">
       {(['core', 'ops', 'system'] as const).map((group) => {
-        const groupItems = visibleItems.filter((item) => item.group === group);
+        const groupItems = itemsDelArea.filter((item) => item.group === group);
         if (groupItems.length === 0) return null;
 
         return (
           <div key={group}>
-            <div className="mb-2 px-3 font-mono-label text-[10px] text-text-muted/50">
-              {GROUP_LABELS[group]}
-            </div>
+            {mostrarEncabezadosDeGrupo && (
+              <div className="mb-2 px-3 font-mono-label text-kicker text-text-muted/50">
+                {GROUP_LABELS[areaActiva][group]}
+              </div>
+            )}
             <div className="space-y-1">
               {groupItems.map((item) => (
                 <NavLink key={item.href} item={item} onClick={onNavigate} />
@@ -212,7 +265,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
       </div>
       <div className="min-w-0">
         <p className="truncate text-xs font-bold text-admin-ink">{userEmail}</p>
-        <p className="font-mono-label mt-0.5 text-[9px] text-primary/70">{roleLabel}</p>
+        <p className="font-mono-label mt-0.5 text-kicker text-primary/70">{roleLabel}</p>
       </div>
     </div>
   );
@@ -229,37 +282,40 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
               <p className="font-display text-xl italic leading-none text-admin-ink">
                 Admin Suite
               </p>
-              <p className="font-mono-label mt-1.5 text-[9px] text-primary/70">
+              <p className="font-mono-label mt-1.5 text-kicker text-primary/70">
                 Omar Hernández
               </p>
             </div>
           </Link>
 
-          <form action="/admin/leads" className="group relative mt-5">
-            <Search
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary"
-            />
-            <input
-              type="search"
-              name="q"
-              placeholder="Buscar leads..."
-              aria-label="Buscar leads"
-              className="w-full rounded-xl border border-admin-line bg-admin-bg/60 py-2.5 pl-9 pr-3 text-xs font-medium text-admin-ink outline-none transition-colors placeholder:text-text-muted/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
-            />
-          </form>
+          {areaActiva === 'negocio' && (
+            <form action="/admin/leads" className="group relative mt-5">
+              <Search
+                size={15}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary"
+              />
+              <input
+                type="search"
+                name="q"
+                placeholder="Buscar leads..."
+                aria-label="Buscar leads"
+                className="w-full rounded-xl border border-admin-line bg-admin-bg/60 py-2.5 pl-9 pr-3 text-xs font-medium text-admin-ink outline-none transition-colors placeholder:text-text-muted/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
+              />
+            </form>
+          )}
         </div>
 
         <nav
           className="flex-1 overflow-y-auto px-3 py-4"
           aria-label="Navegación principal"
         >
+          <AreaSwitch />
           <NavGroups />
         </nav>
 
         <div className="space-y-3 border-t border-admin-line p-4">
           <div className="flex items-center justify-between px-1">
-            <span className="inline-flex items-center gap-1.5 font-mono-label text-[9px] text-admin-success">
+            <span className="inline-flex items-center gap-1.5 font-mono-label text-kicker text-admin-success">
               <span className="h-1.5 w-1.5 rounded-full bg-admin-success shadow-[0_0_8px_var(--admin-success)]" />
               Sistema operativo
             </span>
@@ -278,7 +334,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
 
           <button
             onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-sm font-semibold text-red-400 transition-colors hover:border-red-500/20 hover:bg-red-500/10"
+            className="flex w-full items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-sm font-semibold text-admin-danger transition-colors hover:border-admin-danger/20 hover:bg-admin-danger/10"
           >
             <LogOut size={17} />
             <span>Cerrar sesión</span>
@@ -297,13 +353,15 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
         </Link>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/admin/leads"
-            aria-label="Buscar leads"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-admin-line bg-white/[0.04] p-0 text-text-muted transition-colors hover:text-primary"
-          >
-            <Search size={18} />
-          </Link>
+          {areaActiva === 'negocio' && (
+            <Link
+              href="/admin/leads"
+              aria-label="Buscar leads"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-admin-line bg-white/[0.04] p-0 text-text-muted transition-colors hover:text-primary"
+            >
+              <Search size={18} />
+            </Link>
+          )}
           <button
             ref={mobileMenuButtonRef}
             type="button"
@@ -351,7 +409,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
                     <p className="font-display text-lg italic leading-none text-admin-ink">
                       Admin Suite
                     </p>
-                    <p className="font-mono-label mt-1 text-[9px] text-primary/70">
+                    <p className="font-mono-label mt-1 text-kicker text-primary/70">
                       {roleLabel}
                     </p>
                   </div>
@@ -367,26 +425,29 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
                 </button>
               </div>
 
-              <div className="border-b border-admin-line p-4">
-                <form action="/admin/leads" className="group relative">
-                  <Search
-                    size={15}
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary"
-                  />
-                  <input
-                    type="search"
-                    name="q"
-                    placeholder="Buscar leads..."
-                    aria-label="Buscar leads"
-                    className="w-full rounded-xl border border-admin-line bg-admin-bg/60 py-2.5 pl-9 pr-3 text-xs font-medium text-admin-ink outline-none transition-colors placeholder:text-text-muted/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
-                  />
-                </form>
-              </div>
+              {areaActiva === 'negocio' && (
+                <div className="border-b border-admin-line p-4">
+                  <form action="/admin/leads" className="group relative">
+                    <Search
+                      size={15}
+                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary"
+                    />
+                    <input
+                      type="search"
+                      name="q"
+                      placeholder="Buscar leads..."
+                      aria-label="Buscar leads"
+                      className="w-full rounded-xl border border-admin-line bg-admin-bg/60 py-2.5 pl-9 pr-3 text-xs font-medium text-admin-ink outline-none transition-colors placeholder:text-text-muted/60 focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
+                    />
+                  </form>
+                </div>
+              )}
 
               <nav
                 className="flex-1 overflow-y-auto p-4"
                 aria-label="Navegación principal móvil"
               >
+                <AreaSwitch />
                 <NavGroups onNavigate={() => closeMobileMenu()} />
               </nav>
 
@@ -402,14 +463,14 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
                     Ver sitio
                     <ExternalLink size={11} />
                   </Link>
-                  <span className="inline-flex items-center gap-1.5 font-mono-label text-[9px] text-admin-success">
+                  <span className="inline-flex items-center gap-1.5 font-mono-label text-kicker text-admin-success">
                     <span className="h-1.5 w-1.5 rounded-full bg-admin-success" />
                     Online
                   </span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-400 transition-colors hover:bg-red-500/15"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-admin-danger/20 bg-admin-danger/10 px-4 py-3 text-sm font-bold text-admin-danger transition-colors hover:bg-admin-danger/15"
                 >
                   <LogOut size={17} />
                   Cerrar sesión

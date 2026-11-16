@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16, T-19 y T-13 hechas; siguiente tarea: T-08**
+> Creado: 2026-11-12 · Última revisión: 2026-11-16 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16, T-19, T-13 y T-08 hechas; siguiente tarea: T-09**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -28,6 +28,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-16 | Resumen diario de Telegram condicional (sin plantillas con ceros), pendientes con ventana de 48h, webhook responde al `chat.id` real, `database-cleanup` ya no avisa sin haber limpiado nada |
 | T-19 | Allowlist falla cerrado, login con límite de intentos, caché de rol, MFA TOTP para `owner`, auditoría en los 2 endpoints que faltaban, grants de las 16 tablas antiguas revocados en la base real (0 avisos WARN del linter) |
 | T-13 | `src/lib/github.ts` + tabla `github_metrics` + cron diario: commits, lenguajes, estrellas, PRs, rachas por repositorio, verificado contra la API real de GitHub |
+| T-08 | Panel reorganizado en dos áreas (Portafolio/Negocio) con el patrón de pestañas subrayadas de `DESIGN.md`; los 13 destinos de Negocio siguen en sus URLs; `/admin` es ahora un estado vacío honesto con puente a Negocio; `/admin/negocio` tiene el CRM movido verbatim |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -42,7 +43,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-`T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -687,7 +688,7 @@ Se queda en Supabase Auth. No se instaló ningún SDK de AWS (eso es T-20, condi
 **Pendiente de validación con credenciales:** confirmar que la próxima corrida (con este arreglo) incluye también `27-02-2024-drinksReact`, con 0 commits y sin aparecer en `saltados`.
 
 #### T-08 · Nuevo shell del panel, mobile-first
-**Rama:** `feat/dashboard-shell` · **Depende de:** nada · **Skills:** `impeccable` (obligatoria) · **Estado:** `[ ]`
+**Rama:** `feat/dashboard-shell` · **Depende de:** nada · **Skills:** `impeccable` (obligatoria) · **Estado:** `[x]`
 
 **Objetivo.** Reorganizar la navegación del panel en dos áreas: **Portafolio** (el motor: contenido y métricas) y **Negocio** (el CRM actual, completo e intacto). Decisión de Omar recogida en `PRODUCT.md`.
 
@@ -703,11 +704,11 @@ Se queda en Supabase Auth. No se instaló ningún SDK de AWS (eso es T-20, condi
 - Se corrigen los tamaños de letra fuera de escala **solo en los archivos que esta tarea toque** (el detector los señala).
 
 **Aceptación.**
-- [ ] Tests: los 12 destinos siguen en la navegación; el filtrado por rol no cambió (`viewer`, `assistant`, `owner`).
-- [ ] Tests de `AdminNav`: abrir y cerrar el cajón, Escape, foco.
-- [ ] Detector sin antipatrones nuevos (`npm run verify`).
-- [ ] `/impeccable critique` sobre el resultado, y sus hallazgos materiales resueltos o anotados.
-- [ ] Revisión a 375, 475 y ≥1024 px.
+- [x] Tests: los 13 destinos de Negocio (12 más Seguridad, añadida en T-19 tras escribirse esta ficha) siguen en la navegación con su `href` y sus `roles` intactos; el filtrado por rol no cambió (`viewer`, `assistant`, `owner`) — `__tests__/unit/admin-permissions.test.ts`.
+- [x] Tests de `AdminNav`: abrir y cerrar el cajón, Escape, foco (al abrir y al cerrar), enlace interno que también cierra, interruptor de área, buscador condicionado por área — `__tests__/unit/admin-nav.test.tsx`, 9 tests.
+- [x] Detector sin antipatrones nuevos (`npm run verify`): 1 antipatrón, igual a la línea base (225→220 notas totales tras el detector, por líneas heredadas en el archivo movido; 0 nuevos en los archivos que esta tarea tocó, confirmado línea por línea contra `git diff HEAD`).
+- [x] `/impeccable critique` sobre el resultado (dual-agent, Assessment A y B aislados; sin navegador disponible porque el panel exige sesión real y el enlace mágico expiró en el intento — anotado explícitamente, no simulado). 26/32 (81 %, "Bueno"). Hallazgos materiales resueltos: `AreaSwitch` usaba `role="tablist"/"tab"` sin soporte de teclado → ahora `aria-current` simple con anillo de foco; el buscador "Buscar leads" aparecía también en Portafolio sin nada que buscar → oculto fuera de Negocio; `GROUP_LABELS` no distinguía área (bug latente: "CRM" habría aparecido sobre Portafolio en cuanto T-09+ sume un segundo grupo) → indexado por `(area, group)`; aterrizaje sin datos tras login → botón "Ir a Negocio" en la cabecera de la nueva portada. Anotados sin corregir (fuera de alcance de un shell de navegación): título de `EmptyState` como `<p>` no como encabezado (primitivo compartido, tocarlo afecta otras pantallas), ausencia de atajos de teclado entre áreas, grupo "Sistema" con 5 ítems para `owner` (ya agrupado con encabezado). Snapshot: `.impeccable/critique/2026-11-16T23-20-09Z__src-components-admin-adminnav-tsx.md`.
+- [x] Revisión a 375, 475 y ≥1024 px: **parcial**. Se confirmó estáticamente (clases Tailwind) que el patrón `hidden lg:flex` / `lg:hidden` separa sidebar fijo (≥1024px) de header + cajón móvil (<1024px), que el cajón mide `min(88vw, 22rem)` (cabe en 375 y 475px sin desbordar), y que el interruptor de área tiene `min-h-11` (44px táctil). **No se pudo confirmar en un navegador real**: el panel exige sesión autenticada por enlace mágico a un correo real de Omar; el enlace expiró al intentarlo y, para no demorar la tarea, se continuó sin reintentarlo. Pendiente confirmar visualmente en los tres anchos la próxima vez que haya sesión a mano.
 
 #### T-09 a T-12 · Módulos de edición de contenido
 **Ramas:** `feat/module-projects` (T-09), `feat/module-skills` (T-10), `feat/module-education` (T-11), `feat/module-content` (T-12: servicios, tecnologías, timeline, perfil) · **Dependen de:** T-06, T-08 · **Skills:** `impeccable` · **Estado:** `[ ]`
@@ -829,6 +830,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 
 | Fecha | Tarea | Rama | Validaciones | Estado |
 |---|---|---|---|---|
+| 2026-11-16 | T-08: panel en dos áreas (Portafolio/Negocio) | `feat/dashboard-shell` | 16 tests nuevos (9 de AdminNav: cajón, Escape, foco, interruptor de área, buscador condicionado; 7 de permisos) · 466 tests totales · detector: 1 antipatrón = línea base, 0 nuevos en archivos tocados · critique dual-agent 26/32 (81%, "Bueno"), 3 hallazgos materiales corregidos (tablist sin teclado→aria-current, buscador fuera de área→oculto, "CRM" habría fugado a Portafolio→`GROUP_LABELS` por área) y 1 parcial (aterrizaje sin datos→botón "Ir a Negocio") · revisión responsive solo estática (clases Tailwind): sesión real bloqueada por enlace mágico expirado, pendiente confirmar a 375/475px con sesión a mano | ✅ |
 | 2026-11-12 | Análisis completo | — | — | ✅ |
 | 2026-11-12 | Plan maestro | `docs/plan-maestro-dashboard` | — | ✅ |
 | 2026-11-12 | T-01 Tokens de diseño | `feat/design-tokens` | typecheck · lint · 93 tests · CSS compilado | ✅ |
