@@ -18,6 +18,7 @@ import { highlightedCoursesData } from '@/lib/portfolio/source/badges';
 import { marqueeTechnologies } from '@/lib/portfolio/source/technologies';
 import { timelineEn, timelineEs } from '@/lib/portfolio/source/timeline';
 import { interestsData, personalData } from '@/lib/portfolio/source/about';
+import { creadorDeSlugs, slugificar } from '@/lib/portfolio/slug';
 
 // ── Utilidades ──────────────────────────────────────────────────────────────
 
@@ -42,37 +43,11 @@ export function bilingue(valor: unknown): Localizado {
   return { es: '', en: '' };
 }
 
-/**
- * Slug determinista a partir de un texto en español: sin tildes, en
- * minúsculas, con guiones. Determinista a propósito: el seed se ejecuta más de
- * una vez y el `on conflict (slug)` solo funciona si el slug no cambia.
- */
-export function slugificar(texto: string): string {
-  return texto
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '') // quita diacríticos
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 80) || 'sin-titulo';
-}
-
-/**
- * Desambigua slugs repetidos con un sufijo numérico. Hace falta: entre 172
- * ítems de educación hay títulos que se repiten entre instituciones.
- *
- * El orden de llamada decide quién se queda el slug limpio, así que se recorre
- * siempre el contenido en su orden original.
- */
-export function creadorDeSlugs() {
-  const usados = new Map<string, number>();
-  return (texto: string): string => {
-    const base = slugificar(texto);
-    const vistas = usados.get(base) ?? 0;
-    usados.set(base, vistas + 1);
-    return vistas === 0 ? base : `${base}-${vistas + 1}`;
-  };
-}
+// `slugificar`/`creadorDeSlugs` viven en `../slug.ts` (sin dependencias: un
+// componente de cliente las necesita para la `key` de React en T-07 sin
+// arrastrar los 9 módulos de contenido que importa este archivo). Se
+// reexportan aquí para no romper a quien ya las importaba de este módulo.
+export { creadorDeSlugs, slugificar } from '../slug';
 
 /** `"95%"` → `95`. El símbolo es presentación; la columna es un entero. */
 export function porcentajeAEntero(valor: string | number): number {

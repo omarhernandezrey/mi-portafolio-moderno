@@ -14,7 +14,9 @@ import {
 } from "framer-motion";
 import Card from "../shared/Card";
 import { useTranslation } from "../../hooks/useTranslation";
-import { projectsData, getLocalizedProjectsData } from "../../lib/projectsData";
+import { getLocalizedProjectsData, type Project } from "../../lib/projectsData";
+import { slugificar } from "../../lib/portfolio/slug";
+import { coincideConBusqueda, paginar } from "../../lib/portfolio/projectSearch";
 
 // Tipado para los elementos flotantes
 interface FloatingElement {
@@ -44,7 +46,12 @@ const createFloatingElements = (count = 12) =>
 --------------------------------------------------------------------------- */
 const PROJECTS_PER_PAGE = 4;
 
-const ProjectsSection: React.FC = () => {
+interface ProjectsSectionProps {
+  /** Bilingüe, misma forma que `projectsData`: lo resuelve `getProjects()` en la página de servidor. */
+  projects: Project[];
+}
+
+const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
   /* ---------------- estados ---------------- */
   const { language, t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -71,19 +78,13 @@ const ProjectsSection: React.FC = () => {
 
   /* ---------------- datos localizados con useMemo ---------------- */
   const localizedProjects = useMemo(
-    () => getLocalizedProjectsData(projectsData, language),
-    [language]
+    () => getLocalizedProjectsData(projects, language),
+    [projects, language]
   );
 
   /* ---------------- filtrado dinámico ---------------- */
   const filteredProjects = useMemo(
-    () =>
-      localizedProjects.filter((p) => {
-        const bySearch = `${p.title} ${p.description} ${p.technologies.join(" ")}`
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-        return bySearch;
-      }),
+    () => localizedProjects.filter((p) => coincideConBusqueda(p, searchTerm)),
     [localizedProjects, searchTerm],
   );
 
@@ -103,10 +104,10 @@ const ProjectsSection: React.FC = () => {
     }
   }, [currentPage, totalPages]);
 
-  const paginatedProjects = useMemo(() => {
-    const start = (currentPage - 1) * PROJECTS_PER_PAGE;
-    return filteredProjects.slice(start, start + PROJECTS_PER_PAGE);
-  }, [filteredProjects, currentPage]);
+  const paginatedProjects = useMemo(
+    () => paginar(filteredProjects, currentPage, PROJECTS_PER_PAGE),
+    [filteredProjects, currentPage],
+  );
 
   const goToPage = (page: number) => {
     const next = Math.min(Math.max(1, page), totalPages);
@@ -364,7 +365,7 @@ const ProjectsSection: React.FC = () => {
             <AnimatePresence>
               {paginatedProjects.map((p, i) => (
                 <motion.div
-                  key={`${p.title}-${currentPage}`}
+                  key={`${slugificar(p.title)}-${currentPage}`}
                   layout
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}

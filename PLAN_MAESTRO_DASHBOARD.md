@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06 hecha; siguiente tarea: T-07**
+> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06 y T-07 hechas; siguiente tarea: T-16**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -24,6 +24,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-05b | Seed generado, validado en PostgreSQL y cargado en Supabase: 8 de 9 tablas |
 | T-05c | Los 172 ítems de educación cargados en Supabase; `.env.local` auditado por nombres (sin bloqueos); tipos regenerados; respaldo semanal roto detectado |
 | T-06 | `src/lib/portfolio/repository.ts`: lectura de las 8 tablas de contenido con respaldo a los módulos de origen y caché por etiqueta. `sobre-mi/page.tsx` ya no repite proyectos/skills/educación a mano |
+| T-07 | El visor de proyectos (`ProjectsSection` + home) lee de `getProjects()`; `Card.tsx` sin tocar. Comprobador de embebido (`embedCheck.ts`) listo para que T-09 lo use |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -38,7 +39,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-`T-07 → T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -560,22 +561,26 @@ Con el informe delante:
 **Evidencia en §6:** conteo de tests nuevos y resultado de la comparación.
 
 #### T-07 · El visor de proyectos lee de la base
-**Rama:** `feat/projects-from-db` · **Depende de:** T-06 · **Estado:** `[ ]`
+**Rama:** `feat/projects-from-db` · **Depende de:** T-06 · **Estado:** `[x]`
 
 **Objetivo.** Los proyectos del visor salen de `getProjects()`. **`src/components/shared/Card.tsx` no cambia ni una línea** (`npm run verify` lo comprueba).
 
-**Pasos.**
-1. Lee `src/components/sections/ProjectsSection.tsx` entero: paginación de 4, búsqueda sobre título + descripción + tecnologías, y la `key` de React (hoy basada en el título).
-2. La página de servidor obtiene los proyectos y los pasa a `ProjectsSection`. Se sigue usando `getLocalizedProjectsData` (respaldo a `es`) para entregar a `Card` exactamente `{ title, description, technologies, repository, demo, category? }` con cadenas ya localizadas.
-3. Cambia la `key` a `slug` (en `ProjectsSection`, no en `Card`).
-4. Comprobador de embebido: una función de servidor que hace `fetch` al `demo` y lee `X-Frame-Options` y la directiva `frame-ancestors` de `Content-Security-Policy`; el resultado se guarda en `demo_embeddable` y `demo_checked_at`. Se ejecutará desde el panel (T-09); aquí solo la función y sus tests.
+**Hecho.**
+1. `ProjectsSection` ahora recibe `projects: Project[]` por props (antes importaba `projectsData` estático); `src/app/[locale]/page.tsx` (`Home`, ahora `async`) llama a `getProjects()` y se lo pasa.
+2. `getLocalizedProjectsData` se sigue usando igual, ahora sobre el array que llega por props. `Card` recibe exactamente lo mismo que antes.
+3. La `key` ya no es el título: es `slugificar(p.title)` (de `src/lib/portfolio/slug.ts`, nuevo — ver nota). No se guardó un campo `slug` en `getProjects()` porque el contrato de T-06 es devolver la forma exacta de `projectsData`, que no tiene `slug`; recalcularlo con el mismo algoritmo que usó el seed da el mismo resultado sin romper ese contrato.
+4. `src/lib/portfolio/embedCheck.ts`: `comprobarEmbebido(demo, fetch?)` → `'embebible' | 'no-embebible' | 'sin-comprobar'`. Solo la función y sus tests, como pedía la ficha; T-09 la invoca y persiste el resultado.
 
-**Aceptación.**
-- [ ] `git diff origin/main -- src/components/shared/Card.tsx` vacío.
-- [ ] Test: los 22 proyectos llegan a `Card` con las mismas props que antes del cambio (compara contra `getLocalizedProjectsData(projectsData, 'es')` y `'en'`).
-- [ ] Test: búsqueda y paginación devuelven lo mismo que antes para tres consultas de ejemplo.
-- [ ] Tests del comprobador: `X-Frame-Options: DENY`, `SAMEORIGIN`, `frame-ancestors 'none'`, sin cabeceras, y error de red (este último **no** marca el demo como no embebible: marca «sin comprobar»).
-- [ ] Revisión visual a 375 px y en escritorio: el visor se ve y se toca igual. Si el entorno no puede levantar el sitio, se declara pendiente de validación visual.
+**Dos extracciones no pedidas por los pasos, pero necesarias para poder probar algo sin romper nada:**
+- `slugificar`/`creadorDeSlugs` salieron de `seed/build.ts` a `src/lib/portfolio/slug.ts` (sin dependencias): si `ProjectsSection` las importara de `seed/build.ts`, su bundle de cliente arrastraría los 9 módulos de contenido que ese archivo importa solo para construir el seed. `build.ts` las reexporta, así que nada que ya las importara de ahí se rompe (`portfolio-seed.test.ts` en verde sin tocarlo).
+- El predicado de búsqueda y el paginador salieron a `src/lib/portfolio/projectSearch.ts` (`coincideConBusqueda`, `paginar`), con el mismo comportamiento exacto que tenían inline. Importar `ProjectsSection.tsx` en un test arrastra `useTranslation` → `next-intl` (ESM), que Jest no transforma; estas dos funciones puras sí se pueden probar solas.
+
+**Aceptación — comprobado el 2026-11-16.**
+- [x] `git diff origin/main -- src/components/shared/Card.tsx` → vacío.
+- [x] Los 22 proyectos de `getProjects()`, localizados, son idénticos a los de `projectsData` en `es` y en `en` (`__tests__/unit/projects-section.test.ts`), con `getProjects()` cayendo a su respaldo porque no hay runtime de Next en Jest — exactamente el camino que recorrería una visita real si la base no respondiera.
+- [x] Búsqueda y paginación: 3 consultas de ejemplo medidas contra el contenido real antes de escribir el test (`"react"` → 5, `"zzz-no-existe"` → 0, `"vercel"` → 8) y comprobadas también a mano en el navegador: buscar «vercel» en `/` mostró «Mostrando 8 de 22 proyectos "vercel"». Paginación de 4 en 4 probada con páginas 1, 2, la última y una fuera de rango.
+- [x] Tests del comprobador (7): `DENY`, `SAMEORIGIN` (no embebible aunque no sea `DENY`: el portafolio nunca es el mismo origen), `frame-ancestors 'none'`, una lista de orígenes que no es `'none'` (no se da por bloqueado), sin cabeceras, error de red → `sin-comprobar` (nunca `no-embebible`), y el `fetch` global por defecto.
+- [x] Revisión visual: `npm run build` real contra la base real y `npm run dev`, navegados de verdad — portada 200, sección de proyectos «Mostrando 22 de 22», las tres tarjetas del visor (laptop/tablet/móvil con sus iframes) idénticas a antes, búsqueda probada en vivo. **Pendiente, igual que en T-06:** no se pudo forzar un viewport de 375 px real con la herramienta de navegador disponible en esta sesión (`resize_window` no cambió `window.innerWidth`); el riesgo es bajo porque ni `Card.tsx` ni el CSS de `ProjectsSection` cambiaron, solo de dónde sale el array y la `key`, pero queda pendiente confirmarlo a simple vista en un móvil o en el DevTools de un navegador normal.
 
 #### T-16 · Bot de Telegram que solo avisa de lo real
 **Rama:** `fix/telegram-bot` (existe, 1 commit `wip`) · **Depende de:** nada · **Estado:** `[~]`
@@ -802,6 +807,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-16 | T-07: el visor de proyectos lee de la base | `feat/projects-from-db` | 7 tests del comprobador de embebido · los 22 proyectos de getProjects() idénticos a projectsData en es/en · 3 búsquedas de ejemplo medidas y comprobadas (react=5, zzz=0, vercel=8) · paginación de 4 · git diff de Card.tsx vacío · build real + navegación real: portada 200, visor intacto, búsqueda "vercel" en vivo mostró 8 de 22 · 371 tests totales · pendiente confirmar 375px real | ✅ |
 | 2026-11-16 | T-06: capa de lectura del portafolio con respaldo | `feat/portfolio-data-layer` | 23 tests nuevos (`portfolio-repository.test.ts`) · 357 tests totales · comparación completa de los 22 proyectos contra `projectsData` · build real con la base real: `/es/sobre-mi` y `/en/sobre-mi` prerenderizados · drift real encontrado y corregido (descripción de "DevOps & CI/CD" distinta entre `sobre-mi` y `skillsData`) · revisión visual a ~1093px en navegador; pendiente confirmar a 375px real | ✅ |
 | 2026-11-16 | T-05c: carga de educación + entorno coherente en la máquina de Omar | `chore/t05c-cierre-entorno` | 172/171/0 medidos 2× con psql + confirmado con clave anon · env:check sin bloqueos (proyecto Supabase correcto) · hueco de auditoría corregido (.mcp.json) + test nuevo · build real OK · dev: portada 200, /admin 307, 22 proyectos anon · feat/portfolio-seed borrada · tipos regenerados sin match_projects · 334 tests | ✅ |
 | 2026-11-15 | Auditoría de workflows: respaldo semanal roto (secreto ausente), cron de cuotas LLM huérfano, rutas de cron verificadas | `docs/hallazgos-ci-entorno` | `gh run view --log-failed` · cruce workflow ↔ rutas existentes · verify en verde | ✅ |

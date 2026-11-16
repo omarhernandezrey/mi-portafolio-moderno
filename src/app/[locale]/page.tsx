@@ -11,6 +11,7 @@ import ProjectsSection from "@/components/sections/ProjectsSection";
 import ContactForm from "@/components/sections/ContactForm";
 import Footer from "@/components/shared/Footer";
 import { OMAR_PROFILE } from "@/data/omarProfile";
+import { getProjects } from "@/lib/portfolio/repository";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -63,7 +64,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const proyectos = await getProjects();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -106,7 +109,7 @@ export default function Home() {
       <TechMarquee />
       <EducationSection />
       <SkillSection />
-      <ProjectsSection />
+      <ProjectsSection projects={proyectos} />
       <ServicesSection />
       <ContactForm />
       <Footer />
