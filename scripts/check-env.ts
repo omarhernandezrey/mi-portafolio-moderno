@@ -53,7 +53,10 @@ const deRaiz = readdirSync(RAIZ)
   .filter((n) => codigo.test(n) && statSync(join(RAIZ, n)).isFile())
   .map((n) => join(RAIZ, n));
 const textoCodigo = leer([...recorrer(join(RAIZ, 'src'), codigo), ...recorrer(join(RAIZ, 'scripts'), codigo), ...deRaiz]);
-const textoShell = leer(recorrer(join(RAIZ, 'scripts'), /\.sh$/));
+// .mcp.json expande ${VAR} para lanzar servidores MCP (p. ej. el conector de Supabase):
+// es una lectura real de la variable, aunque ningún `process.env` lo vea.
+const rutaMcp = join(RAIZ, '.mcp.json');
+const textoShell = leer([...recorrer(join(RAIZ, 'scripts'), /\.sh$/), ...(existsSync(rutaMcp) ? [rutaMcp] : [])]);
 const textoWorkflows = leer(recorrer(join(RAIZ, '.github', 'workflows'), /\.ya?ml$/));
 
 const locales: VariableConValor[] = ARCHIVOS_LOCALES.filter((a) => existsSync(join(RAIZ, a))).flatMap((a) =>

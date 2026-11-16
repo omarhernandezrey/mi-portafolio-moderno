@@ -5,18 +5,9 @@
  *   - con el conector de Supabase: generate_typescript_types
  *   - o con la CLI: supabase gen types typescript --project-id ozftxfwkhomnbvicjtae
  *
- * Generado el 2026-11-14 contra el proyecto `ozftxfwkhomnbvicjtae`
- * (PostgreSQL 17.6, PostgREST 14.5), ya con las 9 tablas `portfolio_*` de T-04
- * aplicadas.
- *
- * Por qué existe: hasta ahora los tipos de la base estaban escritos a mano en
- * `src/lib/admin/types.ts` y `src/lib/portfolio/types.ts`, y eso se
- * desincroniza en silencio. Este archivo es la verdad del esquema; los tipos a
- * mano siguen valiendo como forma de dominio, pero quien consulte la base
- * debería tiparse contra `Database`.
- *
- * Nota: `match_projects` aparece en Functions, pero está roto — consulta la
- * tabla `project_embeddings`, que no existe. Es un resto del chatbot retirado.
+ * Regenerado el 2026-11-16 contra el proyecto `ozftxfwkhomnbvicjtae`,
+ * ya con los 172 ítems de educación cargados (T-05c) y sin `match_projects`
+ * (función rota del chatbot retirado, borrada en D-2).
  */
 
 export type Json =
@@ -1131,20 +1122,6 @@ export type Database = {
       get_auth_role: {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
-      }
-      match_projects: {
-        Args: {
-          match_count: number
-          match_threshold: number
-          query_embedding: string
-        }
-        Returns: {
-          content: string
-          id: string
-          metadata: Json
-          project_id: string
-          similarity: number
-        }[]
       }
     }
     Enums: {

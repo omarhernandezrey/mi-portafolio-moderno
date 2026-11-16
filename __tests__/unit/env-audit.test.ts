@@ -254,6 +254,13 @@ describe('comprobarSupabase', () => {
   });
 });
 
+describe('nombresExpandidosEnShell sobre .mcp.json', () => {
+  it('reconoce ${VAR} en la configuración de servidores MCP', () => {
+    const mcp = JSON.stringify({ mcpServers: { supabase: { args: ['${SUPABASE_ACCESS_TOKEN}', '${SUPABASE_PROJECT_REF}'] } } });
+    expect(nombresExpandidosEnShell(mcp)).toEqual(['SUPABASE_ACCESS_TOKEN', 'SUPABASE_PROJECT_REF']);
+  });
+});
+
 describe('guardarraíl: el repositorio documenta lo que lee', () => {
   const codigo = /\.(ts|tsx|js|jsx|mjs|cjs)$/;
   const recorrer = (dir: string): string[] =>

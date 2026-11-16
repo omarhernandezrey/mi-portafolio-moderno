@@ -62,3 +62,4 @@ mis-claves-chatbot.txt*
 # Impeccable: estado por desarrollador y cachés (lo compartido sí se versiona)
 .impeccable/config.local.json
 .impeccable/hook.cache.json
+supabase/.temp/

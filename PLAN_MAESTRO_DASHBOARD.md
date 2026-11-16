@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; siguiente tarea: T-05c (cierre en la máquina de Omar) y después T-06**
+> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas, incluido T-05c; siguiente tarea: T-06**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -21,7 +21,8 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-03 | 11 primitivos de UI mobile-first en `src/components/admin/ui/` |
 | T-04 | Esquema de 9 tablas `portfolio_*` con RLS real, ejecutado en PostgreSQL 16 |
 | T-05a | Contenido inline extraído a `src/lib/portfolio/source/` |
-| T-05b | Seed generado, validado en PostgreSQL y cargado en Supabase: 8 de 9 tablas. Faltan solo los 172 ítems de educación (T-05c) |
+| T-05b | Seed generado, validado en PostgreSQL y cargado en Supabase: 8 de 9 tablas |
+| T-05c | Los 172 ítems de educación cargados en Supabase; `.env.local` auditado por nombres (sin bloqueos); tipos regenerados; respaldo semanal roto detectado |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -32,15 +33,13 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 |---|---|---|---|
 | `fix/telegram-bot` | T-16 | Un commit `wip`: `sendTelegramMessage` con `chatId` y resultado tipado en `src/lib/chatbot/telegram.ts`; `TELEGRAM_WEBHOOK_SECRET` en el schema de `src/config/env.ts`. Compila | `daily-summary`, webhook, adaptar llamadores y **todos** los tests. Ver ficha T-16 |
 
-`feat/portfolio-seed` sigue en `origin` pero está **obsoleta**: su contenido entró en `main` por `cherry-pick` y parte de un `main` antiguo. No se mergea ni se continúa; se borra en T-05c.
-
 Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> && git rebase origin/main`, y lee su diff completo (`git diff origin/main...HEAD`). No asumas qué hace: compruébalo.
 
 ### Orden de ejecución recomendado
 
-`T-05c → T-06 → T-07 → T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-06 → T-07 → T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
-El orden no es arbitrario: T-05c necesita la máquina de Omar (su `.env` y red sin restricciones) y deja el entorno fiable antes de construir encima; T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
+El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
 ### Bloqueos que solo Omar puede resolver
 
@@ -50,7 +49,8 @@ El orden no es arbitrario: T-05c necesita la máquina de Omar (su `.env` y red s
 | Decisión D-1 (§4): proveedor de autenticación | T-20 | T-19 se ejecuta igual: sirve para ambos caminos |
 | Aplicar migraciones | — | Ya no es un bloqueo: se aplican con el conector. Cada migración debe seguir siendo idempotente, estar validada antes en PostgreSQL local (§3.5), y el archivo del repositorio debe quedar idéntico a lo aplicado |
 | **Borrar datos de la base** | D-2 (restos del chatbot) | No se borra nada sin respuesta explícita de Omar |
-| **Respaldo semanal roto** desde el 2026-10-25: falta el secreto `BACKUPS_REPO` en GitHub (ver T-05c) | Cualquier tarea que modifique o borre datos existentes | Las tareas que solo añaden (seed, tablas nuevas) siguen. Omar pone los secretos y se relanza el workflow |
+| **Respaldo semanal roto** desde el 2026-10-25: faltan `BACKUPS_REPO`, `BACKUPS_REPO_TOKEN`, `BACKUP_PUBLIC_KEY` y `R2_BUCKET_NAME` en GitHub Secrets (medido el 2026-11-16 con `gh secret list`) | Cualquier tarea que modifique o borre datos existentes | Las tareas que solo añaden (seed, tablas nuevas) siguen. Omar pone los secretos y se relanza el workflow |
+| `VERCEL_TOKEN` en `.env.local` parece un valor de plantilla (el CLI de Vercel lo rechaza: contiene `[` `]`) | Cruce de nombres con las variables de Vercel | No se pudo hacer ese cruce en T-05c. Pendiente: Omar genera un token real en vercel.com/account/tokens |
 
 ---
 
@@ -413,7 +413,7 @@ Leyenda: `[ ]` pendiente · `[~]` en curso · `[x]` completada y mergeada
     *Validado:* typecheck 0 errores · lint limpio · **257 tests** (74 de la extracción + 14 de conteos en vivo).
     *Deuda preexistente detectada, ajena a esta tarea:* `npx tsc -p tsconfig.jest.json` arroja 816 errores (`jsx: "react"` sin `import React`), idénticos antes y después. Jest no usa ese config (va por `next/jest` + SWC), así que no afecta a los tests, pero está anotado en T-24.
   - [x] **T-05b** Seed del contenido, en `feat/portfolio-seed`. Generador puro + SQL idempotente, validado en PostgreSQL y cargado en Supabase. Ver su ficha para el detalle y el único paso que queda.
-  - [ ] **T-05c** Cierre en la máquina de Omar: cargar los 172 ítems de educación, dejar el `.env` coherente y comprobar el build real. Ver su ficha.
+  - [x] **T-05c** Cierre en la máquina de Omar: cargar los 172 ítems de educación, dejar el `.env` coherente y comprobar el build real. Ver su ficha.
 
 ---
 
@@ -472,7 +472,7 @@ Validado en PostgreSQL 16 local: migración + seed **dos veces** sin error, con 
 **Nota de proceso.** Al cargar las tablas en Supabase se omitieron los servicios en el primer lote y la verificación posterior lo detectó (`servicios 0`). Se corrigió en el acto. Es el argumento del hábito 2 del §3: la comprobación después de escribir no es ceremonia.
 
 #### T-05c · Cierre de la carga y entorno coherente
-**Rama:** `chore/cierre-entorno` · **Depende de:** T-05b · **Dónde:** en la máquina de Omar, no en la nube · **Estado:** `[ ]`
+**Rama:** `chore/t05c-cierre-entorno` · **Depende de:** T-05b · **Dónde:** en la máquina de Omar, no en la nube · **Estado:** `[x]`
 
 **Por qué existe.** Quedan tres cosas que el entorno en la nube no puede hacer: mover 130 KiB de SQL a la base, leer el `.env` real y ejecutar `npm run build` (ahí `fonts.googleapis.com` está bloqueado). Omar además avisa de que su `.env` no corresponde con lo que existe hoy: sobrevivió al chatbot retirado y quizá a otro proyecto de Supabase. Construir T-06 en adelante sobre un entorno dudoso es perder el tiempo.
 
@@ -519,14 +519,17 @@ Con el informe delante:
 - El SQL Editor y `psql` ejecutan como propietario y se saltan RLS: que la carga funcione no demuestra que `anon` pueda leer. Comprobarlo con la clave `anon`.
 - Si el `.env` apunta a otro proyecto, **no se carga nada** hasta corregirlo: se estaría escribiendo en la base equivocada.
 
-**Criterios de aceptación.**
-- [ ] 172 ítems, 171 con certificado y 0 sin categoría en la base real, medidos después de cargar y tras una segunda pasada.
-- [ ] `npm run env:check` termina en «sin bloqueos» en la máquina de Omar.
-- [ ] Omar ha visto la lista de sobrantes y faltantes y ha decidido sobre cada una.
-- [ ] `npm run build` real ejecutado y en verde; `npm run dev` sirve la portada y `/admin`.
-- [ ] Ningún valor del `.env` aparece en el chat, en el diff ni en §6. `git status` no muestra ningún `.env*` salvo `.env.example`.
-- [ ] Rama `feat/portfolio-seed` borrada de `origin`; tipos regenerados.
-- [ ] El respaldo semanal pasa en verde, o Omar ha dicho expresamente que lo deja para después y queda anotado como bloqueo en §0.
+**Criterios de aceptación — comprobados el 2026-11-16.**
+- [x] 172 ítems, 171 con certificado, 0 sin categoría; medidos tras la 1ª y la 2ª carga (idéntico) con `psql` contra la base real. Por categoría: 1/1/1/2/8/73/86, igual que `educationData` (suman 172).
+- [x] Confirmado también con la clave `anon` vía REST: `content-range: 0-171/172`. RLS no lo oculta.
+- [x] `npm run env:check` termina en «sin bloqueos» en esta máquina. 0 obligatorias sin valor; proyecto de Supabase correcto (`ozftxfwkhomnbvicjtae`) en las 7 comprobaciones.
+- [x] Encontré un hueco real en la auditoría: `.mcp.json` expande `${SUPABASE_ACCESS_TOKEN}` y `${SUPABASE_PROJECT_REF}` para el conector MCP, y el script no lo miraba — las marcaba como «sobrantes» por error. Corregido (`scripts/check-env.ts` ahora también lee `.mcp.json`) y cubierto por un test nuevo.
+- [ ] **Pendiente de tu decisión** — 21 variables en `.env.local` que nada lee: `GROQ_API_KEY`, `CLOUDFLARE_ACCOUNT_ID`, y 19 más de proveedores de LLM (Cerebras, DeepSeek, HuggingFace, Mistral, Ollama, OpenRouter y 9 de Nvidia) y `LLM_PROVIDER_CHAIN`. Son restos del chatbot retirado (D-2). No las toqué: te las listo completas más abajo en el mensaje y tú decides si se comentan.
+- [x] `npm run build` real ejecutado con el `.env.local` de esta máquina: termina sin errores (middleware + todas las rutas, estáticas y dinámicas). `npm run dev`: portada `200`, `/admin` `307` (redirige a login sin sesión, que es el comportamiento correcto), 22 proyectos publicados confirmados con la clave `anon`.
+- [x] Ningún valor del `.env` apareció en el chat ni en un commit. `git status` solo mostró el `.bak` (ignorado por `.gitignore`) y los archivos de código que se listan en §6.
+- [x] Rama `feat/portfolio-seed` borrada de `origin`. `src/types/database.types.ts` regenerado con la CLI de Supabase contra el proyecto real: `match_projects` ya no aparece.
+- [ ] **Respaldo semanal: sigue roto.** `gh secret list` (autenticado con el token de `.env.local`) confirma que faltan 4 secretos: `BACKUPS_REPO`, `BACKUPS_REPO_TOKEN`, `BACKUP_PUBLIC_KEY`, `R2_BUCKET_NAME`. También sobran 3 que ningún workflow ya usa: `ADMIN_PASSWORD`, `ADMIN_SECRET`, `GROQ_API_KEY`. Anotado como bloqueo en §0; no se ejecuta nada que modifique o borre datos hasta que esté en verde.
+- [ ] **Nuevo, no estaba en la ficha:** `VERCEL_TOKEN` en `.env.local` parece un valor de plantilla — el CLI de Vercel lo rechaza (contiene `[` y `]`), así que no pude cruzar las variables de Vercel. Anotado como bloqueo en §0.
 
 **Evidencia en §6.** Conteos medidos en la base, resumen del informe **por número de variables en cada categoría** (sin valores), resultado del build y lo que Omar decidió retirar.
 
@@ -794,6 +797,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-16 | T-05c: carga de educación + entorno coherente en la máquina de Omar | `chore/t05c-cierre-entorno` | 172/171/0 medidos 2× con psql + confirmado con clave anon · env:check sin bloqueos (proyecto Supabase correcto) · hueco de auditoría corregido (.mcp.json) + test nuevo · build real OK · dev: portada 200, /admin 307, 22 proyectos anon · feat/portfolio-seed borrada · tipos regenerados sin match_projects · 334 tests | ✅ |
 | 2026-11-15 | Auditoría de workflows: respaldo semanal roto (secreto ausente), cron de cuotas LLM huérfano, rutas de cron verificadas | `docs/hallazgos-ci-entorno` | `gh run view --log-failed` · cruce workflow ↔ rutas existentes · verify en verde | ✅ |
 | 2026-11-14 | Auditoría del entorno (`npm run env:check`) + estado del plan al día + T-05c | `chore/env-audit-y-estado` | verify en verde · 333 tests (23 nuevos) · el informe no arrastra valores (probado) · `.env.example` = lo que lee el código (28) · 3 variables muertas fuera de CI | ✅ |
 | 2026-11-14 | T-05b Seed del contenido | `feat/portfolio-seed` | generador puro + SQL idempotente · migración y seed 2× en PostgreSQL 16 con conteos exactos · ida y vuelta idéntica a los módulos · 8/9 tablas cargadas en Supabase · 310 tests |  ✅ |
