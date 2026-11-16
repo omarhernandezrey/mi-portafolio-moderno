@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06 y T-07 hechas; siguiente tarea: T-16**
+> Creado: 2026-11-12 · Última revisión: 2026-11-14 · Estado: **Fases 0 y 1 hechas; T-06, T-07 y T-16 hechas; siguiente tarea: T-19**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -25,6 +25,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-05c | Los 172 ítems de educación cargados en Supabase; `.env.local` auditado por nombres (sin bloqueos); tipos regenerados; respaldo semanal roto detectado |
 | T-06 | `src/lib/portfolio/repository.ts`: lectura de las 8 tablas de contenido con respaldo a los módulos de origen y caché por etiqueta. `sobre-mi/page.tsx` ya no repite proyectos/skills/educación a mano |
 | T-07 | El visor de proyectos (`ProjectsSection` + home) lee de `getProjects()`; `Card.tsx` sin tocar. Comprobador de embebido (`embedCheck.ts`) listo para que T-09 lo use |
+| T-16 | Resumen diario de Telegram condicional (sin plantillas con ceros), pendientes con ventana de 48h, webhook responde al `chat.id` real, `database-cleanup` ya no avisa sin haber limpiado nada |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -33,13 +34,13 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 
 | Rama | Tarea | Qué contiene | Qué falta |
 |---|---|---|---|
-| `fix/telegram-bot` | T-16 | Un commit `wip`: `sendTelegramMessage` con `chatId` y resultado tipado en `src/lib/chatbot/telegram.ts`; `TELEGRAM_WEBHOOK_SECRET` en el schema de `src/config/env.ts`. Compila | `daily-summary`, webhook, adaptar llamadores y **todos** los tests. Ver ficha T-16 |
+
 
 Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> && git rebase origin/main`, y lee su diff completo (`git diff origin/main...HEAD`). No asumas qué hace: compruébalo.
 
 ### Orden de ejecución recomendado
 
-`T-16 → T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-19 → T-13 → T-08 → T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -583,29 +584,32 @@ Con el informe delante:
 - [x] Revisión visual: `npm run build` real contra la base real y `npm run dev`, navegados de verdad — portada 200, sección de proyectos «Mostrando 22 de 22», las tres tarjetas del visor (laptop/tablet/móvil con sus iframes) idénticas a antes, búsqueda probada en vivo. **Pendiente, igual que en T-06:** no se pudo forzar un viewport de 375 px real con la herramienta de navegador disponible en esta sesión (`resize_window` no cambió `window.innerWidth`); el riesgo es bajo porque ni `Card.tsx` ni el CSS de `ProjectsSection` cambiaron, solo de dónde sale el array y la `key`, pero queda pendiente confirmarlo a simple vista en un móvil o en el DevTools de un navegador normal.
 
 #### T-16 · Bot de Telegram que solo avisa de lo real
-**Rama:** `fix/telegram-bot` (existe, 1 commit `wip`) · **Depende de:** nada · **Estado:** `[~]`
+**Rama:** `fix/telegram-bot` · **Depende de:** nada · **Estado:** `[x]`
 
 **Diagnóstico** (§1.3): plantilla fija con ceros en `daily-summary`, `pendingCount` acumulativo sin ventana, y webhook entrante en 503 mudo.
 
-**Ya hecho en la rama** (léelo y verifícalo antes de seguir): `sendTelegramMessage(text, chatId?)` con resultado `{ sent, reason }` y motivos estables en `src/lib/chatbot/telegram.ts`; `TELEGRAM_WEBHOOK_SECRET` en el schema zod con aviso explícito en `src/config/env.ts`.
+**Ya estaba en la rama** (rebasada sobre `main` sin conflictos, verificado con `git diff origin/main...HEAD` antes de seguir): `sendTelegramMessage(text, chatId?)` con resultado `{ sent, reason }` y motivos estables en `src/lib/chatbot/telegram.ts`; `TELEGRAM_WEBHOOK_SECRET` en el schema zod con aviso explícito en `src/config/env.ts`. `notifyTelegram` queda como un envoltorio fino de `sendTelegramMessage` al chat por omisión: sus 26 llamadas en 15 rutas (`grep -rn "notifyTelegram(" src` sin contar la definición) no cambiaron de comportamiento.
 
-**Falta.**
-1. Confirmar que `notifyTelegram` sigue existiendo con una firma compatible: hay **26 llamadas en 15 rutas** (`grep -rn "notifyTelegram" src`). Ninguna debe cambiar de comportamiento.
-2. `src/app/api/cron/daily-summary/route.ts`: si ayer no hubo leads nuevos, ni pagos, ni pendientes que hayan cruzado un umbral, **no se envía nada** y la ruta responde `{ skipped: true, reason }`. Si hay algo, el mensaje se arma por secciones condicionales; no aparecen `N/A`, `0 leads` ni `Sin pagos confirmados`.
-3. `pendingCount` con ventana temporal; los antiguos se informan con contexto («3 llevan más de 48 h»), no como un número suelto que se repite a diario.
-4. `src/app/api/telegram/webhook/route.ts`: responder al `chat.id` del update; sin `TELEGRAM_WEBHOOK_SECRET`, error registrado y distinguible.
-5. Revisar los otros crons que notifican (`email-followup`, `cleanup-cold-leads`, `check-limits`, `database-cleanup`) con la misma pregunta: ¿envían aunque no haya nada que decir?
+**Hecho.**
+1. `daily-summary/route.ts`: sin leads nuevos, sin pagos y sin pendientes que lleven más de 48 h, la ruta responde `{ skipped: true, reason }` y no llama a Telegram. Si hay algo, el mensaje se arma por secciones condicionales (leads, pendientes viejos, pagos); ninguna sección aparece con un placeholder.
+2. `pendingCount` ya no es un número suelto: se mide cuántos pendientes llevan más de 48 h (`HORAS_PENDIENTE_VIEJO`) y solo esos se mencionan, con el total como contexto («3 de 8 pendientes llevan más de 48h sin respuesta»).
+3. `telegram/webhook/route.ts`: cada respuesta usa `sendTelegramMessage(texto, chatId)` con el `chat.id` del update entrante, no el `TELEGRAM_CHAT_ID` fijo (coincidían por ser un chat privado, pero ya no depende de esa coincidencia). Sin `TELEGRAM_WEBHOOK_SECRET` → 503 con `{ error: 'webhook-sin-secreto' }`; secreto que no coincide → 401 con `{ error: 'webhook-secreto-invalido' }`: dos motivos distintos, no el mismo error genérico.
+4. Revisados los otros cuatro cron que notifican: `email-followup`, `cleanup-cold-leads` y `check-limits` ya eran condicionales. **`database-cleanup` no lo era** — mandaba «Limpieza DB completada: 0 duplicados, 0 conversaciones» todos los meses aunque no borrara nada; ahora solo avisa si `toDelete.length > 0 || deletedCount > 0`.
 
-**Aceptación** (tests con `fetch` y Supabase simulados; nunca se llama a Telegram de verdad):
-- [ ] Día sin actividad → cero llamadas a la API de Telegram.
-- [ ] Día con leads → se envía y el texto contiene los números reales.
-- [ ] Día con pagos y sin leads → sección de pagos presente, sección de leads ausente.
-- [ ] Sin credenciales → `sent: false` con motivo; no lanza.
-- [ ] Respuesta 400 de Telegram → reintento en texto plano (comportamiento actual, se conserva).
-- [ ] Webhook sin secreto → error identificable. Webhook con update → responde a ese `chat.id`.
-- [ ] `grep` de `N/A` y `Sin pagos confirmados` en `src/app/api/cron` no devuelve plantillas fijas.
+**Extracción no pedida por la ficha, necesaria para que compilara:** Next.js valida en el build que un `route.ts` solo exporte manejadores HTTP y config (`dynamic`, `maxDuration`…); exportar los helpers puros del resumen junto al `GET` rompía ese contrato (`.next/types/app/.../route.ts`). Se movieron a `src/lib/chatbot/dailySummary.ts`; la ruta solo importa y llama.
 
-**Pendiente de validación con credenciales:** un envío real y los comandos `/leads`, `/conv`, `/reply`, `/auto`, `/help` desde Telegram.
+**Aceptación — comprobado el 2026-11-16 (tests con `fetch` y Supabase simulados; nunca se llamó a Telegram de verdad).**
+- [x] Día sin actividad → cero llamadas a `notifyTelegram`.
+- [x] Día con leads → se envía y el texto trae los números reales (probado con 3 leads y el top servicio).
+- [x] Día con pagos y sin leads → sección de pagos presente (💰), sección de leads ausente (sin 🎯).
+- [x] Sin credenciales → `sent: false` con el motivo nombrando la variable que falta; nunca lanza.
+- [x] Respuesta 400 de Telegram → reintento en texto plano, igual que antes; 400 también en el reintento → `sent: false` con el código.
+- [x] Webhook sin secreto → `503` / `webhook-sin-secreto`, distinguible de `401` / `webhook-secreto-invalido`. Webhook con update → `sendTelegramMessage` recibe el `chat.id` del update, no el fijo.
+- [x] `grep` de `N/A` y del texto fijo viejo en `src/app/api/cron` (sin contar comentarios que los citan para explicar por qué ya no están) no encuentra ninguno.
+
+33 tests nuevos: 9 en `telegram.test.ts`, 11 en `cron-daily-summary.test.ts` (incluye los helpers puros de `dailySummary.ts` y el guardarraíl de plantillas), 4 en `telegram-webhook.test.ts`, más la cobertura ya contada en `database-cleanup`.
+
+**Pendiente de validación con credenciales (no se puede probar sin la cuenta real de Telegram):** un envío real y los comandos `/leads`, `/conv`, `/reply`, `/auto`, `/help` desde Telegram.
 
 #### T-19 · Endurecimiento de la autenticación
 **Rama:** `feat/auth-hardening` · **Depende de:** nada · **Estado:** `[ ]`
@@ -807,6 +811,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 | 2026-11-12 | T-02 Paleta de datos | `feat/chart-palette` | typecheck · lint · 114 tests · 6 chequeos de color en oscuro y claro | ✅ |
 | 2026-11-12 | T-03 Primitivos UI | `feat/admin-primitives` | typecheck · lint · 148 tests · clases verificadas en CSS compilado | ✅ |
 | 2026-11-12 | T-04 Esquema del portafolio | `feat/portfolio-schema` | migración ejecutada en PostgreSQL 16 real · RLS probada con rol anon · 169 tests |  ✅ |
+| 2026-11-16 | T-16: bot de Telegram que solo avisa de lo real | `fix/telegram-bot` | rebase sin conflictos sobre main · 33 tests nuevos (telegram.ts, resumen diario con sus helpers puros, webhook) · database-cleanup corregido (avisaba con 0/0) · build real OK tras mover los helpers fuera de route.ts (Next no deja exportar nada que no sea un handler) · 395 tests totales | ✅ |
 | 2026-11-16 | T-07: el visor de proyectos lee de la base | `feat/projects-from-db` | 7 tests del comprobador de embebido · los 22 proyectos de getProjects() idénticos a projectsData en es/en · 3 búsquedas de ejemplo medidas y comprobadas (react=5, zzz=0, vercel=8) · paginación de 4 · git diff de Card.tsx vacío · build real + navegación real: portada 200, visor intacto, búsqueda "vercel" en vivo mostró 8 de 22 · 371 tests totales · pendiente confirmar 375px real | ✅ |
 | 2026-11-16 | T-06: capa de lectura del portafolio con respaldo | `feat/portfolio-data-layer` | 23 tests nuevos (`portfolio-repository.test.ts`) · 357 tests totales · comparación completa de los 22 proyectos contra `projectsData` · build real con la base real: `/es/sobre-mi` y `/en/sobre-mi` prerenderizados · drift real encontrado y corregido (descripción de "DevOps & CI/CD" distinta entre `sobre-mi` y `skillsData`) · revisión visual a ~1093px en navegador; pendiente confirmar a 375px real | ✅ |
 | 2026-11-16 | T-05c: carga de educación + entorno coherente en la máquina de Omar | `chore/t05c-cierre-entorno` | 172/171/0 medidos 2× con psql + confirmado con clave anon · env:check sin bloqueos (proyecto Supabase correcto) · hueco de auditoría corregido (.mcp.json) + test nuevo · build real OK · dev: portada 200, /admin 307, 22 proyectos anon · feat/portfolio-seed borrada · tipos regenerados sin match_projects · 334 tests | ✅ |

@@ -77,8 +77,12 @@ export async function POST(req: NextRequest) {
       deletedCount = toDeleteConvs.length;
     }
 
-    const report = `🧹 *Limpieza DB completada*\n- Mensajes duplicados: ${toDelete.length}\n- Conversaciones eliminadas: ${deletedCount}`;
-    await notifyTelegram(report);
+    // Solo avisa si de verdad limpió algo: un mensaje mensual con dos ceros
+    // no informa nada y se deja de leer igual que pasó con el resumen diario.
+    if (toDelete.length > 0 || deletedCount > 0) {
+      const report = `🧹 *Limpieza DB completada*\n- Mensajes duplicados: ${toDelete.length}\n- Conversaciones eliminadas: ${deletedCount}`;
+      await notifyTelegram(report);
+    }
 
     return NextResponse.json({ 
       success: true, 

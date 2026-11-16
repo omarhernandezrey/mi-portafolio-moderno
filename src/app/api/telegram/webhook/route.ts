@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { serverEnv } from '@/config/env';
-import { notifyTelegram } from '@/lib/chatbot/telegram';
+import { sendTelegramMessage } from '@/lib/chatbot/telegram';
 
 async function answerCallback(callbackId: string, text: string) {
   try {
@@ -24,11 +24,12 @@ export async function POST(req: Request) {
     // Sin esta validación, cualquiera que conozca la URL podría falsificar updates.
     const secret = serverEnv.TELEGRAM_WEBHOOK_SECRET;
     if (!secret) {
-      console.error('TELEGRAM_WEBHOOK_SECRET no configurado — webhook deshabilitado');
-      return NextResponse.json({ error: 'Webhook disabled' }, { status: 503 });
+      console.error('[telegram/webhook] TELEGRAM_WEBHOOK_SECRET no configurado — webhook deshabilitado');
+      return NextResponse.json({ error: 'webhook-sin-secreto' }, { status: 503 });
     }
     if (req.headers.get('x-telegram-bot-api-secret-token') !== secret) {
-      return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+      console.error('[telegram/webhook] secret_token del header no coincide con TELEGRAM_WEBHOOK_SECRET');
+      return NextResponse.json({ error: 'webhook-secreto-invalido' }, { status: 401 });
     }
 
     const body = await req.json();
@@ -65,6 +66,11 @@ export async function POST(req: Request) {
 
     const fromId = message.from.id.toString();
     const text = message.text;
+    // El chat al que responder: el del update entrante, no el TELEGRAM_CHAT_ID fijo.
+    // En un chat privado son el mismo id, pero esto deja de depender de esa
+    // coincidencia (y es el chat correcto si algún día Omar escribe desde un grupo).
+    const chatId: string | number = message.chat?.id ?? fromId;
+    const responder = (texto: string) => sendTelegramMessage(texto, chatId);
 
     // REGLA: Solo Omar (su chat_id) puede mandar comandos al bot
     if (fromId !== serverEnv.TELEGRAM_CHAT_ID) {
@@ -83,13 +89,13 @@ export async function POST(req: Request) {
       if (error) throw error;
 
       if (!leads || leads.length === 0) {
-        await notifyTelegram("📭 No hay leads registrados todavía.");
+        await responder("📭 No hay leads registrados todavía.");
       } else {
         let reply = "🎯 *Últimos 5 Leads:*\n\n";
         leads.forEach((l, i) => {
           reply += `${i+1}. *${l.name}*\nServicio: ${l.service_requested || 'N/A'}\nEstado: \`${l.status}\`\nFecha: ${new Date(l.created_at).toLocaleDateString()}\n\n`;
         });
-        await notifyTelegram(reply);
+        await responder(reply);
       }
     }
 
@@ -97,7 +103,7 @@ export async function POST(req: Request) {
     else if (text.startsWith('/conv')) {
       const sessionId = text.split(' ')[1];
       if (!sessionId) {
-        await notifyTelegram("⚠️ Uso: `/conv <sessionId>`");
+        await responder("⚠️ Uso: `/conv <sessionId>`");
         return NextResponse.json({ ok: true });
       }
 
@@ -108,7 +114,7 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       if (convErr || !conv) {
-        await notifyTelegram(`❌ No se encontró la sesión \`${sessionId}\`.`);
+        await responder(`❌ No se encontró la sesión \`${sessionId}\`.`);
         return NextResponse.json({ ok: true });
       }
 
@@ -126,7 +132,7 @@ export async function POST(req: Request) {
         const roleIcon = m.role === 'user' ? '👤' : '🤖';
         reply += `${roleIcon} *${m.role}:* ${m.content}\n\n`;
       });
-      await notifyTelegram(reply);
+      await responder(reply);
     }
 
     // --- COMANDO /reply {sessionId} {mensaje} ---
@@ -136,7 +142,7 @@ export async function POST(req: Request) {
       const replyMsg = parts.slice(2).join(' ');
 
       if (!sessionId || !replyMsg) {
-        await notifyTelegram("⚠️ Uso: `/reply <sessionId> <mensaje>`");
+        await responder("⚠️ Uso: `/reply <sessionId> <mensaje>`");
         return NextResponse.json({ ok: true });
       }
 
@@ -147,7 +153,7 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       if (convErr || !conv) {
-        await notifyTelegram(`❌ No se encontró la sesión \`${sessionId}\`.`);
+        await responder(`❌ No se encontró la sesión \`${sessionId}\`.`);
         return NextResponse.json({ ok: true });
       }
 
@@ -168,14 +174,14 @@ export async function POST(req: Request) {
         .update({ human_takeover: true })
         .eq('id', conv.id);
 
-      await notifyTelegram(`✅ Mensaje enviado a \`${sessionId}\`. AI desactivada para este chat.`);
+      await responder(`✅ Mensaje enviado a \`${sessionId}\`. AI desactivada para este chat.`);
     }
 
     // --- COMANDO /auto {sessionId} ---
     else if (text.startsWith('/auto')) {
       const sessionId = text.split(' ')[1];
       if (!sessionId) {
-        await notifyTelegram("⚠️ Uso: `/auto <sessionId>`");
+        await responder("⚠️ Uso: `/auto <sessionId>`");
         return NextResponse.json({ ok: true });
       }
 
@@ -190,7 +196,7 @@ export async function POST(req: Request) {
           .from('conversations')
           .update({ human_takeover: false })
           .eq('id', conv.id);
-        await notifyTelegram(`🤖 AI reactivada para la sesión \`${sessionId}\`.`);
+        await responder(`🤖 AI reactivada para la sesión \`${sessionId}\`.`);
       }
     }
 
@@ -205,7 +211,7 @@ export async function POST(req: Request) {
 /auto <id> - Desbloquear AI para esa sesión.
 /help - Mostrar este mensaje.
       `.trim();
-      await notifyTelegram(help);
+      await responder(help);
     }
 
     return NextResponse.json({ ok: true });

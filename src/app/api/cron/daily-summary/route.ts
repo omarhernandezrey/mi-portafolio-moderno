@@ -2,26 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
 import { requireCronAuth } from '@/lib/cronAuth';
-import { parseBudget, type BudgetCurrency } from '@/lib/budget';
+import {
+  bogotaDayRange,
+  construirResumenDiario,
+  formatearPagos,
+  resumirPendientes,
+  topServicio,
+} from '@/lib/chatbot/dailySummary';
 
 export const maxDuration = 30;
 
 export const dynamic = 'force-dynamic';
-
-// Ventana de "ayer" en hora de Bogotá (UTC-5) independiente de la TZ del servidor
-function bogotaDayRange(offsetDays = 1): { start: string; end: string } {
-  const BOGOTA_OFFSET_MS = -5 * 60 * 60 * 1000;
-  const nowBogota = new Date(Date.now() + BOGOTA_OFFSET_MS);
-  const startBogota = new Date(nowBogota);
-  startBogota.setUTCDate(startBogota.getUTCDate() - offsetDays);
-  startBogota.setUTCHours(0, 0, 0, 0);
-  const endBogota = new Date(startBogota);
-  endBogota.setUTCDate(endBogota.getUTCDate() + 1);
-  return {
-    start: new Date(startBogota.getTime() - BOGOTA_OFFSET_MS).toISOString(),
-    end: new Date(endBogota.getTime() - BOGOTA_OFFSET_MS).toISOString(),
-  };
-}
 
 export async function GET(req: NextRequest) {
   const authError = requireCronAuth(req);
@@ -38,12 +29,13 @@ export async function GET(req: NextRequest) {
       .lt('created_at', startOfToday);
     if (leadsErr) throw leadsErr;
 
-    // 2. Pendientes de respuesta (status 'new' o 'cold')
-    const { count: pendingCount, error: pendingErr } = await supabaseServer
+    // 2. Pendientes de respuesta (status 'new' o 'cold'), con su fecha para medir antigüedad
+    const { data: pendingLeads, error: pendingErr } = await supabaseServer
       .from('leads')
-      .select('*', { count: 'exact', head: true })
+      .select('created_at')
       .in('status', ['new', 'cold']);
     if (pendingErr) throw pendingErr;
+    const pendientes = resumirPendientes(pendingLeads ?? [], new Date());
 
     // 3. Pagos confirmados de ayer (status 'paid', por fecha de pago si existe)
     const { data: paidLeads, error: paidErr } = await supabaseServer
@@ -53,60 +45,30 @@ export async function GET(req: NextRequest) {
       .gte('paid_at', startOfYesterday)
       .lt('paid_at', startOfToday);
     if (paidErr) throw paidErr;
+    const pagosLabel = formatearPagos(paidLeads ?? []);
 
-    const paidTotals = (paidLeads || []).reduce<Record<string, number>>(
-      (acc, lead) => {
-        const { amount, currency } = parseBudget(lead.budget);
-        const key = currency ?? 'USD';
-        acc[key] = (acc[key] || 0) + amount;
-        return acc;
-      },
-      {}
-    );
-    const paidLabel =
-      Object.entries(paidTotals)
-        .filter(([, total]) => total > 0)
-        .map(([currency, total]) =>
-          new Intl.NumberFormat(
-            currency === 'COP' ? 'es-CO' : 'en-US',
-            {
-              style: 'currency',
-              currency: currency as BudgetCurrency,
-              maximumFractionDigits: 0,
-            }
-          ).format(total)
-        )
-        .join(' · ') || 'Sin pagos confirmados';
-
-    // 5. Top servicio consultado de ayer
+    // 4. Top servicio consultado de ayer
     const { data: topServiceData, error: serviceErr } = await supabaseServer
       .from('leads')
       .select('service_requested')
       .gte('created_at', startOfYesterday)
       .lt('created_at', startOfToday);
     if (serviceErr) throw serviceErr;
+    const servicioTop = topServicio(topServiceData ?? []);
 
-    const serviceCounts: Record<string, number> = {};
-    topServiceData?.forEach(l => {
-      const s = l.service_requested || 'Otros';
-      serviceCounts[s] = (serviceCounts[s] || 0) + 1;
+    const resumen = construirResumenDiario({
+      leadsCount: leadsCount ?? 0,
+      pendientes,
+      pagosLabel,
+      servicioTop,
     });
-    const topService = Object.entries(serviceCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
 
-    // 4. Enviar mensaje a Telegram
-    const message = [
-      '☀️ *Buenos días Omar*',
-      'Ayer:',
-      `- 🎯 ${leadsCount || 0} leads nuevos`,
-      `- ⏳ ${pendingCount || 0} pendientes de tu respuesta`,
-      `- 💰 ${paidLabel} en pagos confirmados`,
-      `Top servicio consultado: ${topService}`,
-    ].join('\n');
+    if (resumen.skip) {
+      return NextResponse.json({ skipped: true, reason: resumen.reason });
+    }
 
-    await notifyTelegram(message);
-
-    return NextResponse.json({ success: true });
-
+    const resultado = await notifyTelegram(resumen.mensaje);
+    return NextResponse.json({ success: true, telegram: resultado });
   } catch (error) {
     console.error('Cron daily summary error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
