@@ -80,6 +80,16 @@ describe('NAV_ITEMS — Skills (T-10)', () => {
   });
 });
 
+describe('NAV_ITEMS — Educación (T-11)', () => {
+  it('«Educación» vive en el área portfolio, grupo core, visible a los tres roles', () => {
+    const educacion = NAV_ITEMS.find((i) => i.href === '/admin/educacion');
+    expect(educacion).toBeDefined();
+    expect(educacion?.area).toBe('portfolio');
+    expect(educacion?.group).toBe('core');
+    expect(educacion?.roles).toEqual(['owner', 'assistant', 'viewer']);
+  });
+});
+
 describe('permisos de API de /api/admin/portfolio (T-09)', () => {
   it('cualquier rol admin puede leer; solo owner puede escribir', () => {
     expect(minRoleForApiRequest('/api/admin/portfolio/projects', 'GET')).toBe('viewer');
@@ -91,6 +101,13 @@ describe('permisos de API de /api/admin/portfolio (T-09)', () => {
   it('el mismo prefijo cubre /skills (T-10) sin necesitar una entrada nueva', () => {
     expect(minRoleForApiRequest('/api/admin/portfolio/skills', 'GET')).toBe('viewer');
     expect(minRoleForApiRequest('/api/admin/portfolio/skills', 'POST')).toBe('owner');
+  });
+
+  it('el mismo prefijo cubre education-categories/education-items/badges (T-11) sin entradas nuevas', () => {
+    for (const recurso of ['education-categories', 'education-items', 'badges']) {
+      expect(minRoleForApiRequest(`/api/admin/portfolio/${recurso}`, 'GET')).toBe('viewer');
+      expect(minRoleForApiRequest(`/api/admin/portfolio/${recurso}`, 'POST')).toBe('owner');
+    }
   });
 
   it('el prefijo /api/admin/portfolio está antes que el catch-all /api/admin', () => {

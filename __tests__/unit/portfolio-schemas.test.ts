@@ -2,6 +2,12 @@
  * Validación compartida de los módulos de contenido (T-09 la establece).
  */
 import {
+  badgeCreateSchema,
+  badgeUpdateSchema,
+  educationCategoryCreateSchema,
+  educationCategoryUpdateSchema,
+  educationItemCreateSchema,
+  educationItemUpdateSchema,
   projectCreateSchema,
   projectUpdateSchema,
   reorderSchema,
@@ -9,6 +15,8 @@ import {
   skillUpdateSchema,
   slugSchema,
 } from '@/lib/portfolio/schemas';
+
+const UUID_VALIDA = '123e4567-e89b-12d3-a456-426614174000';
 
 describe('slugSchema', () => {
   it('acepta minúsculas, números y guiones', () => {
@@ -166,6 +174,109 @@ describe('skillUpdateSchema', () => {
   it('un percentage presente sigue validándose con las mismas reglas', () => {
     expect(skillUpdateSchema.safeParse({ percentage: 150 }).success).toBe(false);
     expect(skillUpdateSchema.safeParse({ percentage: 42 }).success).toBe(true);
+  });
+});
+
+describe('educationCategoryCreateSchema / educationCategoryUpdateSchema', () => {
+  it('acepta el mínimo válido y publica por omisión', () => {
+    const resultado = educationCategoryCreateSchema.safeParse({ slug: 'certificaciones', name: { es: 'Certificaciones' } });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) expect(resultado.data.is_published).toBe(true);
+  });
+
+  it('exige el nombre en español', () => {
+    expect(educationCategoryCreateSchema.safeParse({ slug: 'x', name: { es: '' } }).success).toBe(false);
+  });
+
+  it('actualizar vacío se queda vacío (no rellena is_published)', () => {
+    const resultado = educationCategoryUpdateSchema.safeParse({ slug: 'otro-slug' });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(Object.keys(resultado.data)).toEqual(['slug']);
+      expect(resultado.data.is_published).toBeUndefined();
+    }
+  });
+});
+
+describe('educationItemCreateSchema / educationItemUpdateSchema', () => {
+  const base = { category_id: UUID_VALIDA, slug: 'curso-1', title: { es: 'Curso 1' } };
+
+  it('acepta el mínimo válido y rellena los valores por omisión', () => {
+    const resultado = educationItemCreateSchema.safeParse(base);
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(resultado.data.logo).toBe('');
+      expect(resultado.data.certificate_url).toBe('');
+      expect(resultado.data.is_new).toBe(false);
+      expect(resultado.data.is_published).toBe(true);
+    }
+  });
+
+  it('category_id debe ser un uuid', () => {
+    expect(educationItemCreateSchema.safeParse({ ...base, category_id: 'no-es-uuid' }).success).toBe(false);
+  });
+
+  it('logo/certificate_url vacíos son válidos', () => {
+    expect(educationItemCreateSchema.safeParse({ ...base, logo: '', certificate_url: '' }).success).toBe(true);
+  });
+
+  it('logo/certificate_url de un dominio permitido son válidos', () => {
+    const resultado = educationItemCreateSchema.safeParse({
+      ...base,
+      logo: 'https://images.unsplash.com/foto.jpg',
+      certificate_url: 'https://ozftxfwkhomnbvicjtae.supabase.co/storage/v1/object/public/portfolio-media/x.png',
+    });
+    expect(resultado.success).toBe(true);
+  });
+
+  it('logo/certificate_url de un dominio NO permitido se rechazan', () => {
+    expect(educationItemCreateSchema.safeParse({ ...base, logo: 'https://un-sitio-cualquiera.com/logo.png' }).success).toBe(false);
+  });
+
+  it('acepta logo_data_url/certificate_data_url como campos de transporte', () => {
+    const resultado = educationItemCreateSchema.safeParse({ ...base, logo_data_url: 'data:image/png;base64,AAAA' });
+    expect(resultado.success).toBe(true);
+  });
+
+  it('actualizar vacío se queda vacío (no rellena is_new/is_published/logo con los valores de creación)', () => {
+    const resultado = educationItemUpdateSchema.safeParse({ title: { es: 'Nuevo título' } });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(Object.keys(resultado.data)).toEqual(['title']);
+      expect(resultado.data.is_new).toBeUndefined();
+      expect(resultado.data.is_published).toBeUndefined();
+      expect(resultado.data.logo).toBeUndefined();
+    }
+  });
+});
+
+describe('badgeCreateSchema / badgeUpdateSchema', () => {
+  const base = { slug: 'credly-badge', title: { es: 'Badge de Credly' } };
+
+  it('acepta el mínimo válido y rellena los valores por omisión', () => {
+    const resultado = badgeCreateSchema.safeParse(base);
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(resultado.data.is_new).toBe(false);
+      expect(resultado.data.is_published).toBe(true);
+    }
+  });
+
+  it('no exige category_id (las insignias no tienen categoría, a diferencia de los cursos)', () => {
+    expect(badgeCreateSchema.safeParse(base).success).toBe(true);
+  });
+
+  it('logo de un dominio no permitido se rechaza', () => {
+    expect(badgeCreateSchema.safeParse({ ...base, logo: 'https://otro-dominio.net/x.png' }).success).toBe(false);
+  });
+
+  it('actualizar vacío se queda vacío', () => {
+    const resultado = badgeUpdateSchema.safeParse({ is_new: true });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(Object.keys(resultado.data)).toEqual(['is_new']);
+      expect(resultado.data.is_published).toBeUndefined();
+    }
   });
 });
 

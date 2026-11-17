@@ -31,7 +31,19 @@ export type AuditAction =
   | 'portfolio_skill.create'
   | 'portfolio_skill.update'
   | 'portfolio_skill.delete'
-  | 'portfolio_skill.reorder';
+  | 'portfolio_skill.reorder'
+  | 'portfolio_education_category.create'
+  | 'portfolio_education_category.update'
+  | 'portfolio_education_category.delete'
+  | 'portfolio_education_category.reorder'
+  | 'portfolio_education_item.create'
+  | 'portfolio_education_item.update'
+  | 'portfolio_education_item.delete'
+  | 'portfolio_education_item.reorder'
+  | 'portfolio_badge.create'
+  | 'portfolio_badge.update'
+  | 'portfolio_badge.delete'
+  | 'portfolio_badge.reorder';
 
 export type AuditActor = {
   userId: string;

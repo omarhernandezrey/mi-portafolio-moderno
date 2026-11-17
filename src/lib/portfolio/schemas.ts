@@ -107,6 +107,121 @@ export const skillUpdateSchema = z.object(camposSkill).partial();
 export type SkillCreateInput = z.infer<typeof skillCreateSchema>;
 export type SkillUpdateInput = z.infer<typeof skillUpdateSchema>;
 
+// ── Educación e insignias (T-11) ────────────────────────────────────────
+
+/**
+ * Lista cerrada de dominios para `logo`/`certificate_url` cuando NO se sube
+ * un archivo sino que se pega una URL externa. Debe coincidir con
+ * `images.remotePatterns` de `next.config.mjs` — `EducationModal.tsx` pinta
+ * el certificado con `next/image`, que rechaza en tiempo de ejecución
+ * cualquier host fuera de esa lista. Para ampliarla: añadir el dominio aquí
+ * Y en `next.config.mjs`, y desplegar — no hay forma de hacerlo sin
+ * redesplegar.
+ */
+export const DOMINIOS_DE_IMAGEN_PERMITIDOS = [
+  'ozftxfwkhomnbvicjtae.supabase.co', // Storage propio: lo usan los archivos subidos desde el panel.
+  'images.unsplash.com',
+] as const;
+
+function hostnameValido(url: string): boolean {
+  try {
+    return (DOMINIOS_DE_IMAGEN_PERMITIDOS as readonly string[]).includes(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+}
+
+/** Vacío permitido; si no, debe ser `https://` y el host debe estar en `DOMINIOS_DE_IMAGEN_PERMITIDOS`. */
+const imagenUrlOrVacioSchema = z
+  .string()
+  .trim()
+  .refine(
+    (v) => v === '' || (/^https:\/\//i.test(v) && hostnameValido(v)),
+    'Debe ser una imagen subida o una URL https de un dominio permitido, o quedar vacío',
+  );
+
+/**
+ * Campos de transporte, no de la fila: si vienen, la API sube el archivo a
+ * Storage y el resultado PISA lo que haya en `logo`/`certificate_url` del
+ * cuerpo. Se valida junto al resto del esquema (`.merge()`) para que un
+ * data URL mal formado dé 400 igual que cualquier otro campo inválido.
+ */
+export const subidaDeImagenSchema = z.object({
+  logo_data_url: z.string().trim().optional(),
+  certificate_data_url: z.string().trim().optional(),
+});
+
+const camposCategoriaEducacion = {
+  slug: slugSchema,
+  name: localizedRequiredSchema,
+  is_published: z.boolean(),
+};
+
+export const educationCategoryCreateSchema = z.object({
+  ...camposCategoriaEducacion,
+  is_published: camposCategoriaEducacion.is_published.default(true),
+});
+
+export const educationCategoryUpdateSchema = z.object(camposCategoriaEducacion).partial();
+
+export type EducationCategoryCreateInput = z.infer<typeof educationCategoryCreateSchema>;
+export type EducationCategoryUpdateInput = z.infer<typeof educationCategoryUpdateSchema>;
+
+const camposItemEducacion = {
+  category_id: z.string().uuid('Falta elegir la categoría'),
+  slug: slugSchema,
+  title: localizedRequiredSchema,
+  institution: localizedOptionalSchema,
+  duration: localizedOptionalSchema,
+  description: localizedOptionalSchema,
+  /** Subido a Storage o pegado: ver `DOMINIOS_DE_IMAGEN_PERMITIDOS`. Nunca toca `certificate`, el campo legado de las rutas estáticas de origen. */
+  logo: imagenUrlOrVacioSchema,
+  certificate_url: imagenUrlOrVacioSchema,
+  is_new: z.boolean(),
+  is_published: z.boolean(),
+};
+
+export const educationItemCreateSchema = z
+  .object({
+    ...camposItemEducacion,
+    logo: camposItemEducacion.logo.default(''),
+    certificate_url: camposItemEducacion.certificate_url.default(''),
+    is_new: camposItemEducacion.is_new.default(false),
+    is_published: camposItemEducacion.is_published.default(true),
+  })
+  .merge(subidaDeImagenSchema);
+
+export const educationItemUpdateSchema = z.object(camposItemEducacion).partial().merge(subidaDeImagenSchema);
+
+export type EducationItemCreateInput = z.infer<typeof educationItemCreateSchema>;
+export type EducationItemUpdateInput = z.infer<typeof educationItemUpdateSchema>;
+
+const camposInsignia = {
+  slug: slugSchema,
+  title: localizedRequiredSchema,
+  institution: localizedOptionalSchema,
+  summary: localizedOptionalSchema,
+  logo: imagenUrlOrVacioSchema,
+  certificate_url: imagenUrlOrVacioSchema,
+  is_new: z.boolean(),
+  is_published: z.boolean(),
+};
+
+export const badgeCreateSchema = z
+  .object({
+    ...camposInsignia,
+    logo: camposInsignia.logo.default(''),
+    certificate_url: camposInsignia.certificate_url.default(''),
+    is_new: camposInsignia.is_new.default(false),
+    is_published: camposInsignia.is_published.default(true),
+  })
+  .merge(subidaDeImagenSchema);
+
+export const badgeUpdateSchema = z.object(camposInsignia).partial().merge(subidaDeImagenSchema);
+
+export type BadgeCreateInput = z.infer<typeof badgeCreateSchema>;
+export type BadgeUpdateInput = z.infer<typeof badgeUpdateSchema>;
+
 /** Reordenar: el array completo de ids en el orden deseado; position se reescribe 0..n-1. */
 export const reorderSchema = z.object({
   ids: z.array(z.string().uuid()).min(1, 'Falta la lista de ids'),

@@ -5,6 +5,14 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Configuración para imágenes optimizada para Vercel
+  //
+  // `ozftxfwkhomnbvicjtae.supabase.co` e `images.unsplash.com` son también
+  // la lista cerrada que valida `DOMINIOS_DE_IMAGEN_PERMITIDOS` en
+  // `src/lib/portfolio/schemas.ts` (T-11: logo/certificado de educación e
+  // insignias, pegados como URL en vez de subidos). Para admitir un dominio
+  // nuevo hay que añadirlo en LOS DOS sitios y redesplegar — `next/image`
+  // rechaza en tiempo de ejecución cualquier host que no esté aquí, y el
+  // panel lo rechazaría en el formulario si no está también allá.
   images: {
     remotePatterns: [
       {
