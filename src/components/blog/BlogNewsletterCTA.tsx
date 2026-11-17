@@ -30,7 +30,7 @@ export default function BlogNewsletterCTA() {
   };
 
   return (
-    <section className="bg-background rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary transition-all duration-500">
+    <section className="bg-background rounded-canvas md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary transition-all duration-500">
       <div className="absolute inset-0 bg-primary-7 opacity-0 group-hover:opacity-100 transition-opacity blur-[100px]" />
 
       <div className="max-w-2xl mx-auto space-y-12 relative z-10">

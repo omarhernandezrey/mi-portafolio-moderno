@@ -342,7 +342,7 @@ export default async function SobreMiPage({ params }: Props) {
             alt={isEn ? pageHeroImages.sobreMi.alt.en : pageHeroImages.sobreMi.alt.es}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
             priority
-            className="w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
+            className="w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl"
           />
         </ScrollReveal>
 

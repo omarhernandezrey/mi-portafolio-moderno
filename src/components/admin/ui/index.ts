@@ -4,8 +4,9 @@
  * Importa siempre desde aquí (`@/components/admin/ui`) y no del archivo
  * concreto: así se puede reorganizar el interior sin tocar las vistas.
  *
- * Nota: `src/components/ui/Button.tsx` NO forma parte de este sistema
- * (hardcodea `bg-blue-500`). Para botones del panel, `AdminButton`.
+ * Para botones del panel, `AdminButton`. (El viejo
+ * `src/components/ui/Button.tsx`, que hardcodeaba `bg-blue-500` fuera del
+ * sistema, se eliminó en T-24: no lo importaba nadie.)
  */
 
 // Pre-existentes

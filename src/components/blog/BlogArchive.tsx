@@ -90,7 +90,7 @@ function FeaturedEssay({
     <ScrollReveal y={20}>
       <Link
         href={`/blog/${post.slug}`}
-        className="group relative block overflow-hidden rounded-[32px] border border-white/10 bg-card-50 shadow-2xl transition-colors duration-500 hover:border-primary"
+        className="group relative block overflow-hidden rounded-canvas border border-white/10 bg-card-50 shadow-2xl transition-colors duration-500 hover:border-primary"
       >
         <div className="grid lg:grid-cols-12">
           <div className="order-2 flex flex-col justify-between p-7 sm:p-10 lg:order-1 lg:col-span-7 lg:p-12">

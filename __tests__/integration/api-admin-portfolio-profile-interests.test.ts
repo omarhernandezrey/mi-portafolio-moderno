@@ -48,7 +48,7 @@ function authInsuficiente() {
   mockRequireAdmin.mockResolvedValue({ ok: false, response: Response.json({ error: 'Permisos insuficientes' }, { status: 403 }) });
 }
 
-function req(url: string, init?: RequestInit) {
+function req(url: string, init?: ConstructorParameters<typeof NextRequest>[1]) {
   return new NextRequest(`http://localhost${url}`, init);
 }
 

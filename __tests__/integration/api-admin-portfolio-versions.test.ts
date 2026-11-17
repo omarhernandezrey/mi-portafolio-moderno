@@ -32,7 +32,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { GET as listar } from '@/app/api/admin/portfolio/versions/route';
 import { POST as restaurar } from '@/app/api/admin/portfolio/versions/[id]/restore/route';
 
-function req(url: string, init?: RequestInit) {
+function req(url: string, init?: ConstructorParameters<typeof NextRequest>[1]) {
   return new NextRequest(`http://localhost${url}`, init);
 }
 

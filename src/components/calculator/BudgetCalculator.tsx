@@ -137,14 +137,14 @@ export default function BudgetCalculator() {
     <SmoothScrollProvider>
     <div className="mx-auto max-w-4xl px-4 py-12 space-y-12">
       {/* Header Intelligence */}
-      <div className="relative overflow-hidden rounded-[32px] sm:rounded-[40px]">
+      <div className="relative overflow-hidden rounded-canvas sm:rounded-[40px]">
         <HeroParallax className="absolute -inset-10 -z-10">
           <div data-parallax-speed="0.3" className="absolute inset-0">
             <ParticleField className="w-full h-full opacity-45" />
           </div>
         </HeroParallax>
         <ScrollReveal immediate>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-canvas sm:rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
               <Wallet size={160} className="rotate-12" />
             </div>
@@ -162,7 +162,7 @@ export default function BudgetCalculator() {
               </p>
             </div>
 
-            <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-[32px] border border-white/5 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
+            <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-canvas border border-white/5 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary opacity-60">
                 {lang === 'es' ? 'Presupuesto Base' : lang === 'en' ? 'Estimated Base' : 'Orçamento Base'}
               </span>
@@ -183,7 +183,7 @@ export default function BudgetCalculator() {
           alt={lang === 'en' ? pageHeroImages.calculadora.alt.en : pageHeroImages.calculadora.alt.es}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 896px"
           priority
-          className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
+          className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl"
         />
       </ScrollReveal>
 
@@ -203,7 +203,7 @@ export default function BudgetCalculator() {
         </div>
       </div>
 
-      <div className="relative min-h-[300px] sm:min-h-[500px] overflow-hidden rounded-[32px] sm:rounded-[48px] bg-card-bg p-6 sm:p-10 md:p-16 shadow-2xl border border-white/5 backdrop-blur-md">
+      <div className="relative min-h-[300px] sm:min-h-[500px] overflow-hidden rounded-canvas sm:rounded-[48px] bg-card-bg p-6 sm:p-10 md:p-16 shadow-2xl border border-white/5 backdrop-blur-md">
         <AnimatePresence mode="wait">
           {!showLeadForm ? (
             <motion.div
@@ -235,7 +235,7 @@ export default function BudgetCalculator() {
                     <button
                       key={option.id}
                       onClick={() => handleSelect(option.id)}
-                      className={`group relative flex flex-col items-start gap-3 sm:gap-4 rounded-[24px] sm:rounded-[32px] border-2 p-5 sm:p-8 text-left transition-all duration-300 ${
+                      className={`group relative flex flex-col items-start gap-3 sm:gap-4 rounded-[24px] sm:rounded-canvas border-2 p-5 sm:p-8 text-left transition-all duration-300 ${
                         isSelected 
                           ? 'border-primary bg-primary/5 shadow-2xl shadow-primary/5' 
                           : 'border-white/5 bg-background/30 hover:border-white/20 hover:bg-background/50'
@@ -291,7 +291,7 @@ export default function BudgetCalculator() {
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-primary blur-3xl opacity-20 animate-pulse" />
-                <div className="relative flex h-24 w-24 items-center justify-center rounded-[32px] bg-primary text-background shadow-2xl shadow-primary/20">
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-canvas bg-primary text-background shadow-2xl shadow-primary/20">
                   <Sparkles size={48} />
                 </div>
               </div>
@@ -400,7 +400,7 @@ export default function BudgetCalculator() {
         </AnimatePresence>
       </div>
       
-      <div className="bg-white/5 border border-white/5 p-8 rounded-[32px] flex items-start gap-4 max-w-2xl mx-auto italic">
+      <div className="bg-white/5 border border-white/5 p-8 rounded-canvas flex items-start gap-4 max-w-2xl mx-auto italic">
         <Info className="text-primary shrink-0 mt-1" size={20} />
         <p className="text-[11px] text-text-muted font-medium leading-relaxed opacity-60">
           {lang === 'es'

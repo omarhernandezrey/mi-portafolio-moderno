@@ -112,7 +112,7 @@ export default function StatusPage() {
 
               <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
                 <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
-                  <div className={`p-6 rounded-[32px] shadow-inner ${data?.status === 'operational' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-accent/10 text-accent border border-accent/20'}`}>
+                  <div className={`p-6 rounded-canvas shadow-inner ${data?.status === 'operational' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-accent/10 text-accent border border-accent/20'}`}>
                     {data?.status === 'operational' ? <CheckCircle2 size={48} strokeWidth={1.5} /> : <AlertCircle size={48} strokeWidth={1.5} />}
                   </div>
                   <div className="space-y-2">
@@ -228,7 +228,7 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
   const isOperational = status === 'operational' || status === 'active';
   
   return (
-    <div className="bg-card-bg/40 rounded-[32px] border border-white/5 p-8 shadow-xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden">
+    <div className="bg-card-bg/40 rounded-canvas border border-white/5 p-8 shadow-xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden">
       <div className="flex justify-between items-start mb-6">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">

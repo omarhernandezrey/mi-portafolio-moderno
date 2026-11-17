@@ -140,7 +140,7 @@ export default function RecursosContent() {
             alt={isEn ? pageHeroImages.recursos.alt.en : pageHeroImages.recursos.alt.es}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
             priority
-            className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl mt-4"
+            className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl mt-4"
           />
         </header>
 
@@ -187,14 +187,14 @@ export default function RecursosContent() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="group relative bg-card-bg rounded-[32px] md:rounded-[48px] border border-white/5 p-6 md:p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
+              className="group relative bg-card-bg rounded-canvas md:rounded-[48px] border border-white/5 p-6 md:p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
             >
               {/* Decorative Index */}
               <div className="absolute top-8 right-8 text-[40px] font-black text-white-custom opacity-[0.03] italic group-hover:opacity-[0.08] transition-opacity">
                 0{idx + 1}
               </div>
 
-              <div className="mb-10 w-20 h-20 rounded-[32px] bg-background/50 border border-white/5 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-500">
+              <div className="mb-10 w-20 h-20 rounded-canvas bg-background/50 border border-white/5 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-500">
                 {magnet.icon}
               </div>
 
@@ -237,7 +237,7 @@ export default function RecursosContent() {
         </div>
 
         {/* Global Strategy CTA */}
-        <section className="bg-background rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
+        <section className="bg-background rounded-canvas md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[100px]" />
 
           <div className="max-w-2xl mx-auto space-y-12 relative z-10">

@@ -251,7 +251,7 @@ export default async function ServiciosPage({ params }: Props) {
               alt={isEn ? pageHeroImages.servicios.alt.en : pageHeroImages.servicios.alt.es}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
               priority
-              className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 mt-12 shadow-2xl"
+              className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 mt-12 shadow-2xl"
             />
           </ScrollReveal>
 

@@ -61,7 +61,7 @@ function tabla(porTabla: Record<string, unknown> | ((tabla: string) => unknown))
   });
 }
 
-function req(url: string, init?: RequestInit) {
+function req(url: string, init?: ConstructorParameters<typeof NextRequest>[1]) {
   return new NextRequest(`http://localhost${url}`, init);
 }
 

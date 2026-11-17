@@ -16,8 +16,9 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 
 # Antipatrones de diseño ya presentes cuando se instaló el detector (ver §3.9
-# del plan). Solo puede bajar. Cuando T-24 corrija el que queda, ponlo en 0.
-LINEA_BASE_ANTIPATRONES=1
+# del plan). Solo puede bajar. T-24 corrigió el último (border-l-4 en
+# docs/[slug]): la línea base es 0 y cualquier hallazgo nuevo bloquea.
+LINEA_BASE_ANTIPATRONES=0
 
 ROJO=$'\033[31m'; VERDE=$'\033[32m'; GRIS=$'\033[90m'; FIN=$'\033[0m'
 fallos=0

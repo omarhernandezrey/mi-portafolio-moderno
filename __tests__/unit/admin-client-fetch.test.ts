@@ -6,11 +6,12 @@ describe('adminFetch', () => {
 
   beforeEach(() => {
     global.fetch = jest.fn();
-    // Evitar side-effects de redirect en node
-    // @ts-expect-error test stub
+    // Evitar side-effects de redirect en node: un stub mínimo de window,
+    // tipado con cast (no @ts-expect-error: la directiva solo cubría la
+    // línea de la asignación, no el literal incompleto de dentro).
     global.window = {
       location: { href: 'http://localhost/' },
-    };
+    } as unknown as Window & typeof globalThis;
   });
 
   afterEach(() => {
@@ -54,7 +55,6 @@ describe('adminFetch', () => {
   });
 
   it('no redirige si redirectOnUnauthorized=false', async () => {
-    // @ts-expect-error stub
     global.window.location.href = 'http://localhost/stay';
     (global.fetch as jest.Mock).mockResolvedValue({
       status: 401,

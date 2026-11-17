@@ -208,7 +208,7 @@ export default async function ServicioPilarPage({ params }: Props) {
                 alt={isEn ? servicioHero.alt.en : servicioHero.alt.es}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
                 priority
-                className="w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
+                className="w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl"
               />
             </ScrollReveal>
           )}

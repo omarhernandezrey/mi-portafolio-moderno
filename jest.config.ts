@@ -3,12 +3,13 @@ import nextJest from 'next/jest.js';
 
 const createJestConfig = nextJest({ dir: './' });
 
+// La transformación la hace el SWC de `next/jest`, no ts-jest: el bloque
+// `globals['ts-jest']` que había aquí era configuración muerta (T-24).
+// `tsconfig.jest.json` sigue existiendo, pero como config de TYPECHECK de
+// los tests (`npx tsc -p tsconfig.jest.json`), no de transformación.
 const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'node',
-  globals: {
-    'ts-jest': { tsconfig: 'tsconfig.jest.json' },
-  },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },

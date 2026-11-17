@@ -361,7 +361,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
                 alt={isEn ? servicioHero.alt.en : servicioHero.alt.es}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
                 priority
-                className="w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl"
+                className="w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl"
               />
             </ScrollReveal>
           )}
@@ -406,7 +406,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
                   src={unsplashUrl(servicioSecondary.photoId)}
                   alt={isEn ? servicioSecondary.alt.en : servicioSecondary.alt.es}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 800px"
-                  className="w-full aspect-[4/3] md:aspect-[16/10] rounded-[32px] md:rounded-[48px] border border-white/5 shadow-2xl"
+                  className="w-full aspect-[4/3] md:aspect-[16/10] rounded-canvas md:rounded-[48px] border border-white/5 shadow-2xl"
                 />
                 <div className="absolute -bottom-6 -left-6 hidden sm:flex items-center gap-3 bg-card-bg/90 backdrop-blur-xl border border-primary/20 rounded-2xl px-5 py-4 shadow-2xl">
                   <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
@@ -663,7 +663,7 @@ function ValueCard({ icon, title, description }: { icon: React.ReactNode, title:
       <div className="absolute -right-4 -top-4 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
         {icon}
       </div>
-      <div className="mb-10 w-20 h-20 rounded-[32px] bg-background/50 border border-white/5 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-500">
+      <div className="mb-10 w-20 h-20 rounded-canvas bg-background/50 border border-white/5 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-500">
         {icon}
       </div>
       <div className="space-y-4">

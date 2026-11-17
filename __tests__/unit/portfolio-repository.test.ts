@@ -303,11 +303,15 @@ describe('leerEducacion', () => {
       portfolio_education_items: { data: items, error: null },
     });
     const resultado = await leerEducacion(cliente);
+    // El tipo público de educación admite `string | {es,en}` (legado); el
+    // repositorio siempre produce la forma bilingüe — este helper estrecha
+    // el tipo para las aserciones sin un cast suelto por línea.
+    const es = (v: string | { es: string; en: string }) => (typeof v === 'string' ? v : v.es);
     expect(resultado).toHaveLength(2);
-    expect(resultado[0].category.es).toBe('Universidad');
+    expect(es(resultado[0].category)).toBe('Universidad');
     expect(resultado[0].items).toHaveLength(1);
-    expect(resultado[0].items[0].title.es).toBe('Ingeniería');
-    expect(resultado[1].items[0].title.es).toBe('Curso SENA');
+    expect(es(resultado[0].items[0].title)).toBe('Ingeniería');
+    expect(es(resultado[1].items[0].title)).toBe('Curso SENA');
   });
 
   it('error en cualquiera de las dos tablas → educationData', async () => {

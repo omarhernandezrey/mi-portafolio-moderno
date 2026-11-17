@@ -249,7 +249,7 @@ body {
   --loadmore-hover-bg-color: #1f2833;
 
   /* Tipografía elegante para morado */
-  --main-font-family: "Poppins", "Segoe UI", arial, sans-serif;
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif; /* antes "Poppins": next/font nunca la cargaba (T-24) */
 }
 
 /* palette3 */
@@ -285,7 +285,7 @@ body {
   --gold-gradient: linear-gradient(135deg, #c5961f 0%, #ffd65a 100%);
 
   /* Tipografía con serif para dorado/café */
-  --main-font-family: "Merriweather", georgia, serif;
+  --main-font-family: var(--font-display), georgia, serif; /* antes "Merriweather": serif que next/font no cargaba; Fraunces conserva el caracter serif (T-24) */
 }
 
 /* palette4 (versión clara inspirada en palette1) */
@@ -356,7 +356,7 @@ body {
   --bold-gradient: linear-gradient(135deg, #ed3434 0%, #fa5c5c 100%);
 
   /* Tipografía robusta para rojo oscuro */
-  --main-font-family: "Montserrat", "Segoe UI", arial, sans-serif;
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif; /* antes "Montserrat": next/font nunca la cargaba (T-24) */
 }
 
 /* palette6 - Tema Cyberpunk Neon */
@@ -392,7 +392,7 @@ body {
   --neon-text-glow: 0 0 5px #0ff, 0 0 10px #0ff;
 
   /* Tipografía futurista para cyberpunk */
-  --main-font-family: "Orbitron", "Share Tech Mono", monospace;
+  --main-font-family: var(--font-mono), "Share Tech Mono", monospace; /* antes "Orbitron": next/font no la cargaba; JetBrains Mono conserva el caracter tecnico (T-24) */
 }
 
 /* palette7 - Tema Forest Night */
@@ -427,7 +427,7 @@ body {
   --leaf-shadow: 0 4px 6px rgb(76 175 80 / 20%);
 
   /* Tipografía amigable para forest */
-  --main-font-family: "Nunito", "Segoe UI", arial, sans-serif;
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif; /* antes "Nunito": next/font nunca la cargaba (T-24) */
 }
 
 /* palette8 - Tema Sunset Vibes */
@@ -462,7 +462,7 @@ body {
   --sunset-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffb347 100%);
 
   /* Tipografía redondeada para sunset */
-  --main-font-family: "Quicksand", "Segoe UI", arial, sans-serif;
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif; /* antes "Quicksand": next/font nunca la cargaba (T-24) */
 }
 
 /* palette9 - Tema Deep Ocean */
@@ -497,7 +497,7 @@ body {
   --wave-shadow: 0 4px 8px rgb(0 180 216 / 30%);
 
   /* Tipografía geométrica para ocean */
-  --main-font-family: "Rubik", "Segoe UI", arial, sans-serif;
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif; /* antes "Rubik": next/font nunca la cargaba (T-24) */
 }
 
 /* palette10 - Tema Royal Purple */
@@ -532,7 +532,7 @@ body {
   --royal-glow: 0 0 10px rgb(156 39 176 / 50%);
 
   /* Tipografía elegante para purple */
-  --main-font-family: "Poppins", "Segoe UI", arial, sans-serif;
+  --main-font-family: var(--font-body), "Segoe UI", arial, sans-serif; /* antes "Poppins": next/font nunca la cargaba (T-24) */
 }
 
 /* ═══════════════════════════════════════════════════════════════

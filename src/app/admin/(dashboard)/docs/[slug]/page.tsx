@@ -23,8 +23,11 @@ const components = {
   strong: (props: React.HTMLAttributes<HTMLElement>) => <strong className="font-bold text-admin-ink" {...props} />,
   code: (props: React.HTMLAttributes<HTMLElement>) => <code className="bg-primary/10 px-1.5 py-0.5 rounded text-sm text-primary font-mono" {...props} />,
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => <pre className="bg-black/40 border border-admin-line text-admin-ink p-6 rounded-2xl overflow-x-auto mb-6 text-sm" {...props} />,
+  // T-24: la barra lateral gruesa (border-l-4) era el único antipatrón de la
+  // línea base del detector. La cita se distingue igual con el fondo teñido,
+  // la cursiva y un borde fino completo — sin la barra.
   blockquote: (props: React.BlockquoteHTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote className="border-l-4 border-primary pl-6 italic my-8 text-text-muted bg-primary/5 py-4 rounded-r-2xl" {...props} />
+    <blockquote className="border border-primary/15 px-6 italic my-8 text-text-muted bg-primary/5 py-4 rounded-2xl" {...props} />
   ),
 };
 

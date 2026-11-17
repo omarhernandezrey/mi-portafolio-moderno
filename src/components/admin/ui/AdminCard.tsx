@@ -17,11 +17,13 @@ export default function AdminCard({
 }: AdminCardProps) {
   const paddingClass =
     padding === 'none' ? '' : padding === 'large' ? 'p-8 md:p-10' : 'p-5 md:p-7';
+  // `rounded-canvas` = var(--radius-canvas) = 2rem: el mismo 32px que antes
+  // iba escrito a mano, ahora desde la escala nombrada de T-01 (T-24).
   const radiusClass =
     radius === '2xl'
       ? 'rounded-2xl'
       : radius === '4xl'
-        ? 'rounded-[32px]'
+        ? 'rounded-canvas'
         : 'rounded-3xl';
 
   return (

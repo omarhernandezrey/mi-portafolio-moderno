@@ -40,7 +40,8 @@ Antes de escribir cualquier gráfica, carga también la skill `dataviz` si está
 - **Las diez paletas no se tocan.** Los componentes consumen tokens (`primary`, `accent`, `card-bg`, `admin-*`, `chart-*`); ningún hex literal.
 - **Mobile-first**: se compone y se valida a 375 px antes que en escritorio. Objetivos táctiles de 44px.
 - **Ningún dato inventado** en el panel ni en el sitio.
-- Primitivos de UI del panel: `src/components/admin/ui/` (importar desde su `index.ts`). `src/components/ui/Button.tsx` está fuera del sistema.
+- Primitivos de UI del panel: `src/components/admin/ui/` (importar desde su `index.ts`).
+- `src/data/` guarda contenido estático y constantes (perfiles, ciudades, precios); `src/lib/` guarda lógica. Los `*Data.ts` legados de `src/lib/` (proyectos, skills, educación, servicios) se quedan donde están: moverlos tocaría decenas de imports sin beneficio (decidido en T-24).
 
 ## Validación de cada tarea
 

@@ -287,7 +287,7 @@ export default async function FAQPage({ params }: Props) {
                 alt={isEn ? pageHeroImages.faq.alt.en : pageHeroImages.faq.alt.es}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
                 priority
-                className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-[32px] border border-white/5 shadow-2xl mt-6"
+                className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl mt-6"
               />
             </ScrollReveal>
           </div>
@@ -324,12 +324,12 @@ export default async function FAQPage({ params }: Props) {
 
           {/* Global CTA */}
           <ScrollReveal>
-          <section className="bg-card-bg rounded-[32px] md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-20 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
+          <section className="bg-card-bg rounded-canvas md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-20 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent opacity-30" />
             <div className="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
 
             <div className="max-w-2xl mx-auto space-y-10 relative z-10">
-              <div className="mx-auto w-20 h-20 rounded-[32px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
+              <div className="mx-auto w-20 h-20 rounded-canvas bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500">
                 <HelpCircle size={40} />
               </div>
 

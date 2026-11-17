@@ -2,10 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "types": ["jest", "node"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "jsx": "react"
+    "target": "es2022",
+    "jsx": "react-jsx",
+    "noEmit": true
   },
-  "include": ["__tests__/**/*.ts", "__tests__/**/*.tsx", "src/**/*.ts", "src/**/*.tsx"],
+  "include": ["__tests__/**/*.ts", "__tests__/**/*.tsx"],
   "exclude": ["node_modules", "cypress", "k6"]
 }
