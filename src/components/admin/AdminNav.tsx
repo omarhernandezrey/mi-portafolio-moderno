@@ -8,6 +8,7 @@ import {
   LogOut,
   LayoutDashboard,
   Briefcase,
+  FolderKanban,
   Users,
   Clock,
   Menu,
@@ -34,6 +35,7 @@ import { ADMIN_ROLE_LABELS, type AdminRole } from '@/lib/admin/roles';
 const NAV_ICONS: Record<string, LucideIcon> = {
   '/admin': LayoutDashboard,
   '/admin/negocio': Briefcase,
+  '/admin/proyectos': FolderKanban,
   '/admin/leads': Users,
   '/admin/tickets': Ticket,
   '/admin/feed': MessagesSquare,

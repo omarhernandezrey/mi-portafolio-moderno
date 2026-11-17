@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-16 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16, T-19, T-13 y T-08 hechas; siguiente tarea: T-09**
+> Creado: 2026-11-12 · Última revisión: 2026-11-16 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16, T-19, T-13, T-08 y T-09 hechas; siguiente tarea: T-10**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -29,6 +29,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-19 | Allowlist falla cerrado, login con límite de intentos, caché de rol, MFA TOTP para `owner`, auditoría en los 2 endpoints que faltaban, grants de las 16 tablas antiguas revocados en la base real (0 avisos WARN del linter) |
 | T-13 | `src/lib/github.ts` + tabla `github_metrics` + cron diario: commits, lenguajes, estrellas, PRs, rachas por repositorio, verificado contra la API real de GitHub |
 | T-08 | Panel reorganizado en dos áreas (Portafolio/Negocio) con el patrón de pestañas subrayadas de `DESIGN.md`; los 13 destinos de Negocio siguen en sus URLs; `/admin` es ahora un estado vacío honesto con puente a Negocio; `/admin/negocio` tiene el CRM movido verbatim |
+| T-09 | Primer módulo de edición de contenido (`/admin/proyectos`): API CRUD + reorden en `src/app/api/admin/portfolio/projects/`, validación zod compartida en `src/lib/portfolio/schemas.ts`, comprobador de embebido de T-07 enganchado al guardar `demo`, RLS verificada con `anon` en la base real. Establece el patrón que copian T-10 a T-12 |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -43,7 +44,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-`T-09 → T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -711,7 +712,7 @@ Se queda en Supabase Auth. No se instaló ningún SDK de AWS (eso es T-20, condi
 - [x] Revisión a 375, 475 y ≥1024 px: **parcial**. Se confirmó estáticamente (clases Tailwind) que el patrón `hidden lg:flex` / `lg:hidden` separa sidebar fijo (≥1024px) de header + cajón móvil (<1024px), que el cajón mide `min(88vw, 22rem)` (cabe en 375 y 475px sin desbordar), y que el interruptor de área tiene `min-h-11` (44px táctil). **No se pudo confirmar en un navegador real**: el panel exige sesión autenticada por enlace mágico a un correo real de Omar; el enlace expiró al intentarlo y, para no demorar la tarea, se continuó sin reintentarlo. Pendiente confirmar visualmente en los tres anchos la próxima vez que haya sesión a mano.
 
 #### T-09 a T-12 · Módulos de edición de contenido
-**Ramas:** `feat/module-projects` (T-09), `feat/module-skills` (T-10), `feat/module-education` (T-11), `feat/module-content` (T-12: servicios, tecnologías, timeline, perfil) · **Dependen de:** T-06, T-08 · **Skills:** `impeccable` · **Estado:** `[ ]`
+**Ramas:** `feat/module-projects` (T-09), `feat/module-skills` (T-10), `feat/module-education` (T-11), `feat/module-content` (T-12: servicios, tecnologías, timeline, perfil) · **Dependen de:** T-06, T-08 · **Skills:** `impeccable` · **Estado:** `[ ]` (T-09 hecha; T-10 a T-12 pendientes)
 
 Los cuatro siguen el mismo patrón; **T-09 lo establece y los demás lo copian**. Haz T-09 completo y con cuidado antes de empezar otro.
 
@@ -734,6 +735,14 @@ Los cuatro siguen el mismo patrón; **T-09 lo establece y los demás lo copian**
 - [ ] Un borrador no aparece en el sitio público (lo garantiza RLS; se comprueba con el rol `anon` en PostgreSQL local).
 - [ ] Ningún hex literal en los componentes nuevos; detector sin antipatrones nuevos.
 - [ ] Revisión a 375 px: todo el flujo se completa con el pulgar.
+
+**T-09 (Proyectos) hecha — el checklist de arriba es la plantilla que T-10 a T-12 repiten; esto es lo que de verdad se comprobó para T-09:**
+- [x] Tests de API (`__tests__/integration/api-admin-portfolio-projects.test.ts`, 18 tests): sin sesión → 401; rol insuficiente → 403 en los 4 handlers de escritura; cuerpo inválido → 400 con el campo señalado; alta/edición/borrado/reorden correctos; cada escritura deja auditoría (`portfolio_project.create/update/delete/reorder`) e invalida `portfolio:projects`; un slug duplicado (23505) da 400, no 500; el comprobador de embebido de T-07 se ejecuta solo cuando `demo` cambia, nunca en una edición que no lo toca.
+- [x] Tests de esquema (`__tests__/unit/portfolio-schemas.test.ts`, 18 tests): incluyen un bug real que atraparon antes de llegar a producción — `projectUpdateSchema` heredaba los `.default()` de la creación vía `.partial()`, así que un PATCH que solo tocaba el título habría repoblicado el proyecto (`is_published: true`) y vaciado su `technologies` a `[]` sin que nadie lo pidiera. Corregido: la forma compartida no lleva `.default()`; solo lo añade `projectCreateSchema`.
+- [x] Tests de interfaz (`__tests__/unit/admin-proyectos-page.test.tsx`, 8 tests): crear, editar, publicar/despublicar (con reversión real al fallar el PATCH), reordenar, cancelar un borrado, confirmar un borrado, y un estado de error de red con botón «Reintentar» distinto del estado «sin proyectos todavía».
+- [x] Un borrador no aparece para `anon`: comprobado en la base real (`SUPABASE_DB_URL`) insertando un proyecto publicado y uno en borrador dentro de una transacción con `SET LOCAL ROLE anon`, confirmando que solo el publicado es visible, y haciendo `ROLLBACK` (0 filas de prueba quedaron en la tabla).
+- [x] Ningún hex literal; detector: 1 antipatrón, igual a la línea base, 0 nuevos en los archivos de esta tarea.
+- [x] Revisión a 375 px: **parcial**, igual que en T-08. Se confirmó estáticamente que `DataTable` ya resuelve móvil con tarjetas (sin tabla con scroll horizontal) y que `Dialog` entra como hoja inferior; los 4 botones de acción nuevos (subir/bajar/editar/eliminar) se subieron de 36px a 44px al revisar el código, por debajo del mínimo táctil del proyecto. No se pudo confirmar en un navegador real: sigue sin sesión disponible (enlace mágico), y por pedido explícito de Omar no se volvió a esperar el login para esta tarea. Pendiente confirmar visualmente la próxima vez que haya sesión a mano.
 
 **Pendiente de validación con credenciales:** el ciclo completo contra la base real y la subida de archivos a Storage.
 
@@ -830,6 +839,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 
 | Fecha | Tarea | Rama | Validaciones | Estado |
 |---|---|---|---|---|
+| 2026-11-16 | T-09: primer módulo de contenido — Proyectos | `feat/module-projects` | 46 tests nuevos (18 de API: 401/403/400/CRUD/reorden/auditoría/caché; 18 de esquemas zod, con un bug real atrapado — `.partial()` heredaba `.default()` y habría vaciado `technologies`/republicado `is_published` en cualquier PATCH parcial; 8 de interfaz; 2 de permisos) · 512 tests totales · RLS verificada en la base real: `anon` dentro de una transacción con `ROLLBACK` solo ve el proyecto publicado, nunca el borrador, y no quedó ninguna fila de prueba · detector: 1 antipatrón = línea base, 0 nuevos · botones de acción subidos de 36px a 44px (objetivo táctil) al revisar el código · revisión 375px solo estática, sin sesión real disponible (igual que T-08, por pedido explícito de Omar de no esperar el login) | ✅ |
 | 2026-11-16 | T-08: panel en dos áreas (Portafolio/Negocio) | `feat/dashboard-shell` | 16 tests nuevos (9 de AdminNav: cajón, Escape, foco, interruptor de área, buscador condicionado; 7 de permisos) · 466 tests totales · detector: 1 antipatrón = línea base, 0 nuevos en archivos tocados · critique dual-agent 26/32 (81%, "Bueno"), 3 hallazgos materiales corregidos (tablist sin teclado→aria-current, buscador fuera de área→oculto, "CRM" habría fugado a Portafolio→`GROUP_LABELS` por área) y 1 parcial (aterrizaje sin datos→botón "Ir a Negocio") · revisión responsive solo estática (clases Tailwind): sesión real bloqueada por enlace mágico expirado, pendiente confirmar a 375/475px con sesión a mano | ✅ |
 | 2026-11-12 | Análisis completo | — | — | ✅ |
 | 2026-11-12 | Plan maestro | `docs/plan-maestro-dashboard` | — | ✅ |

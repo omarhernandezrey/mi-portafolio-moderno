@@ -23,6 +23,7 @@ export const ADMIN_PATH_PERMISSIONS: ReadonlyArray<{
   { prefix: '/admin/tickets', minRole: 'viewer' },
   { prefix: '/admin/leads', minRole: 'viewer' },
   { prefix: '/admin/negocio', minRole: 'viewer' },
+  { prefix: '/admin/proyectos', minRole: 'viewer' },
   { prefix: '/admin', minRole: 'viewer' },
 ];
 
@@ -46,6 +47,10 @@ export const ADMIN_API_PERMISSIONS: ReadonlyArray<ApiPermission> = [
   { prefix: '/api/admin/timer', read: 'assistant', write: 'assistant' },
   { prefix: '/api/admin/leads', read: 'viewer', write: 'assistant' },
   { prefix: '/api/admin/feed', read: 'viewer', write: 'assistant' },
+  // T-09: edición de contenido del portafolio. Solo `owner` escribe (lo
+  // valida también cada handler con requireAdmin('owner')); cualquier rol
+  // admin puede leer para ver el estado de borradores en el panel.
+  { prefix: '/api/admin/portfolio', read: 'viewer', write: 'owner' },
   { prefix: '/api/tickets', read: 'viewer', write: 'assistant' },
   { prefix: '/api/admin', read: 'viewer', write: 'assistant' },
 ];
@@ -98,6 +103,7 @@ export const NAV_ITEMS: ReadonlyArray<{
   area: 'portfolio' | 'negocio';
 }> = [
   { label: 'Resumen', href: '/admin', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
+  { label: 'Proyectos', href: '/admin/proyectos', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Resumen', href: '/admin/negocio', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
   { label: 'Leads', href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
   { label: 'Tickets', href: '/admin/tickets', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },

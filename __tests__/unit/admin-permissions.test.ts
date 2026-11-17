@@ -5,7 +5,7 @@
  * portafolio); todos los demás destinos, antes agrupados sin áreas, ahora
  * viven bajo `area: 'negocio'` con sus mismos roles.
  */
-import { ADMIN_PATH_PERMISSIONS, NAV_ITEMS, canAccessAdminPath } from '@/lib/admin/permissions';
+import { ADMIN_API_PERMISSIONS, ADMIN_PATH_PERMISSIONS, NAV_ITEMS, canAccessAdminPath, minRoleForApiRequest } from '@/lib/admin/permissions';
 
 const DESTINOS_DE_NEGOCIO_INTACTOS: ReadonlyArray<{ href: string; roles: readonly string[] }> = [
   { href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'] },
@@ -57,6 +57,32 @@ describe('NAV_ITEMS', () => {
     expect(hrefsParaViewer).not.toContain('/admin/invoices');
     expect(hrefsParaViewer).not.toContain('/admin/webhooks');
     expect(hrefsParaViewer).not.toContain('/admin/timer');
+  });
+});
+
+describe('NAV_ITEMS — Proyectos (T-09)', () => {
+  it('«Proyectos» vive en el área portfolio, grupo core, visible a los tres roles', () => {
+    const proyectos = NAV_ITEMS.find((i) => i.href === '/admin/proyectos');
+    expect(proyectos).toBeDefined();
+    expect(proyectos?.area).toBe('portfolio');
+    expect(proyectos?.group).toBe('core');
+    expect(proyectos?.roles).toEqual(['owner', 'assistant', 'viewer']);
+  });
+});
+
+describe('permisos de API de /api/admin/portfolio (T-09)', () => {
+  it('cualquier rol admin puede leer; solo owner puede escribir', () => {
+    expect(minRoleForApiRequest('/api/admin/portfolio/projects', 'GET')).toBe('viewer');
+    expect(minRoleForApiRequest('/api/admin/portfolio/projects', 'POST')).toBe('owner');
+    expect(minRoleForApiRequest('/api/admin/portfolio/projects/abc', 'PATCH')).toBe('owner');
+    expect(minRoleForApiRequest('/api/admin/portfolio/projects/abc', 'DELETE')).toBe('owner');
+  });
+
+  it('el prefijo /api/admin/portfolio está antes que el catch-all /api/admin', () => {
+    const portfolio = ADMIN_API_PERMISSIONS.find((p) => p.prefix === '/api/admin/portfolio');
+    const catchAll = ADMIN_API_PERMISSIONS.find((p) => p.prefix === '/api/admin');
+    expect(portfolio).toBeDefined();
+    expect(ADMIN_API_PERMISSIONS.indexOf(portfolio!)).toBeLessThan(ADMIN_API_PERMISSIONS.indexOf(catchAll!));
   });
 });
 

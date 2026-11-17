@@ -23,7 +23,11 @@ export type AuditAction =
   | 'feed_post.update'
   | 'feed_post.delete'
   | 'feed_comment.update'
-  | 'feed_comment.delete';
+  | 'feed_comment.delete'
+  | 'portfolio_project.create'
+  | 'portfolio_project.update'
+  | 'portfolio_project.delete'
+  | 'portfolio_project.reorder';
 
 export type AuditActor = {
   userId: string;
