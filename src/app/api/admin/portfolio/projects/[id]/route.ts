@@ -5,6 +5,8 @@ import { writeAuditLog } from '@/lib/admin/audit';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { projectUpdateSchema } from '@/lib/portfolio/schemas';
 import { comprobarEmbebido } from '@/lib/portfolio/embedCheck';
+import { debeAvisarProyectoPublicado, mensajeProyectoPublicado } from '@/lib/notifications/events';
+import { notifyTelegram } from '@/lib/chatbot/telegram';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin('owner');
@@ -39,6 +41,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     update.demo_checked_at = new Date().toISOString();
   }
 
+  // Solo se necesita el estado ANTERIOR cuando esta edición intenta publicar:
+  // es la única forma de distinguir "se acaba de publicar" de "ya estaba
+  // publicado y lo volvieron a guardar" (T-17, aviso de "proyecto publicado").
+  let estabaPublicado = false;
+  if (update.is_published === true) {
+    const { data: previo } = await supabaseServer
+      .from('portfolio_projects')
+      .select('is_published')
+      .eq('id', id)
+      .single();
+    estabaPublicado = previo?.is_published === true;
+  }
+
   const { data, error } = await supabaseServer
     .from('portfolio_projects')
     .update(update)
@@ -58,6 +73,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     resourceId: id,
     metadata: update,
   });
+
+  if (debeAvisarProyectoPublicado({ estabaPublicado, quedaPublicado: data.is_published === true })) {
+    const titulo = data.title?.es ?? data.title?.en ?? 'Proyecto';
+    await notifyTelegram(mensajeProyectoPublicado(titulo));
+  }
 
   revalidateTag('portfolio:projects');
 

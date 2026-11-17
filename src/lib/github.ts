@@ -251,6 +251,27 @@ export interface MetricasRepositorio {
   longestStreak: number;
 }
 
+/** Evento público (o privado si `token` es del propio usuario) de `/users/{usuario}/events`. */
+export interface EventoGitHub {
+  type: string;
+  created_at: string;
+}
+
+/**
+ * ¿Hubo al menos un `PushEvent` fechado `hoy` (Bogotá)? Para T-17: saber si
+ * ya hubo commit "hoy" antes de que acabe el día, sin esperar a la próxima
+ * corrida del cron de ingesta (que ya pasó, de madrugada).
+ */
+export function huboPushHoy(eventos: readonly EventoGitHub[], hoy: string): boolean {
+  return eventos.some((evento) => {
+    if (evento.type !== 'PushEvent') return false;
+    const fechaBogota = new Date(new Date(evento.created_at).getTime() - 5 * 3600 * 1000)
+      .toISOString()
+      .slice(0, 10);
+    return fechaBogota === hoy;
+  });
+}
+
 function cabecerasAuth(token: string): Record<string, string> {
   return {
     Authorization: `Bearer ${token}`,
@@ -271,6 +292,26 @@ export async function obtenerReposDelUsuario(
     cabecerasAuth(token)
   );
   return repos.filter((r) => !r.fork).map((r) => r.full_name);
+}
+
+/**
+ * Eventos recientes del usuario (T-17), para el aviso de "racha en riesgo".
+ * `/users/{usuario}/events` (sin `/public`) porque, autenticado como el
+ * propio usuario, incluye también sus `PushEvent` a repos privados — con
+ * `/events/public` un commit de hoy a un repo privado pasaría desapercibido
+ * y el aviso avisaría de un riesgo que ya no existe.
+ */
+export async function obtenerEventosDelUsuario(
+  usuario: string,
+  token: string,
+  fetchImpl: FetchGitHub = fetch as unknown as FetchGitHub
+): Promise<EventoGitHub[]> {
+  const res = await fetchImpl(`${GITHUB_API}/users/${usuario}/events?per_page=100`, {
+    headers: cabecerasAuth(token),
+  });
+  comprobarCupoDesdeCabeceras(res.headers);
+  if (!res.ok) throw new Error(`GitHub API respondió ${res.status} en /users/${usuario}/events`);
+  return (await res.json()) as EventoGitHub[];
 }
 
 /** `hoy` en formato `YYYY-MM-DD` de Bogotá, para que calcularRachas no dependa del reloj del proceso. */

@@ -1,0 +1,22 @@
+name: Vitals Check Bot
+
+on:
+  schedule:
+    - cron: '30 13 * * *' # 13:30 UTC (08:30 Colombia) — justo después de daily-summary, hora libre
+  workflow_dispatch:
+
+jobs:
+  vitals-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vitals Check API
+        run: |
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          CRON_SECRET="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::Secrets no configurados. Saltando vitals-check."
+            exit 0
+          fi
+          curl -X GET "${SITE_URL}/api/cron/vitals-check" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -f

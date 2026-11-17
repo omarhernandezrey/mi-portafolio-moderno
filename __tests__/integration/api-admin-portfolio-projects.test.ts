@@ -27,6 +27,11 @@ jest.mock('@/lib/portfolio/embedCheck', () => ({
   comprobarEmbebido: (...args: unknown[]) => mockComprobarEmbebido(...args),
 }));
 
+const mockNotifyTelegram = jest.fn().mockResolvedValue({ sent: true });
+jest.mock('@/lib/chatbot/telegram', () => ({
+  notifyTelegram: (...args: unknown[]) => mockNotifyTelegram(...args),
+}));
+
 import { NextRequest } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { writeAuditLog } from '@/lib/admin/audit';
@@ -252,6 +257,46 @@ describe('PATCH /[id] — actualizar', () => {
     );
     expect(res.status).toBe(200);
     expect(mockComprobarEmbebido).toHaveBeenCalledWith('https://y.com');
+  });
+
+  // T-17: aviso de "proyecto publicado" — se envía solo en la transición
+  // false→true, nunca en un PATCH que ya estaba publicado (duplicados).
+  it('publicar un proyecto que estaba sin publicar: avisa por Telegram', async () => {
+    tabla((_tabla, metodo) =>
+      metodo === 'eq'
+        ? { data: { is_published: false }, error: null } // estado ANTES de este PATCH
+        : { data: { ...PROYECTO, is_published: true }, error: null }, // fila ya actualizada
+    );
+    const res = await actualizar(
+      req('/x', { method: 'PATCH', body: JSON.stringify({ is_published: true }) }),
+      { params: Promise.resolve({ id: 'p1' }) },
+    );
+    expect(res.status).toBe(200);
+    expect(mockNotifyTelegram).toHaveBeenCalledWith(expect.stringContaining('Demo'));
+  });
+
+  it('volver a guardar is_published:true sobre un proyecto YA publicado: no avisa otra vez', async () => {
+    tabla((_tabla, metodo) =>
+      metodo === 'eq'
+        ? { data: { is_published: true }, error: null } // ya estaba publicado antes de este PATCH
+        : { data: { ...PROYECTO, is_published: true }, error: null },
+    );
+    const res = await actualizar(
+      req('/x', { method: 'PATCH', body: JSON.stringify({ is_published: true }) }),
+      { params: Promise.resolve({ id: 'p1' }) },
+    );
+    expect(res.status).toBe(200);
+    expect(mockNotifyTelegram).not.toHaveBeenCalled();
+  });
+
+  it('despublicar un proyecto (is_published:false): no avisa de publicación', async () => {
+    tabla({ portfolio_projects: { data: { ...PROYECTO, is_published: false }, error: null } });
+    const res = await actualizar(
+      req('/x', { method: 'PATCH', body: JSON.stringify({ is_published: false }) }),
+      { params: Promise.resolve({ id: 'p1' }) },
+    );
+    expect(res.status).toBe(200);
+    expect(mockNotifyTelegram).not.toHaveBeenCalled();
   });
 });
 

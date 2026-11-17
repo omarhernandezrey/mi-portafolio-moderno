@@ -9,9 +9,12 @@ import {
   calcularPorcentajesDeLenguajes,
   calcularRachas,
   comprobarCupoDesdeCabeceras,
+  huboPushHoy,
   obtenerConReintento202,
+  obtenerEventosDelUsuario,
   obtenerTodasLasPaginas,
   siguienteUrlDeLink,
+  type EventoGitHub,
   type FetchGitHub,
   type RespuestaGitHub,
 } from '@/lib/github';
@@ -203,5 +206,47 @@ describe('aplanarActividadDiaria', () => {
     ]);
     const fechas = dias.map((d) => d.fecha);
     expect(new Set(fechas).size).toBe(14);
+  });
+});
+
+describe('huboPushHoy (T-17)', () => {
+  function push(fechaIso: string): EventoGitHub {
+    return { type: 'PushEvent', created_at: fechaIso };
+  }
+
+  it('hay un PushEvent de hoy (Bogotá): true', () => {
+    // 2026-11-17T02:00:00Z en Bogotá (UTC-5) es 2026-11-16.
+    expect(huboPushHoy([push('2026-11-17T02:00:00Z')], '2026-11-16')).toBe(true);
+  });
+
+  it('solo hay eventos de otros días: false', () => {
+    expect(huboPushHoy([push('2026-11-15T12:00:00Z')], '2026-11-16')).toBe(false);
+  });
+
+  it('ignora eventos que no son PushEvent, aunque sean de hoy', () => {
+    const evento: EventoGitHub = { type: 'WatchEvent', created_at: '2026-11-16T12:00:00Z' };
+    expect(huboPushHoy([evento], '2026-11-16')).toBe(false);
+  });
+
+  it('sin eventos: false, no lanza', () => {
+    expect(huboPushHoy([], '2026-11-16')).toBe(false);
+  });
+});
+
+describe('obtenerEventosDelUsuario (T-17)', () => {
+  it('pide /users/{usuario}/events (sin /public, para incluir repos privados)', async () => {
+    const fetchImpl: FetchGitHub = jest.fn().mockResolvedValue(
+      respuesta(200, [{ type: 'PushEvent', created_at: '2026-11-16T10:00:00Z' }]),
+    );
+    const eventos = await obtenerEventosDelUsuario('omarhernandezrey', 'tok', fetchImpl);
+    expect(eventos).toHaveLength(1);
+    expect((fetchImpl as jest.Mock).mock.calls[0][0]).toBe(
+      'https://api.github.com/users/omarhernandezrey/events?per_page=100',
+    );
+  });
+
+  it('respuesta no-ok: lanza con el status', async () => {
+    const fetchImpl: FetchGitHub = jest.fn().mockResolvedValue(respuesta(404, null));
+    await expect(obtenerEventosDelUsuario('omarhernandezrey', 'tok', fetchImpl)).rejects.toThrow('404');
   });
 });

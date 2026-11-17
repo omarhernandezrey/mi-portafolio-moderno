@@ -1,0 +1,22 @@
+name: Streak Check Bot
+
+on:
+  schedule:
+    - cron: '30 1 * * *' # 01:30 UTC (20:30 Colombia) — deja ~3.5h antes de medianoche para avisar a tiempo
+  workflow_dispatch:
+
+jobs:
+  streak-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Streak Check API
+        run: |
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          CRON_SECRET="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::Secrets no configurados. Saltando streak-check."
+            exit 0
+          fi
+          curl -X GET "${SITE_URL}/api/cron/streak-check" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -f
