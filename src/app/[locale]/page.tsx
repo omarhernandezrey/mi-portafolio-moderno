@@ -14,7 +14,6 @@ import Footer from "@/components/shared/Footer";
 import PreviewBanner from "@/components/preview/PreviewBanner";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { getProjects } from "@/lib/portfolio/repository";
-import { leerProyectosConBorradores } from "@/lib/portfolio/preview";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -70,7 +69,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   const { isEnabled: vistaPrevia } = await draftMode();
-  const proyectos = vistaPrevia ? await leerProyectosConBorradores() : await getProjects();
+  // Import dinámico a propósito: `preview.ts` carga `supabaseServer`, que
+  // lanza si faltan las variables de Supabase (ver su propio archivo). Un
+  // `import` estático arriba del todo metería ese riesgo en CADA visita a
+  // la home, aunque la vista previa nunca se use — con `await import(...)`
+  // ese módulo solo se carga cuando el modo borrador está de verdad activo.
+  const proyectos = vistaPrevia
+    ? await import('@/lib/portfolio/preview').then((m) => m.leerProyectosConBorradores())
+    : await getProjects();
 
   const jsonLd = {
     "@context": "https://schema.org",
