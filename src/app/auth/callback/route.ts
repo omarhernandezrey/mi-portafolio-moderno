@@ -1,13 +1,29 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import type { EmailOtpType } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { serverEnv } from '@/config/env'
 import { isAdminRole } from '@/lib/admin/roles'
 import { isEmailAllowed } from '@/lib/admin/access'
 
+/**
+ * Callback del enlace mágico (T-19).
+ *
+ * Camino principal: `token_hash` + `type`, el patrón SSR de Supabase. El
+ * enlace del correo apunta aquí directamente y `verifyOtp` crea la sesión en
+ * el servidor (cookies incluidas). El camino `code` original no funcionaba de
+ * punta a punta: `signInWithOtp` se hace con un cliente de flujo implícito,
+ * así que Supabase devolvía los tokens en el fragmento `#...` de la URL, que
+ * un route handler jamás recibe. Se conserva `code` por compatibilidad con
+ * enlaces OAuth/PKCE que sí traen query param.
+ */
+const TIPOS_OTP: ReadonlyArray<EmailOtpType> = ['magiclink', 'email', 'recovery', 'invite', 'email_change']
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const tokenHash = searchParams.get('token_hash')
+  const typeParam = searchParams.get('type')
   const nextParam = searchParams.get('next') ?? '/admin'
   // Solo rutas internas: evita //evil.com o /\evil.com como open redirect.
   const next =
@@ -17,7 +33,7 @@ export async function GET(request: Request) {
       ? nextParam
       : '/admin'
 
-  if (code) {
+  if (code || tokenHash) {
     const cookieStore = await cookies()
     const supabase = createServerClient(
       serverEnv.SUPABASE_URL,
@@ -35,7 +51,16 @@ export async function GET(request: Request) {
         },
       }
     )
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+    const { error } = tokenHash
+      ? await supabase.auth.verifyOtp({
+          type: TIPOS_OTP.includes(typeParam as EmailOtpType)
+            ? (typeParam as EmailOtpType)
+            : 'magiclink',
+          token_hash: tokenHash,
+        })
+      : await supabase.auth.exchangeCodeForSession(code as string)
+
     if (!error) {
       const { data: { user } } = await supabase.auth.getUser()
 
