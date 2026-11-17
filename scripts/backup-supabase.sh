@@ -88,7 +88,7 @@ if [ "$HAS_CHANGES" = true ]; then
 fi
 
 # --- DESTINO 2: Cloudflare R2 (Opcional) ---
-if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${R2_BUCKET_NAME:-}" ]; then
+if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ] && [ -n "${R2_BUCKET_NAME:-}" ]; then
   echo "▶️  Subiendo a Cloudflare R2 (${R2_BUCKET_NAME})"
   
   UPLOAD_TARGET="$GZ_FILE"
