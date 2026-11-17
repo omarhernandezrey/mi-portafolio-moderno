@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, Eye, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import EmptyState from '@/components/admin/ui/EmptyState';
-import { AdminButton, DataTable, type Column, Switch, ConfirmDialog } from '@/components/admin/ui';
+import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, adminButtonClasses } from '@/components/admin/ui';
 import { adminFetch } from '@/lib/admin/client-fetch';
 import { useToast } from '@/components/ui/Toast';
 import { ProjectFormDialog, type ProjectFormValues } from '@/components/admin/portfolio/ProjectFormDialog';
@@ -207,16 +207,30 @@ export default function AdminProyectosPage() {
         title="Proyectos"
         description="Crea, edita, publica y reordena los proyectos que alimenta el visor del sitio."
         actions={
-          <AdminButton
-            variant="primary"
-            icon={<Plus size={16} />}
-            onClick={() => {
-              setEditando(null);
-              setDialogAbierto(true);
-            }}
-          >
-            Nuevo proyecto
-          </AdminButton>
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Vista previa de borradores (T-18): abre la home pública con el
+               modo borrador de Next.js activo, incluyendo proyectos sin
+               publicar — solo llega aquí quien ya tiene sesión de owner. */}
+            <a
+              href="/api/preview/enable?next=/es"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={adminButtonClasses({ variant: 'secondary' })}
+            >
+              <Eye size={16} />
+              Vista previa
+            </a>
+            <AdminButton
+              variant="primary"
+              icon={<Plus size={16} />}
+              onClick={() => {
+                setEditando(null);
+                setDialogAbierto(true);
+              }}
+            >
+              Nuevo proyecto
+            </AdminButton>
+          </div>
         }
       />
 

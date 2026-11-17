@@ -17,6 +17,11 @@ jest.mock('@/lib/admin/audit', () => ({
   writeAuditLog: jest.fn().mockResolvedValue(undefined),
 }));
 
+const mockWriteContentVersion = jest.fn().mockResolvedValue(undefined);
+jest.mock('@/lib/admin/versions', () => ({
+  writeContentVersion: (...args: unknown[]) => mockWriteContentVersion(...args),
+}));
+
 const mockRevalidateTag = jest.fn();
 jest.mock('next/cache', () => ({
   revalidateTag: (...args: unknown[]) => mockRevalidateTag(...args),
@@ -175,6 +180,11 @@ describe('POST — crear', () => {
       expect.objectContaining({ email: 'owner@test.com' }),
       expect.objectContaining({ action: 'portfolio_project.create', resourceType: 'portfolio_project' }),
     );
+    // T-18: cada alta queda como una versión con `before: null`, restaurable.
+    expect(mockWriteContentVersion).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ action: 'create', resourceType: 'portfolio_project', before: null }),
+    );
     expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
   });
 
@@ -237,6 +247,11 @@ describe('PATCH /[id] — actualizar', () => {
     expect(mockWriteAuditLog).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ action: 'portfolio_project.update', resourceId: 'p1' }),
+    );
+    // T-18: cada edición queda como una versión, con la foto anterior incluida.
+    expect(mockWriteContentVersion).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ action: 'update', resourceType: 'portfolio_project', resourceId: 'p1' }),
     );
     expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
   });
@@ -309,6 +324,11 @@ describe('DELETE /[id] — borrar', () => {
     expect(mockWriteAuditLog).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ action: 'portfolio_project.delete', resourceId: 'p1' }),
+    );
+    // T-18: un borrado también queda como versión, con `after: null` — restaurable (undelete).
+    expect(mockWriteContentVersion).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ action: 'delete', resourceType: 'portfolio_project', resourceId: 'p1', after: null }),
     );
     expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
   });

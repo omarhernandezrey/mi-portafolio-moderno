@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { technologyCreateSchema } from '@/lib/portfolio/schemas';
 
@@ -50,6 +51,14 @@ export async function POST(req: NextRequest) {
     resourceType: 'portfolio_technology',
     resourceId: data.id,
     metadata: { name: result.data.name },
+  });
+
+  await writeContentVersion(auth.actor, {
+    action: 'create',
+    resourceType: 'portfolio_technology',
+    resourceId: data.id,
+    before: null,
+    after: data,
   });
 
   revalidateTag('portfolio:technologies');

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { projectCreateSchema } from '@/lib/portfolio/schemas';
 import { comprobarEmbebido } from '@/lib/portfolio/embedCheck';
@@ -71,6 +72,14 @@ export async function POST(req: NextRequest) {
     resourceType: 'portfolio_project',
     resourceId: data.id,
     metadata: { slug: resto.slug },
+  });
+
+  await writeContentVersion(auth.actor, {
+    action: 'create',
+    resourceType: 'portfolio_project',
+    resourceId: data.id,
+    before: null,
+    after: data,
   });
 
   revalidateTag('portfolio:projects');

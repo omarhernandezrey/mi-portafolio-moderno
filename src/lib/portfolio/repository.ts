@@ -112,7 +112,10 @@ async function conProteccion<T>(tabla: string, respaldo: T, tarea: () => Promise
 
 // ── Proyectos ────────────────────────────────────────────────────────────────
 
-function filaAProyecto(fila: PortfolioProjectRow): Project {
+/** Exportada para `src/lib/portfolio/preview.ts` (T-18): la vista previa de
+ * borradores reutiliza este mapeo, pero lee con `service_role` fuera de este
+ * archivo — el guardarraíl de más abajo exige que ESTE módulo nunca lo haga. */
+export function filaAProyecto(fila: PortfolioProjectRow): Project {
   return {
     title: comoLocalizado(fila.title),
     description: comoLocalizado(fila.description),

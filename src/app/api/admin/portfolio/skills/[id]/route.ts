@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { skillUpdateSchema } from '@/lib/portfolio/schemas';
 
@@ -27,6 +28,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'No hay campos para actualizar' }, { status: 400 });
   }
 
+  // Foto ANTERIOR completa: es el "before" de la versión (T-18).
+  const { data: previo } = await supabaseServer.from('portfolio_skills').select('*').eq('id', id).single();
+
   const { data, error } = await supabaseServer
     .from('portfolio_skills')
     .update(update)
@@ -47,6 +51,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     metadata: update,
   });
 
+  await writeContentVersion(auth.actor, {
+    action: 'update',
+    resourceType: 'portfolio_skill',
+    resourceId: id,
+    before: previo ?? null,
+    after: data,
+  });
+
   revalidateTag('portfolio:skills');
 
   return NextResponse.json(data);
@@ -58,7 +70,12 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
 
   const { id } = await params;
 
-  const { error } = await supabaseServer.from('portfolio_skills').delete().eq('id', id);
+  const { data: borrado, error } = await supabaseServer
+    .from('portfolio_skills')
+    .delete()
+    .eq('id', id)
+    .select()
+    .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -66,6 +83,14 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     action: 'portfolio_skill.delete',
     resourceType: 'portfolio_skill',
     resourceId: id,
+  });
+
+  await writeContentVersion(auth.actor, {
+    action: 'delete',
+    resourceType: 'portfolio_skill',
+    resourceId: id,
+    before: borrado ?? null,
+    after: null,
   });
 
   revalidateTag('portfolio:skills');

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { educationCategoryUpdateSchema } from '@/lib/portfolio/schemas';
 
@@ -25,6 +26,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'No hay campos para actualizar' }, { status: 400 });
   }
 
+  // Foto ANTERIOR completa: es el "before" de la versión (T-18).
+  const { data: previo } = await supabaseServer
+    .from('portfolio_education_categories')
+    .select('*')
+    .eq('id', id)
+    .single();
+
   const { data, error } = await supabaseServer
     .from('portfolio_education_categories')
     .update(update)
@@ -43,6 +51,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     resourceType: 'portfolio_education_category',
     resourceId: id,
     metadata: update,
+  });
+
+  await writeContentVersion(auth.actor, {
+    action: 'update',
+    resourceType: 'portfolio_education_category',
+    resourceId: id,
+    before: previo ?? null,
+    after: data,
   });
 
   revalidateTag('portfolio:education');
@@ -69,7 +85,12 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .select('*', { count: 'exact', head: true })
     .eq('category_id', id);
 
-  const { error } = await supabaseServer.from('portfolio_education_categories').delete().eq('id', id);
+  const { data: borrado, error } = await supabaseServer
+    .from('portfolio_education_categories')
+    .delete()
+    .eq('id', id)
+    .select()
+    .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -78,6 +99,18 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     resourceType: 'portfolio_education_category',
     resourceId: id,
     metadata: { itemsEliminados: itemsEliminados ?? 0 },
+  });
+
+  // Nota: `on delete cascade` también borra los ítems de esta categoría en
+  // la base, pero ese borrado lo ejecuta Postgres, no esta ruta — no queda
+  // una versión por cada ítem perdido así. Restaurar esta categoría no
+  // revive sus ítems; es una limitación conocida, no un intento fallido.
+  await writeContentVersion(auth.actor, {
+    action: 'delete',
+    resourceType: 'portfolio_education_category',
+    resourceId: id,
+    before: borrado ?? null,
+    after: null,
   });
 
   revalidateTag('portfolio:education');

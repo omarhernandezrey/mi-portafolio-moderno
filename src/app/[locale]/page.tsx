@@ -1,4 +1,5 @@
 import React from "react";
+import { draftMode } from "next/headers";
 import { buildMetadata, withBrand } from '@/lib/seo';
 import { Metadata } from "next";
 import HeroSection from "@/components/sections/HeroSection";
@@ -10,8 +11,10 @@ import SkillSection from "@/components/sections/SkillSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
 import ContactForm from "@/components/sections/ContactForm";
 import Footer from "@/components/shared/Footer";
+import PreviewBanner from "@/components/preview/PreviewBanner";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { getProjects } from "@/lib/portfolio/repository";
+import { leerProyectosConBorradores } from "@/lib/portfolio/preview";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -64,8 +67,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 }
 
-export default async function Home() {
-  const proyectos = await getProjects();
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+  const { isEnabled: vistaPrevia } = await draftMode();
+  const proyectos = vistaPrevia ? await leerProyectosConBorradores() : await getProjects();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -100,6 +105,7 @@ export default async function Home() {
 
   return (
     <>
+      {vistaPrevia && <PreviewBanner volverA={`/${locale}`} />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

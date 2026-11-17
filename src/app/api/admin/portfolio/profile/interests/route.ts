@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { interestsContentSchema } from '@/lib/portfolio/schemas';
 
@@ -36,13 +37,22 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: result.error.flatten().fieldErrors }, { status: 400 });
   }
 
+  // Foto ANTERIOR completa: es el "before" de la versión (T-18). Incluye
+  // `section` (no solo `content`/`is_published`) para que una restauración
+  // futura pueda volver a hacer `upsert` sobre la misma clave.
+  const { data: previo } = await supabaseServer
+    .from('portfolio_profile')
+    .select('section, content, is_published')
+    .eq('section', 'interests')
+    .maybeSingle();
+
   const { data, error } = await supabaseServer
     .from('portfolio_profile')
     .upsert(
       { section: 'interests', content: result.data.content, is_published: result.data.is_published },
       { onConflict: 'section' },
     )
-    .select('content, is_published')
+    .select('section, content, is_published')
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -52,6 +62,14 @@ export async function PUT(req: NextRequest) {
     resourceType: 'portfolio_profile',
     resourceId: 'interests',
     metadata: { total: result.data.content.length },
+  });
+
+  await writeContentVersion(auth.actor, {
+    action: 'update',
+    resourceType: 'portfolio_profile',
+    resourceId: 'interests',
+    before: previo ?? null,
+    after: data,
   });
 
   revalidateTag('portfolio:profile');

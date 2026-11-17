@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { educationCategoryCreateSchema } from '@/lib/portfolio/schemas';
 
@@ -49,6 +50,14 @@ export async function POST(req: NextRequest) {
     resourceType: 'portfolio_education_category',
     resourceId: data.id,
     metadata: { slug: result.data.slug },
+  });
+
+  await writeContentVersion(auth.actor, {
+    action: 'create',
+    resourceType: 'portfolio_education_category',
+    resourceId: data.id,
+    before: null,
+    after: data,
   });
 
   revalidateTag('portfolio:education');

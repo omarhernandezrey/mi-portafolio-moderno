@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { projectUpdateSchema } from '@/lib/portfolio/schemas';
 import { comprobarEmbebido } from '@/lib/portfolio/embedCheck';
@@ -41,18 +42,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     update.demo_checked_at = new Date().toISOString();
   }
 
-  // Solo se necesita el estado ANTERIOR cuando esta edición intenta publicar:
-  // es la única forma de distinguir "se acaba de publicar" de "ya estaba
-  // publicado y lo volvieron a guardar" (T-17, aviso de "proyecto publicado").
-  let estabaPublicado = false;
-  if (update.is_published === true) {
-    const { data: previo } = await supabaseServer
-      .from('portfolio_projects')
-      .select('is_published')
-      .eq('id', id)
-      .single();
-    estabaPublicado = previo?.is_published === true;
-  }
+  // Estado ANTERIOR completo: lo necesita T-18 (el "before" de la versión) y,
+  // de paso, resuelve también lo que T-17 necesitaba (saber si ya estaba
+  // publicado antes de esta edición).
+  const { data: previo } = await supabaseServer.from('portfolio_projects').select('*').eq('id', id).single();
+  const estabaPublicado = previo?.is_published === true;
 
   const { data, error } = await supabaseServer
     .from('portfolio_projects')
@@ -74,6 +68,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     metadata: update,
   });
 
+  await writeContentVersion(auth.actor, {
+    action: 'update',
+    resourceType: 'portfolio_project',
+    resourceId: id,
+    before: previo ?? null,
+    after: data,
+  });
+
   if (debeAvisarProyectoPublicado({ estabaPublicado, quedaPublicado: data.is_published === true })) {
     const titulo = data.title?.es ?? data.title?.en ?? 'Proyecto';
     await notifyTelegram(mensajeProyectoPublicado(titulo));
@@ -90,7 +92,12 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
 
   const { id } = await params;
 
-  const { error } = await supabaseServer.from('portfolio_projects').delete().eq('id', id);
+  const { data: borrado, error } = await supabaseServer
+    .from('portfolio_projects')
+    .delete()
+    .eq('id', id)
+    .select()
+    .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -98,6 +105,14 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     action: 'portfolio_project.delete',
     resourceType: 'portfolio_project',
     resourceId: id,
+  });
+
+  await writeContentVersion(auth.actor, {
+    action: 'delete',
+    resourceType: 'portfolio_project',
+    resourceId: id,
+    before: borrado ?? null,
+    after: null,
   });
 
   revalidateTag('portfolio:projects');

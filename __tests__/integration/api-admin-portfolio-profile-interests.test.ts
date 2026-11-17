@@ -121,7 +121,10 @@ describe('PUT — reemplaza el array entero', () => {
     (supabaseServer.from as jest.Mock).mockReturnValue({
       upsert: mockUpsert,
       select: jest.fn().mockReturnThis(),
-      single: jest.fn().mockResolvedValue({ data: { content: [INTERES_VALIDO], is_published: true }, error: null }),
+      eq: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }), // sin fila previa
+      single: jest.fn().mockResolvedValue({ data: { section: 'interests', content: [INTERES_VALIDO], is_published: true }, error: null }),
+      insert: jest.fn().mockResolvedValue({ error: null }), // content_versions (T-18)
     });
 
     const res = await reemplazar(req('/x', { method: 'PUT', body: JSON.stringify({ content: [INTERES_VALIDO], is_published: true }) }));
@@ -142,7 +145,10 @@ describe('PUT — reemplaza el array entero', () => {
     (supabaseServer.from as jest.Mock).mockReturnValue({
       upsert: jest.fn().mockReturnThis(),
       select: jest.fn().mockReturnThis(),
-      single: jest.fn().mockResolvedValue({ data: { content: [], is_published: true }, error: null }),
+      eq: jest.fn().mockReturnThis(),
+      maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
+      single: jest.fn().mockResolvedValue({ data: { section: 'interests', content: [], is_published: true }, error: null }),
+      insert: jest.fn().mockResolvedValue({ error: null }), // content_versions (T-18)
     });
     const res = await reemplazar(req('/x', { method: 'PUT', body: JSON.stringify({ content: [] }) }));
     expect(res.status).toBe(200);
