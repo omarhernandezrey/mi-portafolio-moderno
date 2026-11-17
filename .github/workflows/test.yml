@@ -169,6 +169,23 @@ jobs:
         run: npm start &
         env:
           PORT: 3000
+          # T-23 encontró el motivo real de pasarlas también aquí: el
+          # middleware llama a `createServerClient` en CADA petición a
+          # /admin/*, sin esperar a que nadie visite algo que las necesite
+          # de verdad — a diferencia de una página que las carga solo si
+          # algo la usa (ver el fix de T-18 en `[locale]/page.tsx`), el
+          # middleware no tiene ese margen: sin estas variables, cualquier
+          # ruta /admin/* (hasta /admin/login, público) responde 500.
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          NEXT_PUBLIC_CALCOM_INTERVIEW_URL: ${{ secrets.NEXT_PUBLIC_CALCOM_INTERVIEW_URL }}
+          NEXT_PUBLIC_CALCOM_CONSULT_URL: ${{ secrets.NEXT_PUBLIC_CALCOM_CONSULT_URL }}
+          NEXT_PUBLIC_WHATSAPP_NUMBER: ${{ secrets.NEXT_PUBLIC_WHATSAPP_NUMBER }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
 
       - name: Esperar a que el servidor esté listo
         if: steps.check_secrets.outputs.skip != 'true'
