@@ -43,7 +43,20 @@ export type AuditAction =
   | 'portfolio_badge.create'
   | 'portfolio_badge.update'
   | 'portfolio_badge.delete'
-  | 'portfolio_badge.reorder';
+  | 'portfolio_badge.reorder'
+  | 'portfolio_service.create'
+  | 'portfolio_service.update'
+  | 'portfolio_service.delete'
+  | 'portfolio_service.reorder'
+  | 'portfolio_technology.create'
+  | 'portfolio_technology.update'
+  | 'portfolio_technology.delete'
+  | 'portfolio_technology.reorder'
+  | 'portfolio_timeline.create'
+  | 'portfolio_timeline.update'
+  | 'portfolio_timeline.delete'
+  | 'portfolio_timeline.reorder'
+  | 'portfolio_profile_interests.update';
 
 export type AuditActor = {
   userId: string;

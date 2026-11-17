@@ -8,12 +8,19 @@ import {
   educationCategoryUpdateSchema,
   educationItemCreateSchema,
   educationItemUpdateSchema,
+  interestsContentSchema,
   projectCreateSchema,
   projectUpdateSchema,
   reorderSchema,
+  serviceCreateSchema,
+  serviceUpdateSchema,
   skillCreateSchema,
   skillUpdateSchema,
   slugSchema,
+  technologyCreateSchema,
+  technologyUpdateSchema,
+  timelineCreateSchema,
+  timelineUpdateSchema,
 } from '@/lib/portfolio/schemas';
 
 const UUID_VALIDA = '123e4567-e89b-12d3-a456-426614174000';
@@ -277,6 +284,110 @@ describe('badgeCreateSchema / badgeUpdateSchema', () => {
       expect(Object.keys(resultado.data)).toEqual(['is_new']);
       expect(resultado.data.is_published).toBeUndefined();
     }
+  });
+});
+
+describe('serviceCreateSchema / serviceUpdateSchema', () => {
+  const base = { slug: 'sitios-web', title: { es: 'Sitios Web' } };
+
+  it('acepta el mínimo válido y rellena los valores por omisión', () => {
+    const resultado = serviceCreateSchema.safeParse(base);
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(resultado.data.icon).toBe('');
+      expect(resultado.data.price_min).toBeNull();
+      expect(resultado.data.is_published).toBe(true);
+    }
+  });
+
+  it('acepta features bilingües', () => {
+    const resultado = serviceCreateSchema.safeParse({ ...base, features: { es: ['Rápido', 'SEO'], en: ['Fast', 'SEO'] } });
+    expect(resultado.success).toBe(true);
+  });
+
+  it('price_min negativo se rechaza', () => {
+    expect(serviceCreateSchema.safeParse({ ...base, price_min: -5 }).success).toBe(false);
+  });
+
+  it('actualizar vacío se queda vacío (no rellena price_min/is_published con los valores de creación)', () => {
+    const resultado = serviceUpdateSchema.safeParse({ badge: 'WEB' });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(Object.keys(resultado.data)).toEqual(['badge']);
+      expect(resultado.data.price_min).toBeUndefined();
+      expect(resultado.data.is_published).toBeUndefined();
+    }
+  });
+});
+
+describe('technologyCreateSchema / technologyUpdateSchema', () => {
+  it('acepta el mínimo válido (solo name es obligatorio)', () => {
+    const resultado = technologyCreateSchema.safeParse({ name: 'React' });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) expect(resultado.data.is_published).toBe(true);
+  });
+
+  it('icon_key debe existir en el registro', () => {
+    expect(technologyCreateSchema.safeParse({ name: 'React', icon_key: 'FaReact' }).success).toBe(true);
+    expect(technologyCreateSchema.safeParse({ name: 'React', icon_key: 'NoExiste123' }).success).toBe(false);
+  });
+
+  it('no tiene slug: name es la identidad', () => {
+    const resultado = technologyCreateSchema.safeParse({ name: 'Vue.js' });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) expect('slug' in resultado.data).toBe(false);
+  });
+
+  it('actualizar vacío se queda vacío', () => {
+    const resultado = technologyUpdateSchema.safeParse({ category: 'Frontend' });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) expect(Object.keys(resultado.data)).toEqual(['category']);
+  });
+});
+
+describe('timelineCreateSchema / timelineUpdateSchema', () => {
+  const base = { slug: 'hito-1', year: { es: '2024' }, title: { es: 'Primer hito' } };
+
+  it('acepta el mínimo válido', () => {
+    expect(timelineCreateSchema.safeParse(base).success).toBe(true);
+  });
+
+  it('year es bilingüe igual que title (el hito "Presente" traduce el año)', () => {
+    const resultado = timelineCreateSchema.safeParse({ ...base, year: { es: '2025 - Presente', en: '2025 - Present' } });
+    expect(resultado.success).toBe(true);
+  });
+
+  it('icon_key inválido se rechaza', () => {
+    expect(timelineCreateSchema.safeParse({ ...base, icon_key: 'NoExiste' }).success).toBe(false);
+    expect(timelineCreateSchema.safeParse({ ...base, icon_key: 'Sparkles' }).success).toBe(true);
+  });
+});
+
+describe('interestsContentSchema (perfil → solo `interests`)', () => {
+  it('acepta una lista de intereses válida', () => {
+    const resultado = interestsContentSchema.safeParse({
+      content: [{ title: 'Open Source', href: 'https://opensource.org/', iconKey: 'Globe' }],
+    });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) expect(resultado.data.is_published).toBe(true);
+  });
+
+  it('rechaza un href que no es una URL', () => {
+    const resultado = interestsContentSchema.safeParse({
+      content: [{ title: 'x', href: 'no-es-una-url', iconKey: 'Globe' }],
+    });
+    expect(resultado.success).toBe(false);
+  });
+
+  it('rechaza un iconKey que no existe en el registro', () => {
+    const resultado = interestsContentSchema.safeParse({
+      content: [{ title: 'x', href: 'https://x.com', iconKey: 'NoExiste' }],
+    });
+    expect(resultado.success).toBe(false);
+  });
+
+  it('una lista vacía es válida (quitar todos los intereses es una operación legítima)', () => {
+    expect(interestsContentSchema.safeParse({ content: [] }).success).toBe(true);
   });
 });
 

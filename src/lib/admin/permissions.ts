@@ -26,6 +26,7 @@ export const ADMIN_PATH_PERMISSIONS: ReadonlyArray<{
   { prefix: '/admin/proyectos', minRole: 'viewer' },
   { prefix: '/admin/skills', minRole: 'viewer' },
   { prefix: '/admin/educacion', minRole: 'viewer' },
+  { prefix: '/admin/contenido', minRole: 'viewer' },
   { prefix: '/admin', minRole: 'viewer' },
 ];
 
@@ -108,6 +109,7 @@ export const NAV_ITEMS: ReadonlyArray<{
   { label: 'Proyectos', href: '/admin/proyectos', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Skills', href: '/admin/skills', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Educación', href: '/admin/educacion', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
+  { label: 'Contenido', href: '/admin/contenido', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Resumen', href: '/admin/negocio', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
   { label: 'Leads', href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
   { label: 'Tickets', href: '/admin/tickets', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },

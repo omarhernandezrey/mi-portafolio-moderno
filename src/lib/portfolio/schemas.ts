@@ -8,6 +8,7 @@
  * añaden su propio esquema aquí mismo, no en un archivo nuevo.
  */
 import { z } from 'zod';
+import { portfolioIconRegistry } from './source/icon-registry';
 
 /** Slug de URL: minúsculas, dígitos y guiones, sin empezar/terminar en guion. */
 export const slugSchema = z
@@ -221,6 +222,124 @@ export const badgeUpdateSchema = z.object(camposInsignia).partial().merge(subida
 
 export type BadgeCreateInput = z.infer<typeof badgeCreateSchema>;
 export type BadgeUpdateInput = z.infer<typeof badgeUpdateSchema>;
+
+// ── Servicios, tecnologías, timeline y perfil (T-12) ─────────────────────
+
+/** `icon_key` debe ser una clave real del registro: una mal escrita deja el hueco del icono vacío en el sitio sin avisar. */
+const iconKeySchema = z
+  .string()
+  .trim()
+  .refine((v) => v === '' || Object.prototype.hasOwnProperty.call(portfolioIconRegistry, v), 'Esa clave de icono no existe en el registro');
+
+/** `{es: string[], en: string[]}`, ambas opcionales — las features de un servicio. */
+const localizedListaOpcionalSchema = z
+  .object({
+    es: z.array(z.string().trim().min(1)).optional(),
+    en: z.array(z.string().trim().min(1)).optional(),
+  })
+  .nullable()
+  .optional();
+
+const camposServicio = {
+  slug: slugSchema,
+  title: localizedRequiredSchema,
+  description: localizedOptionalSchema,
+  /** Ruta dentro de `public/images/services/`. Vacío si no tiene icono propio. */
+  icon: z.string().trim(),
+  badge: z.string().trim(),
+  features: localizedListaOpcionalSchema,
+  /** Dato del contenido (el degradado de esa tarjeta), no un token de la interfaz. */
+  gradient: z.string().trim(),
+  price_min: z.number().nonnegative().nullable(),
+  price_max: z.number().nonnegative().nullable(),
+  price_currency: z.string().trim().nullable(),
+  is_published: z.boolean(),
+};
+
+export const serviceCreateSchema = z.object({
+  ...camposServicio,
+  icon: camposServicio.icon.default(''),
+  badge: camposServicio.badge.default(''),
+  gradient: camposServicio.gradient.default(''),
+  price_min: camposServicio.price_min.default(null),
+  price_max: camposServicio.price_max.default(null),
+  price_currency: camposServicio.price_currency.default(null),
+  is_published: camposServicio.is_published.default(true),
+});
+
+export const serviceUpdateSchema = z.object(camposServicio).partial();
+
+export type ServiceCreateInput = z.infer<typeof serviceCreateSchema>;
+export type ServiceUpdateInput = z.infer<typeof serviceUpdateSchema>;
+
+const camposTecnologia = {
+  /** Identidad (unique en la tabla): nombre TAL CUAL, se muestra en el tooltip del marquee. */
+  name: z.string().trim().min(1, 'Falta el nombre'),
+  icon_key: iconKeySchema,
+  color: hexOrVacioSchema,
+  category: z.string().trim(),
+  is_published: z.boolean(),
+};
+
+export const technologyCreateSchema = z.object({
+  ...camposTecnologia,
+  icon_key: camposTecnologia.icon_key.default(''),
+  color: camposTecnologia.color.default(''),
+  category: camposTecnologia.category.default(''),
+  is_published: camposTecnologia.is_published.default(true),
+});
+
+export const technologyUpdateSchema = z.object(camposTecnologia).partial();
+
+export type TechnologyCreateInput = z.infer<typeof technologyCreateSchema>;
+export type TechnologyUpdateInput = z.infer<typeof technologyUpdateSchema>;
+
+const camposHito = {
+  slug: slugSchema,
+  /** Bilingüe: el hito "Presente" traduce el año, no solo el texto. */
+  year: localizedRequiredSchema,
+  title: localizedRequiredSchema,
+  description: localizedOptionalSchema,
+  icon_key: iconKeySchema,
+  is_published: z.boolean(),
+};
+
+export const timelineCreateSchema = z.object({
+  ...camposHito,
+  icon_key: camposHito.icon_key.default(''),
+  is_published: camposHito.is_published.default(true),
+});
+
+export const timelineUpdateSchema = z.object(camposHito).partial();
+
+export type TimelineCreateInput = z.infer<typeof timelineCreateSchema>;
+export type TimelineUpdateInput = z.infer<typeof timelineUpdateSchema>;
+
+/**
+ * Perfil → solo la sección `interests` (decisión de Omar: `personal_data` son
+ * claves de traducción, no texto, y queda fuera del panel). No es una lista
+ * de filas con su propio id: es EL contenido jsonb completo de la única fila
+ * `portfolio_profile` donde `section = 'interests'`. Por eso no hay
+ * crear/borrar/reordenar por id — se manda el array entero en el orden
+ * deseado y se reemplaza entero.
+ */
+export const interestItemSchema = z.object({
+  title: z.string().trim().min(1, 'Falta el título'),
+  href: z.string().trim().url('Debe ser una URL válida'),
+  iconKey: z
+    .string()
+    .trim()
+    .min(1, 'Falta el icono')
+    .refine((v) => Object.prototype.hasOwnProperty.call(portfolioIconRegistry, v), 'Esa clave de icono no existe en el registro'),
+});
+
+export const interestsContentSchema = z.object({
+  content: z.array(interestItemSchema),
+  is_published: z.boolean().default(true),
+});
+
+export type InterestItem = z.infer<typeof interestItemSchema>;
+export type InterestsContentInput = z.infer<typeof interestsContentSchema>;
 
 /** Reordenar: el array completo de ids en el orden deseado; position se reescribe 0..n-1. */
 export const reorderSchema = z.object({
