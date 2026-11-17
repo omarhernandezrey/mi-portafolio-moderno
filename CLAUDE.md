@@ -6,6 +6,7 @@ Portafolio de Omar Hernández Rey (Next.js 15, TypeScript, Tailwind, Supabase) y
 
 1. Lee `PLAN_MAESTRO_DASHBOARD.md`, en este orden: §0 (estado y ramas en curso), §3 (manual de ejecución: es obligatorio), §2 (restricciones) y la ficha de tu tarea en §5.
 2. `PRODUCT.md` es la verdad de producto y `DESIGN.md` la del sistema visual. Si un cambio los contradice, se detiene y se pregunta; no se editan de paso.
+3. **La rama se crea antes de la primera edición**, no al final. Un hook del repo (`.claude/hooks/guardia-rama.sh`, registrado en `.claude/settings.json`) bloquea toda edición de `src/`, `__tests__/`, `cypress/` o `supabase/` estando en `main`; docs, plan, scripts y ops sí pueden ir a `main`.
 
 ## Skills de diseño instaladas en `.claude/skills/`
 
