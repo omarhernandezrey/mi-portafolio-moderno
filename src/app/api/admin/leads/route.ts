@@ -33,9 +33,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: result.error.flatten().fieldErrors }, { status: 400 });
     }
 
+    // T-25: origen explícito — un alta manual desde el panel es 'manual',
+    // el único de los 4 valores de `leads.source` que este endpoint puede
+    // producir (los otros 3 vienen del formulario, la calculadora o el
+    // chatbot retirado).
     const { data: lead, error } = await supabaseServer
       .from('leads')
-      .insert(result.data)
+      .insert({ ...result.data, source: 'manual' })
       .select()
       .single();
 

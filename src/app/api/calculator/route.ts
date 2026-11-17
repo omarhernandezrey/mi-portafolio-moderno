@@ -37,62 +37,50 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
     }
-    const { selections, visitorInfo, currency, language } = parsed.data;
+    const { selections, visitorInfo, currency } = parsed.data;
     const budget = calculateBudget(selections, currency);
     const currencyLabel = currency.toUpperCase();
     const budgetLabel = `$${budget.toLocaleString(currency === 'cop' ? 'es-CO' : 'en-US')} ${currencyLabel}`;
 
-    // 1. Guardar lead en Supabase
-    const { data: conv } = await supabaseServer
-      .from('conversations')
-      .insert({
-        session_id: `calc-${Date.now()}`,
-        visitor_name: visitorInfo.name,
-        visitor_email: visitorInfo.email,
-        language,
-        intent: 'budget_calculator',
-        summary: `Presupuesto calculado: ${budgetLabel}. Empresa: ${visitorInfo.company}`
-      })
-      .select()
-      .single();
+    // 1. Guardar lead en Supabase — T-25: sin `conversations` ficticia solo
+    // para colgar el lead de algo (dejaba el origen escondido en
+    // `conversations.intent`); el origen ahora es `leads.source` directo.
+    const ORIGEN = 'budget_calculator';
+    const { data: insertedLead } = await supabaseServer.from('leads').insert({
+      name: visitorInfo.name,
+      email: visitorInfo.email,
+      company: visitorInfo.company,
+      budget: budgetLabel,
+      service_requested: 'Calculadora de Presupuesto',
+      notes: `Selecciones: ${JSON.stringify(selections).slice(0, 1000)}`,
+      source: ORIGEN,
+      status: 'new',
+    }).select('id').single();
 
-    if (conv) {
-      const { data: insertedLead } = await supabaseServer.from('leads').insert({
-        conversation_id: conv.id,
+    if (insertedLead) {
+      const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
+      pushLeadToNotion({
+        type: 'client',
         name: visitorInfo.name,
         email: visitorInfo.email,
         company: visitorInfo.company,
         budget: budgetLabel,
         service_requested: 'Calculadora de Presupuesto',
         notes: `Selecciones: ${JSON.stringify(selections).slice(0, 1000)}`,
-        status: 'new'
-      }).select('id').single();
+        timeline: null,
+        phone: null
+      }, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
 
-      if (insertedLead) {
-        const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
-        pushLeadToNotion({
-          type: 'client',
-          name: visitorInfo.name,
-          email: visitorInfo.email,
-          company: visitorInfo.company,
-          budget: budgetLabel,
-          service_requested: 'Calculadora de Presupuesto',
-          notes: `Selecciones: ${JSON.stringify(selections).slice(0, 1000)}`,
-          timeline: null,
-          phone: null
-        }, insertedLead.id, clientEnv.NEXT_PUBLIC_SITE_URL).catch(console.error);
-
-        await dispatchEvent('lead.created', {
-          id: insertedLead.id,
-          name: visitorInfo.name,
-          email: visitorInfo.email,
-          company: visitorInfo.company,
-          budget: budgetLabel,
-          service: 'Calculadora de Presupuesto',
-          source: 'calculator',
-          status: 'new',
-        }).catch((error) => console.error('dispatchEvent lead.created error:', error));
-      }
+      await dispatchEvent('lead.created', {
+        id: insertedLead.id,
+        name: visitorInfo.name,
+        email: visitorInfo.email,
+        company: visitorInfo.company,
+        budget: budgetLabel,
+        service: 'Calculadora de Presupuesto',
+        source: ORIGEN,
+        status: 'new',
+      }).catch((error) => console.error('dispatchEvent lead.created error:', error));
     }
 
     // 2. Generar PDF con pdf-lib
@@ -165,13 +153,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 4. Notificar a Telegram
+    // 4. Notificar a Telegram — nombre, correo, servicio y origen (T-25).
     await notifyTelegram(`
 🧮 *Nueva consulta en Calculadora*
 Nombre: ${visitorInfo.name}
 Email: ${visitorInfo.email}
 Empresa: ${visitorInfo.company}
+Servicio: Calculadora de Presupuesto
 Presupuesto: *${budgetLabel}*
+Origen: ${ORIGEN}
 Email enviado: ${emailSent ? '✅' : '❌ (Revisar Resend API Key)'}
     `.trim());
 
