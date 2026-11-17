@@ -85,7 +85,7 @@ export default async function AdminFeedPage({
         }
       />
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <Link
           href="/admin/feed"
           className={`px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border transition-all ${
@@ -119,7 +119,71 @@ export default async function AdminFeedPage({
         </Link>
       </div>
 
-      <div className="bg-card-bg rounded-2xl border border-admin-line shadow-2xl overflow-hidden">
+      {/* T-29: variante móvil — la tabla de abajo exige 720px de ancho mínimo,
+          que a 375px solo se puede leer con scroll horizontal de página. */}
+      <div className="space-y-3 lg:hidden">
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <article key={post.id} className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-admin-line bg-white/[0.04]">
+                    <User size={14} className="opacity-50" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 truncate text-sm font-bold text-admin-ink">
+                      {post.author_name}
+                      {post.pinned && <Pin size={11} className="shrink-0 text-primary" />}
+                    </div>
+                    <div className="text-3xs font-black uppercase tracking-widest text-text-muted/50">
+                      {post.author_role === 'owner' ? 'Verificado' : 'Visitante'} · {post.lang}
+                    </div>
+                  </div>
+                </div>
+                <span
+                  className={`shrink-0 rounded-full border px-2.5 py-1 text-3xs font-black uppercase tracking-widest ${
+                    post.status === 'published'
+                      ? 'border-admin-success/20 bg-admin-success/10 text-admin-success'
+                      : 'border-admin-line bg-white/[0.04] text-text-muted'
+                  }`}
+                >
+                  {post.status === 'published' ? 'Publicado' : 'Oculto'}
+                </span>
+              </div>
+
+              <div className="mt-3">
+                {post.title && <div className="truncate text-sm font-bold text-admin-ink">{post.title}</div>}
+                <div className="text-xs text-text-muted line-clamp-2">{post.body}</div>
+              </div>
+
+              <div className="mt-3 flex items-center justify-between border-t border-admin-line pt-3">
+                <span className="rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-3xs font-black uppercase tracking-widest text-primary">
+                  {post.category}
+                </span>
+                <div className="flex items-center gap-3 text-xs font-bold text-text-muted">
+                  <span className="flex items-center gap-1"><Heart size={12} />{post.likes_count}</span>
+                  <span className="flex items-center gap-1"><MessageSquare size={12} />{post.comments_count}</span>
+                </div>
+              </div>
+
+              <div className="mt-3 border-t border-admin-line pt-3">
+                <FeedPostRowActions
+                  postId={post.id}
+                  status={post.status}
+                  pinned={post.pinned}
+                  canWrite={canWrite}
+                  canPin={canPin}
+                  canDelete={canDelete}
+                />
+              </div>
+            </article>
+          ))
+        ) : (
+          <EmptyState icon={<Search size={24} />} title="Sin publicaciones" description="No se encontraron publicaciones con este filtro." />
+        )}
+      </div>
+
+      <div className="hidden bg-card-bg rounded-2xl border border-admin-line shadow-2xl overflow-hidden lg:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-separate border-spacing-0 min-w-[720px]">
             <thead>

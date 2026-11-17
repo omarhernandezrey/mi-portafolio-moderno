@@ -21,9 +21,11 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
     'border border-admin-danger/20 bg-admin-danger/10 text-admin-danger hover:bg-admin-danger/15',
 };
 
+// T-29: las dos tallas suben a min-h-11 (44px) — el objetivo táctil mínimo
+// que CLAUDE.md exige sin negociación. Antes `sm` quedaba en ~32px real.
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  sm: 'px-3 py-2 text-xs',
-  md: 'px-4 py-2.5 text-sm',
+  sm: 'min-h-11 px-3 py-2 text-xs',
+  md: 'min-h-11 px-4 py-2.5 text-sm',
 };
 
 export function adminButtonClasses({

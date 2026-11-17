@@ -42,7 +42,7 @@ export default function Pagination({
   const hasNext = page < totalPages;
 
   const buttonBase =
-    'inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-3xs font-bold transition-colors';
+    'inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-3 py-2 text-3xs font-bold transition-colors';
   const enabled =
     'border-admin-line bg-white/[0.03] text-text-muted hover:border-primary/30 hover:text-primary';
   const disabled =
