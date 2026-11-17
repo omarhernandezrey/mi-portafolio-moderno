@@ -22,8 +22,25 @@ jest.mock('@/lib/github', () => {
 });
 
 const mockUpsert = jest.fn().mockResolvedValue({ error: null });
+// T-21: `portfolio_projects` necesita su propio `select`/`insert` — por
+// omisión, "sin proyectos todavía" (`data: []`), para que proponer un
+// borrador no choque con nada en los tests que no son de T-21.
+const mockProjectsSelect = jest.fn().mockResolvedValue({ data: [], error: null });
+const mockProjectsInsert = jest.fn().mockResolvedValue({ error: null });
 jest.mock('@/lib/supabaseServer', () => ({
-  supabaseServer: { from: jest.fn(() => ({ upsert: mockUpsert })) },
+  supabaseServer: {
+    from: jest.fn((tabla: string) => {
+      if (tabla === 'portfolio_projects') {
+        return { select: mockProjectsSelect, insert: mockProjectsInsert };
+      }
+      return { upsert: mockUpsert };
+    }),
+  },
+}));
+
+const mockNotifyTelegram = jest.fn().mockResolvedValue({ sent: true });
+jest.mock('@/lib/chatbot/telegram', () => ({
+  notifyTelegram: (...args: unknown[]) => mockNotifyTelegram(...args),
 }));
 
 import { NextRequest } from 'next/server';
@@ -58,6 +75,11 @@ beforeEach(() => {
   mockObtenerRepos.mockReset();
   mockObtenerMetricas.mockReset();
   mockUpsert.mockClear();
+  mockProjectsSelect.mockClear();
+  mockProjectsSelect.mockResolvedValue({ data: [], error: null });
+  mockProjectsInsert.mockClear();
+  mockProjectsInsert.mockResolvedValue({ error: null });
+  mockNotifyTelegram.mockClear();
 });
 
 describe('GET /api/cron/github-metrics', () => {
@@ -129,5 +151,65 @@ describe('GET /api/cron/github-metrics', () => {
     } finally {
       serverEnv.GITHUB_TOKEN = original;
     }
+  });
+});
+
+// T-21: un repo nuevo (sin fila en portfolio_projects) se propone como
+// borrador; uno que ya tiene proyecto no se vuelve a proponer.
+describe('T-21: proponer proyectos nuevos desde GitHub', () => {
+  it('un repo sin proyecto todavía: se inserta como borrador (is_published: false) y avisa por Telegram', async () => {
+    mockObtenerRepos.mockResolvedValue(['omarhernandezrey/proyecto-nuevo']);
+    mockObtenerMetricas.mockImplementation(async (repo: string) => metricasDe(repo));
+
+    const res = await GET(peticion());
+    const body = await res.json();
+
+    expect(body.propuestos).toEqual(['proyecto-nuevo']);
+    expect(mockProjectsInsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        slug: 'proyecto-nuevo',
+        repository: 'https://github.com/omarhernandezrey/proyecto-nuevo',
+        is_published: false,
+        technologies: ['TypeScript'],
+      }),
+    );
+    expect(mockNotifyTelegram).toHaveBeenCalledWith(expect.stringContaining('proyecto-nuevo'));
+  });
+
+  it('un repo que ya tiene proyecto: no se propone ni se avisa de nuevo (sin novedad no hay mensaje)', async () => {
+    mockObtenerRepos.mockResolvedValue(['omarhernandezrey/ya-existe']);
+    mockObtenerMetricas.mockImplementation(async (repo: string) => metricasDe(repo));
+    mockProjectsSelect.mockResolvedValue({
+      data: [{ slug: 'ya-existe', repository: 'https://github.com/omarhernandezrey/ya-existe' }],
+      error: null,
+    });
+
+    const res = await GET(peticion());
+    const body = await res.json();
+
+    expect(body.propuestos).toEqual([]);
+    expect(mockProjectsInsert).not.toHaveBeenCalled();
+    expect(mockNotifyTelegram).not.toHaveBeenCalled();
+  });
+
+  it('dos repos nuevos con el mismo slug derivado: el segundo no choca, se le suma un sufijo', async () => {
+    mockObtenerRepos.mockResolvedValue(['omarhernandezrey/demo', 'otraCuenta/Demo']);
+    mockObtenerMetricas.mockImplementation(async (repo: string) => metricasDe(repo));
+
+    const res = await GET(peticion());
+    const body = await res.json();
+
+    expect(body.propuestos).toEqual(['demo', 'demo-2']);
+  });
+
+  it('sin repos procesados (todos fallaron): no intenta proponer nada', async () => {
+    mockObtenerRepos.mockResolvedValue(['omarhernandezrey/rota']);
+    mockObtenerMetricas.mockRejectedValue(new Error('404'));
+
+    const res = await GET(peticion());
+    const body = await res.json();
+
+    expect(body.propuestos).toEqual([]);
+    expect(mockProjectsSelect).not.toHaveBeenCalled();
   });
 });

@@ -8,6 +8,8 @@ import {
   obtenerReposDelUsuario,
   type MetricasRepositorio,
 } from '@/lib/github';
+import { construirProyectoPropuesto } from '@/lib/portfolio/githubSync';
+import { notifyTelegram } from '@/lib/chatbot/telegram';
 
 /**
  * Con Fluid Compute (Hobby y Pro) el máximo es 300s. Sin Fluid, Hobby se
@@ -42,6 +44,46 @@ const PRESUPUESTO_MS = maxDuration * 1000 - MARGEN_MS;
 
 function hoyEnBogota(): string {
   return new Date(Date.now() - 5 * 3600 * 1000).toISOString().slice(0, 10);
+}
+
+/**
+ * Propone como borrador cada repo procesado que todavía no tiene fila en
+ * `portfolio_projects` (T-21). `is_published` siempre `false` — nunca se
+ * publica solo. Devuelve los slugs creados, para el aviso de Telegram
+ * (sin novedad no hay mensaje: si la lista viene vacía, no se avisa).
+ */
+async function proponerProyectosNuevos(metricasPorRepo: ReadonlyMap<string, MetricasRepositorio>): Promise<string[]> {
+  if (metricasPorRepo.size === 0) return [];
+
+  const { data: existentes, error } = await supabaseServer.from('portfolio_projects').select('slug, repository');
+  if (error) {
+    console.error(`[github-metrics] no se pudo leer portfolio_projects para T-21: ${error.message}`);
+    return [];
+  }
+
+  const slugsExistentes = new Set((existentes ?? []).map((p) => p.slug as string));
+  const reposExistentes = new Set((existentes ?? []).map((p) => p.repository as string).filter(Boolean));
+
+  const propuestos: string[] = [];
+  for (const [repoFullName, metricas] of metricasPorRepo) {
+    const urlRepo = `https://github.com/${repoFullName}`;
+    if (reposExistentes.has(urlRepo)) continue;
+
+    const propuesta = construirProyectoPropuesto(
+      { repoFullName, languagesBytes: metricas.languagesBytes },
+      slugsExistentes,
+    );
+    slugsExistentes.add(propuesta.slug); // evita colisiones dentro del mismo lote
+
+    const { error: insertError } = await supabaseServer.from('portfolio_projects').insert(propuesta);
+    if (insertError) {
+      console.error(`[github-metrics] T-21: no se pudo proponer ${repoFullName}: ${insertError.message}`);
+      continue;
+    }
+    propuestos.push(propuesta.slug);
+  }
+
+  return propuestos;
 }
 
 /** Devuelve el mensaje de error del upsert, o `null` si se guardó. */
@@ -86,6 +128,9 @@ export async function GET(req: NextRequest) {
 
     const procesados: string[] = [];
     const saltados: Array<{ repo: string; motivo: string }> = [];
+    // Para T-21 (proponer proyecto nuevo): solo de los repos que de verdad
+    // se guardaron esta corrida, con los lenguajes ya calculados.
+    const metricasPorRepo = new Map<string, MetricasRepositorio>();
     let siguiente = 0;
     let detener = false;
     let motivoDetencion: string | null = null;
@@ -114,6 +159,7 @@ export async function GET(req: NextRequest) {
             saltados.push({ repo, motivo: errorUpsert });
           } else {
             procesados.push(repo);
+            metricasPorRepo.set(repo, metricas);
           }
         } catch (error) {
           if (error instanceof CupoAgotadoError) {
@@ -143,6 +189,16 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // T-21: repos que ya tienen métricas pero todavía no tienen proyecto en
+    // el panel se proponen como borrador (nunca publicados). Solo se avisa
+    // por Telegram si de verdad se propuso algo — sin novedad no hay mensaje.
+    const propuestos = await proponerProyectosNuevos(metricasPorRepo);
+    if (propuestos.length > 0) {
+      await notifyTelegram(
+        `🆕 *${propuestos.length} proyecto${propuestos.length > 1 ? 's' : ''} propuesto${propuestos.length > 1 ? 's' : ''} desde GitHub*\n${propuestos.map((s) => `• ${s}`).join('\n')}\nRevísalos en /admin/proyectos — quedaron sin publicar.`,
+      );
+    }
+
     return NextResponse.json({
       success: true,
       completo: pendientes.length === 0 && !motivoDetencion,
@@ -151,6 +207,7 @@ export async function GET(req: NextRequest) {
       procesados: procesados.length,
       saltados,
       pendientes,
+      propuestos,
       duracionMs: Date.now() - inicio,
     });
   } catch (error) {
