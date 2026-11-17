@@ -43,6 +43,7 @@ function metricasDe(repo: string) {
     additions: 100,
     deletions: 20,
     languages: { TypeScript: 100 },
+    languagesBytes: { TypeScript: 1000 },
     stars: 1,
     forks: 0,
     openPrs: 0,

@@ -54,6 +54,7 @@ async function guardarMetricas(m: MetricasRepositorio, capturedAt: string): Prom
       additions: m.additions,
       deletions: m.deletions,
       languages: m.languages,
+      languages_bytes: m.languagesBytes,
       stars: m.stars,
       forks: m.forks,
       open_prs: m.openPrs,

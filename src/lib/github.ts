@@ -240,6 +240,8 @@ export interface MetricasRepositorio {
   additions: number;
   deletions: number;
   languages: Record<string, number>;
+  /** Bytes crudos por lenguaje (T-14): `languages` ya es porcentaje y no sirve para agregar entre repos de tamaños distintos. */
+  languagesBytes: Record<string, number>;
   stars: number;
   forks: number;
   openPrs: number;
@@ -272,7 +274,7 @@ export async function obtenerReposDelUsuario(
 }
 
 /** `hoy` en formato `YYYY-MM-DD` de Bogotá, para que calcularRachas no dependa del reloj del proceso. */
-function hoyEnBogota(): string {
+export function hoyEnBogota(): string {
   return new Date(Date.now() - 5 * 3600 * 1000).toISOString().slice(0, 10);
 }
 
@@ -312,6 +314,7 @@ export async function obtenerMetricasDeRepositorio(
     additions,
     deletions,
     languages: calcularPorcentajesDeLenguajes(lenguajesBytes),
+    languagesBytes: lenguajesBytes,
     stars: repoInfo.stargazers_count,
     forks: repoInfo.forks_count,
     openPrs: prsAbiertas.length,
