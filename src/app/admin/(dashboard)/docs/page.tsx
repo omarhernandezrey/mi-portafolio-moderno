@@ -24,7 +24,7 @@ export default async function AdminDocsPage() {
         description="Procesos repetibles y guías para el equipo y subcontratistas."
       />
 
-      <section className="relative overflow-hidden rounded-2xl border border-admin-line bg-card-bg p-6 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-8">
+      <section className="relative overflow-hidden rounded-2xl border border-admin-line bg-card-bg p-6 shadow-e3 sm:p-8">
         <div
           aria-hidden
           className="pointer-events-none absolute -right-24 -top-32 h-72 w-72 rounded-full bg-primary/10 blur-[100px]"
@@ -32,7 +32,7 @@ export default async function AdminDocsPage() {
         <div className="relative grid gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
           <div className="max-w-xl">
             <p className="font-mono-label text-3xs text-primary">Manual operativo</p>
-            <h2 className="mt-3 font-display text-2xl font-semibold italic leading-tight tracking-tight text-admin-ink sm:text-3xl">
+            <h2 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight text-admin-ink sm:text-3xl">
               Procesos que no dependen de la memoria.
             </h2>
             <p className="mt-3 text-sm font-medium leading-relaxed text-text-muted">
@@ -58,7 +58,7 @@ export default async function AdminDocsPage() {
             <Link
               key={doc.slug}
               href={`/admin/docs/${doc.slug}`}
-              className="group relative flex min-h-[260px] flex-col overflow-hidden rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] transition-colors hover:border-primary/35"
+              className="group relative flex min-h-[260px] flex-col overflow-hidden rounded-2xl border border-admin-line bg-card-bg p-5 shadow-e3 transition-colors hover:border-primary/35"
             >
               <div
                 aria-hidden

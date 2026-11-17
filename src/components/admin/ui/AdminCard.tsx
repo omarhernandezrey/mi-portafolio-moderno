@@ -17,18 +17,19 @@ export default function AdminCard({
 }: AdminCardProps) {
   const paddingClass =
     padding === 'none' ? '' : padding === 'large' ? 'p-8 md:p-10' : 'p-5 md:p-7';
-  // `rounded-canvas` = var(--radius-canvas) = 2rem: el mismo 32px que antes
-  // iba escrito a mano, ahora desde la escala nombrada de T-01 (T-24).
+  // T-26: los valores del prop se conservan por compatibilidad, pero mapean a
+  // la escala de roles de T-01 (card=20px, panel=28px, canvas=32px) — la deuda
+  // que DESIGN.md §Shapes dejó anotada en T-24 y la auditoría mandó saldar.
   const radiusClass =
     radius === '2xl'
-      ? 'rounded-2xl'
+      ? 'rounded-card'
       : radius === '4xl'
         ? 'rounded-canvas'
-        : 'rounded-3xl';
+        : 'rounded-panel';
 
   return (
     <div
-      className={`relative overflow-hidden border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] ${paddingClass} ${radiusClass} ${className}`}
+      className={`relative overflow-hidden border border-admin-line bg-card-bg shadow-e3 ${paddingClass} ${radiusClass} ${className}`}
     >
       {glow && (
         <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-primary/10 blur-[80px]" />

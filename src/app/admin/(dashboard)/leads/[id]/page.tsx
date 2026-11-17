@@ -82,7 +82,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             <div className="flex items-center gap-2 text-primary font-black text-3xs uppercase tracking-[0.3em] mb-1">
               CRM Intelligence
             </div>
-            <h1 className="font-display italic text-2xl font-medium text-admin-ink tracking-tight flex items-center gap-3">
+            <h1 className="font-display text-2xl font-medium text-admin-ink tracking-tight flex items-center gap-3">
               {lead.name || 'Entidad no identificada'}
               <StatusBadge status={lead.status} />
             </h1>
@@ -126,7 +126,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
 
             <div className="mt-10 pt-8 border-t border-admin-line">
               <div className="p-6 rounded-2xl bg-admin-bg/50 border border-admin-line group-hover:border-primary/10 transition-colors">
-                <h4 className="text-4xs font-black uppercase tracking-widest text-text-muted mb-3 opacity-40 italic">Servicio Prioritario</h4>
+                <h4 className="text-4xs font-black uppercase tracking-widest text-text-muted mb-3 opacity-40">Servicio Prioritario</h4>
                 <p className="text-sm font-bold text-admin-ink">{lead.service_requested || 'Consultoría General de Software'}</p>
               </div>
             </div>
@@ -146,7 +146,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-3xs font-black uppercase tracking-widest text-text-muted/60 ml-2 italic">Control de Pipeline</h4>
+                <h4 className="text-3xs font-black uppercase tracking-widest text-text-muted/60 ml-2">Control de Pipeline</h4>
                 <LeadActions leadId={lead.id} currentStatus={lead.status} canEdit={canWrite} />
               </div>
 
@@ -155,7 +155,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
               {lead.notes && (
                 <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
                   <h4 className="text-3xs font-black uppercase tracking-widest text-primary mb-3">Resumen de la IA</h4>
-                  <p className="text-xs text-text-muted leading-relaxed font-medium italic opacity-80">
+                  <p className="text-xs text-text-muted leading-relaxed font-medium opacity-80">
                     &ldquo;{lead.notes}&rdquo;
                   </p>
                 </div>
@@ -171,12 +171,12 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             <div className="p-4 sm:p-6 border-b border-admin-line flex items-center justify-between bg-admin-bg/30 backdrop-blur-md sticky top-0 z-20">
               <div className="flex items-center gap-4">
                 <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/20" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-admin-danger/20" />
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20" />
                   <div className="w-2.5 h-2.5 rounded-full bg-admin-success/20" />
                 </div>
                 <div className="h-4 w-px bg-white/[0.07] mx-2" />
-                <h3 className="font-bold flex items-center gap-2 text-sm italic tracking-tight">
+                <h3 className="font-bold flex items-center gap-2 text-sm tracking-tight">
                   <MessageSquare size={18} className="text-primary" />
                   Transcripción de Seguridad
                 </h3>

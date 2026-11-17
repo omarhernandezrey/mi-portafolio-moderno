@@ -283,7 +283,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-72 flex-col border-r border-admin-line bg-admin-surface/95 backdrop-blur-xl lg:flex">
         <div className="border-b border-admin-line p-5">
           <Link href="/admin" className="group flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary shadow-custom-primary transition-transform duration-200 group-hover:scale-105">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary shadow-e1 transition-transform duration-200 group-hover:scale-105">
               <ShieldCheck size={22} />
             </div>
             <div className="min-w-0">
@@ -324,7 +324,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
         <div className="space-y-3 border-t border-admin-line p-4">
           <div className="flex items-center justify-between px-1">
             <span className="inline-flex items-center gap-1.5 font-mono-label text-kicker text-admin-success">
-              <span className="h-1.5 w-1.5 rounded-full bg-admin-success shadow-[0_0_8px_var(--admin-success)]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-admin-success" />
               Sistema operativo
             </span>
             <Link

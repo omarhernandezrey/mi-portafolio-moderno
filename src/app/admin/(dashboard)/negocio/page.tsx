@@ -463,7 +463,7 @@ export default async function NegocioDashboardPage() {
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
         <div className="space-y-5 xl:col-span-8">
-          <section className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <section className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3">
             <div className="flex flex-col gap-3 border-b border-admin-line p-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="flex items-center gap-2 text-base font-bold text-admin-ink">
@@ -531,7 +531,7 @@ export default async function NegocioDashboardPage() {
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <section className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3">
             <div className="flex flex-col gap-3 border-b border-admin-line p-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-base font-bold text-admin-ink">
@@ -572,7 +572,7 @@ export default async function NegocioDashboardPage() {
                         {lead.email || 'Sin correo'}
                       </p>
                       <div className="mt-2 flex items-center justify-between gap-2">
-                        <p className="truncate text-xs font-medium italic text-text-muted">
+                        <p className="truncate text-xs font-medium text-text-muted">
                           {lead.service_requested || 'Consulta general'}
                         </p>
                         <span className="shrink-0 font-mono-label text-4xs text-text-muted/60">
@@ -637,7 +637,7 @@ export default async function NegocioDashboardPage() {
                           </div>
                         </td>
                         <td className="max-w-[220px] px-5 py-4">
-                          <p className="truncate text-xs font-medium italic text-text-muted">
+                          <p className="truncate text-xs font-medium text-text-muted">
                             {lead.service_requested || 'Consulta general'}
                           </p>
                         </td>
@@ -778,7 +778,7 @@ export default async function NegocioDashboardPage() {
                       </div>
                       <div className="mt-2 flex items-center justify-between gap-2">
                         <StatusBadge status={ticket.status} size="sm" />
-                        <span className="flex items-center gap-1 font-mono-label text-[8px] text-text-muted/60">
+                        <span className="flex items-center gap-1 font-mono-label text-4xs text-text-muted/60">
                           <Clock size={9} />
                           {getTimeAgo(new Date(ticket.created_at))}
                         </span>

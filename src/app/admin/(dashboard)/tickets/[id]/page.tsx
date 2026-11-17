@@ -128,7 +128,7 @@ export default function TicketDetailPage({ params }: Props) {
   if (error || !ticket) {
     return (
       <div className="mx-auto flex min-h-[50vh] max-w-lg flex-col items-center justify-center text-center">
-        <div className="w-full rounded-2xl border border-admin-line bg-card-bg p-8 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+        <div className="w-full rounded-2xl border border-admin-line bg-card-bg p-8 shadow-e3">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-admin-danger/20 bg-admin-danger/10 text-admin-danger">
             <AlertCircle size={26} />
           </div>
@@ -165,7 +165,7 @@ export default function TicketDetailPage({ params }: Props) {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <header className="flex flex-col gap-5 rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-6 lg:flex-row lg:items-start lg:justify-between">
+      <header className="flex flex-col gap-5 rounded-2xl border border-admin-line bg-card-bg p-5 shadow-e3 sm:p-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex min-w-0 items-start gap-4">
           <Link
             href="/admin/tickets"
@@ -178,7 +178,7 @@ export default function TicketDetailPage({ params }: Props) {
             <p className="font-mono-label text-4xs text-text-muted/50">
               Soporte · #{ticket.id.slice(0, 8)}
             </p>
-            <h1 className="mt-2 font-display text-2xl font-semibold italic leading-tight tracking-tight text-admin-ink sm:text-3xl">
+            <h1 className="mt-2 font-display text-2xl font-semibold leading-tight tracking-tight text-admin-ink sm:text-3xl">
               {ticket.title}
             </h1>
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -219,7 +219,7 @@ export default function TicketDetailPage({ params }: Props) {
       </header>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="flex h-[68vh] min-h-[520px] max-h-[760px] flex-col overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+        <section className="flex h-[68vh] min-h-[520px] max-h-[760px] flex-col overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3">
           <div className="flex items-center justify-between border-b border-admin-line px-4 py-3.5 sm:px-5">
             <div className="flex items-center gap-2 text-sm font-bold text-admin-ink">
               <MessageSquare size={16} className="text-primary" />
@@ -320,7 +320,7 @@ export default function TicketDetailPage({ params }: Props) {
         </section>
 
         <aside className="space-y-4">
-          <section className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <section className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-e3">
             <h2 className="flex items-center gap-2 text-sm font-bold text-admin-ink">
               <AlertCircle size={16} className="text-primary" />
               Detalles del ticket
@@ -354,7 +354,7 @@ export default function TicketDetailPage({ params }: Props) {
           </section>
 
           {ticket.lead && (
-            <section className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+            <section className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-e3">
               <h2 className="flex items-center gap-2 text-sm font-bold text-admin-ink">
                 <User size={16} className="text-primary" />
                 Cliente

@@ -49,9 +49,9 @@ export default async function AdminDocDetailPage({ params }: { params: Promise<{
         Volver a la documentación
       </Link>
       
-      <article className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-8 lg:p-12">
+      <article className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3 sm:p-8 lg:p-12">
         <header className="mb-6 sm:mb-12 border-b border-admin-line pb-4 sm:pb-8">
-          <h1 className="font-display italic text-2xl sm:text-3xl lg:text-4xl font-medium text-admin-ink mb-2 sm:mb-4 tracking-tight">
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-medium text-admin-ink mb-2 sm:mb-4 tracking-tight">
             {doc.title}
           </h1>
           <p className="text-sm sm:text-lg text-text-muted leading-relaxed">

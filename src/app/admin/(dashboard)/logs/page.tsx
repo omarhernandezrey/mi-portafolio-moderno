@@ -194,7 +194,7 @@ export default function ApiLogsPage() {
 
       {/* Provider breakdown */}
       {Object.keys(stats.byProvider).length > 0 && (
-        <div className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+        <div className="rounded-2xl border border-admin-line bg-card-bg p-5 shadow-e3">
           <h2 className="mb-4 flex items-center gap-2 text-sm font-bold text-admin-ink">
             <Zap size={14} className="text-primary" />
             Uso por proveedor

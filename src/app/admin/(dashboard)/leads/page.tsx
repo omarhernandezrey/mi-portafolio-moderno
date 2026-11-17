@@ -163,7 +163,7 @@ export default async function AdminLeadsPage({
           leads.map((lead) => (
             <article
               key={lead.id}
-              className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+              className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
@@ -185,7 +185,7 @@ export default async function AdminLeadsPage({
 
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
-                  <p className="font-mono-label text-[8px] text-text-muted/50">
+                  <p className="font-mono-label text-4xs text-text-muted/50">
                     Servicio
                   </p>
                   <p className="mt-1 truncate text-2xs font-bold text-text-muted">
@@ -193,7 +193,7 @@ export default async function AdminLeadsPage({
                   </p>
                 </div>
                 <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
-                  <p className="font-mono-label text-[8px] text-text-muted/50">
+                  <p className="font-mono-label text-4xs text-text-muted/50">
                     Presupuesto
                   </p>
                   <p className="mt-1 truncate text-2xs font-black text-admin-ink">
@@ -203,7 +203,7 @@ export default async function AdminLeadsPage({
               </div>
 
               <div className="mt-3 flex items-center justify-between border-t border-admin-line pt-3">
-                <span className="flex items-center gap-1.5 font-mono-label text-[8px] text-text-muted/50">
+                <span className="flex items-center gap-1.5 font-mono-label text-4xs text-text-muted/50">
                   <Calendar size={10} />
                   {formatDate(lead.created_at)}
                 </span>
@@ -239,7 +239,7 @@ export default async function AdminLeadsPage({
         )}
       </div>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3 lg:block">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[860px] text-left">
             <thead>
@@ -288,10 +288,10 @@ export default async function AdminLeadsPage({
                       </div>
                     </td>
                     <td className="px-5 py-4">
-                      <p className="text-xs font-bold italic text-text-muted">
+                      <p className="text-xs font-bold text-text-muted">
                         {lead.company || 'N/A'}
                       </p>
-                      <p className="mt-0.5 font-mono-label text-[8px] text-primary/60">
+                      <p className="mt-0.5 font-mono-label text-4xs text-primary/60">
                         {lead.type || 'other'}
                       </p>
                     </td>
@@ -300,7 +300,7 @@ export default async function AdminLeadsPage({
                         <Briefcase size={12} className="shrink-0 text-primary/50" />
                         <span className="truncate">{lead.service_requested || 'Consulta general'}</span>
                       </p>
-                      <p className="mt-1 flex items-center gap-1 font-mono-label text-[8px] text-text-muted/40">
+                      <p className="mt-1 flex items-center gap-1 font-mono-label text-4xs text-text-muted/40">
                         <Calendar size={9} />
                         {formatDate(lead.created_at)}
                       </p>

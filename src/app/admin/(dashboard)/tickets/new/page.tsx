@@ -78,13 +78,13 @@ export default function NewTicketPage() {
         <ArrowLeft size={18} /> Volver a Tickets
       </Link>
 
-      <div className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-6 lg:p-8">
+      <div className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3 sm:p-6 lg:p-8">
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="p-2 sm:p-3 bg-primary/10 rounded-xl sm:rounded-2xl text-primary">
             <Ticket size={28} />
           </div>
           <div>
-            <h1 className="font-display italic text-xl sm:text-2xl lg:text-3xl font-medium text-admin-ink">Nuevo Ticket</h1>
+            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-medium text-admin-ink">Nuevo Ticket</h1>
             <p className="text-xs sm:text-sm text-text-muted">Registra un nuevo requerimiento de soporte.</p>
           </div>
         </div>

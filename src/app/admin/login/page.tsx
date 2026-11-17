@@ -80,7 +80,7 @@ export default function AdminLoginPage() {
             />
             Volver al portafolio
           </Link>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-admin-line bg-white/[0.03] px-2.5 py-1 font-mono-label text-[8px] text-text-muted/70">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-admin-line bg-white/[0.03] px-2.5 py-1 font-mono-label text-4xs text-text-muted/70">
             <LockKeyhole size={10} />
             Acceso restringido
           </span>
@@ -93,7 +93,7 @@ export default function AdminLoginPage() {
           className="rounded-2xl border border-admin-line bg-admin-surface/90 p-6 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:p-8"
         >
           <div className="mb-8">
-            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-custom-primary">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-e1">
               <ShieldCheck size={28} />
             </div>
             <p className="font-mono-label mb-2 text-4xs text-primary/80">
@@ -122,7 +122,7 @@ export default function AdminLoginPage() {
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
                   <CheckCircle size={24} />
                 </div>
-                <h2 className="font-display text-xl font-semibold italic text-admin-ink">
+                <h2 className="font-display text-xl font-semibold text-admin-ink">
                   Enlace enviado
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-text-muted">
@@ -196,7 +196,7 @@ export default function AdminLoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group flex w-full items-center justify-center gap-2.5 rounded-xl border border-primary bg-primary px-5 py-3.5 text-sm font-black text-background shadow-custom-primary transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+                  className="group flex w-full items-center justify-center gap-2.5 rounded-xl border border-primary bg-primary px-5 py-3.5 text-sm font-black text-background shadow-e1 transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
                 >
                   {isLoading ? (
                     <span
@@ -221,7 +221,7 @@ export default function AdminLoginPage() {
           </AnimatePresence>
         </motion.div>
 
-        <p className="mt-5 text-center font-mono-label text-[8px] text-text-muted/40">
+        <p className="mt-5 text-center font-mono-label text-4xs text-text-muted/40">
           Supabase Auth · Acceso cifrado · Omar Hernández
         </p>
       </div>

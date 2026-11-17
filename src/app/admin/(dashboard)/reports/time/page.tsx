@@ -186,7 +186,7 @@ export default function TimeReportPage() {
             return (
               <article
                 key={row.id}
-                className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+                className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04]">
@@ -207,7 +207,7 @@ export default function TimeReportPage() {
 
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5 text-center">
-                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                    <p className="font-mono-label text-4xs text-text-muted/50">
                       Horas
                     </p>
                     <p className="mt-1 text-xs font-black text-admin-ink">
@@ -215,7 +215,7 @@ export default function TimeReportPage() {
                     </p>
                   </div>
                   <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5 text-center">
-                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                    <p className="font-mono-label text-4xs text-text-muted/50">
                       Budget
                     </p>
                     <p className="mt-1 truncate text-xs font-black text-admin-success">
@@ -223,7 +223,7 @@ export default function TimeReportPage() {
                     </p>
                   </div>
                   <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5 text-center">
-                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                    <p className="font-mono-label text-4xs text-text-muted/50">
                       $/hora
                     </p>
                     <p
@@ -250,7 +250,7 @@ export default function TimeReportPage() {
         )}
       </div>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3 lg:block">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[700px] text-left">
             <thead>

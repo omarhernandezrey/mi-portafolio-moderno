@@ -260,7 +260,7 @@ export default function AdminWebhooksPage() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
         <div className="space-y-4 lg:col-span-2">
-          <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3">
             <div className="flex items-center justify-between border-b border-admin-line p-4 sm:p-5">
               <h2 className="text-sm font-bold text-admin-ink">
                 Endpoints registrados
@@ -323,12 +323,12 @@ export default function AdminWebhooksPage() {
                             </p>
                             <div className="mt-1.5 flex flex-wrap items-center gap-2">
                               {webhook.active ? (
-                                <span className="flex items-center gap-1 font-mono-label text-[8px] text-admin-success">
+                                <span className="flex items-center gap-1 font-mono-label text-4xs text-admin-success">
                                   <CheckCircle size={9} />
                                   Activo
                                 </span>
                               ) : (
-                                <span className="flex items-center gap-1 font-mono-label text-[8px] text-admin-danger">
+                                <span className="flex items-center gap-1 font-mono-label text-4xs text-admin-danger">
                                   <XCircle size={9} />
                                   Inactivo
                                 </span>
@@ -406,7 +406,7 @@ export default function AdminWebhooksPage() {
                         {webhook.events.map((event) => (
                           <span
                             key={event}
-                            className="rounded-md border border-admin-line bg-admin-bg px-2 py-0.5 font-mono-label text-[8px] text-primary"
+                            className="rounded-md border border-admin-line bg-admin-bg px-2 py-0.5 font-mono-label text-4xs text-primary"
                           >
                             {event}
                           </span>
@@ -449,7 +449,7 @@ export default function AdminWebhooksPage() {
         </div>
 
         <div>
-          <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+          <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3">
             <div className="flex items-center gap-2 border-b border-admin-line p-4 sm:p-5">
               <Activity className="text-primary" size={16} />
               <h2 className="text-sm font-bold text-admin-ink">
@@ -473,11 +473,11 @@ export default function AdminWebhooksPage() {
                     className="p-4 transition-colors hover:bg-white/[0.02]"
                   >
                     <div className="mb-1.5 flex items-start justify-between gap-2">
-                      <span className="font-mono-label text-[8px] text-primary">
+                      <span className="font-mono-label text-4xs text-primary">
                         {log.event_type}
                       </span>
                       <span
-                        className={`rounded px-1.5 py-0.5 font-mono-label text-[8px] ${
+                        className={`rounded px-1.5 py-0.5 font-mono-label text-4xs ${
                           log.response_status && log.response_status < 300
                             ? 'bg-admin-success/15 text-admin-success'
                             : log.error

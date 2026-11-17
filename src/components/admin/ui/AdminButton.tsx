@@ -9,14 +9,16 @@ const BASE_CLASSES =
   'inline-flex items-center justify-center gap-2 rounded-xl font-bold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:pointer-events-none disabled:opacity-50';
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
+  // T-26: sombra de elevación (e1), no halo de color — «la luz por detrás» de
+  // DESIGN.md; y el estado danger con sus tokens, no la paleta cruda de Tailwind.
   primary:
-    'border border-primary bg-primary text-background shadow-custom-primary hover:bg-primary/90',
+    'border border-primary bg-primary text-background shadow-e1 hover:bg-primary/90',
   secondary:
     'border border-admin-line bg-white/[0.04] text-admin-ink hover:border-primary/30 hover:bg-white/[0.07]',
   ghost:
     'border border-transparent text-text-muted hover:bg-white/[0.05] hover:text-admin-ink',
   danger:
-    'border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/15',
+    'border border-admin-danger/20 bg-admin-danger/10 text-admin-danger hover:bg-admin-danger/15',
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {

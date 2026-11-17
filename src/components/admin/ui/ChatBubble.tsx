@@ -13,10 +13,10 @@ export default function ChatBubble({ role, senderName, content, timestamp }: Cha
   return (
     <div className={`flex flex-col ${isOutgoing ? 'items-end' : 'items-start'} group`}>
       <div className="flex items-center gap-2 mb-2 px-1">
-        <span className="text-4xs font-black uppercase tracking-[0.2em] text-text-muted/30 italic">
+        <span className="text-4xs font-black uppercase tracking-[0.2em] text-text-muted/30">
           {senderName}
         </span>
-        <span className="text-[8px] text-text-muted/20">•</span>
+        <span className="text-4xs text-text-muted/20">•</span>
         <span className="text-4xs text-text-muted/30 font-medium">
           {timestamp}
         </span>

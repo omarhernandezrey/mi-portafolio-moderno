@@ -71,7 +71,7 @@ export default function FeedCommentRowActions({
           onClick={handleDelete}
           disabled={loading !== null}
           title="Eliminar"
-          className="w-9 h-9 rounded-lg p-0 bg-white/5 border border-white/10 flex items-center justify-center text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all disabled:opacity-50"
+          className="w-9 h-9 rounded-lg p-0 bg-white/5 border border-white/10 flex items-center justify-center text-admin-danger hover:bg-admin-danger/10 hover:border-admin-danger/30 transition-all disabled:opacity-50"
         >
           {loading === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
         </button>

@@ -133,7 +133,7 @@ export default function StatCard({
         : 'text-text-muted bg-white/[0.04] border-admin-line';
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-admin-line bg-card-bg p-5 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]">
+    <article className="group relative overflow-hidden rounded-card border border-admin-line bg-card-bg p-5 shadow-e3">
       <div
         className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent to-transparent ${tone.line}`}
       />
@@ -164,7 +164,9 @@ export default function StatCard({
       </div>
 
       <div className="relative mt-5 flex items-end justify-between gap-4">
-        <p className="text-3xl font-black tracking-tight text-admin-ink sm:text-4xl">
+        {/* La voz Metric del sistema (DESIGN.md): fluida, 700, tracking propio.
+            tabular-nums evita el baile de dígitos cuando el dato cambia. */}
+        <p className="text-metric-sm tabular-nums text-admin-ink">
           {value}
         </p>
         {sparkline && <Sparkline data={sparkline} tone={color} />}

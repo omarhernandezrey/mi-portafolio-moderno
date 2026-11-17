@@ -383,7 +383,7 @@ export default function SubscribersPage() {
                             <span className="text-3xs font-bold">Enviado</span>
                           </div>
                         ) : (
-                          <span className="text-3xs text-text-muted/30 italic">—</span>
+                          <span className="text-3xs text-text-muted/30">—</span>
                         )}
                       </td>
                       <td className="px-6 py-5 text-right">

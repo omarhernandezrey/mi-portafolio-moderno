@@ -26,7 +26,7 @@ export default function PageHeader({
             {overline}
           </div>
         )}
-        <h1 className="font-display text-3xl font-semibold italic leading-[1.05] tracking-tight text-admin-ink sm:text-4xl">
+        <h1 className="font-display text-3xl font-semibold leading-[1.05] tracking-tight text-admin-ink sm:text-4xl">
           {title}
         </h1>
         {description && (

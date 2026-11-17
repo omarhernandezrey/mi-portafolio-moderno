@@ -133,14 +133,14 @@ export default async function AdminInvoicesPage() {
           invoices.map((invoice) => (
             <article
               key={invoice.id}
-              className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+              className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-bold text-admin-ink">
                     {invoice.number}
                   </p>
-                  <p className="font-mono-label text-[8px] text-text-muted/50">
+                  <p className="font-mono-label text-4xs text-text-muted/50">
                     ID: {invoice.id.substring(0, 8)}
                   </p>
                 </div>
@@ -159,7 +159,7 @@ export default async function AdminInvoicesPage() {
               </div>
 
               <div className="mt-3 flex items-center justify-between gap-3">
-                <span className="flex items-center gap-1.5 font-mono-label text-[8px] text-text-muted/50">
+                <span className="flex items-center gap-1.5 font-mono-label text-4xs text-text-muted/50">
                   <Calendar size={10} />
                   Vence {formatDate(invoice.due_date)}
                 </span>
@@ -190,7 +190,7 @@ export default async function AdminInvoicesPage() {
         )}
       </div>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3 lg:block">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[820px] text-left">
             <thead>
@@ -226,7 +226,7 @@ export default async function AdminInvoicesPage() {
                       <p className="text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
                         {invoice.number}
                       </p>
-                      <p className="font-mono-label text-[8px] text-text-muted/50">
+                      <p className="font-mono-label text-4xs text-text-muted/50">
                         ID: {invoice.id.substring(0, 8)}
                       </p>
                     </td>

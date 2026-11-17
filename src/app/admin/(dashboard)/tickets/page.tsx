@@ -151,7 +151,7 @@ export default async function AdminTicketsPage() {
             return (
               <article
                 key={ticket.id}
-                className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)]"
+                className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -166,7 +166,7 @@ export default async function AdminTicketsPage() {
                         {ticket.title}
                       </p>
                     </div>
-                    <p className="mt-0.5 font-mono-label text-[8px] text-text-muted/50">
+                    <p className="mt-0.5 font-mono-label text-4xs text-text-muted/50">
                       ID: {ticket.id.substring(0, 8)}
                     </p>
                   </div>
@@ -192,7 +192,7 @@ export default async function AdminTicketsPage() {
 
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
-                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                    <p className="font-mono-label text-4xs text-text-muted/50">
                       Prioridad
                     </p>
                     <span
@@ -205,7 +205,7 @@ export default async function AdminTicketsPage() {
                     </span>
                   </div>
                   <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
-                    <p className="font-mono-label text-[8px] text-text-muted/50">
+                    <p className="font-mono-label text-4xs text-text-muted/50">
                       Actualizado
                     </p>
                     <p className="mt-1 flex items-center gap-1 text-3xs font-medium text-text-muted">
@@ -234,7 +234,7 @@ export default async function AdminTicketsPage() {
         )}
       </div>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] lg:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3 lg:block">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px] text-left">
             <thead>
@@ -286,7 +286,7 @@ export default async function AdminTicketsPage() {
                             <p className="truncate text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
                               {ticket.title}
                             </p>
-                            <p className="font-mono-label text-[8px] text-text-muted/50">
+                            <p className="font-mono-label text-4xs text-text-muted/50">
                               ID: {ticket.id.substring(0, 8)}
                             </p>
                           </div>

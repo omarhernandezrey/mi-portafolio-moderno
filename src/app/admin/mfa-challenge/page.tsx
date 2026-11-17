@@ -80,10 +80,10 @@ export default function MfaChallengePage() {
   return (
     <div className="admin-shell relative flex min-h-dvh items-center justify-center overflow-hidden p-4 sm:p-6">
       <div className="relative w-full max-w-md rounded-2xl border border-admin-line bg-admin-surface/90 p-6 shadow-[0_24px_70px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:p-8">
-        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-custom-primary">
+        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-e1">
           <ShieldCheck size={28} />
         </div>
-        <h1 className="font-display text-2xl font-semibold italic tracking-tight text-admin-ink">
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-admin-ink">
           Verificación en dos pasos
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-text-muted">
@@ -129,7 +129,7 @@ export default function MfaChallengePage() {
             <button
               type="submit"
               disabled={!challengeId || isVerifying || code.length !== 6}
-              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-primary bg-primary px-5 py-3.5 text-sm font-black text-background shadow-custom-primary transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-primary bg-primary px-5 py-3.5 text-sm font-black text-background shadow-e1 transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
             >
               {isVerifying ? 'Verificando…' : 'Verificar'}
             </button>

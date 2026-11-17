@@ -10,10 +10,10 @@ interface InfoItemProps {
 
 export default function InfoItem({ icon, label, value, isLink, href }: InfoItemProps) {
   return (
-    <div className="flex items-start gap-4 p-4 rounded-2xl border border-transparent hover:border-white/5 hover:bg-white/[0.01] transition-all group/item">
+    <div className="flex items-start gap-4 p-4 rounded-card border border-transparent hover:border-white/5 hover:bg-white/[0.01] transition-all group/item">
       <div className="mt-1 text-primary opacity-40 group-hover/item:opacity-100 transition-opacity">{icon}</div>
       <div className="overflow-hidden min-w-0">
-        <p className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.15em] mb-1 italic">{label}</p>
+        <p className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.15em] mb-1">{label}</p>
         {isLink && href ? (
           <a 
             href={href} 

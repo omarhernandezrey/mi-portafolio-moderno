@@ -148,7 +148,7 @@ export default function TimerPage() {
       )}
 
       <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
-        <section className="space-y-5 rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-6 xl:col-span-5">
+        <section className="space-y-5 rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3 sm:p-6 xl:col-span-5">
           <div>
             <h2 className="mb-5 flex items-center gap-2 font-mono-label text-4xs text-primary">
               <Zap size={13} />
@@ -222,7 +222,7 @@ export default function TimerPage() {
           </div>
 
           <div className="rounded-xl border border-dashed border-admin-line bg-admin-raised/30 p-4">
-            <div className="mb-2 flex items-center gap-2 font-mono-label text-[8px] text-text-muted/60">
+            <div className="mb-2 flex items-center gap-2 font-mono-label text-4xs text-text-muted/60">
               <Activity size={11} />
               Tip de productividad
             </div>
@@ -261,7 +261,7 @@ export default function TimerPage() {
               {activeEntries.map((entry) => (
                 <article
                   key={entry.id}
-                  className="flex items-center justify-between gap-3 rounded-2xl border border-primary/20 bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-5"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-primary/20 bg-card-bg p-4 shadow-e3 sm:p-5"
                 >
                   <div className="flex min-w-0 items-center gap-4">
                     <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10">
@@ -273,7 +273,7 @@ export default function TimerPage() {
                         <p className="truncate text-sm font-bold text-admin-ink">
                           {entry.leads?.name || 'Procesando...'}
                         </p>
-                        <span className="rounded-md border border-admin-line bg-white/[0.04] px-2 py-0.5 font-mono-label text-[8px] text-text-muted">
+                        <span className="rounded-md border border-admin-line bg-white/[0.04] px-2 py-0.5 font-mono-label text-4xs text-text-muted">
                           {entry.leads?.company || 'Freelance'}
                         </span>
                       </div>
