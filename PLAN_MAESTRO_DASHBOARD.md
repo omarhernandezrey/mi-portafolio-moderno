@@ -895,6 +895,8 @@ Un repositorio nuevo detectado en la ingesta se **propone** en el panel como bor
 **Aceptación (definida aquí, la ficha original no traía checklist).**
 - [x] Tests: un repo nuevo se propone con `is_published: false` y avisa; un repo que ya tiene proyecto no se propone ni avisa de nuevo; dos repos que derivarían el mismo slug no chocan; si ningún repo se procesó, ni siquiera consulta `portfolio_projects`. 19 tests nuevos: `portfolio-github-sync.test.ts` (15, las funciones puras — slugify, slug único, título legible, lenguajes principales, y la garantía de que `construirProyectoPropuesto` nunca inventa `demo`/`category`/tecnologías) + 4 en `cron-github-metrics.test.ts` (el paso nuevo del cron).
 - [x] `grep` sin datos de ejemplo: la única cadena fija es el aviso honesto de "sin descripción todavía", no contenido de proyecto.
+
+#### T-22 · Modo reclutador
 **Rama:** `feat/recruiter-mode` · **Depende de:** T-06 · **Skills:** `impeccable`
 
 CV en PDF generado desde los datos reales (`pdf-lib` ya está instalado). Sirve directamente al objetivo de `PRODUCT.md`: que lo contraten. Titular: «Ingeniero de Software» primero. El registro de visitas por empresa solo si puede hacerse sin datos personales; si no, se descarta y se anota por qué.
