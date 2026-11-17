@@ -58,6 +58,8 @@ mis-claves-chatbot.txt*
 .claude/*
 !.claude/skills/
 !.claude/agents/
+!.claude/hooks/
+!.claude/settings.json
 
 # Coordinación entre IAs concurrentes (sección O del documento)
 .claim-lock
