@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Pin, PinOff, Trash2, Loader2 } from "lucide-react";
 import { useAdminToast } from "@/hooks/useAdminToast";
 import { adminFetch } from "@/lib/admin/client-fetch";
+import { ConfirmDialog } from "@/components/admin/ui";
 
 export default function FeedPostRowActions({
   postId,
@@ -22,6 +23,7 @@ export default function FeedPostRowActions({
   canDelete: boolean;
 }) {
   const [loading, setLoading] = useState<string | null>(null);
+  const [confirmando, setConfirmando] = useState(false);
   const router = useRouter();
   const toast = useAdminToast();
 
@@ -42,11 +44,11 @@ export default function FeedPostRowActions({
   };
 
   const handleDelete = async () => {
-    if (!confirm("¿Borrar esta publicación permanentemente? Se eliminarán también sus comentarios y likes.")) return;
     setLoading("delete");
     try {
       await adminFetch(`/api/admin/feed/posts/${postId}`, { method: "DELETE" });
       toast.success("Publicación eliminada");
+      setConfirmando(false);
       router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Error al eliminar");
@@ -93,7 +95,7 @@ export default function FeedPostRowActions({
 
       {canDelete && (
         <button
-          onClick={handleDelete}
+          onClick={() => setConfirmando(true)}
           disabled={loading !== null}
           title="Eliminar"
           aria-label="Eliminar publicación"
@@ -102,6 +104,17 @@ export default function FeedPostRowActions({
           {loading === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
         </button>
       )}
+
+      <ConfirmDialog
+        open={confirmando}
+        onClose={() => setConfirmando(false)}
+        onConfirm={handleDelete}
+        title="Eliminar publicación"
+        description="Se eliminarán también sus comentarios y likes. Esta acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        tone="danger"
+        busy={loading === "delete"}
+      />
     </div>
   );
 }

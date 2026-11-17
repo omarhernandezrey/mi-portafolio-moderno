@@ -2,9 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { ArrowDown, ArrowUp, Gauge, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import { AdminButton, DataTable, type Column, Switch, ConfirmDialog } from '@/components/admin/ui';
+import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, PageHeader, EmptyState } from '@/components/admin/ui';
 import { adminFetch } from '@/lib/admin/client-fetch';
 import { useToast } from '@/components/ui/Toast';
 import { SkillFormDialog, type SkillFormValues } from '@/components/admin/portfolio/SkillFormDialog';

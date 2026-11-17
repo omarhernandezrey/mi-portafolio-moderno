@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Mail, Search, Trash2, CheckCircle, XCircle, Clock,
   Users, X, RefreshCw, Download, Hash, MoreVertical,
@@ -8,8 +8,7 @@ import {
 } from 'lucide-react';
 import { adminFetch } from '@/lib/admin/client-fetch';
 import { toCSV } from '@/lib/csv';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import StatCard from '@/components/admin/ui/StatCard';
+import { PageHeader, StatCard, ConfirmDialog } from '@/components/admin/ui';
 import { AdminButton } from '@/components/admin/ui/AdminButton';
 
 interface Subscriber {
@@ -40,6 +39,36 @@ export default function SubscribersPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [borrando, setBorrando] = useState<Subscriber | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  // T-30: el menú «más acciones» de cada suscriptor no tenía Escape, clic
+  // fuera ni foco — se quedaba abierto hasta otro clic en el mismo botón.
+  useEffect(() => {
+    if (!openMenu) return;
+    const idAbierto = openMenu;
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setOpenMenu(null);
+        triggerRefs.current[idAbierto]?.focus();
+      }
+    }
+    function onPointerDown(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenu(null);
+      }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('mousedown', onPointerDown);
+    const primerItem = menuRef.current?.querySelector<HTMLButtonElement>('[role="menuitem"]');
+    primerItem?.focus();
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('mousedown', onPointerDown);
+    };
+  }, [openMenu]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -83,13 +112,15 @@ export default function SubscribersPage() {
     unsubscribed: subscribers.filter(s => !!s.unsubscribed_at).length,
   }), [subscribers]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('¿Eliminar este suscriptor definitivamente?')) return;
+  const handleConfirmarBorrado = async () => {
+    if (!borrando) return;
+    const id = borrando.id;
     setDeleting(id);
     setError('');
     try {
       await adminFetch(`/api/admin/subscribers/${id}`, { method: 'DELETE' });
       setSubscribers(prev => prev.filter(s => s.id !== id));
+      setBorrando(null);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'No se pudo eliminar el suscriptor.'
@@ -292,10 +323,10 @@ export default function SubscribersPage() {
                       ) : s.confirmed ? (
                         <span className="px-2 py-0.5 rounded-md bg-admin-success/10 text-admin-success text-4xs font-black uppercase">Confirmado</span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 text-4xs font-black uppercase">Pendiente</span>
+                        <span className="px-2 py-0.5 rounded-md bg-admin-warning/10 text-admin-warning text-4xs font-black uppercase">Pendiente</span>
                       )}
                       <button
-                        onClick={() => handleDelete(s.id)}
+                        onClick={() => setBorrando(s)}
                         disabled={deleting === s.id}
                         aria-label={`Eliminar ${s.email}`}
                         className="flex h-11 w-11 items-center justify-center rounded-lg border border-admin-line bg-white/[0.03] p-0 text-admin-danger/60 transition-colors hover:bg-admin-danger/10 hover:text-admin-danger disabled:opacity-50"
@@ -363,8 +394,8 @@ export default function SubscribersPage() {
                           </div>
                         ) : (
                           <div className="flex items-center justify-center gap-1.5">
-                            <Clock size={14} className="text-amber-400" />
-                            <span className="text-3xs font-black text-amber-400 uppercase">Pendiente</span>
+                            <Clock size={14} className="text-admin-warning" />
+                            <span className="text-3xs font-black text-admin-warning uppercase">Pendiente</span>
                           </div>
                         )}
                       </td>
@@ -399,18 +430,26 @@ export default function SubscribersPage() {
                             </button>
                           )}
                           <button
+                            ref={(el) => { triggerRefs.current[s.id] = el; }}
                             onClick={() => setOpenMenu(openMenu === s.id ? null : s.id)}
                             aria-label={`Más acciones para ${s.email}`}
+                            aria-haspopup="menu"
                             aria-expanded={openMenu === s.id}
                             className="flex h-9 w-9 items-center justify-center rounded-lg p-0 text-text-muted/50 transition-colors hover:bg-white/[0.04] hover:text-admin-ink"
                           >
                             <MoreVertical size={16} />
                           </button>
                           {openMenu === s.id && (
-                            <div className="absolute right-0 top-full mt-1 w-44 bg-card-bg border border-admin-line rounded-xl shadow-2xl z-10 overflow-hidden">
+                            <div
+                              ref={menuRef}
+                              role="menu"
+                              aria-label={`Acciones para ${s.email}`}
+                              className="absolute right-0 top-full mt-1 w-44 bg-card-bg border border-admin-line rounded-xl shadow-2xl z-10 overflow-hidden"
+                            >
                               {s.confirmed ? (
                                 <button
-                                  onClick={() => handleMarkConfirmed(s.id, false)}
+                                  role="menuitem"
+                                  onClick={() => { setOpenMenu(null); handleMarkConfirmed(s.id, false); }}
                                   className="flex items-center gap-2 w-full px-4 py-3 text-xs font-bold text-text-muted hover:bg-white/[0.04] hover:text-admin-ink transition-all text-left"
                                 >
                                   <XCircle size={13} />
@@ -418,7 +457,8 @@ export default function SubscribersPage() {
                                 </button>
                               ) : null}
                               <button
-                                onClick={() => handleDelete(s.id)}
+                                role="menuitem"
+                                onClick={() => { setOpenMenu(null); setBorrando(s); }}
                                 disabled={deleting === s.id}
                                 className="flex items-center gap-2 w-full px-4 py-3 text-xs font-bold text-admin-danger hover:bg-admin-danger/10 transition-all text-left disabled:opacity-50"
                               >
@@ -449,6 +489,17 @@ export default function SubscribersPage() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={Boolean(borrando)}
+        onClose={() => setBorrando(null)}
+        onConfirm={handleConfirmarBorrado}
+        title="Eliminar suscriptor"
+        description={borrando ? `«${borrando.email}» se eliminará definitivamente.` : ''}
+        confirmLabel="Eliminar"
+        tone="danger"
+        busy={borrando ? deleting === borrando.id : false}
+      />
     </div>
   );
 }

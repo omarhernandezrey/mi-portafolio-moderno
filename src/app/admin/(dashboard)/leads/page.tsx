@@ -9,11 +9,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import Link from 'next/link';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import StatusBadge from '@/components/admin/ui/StatusBadge';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import ErrorState from '@/components/admin/ui/ErrorState';
-import Pagination from '@/components/admin/ui/Pagination';
+import { PageHeader, StatusBadge, EmptyState, ErrorState, Pagination } from '@/components/admin/ui';
 import ExportLeadsButton from '@/components/admin/ExportLeadsButton';
 import { AdminButton, AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import {

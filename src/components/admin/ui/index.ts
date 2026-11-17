@@ -12,9 +12,14 @@
 // Pre-existentes
 export { default as AdminCard } from './AdminCard';
 export { AdminButton, AdminButtonLink, adminButtonClasses } from './AdminButton';
+export { default as PageHeader } from './PageHeader';
 export { default as EmptyState } from './EmptyState';
 export { default as ErrorState } from './ErrorState';
-export { default as PageHeader } from './PageHeader';
+export { default as StatCard } from './StatCard';
+export { default as StatusBadge } from './StatusBadge';
+export { default as PriorityBadge } from './PriorityBadge';
+export { default as RowReorderActions } from './RowReorderActions';
+export { default as Pagination } from './Pagination';
 
 // Formulario
 export { Field, controlClasses, useFieldIds } from './Field';

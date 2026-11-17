@@ -2,8 +2,7 @@ import React from 'react';
 import { getAllDocs } from '@/lib/docs';
 import Link from 'next/link';
 import { ArrowUpRight, Book, Clock3, FileText } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
+import { PageHeader, EmptyState } from '@/components/admin/ui';
 
 export const dynamic = 'force-dynamic';
 

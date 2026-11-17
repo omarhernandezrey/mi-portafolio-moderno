@@ -18,9 +18,7 @@ import {
   AlertCircle,
   Loader2,
 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import StatCard from '@/components/admin/ui/StatCard';
-import EmptyState from '@/components/admin/ui/EmptyState';
+import { PageHeader, StatCard, EmptyState, ConfirmDialog } from '@/components/admin/ui';
 import {
   AdminButton,
   AdminButtonLink,
@@ -57,6 +55,7 @@ export default function AdminWebhooksPage() {
   const [testing, setTesting] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [toggling, setToggling] = useState<string | null>(null);
+  const [borrando, setBorrando] = useState<Webhook | null>(null);
   const [error, setError] = useState('');
   const [testResults, setTestResults] = useState<
     Record<
@@ -91,22 +90,24 @@ export default function AdminWebhooksPage() {
     load();
   }, [load]);
 
-  const handleDelete = async (id: string, url: string) => {
-    let host = url;
+  function hostDe(url: string): string {
     try {
-      host = new URL(url).host;
+      return new URL(url).host;
     } catch {
-      // Conserva la URL completa si no es parseable.
+      return url;
     }
+  }
 
-    if (!confirm(`¿Eliminar webhook para ${host}?`)) return;
-
+  const handleConfirmarBorrado = async () => {
+    if (!borrando) return;
+    const { id } = borrando;
     setDeleting(id);
     setError('');
 
     try {
       await adminFetch(`/api/admin/webhooks/${id}`, { method: 'DELETE' });
       setWebhooks((prev) => prev.filter((webhook) => webhook.id !== id));
+      setBorrando(null);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'No se pudo eliminar el webhook.'
@@ -387,7 +388,7 @@ export default function AdminWebhooksPage() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleDelete(webhook.id, webhook.url)}
+                            onClick={() => setBorrando(webhook)}
                             disabled={deleting === webhook.id}
                             title="Eliminar webhook"
                             aria-label="Eliminar webhook"
@@ -507,6 +508,17 @@ export default function AdminWebhooksPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={Boolean(borrando)}
+        onClose={() => setBorrando(null)}
+        onConfirm={handleConfirmarBorrado}
+        title="Eliminar webhook"
+        description={borrando ? `¿Eliminar webhook para ${hostDe(borrando.url)}?` : ''}
+        confirmLabel="Eliminar"
+        tone="danger"
+        busy={borrando ? deleting === borrando.id : false}
+      />
     </div>
   );
 }

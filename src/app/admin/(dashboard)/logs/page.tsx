@@ -6,11 +6,10 @@ import {
   CheckCircle, Clock, Zap, Hash, ChevronDown, ChevronUp,
   AlertCircle,
 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import StatCard from '@/components/admin/ui/StatCard';
-import EmptyState from '@/components/admin/ui/EmptyState';
+import { PageHeader, StatCard, EmptyState } from '@/components/admin/ui';
 import { AdminButton } from '@/components/admin/ui/AdminButton';
 import { adminFetch } from '@/lib/admin/client-fetch';
+import { assignSeriesColors } from '@/lib/charts/palette';
 
 interface ApiLog {
   id: string;
@@ -23,16 +22,33 @@ interface ApiLog {
   session_id: string | null;
 }
 
-const PROVIDER_COLORS: Record<string, string> = {
-  groq: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
-  openrouter: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  cerebras: 'bg-admin-info/10 text-admin-info border-admin-info/20',
-  nvidia: 'bg-green-500/10 text-green-400 border-green-500/20',
-  mistral: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-  deepseek: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-  openai: 'bg-admin-success/10 text-admin-success border-admin-success/20',
-  anthropic: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-};
+/**
+ * T-30: la paleta por proveedor era 8 colores crudos de Tailwind elegidos a
+ * mano (`orange-500`, `purple-500`...), fuera del sistema de 10 paletas.
+ * `assignSeriesColors` reparte los mismos 8 proveedores conocidos en los
+ * slots fijos de `--chart-*` — el color sigue al proveedor, no a su posición.
+ */
+const PROVEEDORES_CONOCIDOS = [
+  'groq', 'openrouter', 'cerebras', 'nvidia', 'mistral', 'deepseek', 'openai', 'anthropic',
+] as const;
+const COLOR_POR_PROVEEDOR = assignSeriesColors(PROVEEDORES_CONOCIDOS, (p) => p);
+
+function provColor(provider: string | undefined): { className: string; style?: React.CSSProperties } {
+  const clave = (provider ?? '').toLowerCase();
+  const asignado = COLOR_POR_PROVEEDOR.find((c) => c.key === clave);
+  if (!asignado) {
+    return { className: 'bg-white/[0.04] text-text-muted border-admin-line' };
+  }
+  const { color } = asignado;
+  return {
+    className: '',
+    style: {
+      color,
+      borderColor: `color-mix(in oklab, ${color} 35%, transparent)`,
+      backgroundColor: `color-mix(in oklab, ${color} 12%, transparent)`,
+    },
+  };
+}
 
 function latencyColor(ms: number | null): string {
   if (!ms) return 'text-text-muted/40';
@@ -201,14 +217,15 @@ export default function ApiLogsPage() {
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {Object.entries(stats.byProvider).sort((a, b) => b[1].total - a[1].total).map(([provider, data]) => {
-              const color = PROVIDER_COLORS[provider.toLowerCase()] || 'bg-white/[0.03] text-text-muted border-admin-line';
+              const { className: colorClass, style } = provColor(provider);
               const errorRate = ((data.errors / data.total) * 100).toFixed(0);
               return (
                 <button
                   key={provider}
                   type="button"
                   aria-pressed={providerFilter === provider}
-                  className={`rounded-xl border px-4 py-3 text-left transition-colors hover:border-primary/30 ${color}`}
+                  className={`rounded-xl border px-4 py-3 text-left transition-colors hover:border-primary/30 ${colorClass}`}
+                  style={style}
                   onClick={() => setProviderFilter(providerFilter === provider ? '' : provider)}
                 >
                   <div className="font-mono-label text-4xs uppercase">{provider}</div>
@@ -324,7 +341,7 @@ export default function ApiLogsPage() {
               <tbody>
                 {paginated.map(log => {
                   const error = isError(log);
-                  const pColor = PROVIDER_COLORS[log.provider?.toLowerCase()] || 'bg-white/[0.04] text-text-muted border-admin-line';
+                  const { className: pColorClass, style: pColorStyle } = provColor(log.provider);
                   const isOpen = expanded === log.id;
 
                   return (
@@ -358,7 +375,7 @@ export default function ApiLogsPage() {
                           )}
                         </td>
                         <td className="px-5 py-4 border-b border-admin-line">
-                          <span className={`px-2.5 py-1 rounded-md text-3xs font-black uppercase border ${pColor}`}>
+                          <span className={`px-2.5 py-1 rounded-md text-3xs font-black uppercase border ${pColorClass}`} style={pColorStyle}>
                             {log.provider}
                           </span>
                         </td>
@@ -426,9 +443,7 @@ export default function ApiLogsPage() {
           <div className="divide-y divide-admin-line md:hidden">
             {paginated.map((log) => {
               const error = isError(log);
-              const pColor =
-                PROVIDER_COLORS[log.provider?.toLowerCase()] ||
-                'bg-white/[0.04] text-text-muted border-admin-line';
+              const { className: pColorClass, style: pColorStyle } = provColor(log.provider);
               const isOpen = expanded === log.id;
               const timestamp = new Date(log.created_at);
 
@@ -450,7 +465,7 @@ export default function ApiLogsPage() {
                           {error ? <AlertTriangle size={13} /> : <CheckCircle size={13} />}
                           {error ? 'Error' : 'OK'}
                         </span>
-                        <span className={`rounded-md border px-2 py-0.5 text-3xs font-black uppercase ${pColor}`}>
+                        <span className={`rounded-md border px-2 py-0.5 text-3xs font-black uppercase ${pColorClass}`} style={pColorStyle}>
                           {log.provider}
                         </span>
                         {log.http_status && (

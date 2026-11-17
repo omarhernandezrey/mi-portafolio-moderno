@@ -13,8 +13,7 @@ import {
   AlertCircle,
   Loader2,
 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
+import { PageHeader, EmptyState } from '@/components/admin/ui';
 import { AdminButton } from '@/components/admin/ui/AdminButton';
 import { adminFetch } from '@/lib/admin/client-fetch';
 

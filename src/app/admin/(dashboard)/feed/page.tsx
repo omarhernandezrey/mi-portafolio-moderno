@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { MessageSquare, Plus, Search, Heart, Pin, User } from 'lucide-react';
 import { supabaseServer } from '@/lib/supabaseServer';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import ErrorState from '@/components/admin/ui/ErrorState';
+import { PageHeader, EmptyState, ErrorState, StatusBadge, Pagination } from '@/components/admin/ui';
+import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import FeedPostRowActions from '@/components/admin/FeedPostRowActions';
 import { DEFAULT_PAGE_SIZE } from '@/lib/admin/types';
 import { parsePage, pageRange } from '@/lib/admin/query';
@@ -73,14 +72,10 @@ export default async function AdminFeedPage({
         description="Moderación de publicaciones del feed de comunidad."
         actions={
           canCreate && (
-            <Link
-              href="/admin/feed/new"
-              className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-primary text-background text-sm font-black hover:scale-105 transition-all shadow-lg shadow-primary/20"
-            >
-              <Plus size={16} />
+            <AdminButtonLink href="/admin/feed/new" variant="primary" size="sm" icon={<Plus size={15} />}>
               <span className="hidden sm:inline">Nueva publicación</span>
               <span className="sm:hidden">Nueva</span>
-            </Link>
+            </AdminButtonLink>
           )
         }
       />
@@ -110,17 +105,14 @@ export default async function AdminFeedPage({
         >
           Ocultos
         </Link>
-        <Link
-          href="/admin/feed/comments"
-          className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
-        >
-          <MessageSquare size={13} />
+        <AdminButtonLink href="/admin/feed/comments" size="sm" className="ml-auto" icon={<MessageSquare size={13} />}>
           Ver comentarios
-        </Link>
+        </AdminButtonLink>
       </div>
 
-      {/* T-29: variante móvil — la tabla de abajo exige 720px de ancho mínimo,
-          que a 375px solo se puede leer con scroll horizontal de página. */}
+      {/* T-29/T-30: variante móvil — la tabla de abajo exige 720px de ancho
+          mínimo, que a 375px solo se puede leer con scroll horizontal de
+          página. */}
       <div className="space-y-3 lg:hidden">
         {cargaFallida ? (
           <ErrorState description="No se pudieron cargar las publicaciones. Intenta de nuevo en unos segundos." />
@@ -142,15 +134,7 @@ export default async function AdminFeedPage({
                     </div>
                   </div>
                 </div>
-                <span
-                  className={`shrink-0 rounded-full border px-2.5 py-1 text-3xs font-black uppercase tracking-widest ${
-                    post.status === 'published'
-                      ? 'border-admin-success/20 bg-admin-success/10 text-admin-success'
-                      : 'border-admin-line bg-white/[0.04] text-text-muted'
-                  }`}
-                >
-                  {post.status === 'published' ? 'Publicado' : 'Oculto'}
-                </span>
+                <StatusBadge status={post.status} size="sm" />
               </div>
 
               <div className="mt-3">
@@ -240,15 +224,7 @@ export default async function AdminFeedPage({
                       </div>
                     </td>
                     <td className="px-6 py-5 text-center">
-                      <span
-                        className={`text-3xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
-                          post.status === 'published'
-                            ? 'text-admin-success bg-admin-success/10 border-admin-success/20'
-                            : 'text-text-muted bg-white/[0.04] border-admin-line'
-                        }`}
-                      >
-                        {post.status === 'published' ? 'Publicado' : 'Oculto'}
-                      </span>
+                      <StatusBadge status={post.status} size="sm" />
                     </td>
                     <td className="px-6 py-5">
                       <FeedPostRowActions
@@ -272,32 +248,17 @@ export default async function AdminFeedPage({
             </tbody>
           </table>
         </div>
+      </div>
 
-        {!cargaFallida && total > 0 && (
-          <div className="p-4 sm:p-6 border-t border-admin-line bg-white/[0.01] flex items-center justify-between gap-3">
-            <span className="text-3xs font-black uppercase tracking-[0.2em] text-text-muted/40">
-              Página {page} / {totalPages} · {total} publicaciones
-            </span>
-            <div className="flex gap-2">
-              {page > 1 && (
-                <Link
-                  href={`/admin/feed?${statusFilter ? `status=${statusFilter}&` : ''}page=${page - 1}`}
-                  className="px-4 py-2 rounded-lg border text-3xs font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
-                >
-                  Anterior
-                </Link>
-              )}
-              {page < totalPages && (
-                <Link
-                  href={`/admin/feed?${statusFilter ? `status=${statusFilter}&` : ''}page=${page + 1}`}
-                  className="px-4 py-2 rounded-lg border text-3xs font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
-                >
-                  Siguiente
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
+      <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg">
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={DEFAULT_PAGE_SIZE}
+          basePath="/admin/feed"
+          query={{ status: statusFilter || undefined }}
+        />
       </div>
     </div>
   );

@@ -1,11 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Activity, AlertTriangle, Briefcase, CalendarDays, ChevronRight, Flame, FolderKanban, Gauge, GitCommit, LayoutGrid, Users } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
+import { PageHeader, EmptyState, ErrorState, StatCard } from '@/components/admin/ui';
 import AdminCard from '@/components/admin/ui/AdminCard';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import ErrorState from '@/components/admin/ui/ErrorState';
-import StatCard from '@/components/admin/ui/StatCard';
 import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { hoyEnBogota } from '@/lib/github';

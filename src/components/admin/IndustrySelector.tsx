@@ -66,15 +66,15 @@ export default function IndustrySelector({ leadId, currentIndustry, canEdit = tr
         <div className="flex items-center gap-3 text-sm font-bold">
           {currentIndustry ? (
             <>
-              <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
-              <span className="text-emerald-400">
+              <span className="w-3 h-3 rounded-full bg-admin-success shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
+              <span className="text-admin-success">
                 {industries.find((i) => i.id === currentIndustry)?.name || currentIndustry}
               </span>
             </>
           ) : (
             <>
-              <span className="w-3 h-3 rounded-full bg-amber-500" />
-              <span className="text-amber-400">Sin industria asignada</span>
+              <span className="w-3 h-3 rounded-full bg-admin-warning" />
+              <span className="text-admin-warning">Sin industria asignada</span>
             </>
           )}
         </div>
@@ -127,15 +127,15 @@ export default function IndustrySelector({ leadId, currentIndustry, canEdit = tr
       <div className="flex items-center gap-3 text-sm font-bold pt-2">
         {currentIndustry ? (
           <>
-            <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
-            <span className="text-emerald-400">
+            <span className="w-3 h-3 rounded-full bg-admin-success shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
+            <span className="text-admin-success">
               Actual: {industries.find((i) => i.id === currentIndustry)?.name || currentIndustry}
             </span>
           </>
         ) : (
           <>
-            <span className="w-3 h-3 rounded-full bg-amber-500 animate-pulse shadow-[0_0_12px_rgba(245,158,11,0.6)]" />
-            <span className="text-amber-400">Sin industria asignada</span>
+            <span className="w-3 h-3 rounded-full bg-admin-warning animate-pulse shadow-[0_0_12px_rgba(245,158,11,0.6)]" />
+            <span className="text-admin-warning">Sin industria asignada</span>
           </>
         )}
       </div>
