@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowDownRight, ArrowUpRight, Minus } from 'lucide-react';
 
-type StatTone = 'primary' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
+type StatTone = 'primary' | 'accent' | 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 
 interface StatTrend {
   value: string;
@@ -12,53 +12,29 @@ interface StatTrend {
 interface StatCardProps {
   title: string;
   value: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   trend?: string | StatTrend;
   color?: StatTone;
   description?: string;
   sparkline?: number[];
+  /** T-27: el KPI protagonista de una vista usa la voz Metric completa. */
+  size?: 'default' | 'featured';
+  className?: string;
 }
 
-const TONE_CLASSES: Record<
-  StatTone,
-  { icon: string; line: string; text: string; glow: string }
-> = {
-  primary: {
-    icon: 'border-primary/20 bg-primary/10 text-primary',
-    line: 'via-primary/50',
-    text: 'text-primary',
-    glow: 'bg-primary',
-  },
-  accent: {
-    icon: 'border-accent/20 bg-accent/10 text-accent',
-    line: 'via-accent/50',
-    text: 'text-accent',
-    glow: 'bg-accent',
-  },
-  success: {
-    icon: 'border-admin-success/20 bg-admin-success/10 text-admin-success',
-    line: 'via-admin-success/50',
-    text: 'text-admin-success',
-    glow: 'bg-admin-success',
-  },
-  warning: {
-    icon: 'border-admin-warning/20 bg-admin-warning/10 text-admin-warning',
-    line: 'via-admin-warning/50',
-    text: 'text-admin-warning',
-    glow: 'bg-admin-warning',
-  },
-  danger: {
-    icon: 'border-admin-danger/20 bg-admin-danger/10 text-admin-danger',
-    line: 'via-admin-danger/50',
-    text: 'text-admin-danger',
-    glow: 'bg-admin-danger',
-  },
-  info: {
-    icon: 'border-admin-info/20 bg-admin-info/10 text-admin-info',
-    line: 'via-admin-info/50',
-    text: 'text-admin-info',
-    glow: 'bg-admin-info',
-  },
+// T-27: sin la caja de icono ni el halo de esquina (ambos eran decoración,
+// no información — el craft-floor los marca como costume). `line` es la
+// única seña de tono que queda: un filo de 1px, nunca un bloque de color.
+// `neutral` es el tono de los KPI que no narran un estado — el color queda
+// reservado al chip de variación, que decide por su propia dirección.
+const TONE_CLASSES: Record<StatTone, { line: string; text: string }> = {
+  primary: { line: 'via-primary/50', text: 'text-primary' },
+  accent: { line: 'via-accent/50', text: 'text-accent' },
+  success: { line: 'via-admin-success/50', text: 'text-admin-success' },
+  warning: { line: 'via-admin-warning/50', text: 'text-admin-warning' },
+  danger: { line: 'via-admin-danger/50', text: 'text-admin-danger' },
+  info: { line: 'via-admin-info/50', text: 'text-admin-info' },
+  neutral: { line: 'via-admin-line', text: 'text-text-muted' },
 };
 
 function Sparkline({ data, tone }: { data: number[]; tone: StatTone }) {
@@ -115,6 +91,8 @@ export default function StatCard({
   color = 'primary',
   description,
   sparkline,
+  size = 'default',
+  className = '',
 }: StatCardProps) {
   const tone = TONE_CLASSES[color];
   const trendData: StatTrend | undefined =
@@ -133,21 +111,14 @@ export default function StatCard({
         : 'text-text-muted bg-white/[0.04] border-admin-line';
 
   return (
-    <article className="group relative overflow-hidden rounded-card border border-admin-line bg-card-bg p-5 shadow-e3">
+    <article className={`relative overflow-hidden rounded-card border border-admin-line bg-card-bg p-5 shadow-e3 ${className}`}>
       <div
         className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent to-transparent ${tone.line}`}
       />
-      <div
-        className={`pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full blur-[55px] opacity-0 transition-opacity duration-500 group-hover:opacity-20 ${tone.glow}`}
-      />
 
       <div className="relative flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${tone.icon}`}
-          >
-            {icon}
-          </div>
+        <div className="flex min-w-0 items-center gap-2">
+          {icon && <span className="shrink-0 text-text-muted/50">{icon}</span>}
           <p className="min-w-0 font-mono-label text-3xs leading-tight text-text-muted/70">
             {title}
           </p>
@@ -166,7 +137,7 @@ export default function StatCard({
       <div className="relative mt-5 flex items-end justify-between gap-4">
         {/* La voz Metric del sistema (DESIGN.md): fluida, 700, tracking propio.
             tabular-nums evita el baile de dígitos cuando el dato cambia. */}
-        <p className="text-metric-sm tabular-nums text-admin-ink">
+        <p className={`${size === 'featured' ? 'text-metric' : 'text-metric-sm'} tabular-nums text-admin-ink`}>
           {value}
         </p>
         {sparkline && <Sparkline data={sparkline} tone={color} />}

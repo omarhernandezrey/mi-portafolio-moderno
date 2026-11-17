@@ -54,8 +54,11 @@ export function LanguagesBarChart({ data }: LanguagesBarChartProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-bold text-admin-ink">Lenguajes (bytes agregados)</h3>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-mono-label text-3xs text-text-muted/60">Código</p>
+          <h3 className="text-sm font-bold text-admin-ink">Lenguajes (bytes agregados)</h3>
+        </div>
         <button
           type="button"
           onClick={() => setVerTabla((v) => !v)}
