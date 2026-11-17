@@ -13,7 +13,9 @@ interface ProfileCardProps {
 export default function ProfileCard({
   name = 'Omar Hernández',
   tagline = 'Full-Stack Dev · React · Next.js',
-  cvPath = '/files/Omar_Hernandez_Rey_Full_Stack_Developer_CV.pdf',
+  // T-22: generado desde los datos reales (/api/cv), no un archivo estático
+  // que se queda desactualizado en cuanto cambia un proyecto en el panel.
+  cvPath = '/api/cv',
 }: ProfileCardProps) {
   return (
     <div className={styles.cardWrapper}>
