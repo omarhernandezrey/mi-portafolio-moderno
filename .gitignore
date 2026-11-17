@@ -69,3 +69,6 @@ mis-claves-chatbot.txt*
 .impeccable/config.local.json
 .impeccable/hook.cache.json
 supabase/.temp/
+
+# Caché de Python de scripts de skills
+__pycache__/
