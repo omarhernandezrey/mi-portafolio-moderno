@@ -4,6 +4,7 @@ import { Activity, AlertTriangle, Briefcase, CalendarDays, ChevronRight, Flame, 
 import PageHeader from '@/components/admin/ui/PageHeader';
 import AdminCard from '@/components/admin/ui/AdminCard';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import ErrorState from '@/components/admin/ui/ErrorState';
 import StatCard from '@/components/admin/ui/StatCard';
 import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import { supabaseServer } from '@/lib/supabaseServer';
@@ -155,6 +156,7 @@ export default async function PortafolioDashboardPage() {
     obtenerSenalesDeNegocio(),
   ]);
 
+  const errorMetricas = filasMetricas === null;
   const resumen = filasMetricas ? calcularResumenDePortafolio(filasMetricas, hoyEnBogota()) : null;
   const hayMetricas = resumen !== null && resumen.totalRepos > 0;
   const sparklineActividad = resumen?.actividadReciente.slice(-14).map((d) => d.commits);
@@ -275,11 +277,15 @@ export default async function PortafolioDashboardPage() {
         </div>
       ) : (
         <AdminCard padding="normal">
-          <EmptyState
-            icon={<Activity size={22} />}
-            title="Aún sin panel de métricas"
-            description="Los commits, rachas y lenguajes de los repositorios se recopilan cada día. Esta vista los mostrará en cuanto el cron de GitHub haga su primera captura."
-          />
+          {errorMetricas ? (
+            <ErrorState description="No se pudieron cargar las métricas de GitHub. Intenta de nuevo en unos segundos." />
+          ) : (
+            <EmptyState
+              icon={<Activity size={22} />}
+              title="Aún sin panel de métricas"
+              description="Los commits, rachas y lenguajes de los repositorios se recopilan cada día. Esta vista los mostrará en cuanto el cron de GitHub haga su primera captura."
+            />
+          )}
         </AdminCard>
       )}
 

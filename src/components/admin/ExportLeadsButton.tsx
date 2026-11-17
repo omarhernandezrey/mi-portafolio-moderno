@@ -19,7 +19,7 @@ export default function ExportLeadsButton({ leads }: ExportLeadsButtonProps) {
     setIsExporting(true);
     try {
       if (leads.length === 0) {
-        toast.warning('No hay leads para exportar');
+        toast.warning('No hay leads en esta página para exportar');
         return;
       }
 
@@ -55,7 +55,7 @@ export default function ExportLeadsButton({ leads }: ExportLeadsButtonProps) {
       link.click();
       document.body.removeChild(link);
       
-      toast.success(`${leads.length} leads exportados correctamente`);
+      toast.success(`${leads.length} leads de esta página exportados correctamente`);
     } catch (error) {
       console.error("Error exporting leads:", error);
       toast.error('Error al exportar los leads');
@@ -71,7 +71,7 @@ export default function ExportLeadsButton({ leads }: ExportLeadsButtonProps) {
       className={adminButtonClasses({ size: 'sm' })}
     >
       <Download size={16} />
-      <span>{isExporting ? 'Exportando...' : `Exportar CSV (${leads.length})`}</span>
+      <span>{isExporting ? 'Exportando...' : `Exportar página (${leads.length})`}</span>
     </button>
   );
 }

@@ -56,24 +56,36 @@ function formatWhen(iso: string): string {
   });
 }
 
+/** Espera tras la última tecla antes de consultar — ver T-28: hoy es una
+ * petición por tecla, con respuestas fuera de orden que pueden pintar un
+ * resultado viejo encima de uno más nuevo. */
+const DEBOUNCE_BUSQUEDA_MS = 300;
+
 export default function AdminAuditPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [busquedaDebounced, setBusquedaDebounced] = useState('');
   const [actionFilter, setActionFilter] = useState('');
   const [error, setError] = useState('');
 
-  const load = useCallback(async () => {
+  useEffect(() => {
+    const temporizador = setTimeout(() => setBusquedaDebounced(search), DEBOUNCE_BUSQUEDA_MS);
+    return () => clearTimeout(temporizador);
+  }, [search]);
+
+  const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError('');
     const params = new URLSearchParams({ limit: '200' });
     if (actionFilter) params.set('action', actionFilter);
-    if (search.trim()) params.set('actor', search.trim());
+    if (busquedaDebounced.trim()) params.set('actor', busquedaDebounced.trim());
 
     try {
-      const data = await adminFetch<AuditLog[]>(`/api/admin/audit?${params}`);
+      const data = await adminFetch<AuditLog[]>(`/api/admin/audit?${params}`, { signal });
       setLogs(Array.isArray(data) ? data : []);
     } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
       setError(
         err instanceof Error
           ? err.message
@@ -81,12 +93,14 @@ export default function AdminAuditPage() {
       );
       setLogs([]);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
-  }, [actionFilter, search]);
+  }, [actionFilter, busquedaDebounced]);
 
   useEffect(() => {
-    load();
+    const controller = new AbortController();
+    load(controller.signal);
+    return () => controller.abort();
   }, [load]);
 
   const actions = useMemo(() => {
@@ -102,7 +116,7 @@ export default function AdminAuditPage() {
         description="Registro de acciones administrativas (quién, qué, cuándo)."
         actions={
           <AdminButton
-            onClick={load}
+            onClick={() => load()}
             disabled={loading}
             size="sm"
             icon={

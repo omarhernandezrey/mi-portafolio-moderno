@@ -13,6 +13,7 @@ import {
 import PageHeader from '@/components/admin/ui/PageHeader';
 import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import ErrorState from '@/components/admin/ui/ErrorState';
 import StatCard from '@/components/admin/ui/StatCard';
 import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 
@@ -25,7 +26,7 @@ async function getInvoices() {
     .order('created_at', { ascending: false });
 
   if (error) console.error('Error fetching invoices:', error);
-  return data || [];
+  return { invoices: data || [], error: Boolean(error) };
 }
 
 function formatMoney(value: number | string | null, currency = 'USD') {
@@ -64,7 +65,7 @@ function formatTotals(totals: Record<string, number>): string {
 }
 
 export default async function AdminInvoicesPage() {
-  const invoices = await getInvoices();
+  const { invoices, error: cargaFallida } = await getInvoices();
   const activeInvoices = invoices.filter(
     (invoice) => invoice.status !== 'cancelled'
   );
@@ -94,6 +95,10 @@ export default async function AdminInvoicesPage() {
         }
       />
 
+      {cargaFallida ? (
+        <ErrorState description="No se pudieron cargar las facturas. Intenta de nuevo en unos segundos." />
+      ) : (
+        <>
       <section
         aria-label="Resumen de facturación"
         className="grid grid-cols-2 gap-3 xl:grid-cols-4"
@@ -283,6 +288,8 @@ export default async function AdminInvoicesPage() {
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

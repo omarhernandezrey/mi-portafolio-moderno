@@ -314,8 +314,10 @@ export default function AdminContenidoPage() {
 
   async function guardarIntereses(nuevaLista: InterestFormValues[], publicada = interestsPublicadas) {
     const anterior = interests;
+    const anteriorPublicada = interestsPublicadas;
     setGuardandoInteres(true);
     setInterests(nuevaLista);
+    setInterestsPublicadas(publicada);
     try {
       await adminFetch('/api/admin/portfolio/profile/interests', {
         method: 'PUT',
@@ -323,6 +325,7 @@ export default function AdminContenidoPage() {
       });
     } catch (err) {
       setInterests(anterior);
+      setInterestsPublicadas(anteriorPublicada);
       showToast(err instanceof Error ? err.message : 'No se pudo guardar.', 'error');
     } finally {
       setGuardandoInteres(false);
@@ -348,9 +351,7 @@ export default function AdminContenidoPage() {
   }
 
   async function handleTogglePublicadaSeccionIntereses() {
-    const nuevoValor = !interestsPublicadas;
-    setInterestsPublicadas(nuevoValor);
-    await guardarIntereses(interests, nuevoValor);
+    await guardarIntereses(interests, !interestsPublicadas);
   }
 
   function handleConfirmarBorradoInteres() {

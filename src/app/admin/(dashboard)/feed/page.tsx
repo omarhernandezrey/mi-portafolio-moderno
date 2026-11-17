@@ -3,6 +3,7 @@ import { MessageSquare, Plus, Search, Heart, Pin, User } from 'lucide-react';
 import { supabaseServer } from '@/lib/supabaseServer';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import ErrorState from '@/components/admin/ui/ErrorState';
 import FeedPostRowActions from '@/components/admin/FeedPostRowActions';
 import { DEFAULT_PAGE_SIZE } from '@/lib/admin/types';
 import { parsePage, pageRange } from '@/lib/admin/query';
@@ -44,7 +45,7 @@ async function getAdminFeedPosts(status: string, page: number, pageSize: number)
   const { data, error, count } = await query;
   if (error) console.error('Error fetching feed posts:', error);
 
-  return { posts: (data ?? []) as AdminFeedPost[], total: count ?? 0 };
+  return { posts: (data ?? []) as AdminFeedPost[], total: count ?? 0, error: Boolean(error) };
 }
 
 export default async function AdminFeedPage({
@@ -55,7 +56,7 @@ export default async function AdminFeedPage({
   const params = await searchParams;
   const statusFilter = params.status || '';
   const page = parsePage(params.page);
-  const { posts, total } = await getAdminFeedPosts(statusFilter, page, DEFAULT_PAGE_SIZE);
+  const { posts, total, error: cargaFallida } = await getAdminFeedPosts(statusFilter, page, DEFAULT_PAGE_SIZE);
   const totalPages = Math.max(1, Math.ceil(total / DEFAULT_PAGE_SIZE));
 
   const role = await getAdminRole();
@@ -132,7 +133,13 @@ export default async function AdminFeedPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-admin-line">
-              {posts.length > 0 ? (
+              {cargaFallida ? (
+                <tr>
+                  <td colSpan={6} className="px-8 py-24 text-center">
+                    <ErrorState description="No se pudieron cargar las publicaciones. Intenta de nuevo en unos segundos." />
+                  </td>
+                </tr>
+              ) : posts.length > 0 ? (
                 posts.map((post) => (
                   <tr key={post.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-5">
@@ -200,7 +207,7 @@ export default async function AdminFeedPage({
           </table>
         </div>
 
-        {total > 0 && (
+        {!cargaFallida && total > 0 && (
           <div className="p-4 sm:p-6 border-t border-admin-line bg-white/[0.01] flex items-center justify-between gap-3">
             <span className="text-3xs font-black uppercase tracking-[0.2em] text-text-muted/40">
               Página {page} / {totalPages} · {total} publicaciones

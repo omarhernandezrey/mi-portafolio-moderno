@@ -86,6 +86,17 @@ describe('PortafolioDashboardPage — KPI y gráficas (T-14)', () => {
     expect(screen.queryByText(/COMMITS, ÚLTIMOS 30 DÍAS/i)).not.toBeInTheDocument();
   });
 
+  it('T-28: si github_metrics falla de verdad, no dice "Aún sin panel de métricas" (eso es mentir) — pinta un error con Reintentar', async () => {
+    errorGithubMetrics = { message: 'tabla caída' };
+
+    const jsx = await PortafolioDashboardPage();
+    render(jsx);
+
+    expect(screen.queryByText('Aún sin panel de métricas')).not.toBeInTheDocument();
+    expect(screen.getByText('No se pudo cargar esta información')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument();
+  });
+
   it('con filas reales: muestra los 4 KPI calculados y las 4 gráficas, sin el estado vacío', async () => {
     filasGithubMetrics = [
       filaMetrica({

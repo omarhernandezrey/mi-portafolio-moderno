@@ -13,6 +13,7 @@ import Link from 'next/link';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import ErrorState from '@/components/admin/ui/ErrorState';
 import StatCard from '@/components/admin/ui/StatCard';
 import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import { getAdminRole } from '@/lib/admin/auth';
@@ -53,7 +54,7 @@ async function getTickets() {
     .order('updated_at', { ascending: false });
 
   if (error) console.error('Error fetching tickets:', error);
-  return data || [];
+  return { tickets: data || [], error: Boolean(error) };
 }
 
 function isOverSLA(updatedAt: string, status: string) {
@@ -74,7 +75,7 @@ function formatDateTime(value: string) {
 }
 
 export default async function AdminTicketsPage() {
-  const tickets = await getTickets();
+  const { tickets, error: cargaFallida } = await getTickets();
   const role = await getAdminRole();
   const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
 
@@ -108,6 +109,10 @@ export default async function AdminTicketsPage() {
         }
       />
 
+      {cargaFallida ? (
+        <ErrorState description="No se pudieron cargar los tickets. Intenta de nuevo en unos segundos." />
+      ) : (
+        <>
       <section
         aria-label="Resumen de tickets"
         className="grid grid-cols-2 gap-3 xl:grid-cols-4"
@@ -347,6 +352,8 @@ export default async function AdminTicketsPage() {
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
