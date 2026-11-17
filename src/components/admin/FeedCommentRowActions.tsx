@@ -52,7 +52,7 @@ export default function FeedCommentRowActions({
   };
 
   if (!canWrite) {
-    return <span className="text-[10px] text-text-muted/40 font-black uppercase tracking-widest">Solo lectura</span>;
+    return <span className="text-3xs text-text-muted/40 font-black uppercase tracking-widest">Solo lectura</span>;
   }
 
   return (

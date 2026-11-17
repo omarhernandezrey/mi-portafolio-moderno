@@ -74,7 +74,7 @@ export default function StatusPage() {
               <div className="h-16 w-16 animate-spin rounded-[20px] border-2 border-primary/20 border-t-primary shadow-lg shadow-primary/20"></div>
               <Activity size={24} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary animate-pulse" />
             </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted/40 animate-pulse">Initializing Protocols...</p>
+            <p className="text-3xs font-black uppercase tracking-[0.4em] text-text-muted/40 animate-pulse">Initializing Protocols...</p>
           </div>
         ) : error ? (
           <motion.div 
@@ -89,7 +89,7 @@ export default function StatusPage() {
             </div>
             <button 
               onClick={() => { setLoading(true); fetchStatus(); }}
-              className="px-10 py-4 rounded-[20px] bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white-custom hover:bg-white/10 transition-all"
+              className="px-10 py-4 rounded-[20px] bg-white/5 border border-white/10 text-3xs font-black uppercase tracking-widest text-white-custom hover:bg-white/10 transition-all"
             >
               Reintentar Sincronización
             </button>
@@ -119,14 +119,14 @@ export default function StatusPage() {
                     <h2 className="font-display italic text-3xl font-medium text-white-custom tracking-tight leading-none">
                       {data?.status === 'operational' ? 'Operational Protocol' : 'Performance Alert'}
                     </h2>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted italic opacity-40">
+                    <p className="text-3xs font-black uppercase tracking-[0.2em] text-text-muted italic opacity-40">
                       Last Check: {new Date(data?.timestamp || '').toLocaleTimeString('es-CO', { hour12: false })} • {data?.latency_ms}ms Global Latency
                     </p>
                   </div>
                 </div>
                 
                 <div className="flex flex-col items-center md:items-end">
-                  <div className="text-[9px] font-black uppercase tracking-[0.4em] text-text-muted opacity-40 mb-2">Network Health</div>
+                  <div className="text-4xs font-black uppercase tracking-[0.4em] text-text-muted opacity-40 mb-2">Network Health</div>
                   <div className="text-5xl font-black text-white-custom tracking-tighter flex items-baseline gap-2">
                     99<span className="text-xl text-primary">.98</span>
                     <span className="text-xs font-bold text-text-muted/40 uppercase tracking-widest">%</span>
@@ -171,7 +171,7 @@ export default function StatusPage() {
                     <BarChart3 size={14} className="text-primary" />
                     Uptime History Archive
                   </h3>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-text-muted/40 italic">90-Day Operational Cycle</span>
+                  <span className="text-4xs font-black uppercase tracking-widest text-text-muted/40 italic">90-Day Operational Cycle</span>
                </div>
                
                <div className="flex gap-1.5 h-12 items-end">
@@ -192,7 +192,7 @@ export default function StatusPage() {
                 })}
               </div>
               
-              <div className="flex justify-between mt-8 text-[9px] font-black uppercase tracking-[0.3em] text-text-muted/30 italic">
+              <div className="flex justify-between mt-8 text-4xs font-black uppercase tracking-[0.3em] text-text-muted/30 italic">
                 <span>Deployment Genesis</span>
                 <span>Active Terminal</span>
               </div>
@@ -201,7 +201,7 @@ export default function StatusPage() {
             <div className="flex justify-center pt-8">
               <button 
                 onClick={() => { setLoading(true); fetchStatus(); }}
-                className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
+                className="group flex items-center gap-3 text-3xs font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
               >
                 <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-700" />
                 Refresh Protocols
@@ -236,7 +236,7 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
           </div>
           <h4 className="font-black text-white-custom italic tracking-tight">{name}</h4>
         </div>
-        <div className={`flex items-center gap-2 text-[9px] font-black uppercase px-3 py-1.5 rounded-full border transition-all ${
+        <div className={`flex items-center gap-2 text-4xs font-black uppercase px-3 py-1.5 rounded-full border transition-all ${
           isOperational ? 'bg-primary/5 text-primary border-primary/20' : 'bg-accent/5 text-accent border-accent/20'
         }`}>
           <div className={`h-1.5 w-1.5 rounded-full ${isOperational ? 'bg-primary animate-pulse' : 'bg-accent shadow-lg shadow-accent/50'}`} />
@@ -245,7 +245,7 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
       </div>
       <p className="text-xs text-text-muted font-medium italic opacity-60 leading-relaxed mb-6">{description}</p>
       {latency && (
-        <div className="text-[10px] font-black text-primary/40 uppercase tracking-widest bg-background/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit">
+        <div className="text-3xs font-black text-primary/40 uppercase tracking-widest bg-background/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit">
           Protocol Delay: {latency}
         </div>
       )}

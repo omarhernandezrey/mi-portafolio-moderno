@@ -116,7 +116,7 @@ export function Tabs({
             {typeof item.count === 'number' && (
               <span
                 className={cn(
-                  'rounded-full px-1.5 py-0.5 font-mono text-[11px] tabular-nums',
+                  'rounded-full px-1.5 py-0.5 font-mono text-2xs tabular-nums',
                   active
                     ? 'bg-primary/15 text-primary'
                     : 'bg-white/[0.06] text-admin-muted',

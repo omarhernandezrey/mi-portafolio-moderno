@@ -265,7 +265,7 @@ export default function AdminWebhooksPage() {
               <h2 className="text-sm font-bold text-admin-ink">
                 Endpoints registrados
               </h2>
-              <span className="font-mono-label text-[9px] text-text-muted/60">
+              <span className="font-mono-label text-4xs text-text-muted/60">
                 {activeCount}/{webhooks.length} activos
               </span>
             </div>
@@ -318,7 +318,7 @@ export default function AdminWebhooksPage() {
                             <p className="truncate text-sm font-bold text-admin-ink">
                               {webhook.url}
                             </p>
-                            <p className="mt-0.5 font-mono text-[10px] text-text-muted/50">
+                            <p className="mt-0.5 font-mono text-3xs text-text-muted/50">
                               ID: {webhook.id.split('-')[0]}
                             </p>
                             <div className="mt-1.5 flex flex-wrap items-center gap-2">
@@ -333,10 +333,10 @@ export default function AdminWebhooksPage() {
                                   Inactivo
                                 </span>
                               )}
-                              <span className="text-[9px] text-text-muted/30">
+                              <span className="text-4xs text-text-muted/30">
                                 •
                               </span>
-                              <span className="flex items-center gap-1 text-[9px] text-text-muted/50">
+                              <span className="flex items-center gap-1 text-4xs text-text-muted/50">
                                 <Clock size={9} />
                                 {getTimeAgo(webhook.created_at)}
                               </span>
@@ -413,7 +413,7 @@ export default function AdminWebhooksPage() {
                         ))}
                       </div>
 
-                      <div className="flex items-center gap-2 text-[10px] text-text-muted/50">
+                      <div className="flex items-center gap-2 text-3xs text-text-muted/50">
                         <Shield size={11} />
                         <span>HMAC-SHA256 configurado</span>
                       </div>
@@ -490,13 +490,13 @@ export default function AdminWebhooksPage() {
                     </div>
                     {log.error && (
                       <p
-                        className="mb-1 truncate text-[9px] text-admin-danger/70"
+                        className="mb-1 truncate text-4xs text-admin-danger/70"
                         title={log.error}
                       >
                         {log.error}
                       </p>
                     )}
-                    <div className="flex items-center gap-1 text-[9px] text-text-muted/50">
+                    <div className="flex items-center gap-1 text-4xs text-text-muted/50">
                       <Clock size={9} />
                       {getTimeAgo(log.created_at)}
                     </div>

@@ -193,7 +193,7 @@ export default async function ServicioPilarPage({ params }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <WhatsAppCTA
                 message={chatMsg}
-                className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
+                className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-2xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
               >
                 {isEn ? 'Quote my project' : 'Cotizar mi proyecto'}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -376,7 +376,7 @@ export default async function ServicioPilarPage({ params }: Props) {
                     <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-1">
                       {isEn ? s.nameEn ?? s.name : s.name}
                     </p>
-                    <p className="text-[10px] text-text-muted/50">
+                    <p className="text-3xs text-text-muted/50">
                       {(isEn ? s.priceRangeUsd ?? s.priceRange : s.priceRange).split('(')[0].trim()}
                     </p>
                   </div>

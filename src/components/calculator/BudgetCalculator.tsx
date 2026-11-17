@@ -163,7 +163,7 @@ export default function BudgetCalculator() {
             </div>
 
             <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-canvas border border-white/5 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary opacity-60">
+              <span className="text-4xs font-black uppercase tracking-[0.2em] text-primary opacity-60">
                 {lang === 'es' ? 'Presupuesto Base' : lang === 'en' ? 'Estimated Base' : 'Orçamento Base'}
               </span>
               <div className="text-4xl sm:text-5xl font-black text-white-custom tracking-tighter mt-1 flex items-baseline justify-end gap-2">
@@ -197,9 +197,9 @@ export default function BudgetCalculator() {
           />
         </div>
         <div className="flex justify-between mt-4">
-          <span className="text-[9px] font-black uppercase tracking-widest text-text-muted opacity-30">Concepto</span>
-          <span className="text-[9px] font-black uppercase tracking-widest text-text-muted opacity-30">Ejecución</span>
-          <span className="text-[9px] font-black uppercase tracking-widest text-text-muted opacity-30">Finalización</span>
+          <span className="text-4xs font-black uppercase tracking-widest text-text-muted opacity-30">Concepto</span>
+          <span className="text-4xs font-black uppercase tracking-widest text-text-muted opacity-30">Ejecución</span>
+          <span className="text-4xs font-black uppercase tracking-widest text-text-muted opacity-30">Finalización</span>
         </div>
       </div>
 
@@ -250,12 +250,12 @@ export default function BudgetCalculator() {
                       <div className="space-y-2">
                         <div className="font-black text-white-custom tracking-tight italic group-hover:text-primary transition-colors">{option.label[lang]}</div>
                         {option.description && (
-                          <div className="text-[11px] text-text-muted/60 font-medium leading-relaxed italic">{option.description[lang]}</div>
+                          <div className="text-2xs text-text-muted/60 font-medium leading-relaxed italic">{option.description[lang]}</div>
                         )}
                       </div>
 
                       {getOptionBadge(option) && (
-                        <div className="absolute top-8 right-8 font-black text-[10px] uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">
+                        <div className="absolute top-8 right-8 font-black text-3xs uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">
                           {getOptionBadge(option)}
                         </div>
                       )}
@@ -268,7 +268,7 @@ export default function BudgetCalculator() {
                 <button
                   onClick={prevStep}
                   disabled={currentStep === 0}
-                  className="flex items-center gap-3 rounded-2xl px-6 py-3 text-[10px] font-black uppercase tracking-widest text-text-muted transition-all hover:text-white-custom disabled:opacity-0"
+                  className="flex items-center gap-3 rounded-2xl px-6 py-3 text-3xs font-black uppercase tracking-widest text-text-muted transition-all hover:text-white-custom disabled:opacity-0"
                 >
                   <ArrowLeft size={16} />
                   {lang === 'es' ? 'Anterior' : lang === 'en' ? 'Previous' : 'Anterior'}
@@ -276,7 +276,7 @@ export default function BudgetCalculator() {
                 <button
                   onClick={nextStep}
                   disabled={!selections[currentStepData.id] || (Array.isArray(selections[currentStepData.id]) && (selections[currentStepData.id] as string[]).length === 0)}
-                  className="group flex items-center gap-3 rounded-[24px] bg-primary px-10 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-background shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-30 disabled:grayscale"
+                  className="group flex items-center gap-3 rounded-[24px] bg-primary px-10 py-5 text-3xs font-black uppercase tracking-[0.2em] text-background shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-30 disabled:grayscale"
                 >
                   {isLastStep ? (lang === 'es' ? 'Finalizar Auditoría' : 'Finalize Audit') : (lang === 'es' ? 'Próximo Paso' : 'Next Step')}
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -311,7 +311,7 @@ export default function BudgetCalculator() {
               </div>
               <button
                 onClick={() => window.location.href = lang === 'es' ? '/' : `/${lang}`}
-                className="rounded-[24px] border-2 border-primary text-primary px-12 py-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:bg-primary hover:text-background shadow-xl"
+                className="rounded-[24px] border-2 border-primary text-primary px-12 py-5 text-3xs font-black uppercase tracking-[0.3em] transition-all hover:bg-primary hover:text-background shadow-xl"
               >
                 {lang === 'es' ? 'Volver al Centro de Mando' : 'Back to Control Center'}
               </button>
@@ -336,7 +336,7 @@ export default function BudgetCalculator() {
 
               <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Nombre Corporativo</label>
+                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Nombre Corporativo</label>
                   <input
                     required
                     type="text"
@@ -347,7 +347,7 @@ export default function BudgetCalculator() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Email de Negocio</label>
+                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Email de Negocio</label>
                   <input
                     required
                     type="email"
@@ -358,7 +358,7 @@ export default function BudgetCalculator() {
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <label className="text-[9px] font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Organización / Proyecto</label>
+                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Organización / Proyecto</label>
                   <input
                     type="text"
                     value={visitorInfo.company}
@@ -402,7 +402,7 @@ export default function BudgetCalculator() {
       
       <div className="bg-white/5 border border-white/5 p-8 rounded-canvas flex items-start gap-4 max-w-2xl mx-auto italic">
         <Info className="text-primary shrink-0 mt-1" size={20} />
-        <p className="text-[11px] text-text-muted font-medium leading-relaxed opacity-60">
+        <p className="text-2xs text-text-muted font-medium leading-relaxed opacity-60">
           {lang === 'es'
             ? 'Esta estimación se deriva de parámetros de mercado estándar para arquitectura de software moderna (Next.js 15+, Supabase, AI Agents). El valor final se consolidará tras una sesión de descubrimiento técnico directa.'
             : 'This estimate is derived from standard market parameters for modern software architecture (Next.js 15+, Supabase, AI Agents). The final value will be consolidated after a direct technical discovery session.'}

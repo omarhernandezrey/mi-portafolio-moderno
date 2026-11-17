@@ -331,7 +331,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
               href="/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1 text-[10px] font-bold text-text-muted transition-colors hover:text-primary"
+              className="inline-flex items-center gap-1 text-3xs font-bold text-text-muted transition-colors hover:text-primary"
             >
               Ver sitio
               <ExternalLink size={11} />
@@ -466,7 +466,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
                     href="/"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-[10px] font-bold text-text-muted transition-colors hover:text-primary"
+                    className="inline-flex items-center gap-1 text-3xs font-bold text-text-muted transition-colors hover:text-primary"
                   >
                     Ver sitio
                     <ExternalLink size={11} />

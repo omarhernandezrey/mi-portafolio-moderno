@@ -148,13 +148,13 @@ export default function StatCard({
           >
             {icon}
           </div>
-          <p className="min-w-0 font-mono-label text-[10px] leading-tight text-text-muted/70">
+          <p className="min-w-0 font-mono-label text-3xs leading-tight text-text-muted/70">
             {title}
           </p>
         </div>
         {trendData && (
           <span
-            className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2 py-1 text-[10px] font-bold ${trendClass}`}
+            className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2 py-1 text-3xs font-bold ${trendClass}`}
             title={trendData.label}
           >
             <TrendIcon size={11} />

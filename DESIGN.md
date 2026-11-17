@@ -57,6 +57,15 @@ typography:
     fontWeight: 600
     lineHeight: 1
     letterSpacing: "0.2em"
+  # Pasos micro (T-24): metadatos densos del panel — marcas de tiempo,
+  # badges, ejes de gráficas. Sin line-height ni tracking propios: heredan
+  # del contexto, igual que los literales text-[9/10/11px] que oficializan.
+  2xs:
+    fontSize: "0.6875rem"
+  3xs:
+    fontSize: "0.625rem"
+  4xs:
+    fontSize: "0.5625rem"
 rounded:
   chip: "0.625rem"
   field: "0.75rem"

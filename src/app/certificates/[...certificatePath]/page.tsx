@@ -55,7 +55,7 @@ const CertificatePage = () => {
         <a
           href={certificateUrl}
           download
-          className="inline-flex items-center gap-2 py-3 px-8 rounded-full font-black text-[10px] uppercase tracking-widest transition-transform hover:scale-105"
+          className="inline-flex items-center gap-2 py-3 px-8 rounded-full font-black text-3xs uppercase tracking-widest transition-transform hover:scale-105"
           style={{ backgroundColor: "var(--primary-color)", color: "var(--background-color)" }}
         >
           <Download size={16} />
@@ -63,7 +63,7 @@ const CertificatePage = () => {
         </a>
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-2 py-3 px-8 rounded-full font-black text-[10px] uppercase tracking-widest border transition-colors"
+          className="inline-flex items-center gap-2 py-3 px-8 rounded-full font-black text-3xs uppercase tracking-widest border transition-colors"
           style={{
             borderColor: "color-mix(in srgb, var(--white-color) 15%, transparent)",
             color: "var(--muted-color)",

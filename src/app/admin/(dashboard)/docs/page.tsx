@@ -31,7 +31,7 @@ export default async function AdminDocsPage() {
         />
         <div className="relative grid gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
           <div className="max-w-xl">
-            <p className="font-mono-label text-[10px] text-primary">Manual operativo</p>
+            <p className="font-mono-label text-3xs text-primary">Manual operativo</p>
             <h2 className="mt-3 font-display text-2xl font-semibold italic leading-tight tracking-tight text-admin-ink sm:text-3xl">
               Procesos que no dependen de la memoria.
             </h2>
@@ -42,11 +42,11 @@ export default async function AdminDocsPage() {
           <div className="flex items-end gap-8 sm:gap-10">
             <div>
               <p className="text-4xl font-black tracking-tight text-admin-ink">{docs.length}</p>
-              <p className="mt-1 font-mono-label text-[9px] text-text-muted/60">Guías</p>
+              <p className="mt-1 font-mono-label text-4xs text-text-muted/60">Guías</p>
             </div>
             <div>
               <p className="text-4xl font-black tracking-tight text-admin-ink">{totalMinutes}</p>
-              <p className="mt-1 font-mono-label text-[9px] text-text-muted/60">Min lectura</p>
+              <p className="mt-1 font-mono-label text-4xs text-text-muted/60">Min lectura</p>
             </div>
           </div>
         </div>
@@ -65,10 +65,10 @@ export default async function AdminDocsPage() {
                 className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-primary/0 blur-[45px] transition-colors duration-500 group-hover:bg-primary/15"
               />
               <div className="relative flex items-center justify-between gap-3">
-                <span className="font-mono-label text-[10px] text-text-muted/45">
+                <span className="font-mono-label text-3xs text-text-muted/45">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-admin-line bg-white/[0.03] px-2.5 py-1 font-mono-label text-[9px] text-text-muted/60">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-admin-line bg-white/[0.03] px-2.5 py-1 font-mono-label text-4xs text-text-muted/60">
                   <Clock3 size={11} />
                   {readingMinutes(doc.content)} min
                 </span>
@@ -86,7 +86,7 @@ export default async function AdminDocsPage() {
               </p>
 
               <div className="relative mt-auto flex items-center justify-between border-t border-admin-line pt-5">
-                <span className="font-mono-label text-[9px] text-text-muted/50">Abrir guía</span>
+                <span className="font-mono-label text-4xs text-text-muted/50">Abrir guía</span>
                 <ArrowUpRight
                   size={17}
                   className="text-text-muted/50 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"

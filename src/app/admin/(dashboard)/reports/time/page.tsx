@@ -197,7 +197,7 @@ export default function TimeReportPage() {
                       {row.name}
                     </p>
                     {row.company && (
-                      <p className="flex items-center gap-1 text-[10px] text-text-muted/60">
+                      <p className="flex items-center gap-1 text-3xs text-text-muted/60">
                         <Building2 size={9} className="shrink-0" />
                         <span className="truncate">{row.company}</span>
                       </p>
@@ -255,16 +255,16 @@ export default function TimeReportPage() {
           <table className="w-full min-w-[700px] text-left">
             <thead>
               <tr className="border-b border-admin-line bg-white/[0.02]">
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Cliente / Proyecto
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Horas totales
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Ingreso (budget)
                 </th>
-                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 text-right font-mono-label text-4xs text-text-muted/60">
                   Ratio $/hora
                 </th>
               </tr>
@@ -307,7 +307,7 @@ export default function TimeReportPage() {
                         <p className="text-sm font-bold text-admin-ink">
                           {row.name}
                         </p>
-                        <p className="text-[10px] text-text-muted/60">
+                        <p className="text-3xs text-text-muted/60">
                           {row.company || '—'}
                         </p>
                       </td>
@@ -336,7 +336,7 @@ export default function TimeReportPage() {
                                 ratio,
                                 parsedBudget.currency ?? 'USD'
                               )}
-                          <span className="text-[9px] font-normal text-text-muted/60">
+                          <span className="text-4xs font-normal text-text-muted/60">
                             /h
                           </span>
                         </span>

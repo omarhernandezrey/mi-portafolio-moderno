@@ -211,7 +211,7 @@ export default function Footer() {
             
             <motion.button
               onClick={scrollToTop}
-              className="group flex items-center gap-3 px-6 py-3 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all"
+              className="group flex items-center gap-3 px-6 py-3 rounded-full border text-3xs font-black uppercase tracking-widest transition-all"
               style={{
                 borderColor: 'var(--primary-color)',
                 color: 'var(--primary-color)'
@@ -230,7 +230,7 @@ export default function Footer() {
         </div>
 
         {/* Créditos Finales Fuera del Container */}
-        <div className="flex flex-col md:flex-row justify-between items-center text-[10px] font-medium opacity-40 px-4 space-y-4 md:space-y-0 text-center md:text-left">
+        <div className="flex flex-col md:flex-row justify-between items-center text-3xs font-medium opacity-40 px-4 space-y-4 md:space-y-0 text-center md:text-left">
           <div className="space-y-1">
             <p>© {new Date().getFullYear()} {t("footer.name")}. {t("footer.rights")}</p>
             <p className="max-w-md italic">

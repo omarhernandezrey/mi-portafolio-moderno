@@ -222,7 +222,7 @@ export default async function BlogPage({ params }: Props) {
                           <p className="mt-1 font-display text-xl font-medium italic text-white-custom">
                             Omar Hernández Rey
                           </p>
-                          <p className="mt-0.5 text-[11px] text-muted-55">
+                          <p className="mt-0.5 text-2xs text-muted-55">
                             Full Stack Developer · Bogotá
                           </p>
                         </div>

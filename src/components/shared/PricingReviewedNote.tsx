@@ -8,7 +8,7 @@ export default function PricingReviewedNote({ isEn }: { isEn: boolean }) {
   }).format(new Date(`${PRICING_LAST_REVIEWED}-01T00:00:00`));
 
   return (
-    <p className="text-center text-[10px] text-text-muted/40 font-medium py-6">
+    <p className="text-center text-3xs text-text-muted/40 font-medium py-6">
       {isEn ? `Reference pricing last updated ${label}.` : `Precios de referencia actualizados a ${label}.`}
     </p>
   );

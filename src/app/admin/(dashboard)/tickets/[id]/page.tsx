@@ -175,7 +175,7 @@ export default function TicketDetailPage({ params }: Props) {
             <ArrowLeft size={19} />
           </Link>
           <div className="min-w-0">
-            <p className="font-mono-label text-[9px] text-text-muted/50">
+            <p className="font-mono-label text-4xs text-text-muted/50">
               Soporte · #{ticket.id.slice(0, 8)}
             </p>
             <h1 className="mt-2 font-display text-2xl font-semibold italic leading-tight tracking-tight text-admin-ink sm:text-3xl">
@@ -184,11 +184,11 @@ export default function TicketDetailPage({ params }: Props) {
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <StatusBadge status={ticket.status} size="sm" />
               <span
-                className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${priority.className}`}
+                className={`inline-flex items-center rounded-full border px-2 py-0.5 text-3xs font-bold ${priority.className}`}
               >
                 {priority.label}
               </span>
-              <span className="text-[11px] font-medium text-text-muted/60">
+              <span className="text-2xs font-medium text-text-muted/60">
                 Actualizado {updatedLabel}
               </span>
             </div>
@@ -224,11 +224,11 @@ export default function TicketDetailPage({ params }: Props) {
             <div className="flex items-center gap-2 text-sm font-bold text-admin-ink">
               <MessageSquare size={16} className="text-primary" />
               Conversación
-              <span className="rounded-full border border-admin-line bg-white/[0.04] px-2 py-0.5 font-mono-label text-[9px] text-text-muted/60">
+              <span className="rounded-full border border-admin-line bg-white/[0.04] px-2 py-0.5 font-mono-label text-4xs text-text-muted/60">
                 {messages.length}
               </span>
             </div>
-            <span className="hidden font-mono-label text-[9px] text-text-muted/50 sm:block">
+            <span className="hidden font-mono-label text-4xs text-text-muted/50 sm:block">
               Hilo de soporte
             </span>
           </div>
@@ -260,7 +260,7 @@ export default function TicketDetailPage({ params }: Props) {
                       }`}
                     >
                       <div
-                        className={`mb-1.5 flex items-center gap-1.5 font-mono-label text-[9px] ${
+                        className={`mb-1.5 flex items-center gap-1.5 font-mono-label text-4xs ${
                           isAdmin ? 'text-primary' : 'text-text-muted/60'
                         }`}
                       >
@@ -270,7 +270,7 @@ export default function TicketDetailPage({ params }: Props) {
                       <p className="whitespace-pre-wrap text-sm leading-relaxed text-admin-ink">
                         {msg.content}
                       </p>
-                      <div className="mt-2 text-right font-mono text-[9px] text-text-muted/40">
+                      <div className="mt-2 text-right font-mono text-4xs text-text-muted/40">
                         {new Date(msg.created_at).toLocaleTimeString('es-CO', {
                           hour: '2-digit',
                           minute: '2-digit',
@@ -311,7 +311,7 @@ export default function TicketDetailPage({ params }: Props) {
               </form>
             </div>
           ) : (
-            <div className="border-t border-admin-line px-5 py-3 text-center text-[11px] font-medium text-text-muted/60">
+            <div className="border-t border-admin-line px-5 py-3 text-center text-2xs font-medium text-text-muted/60">
               {ticket.status === 'closed'
                 ? 'Este ticket está cerrado. Reábrelo para responder.'
                 : 'No tienes permisos para responder en este ticket.'}
@@ -336,7 +336,7 @@ export default function TicketDetailPage({ params }: Props) {
                 <dt className="text-text-muted">Prioridad</dt>
                 <dd>
                   <span
-                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${priority.className}`}
+                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-3xs font-bold ${priority.className}`}
                   >
                     {priority.label}
                   </span>

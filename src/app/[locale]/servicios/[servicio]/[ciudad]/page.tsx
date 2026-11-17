@@ -346,7 +346,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <WhatsAppCTA
                 message={ui.chatMsg}
-                className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
+                className="group inline-flex items-center gap-4 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-2xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-primary/20"
               >
                 {ui.ctaAudit}
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -413,8 +413,8 @@ export default async function ServicioCiudadPage({ params }: Props) {
                     <Sparkles size={16} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-primary">{isEn ? 'Verified Stack' : 'Stack Verificado'}</p>
-                    <p className="text-[10px] text-text-muted/60 font-medium">{serviceName}</p>
+                    <p className="text-3xs font-black uppercase tracking-widest text-primary">{isEn ? 'Verified Stack' : 'Stack Verificado'}</p>
+                    <p className="text-3xs text-text-muted/60 font-medium">{serviceName}</p>
                   </div>
                 </div>
               </ScrollReveal>
@@ -497,7 +497,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
               <div className="w-12 h-px bg-primary/50" />
               <WhatsAppCTA
                 message={ui.chatMsg}
-                className="text-primary font-black text-[11px] uppercase tracking-[0.4em] hover:scale-105 transition-transform italic"
+                className="text-primary font-black text-2xs uppercase tracking-[0.4em] hover:scale-105 transition-transform italic"
               >
                 {ui.ctaConsult}
               </WhatsAppCTA>
@@ -579,7 +579,7 @@ export default async function ServicioCiudadPage({ params }: Props) {
                     <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-1">
                       {isEn && s.nameEn ? s.nameEn : s.name}
                     </p>
-                    <p className="text-[10px] text-text-muted/50">
+                    <p className="text-3xs text-text-muted/50">
                       {isEn && s.priceRangeUsd ? s.priceRangeUsd : s.priceRange.split('(')[0].trim()}
                     </p>
                   </div>

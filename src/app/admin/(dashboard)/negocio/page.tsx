@@ -468,7 +468,7 @@ export default async function NegocioDashboardPage() {
               <div>
                 <h2 className="flex items-center gap-2 text-base font-bold text-admin-ink">
                   Actividad de leads
-                  <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 font-mono-label text-[9px] text-primary">
+                  <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 font-mono-label text-4xs text-primary">
                     Últimos 7 días
                   </span>
                 </h2>
@@ -480,7 +480,7 @@ export default async function NegocioDashboardPage() {
                 <p className="text-2xl font-black text-admin-ink">
                   {stats.activityTotal}
                 </p>
-                <p className="font-mono-label text-[9px] text-text-muted/60">
+                <p className="font-mono-label text-4xs text-text-muted/60">
                   Total semanal
                 </p>
               </div>
@@ -493,7 +493,7 @@ export default async function NegocioDashboardPage() {
                   <p className="text-xs font-bold text-admin-ink">
                     Sin actividad esta semana
                   </p>
-                  <p className="text-[11px] font-medium text-text-muted">
+                  <p className="text-2xs font-medium text-text-muted">
                     Los nuevos leads aparecerán aquí.
                   </p>
                 </div>
@@ -515,12 +515,12 @@ export default async function NegocioDashboardPage() {
                             style={{ height: `${height}%` }}
                             title={`${day.count} leads`}
                           >
-                            <span className="absolute -top-5 left-1/2 -translate-x-1/2 rounded-md border border-admin-line bg-admin-raised px-1.5 py-0.5 text-[9px] font-bold text-admin-ink opacity-0 transition-opacity group-hover:opacity-100">
+                            <span className="absolute -top-5 left-1/2 -translate-x-1/2 rounded-md border border-admin-line bg-admin-raised px-1.5 py-0.5 text-4xs font-bold text-admin-ink opacity-0 transition-opacity group-hover:opacity-100">
                               {day.count}
                             </span>
                           </div>
                         </div>
-                        <span className="text-center font-mono-label text-[9px] text-text-muted/70">
+                        <span className="text-center font-mono-label text-4xs text-text-muted/70">
                           {day.label}
                         </span>
                       </div>
@@ -568,14 +568,14 @@ export default async function NegocioDashboardPage() {
                         </p>
                         <StatusBadge status={lead.status || 'new'} size="sm" />
                       </div>
-                      <p className="mt-0.5 truncate text-[11px] text-text-muted">
+                      <p className="mt-0.5 truncate text-2xs text-text-muted">
                         {lead.email || 'Sin correo'}
                       </p>
                       <div className="mt-2 flex items-center justify-between gap-2">
                         <p className="truncate text-xs font-medium italic text-text-muted">
                           {lead.service_requested || 'Consulta general'}
                         </p>
-                        <span className="shrink-0 font-mono-label text-[9px] text-text-muted/60">
+                        <span className="shrink-0 font-mono-label text-4xs text-text-muted/60">
                           {formatDate(new Date(lead.created_at))}
                         </span>
                       </div>
@@ -597,19 +597,19 @@ export default async function NegocioDashboardPage() {
               <table className="w-full min-w-[640px] text-left">
                 <thead>
                   <tr className="border-b border-admin-line bg-white/[0.02]">
-                    <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                    <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                       Cliente
                     </th>
-                    <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                    <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                       Interés
                     </th>
-                    <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                    <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                       Estado
                     </th>
-                    <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                    <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                       Fecha
                     </th>
-                    <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                    <th className="px-5 py-3 text-right font-mono-label text-4xs text-text-muted/60">
                       Acción
                     </th>
                   </tr>
@@ -623,14 +623,14 @@ export default async function NegocioDashboardPage() {
                       >
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04] text-[11px] font-black text-admin-ink">
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04] text-2xs font-black text-admin-ink">
                               {lead.name?.[0]?.toUpperCase() || '?'}
                             </div>
                             <div className="min-w-0">
                               <p className="truncate text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
                                 {lead.name || 'Anónimo'}
                               </p>
-                              <p className="truncate text-[10px] text-text-muted/70">
+                              <p className="truncate text-3xs text-text-muted/70">
                                 {lead.email || 'Sin correo'}
                               </p>
                             </div>
@@ -644,7 +644,7 @@ export default async function NegocioDashboardPage() {
                         <td className="px-5 py-4">
                           <StatusBadge status={lead.status || 'new'} size="sm" />
                         </td>
-                        <td className="whitespace-nowrap px-5 py-4 font-mono-label text-[9px] text-text-muted/60">
+                        <td className="whitespace-nowrap px-5 py-4 font-mono-label text-4xs text-text-muted/60">
                           {formatDate(new Date(lead.created_at))}
                         </td>
                         <td className="px-5 py-4 text-right">
@@ -676,7 +676,7 @@ export default async function NegocioDashboardPage() {
 
             <Link
               href="/admin/leads"
-              className="flex items-center justify-center gap-2 border-t border-admin-line p-4 font-mono-label text-[9px] text-text-muted transition-colors hover:text-primary"
+              className="flex items-center justify-center gap-2 border-t border-admin-line p-4 font-mono-label text-4xs text-text-muted transition-colors hover:text-primary"
             >
               Ver repositorio completo
               <ChevronRight size={13} />
@@ -768,7 +768,7 @@ export default async function NegocioDashboardPage() {
                           {ticket.title}
                         </p>
                         <span
-                          className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9px] font-bold ${priority.className}`}
+                          className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-4xs font-bold ${priority.className}`}
                         >
                           <span
                             className={`h-1 w-1 rounded-full ${priority.dot}`}
@@ -837,7 +837,7 @@ export default async function NegocioDashboardPage() {
             </dl>
 
             <div className="mt-4 rounded-xl border border-primary/15 bg-primary/5 p-3">
-              <p className="text-[11px] font-medium leading-relaxed text-text-muted">
+              <p className="text-2xs font-medium leading-relaxed text-text-muted">
                 {stats.openTickets > 0
                   ? `Tienes ${stats.openTickets} ticket${stats.openTickets === 1 ? '' : 's'} abierto${stats.openTickets === 1 ? '' : 's'}. ${
                       stats.urgentTickets > 0
@@ -857,7 +857,7 @@ export default async function NegocioDashboardPage() {
 function MetricItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-3 border-b border-admin-line pb-3 last:border-0 last:pb-0">
-      <dt className="font-mono-label text-[9px] text-text-muted/70">{label}</dt>
+      <dt className="font-mono-label text-4xs text-text-muted/70">{label}</dt>
       <dd className="text-sm font-black text-admin-ink">{value}</dd>
     </div>
   );

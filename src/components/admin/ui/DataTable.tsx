@@ -115,7 +115,7 @@ export function DataTable<T>({
                   <dl className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-admin-line pt-3">
                     {pairs.map((c) => (
                       <div key={c.id} className="flex flex-col gap-0.5">
-                        <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-admin-muted/70">
+                        <dt className="font-mono text-3xs uppercase tracking-[0.2em] text-admin-muted/70">
                           {c.header}
                         </dt>
                         <dd className="text-sm text-admin-ink">{c.cell(row)}</dd>
@@ -146,7 +146,7 @@ export function DataTable<T>({
                   key={c.id}
                   scope="col"
                   className={cn(
-                    'px-4 py-3 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-admin-muted',
+                    'px-4 py-3 font-mono text-3xs font-semibold uppercase tracking-[0.2em] text-admin-muted',
                     c.align === 'right' ? 'text-right' : 'text-left',
                     c.width,
                   )}

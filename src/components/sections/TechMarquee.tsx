@@ -36,7 +36,7 @@ const TechCard: React.FC<TechCardProps> = ({ tech }) => {
         {Icon ? <Icon /> : null}
       </div>
       <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg">
+        <span className="text-3xs font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] text-white shadow-lg">
           {tech.category}
         </span>
       </div>

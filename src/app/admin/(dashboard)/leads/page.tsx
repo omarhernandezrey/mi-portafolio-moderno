@@ -174,7 +174,7 @@ export default async function AdminLeadsPage({
                     <p className="truncate text-sm font-bold text-admin-ink">
                       {lead.name || 'Sin identificar'}
                     </p>
-                    <p className="flex items-center gap-1 text-[10px] text-text-muted">
+                    <p className="flex items-center gap-1 text-3xs text-text-muted">
                       <Mail size={10} className="shrink-0" />
                       <span className="truncate">{lead.email || 'Sin correo'}</span>
                     </p>
@@ -188,7 +188,7 @@ export default async function AdminLeadsPage({
                   <p className="font-mono-label text-[8px] text-text-muted/50">
                     Servicio
                   </p>
-                  <p className="mt-1 truncate text-[11px] font-bold text-text-muted">
+                  <p className="mt-1 truncate text-2xs font-bold text-text-muted">
                     {lead.service_requested || 'Consulta general'}
                   </p>
                 </div>
@@ -196,7 +196,7 @@ export default async function AdminLeadsPage({
                   <p className="font-mono-label text-[8px] text-text-muted/50">
                     Presupuesto
                   </p>
-                  <p className="mt-1 truncate text-[11px] font-black text-admin-ink">
+                  <p className="mt-1 truncate text-2xs font-black text-admin-ink">
                     {lead.budget || 'N/D'}
                   </p>
                 </div>
@@ -209,7 +209,7 @@ export default async function AdminLeadsPage({
                 </span>
                 <Link
                   href={`/admin/leads/${lead.id}`}
-                  className="inline-flex items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-[10px] font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
+                  className="inline-flex items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-3xs font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
                 >
                   Ver perfil
                   <ChevronRight size={13} />
@@ -244,22 +244,22 @@ export default async function AdminLeadsPage({
           <table className="w-full min-w-[860px] text-left">
             <thead>
               <tr className="border-b border-admin-line bg-white/[0.02]">
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Identidad
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Contexto
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Requerimiento
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Presupuesto
                 </th>
-                <th className="px-5 py-3 text-center font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 text-center font-mono-label text-4xs text-text-muted/60">
                   Estado
                 </th>
-                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 text-right font-mono-label text-4xs text-text-muted/60">
                   Acción
                 </th>
               </tr>
@@ -273,14 +273,14 @@ export default async function AdminLeadsPage({
                   >
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04] text-[11px] font-black text-admin-ink transition-colors group-hover:border-primary/30 group-hover:text-primary">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-admin-line bg-white/[0.04] text-2xs font-black text-admin-ink transition-colors group-hover:border-primary/30 group-hover:text-primary">
                           {lead.name?.[0]?.toUpperCase() || '?'}
                         </div>
                         <div className="min-w-0">
                           <p className="truncate text-sm font-bold text-admin-ink transition-colors group-hover:text-primary">
                             {lead.name || 'Sin identificar'}
                           </p>
-                          <p className="flex items-center gap-1 text-[10px] text-text-muted/70">
+                          <p className="flex items-center gap-1 text-3xs text-text-muted/70">
                             <Mail size={9} className="shrink-0" />
                             <span className="truncate">{lead.email || 'Sin correo'}</span>
                           </p>
@@ -316,7 +316,7 @@ export default async function AdminLeadsPage({
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/admin/leads/${lead.id}`}
-                        className="inline-flex items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-[10px] font-bold text-text-muted transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+                        className="inline-flex items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-3xs font-bold text-text-muted transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
                       >
                         Perfil
                         <ChevronRight size={12} />

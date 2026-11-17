@@ -229,7 +229,7 @@ export default async function ServiciosPage({ params }: Props) {
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <WhatsAppCTA
                   message={isEn ? "Hi Omar, I'm coming from the services page. I want to know more about what you offer." : "Hola Omar, vengo de la página de servicios. Quiero saber más sobre lo que ofreces."}
-                  className="inline-flex items-center gap-3 bg-primary text-background px-8 py-4 rounded-[24px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
+                  className="inline-flex items-center gap-3 bg-primary text-background px-8 py-4 rounded-[24px] font-black text-2xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
                 >
                   {isEn ? 'Free Consultation' : 'Consulta Gratis'}
                   <ArrowRight size={16} />
@@ -295,7 +295,7 @@ export default async function ServiciosPage({ params }: Props) {
                   <div className="p-3 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
                     {SERVICE_ICONS[servicio.id] ?? <Code2 size={28} />}
                   </div>
-                  <span className="text-[10px] font-black text-text-muted/40 uppercase tracking-wider">
+                  <span className="text-3xs font-black text-text-muted/40 uppercase tracking-wider">
                     {svcDeliveryTime(servicio)}
                   </span>
                 </div>
@@ -320,7 +320,7 @@ export default async function ServiciosPage({ params }: Props) {
                   <span className="text-xs font-black text-primary/80 italic">{(isEn ? servicio.priceRangeUsd ?? servicio.priceRange : servicio.priceRange).split('(')[0].trim()}</span>
                   <Link
                     href={`/servicios/${servicio.id}`}
-                    className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-colors"
+                    className="flex items-center gap-1.5 text-3xs font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-colors"
                   >
                     {isEn ? 'View service' : 'Ver servicio'}
                     <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
@@ -436,7 +436,7 @@ export default async function ServiciosPage({ params }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <WhatsAppCTA
                 message={isEn ? "Hi Omar, I want to hire your web development services. I'd like to schedule a consultation." : "Hola Omar, quiero contratar tus servicios de desarrollo web. Me gustaría agendar una consulta."}
-                className="inline-flex items-center gap-3 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-[11px] uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
+                className="inline-flex items-center gap-3 bg-primary text-background px-10 py-5 rounded-[28px] font-black text-2xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-xl shadow-primary/20"
               >
                 {isEn ? 'Schedule Free Consultation' : 'Agendar Consulta Gratis'}
                 <ArrowRight size={16} />

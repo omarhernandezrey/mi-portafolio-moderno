@@ -284,15 +284,15 @@ export default function SubscribersPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <div className="font-bold text-admin-ink text-sm truncate">{s.email}</div>
-                      <div className="text-[10px] text-text-muted/60 font-medium">{SOURCE_LABELS[s.source] || s.source}</div>
+                      <div className="text-3xs text-text-muted/60 font-medium">{SOURCE_LABELS[s.source] || s.source}</div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {s.unsubscribed_at ? (
-                        <span className="px-2 py-0.5 rounded-md bg-admin-danger/10 text-admin-danger text-[9px] font-black uppercase">Baja</span>
+                        <span className="px-2 py-0.5 rounded-md bg-admin-danger/10 text-admin-danger text-4xs font-black uppercase">Baja</span>
                       ) : s.confirmed ? (
-                        <span className="px-2 py-0.5 rounded-md bg-admin-success/10 text-admin-success text-[9px] font-black uppercase">Confirmado</span>
+                        <span className="px-2 py-0.5 rounded-md bg-admin-success/10 text-admin-success text-4xs font-black uppercase">Confirmado</span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 text-[9px] font-black uppercase">Pendiente</span>
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 text-4xs font-black uppercase">Pendiente</span>
                       )}
                       <button
                         onClick={() => handleDelete(s.id)}
@@ -304,7 +304,7 @@ export default function SubscribersPage() {
                       </button>
                     </div>
                   </div>
-                  <div className="text-[10px] text-text-muted/40 font-medium">
+                  <div className="text-3xs text-text-muted/40 font-medium">
                     Registrado: {new Date(s.created_at).toLocaleDateString('es-CO')}
                     {s.followup_sent_at && (
                       <span className="ml-3 text-primary/60">Follow-up enviado</span>
@@ -319,12 +319,12 @@ export default function SubscribersPage() {
               <table className="w-full text-left border-separate border-spacing-0">
                 <thead>
                   <tr className="bg-background/40">
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Email</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Fuente</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estado</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Registro</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Follow-up</th>
-                    <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
+                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Email</th>
+                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Fuente</th>
+                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estado</th>
+                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Registro</th>
+                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Follow-up</th>
+                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-admin-line">
@@ -338,7 +338,7 @@ export default function SubscribersPage() {
                           <div>
                             <div className="font-bold text-admin-ink text-sm group-hover:text-primary transition-colors">{s.email}</div>
                             {s.unsubscribed_at && (
-                              <div className="text-[9px] text-admin-danger/70 font-medium">
+                              <div className="text-4xs text-admin-danger/70 font-medium">
                                 Baja: {new Date(s.unsubscribed_at).toLocaleDateString('es-CO')}
                               </div>
                             )}
@@ -346,7 +346,7 @@ export default function SubscribersPage() {
                         </div>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-admin-line text-[10px] font-bold text-text-muted uppercase tracking-wider">
+                        <span className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-admin-line text-3xs font-bold text-text-muted uppercase tracking-wider">
                           {SOURCE_LABELS[s.source] || s.source}
                         </span>
                       </td>
@@ -354,17 +354,17 @@ export default function SubscribersPage() {
                         {s.unsubscribed_at ? (
                           <div className="flex items-center justify-center gap-1.5">
                             <XCircle size={14} className="text-admin-danger" />
-                            <span className="text-[10px] font-black text-admin-danger uppercase">Baja</span>
+                            <span className="text-3xs font-black text-admin-danger uppercase">Baja</span>
                           </div>
                         ) : s.confirmed ? (
                           <div className="flex items-center justify-center gap-1.5">
                             <CheckCircle size={14} className="text-admin-success" />
-                            <span className="text-[10px] font-black text-admin-success uppercase">Confirmado</span>
+                            <span className="text-3xs font-black text-admin-success uppercase">Confirmado</span>
                           </div>
                         ) : (
                           <div className="flex items-center justify-center gap-1.5">
                             <Clock size={14} className="text-amber-400" />
-                            <span className="text-[10px] font-black text-amber-400 uppercase">Pendiente</span>
+                            <span className="text-3xs font-black text-amber-400 uppercase">Pendiente</span>
                           </div>
                         )}
                       </td>
@@ -372,7 +372,7 @@ export default function SubscribersPage() {
                         <div className="text-sm font-medium text-text-muted">
                           {new Date(s.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
                         </div>
-                        <div className="text-[10px] text-text-muted/40">
+                        <div className="text-3xs text-text-muted/40">
                           {new Date(s.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}
                         </div>
                       </td>
@@ -380,10 +380,10 @@ export default function SubscribersPage() {
                         {s.followup_sent_at ? (
                           <div className="flex items-center justify-center gap-1.5 text-primary/70">
                             <Send size={13} />
-                            <span className="text-[10px] font-bold">Enviado</span>
+                            <span className="text-3xs font-bold">Enviado</span>
                           </div>
                         ) : (
-                          <span className="text-[10px] text-text-muted/30 italic">—</span>
+                          <span className="text-3xs text-text-muted/30 italic">—</span>
                         )}
                       </td>
                       <td className="px-6 py-5 text-right">
@@ -391,7 +391,7 @@ export default function SubscribersPage() {
                           {!s.confirmed && !s.unsubscribed_at && (
                             <button
                               onClick={() => handleMarkConfirmed(s.id, true)}
-                              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-admin-success/10 border border-admin-success/20 text-[10px] font-bold text-admin-success hover:bg-admin-success/20 transition-all"
+                              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-admin-success/10 border border-admin-success/20 text-3xs font-bold text-admin-success hover:bg-admin-success/20 transition-all"
                               title="Marcar como confirmado"
                             >
                               <CheckCircle size={12} />
@@ -440,10 +440,10 @@ export default function SubscribersPage() {
 
       {!loading && filtered.length > 0 && (
         <div className="flex items-center justify-between">
-          <p className="text-[10px] text-text-muted/40 font-black uppercase tracking-widest">
+          <p className="text-3xs text-text-muted/40 font-black uppercase tracking-widest">
             {filtered.length} de {subscribers.length} registros
           </p>
-          <div className="flex items-center gap-2 text-[10px] text-text-muted/40 font-medium">
+          <div className="flex items-center gap-2 text-3xs text-text-muted/40 font-medium">
             <Filter size={10} />
             {filter !== 'all' && <span>Filtro activo: {filter}</span>}
           </div>

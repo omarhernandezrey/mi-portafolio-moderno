@@ -66,7 +66,7 @@ export default function BlogNewsletterCTA() {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="bg-primary text-background px-8 py-3 rounded-[18px] font-black text-[9px] uppercase tracking-widest hover:scale-105 transition-transform shadow-lg disabled:opacity-50 disabled:hover:scale-100 shrink-0"
+              className="bg-primary text-background px-8 py-3 rounded-[18px] font-black text-4xs uppercase tracking-widest hover:scale-105 transition-transform shadow-lg disabled:opacity-50 disabled:hover:scale-100 shrink-0"
             >
               {status === "loading" ? (isEn ? "Sending..." : "Enviando...") : (isEn ? "Subscribe" : "Suscribirme")}
             </button>

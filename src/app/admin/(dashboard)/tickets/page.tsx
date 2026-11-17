@@ -182,7 +182,7 @@ export default async function AdminTicketsPage() {
                       {ticket.lead?.name || 'Sin cliente'}
                     </p>
                     {ticket.lead?.company && (
-                      <p className="flex items-center gap-1 text-[9px] text-text-muted/60">
+                      <p className="flex items-center gap-1 text-4xs text-text-muted/60">
                         <Building2 size={8} className="shrink-0" />
                         <span className="truncate">{ticket.lead.company}</span>
                       </p>
@@ -196,7 +196,7 @@ export default async function AdminTicketsPage() {
                       Prioridad
                     </p>
                     <span
-                      className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold ${priority.className}`}
+                      className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-4xs font-bold ${priority.className}`}
                     >
                       <span
                         className={`h-1 w-1 rounded-full ${priority.dot}`}
@@ -208,7 +208,7 @@ export default async function AdminTicketsPage() {
                     <p className="font-mono-label text-[8px] text-text-muted/50">
                       Actualizado
                     </p>
-                    <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-text-muted">
+                    <p className="mt-1 flex items-center gap-1 text-3xs font-medium text-text-muted">
                       <Clock size={9} />
                       {formatDateTime(ticket.updated_at)}
                     </p>
@@ -217,7 +217,7 @@ export default async function AdminTicketsPage() {
 
                 <Link
                   href={`/admin/tickets/${ticket.id}`}
-                  className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2.5 text-[11px] font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
+                  className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2.5 text-2xs font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
                 >
                   Ver ticket
                   <ChevronRight size={14} />
@@ -239,22 +239,22 @@ export default async function AdminTicketsPage() {
           <table className="w-full min-w-[900px] text-left">
             <thead>
               <tr className="border-b border-admin-line bg-white/[0.02]">
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Ticket / Asunto
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Cliente
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Prioridad
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Estado
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Última actividad
                 </th>
-                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 text-right font-mono-label text-4xs text-text-muted/60">
                   Acción
                 </th>
               </tr>
@@ -296,13 +296,13 @@ export default async function AdminTicketsPage() {
                         <p className="text-xs font-semibold text-admin-ink">
                           {ticket.lead?.name || 'Sin cliente'}
                         </p>
-                        <p className="text-[10px] text-text-muted/60">
+                        <p className="text-3xs text-text-muted/60">
                           {ticket.lead?.company || '—'}
                         </p>
                       </td>
                       <td className="px-5 py-4">
                         <span
-                          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold ${priority.className}`}
+                          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-4xs font-bold ${priority.className}`}
                         >
                           <span
                             className={`h-1 w-1 rounded-full ${priority.dot}`}
@@ -314,7 +314,7 @@ export default async function AdminTicketsPage() {
                         <StatusBadge status={ticket.status} size="sm" />
                       </td>
                       <td className="whitespace-nowrap px-5 py-4">
-                        <span className="flex items-center gap-1.5 text-[10px] font-medium text-text-muted">
+                        <span className="flex items-center gap-1.5 text-3xs font-medium text-text-muted">
                           <Clock size={10} />
                           {formatDateTime(ticket.updated_at)}
                         </span>

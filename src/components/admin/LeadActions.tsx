@@ -72,7 +72,7 @@ export default function LeadActions({ leadId, currentStatus, canEdit = true }: L
         <button
           onClick={() => updateStatus('contacted')}
           disabled={loading !== null}
-          className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-primary hover:bg-primary/10 border-primary/20 disabled:opacity-50 active:scale-[0.98]"
+          className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-3xs font-black uppercase tracking-widest transition-all group/act text-primary hover:bg-primary/10 border-primary/20 disabled:opacity-50 active:scale-[0.98]"
         >
           <span className="group-hover/act:scale-110 transition-transform">
             {loading === 'contacted' ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
@@ -85,7 +85,7 @@ export default function LeadActions({ leadId, currentStatus, canEdit = true }: L
         <button
           onClick={() => updateStatus('lost')}
           disabled={loading !== null}
-          className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-red-400 hover:bg-red-500/10 border-red-500/20 disabled:opacity-50 active:scale-[0.98]"
+          className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-3xs font-black uppercase tracking-widest transition-all group/act text-red-400 hover:bg-red-500/10 border-red-500/20 disabled:opacity-50 active:scale-[0.98]"
         >
           <span className="group-hover/act:scale-110 transition-transform">
             {loading === 'lost' ? <Loader2 size={18} className="animate-spin" /> : <XCircle size={18} />}
@@ -98,7 +98,7 @@ export default function LeadActions({ leadId, currentStatus, canEdit = true }: L
         <button
           onClick={() => updateStatus('archived')}
           disabled={loading !== null}
-          className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all group/act text-text-muted hover:bg-white/5 border-white/10 disabled:opacity-50 active:scale-[0.98]"
+          className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-3xs font-black uppercase tracking-widest transition-all group/act text-text-muted hover:bg-white/5 border-white/10 disabled:opacity-50 active:scale-[0.98]"
         >
           <span className="group-hover/act:scale-110 transition-transform">
             {loading === 'archived' ? <Loader2 size={18} className="animate-spin" /> : <Archive size={18} />}

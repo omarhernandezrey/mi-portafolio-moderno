@@ -68,7 +68,7 @@ export default async function AdminFeedCommentsPage({
       <div className="flex items-center gap-3">
         <Link
           href="/admin/feed/comments"
-          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+          className={`px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border transition-all ${
             !statusFilter ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
@@ -76,7 +76,7 @@ export default async function AdminFeedCommentsPage({
         </Link>
         <Link
           href="/admin/feed/comments?status=published"
-          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+          className={`px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border transition-all ${
             statusFilter === 'published' ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
@@ -84,7 +84,7 @@ export default async function AdminFeedCommentsPage({
         </Link>
         <Link
           href="/admin/feed/comments?status=hidden"
-          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+          className={`px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border transition-all ${
             statusFilter === 'hidden' ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
@@ -97,11 +97,11 @@ export default async function AdminFeedCommentsPage({
           <table className="w-full text-left border-separate border-spacing-0 min-w-[720px]">
             <thead>
               <tr className="bg-white/[0.02]">
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Autor</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Comentario</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Publicación</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estatus</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Autor</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Comentario</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Publicación</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estatus</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-admin-line">
@@ -110,7 +110,7 @@ export default async function AdminFeedCommentsPage({
                   <tr key={comment.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-5">
                       <div className="font-bold text-admin-ink text-sm">{comment.author_name}</div>
-                      <div className="flex items-center gap-1 text-[10px] text-text-muted/50">
+                      <div className="flex items-center gap-1 text-3xs text-text-muted/50">
                         <Mail size={10} />
                         {comment.author_email}
                       </div>
@@ -122,14 +122,14 @@ export default async function AdminFeedCommentsPage({
                       <Link
                         href={`/comunidad/${comment.post_id}`}
                         target="_blank"
-                        className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                        className="inline-flex items-center gap-1 text-3xs font-black uppercase tracking-widest text-primary hover:underline"
                       >
                         Ver post
                       </Link>
                     </td>
                     <td className="px-6 py-5 text-center">
                       <span
-                        className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
+                        className={`text-3xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
                           comment.status === 'published'
                             ? 'text-admin-success bg-admin-success/10 border-admin-success/20'
                             : 'text-text-muted bg-white/[0.04] border-admin-line'
@@ -161,14 +161,14 @@ export default async function AdminFeedCommentsPage({
 
         {total > 0 && (
           <div className="p-4 sm:p-6 border-t border-admin-line bg-white/[0.01] flex items-center justify-between gap-3">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/40">
+            <span className="text-3xs font-black uppercase tracking-[0.2em] text-text-muted/40">
               Página {page} / {totalPages} · {total} comentarios
             </span>
             <div className="flex gap-2">
               {page > 1 && (
                 <Link
                   href={`/admin/feed/comments?${statusFilter ? `status=${statusFilter}&` : ''}page=${page - 1}`}
-                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
+                  className="px-4 py-2 rounded-lg border text-3xs font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
                 >
                   Anterior
                 </Link>
@@ -176,7 +176,7 @@ export default async function AdminFeedCommentsPage({
               {page < totalPages && (
                 <Link
                   href={`/admin/feed/comments?${statusFilter ? `status=${statusFilter}&` : ''}page=${page + 1}`}
-                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
+                  className="px-4 py-2 rounded-lg border text-3xs font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
                 >
                   Siguiente
                 </Link>

@@ -154,6 +154,13 @@ module.exports = {
           "clamp(1.125rem, 1rem + 0.6vw, 1.5rem)",
           { lineHeight: "1.15", letterSpacing: "-0.015em", fontWeight: "600" },
         ],
+        // Pasos micro (T-24): oficializan los text-[9/10/11px] que el panel
+        // ya usaba como literales. Cadenas simples a propósito — un objeto
+        // con lineHeight cambiaría el render respecto al literal, que solo
+        // fijaba font-size; así la migración es idéntica píxel a píxel.
+        "2xs": "0.6875rem",
+        "3xs": "0.625rem",
+        "4xs": "0.5625rem",
       },
       // Duraciones y easings tokenizados (antes: 0.3s en body y un
       // cubic-bezier suelto en el hero).

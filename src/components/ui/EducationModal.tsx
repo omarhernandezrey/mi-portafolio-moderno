@@ -199,7 +199,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
               <p className="text-center text-[var(--accent-color)] text-xs sm:text-sm font-medium mb-1.5">
                 {institution}
               </p>
-              <p className="text-center text-[var(--muted-color)] text-[11px] sm:text-xs mb-3.5">
+              <p className="text-center text-[var(--muted-color)] text-2xs sm:text-xs mb-3.5">
                 {duration}
               </p>
 

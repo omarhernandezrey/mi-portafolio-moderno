@@ -79,7 +79,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           </Link>
           <div>
-            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em] mb-1">
+            <div className="flex items-center gap-2 text-primary font-black text-3xs uppercase tracking-[0.3em] mb-1">
               CRM Intelligence
             </div>
             <h1 className="font-display italic text-2xl font-medium text-admin-ink tracking-tight flex items-center gap-3">
@@ -92,7 +92,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
         <div className="flex items-center gap-3">
           <Link 
             href={`/proposal/${lead.id}`}
-            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-background text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20"
+            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-background text-3xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20"
           >
             <FileText size={16} />
             Generar Propuesta
@@ -109,7 +109,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
               <User size={120} className="-rotate-12" />
             </div>
             
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-2">
+            <h3 className="text-3xs font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-2">
               <Target size={14} />
               Perfil del Cliente
             </h3>
@@ -126,7 +126,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
 
             <div className="mt-10 pt-8 border-t border-admin-line">
               <div className="p-6 rounded-2xl bg-admin-bg/50 border border-admin-line group-hover:border-primary/10 transition-colors">
-                <h4 className="text-[9px] font-black uppercase tracking-widest text-text-muted mb-3 opacity-40 italic">Servicio Prioritario</h4>
+                <h4 className="text-4xs font-black uppercase tracking-widest text-text-muted mb-3 opacity-40 italic">Servicio Prioritario</h4>
                 <p className="text-sm font-bold text-admin-ink">{lead.service_requested || 'Consultoría General de Software'}</p>
               </div>
             </div>
@@ -134,19 +134,19 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
 
           {/* AI Insights & Actions */}
           <section className="bg-admin-bg rounded-2xl border border-admin-line p-5 shadow-xl sm:p-7">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-2">
+            <h3 className="text-3xs font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-2">
               <Zap size={14} />
               AI Insights & Operaciones
             </h3>
 
             <div className="space-y-8">
               <div className="space-y-3">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-text-muted/60 ml-2">Asignar Industria</h4>
+                <h4 className="text-3xs font-black uppercase tracking-widest text-text-muted/60 ml-2">Asignar Industria</h4>
                 <IndustrySelector leadId={lead.id} currentIndustry={(lead as { industry?: string }).industry} canEdit={canWrite} />
               </div>
 
               <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-text-muted/60 ml-2 italic">Control de Pipeline</h4>
+                <h4 className="text-3xs font-black uppercase tracking-widest text-text-muted/60 ml-2 italic">Control de Pipeline</h4>
                 <LeadActions leadId={lead.id} currentStatus={lead.status} canEdit={canWrite} />
               </div>
 
@@ -154,7 +154,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
 
               {lead.notes && (
                 <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Resumen de la IA</h4>
+                  <h4 className="text-3xs font-black uppercase tracking-widest text-primary mb-3">Resumen de la IA</h4>
                   <p className="text-xs text-text-muted leading-relaxed font-medium italic opacity-80">
                     &ldquo;{lead.notes}&rdquo;
                   </p>
@@ -182,7 +182,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
                 </h3>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-[9px] font-black uppercase tracking-widest text-text-muted/40">Encrypted Session</span>
+                <span className="text-4xs font-black uppercase tracking-widest text-text-muted/40">Encrypted Session</span>
                 <Shield size={12} className="text-primary opacity-40" />
               </div>
             </div>
@@ -210,7 +210,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
 
             {/* Terminal Footer */}
             <div className="p-6 border-t border-admin-line bg-admin-bg/20 backdrop-blur-md">
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/40">
+              <div className="flex items-center justify-between text-3xs font-black uppercase tracking-[0.2em] text-text-muted/40">
                 <span>Capture Timestamp: {new Date(lead.created_at).toLocaleString()}</span>
                 <span>UUID: {lead.id.slice(0, 8)}...</span>
               </div>

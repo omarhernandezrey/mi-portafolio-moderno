@@ -412,7 +412,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                 id="blog-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortOption)}
-                className="h-10 appearance-none rounded-xl border border-white/10 bg-white/[0.03] pl-3 pr-9 text-[11px] font-bold text-text-muted outline-none transition-colors focus:border-primary [color-scheme:dark]"
+                className="h-10 appearance-none rounded-xl border border-white/10 bg-white/[0.03] pl-3 pr-9 text-2xs font-bold text-text-muted outline-none transition-colors focus:border-primary [color-scheme:dark]"
               >
                 <option value="newest">{locale === 'en' ? 'Newest first' : 'Más recientes'}</option>
                 <option value="oldest">{locale === 'en' ? 'Oldest first' : 'Más antiguos'}</option>
@@ -559,7 +559,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                 </div>
                 <div>
                   <p className="font-display text-lg font-medium italic text-white-custom">Omar Hernández Rey</p>
-                  <p className="mt-0.5 text-[11px] text-muted-55">Full Stack Developer · Bogotá</p>
+                  <p className="mt-0.5 text-2xs text-muted-55">Full Stack Developer · Bogotá</p>
                 </div>
               </div>
               <p className="mt-5 text-sm leading-relaxed text-muted-60">

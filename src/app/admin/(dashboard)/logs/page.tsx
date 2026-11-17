@@ -211,9 +211,9 @@ export default function ApiLogsPage() {
                   className={`rounded-xl border px-4 py-3 text-left transition-colors hover:border-primary/30 ${color}`}
                   onClick={() => setProviderFilter(providerFilter === provider ? '' : provider)}
                 >
-                  <div className="font-mono-label text-[9px] uppercase">{provider}</div>
+                  <div className="font-mono-label text-4xs uppercase">{provider}</div>
                   <div className="mt-1 text-lg font-black">{data.total}</div>
-                  <div className="text-[10px] font-medium opacity-60">
+                  <div className="text-3xs font-medium opacity-60">
                     {errorRate}% err · {formatLatency(data.avgLatency)} avg
                   </div>
                 </button>
@@ -254,7 +254,7 @@ export default function ApiLogsPage() {
               <button
                 key={f}
                 onClick={() => { setStatusFilter(f); setPage(1); }}
-                className={`rounded-xl border px-2 py-3 text-[10px] font-black uppercase tracking-wider transition-all sm:px-4 sm:py-4 sm:text-xs ${
+                className={`rounded-xl border px-2 py-3 text-3xs font-black uppercase tracking-wider transition-all sm:px-4 sm:py-4 sm:text-xs ${
                   statusFilter === f
                     ? f === 'error'
                       ? 'bg-admin-danger/10 border-admin-danger/30 text-admin-danger'
@@ -312,12 +312,12 @@ export default function ApiLogsPage() {
             <table className="w-full text-left border-separate border-spacing-0 min-w-[600px]">
               <thead>
                 <tr className="bg-white/[0.02]">
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Estado</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Proveedor</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">HTTP</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Latencia</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Timestamp</th>
-                  <th className="px-5 py-4 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Session</th>
+                  <th className="px-5 py-4 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Estado</th>
+                  <th className="px-5 py-4 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Proveedor</th>
+                  <th className="px-5 py-4 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">HTTP</th>
+                  <th className="px-5 py-4 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Latencia</th>
+                  <th className="px-5 py-4 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Timestamp</th>
+                  <th className="px-5 py-4 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Session</th>
                   <th className="px-5 py-4 border-b border-admin-line w-8"></th>
                 </tr>
               </thead>
@@ -348,17 +348,17 @@ export default function ApiLogsPage() {
                           {error ? (
                             <div className="flex items-center gap-1.5">
                               <AlertTriangle size={13} className="text-admin-danger" />
-                              <span className="text-[10px] font-black text-admin-danger uppercase">Error</span>
+                              <span className="text-3xs font-black text-admin-danger uppercase">Error</span>
                             </div>
                           ) : (
                             <div className="flex items-center gap-1.5">
                               <CheckCircle size={13} className="text-admin-success" />
-                              <span className="text-[10px] font-black text-admin-success uppercase">OK</span>
+                              <span className="text-3xs font-black text-admin-success uppercase">OK</span>
                             </div>
                           )}
                         </td>
                         <td className="px-5 py-4 border-b border-admin-line">
-                          <span className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase border ${pColor}`}>
+                          <span className={`px-2.5 py-1 rounded-md text-3xs font-black uppercase border ${pColor}`}>
                             {log.provider}
                           </span>
                         </td>
@@ -383,13 +383,13 @@ export default function ApiLogsPage() {
                           <div className="text-xs font-medium text-text-muted">
                             {new Date(log.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
                           </div>
-                          <div className="text-[10px] text-text-muted/40">
+                          <div className="text-3xs text-text-muted/40">
                             {new Date(log.created_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                           </div>
                         </td>
                         <td className="px-5 py-4 border-b border-admin-line">
                           {log.session_id ? (
-                            <span className="font-mono text-[10px] text-text-muted/50 truncate max-w-[80px] block">
+                            <span className="font-mono text-3xs text-text-muted/50 truncate max-w-[80px] block">
                               {log.session_id.slice(0, 8)}…
                             </span>
                           ) : (
@@ -408,7 +408,7 @@ export default function ApiLogsPage() {
                         <tr>
                           <td colSpan={7} className="px-5 pb-4 border-b border-admin-line bg-admin-danger/[0.03]">
                             <div className="p-4 rounded-xl bg-admin-danger/10 border border-admin-danger/20">
-                              <div className="text-[10px] uppercase tracking-widest font-black text-admin-danger/60 mb-1">Error</div>
+                              <div className="text-3xs uppercase tracking-widest font-black text-admin-danger/60 mb-1">Error</div>
                               <p className="text-xs font-mono text-admin-danger leading-relaxed break-all">
                                 {log.error_message}
                               </p>
@@ -443,14 +443,14 @@ export default function ApiLogsPage() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <span
-                          className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase ${
+                          className={`inline-flex items-center gap-1.5 text-3xs font-black uppercase ${
                             error ? 'text-admin-danger' : 'text-admin-success'
                           }`}
                         >
                           {error ? <AlertTriangle size={13} /> : <CheckCircle size={13} />}
                           {error ? 'Error' : 'OK'}
                         </span>
-                        <span className={`rounded-md border px-2 py-0.5 text-[10px] font-black uppercase ${pColor}`}>
+                        <span className={`rounded-md border px-2 py-0.5 text-3xs font-black uppercase ${pColor}`}>
                           {log.provider}
                         </span>
                         {log.http_status && (
@@ -467,7 +467,7 @@ export default function ApiLogsPage() {
                           </span>
                         )}
                       </div>
-                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-text-muted">
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-2xs font-medium text-text-muted">
                         <span className={latencyColor(log.latency_ms)}>
                           {formatLatency(log.latency_ms)}
                         </span>
@@ -482,7 +482,7 @@ export default function ApiLogsPage() {
                           })}
                         </span>
                         {log.session_id && (
-                          <span className="font-mono text-[10px] text-text-muted/40">
+                          <span className="font-mono text-3xs text-text-muted/40">
                             {log.session_id.slice(0, 8)}…
                           </span>
                         )}
@@ -497,7 +497,7 @@ export default function ApiLogsPage() {
                   {isOpen && log.error_message && (
                     <div className="px-4 pb-4">
                       <div className="rounded-xl border border-admin-danger/20 bg-admin-danger/10 p-3.5">
-                        <div className="mb-1 text-[10px] font-black uppercase tracking-widest text-admin-danger/60">
+                        <div className="mb-1 text-3xs font-black uppercase tracking-widest text-admin-danger/60">
                           Error
                         </div>
                         <p className="break-all font-mono text-xs leading-relaxed text-admin-danger">
@@ -518,7 +518,7 @@ export default function ApiLogsPage() {
         <div className="flex justify-center">
           <button
             onClick={() => setPage(p => p + 1)}
-            className="px-8 py-3 rounded-2xl bg-white/[0.04] border border-admin-line text-[10px] font-black uppercase tracking-[0.3em] text-text-muted hover:text-admin-ink hover:bg-white/[0.07] transition-all"
+            className="px-8 py-3 rounded-2xl bg-white/[0.04] border border-admin-line text-3xs font-black uppercase tracking-[0.3em] text-text-muted hover:text-admin-ink hover:bg-white/[0.07] transition-all"
           >
             Mostrar {Math.min(PAGE_SIZE, filtered.length - paginated.length)} más
           </button>

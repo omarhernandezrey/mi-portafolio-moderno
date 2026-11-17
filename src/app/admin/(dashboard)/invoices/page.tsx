@@ -152,7 +152,7 @@ export default async function AdminInvoicesPage() {
                   {invoice.lead?.name || 'Sin cliente'}
                 </p>
                 {invoice.lead?.company && (
-                  <p className="text-[10px] text-text-muted/60">
+                  <p className="text-3xs text-text-muted/60">
                     {invoice.lead.company}
                   </p>
                 )}
@@ -173,7 +173,7 @@ export default async function AdminInvoicesPage() {
                   href={`${serverEnv.SUPABASE_URL}/storage/v1/object/public/invoices/${invoice.pdf_url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-primary/20 bg-primary/10 px-3 py-2.5 text-[11px] font-bold text-primary transition-colors hover:bg-primary/15"
+                  className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-primary/20 bg-primary/10 px-3 py-2.5 text-2xs font-bold text-primary transition-colors hover:bg-primary/15"
                 >
                   <Download size={14} />
                   Descargar PDF
@@ -195,22 +195,22 @@ export default async function AdminInvoicesPage() {
           <table className="w-full min-w-[820px] text-left">
             <thead>
               <tr className="border-b border-admin-line bg-white/[0.02]">
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Nro. factura
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Cliente
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Vencimiento
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Total
                 </th>
-                <th className="px-5 py-3 font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Estado
                 </th>
-                <th className="px-5 py-3 text-right font-mono-label text-[9px] text-text-muted/60">
+                <th className="px-5 py-3 text-right font-mono-label text-4xs text-text-muted/60">
                   PDF
                 </th>
               </tr>
@@ -234,12 +234,12 @@ export default async function AdminInvoicesPage() {
                       <p className="text-xs font-semibold text-admin-ink">
                         {invoice.lead?.name || 'Sin cliente'}
                       </p>
-                      <p className="text-[10px] text-text-muted/60">
+                      <p className="text-3xs text-text-muted/60">
                         {invoice.lead?.company || '—'}
                       </p>
                     </td>
                     <td className="whitespace-nowrap px-5 py-4">
-                      <span className="flex items-center gap-1.5 text-[10px] font-medium text-text-muted">
+                      <span className="flex items-center gap-1.5 text-3xs font-medium text-text-muted">
                         <Calendar size={10} />
                         {formatDate(invoice.due_date)}
                       </span>
@@ -262,7 +262,7 @@ export default async function AdminInvoicesPage() {
                           <Download size={14} />
                         </a>
                       ) : (
-                        <span className="text-[10px] text-text-muted/30">—</span>
+                        <span className="text-3xs text-text-muted/30">—</span>
                       )}
                     </td>
                   </tr>

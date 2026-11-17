@@ -21,7 +21,7 @@ export default function PageHeader({
     >
       <div className="min-w-0">
         {overline && (
-          <div className="mb-2.5 flex items-center gap-2.5 font-mono-label text-[10px] text-primary">
+          <div className="mb-2.5 flex items-center gap-2.5 font-mono-label text-3xs text-primary">
             <span className="h-px w-6 bg-primary/40" />
             {overline}
           </div>

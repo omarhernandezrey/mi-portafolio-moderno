@@ -112,7 +112,7 @@ export default function NewsletterForm() {
                   {errorMsg}
                 </motion.p>
               )}
-              <p className="text-[10px] text-[var(--muted-color)]/60 text-center uppercase tracking-widest font-bold">
+              <p className="text-3xs text-[var(--muted-color)]/60 text-center uppercase tracking-widest font-bold">
                 Al suscribirte, aceptas mi política de privacidad
               </p>
             </form>

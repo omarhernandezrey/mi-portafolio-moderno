@@ -25,7 +25,7 @@ export default function AdminError({
           Algo falló al cargar esta sección. Puedes reintentar sin perder la sesión.
         </p>
         {error.digest && (
-          <p className="text-[10px] font-mono text-text-muted/40">digest: {error.digest}</p>
+          <p className="text-3xs font-mono text-text-muted/40">digest: {error.digest}</p>
         )}
         <button
           type="button"

@@ -96,7 +96,7 @@ export default function AdminLoginPage() {
             <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-custom-primary">
               <ShieldCheck size={28} />
             </div>
-            <p className="font-mono-label mb-2 text-[9px] text-primary/80">
+            <p className="font-mono-label mb-2 text-4xs text-primary/80">
               Panel de administración
             </p>
             <h1 className="font-display text-3xl font-semibold italic tracking-tight text-admin-ink">
@@ -212,7 +212,7 @@ export default function AdminLoginPage() {
                   <span>{isLoading ? 'Enviando...' : 'Acceder ahora'}</span>
                 </button>
 
-                <p className="text-center text-[10px] font-medium leading-relaxed text-text-muted/50">
+                <p className="text-center text-3xs font-medium leading-relaxed text-text-muted/50">
                   Solo los correos incluidos en la lista de administradores
                   pueden solicitar acceso.
                 </p>

@@ -243,7 +243,7 @@ const AboutSection: React.FC = () => {
                     {item.icon ? <item.icon size={16} /> : null}
                   </div>
                   <div>
-                    <p className="font-mono-label text-[10px] text-[var(--accent-color)]/70">
+                    <p className="font-mono-label text-3xs text-[var(--accent-color)]/70">
                       {item.label}
                     </p>
                     <p className="text-sm font-bold text-[var(--text-color)]">

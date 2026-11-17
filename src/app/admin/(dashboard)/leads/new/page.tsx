@@ -74,7 +74,7 @@ const INITIAL: FormData = {
 function Field({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) {
   return (
     <div className="space-y-2">
-      <label className="block text-[10px] uppercase tracking-widest font-black text-text-muted">
+      <label className="block text-3xs uppercase tracking-widest font-black text-text-muted">
         {label}
         {required && <span className="text-primary ml-1">*</span>}
       </label>

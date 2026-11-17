@@ -425,7 +425,7 @@ export default async function SobreMiPage({ params }: Props) {
           <div className="grid md:grid-cols-2 gap-6">
             {educationData.map((edu, i) => (
               <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col gap-4">
-                <div className="text-[10px] font-black uppercase tracking-widest text-primary/60 italic">
+                <div className="text-3xs font-black uppercase tracking-widest text-primary/60 italic">
                   {edu.category}
                 </div>
                 <h3 className="text-xl font-black text-white-custom italic leading-tight">

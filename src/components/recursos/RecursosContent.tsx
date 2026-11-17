@@ -170,7 +170,7 @@ export default function RecursosContent() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="text-red-400 text-[10px] font-black uppercase tracking-widest text-center"
+                className="text-red-400 text-3xs font-black uppercase tracking-widest text-center"
               >
                 {error}
               </motion.p>
@@ -209,7 +209,7 @@ export default function RecursosContent() {
                 <button
                   onClick={() => handleDownload(magnet.id)}
                   disabled={loadingId !== null || successId === magnet.id}
-                  className={`relative w-full py-5 rounded-[24px] text-[10px] font-black uppercase tracking-[0.3em] overflow-hidden transition-all shadow-xl active:scale-95 ${
+                  className={`relative w-full py-5 rounded-[24px] text-3xs font-black uppercase tracking-[0.3em] overflow-hidden transition-all shadow-xl active:scale-95 ${
                     successId === magnet.id
                       ? 'bg-primary text-background'
                       : 'bg-white/5 border border-white/10 text-white-custom hover:bg-primary hover:text-background hover:border-primary'

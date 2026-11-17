@@ -148,7 +148,7 @@ export default function NewInvoicePage() {
               <button 
                 type="button" 
                 onClick={addItem}
-                className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-primary hover:underline"
+                className="flex items-center gap-1 text-3xs sm:text-xs font-bold text-primary hover:underline"
               >
                 <Plus size={14} /> Añadir Ítem
               </button>
@@ -167,7 +167,7 @@ export default function NewInvoicePage() {
                     onChange={(e) => updateItem(idx, 'description', e.target.value)}
                   />
                   <label className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-text-muted/60">Cant.</span>
+                    <span className="text-4xs font-black uppercase tracking-widest text-text-muted/60">Cant.</span>
                     <input
                       type="number"
                       className="w-11 bg-transparent p-0 text-center text-sm text-admin-ink outline-none"

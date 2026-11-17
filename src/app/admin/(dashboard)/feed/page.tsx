@@ -87,7 +87,7 @@ export default async function AdminFeedPage({
       <div className="flex items-center gap-3">
         <Link
           href="/admin/feed"
-          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+          className={`px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border transition-all ${
             !statusFilter ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
@@ -95,7 +95,7 @@ export default async function AdminFeedPage({
         </Link>
         <Link
           href="/admin/feed?status=published"
-          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+          className={`px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border transition-all ${
             statusFilter === 'published' ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
@@ -103,7 +103,7 @@ export default async function AdminFeedPage({
         </Link>
         <Link
           href="/admin/feed?status=hidden"
-          className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+          className={`px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border transition-all ${
             statusFilter === 'hidden' ? 'bg-primary text-background border-primary' : 'bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink'
           }`}
         >
@@ -111,7 +111,7 @@ export default async function AdminFeedPage({
         </Link>
         <Link
           href="/admin/feed/comments"
-          className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
+          className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-3xs font-black uppercase tracking-widest border bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
         >
           <MessageSquare size={13} />
           Ver comentarios
@@ -123,12 +123,12 @@ export default async function AdminFeedPage({
           <table className="w-full text-left border-separate border-spacing-0 min-w-[720px]">
             <thead>
               <tr className="bg-white/[0.02]">
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Autor</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Contenido</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Categoría</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Likes / Comentarios</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estatus</th>
-                <th className="px-6 py-5 text-[10px] uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Autor</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Contenido</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Categoría</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Likes / Comentarios</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estatus</th>
+                <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-admin-line">
@@ -145,7 +145,7 @@ export default async function AdminFeedPage({
                             {post.author_name}
                             {post.pinned && <Pin size={11} className="text-primary" />}
                           </div>
-                          <div className="text-[10px] text-text-muted/50 uppercase font-black tracking-widest">
+                          <div className="text-3xs text-text-muted/50 uppercase font-black tracking-widest">
                             {post.author_role === 'owner' ? 'Verificado' : 'Visitante'} · {post.lang}
                           </div>
                         </div>
@@ -156,7 +156,7 @@ export default async function AdminFeedPage({
                       <div className="text-xs text-text-muted truncate">{post.body}</div>
                     </td>
                     <td className="px-6 py-5">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+                      <span className="text-3xs font-black uppercase tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
                         {post.category}
                       </span>
                     </td>
@@ -168,7 +168,7 @@ export default async function AdminFeedPage({
                     </td>
                     <td className="px-6 py-5 text-center">
                       <span
-                        className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
+                        className={`text-3xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
                           post.status === 'published'
                             ? 'text-admin-success bg-admin-success/10 border-admin-success/20'
                             : 'text-text-muted bg-white/[0.04] border-admin-line'
@@ -202,14 +202,14 @@ export default async function AdminFeedPage({
 
         {total > 0 && (
           <div className="p-4 sm:p-6 border-t border-admin-line bg-white/[0.01] flex items-center justify-between gap-3">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-muted/40">
+            <span className="text-3xs font-black uppercase tracking-[0.2em] text-text-muted/40">
               Página {page} / {totalPages} · {total} publicaciones
             </span>
             <div className="flex gap-2">
               {page > 1 && (
                 <Link
                   href={`/admin/feed?${statusFilter ? `status=${statusFilter}&` : ''}page=${page - 1}`}
-                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
+                  className="px-4 py-2 rounded-lg border text-3xs font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
                 >
                   Anterior
                 </Link>
@@ -217,7 +217,7 @@ export default async function AdminFeedPage({
               {page < totalPages && (
                 <Link
                   href={`/admin/feed?${statusFilter ? `status=${statusFilter}&` : ''}page=${page + 1}`}
-                  className="px-4 py-2 rounded-lg border text-[10px] font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
+                  className="px-4 py-2 rounded-lg border text-3xs font-black uppercase tracking-widest bg-white/[0.04] border-admin-line text-text-muted hover:text-admin-ink transition-all"
                 >
                   Siguiente
                 </Link>

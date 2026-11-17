@@ -62,7 +62,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
               <FileText size={20} />
             </div>
             <div>
-              <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">Technical Dossier</p>
+              <p className="text-4xs font-black uppercase tracking-[0.3em] text-primary">Technical Dossier</p>
               <h2 className="text-sm font-bold text-text-muted italic">ID: {id.substring(0, 12).toUpperCase()}</h2>
             </div>
           </div>
@@ -72,7 +72,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
             <Link 
               href={clientEnv.NEXT_PUBLIC_CALCOM_CONSULT_URL} 
               target="_blank"
-              className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-primary text-background text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-primary/20"
+              className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-primary text-background text-3xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-primary/20"
             >
               Agendar Kickoff
               <ArrowRight size={14} />
@@ -108,8 +108,8 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
               
               <div className="text-right space-y-1">
                 <p className="font-display italic text-3xl font-medium text-white-custom tracking-tight">Omar Hernández</p>
-                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Expert Software Engineer</p>
-                <div className="pt-4 flex flex-col gap-1 text-[10px] text-text-muted font-medium opacity-40 uppercase tracking-widest">
+                <p className="text-3xs font-black uppercase tracking-[0.4em] text-primary/60">Expert Software Engineer</p>
+                <div className="pt-4 flex flex-col gap-1 text-3xs text-text-muted font-medium opacity-40 uppercase tracking-widest">
                   <span>Full-Stack Development</span>
                   <span>AI Systems Architect</span>
                   <span>Performance Consultant</span>
@@ -139,12 +139,12 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
                   {budget}
                   <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">USD</span>
                 </div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mt-2 italic">Estimado Base Consolidado</p>
+                <p className="text-3xs font-black uppercase tracking-[0.2em] text-primary/60 mt-2 italic">Estimado Base Consolidado</p>
               </div>
             </section>
 
             {/* Dossier Footer */}
-            <footer className="pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-end gap-10 text-text-muted/40 font-medium text-[10px] uppercase tracking-[0.2em] italic">
+            <footer className="pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-end gap-10 text-text-muted/40 font-medium text-3xs uppercase tracking-[0.2em] italic">
               <div className="space-y-1">
                 <p>© 2026 Omar Hernández Rey • Portfolio Identity System</p>
                 <p>Propiedad Intelectual y Técnica Confidencial</p>
@@ -172,7 +172,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
 function HeaderMeta({ icon, label, value, color = "text-text-muted/60" }: { icon: React.ReactNode, label: string, value: string, color?: string }) {
   return (
     <div className="space-y-1">
-      <p className="text-[9px] font-black uppercase tracking-widest text-text-muted/30 italic flex items-center gap-2">
+      <p className="text-4xs font-black uppercase tracking-widest text-text-muted/30 italic flex items-center gap-2">
         {icon}
         {label}
       </p>

@@ -105,8 +105,11 @@ describe('tailwind expone los tokens', () => {
     }
   });
 
-  it('la escala tipográfica cubre los roles del dashboard', () => {
+  it('la escala tipográfica cubre los roles del dashboard y los pasos micro de T-24', () => {
     expect(Object.keys(extend.fontSize).sort()).toEqual([
+      '2xs',
+      '3xs',
+      '4xs',
       'kicker',
       'label',
       'metric',
@@ -116,6 +119,13 @@ describe('tailwind expone los tokens', () => {
     // Las métricas escalan con el viewport para no desbordar a 375px.
     expect(extend.fontSize.metric[0]).toContain('clamp(');
     expect(extend.fontSize['metric-sm'][0]).toContain('clamp(');
+    // Los pasos micro son cadenas simples a propósito (solo font-size):
+    // un objeto con lineHeight ya no sería equivalente a los literales
+    // text-[9/10/11px] que oficializan. Si alguien les añade lineHeight,
+    // este test lo delata.
+    expect(extend.fontSize['2xs']).toBe('0.6875rem');
+    expect(extend.fontSize['3xs']).toBe('0.625rem');
+    expect(extend.fontSize['4xs']).toBe('0.5625rem');
   });
 
   it('duraciones, easings y glow apuntan a variables CSS', () => {

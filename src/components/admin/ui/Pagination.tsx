@@ -42,7 +42,7 @@ export default function Pagination({
   const hasNext = page < totalPages;
 
   const buttonBase =
-    'inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[10px] font-bold transition-colors';
+    'inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-3xs font-bold transition-colors';
   const enabled =
     'border-admin-line bg-white/[0.03] text-text-muted hover:border-primary/30 hover:text-primary';
   const disabled =
@@ -50,7 +50,7 @@ export default function Pagination({
 
   return (
     <div className="flex flex-col items-center justify-between gap-3 border-t border-admin-line bg-white/[0.01] p-4 sm:flex-row sm:px-5">
-      <span className="font-mono-label text-[9px] text-text-muted/50">
+      <span className="font-mono-label text-4xs text-text-muted/50">
         Mostrando {from}–{to} de {total}
       </span>
       <div className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export default function Pagination({
             Anterior
           </span>
         )}
-        <span className="px-2 font-mono-label text-[9px] text-text-muted/60">
+        <span className="px-2 font-mono-label text-4xs text-text-muted/60">
           {page} / {totalPages || 1}
         </span>
         {hasNext ? (

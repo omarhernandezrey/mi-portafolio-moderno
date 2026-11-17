@@ -56,9 +56,9 @@ export default async function PrivacidadPage({ params }: Props) {
             </div>
 
             <div className="bg-card-bg/40 border border-white/5 p-6 rounded-[24px] backdrop-blur-xl text-right md:min-w-[200px]">
-              <div className="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted opacity-40 mb-1">{isEn ? 'Last Revision' : 'Última Revisión'}</div>
+              <div className="text-4xs font-black uppercase tracking-[0.2em] text-text-muted opacity-40 mb-1">{isEn ? 'Last Revision' : 'Última Revisión'}</div>
               <div className="text-sm font-bold text-white-custom italic">{isEn ? 'April 15, 2026' : '15 de Abril, 2026'}</div>
-              <div className="flex items-center justify-end gap-2 text-[10px] text-primary font-black uppercase tracking-tighter mt-2">
+              <div className="flex items-center justify-end gap-2 text-3xs text-primary font-black uppercase tracking-tighter mt-2">
                 {isEn ? <Globe size={12} /> : <Shield size={12} />}
                 {isEn ? 'Global Availability' : 'Vigencia Activa'}
               </div>
@@ -135,7 +135,7 @@ export default async function PrivacidadPage({ params }: Props) {
               </section>
 
               <footer className="pt-16 border-t border-white/5 text-center">
-                <p className="text-[11px] text-text-muted/40 font-medium italic leading-relaxed uppercase tracking-[0.1em]">
+                <p className="text-2xs text-text-muted/40 font-medium italic leading-relaxed uppercase tracking-[0.1em]">
                   By interacting with the intelligent assistant or contact protocols, <br />
                   you freely and consciously authorize the processing of your information under these guidelines.
                 </p>
@@ -204,7 +204,7 @@ export default async function PrivacidadPage({ params }: Props) {
               </section>
 
               <footer className="pt-16 border-t border-white/5 text-center">
-                <p className="text-[11px] text-text-muted/40 font-medium italic leading-relaxed uppercase tracking-[0.1em]">
+                <p className="text-2xs text-text-muted/40 font-medium italic leading-relaxed uppercase tracking-[0.1em]">
                   Al interactuar con el asistente inteligente o los protocolos de contacto, <br />
                   usted autoriza de forma libre y consciente el tratamiento de su información bajo estas directrices.
                 </p>
@@ -218,7 +218,7 @@ export default async function PrivacidadPage({ params }: Props) {
           <Link
             href="/"
             locale={locale}
-            className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
+            className="group flex items-center gap-3 text-3xs font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
             {isEn ? 'Back to Control Center' : 'Volver al Centro de Control'}
@@ -226,7 +226,7 @@ export default async function PrivacidadPage({ params }: Props) {
           <Link
             href="/privacidad"
             locale={isEn ? 'es' : 'en'}
-            className="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
+            className="group flex items-center gap-3 text-3xs font-black uppercase tracking-[0.4em] text-text-muted hover:text-primary transition-all"
           >
             {isEn ? 'Versión en Español' : 'English Version'}
           </Link>

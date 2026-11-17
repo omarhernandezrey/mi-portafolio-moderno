@@ -95,7 +95,7 @@ export default function SecurityPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="font-mono-label text-[9px] text-primary/80">Seguridad</p>
+        <p className="font-mono-label text-4xs text-primary/80">Seguridad</p>
         <h1 className="font-display text-2xl font-semibold italic tracking-tight text-admin-ink sm:text-3xl">
           Verificación en dos pasos
         </h1>

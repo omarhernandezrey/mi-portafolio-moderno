@@ -185,7 +185,7 @@ export default function AdminAuditPage() {
                       <User size={12} className="shrink-0 text-text-muted" />
                       <span className="truncate">{log.actor_email}</span>
                     </div>
-                    <div className="text-[10px] uppercase tracking-widest font-black text-primary/70">
+                    <div className="text-3xs uppercase tracking-widest font-black text-primary/70">
                       {log.actor_role}
                     </div>
                   </div>
@@ -200,13 +200,13 @@ export default function AdminAuditPage() {
                     {log.resource_id ? ` · ${log.resource_id.slice(0, 8)}…` : ''}
                   </div>
                   {log.metadata && Object.keys(log.metadata).length > 0 && (
-                    <pre className="mt-2 text-[10px] text-text-muted/70 bg-background/40 rounded-lg p-2 overflow-x-auto max-w-full">
+                    <pre className="mt-2 text-3xs text-text-muted/70 bg-background/40 rounded-lg p-2 overflow-x-auto max-w-full">
                       {JSON.stringify(log.metadata, null, 0)}
                     </pre>
                   )}
                 </div>
 
-                <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-text-muted/50 shrink-0">
+                <div className="flex items-center gap-1.5 text-3xs font-black uppercase tracking-wider text-text-muted/50 shrink-0">
                   <Clock size={12} />
                   {formatWhen(log.created_at)}
                 </div>

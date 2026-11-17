@@ -124,7 +124,7 @@ export default function NewTicketPage() {
                   key={p}
                   type="button"
                   onClick={() => setFormData({...formData, priority: p})}
-                  className={`py-2 sm:py-3 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold uppercase transition-all border ${
+                  className={`py-2 sm:py-3 rounded-lg sm:rounded-xl text-3xs sm:text-xs font-bold uppercase transition-all border ${
                     formData.priority === p 
                       ? 'bg-primary text-background border-primary' 
                       : 'bg-transparent text-text-muted border-admin-line hover:border-primary/50'

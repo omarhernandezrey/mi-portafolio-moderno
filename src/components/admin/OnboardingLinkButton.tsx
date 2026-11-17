@@ -31,14 +31,14 @@ export default function OnboardingLinkButton({ leadId }: { leadId: string }) {
 
   return (
     <div className="space-y-3">
-      <h4 className="text-[10px] font-black uppercase tracking-widest text-text-muted/60 ml-2">
+      <h4 className="text-3xs font-black uppercase tracking-widest text-text-muted/60 ml-2">
         Onboarding del Cliente
       </h4>
       <button
         type="button"
         onClick={generate}
         disabled={loading}
-        className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-[10px] font-black uppercase tracking-widest transition-all text-accent hover:bg-accent/10 border-accent/20 disabled:opacity-50 active:scale-[0.98]"
+        className="flex items-center gap-3 w-full px-6 py-4 rounded-[20px] border text-3xs font-black uppercase tracking-widest transition-all text-accent hover:bg-accent/10 border-accent/20 disabled:opacity-50 active:scale-[0.98]"
       >
         {loading ? (
           <Loader2 size={18} className="animate-spin" />
@@ -51,7 +51,7 @@ export default function OnboardingLinkButton({ leadId }: { leadId: string }) {
       </button>
       {url && (
         <div className="flex items-center gap-2 p-3 rounded-xl bg-background/50 border border-white/10">
-          <code className="flex-1 text-[10px] text-text-muted truncate font-mono">{url}</code>
+          <code className="flex-1 text-3xs text-text-muted truncate font-mono">{url}</code>
           <button
             type="button"
             onClick={async () => {

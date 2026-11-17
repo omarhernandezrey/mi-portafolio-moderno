@@ -347,7 +347,7 @@ export default async function FAQPage({ params }: Props) {
               <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                 <Link
                   href="/calculadora"
-                  className="bg-white/5 hover:bg-white/10 text-white-custom px-10 py-5 rounded-[24px] border border-white/10 font-black text-[10px] uppercase tracking-[0.3em] transition-all"
+                  className="bg-white/5 hover:bg-white/10 text-white-custom px-10 py-5 rounded-[24px] border border-white/10 font-black text-3xs uppercase tracking-[0.3em] transition-all"
                 >
                   {isEn ? "Calculate Budget" : "Calcular Presupuesto"}
                 </Link>
@@ -359,7 +359,7 @@ export default async function FAQPage({ params }: Props) {
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-primary hover:scale-105 text-background px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.3em] transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
+                  className="bg-primary hover:scale-105 text-background px-10 py-5 rounded-[24px] font-black text-3xs uppercase tracking-[0.3em] transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
                 >
                   <MessageCircle size={16} fill="currentColor" />
                   {isEn ? "Direct WhatsApp" : "WhatsApp Directo"}

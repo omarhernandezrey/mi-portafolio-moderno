@@ -75,7 +75,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           {countVisible && (
             <span
               className={cn(
-                'pointer-events-none absolute bottom-2 right-3 font-mono text-[11px] tabular-nums',
+                'pointer-events-none absolute bottom-2 right-3 font-mono text-2xs tabular-nums',
                 nearLimit ? 'text-admin-warning' : 'text-admin-muted/70',
               )}
             >

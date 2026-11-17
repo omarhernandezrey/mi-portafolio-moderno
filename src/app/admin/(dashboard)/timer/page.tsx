@@ -122,7 +122,7 @@ export default function TimerPage() {
         description="Seguimiento de productividad y gestión de billable hours."
         actions={
           <>
-            <span className="inline-flex items-center gap-2 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2 font-mono-label text-[9px] text-text-muted">
+            <span className="inline-flex items-center gap-2 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2 font-mono-label text-4xs text-text-muted">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
               Operational
             </span>
@@ -150,7 +150,7 @@ export default function TimerPage() {
       <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
         <section className="space-y-5 rounded-2xl border border-admin-line bg-card-bg p-4 shadow-[0_18px_45px_-32px_rgba(0,0,0,0.95)] sm:p-6 xl:col-span-5">
           <div>
-            <h2 className="mb-5 flex items-center gap-2 font-mono-label text-[9px] text-primary">
+            <h2 className="mb-5 flex items-center gap-2 font-mono-label text-4xs text-primary">
               <Zap size={13} />
               Nueva sesión
             </h2>
@@ -159,7 +159,7 @@ export default function TimerPage() {
               <div className="space-y-2">
                 <label
                   htmlFor="timer-lead"
-                  className="ml-0.5 block text-[10px] font-bold uppercase tracking-wider text-text-muted"
+                  className="ml-0.5 block text-3xs font-bold uppercase tracking-wider text-text-muted"
                 >
                   Cliente o proyecto
                 </label>
@@ -188,7 +188,7 @@ export default function TimerPage() {
               <div className="space-y-2">
                 <label
                   htmlFor="timer-description"
-                  className="ml-0.5 block text-[10px] font-bold uppercase tracking-wider text-text-muted"
+                  className="ml-0.5 block text-3xs font-bold uppercase tracking-wider text-text-muted"
                 >
                   Objetivo de la actividad
                 </label>
@@ -226,7 +226,7 @@ export default function TimerPage() {
               <Activity size={11} />
               Tip de productividad
             </div>
-            <p className="text-[11px] font-medium leading-relaxed text-text-muted/70">
+            <p className="text-2xs font-medium leading-relaxed text-text-muted/70">
               &ldquo;El enfoque profundo de 90 minutos maximiza la calidad del
               código Next.js.&rdquo;
             </p>
@@ -235,11 +235,11 @@ export default function TimerPage() {
 
         <section className="space-y-3 xl:col-span-7">
           <div className="flex items-center justify-between px-1">
-            <h2 className="flex items-center gap-2 font-mono-label text-[9px] text-text-muted/60">
+            <h2 className="flex items-center gap-2 font-mono-label text-4xs text-text-muted/60">
               <Layout size={13} />
               Operaciones en curso
             </h2>
-            <span className="font-mono-label text-[9px] text-primary/70">
+            <span className="font-mono-label text-4xs text-primary/70">
               {activeEntries.length} activas
             </span>
           </div>
@@ -280,7 +280,7 @@ export default function TimerPage() {
                       <p className="mt-1 truncate text-xs font-medium text-text-muted">
                         {entry.description || 'Tarea sin descripción técnica'}
                       </p>
-                      <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-primary/5 px-2.5 py-1 font-mono-label text-[9px] text-primary/70">
+                      <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-primary/5 px-2.5 py-1 font-mono-label text-4xs text-primary/70">
                         <Clock size={10} />
                         Inicio:{' '}
                         {new Date(entry.started_at).toLocaleTimeString('es-CO', {

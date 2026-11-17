@@ -104,7 +104,7 @@ export default function NewWebhookPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-[10px] uppercase tracking-widest font-black text-text-muted">
+            <label className="block text-3xs uppercase tracking-widest font-black text-text-muted">
               URL de destino <span className="text-primary">*</span>
             </label>
             <input
@@ -115,14 +115,14 @@ export default function NewWebhookPage() {
               className="w-full bg-admin-bg/60 border border-admin-line rounded-xl px-4 py-3 text-sm text-admin-ink placeholder:text-text-muted/30 outline-none focus:border-primary/40 transition-all font-mono"
               required
             />
-            <p className="text-[10px] text-text-muted/40">
+            <p className="text-3xs text-text-muted/40">
               Debe ser una URL HTTPS accesible públicamente
             </p>
           </div>
 
           {/* Secret */}
           <div className="space-y-2">
-            <label className="block text-[10px] uppercase tracking-widest font-black text-text-muted">
+            <label className="block text-3xs uppercase tracking-widest font-black text-text-muted">
               Secreto HMAC-SHA256
             </label>
             <div className="flex gap-2">
@@ -150,7 +150,7 @@ export default function NewWebhookPage() {
                 Regenerar
               </button>
             </div>
-            <p className="text-[10px] text-text-muted/40">
+            <p className="text-3xs text-text-muted/40">
               Úsalo en tu endpoint para verificar la firma del header <code className="text-primary/70">X-Webhook-Signature</code>
             </p>
           </div>
@@ -161,11 +161,11 @@ export default function NewWebhookPage() {
           <div className="flex items-center justify-between">
             <h2 className="font-bold text-admin-ink">Eventos</h2>
             <div className="flex gap-2">
-              <button type="button" onClick={selectAll} className="text-[10px] uppercase tracking-widest font-black text-primary/60 hover:text-primary transition-colors">
+              <button type="button" onClick={selectAll} className="text-3xs uppercase tracking-widest font-black text-primary/60 hover:text-primary transition-colors">
                 Todos
               </button>
               <span className="text-text-muted/20">|</span>
-              <button type="button" onClick={clearAll} className="text-[10px] uppercase tracking-widest font-black text-text-muted/40 hover:text-text-muted transition-colors">
+              <button type="button" onClick={clearAll} className="text-3xs uppercase tracking-widest font-black text-text-muted/40 hover:text-text-muted transition-colors">
                 Ninguno
               </button>
             </div>
@@ -194,15 +194,15 @@ export default function NewWebhookPage() {
                   />
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-sm text-admin-ink">{event.label}</div>
-                    <div className="text-[10px] text-text-muted/60 font-medium mt-0.5">{event.desc}</div>
-                    <code className="text-[9px] text-primary/50 font-mono mt-1 block">{event.value}</code>
+                    <div className="text-3xs text-text-muted/60 font-medium mt-0.5">{event.desc}</div>
+                    <code className="text-4xs text-primary/50 font-mono mt-1 block">{event.value}</code>
                   </div>
                 </label>
               );
             })}
           </div>
 
-          <div className="text-[10px] text-text-muted/40">
+          <div className="text-3xs text-text-muted/40">
             {selectedEvents.length} evento{selectedEvents.length !== 1 ? 's' : ''} seleccionado{selectedEvents.length !== 1 ? 's' : ''}
           </div>
         </div>
