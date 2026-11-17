@@ -176,12 +176,18 @@ jobs:
 
       - name: Ejecutar Cypress
         if: steps.check_secrets.outputs.skip != 'true'
-        run: npx cypress run --spec "cypress/e2e/smoke.cy.ts"
+        run: npx cypress run --spec "cypress/e2e/smoke.cy.ts,cypress/e2e/visual-regression.cy.ts"
 
-      - name: Subir screenshots si fallan tests
+      # T-23: las capturas de regresión visual (home, visor de proyectos,
+      # login del panel a 375/1280px) se suben en CADA corrida, no solo si
+      # algo falla — son "capturas de referencia" para comparar a mano una
+      # corrida contra la anterior, no un diff de píxeles automático (no
+      # hay plugin de eso instalado; la ficha pide reusar Cypress tal cual).
+      - name: Subir capturas de Cypress (regresión visual + fallos, si los hay)
         uses: actions/upload-artifact@v7
-        if: failure() && steps.check_secrets.outputs.skip != 'true'
+        if: always() && steps.check_secrets.outputs.skip != 'true'
         with:
           name: cypress-screenshots
           path: cypress/screenshots/
-          retention-days: 3
+          retention-days: 14
+          if-no-files-found: warn

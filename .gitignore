@@ -12,6 +12,10 @@
 
 # testing
 /coverage
+# Capturas y videos de Cypress (T-23): se regeneran en cada corrida y se
+# suben como artefacto de CI — no son código fuente, no se versionan.
+/cypress/screenshots/
+/cypress/videos/
 
 # next.js
 /.next/
