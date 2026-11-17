@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Briefcase, CalendarDays, FolderKanban, LayoutGrid } from 'lucide-react';
+import { Activity, Briefcase, CalendarDays, FolderKanban, Gauge, LayoutGrid } from 'lucide-react';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import AdminCard from '@/components/admin/ui/AdminCard';
 import EmptyState from '@/components/admin/ui/EmptyState';
@@ -8,16 +8,25 @@ import { supabaseServer } from '@/lib/supabaseServer';
 
 export const dynamic = 'force-dynamic';
 
-async function contarProyectos(): Promise<number | null> {
-  const { count, error } = await supabaseServer
-    .from('portfolio_projects')
-    .select('*', { count: 'exact', head: true });
+async function contarFilas(tabla: string): Promise<number | null> {
+  const { count, error } = await supabaseServer.from(tabla).select('*', { count: 'exact', head: true });
   if (error) {
-    console.error(`[admin/portafolio] portfolio_projects: ${error.message}`);
+    console.error(`[admin/portafolio] ${tabla}: ${error.message}`);
     return null;
   }
   return count ?? 0;
 }
+
+/**
+ * Módulos de contenido que ya tienen su propia pantalla de edición
+ * (T-09 en adelante). Cada uno se lista aquí con su tabla real, no con una
+ * cifra inventada; el resto del contenido sigue en el `EmptyState` de abajo
+ * hasta que tenga su propia tarea.
+ */
+const MODULOS_LISTOS = [
+  { tabla: 'portfolio_projects', icon: FolderKanban, nombre: 'Proyectos', nombrePlural: 'proyectos', href: '/admin/proyectos', accion: 'Gestionar proyectos' },
+  { tabla: 'portfolio_skills', icon: Gauge, nombre: 'Skills', nombrePlural: 'skills', href: '/admin/skills', accion: 'Gestionar skills' },
+] as const;
 
 export default async function PortafolioDashboardPage() {
   const currentDate = new Date().toLocaleDateString('es-CO', {
@@ -27,7 +36,7 @@ export default async function PortafolioDashboardPage() {
     day: 'numeric',
     timeZone: 'America/Bogota',
   });
-  const totalProyectos = await contarProyectos();
+  const conteos = await Promise.all(MODULOS_LISTOS.map((m) => contarFilas(m.tabla)));
 
   return (
     <div className="space-y-6 lg:space-y-8">
@@ -61,30 +70,36 @@ export default async function PortafolioDashboardPage() {
           />
         </AdminCard>
 
-        <AdminCard padding="normal" className="flex flex-col justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
-              <FolderKanban size={22} />
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-admin-ink">Proyectos</p>
-              <p className="mt-1 text-xs font-medium leading-relaxed text-text-muted">
-                {totalProyectos === null
-                  ? 'Crea, edita, publica y reordena los proyectos del visor desde aquí.'
-                  : `${totalProyectos} proyecto${totalProyectos === 1 ? '' : 's'}: crea, edita, publica y reordena los que alimentan el visor.`}
-              </p>
-            </div>
-          </div>
-          <AdminButtonLink href="/admin/proyectos" size="sm" className="self-start">
-            Gestionar proyectos
-          </AdminButtonLink>
-        </AdminCard>
+        {MODULOS_LISTOS.map((modulo, i) => {
+          const total = conteos[i];
+          const Icon = modulo.icon;
+          return (
+            <AdminCard key={modulo.tabla} padding="normal" className="flex flex-col justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+                  <Icon size={22} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-admin-ink">{modulo.nombre}</p>
+                  <p className="mt-1 text-xs font-medium leading-relaxed text-text-muted">
+                    {total === null
+                      ? `Crea, edita, publica y reordena ${modulo.nombrePlural} desde aquí.`
+                      : `${total} ${modulo.nombrePlural}: crea, edita, publica y reordena.`}
+                  </p>
+                </div>
+              </div>
+              <AdminButtonLink href={modulo.href} size="sm" className="self-start">
+                {modulo.accion}
+              </AdminButtonLink>
+            </AdminCard>
+          );
+        })}
 
-        <AdminCard padding="normal" className="lg:col-span-2">
+        <AdminCard padding="normal">
           <EmptyState
             icon={<LayoutGrid size={22} />}
             title="El resto del contenido aún no se edita desde aquí"
-            description="Habilidades, educación, servicios y tecnologías se irán sumando a esta área con el mismo patrón que ya usan los proyectos."
+            description="Educación, servicios y tecnologías se irán sumando a esta área con el mismo patrón que ya usan proyectos y skills."
           />
         </AdminCard>
       </div>

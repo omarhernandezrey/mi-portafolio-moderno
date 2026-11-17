@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-16 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16, T-19, T-13, T-08 y T-09 hechas; siguiente tarea: T-10**
+> Creado: 2026-11-12 · Última revisión: 2026-11-16 · Estado: **Fases 0 y 1 hechas; T-06, T-07, T-16, T-19, T-13, T-08, T-09 y T-10 hechas; siguiente tarea: T-11**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -30,6 +30,7 @@ Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí
 | T-13 | `src/lib/github.ts` + tabla `github_metrics` + cron diario: commits, lenguajes, estrellas, PRs, rachas por repositorio, verificado contra la API real de GitHub |
 | T-08 | Panel reorganizado en dos áreas (Portafolio/Negocio) con el patrón de pestañas subrayadas de `DESIGN.md`; los 13 destinos de Negocio siguen en sus URLs; `/admin` es ahora un estado vacío honesto con puente a Negocio; `/admin/negocio` tiene el CRM movido verbatim |
 | T-09 | Primer módulo de edición de contenido (`/admin/proyectos`): API CRUD + reorden en `src/app/api/admin/portfolio/projects/`, validación zod compartida en `src/lib/portfolio/schemas.ts`, comprobador de embebido de T-07 enganchado al guardar `demo`, RLS verificada con `anon` en la base real. Establece el patrón que copian T-10 a T-12 |
+| T-10 | Segundo módulo de contenido (`/admin/skills`): copia el patrón de T-09 sobre `portfolio_skills` — `percentage` entero 0-100 validado por zod, `color_hex`/`icon` como dato del contenido (nunca un token de la interfaz), selector de icono con `datalist` sobre las 26 rutas conocidas en `public/images/logos/`. RLS verificada con `anon` en la base real |
 | D-2 | Restos rotos del chatbot limpiados sin borrar datos (`match_projects()`, extensión `vector` fuera de `public`) |
 | Entorno | `npm run env:check`: auditoría del `.env` por nombres, sin valores. `.env.example` y el código coinciden, y un test lo mantiene |
 | Skills | Impeccable y kpi-dashboard-design instaladas; `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` |
@@ -44,7 +45,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-`T-10 → T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
+`T-11 → T-12 → T-14 → T-15 → T-17 → T-18 → T-21 → T-22 → T-23 → T-25 → T-24`. T-20 solo si Omar confirma D-1.
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -712,7 +713,7 @@ Se queda en Supabase Auth. No se instaló ningún SDK de AWS (eso es T-20, condi
 - [x] Revisión a 375, 475 y ≥1024 px: **parcial**. Se confirmó estáticamente (clases Tailwind) que el patrón `hidden lg:flex` / `lg:hidden` separa sidebar fijo (≥1024px) de header + cajón móvil (<1024px), que el cajón mide `min(88vw, 22rem)` (cabe en 375 y 475px sin desbordar), y que el interruptor de área tiene `min-h-11` (44px táctil). **No se pudo confirmar en un navegador real**: el panel exige sesión autenticada por enlace mágico a un correo real de Omar; el enlace expiró al intentarlo y, para no demorar la tarea, se continuó sin reintentarlo. Pendiente confirmar visualmente en los tres anchos la próxima vez que haya sesión a mano.
 
 #### T-09 a T-12 · Módulos de edición de contenido
-**Ramas:** `feat/module-projects` (T-09), `feat/module-skills` (T-10), `feat/module-education` (T-11), `feat/module-content` (T-12: servicios, tecnologías, timeline, perfil) · **Dependen de:** T-06, T-08 · **Skills:** `impeccable` · **Estado:** `[ ]` (T-09 hecha; T-10 a T-12 pendientes)
+**Ramas:** `feat/module-projects` (T-09), `feat/module-skills` (T-10), `feat/module-education` (T-11), `feat/module-content` (T-12: servicios, tecnologías, timeline, perfil) · **Dependen de:** T-06, T-08 · **Skills:** `impeccable` · **Estado:** `[ ]` (T-09 y T-10 hechas; T-11 y T-12 pendientes)
 
 Los cuatro siguen el mismo patrón; **T-09 lo establece y los demás lo copian**. Haz T-09 completo y con cuidado antes de empezar otro.
 
@@ -743,6 +744,15 @@ Los cuatro siguen el mismo patrón; **T-09 lo establece y los demás lo copian**
 - [x] Un borrador no aparece para `anon`: comprobado en la base real (`SUPABASE_DB_URL`) insertando un proyecto publicado y uno en borrador dentro de una transacción con `SET LOCAL ROLE anon`, confirmando que solo el publicado es visible, y haciendo `ROLLBACK` (0 filas de prueba quedaron en la tabla).
 - [x] Ningún hex literal; detector: 1 antipatrón, igual a la línea base, 0 nuevos en los archivos de esta tarea.
 - [x] Revisión a 375 px: **parcial**, igual que en T-08. Se confirmó estáticamente que `DataTable` ya resuelve móvil con tarjetas (sin tabla con scroll horizontal) y que `Dialog` entra como hoja inferior; los 4 botones de acción nuevos (subir/bajar/editar/eliminar) se subieron de 36px a 44px al revisar el código, por debajo del mínimo táctil del proyecto. No se pudo confirmar en un navegador real: sigue sin sesión disponible (enlace mágico), y por pedido explícito de Omar no se volvió a esperar el login para esta tarea. Pendiente confirmar visualmente la próxima vez que haya sesión a mano.
+
+**T-10 (Skills) hecha — copió el patrón de T-09 sobre `portfolio_skills`:**
+- [x] Tests de API (`__tests__/integration/api-admin-portfolio-skills.test.ts`, 15 tests): sin sesión → 401; rol insuficiente → 403 en los 4 handlers de escritura; cuerpo inválido → 400 (`percentage` ausente o fuera de 0-100); alta/edición/borrado/reorden correctos; auditoría (`portfolio_skill.create/update/delete/reorder`) e invalidación de `portfolio:skills`; slug duplicado (23505) → 400. El prefijo `/api/admin/portfolio` de T-09 ya cubría `/skills` solo: no hizo falta una entrada nueva en la matriz de permisos (confirmado con un test dedicado).
+- [x] Tests de esquema (7 nuevos en `portfolio-schemas.test.ts`): `percentage` entero 0-100 obligatorio en creación, opcional pero igual de estricto en edición; `color_hex` vacío o hex de 6 dígitos; el mismo cuidado de T-09 con `.partial()` para que un PATCH parcial no rellene `color_hex`/`icon`/`is_published` con sus valores de creación.
+- [x] Tests de interfaz (`__tests__/unit/admin-skills-page.test.tsx`, 8 tests): crear, editar, publicar/despublicar con reversión, reordenar, cancelar/confirmar un borrado, estado de error con «Reintentar».
+- [x] Un borrador no aparece para `anon`: misma comprobación que T-09 (transacción con `ROLLBACK` contra `portfolio_skills` en la base real), 0 filas de prueba quedaron.
+- [x] `color_hex`/`icon` son dato del contenido (igual que ya hace `SkillSection.tsx` en el sitio público con `colorHex` vía `style`/`stroke`), no un token de la interfaz: el selector de icono usa un `<datalist>` sobre las 26 rutas conocidas en `public/images/logos/` en vez de inventar un picker nuevo. Detector: 1 antipatrón, igual a la línea base.
+- [x] Revisión a 375 px: **parcial**, misma limitación que T-08 y T-09 (sin sesión real disponible).
+- [x] La portada de Portafolio (`/admin`) se actualizó para que «Skills» deje de aparecer en la lista de contenido pendiente y pase a su propia tarjeta con conteo real, igual que «Proyectos» en T-09.
 
 **Pendiente de validación con credenciales:** el ciclo completo contra la base real y la subida de archivos a Storage.
 
@@ -839,6 +849,7 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 
 | Fecha | Tarea | Rama | Validaciones | Estado |
 |---|---|---|---|---|
+| 2026-11-16 | T-10: segundo módulo de contenido — Skills | `feat/module-skills` | 33 tests nuevos (15 de API, copiando el patrón de T-09; 7 de esquemas zod para `percentage`/`color_hex`; 8 de interfaz; 3 de permisos, incluido confirmar que el prefijo `/api/admin/portfolio` de T-09 ya cubre `/skills` sin entrada nueva) · 545 tests totales · RLS verificada en la base real igual que T-09 (`ROLLBACK`, sin residuo) · `color_hex`/`icon` tratados como dato del contenido, no token de interfaz (mismo patrón que `SkillSection.tsx` en el sitio público) · detector: 1 antipatrón = línea base · portada de Portafolio actualizada: «Skills» pasa de pendiente a tarjeta con conteo real · revisión 375px solo estática, sin sesión real disponible | ✅ |
 | 2026-11-16 | T-09: primer módulo de contenido — Proyectos | `feat/module-projects` | 46 tests nuevos (18 de API: 401/403/400/CRUD/reorden/auditoría/caché; 18 de esquemas zod, con un bug real atrapado — `.partial()` heredaba `.default()` y habría vaciado `technologies`/republicado `is_published` en cualquier PATCH parcial; 8 de interfaz; 2 de permisos) · 512 tests totales · RLS verificada en la base real: `anon` dentro de una transacción con `ROLLBACK` solo ve el proyecto publicado, nunca el borrador, y no quedó ninguna fila de prueba · detector: 1 antipatrón = línea base, 0 nuevos · botones de acción subidos de 36px a 44px (objetivo táctil) al revisar el código · revisión 375px solo estática, sin sesión real disponible (igual que T-08, por pedido explícito de Omar de no esperar el login) | ✅ |
 | 2026-11-16 | T-08: panel en dos áreas (Portafolio/Negocio) | `feat/dashboard-shell` | 16 tests nuevos (9 de AdminNav: cajón, Escape, foco, interruptor de área, buscador condicionado; 7 de permisos) · 466 tests totales · detector: 1 antipatrón = línea base, 0 nuevos en archivos tocados · critique dual-agent 26/32 (81%, "Bueno"), 3 hallazgos materiales corregidos (tablist sin teclado→aria-current, buscador fuera de área→oculto, "CRM" habría fugado a Portafolio→`GROUP_LABELS` por área) y 1 parcial (aterrizaje sin datos→botón "Ir a Negocio") · revisión responsive solo estática (clases Tailwind): sesión real bloqueada por enlace mágico expirado, pendiente confirmar a 375/475px con sesión a mano | ✅ |
 | 2026-11-12 | Análisis completo | — | — | ✅ |

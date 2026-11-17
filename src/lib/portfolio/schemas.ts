@@ -73,6 +73,40 @@ export const projectUpdateSchema = z.object(camposProyecto).partial();
 export type ProjectCreateInput = z.infer<typeof projectCreateSchema>;
 export type ProjectUpdateInput = z.infer<typeof projectUpdateSchema>;
 
+// ── Skills (T-10) ────────────────────────────────────────────────────────
+
+/** Hex vacío permitido; si no está vacío, deben ser 6 dígitos hex. Sin `.default()`, por la misma razón que `urlOrVacioSchema`. */
+const hexOrVacioSchema = z
+  .string()
+  .trim()
+  .refine((v) => v === '' || /^#[0-9a-fA-F]{6}$/.test(v), 'Debe ser un color hex de 6 dígitos (p. ej. #00cba9) o quedar vacío');
+
+const camposSkill = {
+  slug: slugSchema,
+  name: localizedRequiredSchema,
+  /** Entero 0-100; el "%" lo añade la vista, no la base de datos (igual que `repository.ts`). */
+  percentage: z.number().int().min(0).max(100),
+  /** Dato del contenido (el color de esa tecnología), no un token de la interfaz: por eso admite cualquier hex, no los tokens del panel. */
+  color_hex: hexOrVacioSchema,
+  /** Ruta dentro de `public/`, p. ej. `/images/logos/react.svg`. Vacío si no tiene logo. */
+  icon: z.string().trim(),
+  description: localizedOptionalSchema,
+  category: localizedOptionalSchema,
+  is_published: z.boolean(),
+};
+
+export const skillCreateSchema = z.object({
+  ...camposSkill,
+  color_hex: camposSkill.color_hex.default(''),
+  icon: camposSkill.icon.default(''),
+  is_published: camposSkill.is_published.default(true),
+});
+
+export const skillUpdateSchema = z.object(camposSkill).partial();
+
+export type SkillCreateInput = z.infer<typeof skillCreateSchema>;
+export type SkillUpdateInput = z.infer<typeof skillUpdateSchema>;
+
 /** Reordenar: el array completo de ids en el orden deseado; position se reescribe 0..n-1. */
 export const reorderSchema = z.object({
   ids: z.array(z.string().uuid()).min(1, 'Falta la lista de ids'),

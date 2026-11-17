@@ -70,12 +70,27 @@ describe('NAV_ITEMS — Proyectos (T-09)', () => {
   });
 });
 
+describe('NAV_ITEMS — Skills (T-10)', () => {
+  it('«Skills» vive en el área portfolio, grupo core, visible a los tres roles', () => {
+    const skills = NAV_ITEMS.find((i) => i.href === '/admin/skills');
+    expect(skills).toBeDefined();
+    expect(skills?.area).toBe('portfolio');
+    expect(skills?.group).toBe('core');
+    expect(skills?.roles).toEqual(['owner', 'assistant', 'viewer']);
+  });
+});
+
 describe('permisos de API de /api/admin/portfolio (T-09)', () => {
   it('cualquier rol admin puede leer; solo owner puede escribir', () => {
     expect(minRoleForApiRequest('/api/admin/portfolio/projects', 'GET')).toBe('viewer');
     expect(minRoleForApiRequest('/api/admin/portfolio/projects', 'POST')).toBe('owner');
     expect(minRoleForApiRequest('/api/admin/portfolio/projects/abc', 'PATCH')).toBe('owner');
     expect(minRoleForApiRequest('/api/admin/portfolio/projects/abc', 'DELETE')).toBe('owner');
+  });
+
+  it('el mismo prefijo cubre /skills (T-10) sin necesitar una entrada nueva', () => {
+    expect(minRoleForApiRequest('/api/admin/portfolio/skills', 'GET')).toBe('viewer');
+    expect(minRoleForApiRequest('/api/admin/portfolio/skills', 'POST')).toBe('owner');
   });
 
   it('el prefijo /api/admin/portfolio está antes que el catch-all /api/admin', () => {

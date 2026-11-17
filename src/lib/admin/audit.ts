@@ -27,7 +27,11 @@ export type AuditAction =
   | 'portfolio_project.create'
   | 'portfolio_project.update'
   | 'portfolio_project.delete'
-  | 'portfolio_project.reorder';
+  | 'portfolio_project.reorder'
+  | 'portfolio_skill.create'
+  | 'portfolio_skill.update'
+  | 'portfolio_skill.delete'
+  | 'portfolio_skill.reorder';
 
 export type AuditActor = {
   userId: string;

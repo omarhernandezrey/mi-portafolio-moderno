@@ -1,7 +1,14 @@
 /**
  * Validación compartida de los módulos de contenido (T-09 la establece).
  */
-import { projectCreateSchema, projectUpdateSchema, reorderSchema, slugSchema } from '@/lib/portfolio/schemas';
+import {
+  projectCreateSchema,
+  projectUpdateSchema,
+  reorderSchema,
+  skillCreateSchema,
+  skillUpdateSchema,
+  slugSchema,
+} from '@/lib/portfolio/schemas';
 
 describe('slugSchema', () => {
   it('acepta minúsculas, números y guiones', () => {
@@ -98,6 +105,67 @@ describe('projectUpdateSchema', () => {
 
   it('actualizar solo is_published no exige título ni descripción', () => {
     expect(projectUpdateSchema.safeParse({ is_published: false }).success).toBe(true);
+  });
+});
+
+describe('skillCreateSchema', () => {
+  const base = { slug: 'react', name: { es: 'React' }, percentage: 90 };
+
+  it('acepta el mínimo válido y rellena los valores por omisión', () => {
+    const resultado = skillCreateSchema.safeParse(base);
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(resultado.data.color_hex).toBe('');
+      expect(resultado.data.icon).toBe('');
+      expect(resultado.data.is_published).toBe(true);
+    }
+  });
+
+  it('exige el nombre en español', () => {
+    expect(skillCreateSchema.safeParse({ ...base, name: { es: '' } }).success).toBe(false);
+  });
+
+  it('percentage es obligatorio y entero entre 0 y 100', () => {
+    expect(skillCreateSchema.safeParse({ slug: 'react', name: { es: 'React' } }).success).toBe(false);
+    expect(skillCreateSchema.safeParse({ ...base, percentage: 101 }).success).toBe(false);
+    expect(skillCreateSchema.safeParse({ ...base, percentage: -1 }).success).toBe(false);
+    expect(skillCreateSchema.safeParse({ ...base, percentage: 50.5 }).success).toBe(false);
+    expect(skillCreateSchema.safeParse({ ...base, percentage: 0 }).success).toBe(true);
+    expect(skillCreateSchema.safeParse({ ...base, percentage: 100 }).success).toBe(true);
+  });
+
+  it('color_hex vacío es válido; si no está vacío, exige 6 dígitos hex', () => {
+    expect(skillCreateSchema.safeParse({ ...base, color_hex: '' }).success).toBe(true);
+    expect(skillCreateSchema.safeParse({ ...base, color_hex: '#00cba9' }).success).toBe(true);
+    expect(skillCreateSchema.safeParse({ ...base, color_hex: 'teal' }).success).toBe(false);
+    expect(skillCreateSchema.safeParse({ ...base, color_hex: '#fff' }).success).toBe(false);
+  });
+
+  it('icon acepta cualquier ruta, incluida vacía', () => {
+    expect(skillCreateSchema.safeParse({ ...base, icon: '/images/logos/react.svg' }).success).toBe(true);
+    expect(skillCreateSchema.safeParse({ ...base, icon: '' }).success).toBe(true);
+  });
+});
+
+describe('skillUpdateSchema', () => {
+  it('todo es opcional: un objeto vacío es válido', () => {
+    expect(skillUpdateSchema.safeParse({}).success).toBe(true);
+  });
+
+  it('un objeto vacío se queda vacío: no rellena color_hex/icon/is_published con sus valores de creación', () => {
+    const resultado = skillUpdateSchema.safeParse({ percentage: 75 });
+    expect(resultado.success).toBe(true);
+    if (resultado.success) {
+      expect(Object.keys(resultado.data)).toEqual(['percentage']);
+      expect(resultado.data.color_hex).toBeUndefined();
+      expect(resultado.data.icon).toBeUndefined();
+      expect(resultado.data.is_published).toBeUndefined();
+    }
+  });
+
+  it('un percentage presente sigue validándose con las mismas reglas', () => {
+    expect(skillUpdateSchema.safeParse({ percentage: 150 }).success).toBe(false);
+    expect(skillUpdateSchema.safeParse({ percentage: 42 }).success).toBe(true);
   });
 });
 
