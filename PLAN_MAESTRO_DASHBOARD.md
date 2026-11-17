@@ -1,7 +1,7 @@
 # Plan Maestro — Dashboard como motor real del portafolio
 
 > Propietario: Omar Hernández Rey · Repo: `omarhernandezrey/mi-portafolio-moderno`
-> Creado: 2026-11-12 · Última revisión: 2026-11-17 · Estado: **TODAS las tareas del orden recomendado hechas (T-01 a T-19, T-21 a T-25). Solo queda T-20 (Cognito), bloqueada hasta que Omar confirme D-1.**
+> Creado: 2026-11-12 · Última revisión: 2026-11-17 · Estado: **Orden original completo (T-01 a T-19, T-21 a T-25; T-20 descartada salvo D-1). En curso: fase de mejora del panel T-26 a T-32 (§5), nacida de la auditoría con 3 agentes del 2026-11-17. Siguiente: T-26.**
 
 Documento único de verdad. Toda tarea sale de aquí y se marca completada aquí.
 
@@ -56,7 +56,7 @@ Antes de continuar una rama en curso: `git fetch origin && git checkout <rama> &
 
 ### Orden de ejecución recomendado
 
-Orden completado. Solo queda T-20, y únicamente si Omar confirma D-1.
+Orden original completado (T-20 solo si Omar confirma D-1). Fase de mejora del panel, aprobada por Omar el 2026-11-17, en este orden: **T-26 → T-27 → T-28 → T-29 → T-30 → T-31 → T-32** (primero lo que mata lo «genérico», luego confianza, luego consolidación).
 
 El orden no es arbitrario: T-06 y T-07 cierran la columna vertebral de datos; T-16 y T-19 son arreglos independientes y urgentes (un bot que miente y un fallo de seguridad); T-13 debe ir antes de T-14 porque las gráficas necesitan datos reales acumulados.
 
@@ -979,6 +979,84 @@ Capturas de referencia de la home (incluido el visor de proyectos) y del panel a
 - [x] `DeviceFrame.tsx` + su CSS: confirmado con `grep` que nadie los referencia — eliminados (el historial de git los conserva).
 - [x] `tsconfig.jest.json`: de 816 errores a **0**. Hallazgo: la transformación real la hace el SWC de `next/jest`, así que el bloque `globals['ts-jest']` de `jest.config.ts` era configuración muerta (la nota original de la ficha acertaba en el efecto) — se eliminó, junto con el paquete `ts-jest` (desinstalado; la suite completa pasa igual sin él). El tsconfig se repurposó honestamente como config de TYPECHECK de los tests (`include` solo `__tests__`, `jsx: react-jsx`, `target: es2022`, hereda `bundler` del principal), y los 16 errores reales que destapó en archivos de test se corrigieron (tipo del helper `req()` en 10 archivos, stub de `window` con cast en vez de `@ts-expect-error`, narrowing del union bilingüe en el test de educación).
 - [x] `src/app/admin/(dashboard)/page.tsx`: ya estaba resuelto — T-08 lo vació y T-14 lo reconstruyó; hoy mide 220 líneas con 3 consultas (verificado con `wc -l`), no 864 con ~16. La entrada era anterior a esas dos tareas.
+
+### Fase de mejora del panel (auditoría del 2026-11-17)
+
+Origen: Omar pidió una auditoría completa del dashboard («aún lo veo muy genérico») con varios agentes. Tres auditorías en paralelo — identidad visual (contra la rúbrica de `impeccable` y `DESIGN.md`), UX/IA/KPI (contra `kpi-dashboard-design` adaptada) y técnica — coincidieron en 3 causas raíz: (1) el sistema de diseño existe pero los componentes centrales no lo hablan (vocabulario Tailwind por defecto); (2) jerarquía plana con color decorativo; (3) cero momentos de marca y poca confianza percibida (errores tragados, sin esqueletos, targets <44px). Los informes completos, con archivo:línea, quedaron en la sesión; cada ficha cita lo esencial. Lo que las tres auditorías marcan como estándar a imitar NO se toca: `metrics/`, `StatusBadge`, comportamiento de `AdminNav`, `.admin-shell`, y la regla de ningún dato inventado.
+
+#### T-26 · La voz del sistema en los primitivos
+**Rama:** `chore/admin-voice-primitivos` · **Skills:** `impeccable` · **Estado:** en curso
+
+El mayor rendimiento identidad/esfuerzo: los primitivos hablan por fin los tokens que `DESIGN.md` promete, y el cambio se propaga solo a todo el panel.
+
+- [ ] `StatCard`: la cifra pasa de `text-3xl font-black sm:text-4xl` a `text-metric-sm` con `tabular-nums` (la voz Metric del sistema).
+- [ ] `AdminCard` y `StatCard`: `rounded-2xl` → `rounded-card`, sombra inline → `shadow-e3`; y se borran las sombras inline `shadow-[0_18px_45px…]` de las páginas que las copiaron.
+- [ ] `AdminButton` variante `danger`: `red-500/red-400` → tokens `admin-danger` (mismo cambio en `LeadActions.tsx`).
+- [ ] Fuera los halos de color que violan la regla de la luz: `shadow-custom-primary` (AdminButton, AdminNav) → `shadow-e1`; el punto «online» pierde su glow.
+- [ ] Los `text-[8px]`/`text-[9px]`/`text-[10px]` literales del área admin → `text-4xs`/`text-3xs` (los pasos micro de T-24 existen para esto).
+- [ ] Itálicas solo en la marca («Admin Suite»): fuera del `h1` de `PageHeader` y de los datos de tabla.
+- [ ] `verify` en verde · revisión a 375px · cero `rounded-2xl`, sombras inline o rojos literales en `src/components/admin/ui/`.
+
+#### T-27 · Jerarquía y marca del dashboard
+**Rama:** `feat/dashboard-jerarquia` · **Depende de:** T-26 · **Skills:** `impeccable`, `kpi-dashboard-design`, `dataviz` · **Estado:** `[ ]`
+
+- [ ] KPI protagonista (Commits 30 días) a doble ancho con la voz `text-metric`; los 3 secundarios sin tono decorativo (color de estado solo en el chip de variación).
+- [ ] Quinto KPI de alcance real: «Leads desde el sitio este mes» desde `leads.source`, comparado contra el mes anterior — cero datos inventados.
+- [ ] Franja de Negocio bajo los KPI («N leads nuevos · N tickets urgentes», de las consultas que ya hace `negocio/page.tsx`) para que `/admin` responda «¿cómo va todo?» en 5 segundos.
+- [ ] Retícula editorial de gráficas: actividad diaria y mapa a ancho completo, lenguajes y repos a mitades; títulos con la pareja kicker mono + título.
+- [ ] La cajita de icono teñida queda reservada a la marca del nav; en StatCards, módulos y vacíos, fuera.
+- [ ] Encabezados con datos reales («22 proyectos · 8 skills») y overlines en español con patrón de ubicación («Negocio · CRM»).
+- [ ] `verify` en verde · revisión a 375px.
+
+#### T-28 · Errores honestos y esqueletos
+**Rama:** `fix/estados-honestos` · **Estado:** `[ ]`
+
+Las tres auditorías coinciden: un fallo de Supabase hoy se pinta como «Sin resultados» (un dato falso) y no existe ningún `loading.tsx` con páginas `force-dynamic` de hasta ~20 consultas.
+
+- [ ] Los `console.error` + `data || []` de leads/tickets/invoices/feed/resumen pasan a estado de error con «Reintentar» (el patrón correcto ya existe en `proyectos/page.tsx:34`).
+- [ ] `loading.tsx` por sección con los `Skeleton`/`SkeletonStatCard` que ya existen en `admin/ui` y nadie usa.
+- [ ] Bug real: el switch «Mostrar la sección de intereses» (`contenido/page.tsx:350`) no revierte la bandera si el PUT falla — rollback completo.
+- [ ] Buscador de auditoría (`audit/page.tsx:62`): debounce ~300ms + `AbortController` (hoy: una petición por tecla, con respuestas fuera de orden).
+- [ ] «Exportar CSV» de leads dice la verdad: exporta el total vía endpoint o se renombra «Exportar página».
+- [ ] Tests de los estados de error nuevos · `verify` en verde.
+
+#### T-29 · Móvil de verdad
+**Rama:** `fix/movil-44px` · **Depende de:** T-26 · **Estado:** `[ ]`
+
+- [ ] `AdminButton` `sm`/`md` con `min-h-11` (44px): un archivo arregla decenas de pantallas que hoy quedan en ~32px, contra la regla innegociable de CLAUDE.md.
+- [ ] Targets de 44px en las acciones de tarjetas móviles (`leads` «Ver perfil»), el borrar de subscribers y los enlaces de `Pagination`.
+- [ ] Filtros del feed con `flex-wrap` (hoy desbordan a 375px con scroll horizontal de página) y variante de tarjetas móvil para su tabla `min-w-[720px]`.
+- [ ] `verify` en verde · revisión real a 375px de feed, leads y subscribers.
+
+#### T-30 · Las páginas viejas adoptan los primitivos
+**Rama:** `chore/primitivos-segunda-generacion` · **Depende de:** T-26 · **Estado:** `[ ]`
+
+Conviven dos generaciones de código: las páginas nuevas usan `admin/ui` y las viejas replican tablas, badges, paginación y confirmaciones a mano.
+
+- [ ] Feed migra a los 4 primitivos que ignora: `Pagination`, `StatusBadge`, `AdminButtonLink` y tabla con variante móvil.
+- [ ] Los 4 `confirm()` nativos (webhooks, subscribers, FeedPost/FeedCommentRowActions) → `ConfirmDialog`.
+- [ ] `PriorityBadge` nuevo en `admin/ui` (hoy `PRIORITY_META` son 24 líneas clonadas entre negocio y tickets, con el markup repetido 4 veces).
+- [ ] `RowReorderActions` + hook CRUD optimista compartido: contenido y educación tienen ~350 líneas copiadas carácter a carácter.
+- [ ] Colores Tailwind literales → tokens: `logs` (`PROVIDER_COLORS` → `assignSeriesColors` de `charts/palette.ts`), ámbar de subscribers → `admin-warning`, `IndustrySelector`.
+- [ ] `admin/ui/index.ts` exporta `PageHeader`, `EmptyState`, `StatCard`, `StatusBadge`, `Pagination` (+50 imports directos hoy contradicen CLAUDE.md); menú de subscribers accesible (Escape, clic fuera, foco).
+- [ ] `verify` en verde · sin cambio visual salvo lo corregido.
+
+#### T-31 · Consultas con tope
+**Rama:** `perf/consultas-con-tope` · **Estado:** `[ ]`
+
+- [ ] `negocio/page.tsx` baja de ~20 viajes a Supabase (un `count` por etapa del pipeline y por día) a 3-4 con una consulta agregada en JS o vista preagregada — CLAUDE.md ya exige métricas preagregadas.
+- [ ] Tickets paginado con filtro por estado (hoy trae toda la historia sin tope) y contadores por `count: 'exact', head: true`; mismo criterio en subscribers y logs.
+- [ ] `obtenerUltimasMetricasPorRepo` (resumen) deja de traer todas las filas históricas de `github_metrics`: límite tras ordenar o vista `latest_metrics_per_repo`.
+- [ ] Tests de las agregaciones nuevas · `verify` en verde · el dashboard y negocio se sienten más rápidos en frío (menos round-trips, medible en el log).
+
+#### T-32 · Arquitectura de información y palabra
+**Rama:** `fix/ia-y-textos` · **Skills:** `impeccable` (clarify) · **Estado:** `[ ]`
+
+- [ ] Grupo «Sistema» (webhooks, logs, auditoría, seguridad) visible desde ambas áreas — hoy está declarado `area: 'negocio'` y es invisible desde Portafolio; Docs pasa a «Ayuda».
+- [ ] Los dos ítems «Resumen» duplicados se renombran («Resumen del portafolio» / «Resumen de negocio»).
+- [ ] Fuera el umbral inventado del 20% de conversión (`negocio/page.tsx:414`): neutral con etiqueta, o comparación real contra el mes anterior.
+- [ ] Pase de textos: descripciones con dato útil en vez de «Gestión de…», CTAs con el verbo real («Responder leads»), glosario en español («Cronómetro», «En línea», «Seguimiento enviado», «Ver todos los leads» en vez de «repositorio»), cabeceras de tabla concretas («Cliente / Empresa / Servicio»).
+- [ ] `verify` en verde · revisión de los textos en las 27 páginas con grep de los términos viejos.
 
 ---
 
