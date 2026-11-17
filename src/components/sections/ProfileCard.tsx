@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { track } from '@vercel/analytics';
 import styles from './ProfileCard.module.css';
 
 interface ProfileCardProps {
@@ -87,7 +88,12 @@ export default function ProfileCard({
               </svg>
             </a>
           </div>
-          <a href={cvPath} download className={styles.button}>
+          <a
+            href={cvPath}
+            download
+            className={styles.button}
+            onClick={() => track('cv_downloaded')}
+          >
             Ver CV
           </a>
         </div>

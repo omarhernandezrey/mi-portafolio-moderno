@@ -4,6 +4,7 @@ import "./globals.css";
 import NavbarLogic from "../components/ui/NavbarLogic";
 import ClientProvider from "./ClientProvider";
 import { Analytics } from "@vercel/analytics/react";
+import WebVitalsReporter from "@/components/analytics/WebVitalsReporter";
 import JsonLd from "@/components/seo/JsonLd";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { clientEnv } from "@/config/env";
@@ -189,6 +190,7 @@ export default async function RootLayout({
             <NavbarLogic />
             {children}
             <Analytics />
+            <WebVitalsReporter />
           </ClientProvider>
         </LocaleSync>
       </body>

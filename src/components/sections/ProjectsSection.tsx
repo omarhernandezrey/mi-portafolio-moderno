@@ -12,6 +12,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import { track } from "@vercel/analytics";
 import Card from "../shared/Card";
 import { useTranslation } from "../../hooks/useTranslation";
 import { getLocalizedProjectsData, type Project } from "../../lib/projectsData";
@@ -376,6 +377,8 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                     type: "spring",
                     stiffness: 100,
                   }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  onViewportEnter={() => track("project_viewed", { project: slugificar(p.title) })}
                 >
                   <Card
                     title={p.title}
