@@ -25,14 +25,17 @@ set -euo pipefail
 DRY=false
 [ "${1:-}" = "--dry-run" ] && DRY=true
 
-# Un VERCEL_TOKEN de plantilla (contiene corchetes) rompe el CLI aunque haya
-# sesión de `vercel login`: se descarta con aviso.
+set -a; . ./.env.local; set +a
+
+# El CLI debe usar la vinculación de .vercel/project.json. Si VERCEL_PROJECT_ID
+# llega exportado (del .env o del entorno), el CLI exige VERCEL_ORG_ID y TODO
+# falla — fue la causa del primer intento fallido. Y un VERCEL_TOKEN de
+# plantilla (contiene corchetes) rompe el CLI aunque haya sesión de login.
+unset VERCEL_PROJECT_ID VERCEL_TEAM_ID VERCEL_ORG_ID 2>/dev/null || true
 if [ -n "${VERCEL_TOKEN:-}" ] && printf '%s' "$VERCEL_TOKEN" | grep -q '\['; then
   echo "⚠️  VERCEL_TOKEN del entorno parece plantilla: se ignora (se usará la sesión de vercel login)."
   unset VERCEL_TOKEN
 fi
-
-set -a; . ./.env.local; set +a
 
 # Variables que el RUNTIME lee (src/config/env.ts y supabase server/middleware).
 # NEXT_PUBLIC_SITE_URL queda fuera a propósito: el valor local es localhost.
@@ -58,16 +61,20 @@ BORRAR=(
 )
 
 ENTORNOS=(production preview development)
+FALLOS=0
 
 echo "🗑️  Borrando claves muertas de Vercel…"
 for key in "${BORRAR[@]}"; do
   for env in "${ENTORNOS[@]}"; do
     if $DRY; then
       echo "  [dry-run] vercel env rm $key $env"
+    elif salida="$(vercel env rm "$key" "$env" --yes 2>&1)"; then
+      echo "  ✖ $key ($env): borrada"
+    elif printf '%s' "$salida" | grep -qi "not found\|was not found\|not.*exist"; then
+      echo "  — $key ($env): no existía"
     else
-      vercel env rm "$key" "$env" --yes 2>/dev/null \
-        && echo "  ✖ $key ($env)" \
-        || echo "  — $key ($env): no existía"
+      echo "  ❌ $key ($env): $(printf '%s' "$salida" | grep -m1 -i 'error' || echo 'fallo sin mensaje')"
+      FALLOS=$((FALLOS + 1))
     fi
   done
 done
@@ -79,19 +86,32 @@ for key in "${SUBIR[@]}"; do
     echo "  — $key: vacía en local, se salta"
     continue
   fi
+  # El --force del CLI 59 devuelve éxito pero NO reemplaza filas antiguas
+  # (quedaron valores de 214 días marcados como ✔ en el primer intento).
+  # Borrar y recrear es determinista; la ventana sin variable no importa
+  # porque el entorno solo se aplica al desplegar.
+  if ! $DRY; then
+    for env in "${ENTORNOS[@]}"; do
+      vercel env rm "$key" "$env" --yes >/dev/null 2>&1 || true
+    done
+  fi
   for env in "${ENTORNOS[@]}"; do
     if $DRY; then
       echo "  [dry-run] vercel env add $key $env --force"
+    elif salida="$(printf '%s' "$valor" | vercel env add "$key" "$env" --force 2>&1)"; then
+      echo "  ✔ $key ($env)"
     else
-      printf '%s' "$valor" | vercel env add "$key" "$env" --force >/dev/null \
-        && echo "  ✔ $key ($env)" \
-        || echo "  ❌ $key ($env): FALLO"
+      echo "  ❌ $key ($env): $(printf '%s' "$salida" | grep -m1 -i 'error' || echo 'fallo sin mensaje')"
+      FALLOS=$((FALLOS + 1))
     fi
   done
 done
 
 if $DRY; then
   echo "✅ Ensayo terminado: nada se tocó."
+elif [ "$FALLOS" -gt 0 ]; then
+  echo "❌ Sincronización INCOMPLETA: $FALLOS operaciones fallaron (ver arriba). Nada de redeploy hasta corregirlo."
+  exit 1
 else
-  echo "✅ Sincronización terminada. Falta el redeploy para aplicarla (push a main o botón Redeploy)."
+  echo "✅ Sincronización terminada sin fallos. Falta el redeploy para aplicarla (push a main o botón Redeploy)."
 fi
