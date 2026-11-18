@@ -117,88 +117,61 @@ function addTotals(
   }, {});
 }
 
+/**
+ * T-31: antes ~20 viajes a Supabase — un `count` por etapa del pipeline
+ * (6) y otro por día de actividad (7), más los 7 de este bloque. Leads y
+ * tickets activos de un portafolio personal son pocas filas (cientos, no
+ * millones): traer cada tabla UNA vez y agregar en JS es más barato que
+ * 20 round-trips de red, y es la opción que la propia ficha ofrece como
+ * alternativa a una vista preagregada.
+ */
 async function getStats(includeRevenue: boolean) {
   const firstDayOfMonth = bogotaStartOfMonth(0);
   const firstDayOfPrevMonth = bogotaStartOfMonth(1);
   const firstDayOfMonthIso = firstDayOfMonth.toISOString();
+  const firstDayOfPrevMonthIso = firstDayOfPrevMonth.toISOString();
 
-  const [
-    { count: monthLeads },
-    { count: prevLeads },
-    { count: monthPaid },
-    { count: openTickets },
-    { count: urgentTickets },
-    { data: recentTickets },
-    { data: recentLeads },
-  ] = await Promise.all([
+  const [{ data: leadsRows }, { data: ticketsRows }] = await Promise.all([
     supabaseServer
       .from('leads')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', firstDayOfMonthIso),
-    supabaseServer
-      .from('leads')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', firstDayOfPrevMonth.toISOString())
-      .lt('created_at', firstDayOfMonthIso),
-    supabaseServer
-      .from('leads')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'paid')
-      .gte('paid_at', firstDayOfMonthIso),
-    supabaseServer
-      .from('tickets')
-      .select('*', { count: 'exact', head: true })
-      .neq('status', 'closed'),
-    supabaseServer
-      .from('tickets')
-      .select('*', { count: 'exact', head: true })
-      .neq('status', 'closed')
-      .in('priority', ['high', 'urgent']),
+      .select('id, name, email, service_requested, status, created_at, paid_at')
+      .order('created_at', { ascending: false }),
     supabaseServer
       .from('tickets')
       .select('id, title, status, priority, created_at')
       .neq('status', 'closed')
-      .order('created_at', { ascending: false })
-      .limit(4),
-    supabaseServer
-      .from('leads')
-      .select('id, name, email, service_requested, status, created_at')
-      .order('created_at', { ascending: false })
-      .limit(5),
+      .order('created_at', { ascending: false }),
   ]);
+
+  const leads = leadsRows ?? [];
+  const ticketsAbiertos = ticketsRows ?? [];
+
+  const monthLeads = leads.filter((l) => l.created_at >= firstDayOfMonthIso).length;
+  const prevLeads = leads.filter((l) => l.created_at >= firstDayOfPrevMonthIso && l.created_at < firstDayOfMonthIso).length;
+  const monthPaid = leads.filter((l) => l.status === 'paid' && l.paid_at && l.paid_at >= firstDayOfMonthIso).length;
+  const recentLeads = leads.slice(0, 5);
+
+  const openTickets = ticketsAbiertos.length;
+  const urgentTickets = ticketsAbiertos.filter((t) => t.priority === 'high' || t.priority === 'urgent').length;
+  const recentTickets = ticketsAbiertos.slice(0, 4);
 
   let invoiceData: Array<{ total: number | null; currency: string | null }> = [];
   let prevInvoiceData: Array<{ total: number | null; currency: string | null }> = [];
 
   if (includeRevenue) {
-    const [currentInvoices, previousInvoices] = await Promise.all([
-      supabaseServer
-        .from('invoices')
-        .select('total, currency')
-        .gte('created_at', firstDayOfMonthIso)
-        .eq('status', 'paid'),
-      supabaseServer
-        .from('invoices')
-        .select('total, currency')
-        .gte('created_at', firstDayOfPrevMonth.toISOString())
-        .lt('created_at', firstDayOfMonthIso)
-        .eq('status', 'paid'),
-    ]);
+    const { data: invoiceRows } = await supabaseServer
+      .from('invoices')
+      .select('total, currency, created_at')
+      .gte('created_at', firstDayOfPrevMonthIso)
+      .eq('status', 'paid');
 
-    invoiceData = currentInvoices.data ?? [];
-    prevInvoiceData = previousInvoices.data ?? [];
+    const rows = invoiceRows ?? [];
+    invoiceData = rows.filter((r) => r.created_at >= firstDayOfMonthIso);
+    prevInvoiceData = rows.filter((r) => r.created_at < firstDayOfMonthIso);
   }
 
   const statusCounts = Object.fromEntries(
-    await Promise.all(
-      PIPELINE_STAGES.map(async (stage) => {
-        const { count } = await supabaseServer
-          .from('leads')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', stage.key);
-        return [stage.key, count || 0] as const;
-      })
-    )
+    PIPELINE_STAGES.map((stage) => [stage.key, leads.filter((l) => l.status === stage.key).length] as const)
   );
 
   const activityRanges = Array.from({ length: 7 }, (_, index) => {
@@ -217,16 +190,12 @@ async function getStats(includeRevenue: boolean) {
     };
   });
 
-  const activityDays = await Promise.all(
-    activityRanges.map(async (range) => {
-      const { count } = await supabaseServer
-        .from('leads')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', range.start.toISOString())
-        .lt('created_at', range.end.toISOString());
-      return { key: range.key, label: range.label, count: count || 0 };
-    })
-  );
+  const activityDays = activityRanges.map((range) => {
+    const startIso = range.start.toISOString();
+    const endIso = range.end.toISOString();
+    const count = leads.filter((l) => l.created_at >= startIso && l.created_at < endIso).length;
+    return { key: range.key, label: range.label, count };
+  });
 
   const revenueByCurrency = addTotals(invoiceData);
   const prevRevenueByCurrency = addTotals(prevInvoiceData);

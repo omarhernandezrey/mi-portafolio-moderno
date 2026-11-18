@@ -15,6 +15,7 @@ type FilaFalsa = { repo: string; daily_activity: unknown; languages_bytes: unkno
 
 let filasGithubMetrics: FilaFalsa[] = [];
 let errorGithubMetrics: { message: string } | null = null;
+const mockLimitGithubMetrics = jest.fn();
 
 // T-27: `leads`/`tickets` se consultan ahora con filtros encadenados
 // (gte/lt/in/neq) para el 5.º KPI y la franja de Negocio — el mismo nombre
@@ -49,7 +50,12 @@ jest.mock('@/lib/supabaseServer', () => ({
       if (tabla === 'github_metrics') {
         return {
           select: () => ({
-            order: async () => ({ data: filasGithubMetrics, error: errorGithubMetrics }),
+            order: () => ({
+              limit: async (n: number) => {
+                mockLimitGithubMetrics(n);
+                return { data: filasGithubMetrics, error: errorGithubMetrics };
+              },
+            }),
           }),
         };
       }
@@ -95,6 +101,12 @@ describe('PortafolioDashboardPage — KPI y gráficas (T-14)', () => {
     expect(screen.queryByText('Aún sin panel de métricas')).not.toBeInTheDocument();
     expect(screen.getByText('No se pudo cargar esta información')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument();
+  });
+
+  it('T-31: la consulta de github_metrics lleva un límite — no trae el historial completo', async () => {
+    mockLimitGithubMetrics.mockClear();
+    await PortafolioDashboardPage();
+    expect(mockLimitGithubMetrics).toHaveBeenCalledWith(300);
   });
 
   it('con filas reales: muestra los 4 KPI calculados y las 4 gráficas, sin el estado vacío', async () => {

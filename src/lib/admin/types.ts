@@ -53,6 +53,17 @@ export const TICKET_STATUSES = [
 
 export type TicketStatus = (typeof TICKET_STATUSES)[number];
 
+export function isTicketStatus(value: unknown): value is TicketStatus {
+  return typeof value === 'string' && (TICKET_STATUSES as readonly string[]).includes(value);
+}
+
+export const TICKET_STATUS_OPTIONS: ReadonlyArray<{ value: TicketStatus; label: string }> = [
+  { value: 'open', label: 'Abierto' },
+  { value: 'in_progress', label: 'En proceso' },
+  { value: 'waiting_client', label: 'Esperando cliente' },
+  { value: 'closed', label: 'Cerrado' },
+];
+
 export const TICKET_PRIORITIES = ['low', 'medium', 'high', 'urgent'] as const;
 export type TicketPriority = (typeof TICKET_PRIORITIES)[number];
 
