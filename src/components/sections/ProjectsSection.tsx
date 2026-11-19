@@ -147,18 +147,13 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
   /* --------------------------------------------------------------------- */
   return (
     <>
-      {/* variables globales + helper scrollbar oculto */}
+      {/* Helper scrollbar oculto. Hasta aquí vivía un bloque `:root { ... }`
+          con los valores quemados de la paleta 2 — styled-jsx transforma
+          `:root` en el selector compuesto `.jsx-HASH:root`, que nunca
+          coincide con nada porque <html> jamás recibe esa clase de scope.
+          Era CSS muerto (confirmado en el navegador: la variable activa
+          siempre fue la de la paleta real), no una paleta fija a propósito. */}
       <style jsx>{`
-        :root {
-          --background-color: #1c1c2e;
-          --secondary-background-color: #28283c;
-          --white-color: #ffffff;
-          --text-color: #f4f4f9;
-          --muted-color: #d1d1e0;
-          --primary-color: #ff6f61;
-          --accent-color: #f39c12;
-          --card-bg-color: #28283c;
-        }
         .no-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
