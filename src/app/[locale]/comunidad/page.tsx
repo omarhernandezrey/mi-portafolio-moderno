@@ -103,7 +103,7 @@ export default async function ComunidadPage({ params }: Props) {
             alt={isEn ? pageHeroImages.comunidad.alt.en : pageHeroImages.comunidad.alt.es}
             sizes="(max-width: 640px) 100vw, 672px"
             priority
-            className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[28px] border border-white/10 shadow-2xl mb-10"
+            className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-[28px] border border-text-muted/15 shadow-2xl mb-10"
           />
         </ScrollReveal>
 
