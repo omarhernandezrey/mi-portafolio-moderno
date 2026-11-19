@@ -298,7 +298,7 @@ export default function SubscribersPage() {
                         onClick={() => handleDelete(s.id)}
                         disabled={deleting === s.id}
                         aria-label={`Eliminar ${s.email}`}
-                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-admin-line bg-white/[0.03] p-0 text-admin-danger/60 transition-colors hover:bg-admin-danger/10 hover:text-admin-danger disabled:opacity-50"
+                        className="flex h-11 w-11 items-center justify-center rounded-lg border border-admin-line bg-white/[0.03] p-0 text-admin-danger/60 transition-colors hover:bg-admin-danger/10 hover:text-admin-danger disabled:opacity-50"
                       >
                         <Trash2 size={14} />
                       </button>

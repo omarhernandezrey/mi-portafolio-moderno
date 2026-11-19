@@ -213,7 +213,7 @@ export default async function AdminLeadsPage({
                 </span>
                 <Link
                   href={`/admin/leads/${lead.id}`}
-                  className="inline-flex items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-3xs font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
+                  className="inline-flex min-h-11 items-center gap-1 rounded-lg border border-admin-line bg-white/[0.03] px-3 py-1.5 text-3xs font-bold text-text-muted transition-colors hover:border-primary/30 hover:text-primary"
                 >
                   Ver perfil
                   <ChevronRight size={13} />

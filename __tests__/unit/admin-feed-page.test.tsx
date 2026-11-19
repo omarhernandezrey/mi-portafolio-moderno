@@ -49,16 +49,19 @@ describe('AdminFeedPage — estado de error (T-28)', () => {
     const jsx = await AdminFeedPage({ searchParams: searchParams() });
     render(jsx);
 
+    // T-29 añadió una variante móvil junto a la tabla de escritorio: ambas
+    // responden al mismo `cargaFallida`, así que el estado de error aparece
+    // dos veces en el DOM (una por variante, una oculta por CSS vía lg:*).
     expect(screen.queryByText('Sin publicaciones')).not.toBeInTheDocument();
-    expect(screen.getByText('No se pudo cargar esta información')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Reintentar' })).toBeInTheDocument();
+    expect(screen.getAllByText('No se pudo cargar esta información')).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: 'Reintentar' })).toHaveLength(2);
   });
 
   it('sin publicaciones de verdad (sin error): sigue mostrando "Sin publicaciones"', async () => {
     const jsx = await AdminFeedPage({ searchParams: searchParams() });
     render(jsx);
 
-    expect(screen.getByText('Sin publicaciones')).toBeInTheDocument();
+    expect(screen.getAllByText('Sin publicaciones')).toHaveLength(2);
     expect(screen.queryByText('No se pudo cargar esta información')).not.toBeInTheDocument();
   });
 });
