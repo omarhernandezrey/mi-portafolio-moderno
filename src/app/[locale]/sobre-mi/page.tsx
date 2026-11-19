@@ -268,7 +268,7 @@ export default async function SobreMiPage({ params }: Props) {
               </div>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.1}>
-              <h1 className="font-display italic text-6xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]">
+              <h1 className="font-display italic text-6xl md:text-8xl font-medium text-text-main tracking-tight leading-[0.95]">
                 Omar<br />
                 <span className="text-primary">Hernández Rey</span>
               </h1>
@@ -296,7 +296,7 @@ export default async function SobreMiPage({ params }: Props) {
                 </Link>
                 <Link
                   href="/#projects"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 text-white-custom font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-sm"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-card-bg text-text-main font-bold rounded-lg border border-text-muted/15 hover:bg-text-muted/10 transition-colors text-sm"
                 >
                   {isEn ? 'View Projects' : 'Ver Proyectos'}
                 </Link>
@@ -307,27 +307,27 @@ export default async function SobreMiPage({ params }: Props) {
           {/* Panel lateral — datos rápidos, asimetría deliberada */}
           <div className="hidden lg:block lg:col-span-3 lg:col-start-10">
             <ScrollReveal immediate delay={0.3} y={16}>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5 sticky top-32">
+              <div className="rounded-2xl border border-text-muted/15 bg-card-bg p-6 space-y-5 sticky top-32">
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
                   </span>
-                  <span className="text-sm font-semibold text-white-custom">{isEn ? 'Available for new projects' : 'Disponible para nuevos proyectos'}</span>
+                  <span className="text-sm font-semibold text-text-main">{isEn ? 'Available for new projects' : 'Disponible para nuevos proyectos'}</span>
                 </div>
-                <div className="h-px w-full bg-white/10" />
+                <div className="h-px w-full bg-text-muted/15" />
                 <dl className="space-y-3 text-sm">
                   <div className="flex items-center justify-between gap-3">
                     <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Experience' : 'Experiencia'}</dt>
-                    <dd className="text-white-custom">{isEn ? '3+ years' : '3+ años'}</dd>
+                    <dd className="text-text-main">{isEn ? '3+ years' : '3+ años'}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Education' : 'Educación'}</dt>
-                    <dd className="text-white-custom text-right">{isEn ? 'Software Eng. (2026)' : 'Ing. Software (2026)'}</dd>
+                    <dd className="text-text-main text-right">{isEn ? 'Software Eng. (2026)' : 'Ing. Software (2026)'}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt className="font-mono-label text-[0.6rem] text-text-muted">{isEn ? 'Zone' : 'Zona'}</dt>
-                    <dd className="text-white-custom text-right">{isEn ? 'CO · Remote US' : 'CO · Remoto USA'}</dd>
+                    <dd className="text-text-main text-right">{isEn ? 'CO · Remote US' : 'CO · Remoto USA'}</dd>
                   </div>
                 </dl>
               </div>
@@ -342,7 +342,7 @@ export default async function SobreMiPage({ params }: Props) {
             alt={isEn ? pageHeroImages.sobreMi.alt.en : pageHeroImages.sobreMi.alt.es}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
             priority
-            className="w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl"
+            className="w-full aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-canvas border border-text-muted/10 shadow-2xl"
           />
         </ScrollReveal>
 
@@ -354,13 +354,13 @@ export default async function SobreMiPage({ params }: Props) {
               <Briefcase size={12} />
               {isEn ? '3+ Years of Experience' : '3+ Años de Experiencia'}
             </div>
-            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight">
               {isEn ? <>Professional<br />Experience</> : <>Experiencia<br />Profesional</>}
             </h2>
           </div>
           <div className="grid gap-8">
-            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 md:p-10">
-              <h3 className="text-2xl font-black text-white-custom italic mb-4">
+            <div className="bg-card-bg border border-text-muted/15 rounded-2xl p-8 md:p-10">
+              <h3 className="text-2xl font-black text-text-main italic mb-4">
                 {isEn ? 'Full Stack Web Developer' : 'Desarrollador Web Full Stack'}
               </h3>
               <p className="text-text-muted leading-relaxed mb-6">
@@ -370,14 +370,14 @@ export default async function SobreMiPage({ params }: Props) {
               </p>
               <div className="flex flex-wrap gap-3">
                 {['React', 'Next.js', 'TypeScript', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind CSS', 'Prisma ORM'].map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-text-muted">
+                  <span key={tech} className="px-3 py-1.5 bg-card-bg border border-text-muted/15 rounded-full text-xs font-mono text-text-muted">
                     {tech}
                   </span>
                 ))}
               </div>
             </div>
-            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 md:p-10">
-              <h3 className="text-2xl font-black text-white-custom italic mb-4">
+            <div className="bg-card-bg border border-text-muted/15 rounded-2xl p-8 md:p-10">
+              <h3 className="text-2xl font-black text-text-main italic mb-4">
                 {isEn ? 'Software Developer — Tivit Colombia' : 'Software Developer — Tivit Colombia'}
               </h3>
               <p className="text-xs text-text-muted/60 font-mono mb-4">
@@ -389,8 +389,8 @@ export default async function SobreMiPage({ params }: Props) {
                   : 'Participé en el equipo de ingeniería en el desarrollo y mantenimiento de aplicaciones de software, colaborando en el ciclo completo de desarrollo junto a desarrolladores senior.'}
               </p>
             </div>
-            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 md:p-10">
-              <h3 className="text-2xl font-black text-white-custom italic mb-4">
+            <div className="bg-card-bg border border-text-muted/15 rounded-2xl p-8 md:p-10">
+              <h3 className="text-2xl font-black text-text-main italic mb-4">
                 {isEn ? 'Projects for Remote US Clients' : 'Proyectos para Clientes Remotos en USA'}
               </h3>
               <p className="text-text-muted leading-relaxed mb-6">
@@ -400,7 +400,7 @@ export default async function SobreMiPage({ params }: Props) {
               </p>
               <div className="flex flex-wrap gap-3">
                 {['Git', 'GitHub', 'Jira', 'Slack', 'Vercel', 'REST APIs', 'JWT Auth', 'Zod'].map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-text-muted">
+                  <span key={tech} className="px-3 py-1.5 bg-card-bg border border-text-muted/15 rounded-full text-xs font-mono text-text-muted">
                     {tech}
                   </span>
                 ))}
@@ -418,17 +418,17 @@ export default async function SobreMiPage({ params }: Props) {
               <GraduationCap size={12} />
               {isEn ? 'Academic Background' : 'Formación Académica'}
             </div>
-            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight">
               {isEn ? 'Education' : 'Educación'}
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             {educationData.map((edu, i) => (
-              <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col gap-4">
+              <div key={i} className="bg-card-bg border border-text-muted/15 rounded-2xl p-6 md:p-8 flex flex-col gap-4">
                 <div className="text-3xs font-black uppercase tracking-widest text-primary/60 italic">
                   {edu.category}
                 </div>
-                <h3 className="text-xl font-black text-white-custom italic leading-tight">
+                <h3 className="text-xl font-black text-text-main italic leading-tight">
                   {edu.title}
                 </h3>
                 <p className="text-sm font-mono text-primary/80">
@@ -475,22 +475,22 @@ export default async function SobreMiPage({ params }: Props) {
               <Code2 size={12} />
               {isEn ? 'Core Stack' : 'Stack Principal'}
             </div>
-            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight">
               {isEn ? <>Core<br />Technologies</> : <>Tecnologías<br />Principales</>}
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             {coreSkills.map((skill, i) => (
-              <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 flex flex-col gap-3">
+              <div key={i} className="bg-card-bg border border-text-muted/15 rounded-2xl p-6 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-black text-white-custom italic">
+                  <h3 className="text-lg font-black text-text-main italic">
                     {skill.name}
                   </h3>
                   <span className="text-2xl font-black italic" style={{ color: skill.colorHex }}>
                     {skill.percentage}
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-white/5 overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-card-bg overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-700"
                     style={{
@@ -507,7 +507,7 @@ export default async function SobreMiPage({ params }: Props) {
           </div>
           <div className="flex flex-wrap gap-3 pt-4">
             {OMAR_PROFILE.knowsAbout.map((tech) => (
-              <span key={tech} className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm font-mono text-text-muted hover:border-primary/30 hover:text-white-custom transition-colors">
+              <span key={tech} className="px-4 py-2 bg-card-bg border border-text-muted/15 rounded-full text-sm font-mono text-text-muted hover:border-primary/30 hover:text-text-main transition-colors">
                 {tech}
               </span>
             ))}
@@ -523,15 +523,15 @@ export default async function SobreMiPage({ params }: Props) {
               <Sparkles size={12} />
               {isEn ? 'Featured Projects' : 'Proyectos Destacados'}
             </div>
-            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight">
               {isEn ? 'Projects' : 'Proyectos'}
             </h2>
           </div>
           <div className="grid gap-8">
             {projects.map((project, i) => (
-              <div key={i} className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-10 space-y-6">
+              <div key={i} className="bg-card-bg border border-text-muted/15 rounded-2xl p-6 md:p-10 space-y-6">
                 <div className="space-y-3">
-                  <h3 className="text-2xl font-black text-white-custom italic leading-tight">
+                  <h3 className="text-2xl font-black text-text-main italic leading-tight">
                     {project.title}
                   </h3>
                   <p className="text-text-muted leading-relaxed">
@@ -559,7 +559,7 @@ export default async function SobreMiPage({ params }: Props) {
                     href={project.repository}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 text-white-custom text-sm font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-card-bg text-text-main text-sm font-bold rounded-lg border border-text-muted/15 hover:bg-text-muted/10 transition-colors"
                   >
                     {isEn ? 'Source Code' : 'Código Fuente'}
                     <ExternalLink size={14} />
@@ -571,7 +571,7 @@ export default async function SobreMiPage({ params }: Props) {
           <div className="text-center pt-2">
             <Link
               href="/#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 text-white-custom font-bold rounded-lg border border-white/10 hover:bg-white/10 transition-colors text-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-card-bg text-text-main font-bold rounded-lg border border-text-muted/15 hover:bg-text-muted/10 transition-colors text-sm"
             >
               {isEn ? 'View all projects' : 'Ver todos los proyectos'}
               <ArrowRight size={18} />
@@ -588,7 +588,7 @@ export default async function SobreMiPage({ params }: Props) {
               <Wrench size={12} />
               {isEn ? 'Services' : 'Servicios'}
             </div>
-            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight">
               {isEn ? <>What I Can<br />Do<br />For You</> : <>Lo Que<br />Puedo Hacer<br />Por Ti</>}
             </h2>
           </div>
@@ -597,13 +597,13 @@ export default async function SobreMiPage({ params }: Props) {
               <Link
                 key={i}
                 href={service.href}
-                className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 hover:border-primary/30 hover:bg-white/[0.05] transition-all group"
+                className="bg-card-bg border border-text-muted/15 rounded-2xl p-6 hover:border-primary/30 hover:bg-primary/5 transition-all group"
               >
                 <div className="flex flex-col gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
                     {service.icon}
                   </div>
-                  <h3 className="text-lg font-black text-white-custom italic group-hover:text-primary transition-colors">
+                  <h3 className="text-lg font-black text-text-main italic group-hover:text-primary transition-colors">
                     {service.name}
                   </h3>
                   <p className="text-sm text-text-muted leading-relaxed">
@@ -637,12 +637,12 @@ export default async function SobreMiPage({ params }: Props) {
               <BookOpen size={12} />
               {isEn ? 'Journey' : 'Trayectoria'}
             </div>
-            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
+            <h2 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight">
               {isEn ? <>My Path in<br />Development</> : <>Mi Camino en<br />el Desarrollo</>}
             </h2>
           </div>
           <div className="relative">
-            <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-white/10" />
+            <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-text-muted/15" />
             <div className="space-y-12">
               {timeline.map((event, i) => (
                 <div key={i} className="relative pl-16 md:pl-20">
@@ -651,7 +651,7 @@ export default async function SobreMiPage({ params }: Props) {
                     <span className="text-xs font-mono text-primary font-bold">
                       {event.year}
                     </span>
-                    <h3 className="text-xl font-black text-white-custom italic">
+                    <h3 className="text-xl font-black text-text-main italic">
                       {event.title}
                     </h3>
                     <p className="text-text-muted leading-relaxed max-w-2xl">
@@ -670,7 +670,7 @@ export default async function SobreMiPage({ params }: Props) {
         <section id="contacto" className="space-y-12">
           <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-3xl p-10 md:p-16 text-center space-y-8">
             <div className="space-y-4">
-              <h2 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight">
+              <h2 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight">
                 {isEn ? <>Let&apos;s Work<br />Together?</> : <>¿Trabajamos<br />Juntos?</>}
               </h2>
               <p className="text-lg text-text-muted max-w-xl mx-auto leading-relaxed">
@@ -689,7 +689,7 @@ export default async function SobreMiPage({ params }: Props) {
               </Link>
               <Link
                 href="/calculadora"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white/5 text-white-custom font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-colors text-base"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-card-bg text-text-main font-bold rounded-xl border border-text-muted/15 hover:bg-text-muted/10 transition-colors text-base"
               >
                 {isEn ? 'Calculate budget' : 'Calcular presupuesto'}
                 <ArrowRight size={20} />
@@ -699,34 +699,34 @@ export default async function SobreMiPage({ params }: Props) {
               <a href={`tel:${OMAR_PROFILE.telephone}`} className="hover:text-primary transition-colors">
                 {OMAR_PROFILE.telephone}
               </a>
-              <span className="text-white/20">|</span>
+              <span className="text-text-muted/30">|</span>
               <a href={`mailto:contacto@omarhernandezrey.com`} className="hover:text-primary transition-colors">
                 contacto@omarhernandezrey.com
               </a>
-              <span className="text-white/20">|</span>
+              <span className="text-text-muted/30">|</span>
               <span>{OMAR_PROFILE.addressLocality}, {OMAR_PROFILE.addressCountry}</span>
             </div>
             <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 pt-4">
               <Link href="/blog" className="text-sm text-text-muted/60 hover:text-primary transition-colors">
                 {isEn ? 'Technical Blog' : 'Blog Técnico'}
               </Link>
-              <span className="text-white/20">·</span>
+              <span className="text-text-muted/30">·</span>
               <Link href="/servicios" className="text-sm text-text-muted/60 hover:text-primary transition-colors">
                 {isEn ? 'Services' : 'Servicios'}
               </Link>
-              <span className="text-white/20">·</span>
+              <span className="text-text-muted/30">·</span>
               <Link href="/calculadora" className="text-sm text-text-muted/60 hover:text-primary transition-colors">
                 {isEn ? 'Calculator' : 'Calculadora'}
               </Link>
-              <span className="text-white/20">·</span>
+              <span className="text-text-muted/30">·</span>
               <Link href="/#projects" className="text-sm text-text-muted/60 hover:text-primary transition-colors">
                 {isEn ? 'Projects' : 'Proyectos'}
               </Link>
-              <span className="text-white/20">·</span>
+              <span className="text-text-muted/30">·</span>
               <a href={OMAR_PROFILE.sameAs[0]} target="_blank" rel="noopener noreferrer" className="text-sm text-text-muted/60 hover:text-primary transition-colors">
                 GitHub
               </a>
-              <span className="text-white/20">·</span>
+              <span className="text-text-muted/30">·</span>
               <a href={OMAR_PROFILE.sameAs[1]} target="_blank" rel="noopener noreferrer" className="text-sm text-text-muted/60 hover:text-primary transition-colors">
                 LinkedIn
               </a>
