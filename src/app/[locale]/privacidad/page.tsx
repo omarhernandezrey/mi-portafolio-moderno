@@ -37,7 +37,7 @@ export default async function PrivacidadPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
 
-      <main className="flex-1 max-w-[60rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
+      <main className="flex-1 w-full min-w-0 max-w-[60rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
 
         {/* Document Header */}
         <header className="space-y-8 border-b border-text-muted/10 pb-16">

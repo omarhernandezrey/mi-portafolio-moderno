@@ -243,7 +243,7 @@ export default async function FAQPage({ params }: Props) {
   return (
     <SmoothScrollProvider>
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
-      <main className="flex-1 py-32 px-[var(--grid-margin)]">
+      <main className="flex-1 w-full min-w-0 py-32 px-[var(--grid-margin)]">
         <JsonLd data={faqSchema} />
         <JsonLd data={breadcrumbSchema} />
 

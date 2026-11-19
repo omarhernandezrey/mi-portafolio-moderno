@@ -102,7 +102,7 @@ export default function RecursosContent() {
     <SmoothScrollProvider>
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30">
 
-      <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16 md:space-y-32">
+      <main className="flex-1 w-full min-w-0 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16 md:space-y-32">
 
         {/* Header Architecture */}
         <header className="relative overflow-hidden max-w-4xl mx-auto text-center space-y-8">

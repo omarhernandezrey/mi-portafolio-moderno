@@ -247,7 +247,7 @@ export default async function SobreMiPage({ params }: Props) {
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={personSchema} />
 
-      <main className="flex-1 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-16 space-y-24 md:space-y-32">
+      <main className="flex-1 w-full min-w-0 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-16 space-y-24 md:space-y-32">
 
         {/* ===== HERO — grid editorial asimétrico ===== */}
         <header className="relative overflow-hidden grid grid-cols-12 gap-[var(--grid-gutter)]">

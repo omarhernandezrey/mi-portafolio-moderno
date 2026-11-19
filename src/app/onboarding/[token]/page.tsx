@@ -158,7 +158,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
   return (
     <div className="min-h-screen bg-[var(--background-color)] text-[var(--text-color)] flex flex-col">
       
-      <main className="flex-1 container mx-auto px-4 pt-32 pb-20 max-w-4xl">
+      <main className="flex-1 w-full min-w-0 container mx-auto px-4 pt-32 pb-20 max-w-4xl">
         {/* Progress Bar */}
         <div className="flex justify-between items-center mb-12 relative">
           <div className="absolute top-1/2 left-0 w-full h-0.5 bg-primary/10 -z-10"></div>

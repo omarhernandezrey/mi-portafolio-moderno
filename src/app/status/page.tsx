@@ -43,7 +43,7 @@ export default function StatusPage() {
   return (
     <div className="min-h-screen bg-background text-text-main flex flex-col selection:bg-primary/30 font-main">
       
-      <main className="flex-1 max-w-[70rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
+      <main className="flex-1 w-full min-w-0 max-w-[70rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
         
         {/* Monitoring Header */}
         <header className="text-center space-y-6">
@@ -229,14 +229,14 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
   
   return (
     <div className="bg-card-bg/40 rounded-canvas border border-text-muted/10 p-8 shadow-xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden">
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex flex-wrap justify-between items-start gap-x-4 gap-y-3 mb-6">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-card-bg border border-text-muted/15 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
             {icon}
           </div>
           <h4 className="font-black text-text-main italic tracking-tight">{name}</h4>
         </div>
-        <div className={`flex items-center gap-2 text-4xs font-black uppercase px-3 py-1.5 rounded-full border transition-all ${
+        <div className={`flex items-center gap-2 text-4xs font-black uppercase px-3 py-1.5 rounded-full border transition-all shrink-0 ${
           isOperational ? 'bg-primary/5 text-primary border-primary/20' : 'bg-accent/5 text-accent border-accent/20'
         }`}>
           <div className={`h-1.5 w-1.5 rounded-full ${isOperational ? 'bg-primary animate-pulse' : 'bg-accent shadow-lg shadow-accent/50'}`} />
