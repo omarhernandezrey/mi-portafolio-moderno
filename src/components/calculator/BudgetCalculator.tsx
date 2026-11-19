@@ -144,7 +144,7 @@ export default function BudgetCalculator() {
           </div>
         </HeroParallax>
         <ScrollReveal immediate>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-canvas sm:rounded-[40px] border border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-8 bg-card-bg/40 p-6 sm:p-10 rounded-canvas sm:rounded-[40px] border border-text-muted/10 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
               <Wallet size={160} className="rotate-12" />
             </div>
@@ -152,21 +152,21 @@ export default function BudgetCalculator() {
             <div className="relative z-10 space-y-4">
               <div className="font-mono-label flex items-center gap-2 text-primary text-[0.65rem]">
                 <span className="w-8 h-px bg-primary/30" />
-                Financial Estimator
+                {lang === 'es' ? 'Estimador Financiero' : 'Financial Estimator'}
               </div>
-              <h1 className="font-display italic text-4xl font-medium text-white-custom tracking-tight leading-tight">
-                {lang === 'es' ? 'Calculadora de Presupuesto' : lang === 'en' ? 'Budget Calculator' : 'Calculadora de Orçamento'}
+              <h1 className="font-display italic text-4xl font-medium text-text-main tracking-tight leading-tight">
+                {lang === 'es' ? 'Calculadora de Presupuesto' : 'Budget Calculator'}
               </h1>
               <p className="text-text-muted text-sm font-medium max-w-md opacity-70">
-                {lang === 'es' ? 'Precisión algorítmica para determinar la inversión necesaria en tu próximo hito digital.' : lang === 'en' ? 'Algorithmic precision to determine the necessary investment for your next digital milestone.' : 'Precisão algorítmica para determinar o investimento necessário para o seu próximo marco digital.'}
+                {lang === 'es' ? 'Precisión algorítmica para determinar la inversión necesaria en tu próximo hito digital.' : 'Algorithmic precision to determine the necessary investment for your next digital milestone.'}
               </p>
             </div>
 
-            <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-canvas border border-white/5 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
+            <div className="text-right relative z-10 bg-background/50 p-4 sm:p-6 rounded-[24px] sm:rounded-canvas border border-text-muted/10 shadow-inner w-full md:min-w-[200px] md:w-auto group-hover:border-primary/20 transition-all">
               <span className="text-4xs font-black uppercase tracking-[0.2em] text-primary opacity-60">
-                {lang === 'es' ? 'Presupuesto Base' : lang === 'en' ? 'Estimated Base' : 'Orçamento Base'}
+                {lang === 'es' ? 'Presupuesto Base' : 'Estimated Base'}
               </span>
-              <div className="text-4xl sm:text-5xl font-black text-white-custom tracking-tighter mt-1 flex items-baseline justify-end gap-2">
+              <div className="text-4xl sm:text-5xl font-black text-text-main tracking-tighter mt-1 flex items-baseline justify-end gap-2">
                 <span className="text-xl text-primary opacity-40">$</span>
                 {numberFormatter.format(currentBudget)}
                 <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">{currencyLabel}</span>
@@ -183,13 +183,13 @@ export default function BudgetCalculator() {
           alt={lang === 'en' ? pageHeroImages.calculadora.alt.en : pageHeroImages.calculadora.alt.es}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 896px"
           priority
-          className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl"
+          className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-text-muted/10 shadow-2xl"
         />
       </ScrollReveal>
 
       {/* Progress Architecture */}
       <div className="px-4 sm:px-10">
-        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+        <div className="h-1.5 w-full bg-text-muted/10 rounded-full overflow-hidden border border-text-muted/10">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
@@ -203,7 +203,7 @@ export default function BudgetCalculator() {
         </div>
       </div>
 
-      <div className="relative min-h-[300px] sm:min-h-[500px] overflow-hidden rounded-canvas sm:rounded-[48px] bg-card-bg p-6 sm:p-10 md:p-16 shadow-2xl border border-white/5 backdrop-blur-md">
+      <div className="relative min-h-[300px] sm:min-h-[500px] overflow-hidden rounded-canvas sm:rounded-[48px] bg-card-bg p-6 sm:p-10 md:p-16 shadow-2xl border border-text-muted/10 backdrop-blur-md">
         <AnimatePresence mode="wait">
           {!showLeadForm ? (
             <motion.div
@@ -218,10 +218,12 @@ export default function BudgetCalculator() {
                   0{currentStep + 1}
                 </div>
                 <div>
-                  <h2 className="font-display italic text-xl sm:text-2xl font-medium text-white-custom tracking-tight leading-tight">
+                  <h2 className="font-display italic text-xl sm:text-2xl font-medium text-text-main tracking-tight leading-tight">
                     {currentStepData.title[lang]}
                   </h2>
-                  <p className="text-text-muted text-xs font-medium opacity-50 mt-1 uppercase tracking-widest">Paso obligatorio de calificación</p>
+                  <p className="text-text-muted text-xs font-medium opacity-50 mt-1 uppercase tracking-widest">
+                    {lang === 'es' ? 'Paso obligatorio de calificación' : 'Mandatory qualification step'}
+                  </p>
                 </div>
               </div>
 
@@ -238,17 +240,17 @@ export default function BudgetCalculator() {
                       className={`group relative flex flex-col items-start gap-3 sm:gap-4 rounded-[24px] sm:rounded-canvas border-2 p-5 sm:p-8 text-left transition-all duration-300 ${
                         isSelected 
                           ? 'border-primary bg-primary/5 shadow-2xl shadow-primary/5' 
-                          : 'border-white/5 bg-background/30 hover:border-white/20 hover:bg-background/50'
+                          : 'border-text-muted/10 bg-background/30 hover:border-text-muted/25 hover:bg-background/50'
                       }`}
                     >
                       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-all duration-500 ${
-                        isSelected ? 'border-primary bg-primary text-background' : 'border-white/10 text-white-custom/20'
+                        isSelected ? 'border-primary bg-primary text-background' : 'border-text-muted/20 text-text-muted/40'
                       }`}>
                         {isSelected ? <Check size={18} strokeWidth={3} /> : <Target size={18} />}
                       </div>
-                      
+
                       <div className="space-y-2">
-                        <div className="font-black text-white-custom tracking-tight italic group-hover:text-primary transition-colors">{option.label[lang]}</div>
+                        <div className="font-black text-text-main tracking-tight italic group-hover:text-primary transition-colors">{option.label[lang]}</div>
                         {option.description && (
                           <div className="text-2xs text-text-muted/60 font-medium leading-relaxed italic">{option.description[lang]}</div>
                         )}
@@ -264,11 +266,11 @@ export default function BudgetCalculator() {
                 })}
               </div>
 
-              <div className="flex justify-between items-center pt-10 border-t border-white/5">
+              <div className="flex justify-between items-center pt-10 border-t border-text-muted/10">
                 <button
                   onClick={prevStep}
                   disabled={currentStep === 0}
-                  className="flex items-center gap-3 rounded-2xl px-6 py-3 text-3xs font-black uppercase tracking-widest text-text-muted transition-all hover:text-white-custom disabled:opacity-0"
+                  className="flex items-center gap-3 rounded-2xl px-6 py-3 text-3xs font-black uppercase tracking-widest text-text-muted transition-all hover:text-text-main disabled:opacity-0"
                 >
                   <ArrowLeft size={16} />
                   {lang === 'es' ? 'Anterior' : lang === 'en' ? 'Previous' : 'Anterior'}
@@ -296,7 +298,7 @@ export default function BudgetCalculator() {
                 </div>
               </div>
               <div className="space-y-4">
-                <h2 className="font-display italic text-4xl font-medium text-white-custom tracking-tight">
+                <h2 className="font-display italic text-4xl font-medium text-text-main tracking-tight">
                   {lang === 'es' ? 'Estrategia Generada' : 'Strategy Generated'}
                 </h2>
                 <p className="max-w-md text-text-muted text-sm font-medium leading-relaxed italic opacity-70">
@@ -324,9 +326,9 @@ export default function BudgetCalculator() {
             >
               <div className="text-center space-y-4">
                 <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-                  Última Fase: Exportación
+                  {lang === 'es' ? 'Última Fase: Exportación' : 'Final Phase: Export'}
                 </div>
-                <h2 className="font-display italic text-3xl font-medium text-white-custom tracking-tight leading-tight">
+                <h2 className="font-display italic text-3xl font-medium text-text-main tracking-tight leading-tight">
                   {lang === 'es' ? 'Recibe tu Propuesta Formal' : 'Receive your Formal Proposal'}
                 </h2>
                 <p className="text-text-muted text-sm font-medium opacity-60">
@@ -336,34 +338,34 @@ export default function BudgetCalculator() {
 
               <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Nombre Corporativo</label>
+                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">{lang === 'es' ? 'Nombre Corporativo' : 'Corporate Name'}</label>
                   <input
                     required
                     type="text"
                     value={visitorInfo.name}
                     onChange={(e) => setVisitorInfo({ ...visitorInfo, name: e.target.value })}
-                    className="w-full rounded-[24px] border border-white/5 bg-background/50 px-6 py-4 text-sm text-white-custom outline-none focus:border-primary/30 shadow-inner"
+                    className="w-full rounded-[24px] border border-text-muted/10 bg-background/50 px-6 py-4 text-sm text-text-main outline-none focus:border-primary/30 shadow-inner"
                     placeholder="Omar Hernandez"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Email de Negocio</label>
+                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">{lang === 'es' ? 'Email de Negocio' : 'Business Email'}</label>
                   <input
                     required
                     type="email"
                     value={visitorInfo.email}
                     onChange={(e) => setVisitorInfo({ ...visitorInfo, email: e.target.value })}
-                    className="w-full rounded-[24px] border border-white/5 bg-background/50 px-6 py-4 text-sm text-white-custom outline-none focus:border-primary/30 shadow-inner"
+                    className="w-full rounded-[24px] border border-text-muted/10 bg-background/50 px-6 py-4 text-sm text-text-main outline-none focus:border-primary/30 shadow-inner"
                     placeholder="ejemplo@negocio.com"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">Organización / Proyecto</label>
+                  <label className="text-4xs font-black uppercase text-text-muted/40 tracking-[0.2em] ml-4">{lang === 'es' ? 'Organización / Proyecto' : 'Organization / Project'}</label>
                   <input
                     type="text"
                     value={visitorInfo.company}
                     onChange={(e) => setVisitorInfo({ ...visitorInfo, company: e.target.value })}
-                    className="w-full rounded-[24px] border border-white/5 bg-background/50 px-6 py-4 text-sm text-white-custom outline-none focus:border-primary/30 shadow-inner"
+                    className="w-full rounded-[24px] border border-text-muted/10 bg-background/50 px-6 py-4 text-sm text-text-main outline-none focus:border-primary/30 shadow-inner"
                     placeholder="Mi Startup S.A.S"
                   />
                 </div>
@@ -392,7 +394,9 @@ export default function BudgetCalculator() {
                       </>
                     )}
                   </button>
-                  <p className="text-center text-[8px] text-text-muted/30 uppercase font-black tracking-widest mt-6">Secure Cloud Processing Protocol Enabled</p>
+                  <p className="text-center text-[8px] text-text-muted/30 uppercase font-black tracking-widest mt-6">
+                    {lang === 'es' ? 'Protocolo de Procesamiento Seguro en la Nube Activado' : 'Secure Cloud Processing Protocol Enabled'}
+                  </p>
                 </div>
               </form>
             </motion.div>
@@ -400,7 +404,7 @@ export default function BudgetCalculator() {
         </AnimatePresence>
       </div>
       
-      <div className="bg-white/5 border border-white/5 p-8 rounded-canvas flex items-start gap-4 max-w-2xl mx-auto italic">
+      <div className="bg-card-bg border border-text-muted/10 p-8 rounded-canvas flex items-start gap-4 max-w-2xl mx-auto italic">
         <Info className="text-primary shrink-0 mt-1" size={20} />
         <p className="text-2xs text-text-muted font-medium leading-relaxed opacity-60">
           {lang === 'es'
