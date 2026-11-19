@@ -40,7 +40,7 @@ beforeEach(() => {
 
 describe('SubscribersPage — menú accesible y borrado con ConfirmDialog (T-30)', () => {
   it('Escape cierra el menú y devuelve el foco al botón que lo abrió', async () => {
-    mockAdminFetch.mockResolvedValueOnce([subscriber()]);
+    mockAdminFetch.mockResolvedValueOnce({ data: [subscriber()], counts: { total: 1, confirmed: 1, pending: 0, unsubscribed: 0 } });
     render(<SubscribersPage />);
 
     const disparador = await screen.findByRole('button', { name: 'Más acciones para ada@example.com' });
@@ -53,7 +53,7 @@ describe('SubscribersPage — menú accesible y borrado con ConfirmDialog (T-30)
   });
 
   it('un clic fuera del menú lo cierra', async () => {
-    mockAdminFetch.mockResolvedValueOnce([subscriber()]);
+    mockAdminFetch.mockResolvedValueOnce({ data: [subscriber()], counts: { total: 1, confirmed: 1, pending: 0, unsubscribed: 0 } });
     render(<SubscribersPage />);
 
     fireEvent.click(await screen.findByRole('button', { name: 'Más acciones para ada@example.com' }));
@@ -64,7 +64,7 @@ describe('SubscribersPage — menú accesible y borrado con ConfirmDialog (T-30)
   });
 
   it('borrar desde el menú abre el ConfirmDialog; confirmar manda el DELETE', async () => {
-    mockAdminFetch.mockResolvedValueOnce([subscriber()]);
+    mockAdminFetch.mockResolvedValueOnce({ data: [subscriber()], counts: { total: 1, confirmed: 1, pending: 0, unsubscribed: 0 } });
     render(<SubscribersPage />);
 
     fireEvent.click(await screen.findByRole('button', { name: 'Más acciones para ada@example.com' }));
