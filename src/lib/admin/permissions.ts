@@ -105,16 +105,16 @@ export const NAV_ITEMS: ReadonlyArray<{
   group: 'core' | 'ops' | 'system';
   area: 'portfolio' | 'negocio';
 }> = [
-  { label: 'Resumen', href: '/admin', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
+  { label: 'Resumen del portafolio', href: '/admin', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Proyectos', href: '/admin/proyectos', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Skills', href: '/admin/skills', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Educación', href: '/admin/educacion', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
   { label: 'Contenido', href: '/admin/contenido', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'portfolio' },
-  { label: 'Resumen', href: '/admin/negocio', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
+  { label: 'Resumen de negocio', href: '/admin/negocio', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
   { label: 'Leads', href: '/admin/leads', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
   { label: 'Tickets', href: '/admin/tickets', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
   { label: 'Comunidad', href: '/admin/feed', roles: ['owner', 'assistant', 'viewer'], group: 'core', area: 'negocio' },
-  { label: 'Timer', href: '/admin/timer', roles: ['owner', 'assistant'], group: 'ops', area: 'negocio' },
+  { label: 'Cronómetro', href: '/admin/timer', roles: ['owner', 'assistant'], group: 'ops', area: 'negocio' },
   { label: 'Facturación', href: '/admin/invoices', roles: ['owner'], group: 'ops', area: 'negocio' },
   { label: 'Reportes', href: '/admin/reports/time', roles: ['owner'], group: 'ops', area: 'negocio' },
   { label: 'Suscriptores', href: '/admin/subscribers', roles: ['owner'], group: 'ops', area: 'negocio' },
@@ -122,5 +122,5 @@ export const NAV_ITEMS: ReadonlyArray<{
   { label: 'Logs de API', href: '/admin/logs', roles: ['owner'], group: 'system', area: 'negocio' },
   { label: 'Auditoría', href: '/admin/audit', roles: ['owner'], group: 'system', area: 'negocio' },
   { label: 'Seguridad', href: '/admin/security', roles: ['owner'], group: 'system', area: 'negocio' },
-  { label: 'Docs', href: '/admin/docs', roles: ['owner', 'assistant'], group: 'system', area: 'negocio' },
+  { label: 'Ayuda', href: '/admin/docs', roles: ['owner', 'assistant'], group: 'system', area: 'negocio' },
 ];

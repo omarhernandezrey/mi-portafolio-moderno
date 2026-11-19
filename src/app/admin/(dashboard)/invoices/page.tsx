@@ -78,7 +78,7 @@ export default async function AdminInvoicesPage() {
       <PageHeader
         overline="Finanzas"
         title="Facturación"
-        description="Gestión de facturas, cobros y documentos."
+        description="Qué se ha facturado, qué sigue sin cobrar y el PDF de cada factura."
         actions={
           <AdminButtonLink
             href="/admin/invoices/new"

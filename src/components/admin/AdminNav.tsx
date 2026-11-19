@@ -105,7 +105,10 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
   // corresponde, sin desincronizarse.
   const itemActivo = visibleItems.find((item) => esRutaActiva(item.href));
   const areaActiva: (typeof AREAS)[number]['id'] = itemActivo?.area === 'negocio' ? 'negocio' : 'portfolio';
-  const itemsDelArea = visibleItems.filter((item) => item.area === areaActiva);
+  // T-32: el grupo «Sistema» (webhooks, logs, auditoría, seguridad, ayuda)
+  // estaba declarado `area: 'negocio'` e invisible desde Portafolio, aunque
+  // es transversal a las dos áreas — se muestra en ambas.
+  const itemsDelArea = visibleItems.filter((item) => item.area === areaActiva || item.group === 'system');
   // Con una sola área presente (hoy, Portafolio) el encabezado de grupo
   // ("CRM"…) sería ruido redundante con la pestaña de arriba: se oculta.
   const gruposConContenido = (['core', 'ops', 'system'] as const).filter((g) =>
@@ -473,7 +476,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
                   </Link>
                   <span className="inline-flex items-center gap-1.5 font-mono-label text-kicker text-admin-success">
                     <span className="h-1.5 w-1.5 rounded-full bg-admin-success" />
-                    Online
+                    En línea
                   </span>
                 </div>
                 <button

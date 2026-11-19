@@ -139,3 +139,33 @@ describe('AdminNav — interruptor de área', () => {
     expect(screen.getAllByLabelText('Buscar leads').length).toBeGreaterThan(0);
   });
 });
+
+describe('AdminNav — grupo Sistema transversal (T-32)', () => {
+  it('en Portafolio también se ven los destinos de Sistema (antes solo vivían en Negocio)', () => {
+    mockUsePathname.mockReturnValue('/admin');
+    render(<AdminNav role="owner" userEmail="omar@example.com" />);
+
+    expect(screen.getAllByRole('link', { name: /Webhooks/ }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /Logs de API/ }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /Ayuda/ }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('link', { name: /^Docs$/ })).not.toBeInTheDocument();
+  });
+
+  it('en Negocio siguen viéndose los mismos destinos de Sistema', () => {
+    mockUsePathname.mockReturnValue('/admin/negocio');
+    render(<AdminNav role="owner" userEmail="omar@example.com" />);
+
+    expect(screen.getAllByRole('link', { name: /Webhooks/ }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('link', { name: /Ayuda/ }).length).toBeGreaterThan(0);
+  });
+
+  it('los dos "Resumen" se distinguen por nombre: «Resumen del portafolio» y «Resumen de negocio»', () => {
+    mockUsePathname.mockReturnValue('/admin');
+    render(<AdminNav role="owner" userEmail="omar@example.com" />);
+    expect(screen.getAllByRole('link', { name: /Resumen del portafolio/ }).length).toBeGreaterThan(0);
+
+    mockUsePathname.mockReturnValue('/admin/negocio');
+    render(<AdminNav role="owner" userEmail="omar@example.com" />);
+    expect(screen.getAllByRole('link', { name: /Resumen de negocio/ }).length).toBeGreaterThan(0);
+  });
+});

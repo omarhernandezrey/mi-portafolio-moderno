@@ -149,6 +149,12 @@ async function getStats(includeRevenue: boolean) {
   const monthLeads = leads.filter((l) => l.created_at >= firstDayOfMonthIso).length;
   const prevLeads = leads.filter((l) => l.created_at >= firstDayOfPrevMonthIso && l.created_at < firstDayOfMonthIso).length;
   const monthPaid = leads.filter((l) => l.status === 'paid' && l.paid_at && l.paid_at >= firstDayOfMonthIso).length;
+  // T-32: hacía falta para no inventar un umbral fijo de conversión — ver
+  // `conversionDelta` más abajo. Del mismo array ya traído por T-31, sin
+  // una consulta nueva.
+  const prevPaid = leads.filter(
+    (l) => l.status === 'paid' && l.paid_at && l.paid_at >= firstDayOfPrevMonthIso && l.paid_at < firstDayOfMonthIso
+  ).length;
   const recentLeads = leads.slice(0, 5);
 
   const openTickets = ticketsAbiertos.length;
@@ -219,6 +225,12 @@ async function getStats(includeRevenue: boolean) {
       : null;
   const conversionRate =
     monthLeads && monthLeads > 0 ? ((monthPaid || 0) / monthLeads) * 100 : 0;
+  const prevConversionRate =
+    prevLeads && prevLeads > 0 ? ((prevPaid || 0) / prevLeads) * 100 : null;
+  const conversionDelta =
+    prevConversionRate !== null && prevConversionRate > 0
+      ? ((conversionRate - prevConversionRate) / prevConversionRate) * 100
+      : null;
 
   return {
     monthLeads: monthLeads || 0,
@@ -241,6 +253,7 @@ async function getStats(includeRevenue: boolean) {
     leadsDelta,
     revenueDelta,
     conversionRate,
+    conversionDelta,
   };
 }
 
@@ -349,11 +362,19 @@ export default async function NegocioDashboardPage() {
           title="Ventas cerradas"
           value={stats.monthPaid.toString()}
           icon={<BadgeCheck size={20} />}
-          trend={{
-            value: `${stats.conversionRate.toFixed(0)}%`,
-            direction: stats.conversionRate >= 20 ? 'up' : 'neutral',
-            label: 'Tasa de conversión',
-          }}
+          trend={
+            stats.conversionDelta === null
+              ? {
+                  value: `${stats.conversionRate.toFixed(0)}%`,
+                  direction: 'neutral',
+                  label: 'Sin base del mes anterior',
+                }
+              : {
+                  value: `${stats.conversionDelta >= 0 ? '+' : ''}${stats.conversionDelta.toFixed(0)}%`,
+                  direction: stats.conversionDelta >= 0 ? 'up' : 'down',
+                  label: `Conversión: ${stats.conversionRate.toFixed(0)}% vs mes anterior`,
+                }
+          }
           color="success"
           description="Leads convertidos en clientes este mes"
         />
@@ -618,7 +639,7 @@ export default async function NegocioDashboardPage() {
               href="/admin/leads"
               className="flex items-center justify-center gap-2 border-t border-admin-line p-4 font-mono-label text-4xs text-text-muted transition-colors hover:text-primary"
             >
-              Ver repositorio completo
+              Ver todos los leads
               <ChevronRight size={13} />
             </Link>
           </section>
@@ -672,7 +693,7 @@ export default async function NegocioDashboardPage() {
               href="/admin/leads"
               className="mt-5 flex items-center justify-center gap-2 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2.5 text-xs font-bold text-text-muted transition-colors hover:border-primary/25 hover:text-primary"
             >
-              Gestionar leads
+              Responder leads
               <ArrowRight size={14} />
             </Link>
           </AdminCard>
@@ -730,7 +751,7 @@ export default async function NegocioDashboardPage() {
               href="/admin/tickets"
               className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2.5 text-xs font-bold text-text-muted transition-colors hover:border-primary/25 hover:text-primary"
             >
-              Gestionar tickets
+              Resolver tickets
               <ArrowRight size={14} />
             </Link>
           </AdminCard>

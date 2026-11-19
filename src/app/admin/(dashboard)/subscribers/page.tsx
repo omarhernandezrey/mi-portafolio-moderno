@@ -193,7 +193,7 @@ export default function SubscribersPage() {
       <PageHeader
         overline="Newsletter"
         title="Suscriptores"
-        description="Gestión de la lista de email marketing y lead magnets."
+        description="Quién se suscribió a cada lead magnet y si ya confirmó su correo."
         actions={
           <>
             <AdminButton
@@ -351,7 +351,7 @@ export default function SubscribersPage() {
                   <div className="text-3xs text-text-muted/40 font-medium">
                     Registrado: {new Date(s.created_at).toLocaleDateString('es-CO')}
                     {s.followup_sent_at && (
-                      <span className="ml-3 text-primary/60">Follow-up enviado</span>
+                      <span className="ml-3 text-primary/60">Seguimiento enviado</span>
                     )}
                   </div>
                 </div>
@@ -367,7 +367,7 @@ export default function SubscribersPage() {
                     <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Fuente</th>
                     <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Estado</th>
                     <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line">Registro</th>
-                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Follow-up</th>
+                    <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-center">Seguimiento</th>
                     <th className="px-6 py-5 text-3xs uppercase tracking-[0.2em] font-black text-text-muted/60 border-b border-admin-line text-right">Acciones</th>
                   </tr>
                 </thead>

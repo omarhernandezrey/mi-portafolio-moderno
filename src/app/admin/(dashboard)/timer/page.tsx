@@ -116,14 +116,14 @@ export default function TimerPage() {
   return (
     <div className="space-y-5 lg:space-y-6">
       <PageHeader
-        overline="Performance terminal"
-        title="Timer"
-        description="Seguimiento de productividad y gestión de billable hours."
+        overline="Productividad"
+        title="Cronómetro"
+        description="Horas facturables por proyecto, con el reloj corriendo en tiempo real."
         actions={
           <>
             <span className="inline-flex items-center gap-2 rounded-xl border border-admin-line bg-white/[0.03] px-3 py-2 font-mono-label text-4xs text-text-muted">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-              Operational
+              En línea
             </span>
             <AdminButton
               onClick={fetchActive}

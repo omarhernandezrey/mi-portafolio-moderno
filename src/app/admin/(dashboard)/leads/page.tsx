@@ -250,13 +250,13 @@ export default async function AdminLeadsPage({
             <thead>
               <tr className="border-b border-admin-line bg-white/[0.02]">
                 <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
-                  Identidad
+                  Cliente
                 </th>
                 <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
-                  Contexto
+                  Empresa
                 </th>
                 <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
-                  Requerimiento
+                  Servicio
                 </th>
                 <th className="px-5 py-3 font-mono-label text-4xs text-text-muted/60">
                   Presupuesto

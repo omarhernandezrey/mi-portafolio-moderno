@@ -18,7 +18,7 @@ export default async function AdminDocsPage() {
   return (
     <div className="space-y-6 sm:space-y-10">
       <PageHeader
-        overline="Knowledge Base"
+        overline="Ayuda"
         title="Documentación Interna"
         description="Procesos repetibles y guías para el equipo y subcontratistas."
       />
