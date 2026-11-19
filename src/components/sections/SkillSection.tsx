@@ -8,14 +8,10 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
+import ScrollReveal from "../shared/ScrollReveal";
 import { skillsData, getLocalizedSkillsData, getLocalizedCategories } from "@/lib/skillsData";
 
 /* -------------------------------------------------------------------------------------------------
@@ -36,22 +32,6 @@ import { skillsData, getLocalizedSkillsData, getLocalizedCategories } from "@/li
 const RADIUS = 36;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 const ANIMATION_DURATION = 1200; // duración por defecto
-
-/* -------------------------------------------------------------------------------------------------
-   Partículas de fondo (decorativas)
---------------------------------------------------------------------------------------------------*/
-const createFloatingElements = (count = 12) =>
-  Array.from({ length: count }, (_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    delay: Math.random() * 4,
-    duration: Math.random() * 10 + 15,
-    opacity: Math.random() * 0.4 + 0.1,
-  }));
-
-type FloatingElement = ReturnType<typeof createFloatingElements>[number];
 
 /* -------------------------------------------------------------------------------------------------
    Helpers
@@ -75,9 +55,6 @@ export default function PremiumSkillsSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
-    [],
-  );
   // Ref para leer el valor actual sin re-dependencias en callbacks
   const animatedValuesRef = useRef<number[]>([]);
   useEffect(() => {
@@ -87,17 +64,6 @@ export default function PremiumSkillsSection() {
   /* -------------------------- refs ---------------------------- */
   const sectionRef = React.useRef<HTMLElement>(null);
   const animationRefs = useRef<Array<number | null>>([]);
-
-  /* -------------------- parallax scroll effect -------------------- */
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   /* -------------------- filtrado por categoría -------------------- */
   const filteredSkills = useMemo(
@@ -190,10 +156,6 @@ export default function PremiumSkillsSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, language]); // Incluir language para resetear al cambiar idioma
 
-  useEffect(() => {
-    setFloatingElements(createFloatingElements());
-  }, []);
-
   /* ---------------- manejadores de hover ---------------- */
   const handleSkillHover = (idx: number) => {
     setHoveredIndex(idx);
@@ -222,8 +184,11 @@ export default function PremiumSkillsSection() {
       id="skills"
       className="relative min-h-screen py-32 px-2 sm:px-4 overflow-hidden"
       style={{
-        background:
-          "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
+        background: "var(--background-color)",
+        backgroundImage: `
+          radial-gradient(circle at 12% -8%, color-mix(in srgb, var(--primary-color) 10%, transparent), transparent 32rem),
+          radial-gradient(circle at 100% 110%, color-mix(in srgb, var(--accent-color) 8%, transparent), transparent 28rem)
+        `,
       }}
     >
       {/* Wave superior */}
@@ -238,87 +203,9 @@ export default function PremiumSkillsSection() {
         />
       </div>
 
-      {/* Fondo parallax moderno */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {/* Círculo grande blur */}
-        <motion.div
-          style={{
-            y: y1,
-            backgroundColor: "var(--primary-color)",
-          }}
-          className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
-        />
-        {/* Blob naranja */}
-        <motion.div
-          style={{
-            y: y2,
-            backgroundColor: "var(--accent-color)",
-            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-          }}
-          className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
-        />
-        {/* Círculo degradado */}
-        <motion.div
-          style={{
-            y: y3,
-            background: `linear-gradient(to top right, var(--primary-color), var(--accent-color), transparent)`,
-          }}
-          className="absolute bottom-[-100px] left-[20%] w-[220px] h-[220px] rounded-full opacity-30 blur-2xl"
-        />
-        {/* Línea diagonal luminosa */}
-        <motion.div
-          style={{
-            y: y4,
-            background: `linear-gradient(to right, var(--accent-color), rgba(255,255,255,0.1), transparent)`,
-          }}
-          className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] opacity-40 rotate-[-20deg] blur-md"
-        />
-        {/* Círculo blanco suave */}
-        <motion.div
-          style={{ y: y2 }}
-          className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl"
-        />
-      </div>
-
-      {/* Partículas animadas */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {floatingElements.map((el) => (
-          <motion.div
-            key={el.id}
-            className="absolute rounded-full"
-            style={{
-              width: el.size,
-              height: el.size,
-              left: `${el.x}%`,
-              top: `${el.y}%`,
-              backgroundColor: "var(--accent-color)",
-              opacity: el.opacity,
-            }}
-            animate={{
-              y: [-40, 40, -40],
-              x: [-20, 20, -20],
-              opacity: [el.opacity * 0.3, el.opacity, el.opacity * 0.3],
-              scale: [1, 1.8, 1],
-            }}
-            transition={{
-              duration: el.duration,
-              repeat: Infinity,
-              delay: el.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-
       <div className="relative z-10 max-w-full sm:max-w-7xl mx-auto px-2 sm:px-4">
         {/* cabecera */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <ScrollReveal y={30} className="text-center mb-16">
           <motion.span
             className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
@@ -345,16 +232,10 @@ export default function PremiumSkillsSection() {
           >
             {t('skills.description')}
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         {/* filtros de categoría */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          viewport={{ once: true }}
-          className="flex justify-center mb-16"
-        >
+        <ScrollReveal y={20} delay={0.2} className="flex justify-center mb-16">
           <div
             className="flex w-full max-w-4xl flex-wrap justify-center gap-2 p-2 backdrop-blur-lg rounded-2xl border"
             style={{
@@ -377,7 +258,7 @@ export default function PremiumSkillsSection() {
               />
             ))}
           </div>
-        </motion.div>
+        </ScrollReveal>
 
         {/* grilla de skills */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">

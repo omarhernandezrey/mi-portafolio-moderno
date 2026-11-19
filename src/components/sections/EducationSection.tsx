@@ -5,6 +5,7 @@ import { educationData } from "../../lib/educationData";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import EducationModal from "../ui/EducationModal";
+import ScrollReveal from "../shared/ScrollReveal";
 import FeaturedCertificates from "./FeaturedCertificates";
 import { useTranslation } from "@/hooks/useTranslation";
 import { highlightedCoursesData } from "@/lib/portfolio/source/badges";
@@ -1004,13 +1005,7 @@ const EducationSection = () => {
           />
         </div>
         {/* Header Seccion - Consistente y Estable */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-8 sm:mb-12 md:mb-16"
-        >
+        <ScrollReveal y={30} className="text-center mb-8 sm:mb-12 md:mb-16">
           <motion.span
             className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
@@ -1030,7 +1025,7 @@ const EducationSection = () => {
           >
             {isHydrated ? t('education.headerTitle') : 'Mi Trayectoria Académica'}
           </h2>
-        </motion.div>
+        </ScrollReveal>
 
         <div className="container">
           <div className="timeline-meta">

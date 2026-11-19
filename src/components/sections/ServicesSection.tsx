@@ -6,27 +6,14 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
 import { servicesData, getLocalizedServicesData } from "@/lib/servicesData";
 import ServiceCard3D from "@/components/shared/ServiceCard3D";
+import ScrollReveal from "@/components/shared/ScrollReveal";
 
 // Los datos se obtienen ahora del archivo servicesData.ts
-
-// --- Lógica de partículas flotantes tipo AboutSection ---
-const createFloatingElements = (count = 12) =>
-  Array.from({ length: count }, (_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    delay: Math.random() * 4,
-    duration: Math.random() * 10 + 15,
-    opacity: Math.random() * 0.4 + 0.1,
-  }));
-
-type FloatingElement = ReturnType<typeof createFloatingElements>[number];
 
 export default function ServicesSection() {
   /* ----------------------- i18n y datos ----------------------- */
@@ -39,18 +26,6 @@ export default function ServicesSection() {
     offset: ["start end", "end start"],
   });
 
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
-    [],
-  );
-  // Parallax para varias formas
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  useEffect(() => {
-    setFloatingElements(createFloatingElements());
-  }, []);
-
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   return (
@@ -59,8 +34,11 @@ export default function ServicesSection() {
       id="services"
       className="relative min-h-screen py-32 px-2 sm:px-4 overflow-hidden"
       style={{
-        background:
-          "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
+        background: "var(--background-color)",
+        backgroundImage: `
+          radial-gradient(circle at 100% -8%, color-mix(in srgb, var(--accent-color) 10%, transparent), transparent 32rem),
+          radial-gradient(circle at 0% 110%, color-mix(in srgb, var(--primary-color) 8%, transparent), transparent 28rem)
+        `,
       }}
     >
       {/* Wave superior */}
@@ -75,91 +53,13 @@ export default function ServicesSection() {
         />
       </div>
 
-      {/* Fondo parallax moderno */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {/* Círculo grande blur */}
-        <motion.div
-          style={{
-            y: y1,
-            backgroundColor: "var(--primary-color)",
-          }}
-          className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
-        />
-        {/* Blob naranja */}
-        <motion.div
-          style={{
-            y: y2,
-            backgroundColor: "var(--accent-color)",
-            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-          }}
-          className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
-        />
-        {/* Círculo degradado */}
-        <motion.div
-          style={{
-            y: y3,
-            background: `linear-gradient(to top right, var(--primary-color), var(--accent-color), transparent)`,
-          }}
-          className="absolute bottom-[-100px] left-[20%] w-[220px] h-[220px] rounded-full opacity-30 blur-2xl"
-        />
-        {/* Línea diagonal luminosa */}
-        <motion.div
-          style={{
-            y: y4,
-            background: `linear-gradient(to right, var(--accent-color), rgba(255,255,255,0.1), transparent)`,
-          }}
-          className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] opacity-40 rotate-[-20deg] blur-md"
-        />
-        {/* Círculo blanco suave */}
-        <motion.div
-          style={{ y: y2 }}
-          className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl"
-        />
-      </div>
-
-      {/* Partículas animadas */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {floatingElements.map((el) => (
-          <motion.div
-            key={el.id}
-            className="absolute rounded-full"
-            style={{
-              width: el.size,
-              height: el.size,
-              left: `${el.x}%`,
-              top: `${el.y}%`,
-              backgroundColor: "var(--accent-color)",
-              opacity: el.opacity,
-            }}
-            animate={{
-              y: [-40, 40, -40],
-              x: [-20, 20, -20],
-              opacity: [el.opacity * 0.3, el.opacity, el.opacity * 0.3],
-              scale: [1, 1.8, 1],
-            }}
-            transition={{
-              duration: el.duration,
-              repeat: Infinity,
-              delay: el.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-
       {/* Contenido principal */}
       <motion.div
         className="relative z-10 max-w-full sm:max-w-7xl mx-auto px-2 sm:px-4"
         style={{ opacity }}
       >
         {/* Encabezado */}
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
+        <ScrollReveal y={50} className="text-center mb-20">
           <motion.span
             className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
@@ -185,19 +85,12 @@ export default function ServicesSection() {
           >
             {t('services.description')}
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Grid de servicios — móvil: 2 col · desktop: 4 col */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 items-stretch">
           {localizedServices.map((service, index) => (
-            <motion.div
-              key={index}
-              className="w-full h-full"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.15, type: "spring", stiffness: 100 }}
-              viewport={{ once: true }}
-            >
+            <ScrollReveal key={index} y={50} delay={index * 0.1} className="w-full h-full">
               <ServiceCard3D
                 title={service.title}
                 description={service.description}
@@ -213,18 +106,12 @@ export default function ServicesSection() {
                   }
                 }}
               />
-            </motion.div>
+            </ScrollReveal>
           ))}
         </div>
 
         {/* CTA inferior */}
-        <motion.div
-          className="text-center mt-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          viewport={{ once: true }}
-        >
+        <ScrollReveal y={30} delay={0.3} className="text-center mt-20">
           <motion.button
             onClick={() => {
               const contactSection = document.querySelector("#contact");
@@ -233,7 +120,7 @@ export default function ServicesSection() {
                 block: "start",
               });
             }}
-            className="px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 cursor-pointer"
+            className="group px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 cursor-pointer"
             style={{
               background:
                 "linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%)",
@@ -248,15 +135,11 @@ export default function ServicesSection() {
             aria-label="Ir a la sección de contacto"
           >
             {t('services.cta')}
-            <motion.span
-              className="ml-2 inline-block"
-              animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
+            <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
               →
-            </motion.span>
+            </span>
           </motion.button>
-        </motion.div>
+        </ScrollReveal>
       </motion.div>
 
       {/* Wave inferior */}

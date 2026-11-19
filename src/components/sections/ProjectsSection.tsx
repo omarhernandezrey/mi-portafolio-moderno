@@ -14,6 +14,7 @@ import {
 } from "framer-motion";
 import { track } from "@vercel/analytics";
 import Card from "../shared/Card";
+import ScrollReveal from "../shared/ScrollReveal";
 import { useTranslation } from "../../hooks/useTranslation";
 import { getLocalizedProjectsData, type Project } from "../../lib/projectsData";
 import { slugificar } from "../../lib/portfolio/slug";
@@ -250,19 +251,13 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
         {/* ---------------- contenido principal ---------------- */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* header */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12 md:mb-16"
-          >
+          <ScrollReveal y={30} className="text-center mb-8 sm:mb-12 md:mb-16">
             <motion.span
               className="font-mono-label inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6 text-[0.6rem] sm:text-[0.65rem] rounded-full border"
               style={{
                 color: "var(--accent-color)",
-                background: "rgba(243, 156, 18, 0.1)",
-                borderColor: "rgba(243, 156, 18, 0.3)",
+                background: "color-mix(in srgb, var(--accent-color) 10%, transparent)",
+                borderColor: "color-mix(in srgb, var(--accent-color) 30%, transparent)",
               }}
               whileHover={{ scale: 1.05 }}
             >
@@ -283,21 +278,15 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
             >
               {t('projects.description')}
             </p>
-          </motion.div>
+          </ScrollReveal>
 
           {/* buscador */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            viewport={{ once: true }}
-            className="w-full max-w-md mx-auto mb-8 sm:mb-12 md:mb-16"
-          >
+          <ScrollReveal y={20} delay={0.1} className="w-full max-w-md mx-auto mb-8 sm:mb-12 md:mb-16">
             <div
               className="relative backdrop-blur-xl border rounded-xl sm:rounded-2xl p-0.5"
               style={{
-                backgroundColor: "rgba(40,40,60,0.5)",
-                borderColor: "rgba(209,209,224,0.3)",
+                backgroundColor: "color-mix(in srgb, var(--card-bg-color) 50%, transparent)",
+                borderColor: "color-mix(in srgb, var(--muted-color) 30%, transparent)",
               }}
             >
               <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -321,7 +310,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                 placeholder={t('projects.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-11 pr-10 py-3 sm:py-3.5 bg-transparent text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg sm:rounded-xl text-sm"
+                className="w-full pl-11 pr-10 py-3 sm:py-3.5 bg-transparent text-text-main placeholder-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg sm:rounded-xl text-sm"
               />
               {searchTerm && (
                 <button
@@ -330,13 +319,13 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-white/10 transition-colors"
                   aria-label="Limpiar búsqueda"
                 >
-                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               )}
             </div>
-          </motion.div>
+          </ScrollReveal>
 
           {/* contador */}
           <motion.div
@@ -402,8 +391,8 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                   aria-label={t('projects.previousPage')}
                   className="flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 shrink-0"
                   style={{
-                    backgroundColor: 'rgba(40,40,60,0.5)',
-                    borderColor: 'rgba(209,209,224,0.3)',
+                    backgroundColor: 'color-mix(in srgb, var(--card-bg-color) 50%, transparent)',
+                    borderColor: 'color-mix(in srgb, var(--muted-color) 30%, transparent)',
                     color: 'var(--muted-color)',
                   }}
                 >
@@ -432,16 +421,16 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                       className="w-10 h-10 flex items-center justify-center rounded-full border text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105 shrink-0"
                       style={{
                         backgroundColor:
-                          p === currentPage ? 'var(--primary-color)' : 'rgba(40,40,60,0.5)',
+                          p === currentPage ? 'var(--primary-color)' : 'color-mix(in srgb, var(--card-bg-color) 50%, transparent)',
                         borderColor:
                           p === currentPage
                             ? 'var(--primary-color)'
-                            : 'rgba(209,209,224,0.3)',
+                            : 'color-mix(in srgb, var(--muted-color) 30%, transparent)',
                         color:
                           p === currentPage ? 'var(--white-color)' : 'var(--muted-color)',
                         boxShadow:
                           p === currentPage
-                            ? '0 8px 20px rgba(255,111,97,0.3)'
+                            ? '0 8px 20px color-mix(in srgb, var(--primary-color) 30%, transparent)'
                             : 'none',
                       }}
                     >
@@ -457,8 +446,8 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                   aria-label={t('projects.nextPage')}
                   className="flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 shrink-0"
                   style={{
-                    backgroundColor: 'rgba(40,40,60,0.5)',
-                    borderColor: 'rgba(209,209,224,0.3)',
+                    backgroundColor: 'color-mix(in srgb, var(--card-bg-color) 50%, transparent)',
+                    borderColor: 'color-mix(in srgb, var(--muted-color) 30%, transparent)',
                     color: 'var(--muted-color)',
                   }}
                 >
@@ -475,8 +464,8 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                   aria-label={t('projects.previousPage')}
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
                   style={{
-                    backgroundColor: 'rgba(40,40,60,0.5)',
-                    borderColor: 'rgba(209,209,224,0.3)',
+                    backgroundColor: 'color-mix(in srgb, var(--card-bg-color) 50%, transparent)',
+                    borderColor: 'color-mix(in srgb, var(--muted-color) 30%, transparent)',
                     color: 'var(--muted-color)',
                   }}
                 >
@@ -494,10 +483,10 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                     aria-label={t('projects.goToPage', { page })}
                     className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border text-lg font-semibold transition-colors"
                     style={{
-                      backgroundColor: page === currentPage ? 'var(--primary-color)' : 'rgba(40,40,60,0.5)',
-                      borderColor: page === currentPage ? 'var(--primary-color)' : 'rgba(209,209,224,0.3)',
+                      backgroundColor: page === currentPage ? 'var(--primary-color)' : 'color-mix(in srgb, var(--card-bg-color) 50%, transparent)',
+                      borderColor: page === currentPage ? 'var(--primary-color)' : 'color-mix(in srgb, var(--muted-color) 30%, transparent)',
                       color: page === currentPage ? 'var(--white-color)' : 'var(--muted-color)',
-                      boxShadow: page === currentPage ? '0 8px 20px rgba(255,111,97,0.3)' : 'none',
+                      boxShadow: page === currentPage ? '0 8px 20px color-mix(in srgb, var(--primary-color) 30%, transparent)' : 'none',
                     }}
                   >
                     {page}
@@ -511,8 +500,8 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                   aria-label={t('projects.nextPage')}
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40"
                   style={{
-                    backgroundColor: 'rgba(40,40,60,0.5)',
-                    borderColor: 'rgba(209,209,224,0.3)',
+                    backgroundColor: 'color-mix(in srgb, var(--card-bg-color) 50%, transparent)',
+                    borderColor: 'color-mix(in srgb, var(--muted-color) 30%, transparent)',
                     color: 'var(--muted-color)',
                   }}
                 >
@@ -537,8 +526,8 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
               <div
                 className="max-w-xs sm:max-w-sm md:max-w-md mx-auto p-6 sm:p-8 backdrop-blur-xl border rounded-xl sm:rounded-2xl"
                 style={{
-                  backgroundColor: "rgba(40,40,60,0.5)",
-                  borderColor: "rgba(209,209,224,0.3)",
+                  backgroundColor: "color-mix(in srgb, var(--card-bg-color) 50%, transparent)",
+                  borderColor: "color-mix(in srgb, var(--muted-color) 30%, transparent)",
                 }}
               >
                 <h3

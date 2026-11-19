@@ -7,6 +7,7 @@ interface ScrollRevealProps {
   children: ReactNode;
   delay?: number;
   y?: number;
+  x?: number;
   className?: string;
   // Contenido above-the-fold (hero): ya está en el viewport en la carga
   // inicial. Usa la animación CSS pura .hero-reveal (definida en
@@ -21,7 +22,7 @@ interface ScrollRevealProps {
 // scroll real tarda tanto en cruzar el margen de activación.
 const FALLBACK_MS = 1500;
 
-export default function ScrollReveal({ children, delay = 0, y = 24, className, immediate = false }: ScrollRevealProps) {
+export default function ScrollReveal({ children, delay = 0, y = 24, x = 0, className, immediate = false }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function ScrollReveal({ children, delay = 0, y = 24, className, i
     };
   }, [immediate]);
 
-  const style = { '--reveal-y': `${y}px`, '--reveal-delay': `${delay}s` } as React.CSSProperties;
+  const style = { '--reveal-y': `${y}px`, '--reveal-x': `${x}px`, '--reveal-delay': `${delay}s` } as React.CSSProperties;
 
   if (immediate) {
     return (

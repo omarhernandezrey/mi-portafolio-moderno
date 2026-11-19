@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, CheckCircle, Loader2, Mail, Shield, BookOpen, Target, Sparkles, ChevronRight, Lock } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 import Footer from '@/components/shared/Footer';
 import { track } from '@vercel/analytics';
 import TiltImageCard from '@/components/shared/TiltImageCard';
@@ -181,12 +182,10 @@ export default function RecursosContent() {
         {/* Assets Vault */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {magnets.map((magnet, idx) => (
-            <motion.div
+            <ScrollReveal
               key={magnet.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              y={30}
+              delay={idx * 0.1}
               className="group relative bg-card-bg rounded-canvas md:rounded-[48px] border border-white/5 p-6 md:p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
             >
               {/* Decorative Index */}
@@ -232,7 +231,7 @@ export default function RecursosContent() {
                   </div>
                 </button>
               </div>
-            </motion.div>
+            </ScrollReveal>
           ))}
         </div>
 

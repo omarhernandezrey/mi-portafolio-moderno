@@ -199,6 +199,14 @@ export default function HeroSection() {
               mt-2 mb-8 leading-relaxed text-left
               [text-shadow:_0_2px_4px_rgba(0,0,0,0.5)]
             "
+            // Blanco fijo a propósito, no var(--text-color): este párrafo se
+            // superpone a la foto del hero con su velo bg-black/50 FIJO
+            // (ver arriba), que no sigue la paleta activa. En una paleta
+            // clara, --text-color es gris oscuro — correcto sobre el fondo
+            // real de esa paleta, pero casi invisible sobre este velo
+            // siempre oscuro. Verificado en paleta4 (fondo #f9fcfb): con
+            // var(--text-color) el contraste real dependía de coincidir con
+            // teclas claras de la foto, no de un contraste deliberado.
             style={{ color: "rgba(255, 255, 255, 0.85)", "--reveal-delay": "0.3s" } as React.CSSProperties}
             dangerouslySetInnerHTML={{
               __html: t("hero.subtitle")

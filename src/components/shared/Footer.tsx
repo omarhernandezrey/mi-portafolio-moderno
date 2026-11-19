@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { FiArrowUp } from "react-icons/fi";
 import { motion } from "framer-motion";
+import ScrollReveal from "./ScrollReveal";
 import NewsletterForm from "./NewsletterForm";
 import { useTranslation } from "../../hooks/useTranslation";
 
@@ -176,13 +177,7 @@ export default function Footer() {
           </div>
 
           {/* Mapa Reinstalado */}
-          <motion.div
-            className="mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal y={30} delay={0.2} className="mb-16">
             <h3
               className="font-mono-label text-[0.65rem] text-primary mb-6"
             >
@@ -202,7 +197,7 @@ export default function Footer() {
                 title={t("footer.mapTitle")}
               />
             </div>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Footer del Container */}
           <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">

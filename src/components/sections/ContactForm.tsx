@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { track } from "@vercel/analytics";
 import { useNotyf } from "@/components/ui/NotyfProvider";
 import { buildWhatsAppUrl } from "@/config/whatsapp";
+import ScrollReveal from "@/components/shared/ScrollReveal";
 
 // Bandas de presupuesto por mercado — ver src/data/pricing-sources.ts.
 // El valor lleva el prefijo de moneda ("cop:"/"usd:") para que el lead
@@ -17,20 +18,6 @@ const BUDGET_TIERS = [
   { cop: "cop:6000000-18000000", usd: "usd:8000-25000" },
   { cop: "cop:18000000+", usd: "usd:25000+" },
 ] as const;
-
-// --- Lógica de partículas flotantes tipo AboutSection ---
-const createFloatingElements = (count = 12) =>
-  Array.from({ length: count }, (_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    delay: Math.random() * 4,
-    duration: Math.random() * 10 + 15,
-    opacity: Math.random() * 0.4 + 0.1,
-  }));
-
-type FloatingElement = ReturnType<typeof createFloatingElements>[number];
 
 export default function ContactForm() {
   const form = useRef<HTMLFormElement>(null);
@@ -68,27 +55,9 @@ export default function ContactForm() {
     { value: "flexible", label: t('contact.form.timelineOptions.flexible') },
   ];
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
-    [],
-  );
   const [selectedService, setSelectedService] = useState("");
   const [selectedBudget, setSelectedBudget] = useState("");
   const [selectedTimeline, setSelectedTimeline] = useState("");
-
-  /* -------------------- parallax scroll effect -------------------- */
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-
-  useEffect(() => {
-    setFloatingElements(createFloatingElements());
-  }, []);
 
   const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -135,8 +104,11 @@ export default function ContactForm() {
       id="contact"
       className="relative min-h-screen py-32 px-2 sm:px-4 overflow-hidden"
       style={{
-        background:
-          "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
+        background: "var(--background-color)",
+        backgroundImage: `
+          radial-gradient(circle at 12% -8%, color-mix(in srgb, var(--primary-color) 10%, transparent), transparent 32rem),
+          radial-gradient(circle at 100% 110%, color-mix(in srgb, var(--accent-color) 8%, transparent), transparent 28rem)
+        `,
       }}
     >
       {/* Wave superior */}
@@ -151,88 +123,10 @@ export default function ContactForm() {
         />
       </div>
 
-      {/* Fondo parallax moderno */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {/* Círculo grande blur */}
-        <motion.div
-          style={{
-            y: y1,
-            backgroundColor: "var(--primary-color)",
-          }}
-          className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
-        />
-        {/* Blob naranja */}
-        <motion.div
-          style={{
-            y: y2,
-            backgroundColor: "var(--accent-color)",
-            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-          }}
-          className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
-        />
-        {/* Círculo degradado */}
-        <motion.div
-          style={{
-            y: y3,
-            background: `linear-gradient(to top right, var(--primary-color), var(--accent-color), transparent)`,
-          }}
-          className="absolute bottom-[-100px] left-[20%] w-[220px] h-[220px] rounded-full opacity-30 blur-2xl"
-        />
-        {/* Línea diagonal luminosa */}
-        <motion.div
-          style={{
-            y: y4,
-            background: `linear-gradient(to right, var(--accent-color), rgba(255,255,255,0.1), transparent)`,
-          }}
-          className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] opacity-40 rotate-[-20deg] blur-md"
-        />
-        {/* Círculo blanco suave */}
-        <motion.div
-          style={{ y: y2 }}
-          className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl"
-        />
-      </div>
-
-      {/* Partículas animadas */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {floatingElements.map((el) => (
-          <motion.div
-            key={el.id}
-            className="absolute rounded-full"
-            style={{
-              width: el.size,
-              height: el.size,
-              left: `${el.x}%`,
-              top: `${el.y}%`,
-              backgroundColor: "var(--accent-color)",
-              opacity: el.opacity,
-            }}
-            animate={{
-              y: [-40, 40, -40],
-              x: [-20, 20, -20],
-              opacity: [el.opacity * 0.3, el.opacity, el.opacity * 0.3],
-              scale: [1, 1.8, 1],
-            }}
-            transition={{
-              duration: el.duration,
-              repeat: Infinity,
-              delay: el.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-
       {/* Contenido principal */}
       <div className="relative z-10 container mx-auto max-w-full sm:max-w-4xl px-2 sm:px-4">
         {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <ScrollReveal y={30} className="text-center mb-16">
           <motion.span
             className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
@@ -259,16 +153,10 @@ export default function ContactForm() {
           >
 {t("contact.description")}
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Contact Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="relative"
-        >
+        <ScrollReveal y={40} delay={0.1} className="relative">
           <div
             className="backdrop-blur-xl border rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden"
             style={{
@@ -624,7 +512,7 @@ export default function ContactForm() {
               </div>
             </form>
           </div>
-        </motion.div>
+        </ScrollReveal>
       </div>
 
       {/* Línea decorativa inferior */}

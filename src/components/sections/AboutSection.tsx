@@ -1,50 +1,27 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
+import ScrollReveal from "../shared/ScrollReveal";
 import ProfileCard from "./ProfileCard";
 import ModernInterestCard from "../ui/ModernInterestCard";
 import { resolveIcon } from "@/lib/portfolio/source/icon-registry";
 import { interestsData, personalData as personalDataFields } from "@/lib/portfolio/source/about";
-
-/* ──────────────────────────────────────────────────────────
-   Función para crear partículas aleatorias (solo en cliente) */
-const createFloatingElements = (count = 12) =>
-  Array.from({ length: count }, (_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    delay: Math.random() * 4,
-    duration: Math.random() * 10 + 15,
-    opacity: Math.random() * 0.4 + 0.1,
-  }));
 
 const AboutSection: React.FC = () => {
   const { t } = useTranslation();
   // CV único (ES/EN): Omar la coloca en public/files/.
   const cvDownloadPath = "/files/Omar_Hernandez_Rey_Full_Stack_Developer_CV.pdf";
 
-  /* Estado para partículas flotantes (solo cliente) */
-  const [floatingElements, setFloatingElements] = useState<
-    ReturnType<typeof createFloatingElements>
-  >([]);
-
-  /* Referencia a la sección para animaciones de scroll */
+  /* Referencia a la sección para el fundido de entrada/salida por scroll */
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-
-  /* Parallax para fondo */
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   /* Datos de intereses y enlaces: los datos vienen de
      src/lib/portfolio/source/about.ts (antes estaban inline aquí). El icono es
@@ -59,85 +36,19 @@ const AboutSection: React.FC = () => {
     value: t(field.valueKey),
   }));
 
-  /* Efecto: genera partículas tras montar (evita discrepancia SSR/CSR) */
-  useEffect(() => {
-    setFloatingElements(createFloatingElements());
-  }, []);
-
   return (
     <section
       ref={sectionRef}
       id="about"
       className="relative min-h-screen py-32 px-4 overflow-hidden"
       style={{
-        background:
-          "linear-gradient(135deg, var(--background-color) 0%, var(--secondary-background-color) 50%, var(--background-color) 100%)",
+        background: "var(--background-color)",
+        backgroundImage: `
+          radial-gradient(circle at 12% -8%, color-mix(in srgb, var(--primary-color) 10%, transparent), transparent 32rem),
+          radial-gradient(circle at 100% 110%, color-mix(in srgb, var(--accent-color) 8%, transparent), transparent 28rem)
+        `,
       }}
     >
-      {/* Fondo parallax moderno */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <motion.div
-          className="absolute top-[-120px] left-[-120px] w-[350px] h-[350px] rounded-full opacity-30 blur-3xl"
-          style={{
-            backgroundColor: "var(--primary-color)",
-            y: y1,
-          }}
-        />
-        <motion.div
-          className="absolute top-[30%] right-[-100px] w-[280px] h-[280px] opacity-40 blur-2xl rotate-12"
-          style={{
-            backgroundColor: "var(--accent-color)",
-            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-            y: y2,
-          }}
-        />
-        <motion.div
-          className="absolute bottom-[-100px] left-[20%] w-[220px] h-[220px] rounded-full opacity-30 blur-2xl"
-          style={{
-            background: `linear-gradient(to top right, var(--primary-color), var(--accent-color), transparent)`,
-            y: y3,
-          }}
-        />
-        <motion.div
-          className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] opacity-40 rotate-[-20deg] blur-md"
-          style={{
-            background: `linear-gradient(to right, var(--accent-color), rgba(255,255,255,0.1), transparent)`,
-            y: y4,
-          }}
-        />
-        <div className="absolute bottom-[-60px] right-[10%] w-[120px] h-[120px] rounded-full bg-white opacity-10 blur-2xl" />
-      </div>
-
-      {/* Partículas animadas */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {floatingElements.map((el) => (
-          <motion.div
-            key={el.id}
-            className="absolute rounded-full"
-            style={{
-              width: el.size,
-              height: el.size,
-              left: `${el.x}%`,
-              top: `${el.y}%`,
-              backgroundColor: "var(--accent-color)",
-              opacity: el.opacity,
-            }}
-            animate={{
-              y: [-40, 40, -40],
-              x: [-20, 20, -20],
-              opacity: [el.opacity * 0.3, el.opacity, el.opacity * 0.3],
-              scale: [1, 1.8, 1],
-            }}
-            transition={{
-              duration: el.duration,
-              repeat: Infinity,
-              delay: el.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-
       {/* Wave superior */}
       <motion.div
         className="absolute top-0 left-0 w-full overflow-hidden z-0"
@@ -161,13 +72,7 @@ const AboutSection: React.FC = () => {
         style={{ opacity }}
       >
         {/* Header Seccion (Consistente con Educación/Proyectos) */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <ScrollReveal y={30} className="text-center mb-16">
           <motion.span
             className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
             style={{
@@ -186,33 +91,21 @@ const AboutSection: React.FC = () => {
           >
             {t("about.title")}
           </h2>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Grid principal (foto + texto) — grilla editorial asimétrica 5/7 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           {/* Foto */}
-          <motion.div
-            className="flex flex-col items-center lg:col-span-5"
-            initial={{ opacity: 0, x: -100 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal x={-60} y={0} className="flex flex-col items-center lg:col-span-5">
             <ProfileCard
               name={t("about.name")}
               tagline={t("about.role")}
               cvPath={cvDownloadPath}
             />
-          </motion.div>
+          </ScrollReveal>
 
           {/* Bio + Datos Personales */}
-          <motion.div
-            className="flex flex-col space-y-10 lg:col-span-7"
-            initial={{ opacity: 0, x: 100 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-            viewport={{ once: true }}
-          >
+          <ScrollReveal x={60} y={0} delay={0.1} className="flex flex-col space-y-10 lg:col-span-7">
             {/* Descripción */}
             <motion.p
               className="text-lg leading-relaxed text-justify"
@@ -253,17 +146,11 @@ const AboutSection: React.FC = () => {
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+          </ScrollReveal>
         </div>
 
         {/* ───────── Sección de intereses ───────── */}
-        <motion.div
-          className="mt-32"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
+        <ScrollReveal y={50} delay={0.2} className="mt-32">
           <div className="text-center mb-16">
             <motion.span
               className="font-mono-label inline-flex items-center gap-2 px-4 py-2 mb-6 text-[0.65rem] rounded-full border"
@@ -298,7 +185,7 @@ const AboutSection: React.FC = () => {
               );
             })}
           </div>
-        </motion.div>
+        </ScrollReveal>
       </motion.div>
 
       <motion.div
