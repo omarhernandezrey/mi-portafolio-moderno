@@ -1,8 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
-import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -10,46 +9,66 @@ interface ScrollRevealProps {
   y?: number;
   className?: string;
   // Contenido above-the-fold (hero): ya está en el viewport en la carga
-  // inicial. En vez de whileInView (IntersectionObserver) o animate() de
-  // Framer Motion, usa una animación CSS pura (clase .hero-reveal, definida
-  // en globals.css) — arranca en cuanto el navegador pinta el elemento, sin
-  // depender de que React hidrate ni de que Framer Motion dispare su
-  // animación. Se probó que bajo carga inicial pesada (Three.js + GSAP +
-  // Lenis montando a la vez) tanto whileInView como animate() de Framer
-  // Motion pueden quedarse sin ejecutar nunca en algunas páginas, dejando el
-  // hero con opacidad 0 indefinidamente — CSS puro no tiene ese riesgo.
+  // inicial. Usa la animación CSS pura .hero-reveal (definida en
+  // globals.css) — arranca en cuanto el navegador pinta el elemento, sin
+  // depender de ningún observer ni de que React hidrate.
   immediate?: boolean;
 }
 
+// Respaldo si el IntersectionObserver nunca dispara (error del navegador,
+// elemento ya fuera del árbol cuando se conecta, etc.) — garantiza que el
+// contenido no se quede invisible para siempre. 1.5s es generoso: ningún
+// scroll real tarda tanto en cruzar el margen de activación.
+const FALLBACK_MS = 1500;
+
 export default function ScrollReveal({ children, delay = 0, y = 24, className, immediate = false }: ScrollRevealProps) {
-  // Siempre el mismo elemento en servidor y cliente — solo cambian valores,
-  // nunca el tipo de nodo ni los hijos, así no hay riesgo de mismatch.
-  const shouldReduceMotion = useReducedMotionSafe();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (immediate) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const reveal = () => el.classList.add('is-revealed');
+
+    if (typeof IntersectionObserver === 'undefined') {
+      reveal();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          reveal();
+          observer.disconnect();
+          clearTimeout(fallback);
+        }
+      },
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
+    );
+    observer.observe(el);
+
+    const fallback = setTimeout(reveal, FALLBACK_MS);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(fallback);
+    };
+  }, [immediate]);
+
+  const style = { '--reveal-y': `${y}px`, '--reveal-delay': `${delay}s` } as React.CSSProperties;
 
   if (immediate) {
     return (
-      <div
-        className={`hero-reveal ${className ?? ''}`}
-        style={{ '--reveal-y': `${y}px`, '--reveal-delay': `${delay}s` } as React.CSSProperties}
-      >
+      <div className={`hero-reveal ${className ?? ''}`} style={style}>
         {children}
       </div>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-10% 0px' }}
-      transition={{
-        duration: shouldReduceMotion ? 0 : 0.6,
-        delay: shouldReduceMotion ? 0 : delay,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className={className}
-    >
+    <div ref={ref} className={`scroll-reveal ${className ?? ''}`} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 }

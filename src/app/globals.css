@@ -167,6 +167,27 @@ body {
   animation-delay: var(--reveal-delay, 0s);
 }
 
+/* Reveal al entrar en viewport, para contenido bajo el pliegue. Antes era
+   whileInView de Framer Motion — mismo riesgo que el hero (T-23): si el
+   hilo principal está ocupado montando Three.js+GSAP+Lenis, el observer
+   interno de Framer puede no disparar nunca y la sección se queda en
+   opacidad 0 para siempre. Este par de clases lo resuelve con transition
+   de CSS puro; ScrollReveal.tsx solo decide CUÁNDO añadir `.is-revealed`
+   (vía IntersectionObserver nativo + un respaldo por tiempo), nunca CÓMO
+   se ve la transición — así una animación JS que nunca se dispara ya no
+   puede dejar nada invisible para siempre. */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 24px));
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+.scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Patrón de grid tipo circuito, deriva lentamente — usado en heroes con
    estética "tech" (páginas servicio×ciudad). Cubierto por la regla de
    prefers-reduced-motion más abajo (animation-duration: 0.01ms). */
