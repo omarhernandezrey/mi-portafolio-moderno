@@ -5,26 +5,73 @@ import {
   Ticket,
   AlertCircle,
   Clock,
+  Filter,
   Plus,
   User,
   Building2,
 } from 'lucide-react';
 import Link from 'next/link';
-import { PageHeader, StatusBadge, EmptyState, ErrorState, StatCard, PriorityBadge } from '@/components/admin/ui';
-import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
+import { PageHeader, StatusBadge, EmptyState, ErrorState, StatCard, PriorityBadge, Pagination } from '@/components/admin/ui';
+import { AdminButton, AdminButtonLink } from '@/components/admin/ui/AdminButton';
+import {
+  DEFAULT_PAGE_SIZE,
+  TICKET_STATUS_OPTIONS,
+  type PaginatedResult,
+  type Ticket as TicketRow,
+  isTicketStatus,
+} from '@/lib/admin/types';
+import { pageRange, parsePage } from '@/lib/admin/query';
 import { getAdminRole } from '@/lib/admin/auth';
 import { hasMinRole } from '@/lib/admin/roles';
 
 export const dynamic = 'force-dynamic';
 
-async function getTickets() {
-  const { data, error } = await supabaseServer
-    .from('tickets')
-    .select('*, lead:leads(name, company)')
-    .order('updated_at', { ascending: false });
+/**
+ * T-31: antes traía TODA la historia de tickets sin tope (`order()` sin
+ * `range`/`limit`) y los 4 contadores de arriba se calculaban filtrando
+ * ese array completo en el cliente — página y conteos repetían el mismo
+ * trabajo. Ahora: lista paginada con filtro por estado + 4 `count`
+ * baratos (`count: 'exact', head: true`, sin traer filas) para los
+ * contadores, que así reflejan el total real sin importar la página.
+ */
+async function getTickets(
+  status?: string,
+  page = 1,
+  pageSize = DEFAULT_PAGE_SIZE
+): Promise<PaginatedResult<TicketRow> & { error: boolean }> {
+  const { from, to } = pageRange(page, pageSize);
 
+  let query = supabaseServer
+    .from('tickets')
+    .select('*, lead:leads(name, company)', { count: 'exact' })
+    .order('updated_at', { ascending: false })
+    .range(from, to);
+
+  if (status && isTicketStatus(status)) {
+    query = query.eq('status', status);
+  }
+
+  const { data, error, count } = await query;
   if (error) console.error('Error fetching tickets:', error);
-  return { tickets: data || [], error: Boolean(error) };
+
+  const total = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  return { data: (data || []) as TicketRow[], total, page, pageSize, totalPages, error: Boolean(error) };
+}
+
+async function getTicketCounts() {
+  const [open, inProgress, waitingClient, closed] = await Promise.all(
+    TICKET_STATUS_OPTIONS.map((option) =>
+      supabaseServer.from('tickets').select('*', { count: 'exact', head: true }).eq('status', option.value)
+    )
+  );
+  return {
+    open: open.count ?? 0,
+    in_progress: inProgress.count ?? 0,
+    waiting_client: waitingClient.count ?? 0,
+    closed: closed.count ?? 0,
+  };
 }
 
 function isOverSLA(updatedAt: string, status: string) {
@@ -44,20 +91,20 @@ function formatDateTime(value: string) {
   });
 }
 
-export default async function AdminTicketsPage() {
-  const { tickets, error: cargaFallida } = await getTickets();
+export default async function AdminTicketsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string; page?: string }>;
+}) {
+  const params = await searchParams;
+  const statusFilter = params.status || '';
+  const page = parsePage(params.page);
+  const [{ data: tickets, total, totalPages, pageSize, error: cargaFallida }, counts] = await Promise.all([
+    getTickets(statusFilter, page),
+    getTicketCounts(),
+  ]);
   const role = await getAdminRole();
   const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
-
-  const counts = {
-    open: tickets.filter((ticket) => ticket.status === 'open').length,
-    in_progress: tickets.filter((ticket) => ticket.status === 'in_progress')
-      .length,
-    waiting_client: tickets.filter(
-      (ticket) => ticket.status === 'waiting_client'
-    ).length,
-    closed: tickets.filter((ticket) => ticket.status === 'closed').length,
-  };
 
   return (
     <div className="space-y-5 lg:space-y-6">
@@ -116,6 +163,29 @@ export default async function AdminTicketsPage() {
           description="Resueltos"
         />
       </section>
+
+      <form
+        method="GET"
+        action="/admin/tickets"
+        className="flex flex-wrap items-center gap-2.5 rounded-2xl border border-admin-line bg-card-bg p-3"
+      >
+        <select
+          name="status"
+          defaultValue={statusFilter}
+          aria-label="Filtrar por estado"
+          className="min-w-0 flex-1 rounded-xl border border-admin-line bg-admin-bg/60 px-3 py-2.5 text-xs font-bold text-text-muted outline-none transition-colors focus:border-primary/40 sm:w-52 sm:flex-none"
+        >
+          <option value="">Todos los estados</option>
+          {TICKET_STATUS_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <AdminButton type="submit" size="sm" icon={<Filter size={14} />}>
+          Filtrar
+        </AdminButton>
+      </form>
 
       <div className="space-y-3 lg:hidden">
         {tickets.length > 0 ? (
@@ -198,6 +268,19 @@ export default async function AdminTicketsPage() {
             title="No hay tickets activos"
             description="Crea un nuevo ticket para comenzar."
           />
+        )}
+
+        {tickets.length > 0 && (
+          <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg">
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              total={total}
+              pageSize={pageSize}
+              basePath="/admin/tickets"
+              query={{ status: statusFilter || undefined }}
+            />
+          </div>
         )}
       </div>
 
@@ -304,6 +387,15 @@ export default async function AdminTicketsPage() {
             </tbody>
           </table>
         </div>
+
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={pageSize}
+          basePath="/admin/tickets"
+          query={{ status: statusFilter || undefined }}
+        />
       </div>
       </>
       )}

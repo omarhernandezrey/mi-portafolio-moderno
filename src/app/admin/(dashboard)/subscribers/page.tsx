@@ -43,6 +43,11 @@ export default function SubscribersPage() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
+  // T-31: la lista que llega del API está acotada (últimos 500) — estos
+  // conteos vienen de `count: 'exact', head: true` reales en el servidor,
+  // no de filtrar ese array truncado, así el total nunca se queda corto.
+  const [counts, setCounts] = useState({ total: 0, confirmed: 0, pending: 0, unsubscribed: 0 });
+
   // T-30: el menú «más acciones» de cada suscriptor no tenía Escape, clic
   // fuera ni foco — se quedaba abierto hasta otro clic en el mismo botón.
   useEffect(() => {
@@ -74,8 +79,9 @@ export default function SubscribersPage() {
     setLoading(true);
     setError('');
     try {
-      const data = await adminFetch<Subscriber[]>('/api/admin/subscribers');
-      setSubscribers(Array.isArray(data) ? data : []);
+      const respuesta = await adminFetch<{ data: Subscriber[]; counts: typeof counts }>('/api/admin/subscribers');
+      setSubscribers(Array.isArray(respuesta?.data) ? respuesta.data : []);
+      if (respuesta?.counts) setCounts(respuesta.counts);
     } catch (err) {
       setError(
         err instanceof Error
@@ -105,22 +111,24 @@ export default function SubscribersPage() {
     });
   }, [subscribers, search, filter]);
 
-  const stats = useMemo(() => ({
-    total: subscribers.length,
-    confirmed: subscribers.filter(s => s.confirmed && !s.unsubscribed_at).length,
-    pending: subscribers.filter(s => !s.confirmed && !s.unsubscribed_at).length,
-    unsubscribed: subscribers.filter(s => !!s.unsubscribed_at).length,
-  }), [subscribers]);
+  const stats = counts;
 
   const handleConfirmarBorrado = async () => {
     if (!borrando) return;
     const id = borrando.id;
+    const borrado = borrando;
     setDeleting(id);
     setError('');
     try {
       await adminFetch(`/api/admin/subscribers/${id}`, { method: 'DELETE' });
       setSubscribers(prev => prev.filter(s => s.id !== id));
       setBorrando(null);
+      setCounts(prev => ({
+        total: Math.max(0, prev.total - 1),
+        confirmed: borrado.confirmed && !borrado.unsubscribed_at ? Math.max(0, prev.confirmed - 1) : prev.confirmed,
+        pending: !borrado.confirmed && !borrado.unsubscribed_at ? Math.max(0, prev.pending - 1) : prev.pending,
+        unsubscribed: borrado.unsubscribed_at ? Math.max(0, prev.unsubscribed - 1) : prev.unsubscribed,
+      }));
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'No se pudo eliminar el suscriptor.'
@@ -141,6 +149,11 @@ export default function SubscribersPage() {
       setSubscribers(prev =>
         prev.map(s => (s.id === id ? { ...s, confirmed } : s))
       );
+      setCounts(prev => (
+        confirmed
+          ? { ...prev, confirmed: prev.confirmed + 1, pending: Math.max(0, prev.pending - 1) }
+          : { ...prev, confirmed: Math.max(0, prev.confirmed - 1), pending: prev.pending + 1 }
+      ));
     } catch (err) {
       setError(
         err instanceof Error

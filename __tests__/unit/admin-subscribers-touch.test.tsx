@@ -20,19 +20,22 @@ import SubscribersPage from '@/app/admin/(dashboard)/subscribers/page';
 
 describe('SubscribersPage — borrar a 44px en la tarjeta móvil (T-29)', () => {
   it('el botón de borrar lleva h-11 w-11', async () => {
-    mockAdminFetch.mockResolvedValueOnce([
-      {
-        id: 'sub-1',
-        email: 'ada@example.com',
-        source: 'newsletter',
-        consent_at: '2026-11-17T00:00:00Z',
-        followup_sent_at: null,
-        created_at: '2026-11-17T00:00:00Z',
-        confirmed: true,
-        confirmation_token: null,
-        unsubscribed_at: null,
-      },
-    ]);
+    mockAdminFetch.mockResolvedValueOnce({
+      data: [
+        {
+          id: 'sub-1',
+          email: 'ada@example.com',
+          source: 'newsletter',
+          consent_at: '2026-11-17T00:00:00Z',
+          followup_sent_at: null,
+          created_at: '2026-11-17T00:00:00Z',
+          confirmed: true,
+          confirmation_token: null,
+          unsubscribed_at: null,
+        },
+      ],
+      counts: { total: 1, confirmed: 1, pending: 0, unsubscribed: 0 },
+    });
 
     render(<SubscribersPage />);
 

@@ -39,10 +39,17 @@ async function contarFilas(tabla: string, soloPublicados = false): Promise<numbe
  * `DISTINCT ON` desde el cliente de Supabase.
  */
 async function obtenerUltimasMetricasPorRepo(): Promise<FilaMetricasRepo[] | null> {
+  // T-31: sin límite, esta consulta crece una fila por repo y por día para
+  // siempre — hoy ~100 repos, dentro de un año serían ~36.500 filas solo
+  // para quedarse con la más reciente de cada uno. El cron escribe todos
+  // los repos casi en el mismo instante, así que con 300 filas (~3x el
+  // conteo actual de repos) sobra margen para encontrar la última de cada
+  // repo sin traer el historial completo.
   const { data, error } = await supabaseServer
     .from('github_metrics')
     .select('repo, daily_activity, languages_bytes, captured_at')
-    .order('captured_at', { ascending: false });
+    .order('captured_at', { ascending: false })
+    .limit(300);
 
   if (error) {
     console.error(`[admin/portafolio] github_metrics: ${error.message}`);
