@@ -40,13 +40,13 @@ export default async function PrivacidadPage({ params }: Props) {
       <main className="flex-1 max-w-[60rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 space-y-16">
 
         {/* Document Header */}
-        <header className="space-y-8 border-b border-white/5 pb-16">
+        <header className="space-y-8 border-b border-text-muted/10 pb-16">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-4">
               <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                 {isEn ? 'Global Compliance Standards' : 'Legal Compliance Unit'}
               </div>
-              <h1 className="font-display italic text-4xl md:text-6xl font-medium text-white-custom tracking-tight leading-none">
+              <h1 className="font-display italic text-4xl md:text-6xl font-medium text-text-main tracking-tight leading-none">
                 {isEn ? (
                   <>Privacy <br /><span className="text-primary">Protocol</span></>
                 ) : (
@@ -55,9 +55,9 @@ export default async function PrivacidadPage({ params }: Props) {
               </h1>
             </div>
 
-            <div className="bg-card-bg/40 border border-white/5 p-6 rounded-[24px] backdrop-blur-xl text-right md:min-w-[200px]">
+            <div className="bg-card-bg/40 border border-text-muted/10 p-6 rounded-[24px] backdrop-blur-xl text-right md:min-w-[200px]">
               <div className="text-4xs font-black uppercase tracking-[0.2em] text-text-muted opacity-40 mb-1">{isEn ? 'Last Revision' : 'Última Revisión'}</div>
-              <div className="text-sm font-bold text-white-custom italic">{isEn ? 'April 15, 2026' : '15 de Abril, 2026'}</div>
+              <div className="text-sm font-bold text-text-main italic">{isEn ? 'April 15, 2026' : '15 de Abril, 2026'}</div>
               <div className="flex items-center justify-end gap-2 text-3xs text-primary font-black uppercase tracking-tighter mt-2">
                 {isEn ? <Globe size={12} /> : <Shield size={12} />}
                 {isEn ? 'Global Availability' : 'Vigencia Activa'}
@@ -67,7 +67,7 @@ export default async function PrivacidadPage({ params }: Props) {
         </header>
 
         {/* Regulatory Content */}
-        <div className="bg-card-bg rounded-[48px] border border-white/5 p-8 md:p-16 shadow-2xl space-y-16 relative overflow-hidden">
+        <div className="bg-card-bg rounded-[48px] border border-text-muted/10 p-8 md:p-16 shadow-2xl space-y-16 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 opacity-[0.02]">
             <Scale size={200} className="-rotate-12" />
           </div>
@@ -134,7 +134,7 @@ export default async function PrivacidadPage({ params }: Props) {
                 />
               </section>
 
-              <footer className="pt-16 border-t border-white/5 text-center">
+              <footer className="pt-16 border-t border-text-muted/10 text-center">
                 <p className="text-2xs text-text-muted/40 font-medium italic leading-relaxed uppercase tracking-[0.1em]">
                   By interacting with the intelligent assistant or contact protocols, <br />
                   you freely and consciously authorize the processing of your information under these guidelines.
@@ -203,7 +203,7 @@ export default async function PrivacidadPage({ params }: Props) {
                 />
               </section>
 
-              <footer className="pt-16 border-t border-white/5 text-center">
+              <footer className="pt-16 border-t border-text-muted/10 text-center">
                 <p className="text-2xs text-text-muted/40 font-medium italic leading-relaxed uppercase tracking-[0.1em]">
                   Al interactuar con el asistente inteligente o los protocolos de contacto, <br />
                   usted autoriza de forma libre y consciente el tratamiento de su información bajo estas directrices.
@@ -244,7 +244,7 @@ function LegalBlock({ number, title, content, list, extra }: { number: string, t
     <div className="space-y-6 group">
       <div className="flex items-center gap-6">
         <div className="text-[32px] font-black text-primary/10 italic group-hover:text-primary/30 transition-colors leading-none">{number}</div>
-        <h2 className="font-display italic text-2xl font-medium text-white-custom tracking-tight leading-none">{title}</h2>
+        <h2 className="font-display italic text-2xl font-medium text-text-main tracking-tight leading-none">{title}</h2>
       </div>
       <div className="pl-12 space-y-4">
         <p className="text-sm text-text-muted font-medium leading-relaxed italic opacity-70">{content}</p>
