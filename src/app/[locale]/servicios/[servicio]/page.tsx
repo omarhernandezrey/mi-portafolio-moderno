@@ -153,7 +153,7 @@ export default async function ServicioPilarPage({ params }: Props) {
       <JsonLd data={breadcrumbSchema} />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5 bg-card-bg/20 backdrop-blur-sm">
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden border-b border-text-muted/10 bg-card-bg/20 backdrop-blur-sm">
         <HeroParallax className="absolute top-0 left-0 w-full h-full -z-10">
           <div data-parallax-speed="0.25" className="absolute inset-0 opacity-20">
             <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
@@ -173,7 +173,7 @@ export default async function ServicioPilarPage({ params }: Props) {
               </div>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.1}>
-              <h1 className="font-display italic text-4xl sm:text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-[0.95]">
+              <h1 className="font-display italic text-4xl sm:text-5xl md:text-7xl font-medium text-text-main tracking-tight leading-[0.95]">
                 {h1}
               </h1>
             </ScrollReveal>
@@ -208,7 +208,7 @@ export default async function ServicioPilarPage({ params }: Props) {
                 alt={isEn ? servicioHero.alt.en : servicioHero.alt.es}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
                 priority
-                className="w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl"
+                className="w-full max-w-5xl mx-auto aspect-[3/2] sm:aspect-[4/3] lg:aspect-[16/9] rounded-canvas border border-text-muted/10 shadow-2xl"
               />
             </ScrollReveal>
           )}
@@ -216,12 +216,12 @@ export default async function ServicioPilarPage({ params }: Props) {
       </section>
 
       {/* Benefits */}
-      <section className="py-24 border-t border-white/5 bg-background/50">
+      <section className="py-24 border-t border-text-muted/10 bg-background/50">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <ScrollReveal>
             <div className="text-center space-y-4 mb-16">
               <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{isEn ? 'Benefits' : 'Ventajas'}</h2>
-              <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+              <h3 className="font-display italic text-3xl md:text-4xl font-medium text-text-main tracking-tight">
                 {isEn ? `Why choose my ${serviceName} service` : `Por qué elegir mi servicio de ${serviceName}`}
               </h3>
             </div>
@@ -229,7 +229,7 @@ export default async function ServicioPilarPage({ params }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {benefits.map((benefit, idx) => (
               <ScrollReveal key={idx} delay={(idx % 3) * 0.1}>
-                <div className="flex items-start gap-4 bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
+                <div className="flex items-start gap-4 bg-card-bg rounded-2xl p-6 border border-text-muted/10 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300">
                   <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-0.5" />
                   <p className="text-sm font-medium text-text-muted italic">{benefit}</p>
                 </div>
@@ -245,7 +245,7 @@ export default async function ServicioPilarPage({ params }: Props) {
           <ScrollReveal>
             <div className="text-center space-y-4 mb-16">
               <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{isEn ? 'Process' : 'Proceso'}</h2>
-              <h3 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+              <h3 className="font-display italic text-3xl md:text-4xl font-medium text-text-main tracking-tight">
                 {isEn ? 'How I work' : 'Cómo trabajamos'}
               </h3>
             </div>
@@ -255,13 +255,13 @@ export default async function ServicioPilarPage({ params }: Props) {
               const [title, desc] = step.split(': ');
               return (
                 <ScrollReveal key={idx} delay={idx * 0.1} className="relative">
-                  <div className="bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-primary/20 transition-colors h-full">
+                  <div className="bg-card-bg rounded-2xl p-6 border border-text-muted/10 hover:border-primary/20 transition-colors h-full">
                     <div className="text-4xl font-black text-primary/20 mb-4">0{idx + 1}</div>
-                    <h4 className="text-lg font-bold text-white-custom italic mb-2">{title}</h4>
+                    <h4 className="text-lg font-bold text-text-main italic mb-2">{title}</h4>
                     <p className="text-sm text-text-muted/70 font-medium italic">{desc}</p>
                   </div>
                   {idx < 3 && (
-                    <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-white/10" />
+                    <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-text-muted/15" />
                   )}
                 </ScrollReveal>
               );
@@ -271,21 +271,21 @@ export default async function ServicioPilarPage({ params }: Props) {
       </section>
 
       {/* Price & Time */}
-      <section className="py-24 border-t border-white/5 bg-card-bg/30">
+      <section className="py-24 border-t border-text-muted/10 bg-card-bg/30">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <ScrollReveal>
-              <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center hover:border-primary/20 transition-colors">
+              <div className="bg-card-bg rounded-3xl p-8 border border-text-muted/10 text-center hover:border-primary/20 transition-colors">
                 <DollarSign className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">{isEn ? 'Investment' : 'Inversión'}</h3>
-                <p className="text-2xl font-black text-white-custom italic">{priceRange}</p>
+                <p className="text-2xl font-black text-text-main italic">{priceRange}</p>
               </div>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <div className="bg-card-bg rounded-3xl p-8 border border-white/5 text-center hover:border-primary/20 transition-colors">
+              <div className="bg-card-bg rounded-3xl p-8 border border-text-muted/10 text-center hover:border-primary/20 transition-colors">
                 <Clock className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-black text-text-muted uppercase tracking-widest mb-2">{isEn ? 'Delivery Time' : 'Tiempo de Entrega'}</h3>
-                <p className="text-2xl font-black text-white-custom italic">{deliveryTime}</p>
+                <p className="text-2xl font-black text-text-main italic">{deliveryTime}</p>
               </div>
             </ScrollReveal>
           </div>
@@ -298,7 +298,7 @@ export default async function ServicioPilarPage({ params }: Props) {
           <ScrollReveal>
             <div className="text-center space-y-4 mb-16">
               <HelpCircle className="w-12 h-12 text-primary mx-auto" />
-              <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+              <h2 className="font-display italic text-3xl md:text-4xl font-medium text-text-main tracking-tight">
                 {isEn ? `Frequently asked questions about ${serviceName}` : `Preguntas frecuentes sobre ${serviceName}`}
               </h2>
             </div>
@@ -306,8 +306,8 @@ export default async function ServicioPilarPage({ params }: Props) {
           <div className="space-y-6">
             {faqs.map((faq, idx) => (
               <ScrollReveal key={idx} delay={Math.min(idx * 0.08, 0.4)}>
-                <div className="bg-card-bg rounded-2xl p-6 border border-white/5">
-                  <h3 className="text-lg font-bold text-white-custom italic mb-3">{faq.q}</h3>
+                <div className="bg-card-bg rounded-2xl p-6 border border-text-muted/10">
+                  <h3 className="text-lg font-bold text-text-main italic mb-3">{faq.q}</h3>
                   <p className="text-sm text-text-muted/70 font-medium leading-relaxed italic">{faq.a}</p>
                 </div>
               </ScrollReveal>
@@ -317,12 +317,12 @@ export default async function ServicioPilarPage({ params }: Props) {
       </section>
 
       {/* Cities */}
-      <section className="py-24 bg-card-bg/30 border-t border-white/5">
+      <section className="py-24 bg-card-bg/30 border-t border-text-muted/10">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-10">
           <ScrollReveal>
             <div className="text-center space-y-4">
               <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{isEn ? 'Coverage' : 'Cobertura'}</h2>
-              <h3 className="font-display italic text-2xl md:text-3xl font-medium text-white-custom tracking-tight">
+              <h3 className="font-display italic text-2xl md:text-3xl font-medium text-text-main tracking-tight">
                 {isEn ? `${serviceName} by city` : `${servicio.name} por ciudad`}
               </h3>
               <p className="text-sm text-text-muted/60 max-w-xl mx-auto">
@@ -338,10 +338,10 @@ export default async function ServicioPilarPage({ params }: Props) {
                 <Link
                   key={ciudad.id}
                   href={`/servicios/${servicio.id}/${ciudad.id}`}
-                  className="group flex items-center gap-2 p-4 bg-card-bg rounded-2xl border border-white/5 hover:border-primary/30 hover:bg-primary/5 transition-all"
+                  className="group flex items-center gap-2 p-4 bg-card-bg rounded-2xl border border-text-muted/10 hover:border-primary/30 hover:bg-primary/5 transition-all"
                 >
                   <MapPin size={14} className="text-primary shrink-0" />
-                  <span className="text-sm font-bold text-text-muted group-hover:text-white-custom transition-colors">
+                  <span className="text-sm font-bold text-text-muted group-hover:text-text-main transition-colors">
                     {ciudad.name}
                   </span>
                 </Link>
@@ -352,12 +352,12 @@ export default async function ServicioPilarPage({ params }: Props) {
       </section>
 
       {/* Other Services */}
-      <section className="py-24 bg-background border-t border-white/5">
+      <section className="py-24 bg-background border-t border-text-muted/10">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)]">
           <ScrollReveal>
             <div className="text-center space-y-4 mb-12">
               <h2 className="font-mono-label text-[0.6rem] text-text-muted opacity-40">{isEn ? 'Catalog' : 'Catálogo'}</h2>
-              <h3 className="font-display italic text-2xl md:text-3xl font-medium text-white-custom tracking-tight">
+              <h3 className="font-display italic text-2xl md:text-3xl font-medium text-text-main tracking-tight">
                 {isEn ? 'Other Services' : 'Otros servicios'}
               </h3>
             </div>
@@ -370,10 +370,10 @@ export default async function ServicioPilarPage({ params }: Props) {
                 <ScrollReveal key={s.id} delay={(idx % 3) * 0.1}>
                 <Link
                   href={`/servicios/${s.id}`}
-                  className="group bg-card-bg rounded-2xl p-5 border border-white/5 hover:border-primary/30 transition-all flex items-center justify-between"
+                  className="group bg-card-bg rounded-2xl p-5 border border-text-muted/10 hover:border-primary/30 transition-all flex items-center justify-between"
                 >
                   <div>
-                    <p className="text-sm font-bold text-white-custom group-hover:text-primary transition-colors italic mb-1">
+                    <p className="text-sm font-bold text-text-main group-hover:text-primary transition-colors italic mb-1">
                       {isEn ? s.nameEn ?? s.name : s.name}
                     </p>
                     <p className="text-3xs text-text-muted/50">

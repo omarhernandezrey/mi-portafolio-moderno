@@ -182,7 +182,7 @@ export default async function ServiciosPage({ params }: Props) {
       <JsonLd data={professionalServiceSchema} />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5 bg-card-bg/20">
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden border-b border-text-muted/10 bg-card-bg/20">
         <HeroParallax className="absolute inset-0 -z-10">
           <div data-parallax-speed="0.25" className="absolute inset-0">
             <div className="absolute top-[15%] left-[5%] w-80 h-80 bg-primary/8 rounded-full blur-[120px]" />
@@ -201,7 +201,7 @@ export default async function ServiciosPage({ params }: Props) {
               </div>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.1}>
-              <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-[0.9]">
+              <h1 className="font-display italic text-5xl md:text-7xl font-medium text-text-main tracking-tight leading-[0.9]">
                 {isEn ? (
                   <>Web Development<br /><span className="text-primary">& Software</span><br />Services</>
                 ) : (
@@ -219,7 +219,7 @@ export default async function ServiciosPage({ params }: Props) {
             <ScrollReveal immediate delay={0.2}>
               <div className="flex flex-wrap gap-3 pt-2">
                 {['React & Next.js', 'Node.js', 'PostgreSQL', isEn ? 'Technical SEO' : 'SEO Técnico', 'E-commerce'].map(tech => (
-                  <span key={tech} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-text-muted">
+                  <span key={tech} className="px-3 py-1 bg-card-bg border border-text-muted/15 rounded-full text-xs font-bold text-text-muted">
                     {tech}
                   </span>
                 ))}
@@ -236,7 +236,7 @@ export default async function ServiciosPage({ params }: Props) {
                 </WhatsAppCTA>
                 <Link
                   href="#servicios"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-[24px] border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:border-white/20 transition-all"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-[24px] border border-text-muted/15 text-sm font-bold text-text-muted hover:text-text-main hover:border-primary/30 transition-all"
                 >
                   {isEn ? 'View all services' : 'Ver todos los servicios'}
                 </Link>
@@ -251,13 +251,13 @@ export default async function ServiciosPage({ params }: Props) {
               alt={isEn ? pageHeroImages.servicios.alt.en : pageHeroImages.servicios.alt.es}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1440px"
               priority
-              className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 mt-12 shadow-2xl"
+              className="w-full aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-text-muted/10 mt-12 shadow-2xl"
             />
           </ScrollReveal>
 
           {/* Stats Row */}
           <ScrollReveal immediate delay={0.5}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-16 border-t border-white/5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-16 border-t border-text-muted/10">
               <StatCounter immediate value={30} prefix="+" label={isEn ? 'Projects delivered' : 'Proyectos entregados'} />
               <StatCounter immediate value={5} suffix="+" label={isEn ? 'Years of experience' : 'Años de experiencia'} />
               <div className="text-center">
@@ -276,7 +276,7 @@ export default async function ServiciosPage({ params }: Props) {
           <ScrollReveal>
             <div className="text-center space-y-4">
               <p className="font-mono-label text-[0.65rem] text-primary/60">{isEn ? 'Service catalog' : 'Catálogo de servicios'}</p>
-              <h2 className="font-display italic text-3xl md:text-5xl font-medium text-white-custom tracking-tight">
+              <h2 className="font-display italic text-3xl md:text-5xl font-medium text-text-main tracking-tight">
                 {isEn ? 'What can I do for your business?' : '¿Qué puedo hacer por tu negocio?'}
               </h2>
               <p className="text-text-muted max-w-2xl mx-auto leading-relaxed opacity-70">
@@ -290,7 +290,7 @@ export default async function ServiciosPage({ params }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {serviciosProgramaticos.map((servicio, idx) => (
               <ScrollReveal key={servicio.id} delay={(idx % 3) * 0.1}>
-              <article className="group bg-card-bg rounded-[28px] border border-white/5 p-7 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 flex flex-col">
+              <article className="group bg-card-bg rounded-[28px] border border-text-muted/10 p-7 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 flex flex-col">
                 <div className="flex items-start justify-between mb-6">
                   <div className="p-3 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
                     {SERVICE_ICONS[servicio.id] ?? <Code2 size={28} />}
@@ -300,7 +300,7 @@ export default async function ServiciosPage({ params }: Props) {
                   </span>
                 </div>
 
-                <h3 className="text-xl font-black text-white-custom italic mb-3 group-hover:text-primary transition-colors">
+                <h3 className="text-xl font-black text-text-main italic mb-3 group-hover:text-primary transition-colors">
                   {svcName(servicio)}
                 </h3>
                 <p className="text-sm text-text-muted/70 leading-relaxed flex-1 mb-5">
@@ -316,11 +316,11 @@ export default async function ServiciosPage({ params }: Props) {
                   ))}
                 </div>
 
-                <div className="pt-5 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-5 border-t border-text-muted/10 flex items-center justify-between">
                   <span className="text-xs font-black text-primary/80 italic">{(isEn ? servicio.priceRangeUsd ?? servicio.priceRange : servicio.priceRange).split('(')[0].trim()}</span>
                   <Link
                     href={`/servicios/${servicio.id}`}
-                    className="flex items-center gap-1.5 text-3xs font-black uppercase tracking-widest text-text-muted hover:text-white-custom transition-colors"
+                    className="flex items-center gap-1.5 text-3xs font-black uppercase tracking-widest text-text-muted hover:text-text-main transition-colors"
                   >
                     {isEn ? 'View service' : 'Ver servicio'}
                     <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
@@ -334,12 +334,12 @@ export default async function ServiciosPage({ params }: Props) {
       </section>
 
       {/* Cities Section */}
-      <section className="py-24 border-t border-white/5 bg-card-bg/20">
+      <section className="py-24 border-t border-text-muted/10 bg-card-bg/20">
         <div className="max-w-[90rem] mx-auto px-[var(--grid-margin)] space-y-12">
           <ScrollReveal>
             <div className="text-center space-y-4">
               <p className="font-mono-label text-[0.65rem] text-primary/60">{isEn ? 'Coverage' : 'Cobertura'}</p>
-              <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+              <h2 className="font-display italic text-3xl md:text-4xl font-medium text-text-main tracking-tight">
                 {isEn ? (
                   <>I work with clients across Colombia<br /><span className="text-primary">and remote for the US and LATAM</span></>
                 ) : (
@@ -360,10 +360,10 @@ export default async function ServiciosPage({ params }: Props) {
                 <Link
                   key={ciudad.id}
                   href={`/servicios/desarrollo-web/${ciudad.id}`}
-                  className="group flex items-center gap-2 p-4 bg-card-bg rounded-2xl border border-white/5 hover:border-primary/30 hover:bg-primary/5 transition-all"
+                  className="group flex items-center gap-2 p-4 bg-card-bg rounded-2xl border border-text-muted/10 hover:border-primary/30 hover:bg-primary/5 transition-all"
                 >
                   <MapPin size={14} className="text-primary shrink-0" />
-                  <span className="text-sm font-bold text-text-muted group-hover:text-white-custom transition-colors">{ciudad.name}</span>
+                  <span className="text-sm font-bold text-text-muted group-hover:text-text-main transition-colors">{ciudad.name}</span>
                 </Link>
               ))}
             </div>
@@ -385,7 +385,7 @@ export default async function ServiciosPage({ params }: Props) {
           <ScrollReveal>
             <div className="text-center space-y-4">
               <p className="font-mono-label text-[0.65rem] text-primary/60">{isEn ? 'How I work' : 'Cómo trabajo'}</p>
-              <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+              <h2 className="font-display italic text-3xl md:text-4xl font-medium text-text-main tracking-tight">
                 {isEn ? 'Clear process, real results' : 'Proceso claro, resultados reales'}
               </h2>
             </div>
@@ -406,9 +406,9 @@ export default async function ServiciosPage({ params }: Props) {
                 ]
             ).map((step, idx) => (
               <ScrollReveal key={step.n} delay={idx * 0.1}>
-                <div className="bg-card-bg rounded-2xl p-7 border border-white/5">
+                <div className="bg-card-bg rounded-2xl p-7 border border-text-muted/10">
                   <div className="text-5xl font-black text-primary/15 mb-5">{step.n}</div>
-                  <h3 className="text-lg font-black text-white-custom italic mb-3">{step.title}</h3>
+                  <h3 className="text-lg font-black text-text-main italic mb-3">{step.title}</h3>
                   <p className="text-sm text-text-muted/70 leading-relaxed">{step.desc}</p>
                 </div>
               </ScrollReveal>
@@ -418,10 +418,10 @@ export default async function ServiciosPage({ params }: Props) {
       </section>
 
       {/* CTA */}
-      <section className="py-24 border-t border-white/5 bg-card-bg/30">
+      <section className="py-24 border-t border-text-muted/10 bg-card-bg/30">
         <ScrollReveal>
           <div className="max-w-3xl mx-auto px-4 md:px-8 text-center space-y-8">
-            <h2 className="font-display italic text-3xl md:text-5xl font-medium text-white-custom tracking-tight">
+            <h2 className="font-display italic text-3xl md:text-5xl font-medium text-text-main tracking-tight">
               {isEn ? (
                 <>Ready to start<br /><span className="text-primary">your project?</span></>
               ) : (
@@ -443,7 +443,7 @@ export default async function ServiciosPage({ params }: Props) {
               </WhatsAppCTA>
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-3 px-10 py-5 rounded-[28px] border border-white/10 text-sm font-bold text-text-muted hover:text-white-custom hover:border-white/20 transition-all"
+                className="inline-flex items-center gap-3 px-10 py-5 rounded-[28px] border border-text-muted/15 text-sm font-bold text-text-muted hover:text-text-main hover:border-primary/30 transition-all"
               >
                 {isEn ? 'Read the technical blog' : 'Leer el blog técnico'}
               </Link>
