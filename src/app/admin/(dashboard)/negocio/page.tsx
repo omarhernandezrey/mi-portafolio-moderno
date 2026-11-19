@@ -18,10 +18,7 @@ import {
   Activity,
 } from 'lucide-react';
 import { supabaseServer } from '@/lib/supabaseServer';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import StatCard from '@/components/admin/ui/StatCard';
-import StatusBadge from '@/components/admin/ui/StatusBadge';
-import EmptyState from '@/components/admin/ui/EmptyState';
+import { PageHeader, StatCard, StatusBadge, EmptyState, PriorityBadge } from '@/components/admin/ui';
 import AdminCard from '@/components/admin/ui/AdminCard';
 import { AdminButton, AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import { getAdminRole } from '@/lib/admin/auth';
@@ -37,32 +34,6 @@ const PIPELINE_STAGES = [
   { key: 'cold', label: 'Fríos', color: 'bg-text-muted' },
   { key: 'lost', label: 'Perdidos', color: 'bg-admin-danger' },
 ] as const;
-
-const PRIORITY_META: Record<
-  string,
-  { label: string; className: string; dot: string }
-> = {
-  urgent: {
-    label: 'Urgente',
-    className: 'text-admin-danger bg-admin-danger/10 border-admin-danger/20',
-    dot: 'bg-admin-danger',
-  },
-  high: {
-    label: 'Alta',
-    className: 'text-admin-warning bg-admin-warning/10 border-admin-warning/20',
-    dot: 'bg-admin-warning',
-  },
-  medium: {
-    label: 'Media',
-    className: 'text-admin-info bg-admin-info/10 border-admin-info/20',
-    dot: 'bg-admin-info',
-  },
-  low: {
-    label: 'Baja',
-    className: 'text-text-muted bg-white/[0.04] border-admin-line',
-    dot: 'bg-text-muted',
-  },
-};
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('es-CO', {
@@ -755,8 +726,6 @@ export default async function NegocioDashboardPage() {
             <div className="mt-4 space-y-2.5">
               {stats.recentTickets.length > 0 ? (
                 stats.recentTickets.map((ticket) => {
-                  const priority =
-                    PRIORITY_META[ticket.priority] || PRIORITY_META.low;
                   return (
                     <Link
                       key={ticket.id}
@@ -767,14 +736,7 @@ export default async function NegocioDashboardPage() {
                         <p className="min-w-0 truncate text-xs font-bold text-admin-ink transition-colors group-hover:text-primary">
                           {ticket.title}
                         </p>
-                        <span
-                          className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-4xs font-bold ${priority.className}`}
-                        >
-                          <span
-                            className={`h-1 w-1 rounded-full ${priority.dot}`}
-                          />
-                          {priority.label}
-                        </span>
+                        <PriorityBadge priority={ticket.priority} compact />
                       </div>
                       <div className="mt-2 flex items-center justify-between gap-2">
                         <StatusBadge status={ticket.status} size="sm" />

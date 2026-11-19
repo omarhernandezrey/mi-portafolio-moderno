@@ -19,10 +19,9 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import StatusBadge from '@/components/admin/ui/StatusBadge';
+import { StatusBadge, EmptyState } from '@/components/admin/ui';
 import InfoItem from '@/components/admin/ui/InfoItem';
 import ChatBubble from '@/components/admin/ui/ChatBubble';
-import EmptyState from '@/components/admin/ui/EmptyState';
 import { getAdminRole } from '@/lib/admin/auth';
 import { hasMinRole } from '@/lib/admin/roles';
 

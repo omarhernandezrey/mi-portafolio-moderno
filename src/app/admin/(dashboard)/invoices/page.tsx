@@ -10,11 +10,7 @@ import {
   Clock,
   CheckCircle2,
 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import StatusBadge from '@/components/admin/ui/StatusBadge';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import ErrorState from '@/components/admin/ui/ErrorState';
-import StatCard from '@/components/admin/ui/StatCard';
+import { PageHeader, StatusBadge, EmptyState, ErrorState, StatCard } from '@/components/admin/ui';
 import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 
 export const dynamic = 'force-dynamic';

@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, Heart, Layers, Pencil, Plus, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, Tabs, TabPanel } from '@/components/admin/ui';
+import { Heart, Layers, Plus, RefreshCw, Sparkles } from 'lucide-react';
+import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, Tabs, TabPanel, PageHeader, EmptyState, RowReorderActions } from '@/components/admin/ui';
 import { adminFetch } from '@/lib/admin/client-fetch';
 import { useToast } from '@/components/ui/Toast';
+import { useReorderableResource } from '@/hooks/useReorderableResource';
 import { ServiceFormDialog, aCuerpoDeApi, type ServiceFormInitial } from '@/components/admin/portfolio/ServiceFormDialog';
 import { TechnologyFormDialog, type TechnologyFormInitial, type TechnologyFormValues } from '@/components/admin/portfolio/TechnologyFormDialog';
 import { TimelineFormDialog, type TimelineFormInitial, type TimelineFormValues } from '@/components/admin/portfolio/TimelineFormDialog';
@@ -61,7 +60,6 @@ export default function AdminContenidoPage() {
 
   const [loading, setLoading] = useState(true);
   const [errorCarga, setErrorCarga] = useState('');
-  const [ocupados, setOcupados] = useState<Set<string>>(new Set());
   const [guardandoInteres, setGuardandoInteres] = useState(false);
 
   const [dialogServicio, setDialogServicio] = useState(false);
@@ -106,208 +104,88 @@ export default function AdminContenidoPage() {
     cargar();
   }, [cargar]);
 
-  function marcarOcupado(id: string, ocupado: boolean) {
-    setOcupados((prev) => {
-      const next = new Set(prev);
-      if (ocupado) next.add(id);
-      else next.delete(id);
-      return next;
-    });
-  }
+  // ── Servicios / Tecnologías / Timeline (T-30: el cuarteto crear, publicar,
+  // reordenar y borrar optimista vive una sola vez en useReorderableResource) ─
 
-  // ── Servicios ────────────────────────────────────────────────────────────
+  const serviciosCrud = useReorderableResource<ServiceRow>({
+    items: services,
+    setItems: setServices,
+    endpoint: '/api/admin/portfolio/services',
+    showToast,
+    labels: {
+      created: 'Servicio creado.',
+      updated: 'Servicio actualizado.',
+      deleted: 'Servicio eliminado.',
+      toggleError: 'No se pudo cambiar la publicación.',
+      reorderError: 'No se pudo reordenar.',
+      deleteError: 'No se pudo eliminar.',
+    },
+  });
+
+  const tecnologiasCrud = useReorderableResource<TechnologyRow>({
+    items: technologies,
+    setItems: setTechnologies,
+    endpoint: '/api/admin/portfolio/technologies',
+    showToast,
+    labels: {
+      created: 'Tecnología creada.',
+      updated: 'Tecnología actualizada.',
+      deleted: 'Tecnología eliminada.',
+      toggleError: 'No se pudo cambiar la publicación.',
+      reorderError: 'No se pudo reordenar.',
+      deleteError: 'No se pudo eliminar.',
+    },
+  });
+
+  const timelineCrud = useReorderableResource<TimelineRow>({
+    items: timeline,
+    setItems: setTimeline,
+    endpoint: '/api/admin/portfolio/timeline',
+    showToast,
+    labels: {
+      created: 'Hito creado.',
+      updated: 'Hito actualizado.',
+      deleted: 'Hito eliminado.',
+      toggleError: 'No se pudo cambiar la publicación.',
+      reorderError: 'No se pudo reordenar.',
+      deleteError: 'No se pudo eliminar.',
+    },
+  });
 
   async function handleSubmitServicio(body: ReturnType<typeof aCuerpoDeApi>) {
-    if (editandoServicio) {
-      const r = await adminFetch<ServiceRow>(`/api/admin/portfolio/services/${editandoServicio.id}`, { method: 'PATCH', body: JSON.stringify(body) });
-      setServices((prev) => prev.map((s) => (s.id === r.id ? { ...s, ...r } : s)));
-      showToast('Servicio actualizado.', 'success');
-    } else {
-      const r = await adminFetch<ServiceRow>('/api/admin/portfolio/services', { method: 'POST', body: JSON.stringify(body) });
-      setServices((prev) => [...prev, r]);
-      showToast('Servicio creado.', 'success');
-    }
+    if (editandoServicio) await serviciosCrud.actualizar(editandoServicio.id, body);
+    else await serviciosCrud.crear(body);
     setDialogServicio(false);
     setEditandoServicio(null);
   }
 
-  async function handleTogglePublicadoServicio(s: ServiceRow) {
-    const anterior = s.is_published;
-    marcarOcupado(s.id, true);
-    setServices((prev) => prev.map((x) => (x.id === s.id ? { ...x, is_published: !anterior } : x)));
-    try {
-      await adminFetch(`/api/admin/portfolio/services/${s.id}`, { method: 'PATCH', body: JSON.stringify({ is_published: !anterior }) });
-    } catch (err) {
-      setServices((prev) => prev.map((x) => (x.id === s.id ? { ...x, is_published: anterior } : x)));
-      showToast(err instanceof Error ? err.message : 'No se pudo cambiar la publicación.', 'error');
-    } finally {
-      marcarOcupado(s.id, false);
-    }
-  }
-
-  async function handleMoverServicio(s: ServiceRow, direccion: 'arriba' | 'abajo') {
-    const idx = services.findIndex((x) => x.id === s.id);
-    const destino = direccion === 'arriba' ? idx - 1 : idx + 1;
-    if (idx < 0 || destino < 0 || destino >= services.length) return;
-    const anterior = services;
-    const nuevo = [...services];
-    [nuevo[idx], nuevo[destino]] = [nuevo[destino], nuevo[idx]];
-    setServices(nuevo);
-    marcarOcupado(s.id, true);
-    try {
-      await adminFetch('/api/admin/portfolio/services/reorder', { method: 'PATCH', body: JSON.stringify({ ids: nuevo.map((x) => x.id) }) });
-    } catch (err) {
-      setServices(anterior);
-      showToast(err instanceof Error ? err.message : 'No se pudo reordenar.', 'error');
-    } finally {
-      marcarOcupado(s.id, false);
-    }
-  }
-
   async function handleConfirmarBorradoServicio() {
     if (!borrandoServicio) return;
-    const id = borrandoServicio.id;
-    marcarOcupado(id, true);
-    try {
-      await adminFetch(`/api/admin/portfolio/services/${id}`, { method: 'DELETE' });
-      setServices((prev) => prev.filter((s) => s.id !== id));
-      showToast('Servicio eliminado.', 'success');
-      setBorrandoServicio(null);
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'No se pudo eliminar.', 'error');
-    } finally {
-      marcarOcupado(id, false);
-    }
+    await serviciosCrud.eliminar(borrandoServicio.id, () => setBorrandoServicio(null));
   }
 
-  // ── Tecnologías ──────────────────────────────────────────────────────────
-
   async function handleSubmitTecnologia(values: TechnologyFormValues) {
-    if (editandoTecnologia) {
-      const r = await adminFetch<TechnologyRow>(`/api/admin/portfolio/technologies/${editandoTecnologia.id}`, { method: 'PATCH', body: JSON.stringify(values) });
-      setTechnologies((prev) => prev.map((t) => (t.id === r.id ? { ...t, ...r } : t)));
-      showToast('Tecnología actualizada.', 'success');
-    } else {
-      const r = await adminFetch<TechnologyRow>('/api/admin/portfolio/technologies', { method: 'POST', body: JSON.stringify(values) });
-      setTechnologies((prev) => [...prev, r]);
-      showToast('Tecnología creada.', 'success');
-    }
+    if (editandoTecnologia) await tecnologiasCrud.actualizar(editandoTecnologia.id, values);
+    else await tecnologiasCrud.crear(values);
     setDialogTecnologia(false);
     setEditandoTecnologia(null);
   }
 
-  async function handleTogglePublicadoTecnologia(t: TechnologyRow) {
-    const anterior = t.is_published;
-    marcarOcupado(t.id, true);
-    setTechnologies((prev) => prev.map((x) => (x.id === t.id ? { ...x, is_published: !anterior } : x)));
-    try {
-      await adminFetch(`/api/admin/portfolio/technologies/${t.id}`, { method: 'PATCH', body: JSON.stringify({ is_published: !anterior }) });
-    } catch (err) {
-      setTechnologies((prev) => prev.map((x) => (x.id === t.id ? { ...x, is_published: anterior } : x)));
-      showToast(err instanceof Error ? err.message : 'No se pudo cambiar la publicación.', 'error');
-    } finally {
-      marcarOcupado(t.id, false);
-    }
-  }
-
-  async function handleMoverTecnologia(t: TechnologyRow, direccion: 'arriba' | 'abajo') {
-    const idx = technologies.findIndex((x) => x.id === t.id);
-    const destino = direccion === 'arriba' ? idx - 1 : idx + 1;
-    if (idx < 0 || destino < 0 || destino >= technologies.length) return;
-    const anterior = technologies;
-    const nuevo = [...technologies];
-    [nuevo[idx], nuevo[destino]] = [nuevo[destino], nuevo[idx]];
-    setTechnologies(nuevo);
-    marcarOcupado(t.id, true);
-    try {
-      await adminFetch('/api/admin/portfolio/technologies/reorder', { method: 'PATCH', body: JSON.stringify({ ids: nuevo.map((x) => x.id) }) });
-    } catch (err) {
-      setTechnologies(anterior);
-      showToast(err instanceof Error ? err.message : 'No se pudo reordenar.', 'error');
-    } finally {
-      marcarOcupado(t.id, false);
-    }
-  }
-
   async function handleConfirmarBorradoTecnologia() {
     if (!borrandoTecnologia) return;
-    const id = borrandoTecnologia.id;
-    marcarOcupado(id, true);
-    try {
-      await adminFetch(`/api/admin/portfolio/technologies/${id}`, { method: 'DELETE' });
-      setTechnologies((prev) => prev.filter((t) => t.id !== id));
-      showToast('Tecnología eliminada.', 'success');
-      setBorrandoTecnologia(null);
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'No se pudo eliminar.', 'error');
-    } finally {
-      marcarOcupado(id, false);
-    }
+    await tecnologiasCrud.eliminar(borrandoTecnologia.id, () => setBorrandoTecnologia(null));
   }
 
-  // ── Timeline ─────────────────────────────────────────────────────────────
-
   async function handleSubmitHito(values: TimelineFormValues) {
-    if (editandoHito) {
-      const r = await adminFetch<TimelineRow>(`/api/admin/portfolio/timeline/${editandoHito.id}`, { method: 'PATCH', body: JSON.stringify(values) });
-      setTimeline((prev) => prev.map((h) => (h.id === r.id ? { ...h, ...r } : h)));
-      showToast('Hito actualizado.', 'success');
-    } else {
-      const r = await adminFetch<TimelineRow>('/api/admin/portfolio/timeline', { method: 'POST', body: JSON.stringify(values) });
-      setTimeline((prev) => [...prev, r]);
-      showToast('Hito creado.', 'success');
-    }
+    if (editandoHito) await timelineCrud.actualizar(editandoHito.id, values);
+    else await timelineCrud.crear(values);
     setDialogHito(false);
     setEditandoHito(null);
   }
 
-  async function handleTogglePublicadoHito(h: TimelineRow) {
-    const anterior = h.is_published;
-    marcarOcupado(h.id, true);
-    setTimeline((prev) => prev.map((x) => (x.id === h.id ? { ...x, is_published: !anterior } : x)));
-    try {
-      await adminFetch(`/api/admin/portfolio/timeline/${h.id}`, { method: 'PATCH', body: JSON.stringify({ is_published: !anterior }) });
-    } catch (err) {
-      setTimeline((prev) => prev.map((x) => (x.id === h.id ? { ...x, is_published: anterior } : x)));
-      showToast(err instanceof Error ? err.message : 'No se pudo cambiar la publicación.', 'error');
-    } finally {
-      marcarOcupado(h.id, false);
-    }
-  }
-
-  async function handleMoverHito(h: TimelineRow, direccion: 'arriba' | 'abajo') {
-    const idx = timeline.findIndex((x) => x.id === h.id);
-    const destino = direccion === 'arriba' ? idx - 1 : idx + 1;
-    if (idx < 0 || destino < 0 || destino >= timeline.length) return;
-    const anterior = timeline;
-    const nuevo = [...timeline];
-    [nuevo[idx], nuevo[destino]] = [nuevo[destino], nuevo[idx]];
-    setTimeline(nuevo);
-    marcarOcupado(h.id, true);
-    try {
-      await adminFetch('/api/admin/portfolio/timeline/reorder', { method: 'PATCH', body: JSON.stringify({ ids: nuevo.map((x) => x.id) }) });
-    } catch (err) {
-      setTimeline(anterior);
-      showToast(err instanceof Error ? err.message : 'No se pudo reordenar.', 'error');
-    } finally {
-      marcarOcupado(h.id, false);
-    }
-  }
-
   async function handleConfirmarBorradoHito() {
     if (!borrandoHito) return;
-    const id = borrandoHito.id;
-    marcarOcupado(id, true);
-    try {
-      await adminFetch(`/api/admin/portfolio/timeline/${id}`, { method: 'DELETE' });
-      setTimeline((prev) => prev.filter((h) => h.id !== id));
-      showToast('Hito eliminado.', 'success');
-      setBorrandoHito(null);
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'No se pudo eliminar.', 'error');
-    } finally {
-      marcarOcupado(id, false);
-    }
+    await timelineCrud.eliminar(borrandoHito.id, () => setBorrandoHito(null));
   }
 
   // ── Perfil → intereses ───────────────────────────────────────────────────
@@ -366,51 +244,25 @@ export default function AdminContenidoPage() {
   const columnasServicios: Column<ServiceRow>[] = [
     { id: 'titulo', header: 'Servicio', mobile: 'primary', cell: (s) => s.title.es || s.slug },
     { id: 'insignia', header: 'Insignia', mobile: 'meta', cell: (s) => s.badge || '—' },
-    { id: 'publicado', header: 'Publicado', cell: (s) => <Switch checked={s.is_published} onChange={() => handleTogglePublicadoServicio(s)} label={`Publicar ${s.title.es || s.slug}`} hideLabel disabled={ocupados.has(s.id)} /> },
+    { id: 'publicado', header: 'Publicado', cell: (s) => <Switch checked={s.is_published} onChange={() => serviciosCrud.togglePublicado(s)} label={`Publicar ${s.title.es || s.slug}`} hideLabel disabled={serviciosCrud.ocupados.has(s.id)} /> },
   ];
 
   const columnasTecnologias: Column<TechnologyRow>[] = [
     { id: 'nombre', header: 'Tecnología', mobile: 'primary', cell: (t) => t.name },
     { id: 'categoria', header: 'Categoría', mobile: 'meta', cell: (t) => t.category || '—' },
-    { id: 'publicado', header: 'Publicado', cell: (t) => <Switch checked={t.is_published} onChange={() => handleTogglePublicadoTecnologia(t)} label={`Publicar ${t.name}`} hideLabel disabled={ocupados.has(t.id)} /> },
+    { id: 'publicado', header: 'Publicado', cell: (t) => <Switch checked={t.is_published} onChange={() => tecnologiasCrud.togglePublicado(t)} label={`Publicar ${t.name}`} hideLabel disabled={tecnologiasCrud.ocupados.has(t.id)} /> },
   ];
 
   const columnasTimeline: Column<TimelineRow>[] = [
     { id: 'titulo', header: 'Hito', mobile: 'primary', cell: (h) => h.title.es || h.slug },
     { id: 'ano', header: 'Año', mobile: 'meta', cell: (h) => h.year.es || '—' },
-    { id: 'publicado', header: 'Publicado', cell: (h) => <Switch checked={h.is_published} onChange={() => handleTogglePublicadoHito(h)} label={`Publicar ${h.title.es || h.slug}`} hideLabel disabled={ocupados.has(h.id)} /> },
+    { id: 'publicado', header: 'Publicado', cell: (h) => <Switch checked={h.is_published} onChange={() => timelineCrud.togglePublicado(h)} label={`Publicar ${h.title.es || h.slug}`} hideLabel disabled={timelineCrud.ocupados.has(h.id)} /> },
   ];
 
   const columnasIntereses: Column<InterestFormValues & { indice: number }>[] = [
     { id: 'titulo', header: 'Interés', mobile: 'primary', cell: (i) => i.title },
     { id: 'icono', header: 'Icono', mobile: 'meta', cell: (i) => i.iconKey },
   ];
-
-  const botonesFila = (
-    deshabilitarArriba: boolean,
-    deshabilitarAbajo: boolean,
-    ocupado: boolean,
-    etiqueta: string,
-    onArriba: () => void,
-    onAbajo: () => void,
-    onEditar: () => void,
-    onEliminar: () => void,
-  ) => (
-    <>
-      <button type="button" onClick={onArriba} disabled={deshabilitarArriba || ocupado} aria-label={`Subir ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink disabled:cursor-not-allowed disabled:opacity-40">
-        <ArrowUp size={15} />
-      </button>
-      <button type="button" onClick={onAbajo} disabled={deshabilitarAbajo || ocupado} aria-label={`Bajar ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink disabled:cursor-not-allowed disabled:opacity-40">
-        <ArrowDown size={15} />
-      </button>
-      <button type="button" onClick={onEditar} aria-label={`Editar ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink">
-        <Pencil size={15} />
-      </button>
-      <button type="button" onClick={onEliminar} aria-label={`Eliminar ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-danger/20 bg-admin-danger/10 text-admin-danger transition-colors hover:bg-admin-danger/15">
-        <Trash2 size={15} />
-      </button>
-    </>
-  );
 
   return (
     <div className="space-y-6 lg:space-y-8">
@@ -452,7 +304,18 @@ export default function AdminContenidoPage() {
               empty={<EmptyState icon={<Layers size={22} />} title="Sin servicios todavía" description="Los servicios que crees aquí alimentan la sección de servicios del sitio." />}
               actions={(s) => {
                 const idx = services.findIndex((x) => x.id === s.id);
-                return botonesFila(idx <= 0, idx >= services.length - 1, ocupados.has(s.id), s.title.es || s.slug, () => handleMoverServicio(s, 'arriba'), () => handleMoverServicio(s, 'abajo'), () => { setEditandoServicio(s); setDialogServicio(true); }, () => setBorrandoServicio(s));
+                return (
+                  <RowReorderActions
+                    disableUp={idx <= 0}
+                    disableDown={idx >= services.length - 1}
+                    busy={serviciosCrud.ocupados.has(s.id)}
+                    label={s.title.es || s.slug}
+                    onUp={() => serviciosCrud.mover(s, 'arriba')}
+                    onDown={() => serviciosCrud.mover(s, 'abajo')}
+                    onEdit={() => { setEditandoServicio(s); setDialogServicio(true); }}
+                    onDelete={() => setBorrandoServicio(s)}
+                  />
+                );
               }}
             />
           </TabPanel>
@@ -472,7 +335,18 @@ export default function AdminContenidoPage() {
               empty={<EmptyState icon={<Sparkles size={22} />} title="Sin tecnologías todavía" description="Las tecnologías que crees aquí alimentan la cintilla del stack en la home." />}
               actions={(t) => {
                 const idx = technologies.findIndex((x) => x.id === t.id);
-                return botonesFila(idx <= 0, idx >= technologies.length - 1, ocupados.has(t.id), t.name, () => handleMoverTecnologia(t, 'arriba'), () => handleMoverTecnologia(t, 'abajo'), () => { setEditandoTecnologia(t); setDialogTecnologia(true); }, () => setBorrandoTecnologia(t));
+                return (
+                  <RowReorderActions
+                    disableUp={idx <= 0}
+                    disableDown={idx >= technologies.length - 1}
+                    busy={tecnologiasCrud.ocupados.has(t.id)}
+                    label={t.name}
+                    onUp={() => tecnologiasCrud.mover(t, 'arriba')}
+                    onDown={() => tecnologiasCrud.mover(t, 'abajo')}
+                    onEdit={() => { setEditandoTecnologia(t); setDialogTecnologia(true); }}
+                    onDelete={() => setBorrandoTecnologia(t)}
+                  />
+                );
               }}
             />
           </TabPanel>
@@ -492,7 +366,18 @@ export default function AdminContenidoPage() {
               empty={<EmptyState icon={<Sparkles size={22} />} title="Sin hitos todavía" description="Los hitos que crees aquí alimentan el timeline de experiencia." />}
               actions={(h) => {
                 const idx = timeline.findIndex((x) => x.id === h.id);
-                return botonesFila(idx <= 0, idx >= timeline.length - 1, ocupados.has(h.id), h.title.es || h.slug, () => handleMoverHito(h, 'arriba'), () => handleMoverHito(h, 'abajo'), () => { setEditandoHito(h); setDialogHito(true); }, () => setBorrandoHito(h));
+                return (
+                  <RowReorderActions
+                    disableUp={idx <= 0}
+                    disableDown={idx >= timeline.length - 1}
+                    busy={timelineCrud.ocupados.has(h.id)}
+                    label={h.title.es || h.slug}
+                    onUp={() => timelineCrud.mover(h, 'arriba')}
+                    onDown={() => timelineCrud.mover(h, 'abajo')}
+                    onEdit={() => { setEditandoHito(h); setDialogHito(true); }}
+                    onDelete={() => setBorrandoHito(h)}
+                  />
+                );
               }}
             />
           </TabPanel>
@@ -516,18 +401,18 @@ export default function AdminContenidoPage() {
               caption="Intereses del perfil"
               loading={loading}
               empty={<EmptyState icon={<Heart size={22} />} title="Sin intereses todavía" description="Los intereses que crees aquí alimentan la tarjeta «Sobre mí» del sitio." />}
-              actions={(i) =>
-                botonesFila(
-                  i.indice <= 0,
-                  i.indice >= interests.length - 1,
-                  guardandoInteres,
-                  i.title,
-                  () => handleMoverInteres(i.indice, 'arriba'),
-                  () => handleMoverInteres(i.indice, 'abajo'),
-                  () => { setIndiceEditandoInteres(i.indice); setDialogInteres(true); },
-                  () => setIndiceBorrandoInteres(i.indice),
-                )
-              }
+              actions={(i) => (
+                <RowReorderActions
+                  disableUp={i.indice <= 0}
+                  disableDown={i.indice >= interests.length - 1}
+                  busy={guardandoInteres}
+                  label={i.title}
+                  onUp={() => handleMoverInteres(i.indice, 'arriba')}
+                  onDown={() => handleMoverInteres(i.indice, 'abajo')}
+                  onEdit={() => { setIndiceEditandoInteres(i.indice); setDialogInteres(true); }}
+                  onDelete={() => setIndiceBorrandoInteres(i.indice)}
+                />
+              )}
             />
           </TabPanel>
         </>
@@ -566,7 +451,7 @@ export default function AdminContenidoPage() {
         description={`«${borrandoServicio?.title.es || borrandoServicio?.slug}» desaparecerá de la sección de servicios del sitio. Esta acción no se puede deshacer.`}
         confirmLabel="Eliminar"
         tone="danger"
-        busy={borrandoServicio ? ocupados.has(borrandoServicio.id) : false}
+        busy={borrandoServicio ? serviciosCrud.ocupados.has(borrandoServicio.id) : false}
       />
       <ConfirmDialog
         open={Boolean(borrandoTecnologia)}
@@ -576,7 +461,7 @@ export default function AdminContenidoPage() {
         description={`«${borrandoTecnologia?.name}» desaparecerá de la cintilla del stack. Esta acción no se puede deshacer.`}
         confirmLabel="Eliminar"
         tone="danger"
-        busy={borrandoTecnologia ? ocupados.has(borrandoTecnologia.id) : false}
+        busy={borrandoTecnologia ? tecnologiasCrud.ocupados.has(borrandoTecnologia.id) : false}
       />
       <ConfirmDialog
         open={Boolean(borrandoHito)}
@@ -586,7 +471,7 @@ export default function AdminContenidoPage() {
         description={`«${borrandoHito?.title.es || borrandoHito?.slug}» desaparecerá del timeline. Esta acción no se puede deshacer.`}
         confirmLabel="Eliminar"
         tone="danger"
-        busy={borrandoHito ? ocupados.has(borrandoHito.id) : false}
+        busy={borrandoHito ? timelineCrud.ocupados.has(borrandoHito.id) : false}
       />
       <ConfirmDialog
         open={indiceBorrandoInteres !== null}

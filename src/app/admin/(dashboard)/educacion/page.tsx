@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, Award, FolderPlus, GraduationCap, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, Tabs, TabPanel } from '@/components/admin/ui';
+import { Award, FolderPlus, GraduationCap, Plus, RefreshCw } from 'lucide-react';
+import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, Tabs, TabPanel, PageHeader, EmptyState, RowReorderActions } from '@/components/admin/ui';
 import { adminFetch } from '@/lib/admin/client-fetch';
 import { useToast } from '@/components/ui/Toast';
+import { useReorderableResource } from '@/hooks/useReorderableResource';
 import { EducationCategoryFormDialog, type CategoryFormValues } from '@/components/admin/portfolio/EducationCategoryFormDialog';
 import { EducationItemFormDialog, type ItemFormValues } from '@/components/admin/portfolio/EducationItemFormDialog';
 import { BadgeFormDialog, type BadgeFormValues } from '@/components/admin/portfolio/BadgeFormDialog';
@@ -56,7 +55,6 @@ export default function AdminEducacionPage() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorCarga, setErrorCarga] = useState('');
-  const [ocupados, setOcupados] = useState<Set<string>>(new Set());
 
   const [dialogCategoria, setDialogCategoria] = useState(false);
   const [editandoCategoria, setEditandoCategoria] = useState<CategoryRow | null>(null);
@@ -93,15 +91,6 @@ export default function AdminEducacionPage() {
     cargar();
   }, [cargar]);
 
-  function marcarOcupado(id: string, ocupado: boolean) {
-    setOcupados((prev) => {
-      const next = new Set(prev);
-      if (ocupado) next.add(id);
-      else next.delete(id);
-      return next;
-    });
-  }
-
   const categoriasOrdenadas = useMemo(() => [...categorias].sort((a, b) => a.position - b.position), [categorias]);
   const categoriaPorId = useMemo(() => new Map(categorias.map((c) => [c.id, c])), [categorias]);
   const itemsOrdenados = useMemo(
@@ -111,124 +100,81 @@ export default function AdminEducacionPage() {
       ),
     [categoriasOrdenadas, items],
   );
+  const badgesOrdenados = useMemo(() => [...badges].sort((a, b) => a.position - b.position), [badges]);
 
-  // ── Categorías ───────────────────────────────────────────────────────────
+  // T-30: el cuarteto crear/publicar/reordenar/borrar optimista vivía
+  // copiado carácter a carácter 3 veces aquí y 3 veces más en
+  // contenido/page.tsx — ahora una sola fuente en useReorderableResource.
+
+  const categoriasCrud = useReorderableResource<CategoryRow>({
+    items: categoriasOrdenadas,
+    setItems: setCategorias,
+    endpoint: '/api/admin/portfolio/education-categories',
+    showToast,
+    labels: {
+      created: 'Categoría creada.',
+      updated: 'Categoría actualizada.',
+      deleted: 'Categoría eliminada.',
+      toggleError: 'No se pudo cambiar la publicación.',
+      reorderError: 'No se pudo reordenar.',
+      deleteError: 'No se pudo eliminar.',
+    },
+  });
+
+  // Cursos: el reordenado NO usa itemsCrud.mover — `position` es por
+  // categoría, así que subir/bajar opera solo dentro de la categoría del
+  // ítem (lógica propia de este recurso, no duplicada en ningún otro lado).
+  const itemsCrud = useReorderableResource<ItemRow>({
+    items: itemsOrdenados,
+    setItems,
+    endpoint: '/api/admin/portfolio/education-items',
+    showToast,
+    labels: {
+      created: 'Curso creado.',
+      updated: 'Curso actualizado.',
+      deleted: 'Curso eliminado.',
+      toggleError: 'No se pudo cambiar la publicación.',
+      reorderError: 'No se pudo reordenar.',
+      deleteError: 'No se pudo eliminar.',
+    },
+  });
+
+  const badgesCrud = useReorderableResource<BadgeRow>({
+    items: badgesOrdenados,
+    setItems: setBadges,
+    endpoint: '/api/admin/portfolio/badges',
+    showToast,
+    labels: {
+      created: 'Insignia creada.',
+      updated: 'Insignia actualizada.',
+      deleted: 'Insignia eliminada.',
+      toggleError: 'No se pudo cambiar la publicación.',
+      reorderError: 'No se pudo reordenar.',
+      deleteError: 'No se pudo eliminar.',
+    },
+  });
 
   async function handleSubmitCategoria(values: CategoryFormValues) {
-    if (editandoCategoria) {
-      const r = await adminFetch<CategoryRow>(`/api/admin/portfolio/education-categories/${editandoCategoria.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(values),
-      });
-      setCategorias((prev) => prev.map((c) => (c.id === r.id ? { ...c, ...r } : c)));
-      showToast('Categoría actualizada.', 'success');
-    } else {
-      const r = await adminFetch<CategoryRow>('/api/admin/portfolio/education-categories', {
-        method: 'POST',
-        body: JSON.stringify(values),
-      });
-      setCategorias((prev) => [...prev, r]);
-      showToast('Categoría creada.', 'success');
-    }
+    if (editandoCategoria) await categoriasCrud.actualizar(editandoCategoria.id, values);
+    else await categoriasCrud.crear(values);
     setDialogCategoria(false);
     setEditandoCategoria(null);
-  }
-
-  async function handleTogglePublicadoCategoria(categoria: CategoryRow) {
-    const anterior = categoria.is_published;
-    marcarOcupado(categoria.id, true);
-    setCategorias((prev) => prev.map((c) => (c.id === categoria.id ? { ...c, is_published: !anterior } : c)));
-    try {
-      await adminFetch(`/api/admin/portfolio/education-categories/${categoria.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ is_published: !anterior }),
-      });
-    } catch (err) {
-      setCategorias((prev) => prev.map((c) => (c.id === categoria.id ? { ...c, is_published: anterior } : c)));
-      showToast(err instanceof Error ? err.message : 'No se pudo cambiar la publicación.', 'error');
-    } finally {
-      marcarOcupado(categoria.id, false);
-    }
-  }
-
-  async function handleMoverCategoria(categoria: CategoryRow, direccion: 'arriba' | 'abajo') {
-    const idx = categoriasOrdenadas.findIndex((c) => c.id === categoria.id);
-    const destino = direccion === 'arriba' ? idx - 1 : idx + 1;
-    if (idx < 0 || destino < 0 || destino >= categoriasOrdenadas.length) return;
-
-    const anterior = categorias;
-    const nuevo = [...categoriasOrdenadas];
-    [nuevo[idx], nuevo[destino]] = [nuevo[destino], nuevo[idx]];
-    setCategorias(nuevo);
-    marcarOcupado(categoria.id, true);
-
-    try {
-      await adminFetch('/api/admin/portfolio/education-categories/reorder', {
-        method: 'PATCH',
-        body: JSON.stringify({ ids: nuevo.map((c) => c.id) }),
-      });
-    } catch (err) {
-      setCategorias(anterior);
-      showToast(err instanceof Error ? err.message : 'No se pudo reordenar.', 'error');
-    } finally {
-      marcarOcupado(categoria.id, false);
-    }
   }
 
   async function handleConfirmarBorradoCategoria() {
     if (!borrandoCategoria) return;
     const id = borrandoCategoria.id;
-    marcarOcupado(id, true);
-    try {
-      await adminFetch(`/api/admin/portfolio/education-categories/${id}`, { method: 'DELETE' });
-      setCategorias((prev) => prev.filter((c) => c.id !== id));
+    await categoriasCrud.eliminar(id, () => {
       setItems((prev) => prev.filter((i) => i.category_id !== id));
-      showToast('Categoría eliminada.', 'success');
       setBorrandoCategoria(null);
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'No se pudo eliminar.', 'error');
-    } finally {
-      marcarOcupado(id, false);
-    }
+    });
   }
-
-  // ── Cursos (ítems de educación) ──────────────────────────────────────────
 
   async function handleSubmitItem(values: ItemFormValues) {
-    if (editandoItem) {
-      const r = await adminFetch<ItemRow>(`/api/admin/portfolio/education-items/${editandoItem.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(values),
-      });
-      setItems((prev) => prev.map((i) => (i.id === r.id ? { ...i, ...r } : i)));
-      showToast('Curso actualizado.', 'success');
-    } else {
-      const r = await adminFetch<ItemRow>('/api/admin/portfolio/education-items', {
-        method: 'POST',
-        body: JSON.stringify(values),
-      });
-      setItems((prev) => [...prev, r]);
-      showToast('Curso creado.', 'success');
-    }
+    if (editandoItem) await itemsCrud.actualizar(editandoItem.id, values);
+    else await itemsCrud.crear(values);
     setDialogItem(false);
     setEditandoItem(null);
-  }
-
-  async function handleTogglePublicadoItem(item: ItemRow) {
-    const anterior = item.is_published;
-    marcarOcupado(item.id, true);
-    setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, is_published: !anterior } : i)));
-    try {
-      await adminFetch(`/api/admin/portfolio/education-items/${item.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ is_published: !anterior }),
-      });
-    } catch (err) {
-      setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, is_published: anterior } : i)));
-      showToast(err instanceof Error ? err.message : 'No se pudo cambiar la publicación.', 'error');
-    } finally {
-      marcarOcupado(item.id, false);
-    }
   }
 
   /** `position` es por categoría: el subir/bajar opera solo dentro de la categoría del ítem. */
@@ -243,7 +189,7 @@ export default function AdminEducacionPage() {
     [nuevaSubcategoria[idx], nuevaSubcategoria[destino]] = [nuevaSubcategoria[destino], nuevaSubcategoria[idx]];
     const idsNuevoOrden = new Map(nuevaSubcategoria.map((i, pos) => [i.id, pos]));
     setItems((prev) => prev.map((i) => (idsNuevoOrden.has(i.id) ? { ...i, position: idsNuevoOrden.get(i.id)! } : i)));
-    marcarOcupado(item.id, true);
+    itemsCrud.marcarOcupado(item.id, true);
 
     try {
       await adminFetch('/api/admin/portfolio/education-items/reorder', {
@@ -254,104 +200,25 @@ export default function AdminEducacionPage() {
       setItems(anterior);
       showToast(err instanceof Error ? err.message : 'No se pudo reordenar.', 'error');
     } finally {
-      marcarOcupado(item.id, false);
+      itemsCrud.marcarOcupado(item.id, false);
     }
   }
 
   async function handleConfirmarBorradoItem() {
     if (!borrandoItem) return;
-    const id = borrandoItem.id;
-    marcarOcupado(id, true);
-    try {
-      await adminFetch(`/api/admin/portfolio/education-items/${id}`, { method: 'DELETE' });
-      setItems((prev) => prev.filter((i) => i.id !== id));
-      showToast('Curso eliminado.', 'success');
-      setBorrandoItem(null);
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'No se pudo eliminar.', 'error');
-    } finally {
-      marcarOcupado(id, false);
-    }
+    await itemsCrud.eliminar(borrandoItem.id, () => setBorrandoItem(null));
   }
 
-  // ── Insignias ────────────────────────────────────────────────────────────
-
   async function handleSubmitBadge(values: BadgeFormValues) {
-    if (editandoBadge) {
-      const r = await adminFetch<BadgeRow>(`/api/admin/portfolio/badges/${editandoBadge.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(values),
-      });
-      setBadges((prev) => prev.map((b) => (b.id === r.id ? { ...b, ...r } : b)));
-      showToast('Insignia actualizada.', 'success');
-    } else {
-      const r = await adminFetch<BadgeRow>('/api/admin/portfolio/badges', {
-        method: 'POST',
-        body: JSON.stringify(values),
-      });
-      setBadges((prev) => [...prev, r]);
-      showToast('Insignia creada.', 'success');
-    }
+    if (editandoBadge) await badgesCrud.actualizar(editandoBadge.id, values);
+    else await badgesCrud.crear(values);
     setDialogBadge(false);
     setEditandoBadge(null);
   }
 
-  async function handleTogglePublicadoBadge(badge: BadgeRow) {
-    const anterior = badge.is_published;
-    marcarOcupado(badge.id, true);
-    setBadges((prev) => prev.map((b) => (b.id === badge.id ? { ...b, is_published: !anterior } : b)));
-    try {
-      await adminFetch(`/api/admin/portfolio/badges/${badge.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ is_published: !anterior }),
-      });
-    } catch (err) {
-      setBadges((prev) => prev.map((b) => (b.id === badge.id ? { ...b, is_published: anterior } : b)));
-      showToast(err instanceof Error ? err.message : 'No se pudo cambiar la publicación.', 'error');
-    } finally {
-      marcarOcupado(badge.id, false);
-    }
-  }
-
-  async function handleMoverBadge(badge: BadgeRow, direccion: 'arriba' | 'abajo') {
-    const ordenadas = [...badges].sort((a, b) => a.position - b.position);
-    const idx = ordenadas.findIndex((b) => b.id === badge.id);
-    const destino = direccion === 'arriba' ? idx - 1 : idx + 1;
-    if (idx < 0 || destino < 0 || destino >= ordenadas.length) return;
-
-    const anterior = badges;
-    const nuevo = [...ordenadas];
-    [nuevo[idx], nuevo[destino]] = [nuevo[destino], nuevo[idx]];
-    setBadges(nuevo);
-    marcarOcupado(badge.id, true);
-
-    try {
-      await adminFetch('/api/admin/portfolio/badges/reorder', {
-        method: 'PATCH',
-        body: JSON.stringify({ ids: nuevo.map((b) => b.id) }),
-      });
-    } catch (err) {
-      setBadges(anterior);
-      showToast(err instanceof Error ? err.message : 'No se pudo reordenar.', 'error');
-    } finally {
-      marcarOcupado(badge.id, false);
-    }
-  }
-
   async function handleConfirmarBorradoBadge() {
     if (!borrandoBadge) return;
-    const id = borrandoBadge.id;
-    marcarOcupado(id, true);
-    try {
-      await adminFetch(`/api/admin/portfolio/badges/${id}`, { method: 'DELETE' });
-      setBadges((prev) => prev.filter((b) => b.id !== id));
-      showToast('Insignia eliminada.', 'success');
-      setBorrandoBadge(null);
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : 'No se pudo eliminar.', 'error');
-    } finally {
-      marcarOcupado(id, false);
-    }
+    await badgesCrud.eliminar(borrandoBadge.id, () => setBorrandoBadge(null));
   }
 
   // ── Columnas ─────────────────────────────────────────────────────────────
@@ -363,7 +230,7 @@ export default function AdminEducacionPage() {
       id: 'publicado',
       header: 'Publicado',
       cell: (c) => (
-        <Switch checked={c.is_published} onChange={() => handleTogglePublicadoCategoria(c)} label={`Publicar ${c.name.es || c.slug}`} hideLabel disabled={ocupados.has(c.id)} />
+        <Switch checked={c.is_published} onChange={() => categoriasCrud.togglePublicado(c)} label={`Publicar ${c.name.es || c.slug}`} hideLabel disabled={categoriasCrud.ocupados.has(c.id)} />
       ),
     },
   ];
@@ -375,7 +242,7 @@ export default function AdminEducacionPage() {
       id: 'publicado',
       header: 'Publicado',
       cell: (i) => (
-        <Switch checked={i.is_published} onChange={() => handleTogglePublicadoItem(i)} label={`Publicar ${i.title.es || i.slug}`} hideLabel disabled={ocupados.has(i.id)} />
+        <Switch checked={i.is_published} onChange={() => itemsCrud.togglePublicado(i)} label={`Publicar ${i.title.es || i.slug}`} hideLabel disabled={itemsCrud.ocupados.has(i.id)} />
       ),
     },
   ];
@@ -387,36 +254,10 @@ export default function AdminEducacionPage() {
       id: 'publicado',
       header: 'Publicado',
       cell: (b) => (
-        <Switch checked={b.is_published} onChange={() => handleTogglePublicadoBadge(b)} label={`Publicar ${b.title.es || b.slug}`} hideLabel disabled={ocupados.has(b.id)} />
+        <Switch checked={b.is_published} onChange={() => badgesCrud.togglePublicado(b)} label={`Publicar ${b.title.es || b.slug}`} hideLabel disabled={badgesCrud.ocupados.has(b.id)} />
       ),
     },
   ];
-
-  const botonSubirBajarEditarEliminar = (
-    deshabilitarArriba: boolean,
-    deshabilitarAbajo: boolean,
-    ocupado: boolean,
-    etiqueta: string,
-    onArriba: () => void,
-    onAbajo: () => void,
-    onEditar: () => void,
-    onEliminar: () => void,
-  ) => (
-    <>
-      <button type="button" onClick={onArriba} disabled={deshabilitarArriba || ocupado} aria-label={`Subir ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink disabled:cursor-not-allowed disabled:opacity-40">
-        <ArrowUp size={15} />
-      </button>
-      <button type="button" onClick={onAbajo} disabled={deshabilitarAbajo || ocupado} aria-label={`Bajar ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink disabled:cursor-not-allowed disabled:opacity-40">
-        <ArrowDown size={15} />
-      </button>
-      <button type="button" onClick={onEditar} aria-label={`Editar ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink">
-        <Pencil size={15} />
-      </button>
-      <button type="button" onClick={onEliminar} aria-label={`Eliminar ${etiqueta}`} className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-danger/20 bg-admin-danger/10 text-admin-danger transition-colors hover:bg-admin-danger/15">
-        <Trash2 size={15} />
-      </button>
-    </>
-  );
 
   const cursosDeLaCategoriaABorrar = borrandoCategoria ? items.filter((i) => i.category_id === borrandoCategoria.id).length : 0;
 
@@ -474,18 +315,20 @@ export default function AdminEducacionPage() {
               empty={<EmptyState icon={<GraduationCap size={22} />} title="Sin categorías todavía" description="Crea una categoría antes de añadir cursos." />}
               actions={(c) => {
                 const idx = categoriasOrdenadas.findIndex((item) => item.id === c.id);
-                return botonSubirBajarEditarEliminar(
-                  idx <= 0,
-                  idx >= categoriasOrdenadas.length - 1,
-                  ocupados.has(c.id),
-                  c.name.es || c.slug,
-                  () => handleMoverCategoria(c, 'arriba'),
-                  () => handleMoverCategoria(c, 'abajo'),
-                  () => {
-                    setEditandoCategoria(c);
-                    setDialogCategoria(true);
-                  },
-                  () => setBorrandoCategoria(c),
+                return (
+                  <RowReorderActions
+                    disableUp={idx <= 0}
+                    disableDown={idx >= categoriasOrdenadas.length - 1}
+                    busy={categoriasCrud.ocupados.has(c.id)}
+                    label={c.name.es || c.slug}
+                    onUp={() => categoriasCrud.mover(c, 'arriba')}
+                    onDown={() => categoriasCrud.mover(c, 'abajo')}
+                    onEdit={() => {
+                      setEditandoCategoria(c);
+                      setDialogCategoria(true);
+                    }}
+                    onDelete={() => setBorrandoCategoria(c)}
+                  />
                 );
               }}
             />
@@ -516,18 +359,20 @@ export default function AdminEducacionPage() {
               actions={(i) => {
                 const delaCategoria = items.filter((item) => item.category_id === i.category_id).sort((a, b) => a.position - b.position);
                 const idx = delaCategoria.findIndex((item) => item.id === i.id);
-                return botonSubirBajarEditarEliminar(
-                  idx <= 0,
-                  idx >= delaCategoria.length - 1,
-                  ocupados.has(i.id),
-                  i.title.es || i.slug,
-                  () => handleMoverItem(i, 'arriba'),
-                  () => handleMoverItem(i, 'abajo'),
-                  () => {
-                    setEditandoItem(i);
-                    setDialogItem(true);
-                  },
-                  () => setBorrandoItem(i),
+                return (
+                  <RowReorderActions
+                    disableUp={idx <= 0}
+                    disableDown={idx >= delaCategoria.length - 1}
+                    busy={itemsCrud.ocupados.has(i.id)}
+                    label={i.title.es || i.slug}
+                    onUp={() => handleMoverItem(i, 'arriba')}
+                    onDown={() => handleMoverItem(i, 'abajo')}
+                    onEdit={() => {
+                      setEditandoItem(i);
+                      setDialogItem(true);
+                    }}
+                    onDelete={() => setBorrandoItem(i)}
+                  />
                 );
               }}
             />
@@ -548,26 +393,27 @@ export default function AdminEducacionPage() {
             </div>
             <DataTable
               columns={columnasBadges}
-              rows={[...badges].sort((a, b) => a.position - b.position)}
+              rows={badgesOrdenados}
               rowKey={(b) => b.id}
               caption="Insignias destacadas"
               loading={loading}
               empty={<EmptyState icon={<Award size={22} />} title="Sin insignias todavía" description="Las insignias que crees aquí alimentan el carrusel de cursos destacados." />}
               actions={(b) => {
-                const ordenadas = [...badges].sort((a, c) => a.position - c.position);
-                const idx = ordenadas.findIndex((item) => item.id === b.id);
-                return botonSubirBajarEditarEliminar(
-                  idx <= 0,
-                  idx >= ordenadas.length - 1,
-                  ocupados.has(b.id),
-                  b.title.es || b.slug,
-                  () => handleMoverBadge(b, 'arriba'),
-                  () => handleMoverBadge(b, 'abajo'),
-                  () => {
-                    setEditandoBadge(b);
-                    setDialogBadge(true);
-                  },
-                  () => setBorrandoBadge(b),
+                const idx = badgesOrdenados.findIndex((item) => item.id === b.id);
+                return (
+                  <RowReorderActions
+                    disableUp={idx <= 0}
+                    disableDown={idx >= badgesOrdenados.length - 1}
+                    busy={badgesCrud.ocupados.has(b.id)}
+                    label={b.title.es || b.slug}
+                    onUp={() => badgesCrud.mover(b, 'arriba')}
+                    onDown={() => badgesCrud.mover(b, 'abajo')}
+                    onEdit={() => {
+                      setEditandoBadge(b);
+                      setDialogBadge(true);
+                    }}
+                    onDelete={() => setBorrandoBadge(b)}
+                  />
                 );
               }}
             />
@@ -618,7 +464,7 @@ export default function AdminEducacionPage() {
         }
         confirmLabel="Eliminar"
         tone="danger"
-        busy={borrandoCategoria ? ocupados.has(borrandoCategoria.id) : false}
+        busy={borrandoCategoria ? categoriasCrud.ocupados.has(borrandoCategoria.id) : false}
       />
 
       <ConfirmDialog
@@ -629,7 +475,7 @@ export default function AdminEducacionPage() {
         description={`«${borrandoItem?.title.es || borrandoItem?.slug}» desaparecerá de la sección de educación del sitio. Esta acción no se puede deshacer.`}
         confirmLabel="Eliminar"
         tone="danger"
-        busy={borrandoItem ? ocupados.has(borrandoItem.id) : false}
+        busy={borrandoItem ? itemsCrud.ocupados.has(borrandoItem.id) : false}
       />
 
       <ConfirmDialog
@@ -640,7 +486,7 @@ export default function AdminEducacionPage() {
         description={`«${borrandoBadge?.title.es || borrandoBadge?.slug}» desaparecerá del carrusel de cursos destacados. Esta acción no se puede deshacer.`}
         confirmLabel="Eliminar"
         tone="danger"
-        busy={borrandoBadge ? ocupados.has(borrandoBadge.id) : false}
+        busy={borrandoBadge ? badgesCrud.ocupados.has(borrandoBadge.id) : false}
       />
     </div>
   );

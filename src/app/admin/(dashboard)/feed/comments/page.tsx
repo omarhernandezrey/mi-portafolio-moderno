@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { ArrowLeft, MessageSquare, Mail } from 'lucide-react';
 import { supabaseServer } from '@/lib/supabaseServer';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
+import { PageHeader, EmptyState } from '@/components/admin/ui';
 import FeedCommentRowActions from '@/components/admin/FeedCommentRowActions';
 import { DEFAULT_PAGE_SIZE } from '@/lib/admin/types';
 import { parsePage, pageRange } from '@/lib/admin/query';

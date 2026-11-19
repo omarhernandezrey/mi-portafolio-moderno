@@ -10,42 +10,12 @@ import {
   Building2,
 } from 'lucide-react';
 import Link from 'next/link';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import StatusBadge from '@/components/admin/ui/StatusBadge';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import ErrorState from '@/components/admin/ui/ErrorState';
-import StatCard from '@/components/admin/ui/StatCard';
+import { PageHeader, StatusBadge, EmptyState, ErrorState, StatCard, PriorityBadge } from '@/components/admin/ui';
 import { AdminButtonLink } from '@/components/admin/ui/AdminButton';
 import { getAdminRole } from '@/lib/admin/auth';
 import { hasMinRole } from '@/lib/admin/roles';
 
 export const dynamic = 'force-dynamic';
-
-const PRIORITY_META: Record<
-  string,
-  { label: string; className: string; dot: string }
-> = {
-  urgent: {
-    label: 'Urgente',
-    className: 'text-admin-danger bg-admin-danger/10 border-admin-danger/20',
-    dot: 'bg-admin-danger',
-  },
-  high: {
-    label: 'Alta',
-    className: 'text-admin-warning bg-admin-warning/10 border-admin-warning/20',
-    dot: 'bg-admin-warning',
-  },
-  medium: {
-    label: 'Media',
-    className: 'text-admin-info bg-admin-info/10 border-admin-info/20',
-    dot: 'bg-admin-info',
-  },
-  low: {
-    label: 'Baja',
-    className: 'text-text-muted bg-white/[0.04] border-admin-line',
-    dot: 'bg-text-muted',
-  },
-};
 
 async function getTickets() {
   const { data, error } = await supabaseServer
@@ -150,7 +120,6 @@ export default async function AdminTicketsPage() {
       <div className="space-y-3 lg:hidden">
         {tickets.length > 0 ? (
           tickets.map((ticket) => {
-            const priority = PRIORITY_META[ticket.priority] || PRIORITY_META.low;
             const overSLA = isOverSLA(ticket.updated_at, ticket.status);
 
             return (
@@ -200,14 +169,7 @@ export default async function AdminTicketsPage() {
                     <p className="font-mono-label text-4xs text-text-muted/50">
                       Prioridad
                     </p>
-                    <span
-                      className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-4xs font-bold ${priority.className}`}
-                    >
-                      <span
-                        className={`h-1 w-1 rounded-full ${priority.dot}`}
-                      />
-                      {priority.label}
-                    </span>
+                    <PriorityBadge priority={ticket.priority} className="mt-1" />
                   </div>
                   <div className="rounded-lg border border-admin-line bg-admin-raised/40 p-2.5">
                     <p className="font-mono-label text-4xs text-text-muted/50">
@@ -267,8 +229,6 @@ export default async function AdminTicketsPage() {
             <tbody className="divide-y divide-admin-line">
               {tickets.length > 0 ? (
                 tickets.map((ticket) => {
-                  const priority =
-                    PRIORITY_META[ticket.priority] || PRIORITY_META.low;
                   const overSLA = isOverSLA(
                     ticket.updated_at,
                     ticket.status
@@ -306,14 +266,7 @@ export default async function AdminTicketsPage() {
                         </p>
                       </td>
                       <td className="px-5 py-4">
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-4xs font-bold ${priority.className}`}
-                        >
-                          <span
-                            className={`h-1 w-1 rounded-full ${priority.dot}`}
-                          />
-                          {priority.label}
-                        </span>
+                        <PriorityBadge priority={ticket.priority} />
                       </td>
                       <td className="px-5 py-4">
                         <StatusBadge status={ticket.status} size="sm" />

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Trash2, Loader2 } from "lucide-react";
 import { useAdminToast } from "@/hooks/useAdminToast";
 import { adminFetch } from "@/lib/admin/client-fetch";
+import { ConfirmDialog } from "@/components/admin/ui";
 
 export default function FeedCommentRowActions({
   commentId,
@@ -18,6 +19,7 @@ export default function FeedCommentRowActions({
   canDelete: boolean;
 }) {
   const [loading, setLoading] = useState<string | null>(null);
+  const [confirmando, setConfirmando] = useState(false);
   const router = useRouter();
   const toast = useAdminToast();
 
@@ -38,11 +40,11 @@ export default function FeedCommentRowActions({
   };
 
   const handleDelete = async () => {
-    if (!confirm("¿Borrar este comentario permanentemente?")) return;
     setLoading("delete");
     try {
       await adminFetch(`/api/admin/feed/comments/${commentId}`, { method: "DELETE" });
       toast.success("Comentario eliminado");
+      setConfirmando(false);
       router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Error al eliminar");
@@ -68,7 +70,7 @@ export default function FeedCommentRowActions({
 
       {canDelete && (
         <button
-          onClick={handleDelete}
+          onClick={() => setConfirmando(true)}
           disabled={loading !== null}
           title="Eliminar"
           className="w-9 h-9 rounded-lg p-0 bg-white/5 border border-white/10 flex items-center justify-center text-admin-danger hover:bg-admin-danger/10 hover:border-admin-danger/30 transition-all disabled:opacity-50"
@@ -76,6 +78,17 @@ export default function FeedCommentRowActions({
           {loading === "delete" ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
         </button>
       )}
+
+      <ConfirmDialog
+        open={confirmando}
+        onClose={() => setConfirmando(false)}
+        onConfirm={handleDelete}
+        title="Eliminar comentario"
+        description="Esta acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        tone="danger"
+        busy={loading === "delete"}
+      />
     </div>
   );
 }

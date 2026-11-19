@@ -89,6 +89,17 @@ const configs: Record<
     color: 'text-text-muted border-admin-line bg-white/[0.04]',
     dot: 'bg-text-muted',
   },
+  // Feed (T-30: antes un badge clonado dentro de feed/page.tsx)
+  published: {
+    label: 'Publicado',
+    color: 'text-admin-success border-admin-success/20 bg-admin-success/10',
+    dot: 'bg-admin-success',
+  },
+  hidden: {
+    label: 'Oculto',
+    color: 'text-text-muted border-admin-line bg-white/[0.04]',
+    dot: 'bg-text-muted',
+  },
 };
 
 export default function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {

@@ -9,9 +9,7 @@ import {
   RefreshCw,
   AlertCircle,
 } from 'lucide-react';
-import PageHeader from '@/components/admin/ui/PageHeader';
-import EmptyState from '@/components/admin/ui/EmptyState';
-import StatCard from '@/components/admin/ui/StatCard';
+import { PageHeader, EmptyState, StatCard } from '@/components/admin/ui';
 import { AdminButton } from '@/components/admin/ui/AdminButton';
 import { adminFetch } from '@/lib/admin/client-fetch';
 import { parseBudget, type BudgetCurrency } from '@/lib/budget';

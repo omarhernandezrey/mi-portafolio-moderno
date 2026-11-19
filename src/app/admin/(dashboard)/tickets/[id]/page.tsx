@@ -15,7 +15,7 @@ import {
 import Link from 'next/link';
 import { useAdminToast } from '@/hooks/useAdminToast';
 import { adminFetch } from '@/lib/admin/client-fetch';
-import StatusBadge from '@/components/admin/ui/StatusBadge';
+import { StatusBadge } from '@/components/admin/ui';
 import type { Ticket, TicketMessage } from '@/lib/admin/types';
 
 type TicketDetail = Ticket;
