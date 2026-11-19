@@ -260,7 +260,7 @@ export default function FeedComposer({
       )}
 
       {imageError && (
-        <p className="mb-3 text-xs font-medium" style={{ color: "#dc2626" }}>
+        <p className="mb-3 text-xs font-medium" style={{ color: "#e5484d" }}>
           {imageError}
         </p>
       )}

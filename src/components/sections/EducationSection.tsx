@@ -709,7 +709,7 @@ const EducationSection = () => {
           text-transform: uppercase;
           letter-spacing: 0.1em;
           border-radius: 9999px;
-          background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 60%, #ff6b35 40%), color-mix(in srgb, var(--accent-color) 70%, white 30%));
+          background: linear-gradient(135deg, var(--accent-color), color-mix(in srgb, var(--accent-color) 60%, var(--primary-color) 40%), color-mix(in srgb, var(--accent-color) 70%, white 30%));
           background-size: 200% 200%;
           color: var(--background-color);
           box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color) 35%, transparent), 0 0 0 0 color-mix(in srgb, var(--accent-color) 40%, transparent);
