@@ -118,7 +118,7 @@ export default function RecursosContent() {
             {isEn ? 'Digital Assets & Intelligence' : 'Activos Digitales e Inteligencia'}
           </div>
           <h1
-            className="hero-reveal font-display italic text-5xl md:text-8xl font-medium text-white-custom tracking-tight leading-[0.95]"
+            className="hero-reveal font-display italic text-5xl md:text-8xl font-medium text-text-main tracking-tight leading-[0.95]"
             style={{ '--reveal-delay': '0.1s' } as React.CSSProperties}
           >
             {isEn ? (
@@ -141,7 +141,7 @@ export default function RecursosContent() {
             alt={isEn ? pageHeroImages.recursos.alt.en : pageHeroImages.recursos.alt.es}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
             priority
-            className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl mt-4"
+            className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-text-muted/10 shadow-2xl mt-4"
           />
         </header>
 
@@ -154,14 +154,14 @@ export default function RecursosContent() {
 
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-[24px] blur-lg opacity-10 group-focus-within:opacity-30 transition duration-500"></div>
-            <div className="relative flex items-center bg-card-bg/40 rounded-[24px] p-2 border border-white/5 backdrop-blur-xl shadow-2xl overflow-hidden group-focus-within:border-primary/20 transition-all">
+            <div className="relative flex items-center bg-card-bg/40 rounded-[24px] p-2 border border-text-muted/10 backdrop-blur-xl shadow-2xl overflow-hidden group-focus-within:border-primary/20 transition-all">
               <Mail className="ml-6 text-text-muted/40 group-focus-within:text-primary transition-colors" size={20} />
               <input
                 type="email"
                 placeholder={isEn ? 'Enter your business email...' : 'Introduzca su email de negocio...'}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent border-none focus:ring-0 px-6 py-5 text-sm font-bold text-white-custom placeholder:text-text-muted/20 placeholder:italic"
+                className="w-full bg-transparent border-none focus:ring-0 px-6 py-5 text-sm font-bold text-text-main placeholder:text-text-muted/20 placeholder:italic"
               />
             </div>
           </div>
@@ -186,32 +186,32 @@ export default function RecursosContent() {
               key={magnet.id}
               y={30}
               delay={idx * 0.1}
-              className="group relative bg-card-bg rounded-canvas md:rounded-[48px] border border-white/5 p-6 md:p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
+              className="group relative bg-card-bg rounded-canvas md:rounded-[48px] border border-text-muted/10 p-6 md:p-10 flex flex-col h-full shadow-2xl hover:border-primary/20 transition-all duration-500 overflow-hidden"
             >
               {/* Decorative Index */}
-              <div className="absolute top-8 right-8 text-[40px] font-black text-white-custom opacity-[0.03] italic group-hover:opacity-[0.08] transition-opacity">
+              <div className="absolute top-8 right-8 text-[40px] font-black text-text-main opacity-[0.03] italic group-hover:opacity-[0.08] transition-opacity">
                 0{idx + 1}
               </div>
 
-              <div className="mb-10 w-20 h-20 rounded-canvas bg-background/50 border border-white/5 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-500">
+              <div className="mb-10 w-20 h-20 rounded-canvas bg-background/50 border border-text-muted/10 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-500">
                 {magnet.icon}
               </div>
 
               <div className="space-y-4 flex-1">
-                <h3 className="text-2xl font-black text-white-custom leading-tight tracking-tight italic group-hover:text-primary transition-colors">{magnet.title}</h3>
+                <h3 className="text-2xl font-black text-text-main leading-tight tracking-tight italic group-hover:text-primary transition-colors">{magnet.title}</h3>
                 <p className="text-sm text-text-muted font-medium leading-relaxed opacity-60 italic">
                   {magnet.description}
                 </p>
               </div>
 
-              <div className="mt-12 pt-8 border-t border-white/5">
+              <div className="mt-12 pt-8 border-t border-text-muted/10">
                 <button
                   onClick={() => handleDownload(magnet.id)}
                   disabled={loadingId !== null || successId === magnet.id}
                   className={`relative w-full py-5 rounded-[24px] text-3xs font-black uppercase tracking-[0.3em] overflow-hidden transition-all shadow-xl active:scale-95 ${
                     successId === magnet.id
                       ? 'bg-primary text-background'
-                      : 'bg-white/5 border border-white/10 text-white-custom hover:bg-primary hover:text-background hover:border-primary'
+                      : 'bg-card-bg border border-text-muted/15 text-text-main hover:bg-primary hover:text-background hover:border-primary'
                   } disabled:opacity-30`}
                 >
                   <div className="flex items-center justify-center gap-3">
@@ -236,7 +236,7 @@ export default function RecursosContent() {
         </div>
 
         {/* Global Strategy CTA */}
-        <section className="bg-background rounded-canvas md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
+        <section className="bg-background rounded-canvas md:rounded-[60px] border border-text-muted/10 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity blur-[100px]" />
 
           <div className="max-w-2xl mx-auto space-y-12 relative z-10">
@@ -245,7 +245,7 @@ export default function RecursosContent() {
             </div>
 
             <div className="space-y-4">
-              <h2 className="font-display italic text-4xl md:text-5xl font-medium text-white-custom tracking-tight">
+              <h2 className="font-display italic text-4xl md:text-5xl font-medium text-text-main tracking-tight">
                 {isEn ? 'Calculate Your Budget' : 'Calcula tu Presupuesto'}
               </h2>
               <p className="text-lg text-text-muted font-medium italic opacity-70 leading-relaxed max-w-lg mx-auto">
@@ -266,7 +266,7 @@ export default function RecursosContent() {
         </section>
 
         {/* Global Security / Info Bar */}
-        <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
+        <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-text-muted/10">
           <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
             <Shield size={14} />
             {isEn ? 'Secure Data Transmission' : 'Transmisión Segura de Datos'}
