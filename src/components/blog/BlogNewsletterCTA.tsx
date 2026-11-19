@@ -30,7 +30,7 @@ export default function BlogNewsletterCTA() {
   };
 
   return (
-    <section className="bg-background rounded-canvas md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary transition-all duration-500">
+    <section className="bg-background rounded-canvas md:rounded-[60px] border border-text-muted/10 p-8 md:p-12 lg:p-24 shadow-2xl relative overflow-hidden text-center group hover:border-primary transition-all duration-500">
       <div className="absolute inset-0 bg-primary-7 opacity-0 group-hover:opacity-100 transition-opacity blur-[100px]" />
 
       <div className="max-w-2xl mx-auto space-y-12 relative z-10">
@@ -38,7 +38,7 @@ export default function BlogNewsletterCTA() {
           <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-10 border border-primary-25 text-primary text-[0.65rem] mb-6">
             {isEn ? 'Editorial subscription' : 'Suscripción editorial'}
           </div>
-          <h2 className="font-display italic text-4xl md:text-5xl font-medium text-white-custom tracking-tight">
+          <h2 className="font-display italic text-4xl md:text-5xl font-medium text-text-main tracking-tight">
             {isEn ? (
               <>Get the next <span className="text-primary">essay</span> in your inbox.</>
             ) : (
@@ -54,14 +54,14 @@ export default function BlogNewsletterCTA() {
 
         <form onSubmit={handleSubmit} className="relative group/form max-w-md mx-auto">
           <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-[24px] blur-lg opacity-10 group-focus-within/form:opacity-30 transition duration-500" />
-          <div className="relative flex bg-card-40 rounded-[24px] p-2 border border-white/5 backdrop-blur-xl shadow-2xl overflow-hidden group-focus-within/form:border-primary transition-all">
+          <div className="relative flex bg-card-40 rounded-[24px] p-2 border border-text-muted/10 backdrop-blur-xl shadow-2xl overflow-hidden group-focus-within/form:border-primary transition-all">
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={isEn ? 'you@company.com' : 'tu@email.com'}
-              className="w-full bg-transparent border-none focus:ring-0 px-6 py-4 text-xs font-bold text-white-custom placeholder:text-white/30 placeholder:italic"
+              className="w-full bg-transparent border-none focus:ring-0 px-6 py-4 text-xs font-bold text-text-main placeholder:text-text-muted/40 placeholder:italic"
             />
             <button
               type="submit"

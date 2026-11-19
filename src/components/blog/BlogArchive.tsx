@@ -66,7 +66,7 @@ function TopicChip({
         'inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 font-mono-label text-[8px] transition-colors duration-300',
         active
           ? 'border-primary bg-primary text-background'
-          : 'border-white/10 bg-white/[0.02] text-muted-60 hover:border-white/25 hover:text-white-custom',
+          : 'border-text-muted/15 bg-card-bg text-muted-60 hover:border-primary/30 hover:text-text-main',
       )}
     >
       {label}
@@ -90,7 +90,7 @@ function FeaturedEssay({
     <ScrollReveal y={20}>
       <Link
         href={`/blog/${post.slug}`}
-        className="group relative block overflow-hidden rounded-canvas border border-white/10 bg-card-50 shadow-2xl transition-colors duration-500 hover:border-primary"
+        className="group relative block overflow-hidden rounded-canvas border border-text-muted/15 bg-card-50 shadow-2xl transition-colors duration-500 hover:border-primary"
       >
         <div className="grid lg:grid-cols-12">
           <div className="order-2 flex flex-col justify-between p-7 sm:p-10 lg:order-1 lg:col-span-7 lg:p-12">
@@ -100,11 +100,11 @@ function FeaturedEssay({
                   <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                   {locale === 'en' ? 'Cover story' : 'Ensayo de portada'}
                 </span>
-                <span className="h-px w-6 bg-white/15" />
+                <span className="h-px w-6 bg-text-muted/20" />
                 <span>{topic?.label ?? (locale === 'en' ? 'Essay' : 'Ensayo')}</span>
               </div>
 
-              <h2 className="mt-6 font-display text-3xl font-medium italic leading-[1.04] text-white-custom transition-colors duration-500 group-hover:text-primary sm:text-4xl xl:text-5xl">
+              <h2 className="mt-6 font-display text-3xl font-medium italic leading-[1.04] text-text-main transition-colors duration-500 group-hover:text-primary sm:text-4xl xl:text-5xl">
                 {post.title}
               </h2>
 
@@ -126,12 +126,12 @@ function FeaturedEssay({
                 <span>{post.author}</span>
               </div>
 
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-text-muted/15 pt-5">
                 <div className="flex flex-wrap gap-1.5">
                   {post.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-white/10 px-2.5 py-1 font-mono-label text-[7px] text-muted-40"
+                      className="rounded-full border border-text-muted/15 px-2.5 py-1 font-mono-label text-[7px] text-muted-40"
                     >
                       #{tag}
                     </span>
@@ -148,7 +148,7 @@ function FeaturedEssay({
             </div>
           </div>
 
-          <div className="order-1 min-h-[260px] overflow-hidden border-b border-white/10 sm:min-h-[320px] lg:order-2 lg:col-span-5 lg:min-h-full lg:border-b-0 lg:border-l">
+          <div className="order-1 min-h-[260px] overflow-hidden border-b border-text-muted/15 sm:min-h-[320px] lg:order-2 lg:col-span-5 lg:min-h-full lg:border-b-0 lg:border-l">
             <PostCover
               post={post}
               locale={locale}
@@ -177,9 +177,9 @@ function EssayCard({
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-white/10 bg-card-40 transition-all duration-500 hover:-translate-y-1 hover:border-primary hover:bg-white/[0.04]"
+      className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-text-muted/15 bg-card-40 transition-all duration-500 hover:-translate-y-1 hover:border-primary hover:bg-text-muted/10"
     >
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10">
+      <div className="relative aspect-[16/10] overflow-hidden border-b border-text-muted/15">
         <PostCover post={post} locale={locale} index={index} className="h-full w-full" />
       </div>
 
@@ -192,7 +192,7 @@ function EssayCard({
           </span>
         </div>
 
-        <h3 className="mt-3 font-display text-xl font-medium italic leading-snug text-white-custom transition-colors duration-300 group-hover:text-primary sm:text-2xl">
+        <h3 className="mt-3 font-display text-xl font-medium italic leading-snug text-text-main transition-colors duration-300 group-hover:text-primary sm:text-2xl">
           {post.title}
         </h3>
 
@@ -200,7 +200,7 @@ function EssayCard({
           {post.description}
         </p>
 
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-text-muted/15 pt-4">
           <span className="inline-flex items-center gap-1.5 font-mono-label text-[8px] text-muted-40">
             <Clock3 size={11} />
             {post.readingTime ?? 5} min
@@ -350,12 +350,12 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
 
   return (
     <section id="archive" className="min-w-0 scroll-mt-24 space-y-8">
-      <div className="flex flex-col gap-4 border-t border-white/10 pt-10 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-4 border-t border-text-muted/15 pt-10 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="font-mono-label text-[8px] text-primary-60">
             {locale === 'en' ? 'The Archive' : 'El Archivo'}
           </p>
-          <h2 className="mt-2 font-display text-3xl font-medium italic tracking-tight text-white-custom sm:text-4xl">
+          <h2 className="mt-2 font-display text-3xl font-medium italic tracking-tight text-text-main sm:text-4xl">
             {locale === 'en' ? 'Every essay, indexed' : 'Todos los ensayos, indexados'}
           </h2>
         </div>
@@ -366,7 +366,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
         </p>
       </div>
 
-      <div className="space-y-5 border-y border-white/10 py-5">
+      <div className="space-y-5 border-y border-text-muted/15 py-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full lg:max-w-md">
             <Search
@@ -382,19 +382,19 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                 locale === 'en' ? 'Search title or topic…' : 'Buscar título o tema…'
               }
               aria-label={locale === 'en' ? 'Search the archive' : 'Buscar en el archivo'}
-              className="h-12 w-full rounded-2xl border border-white/10 bg-white/[0.03] pl-11 pr-20 text-sm text-text-main outline-none transition-colors placeholder:text-muted-35 focus:border-primary focus:bg-white/[0.05]"
+              className="h-12 w-full rounded-2xl border border-text-muted/15 bg-card-bg pl-11 pr-20 text-sm text-text-main outline-none transition-colors placeholder:text-muted-35 focus:border-primary focus:bg-card-bg"
             />
             {query ? (
               <button
                 type="button"
                 onClick={() => setQuery('')}
                 aria-label={locale === 'en' ? 'Clear search' : 'Limpiar búsqueda'}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-muted-50 transition-colors hover:bg-white/10 hover:text-white-custom"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-muted-50 transition-colors hover:bg-text-muted/10 hover:text-text-main"
               >
                 <X size={14} />
               </button>
             ) : (
-              <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 font-mono-label text-[7px] text-muted-35 sm:flex">
+              <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 items-center gap-1 rounded-md border border-text-muted/15 bg-card-bg px-2 py-1 font-mono-label text-[7px] text-muted-35 sm:flex">
                 <Command size={9} /> K
               </kbd>
             )}
@@ -412,7 +412,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                 id="blog-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortOption)}
-                className="h-10 appearance-none rounded-xl border border-white/10 bg-white/[0.03] pl-3 pr-9 text-2xs font-bold text-text-muted outline-none transition-colors focus:border-primary [color-scheme:dark]"
+                className="h-10 appearance-none rounded-xl border border-text-muted/15 bg-card-bg pl-3 pr-9 text-2xs font-bold text-text-muted outline-none transition-colors focus:border-primary [color-scheme:dark]"
               >
                 <option value="newest">{locale === 'en' ? 'Newest first' : 'Más recientes'}</option>
                 <option value="oldest">{locale === 'en' ? 'Oldest first' : 'Más antiguos'}</option>
@@ -468,9 +468,9 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
               ))}
             </div>
           ) : (
-            <div className="rounded-[28px] border border-dashed border-white/15 px-6 py-20 text-center">
+            <div className="rounded-[28px] border border-dashed border-text-muted/20 px-6 py-20 text-center">
               <Search size={32} strokeWidth={1} className="mx-auto text-muted-25" />
-              <p className="mt-5 font-display text-2xl font-medium italic text-white-custom">
+              <p className="mt-5 font-display text-2xl font-medium italic text-text-main">
                 {locale === 'en' ? 'No essays found' : 'Sin resultados'}
               </p>
               <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-muted-55">
@@ -494,7 +494,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
               <button
                 type="button"
                 onClick={() => setVisible((current) => current + 6)}
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 px-6 py-3 font-mono-label text-[8px] text-muted-60 transition-colors hover:border-primary hover:text-white-custom"
+                className="inline-flex items-center gap-2 rounded-full border border-text-muted/15 px-6 py-3 font-mono-label text-[8px] text-muted-60 transition-colors hover:border-primary hover:text-text-main"
               >
                 {locale === 'en' ? 'Load more essays' : 'Cargar más ensayos'}
                 <ArrowDown size={13} />
@@ -505,7 +505,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
 
         <aside className="min-w-0 lg:col-span-4">
           <div className="space-y-5 lg:sticky lg:top-28">
-            <div className="rounded-[26px] border border-white/10 bg-card-40 p-6">
+            <div className="rounded-[26px] border border-text-muted/15 bg-card-40 p-6">
               <div className="flex items-center justify-between">
                 <p className="font-mono-label text-[8px] text-primary-60">
                   {locale === 'en' ? 'Topic index' : 'Índice de temas'}
@@ -523,7 +523,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                     'flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors',
                     activeTopic === null
                       ? 'bg-primary-10 text-primary'
-                      : 'text-muted-60 hover:bg-white/5 hover:text-white-custom',
+                      : 'text-muted-60 hover:bg-card-bg hover:text-text-main',
                   )}
                 >
                   <span>{locale === 'en' ? 'All essays' : 'Todos los ensayos'}</span>
@@ -539,7 +539,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                       'flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors',
                       activeTopic === topic.id
                         ? 'bg-primary-10 text-primary'
-                        : 'text-muted-60 hover:bg-white/5 hover:text-white-custom',
+                        : 'text-muted-60 hover:bg-card-bg hover:text-text-main',
                     )}
                   >
                     <span>{topic.label}</span>
@@ -549,7 +549,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
               </div>
             </div>
 
-            <div className="rounded-[26px] border border-white/10 bg-card-40 p-6">
+            <div className="rounded-[26px] border border-text-muted/15 bg-card-40 p-6">
               <p className="font-mono-label text-[8px] text-primary-60">
                 {locale === 'en' ? 'About the author' : 'Sobre el autor'}
               </p>
@@ -558,7 +558,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                   OH
                 </div>
                 <div>
-                  <p className="font-display text-lg font-medium italic text-white-custom">Omar Hernández Rey</p>
+                  <p className="font-display text-lg font-medium italic text-text-main">Omar Hernández Rey</p>
                   <p className="mt-0.5 text-2xs text-muted-55">Full Stack Developer · Bogotá</p>
                 </div>
               </div>
@@ -567,21 +567,21 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                   ? 'Field notes from building web products for companies and founders in Colombia and abroad. Code, pricing, SEO, and the decisions behind them.'
                   : 'Notas de campo construyendo productos web para empresas y fundadores en Colombia y el exterior. Código, precios, SEO y las decisiones detrás.'}
               </p>
-              <div className="mt-5 grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
+              <div className="mt-5 grid grid-cols-3 gap-3 border-t border-text-muted/15 pt-4">
                 <div>
-                  <p className="font-display text-xl font-medium italic text-white-custom">3+</p>
+                  <p className="font-display text-xl font-medium italic text-text-main">3+</p>
                   <p className="font-mono-label text-[7px] text-muted-35">
                     {locale === 'en' ? 'Years' : 'Años'}
                   </p>
                 </div>
                 <div>
-                  <p className="font-display text-xl font-medium italic text-white-custom">16+</p>
+                  <p className="font-display text-xl font-medium italic text-text-main">16+</p>
                   <p className="font-mono-label text-[7px] text-muted-35">
                     {locale === 'en' ? 'Projects' : 'Proyectos'}
                   </p>
                 </div>
                 <div>
-                  <p className="font-display text-xl font-medium italic text-white-custom">24h</p>
+                  <p className="font-display text-xl font-medium italic text-text-main">24h</p>
                   <p className="font-mono-label text-[7px] text-muted-35">
                     {locale === 'en' ? 'Response' : 'Respuesta'}
                   </p>
@@ -597,11 +597,11 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
             </div>
 
             {startHere.length > 0 && (
-              <div className="rounded-[26px] border border-white/10 bg-card-40 p-6">
+              <div className="rounded-[26px] border border-text-muted/15 bg-card-40 p-6">
                 <p className="font-mono-label text-[8px] text-primary-60">
                   {locale === 'en' ? 'Start here' : 'Por dónde empezar'}
                 </p>
-                <div className="mt-3 divide-y divide-white/5">
+                <div className="mt-3 divide-y divide-text-muted/10">
                   {startHere.map((post, index) => (
                     <Link
                       key={post.slug}
@@ -611,7 +611,7 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
                       <span className="mt-0.5 font-mono-label text-[8px] text-primary-50">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      <span className="flex-1 text-sm font-bold leading-snug text-muted-65 transition-colors group-hover:text-white-custom">
+                      <span className="flex-1 text-sm font-bold leading-snug text-muted-65 transition-colors group-hover:text-text-main">
                         {post.title}
                       </span>
                       <ArrowUpRight

@@ -122,7 +122,7 @@ export default async function BlogPage({ params }: Props) {
         <JsonLd data={blogSchema} />
 
         <main className="flex-1 w-full min-w-0 max-w-[90rem] mx-auto px-[var(--grid-margin)] pt-32 pb-32 md:pt-40 space-y-16 md:space-y-24">
-          <header className="relative overflow-hidden border-b border-white/10 pb-14">
+          <header className="relative overflow-hidden border-b border-text-muted/15 pb-14">
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
               <div className="absolute -right-40 -top-48 h-[520px] w-[520px] rounded-full bg-primary-7 blur-[130px]" />
               <div className="absolute -left-32 bottom-0 h-[360px] w-[360px] rounded-full bg-accent-5 blur-[110px]" />
@@ -137,15 +137,15 @@ export default async function BlogPage({ params }: Props) {
                       <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                       The Engineering Journal
                     </span>
-                    <span className="hidden h-px w-10 bg-white/20 sm:block" />
+                    <span className="hidden h-px w-10 bg-text-muted/25 sm:block" />
                     <span>Vol. 01 — {latestDate?.slice(0, 4) ?? '2026'}</span>
-                    <span className="hidden h-px w-10 bg-white/20 sm:block" />
+                    <span className="hidden h-px w-10 bg-text-muted/25 sm:block" />
                     <span>Bogotá · CO</span>
                   </div>
                 </ScrollReveal>
 
                 <ScrollReveal immediate delay={0.08}>
-                  <h1 className="mt-8 font-display text-[clamp(3rem,7.5vw,6.5rem)] font-medium italic leading-[0.9] tracking-tight text-white-custom">
+                  <h1 className="mt-8 font-display text-[clamp(3rem,7.5vw,6.5rem)] font-medium italic leading-[0.9] tracking-tight text-text-main">
                     {isEn ? (
                       <>
                         Code, judgment{' '}
@@ -169,9 +169,9 @@ export default async function BlogPage({ params }: Props) {
                 </ScrollReveal>
 
                 <ScrollReveal immediate delay={0.24}>
-                  <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/10 pt-6 sm:grid-cols-4">
+                  <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-text-muted/15 pt-6 sm:grid-cols-4">
                     <div>
-                      <p className="font-display text-2xl font-medium italic text-white-custom sm:text-3xl">
+                      <p className="font-display text-2xl font-medium italic text-text-main sm:text-3xl">
                         {posts.length.toString().padStart(2, '0')}
                       </p>
                       <p className="mt-1 font-mono-label text-[7px] text-muted-35">
@@ -179,7 +179,7 @@ export default async function BlogPage({ params }: Props) {
                       </p>
                     </div>
                     <div>
-                      <p className="font-display text-2xl font-medium italic text-white-custom sm:text-3xl">
+                      <p className="font-display text-2xl font-medium italic text-text-main sm:text-3xl">
                         {wordCountLabel}
                       </p>
                       <p className="mt-1 font-mono-label text-[7px] text-muted-35">
@@ -187,7 +187,7 @@ export default async function BlogPage({ params }: Props) {
                       </p>
                     </div>
                     <div>
-                      <p className="font-display text-2xl font-medium italic text-white-custom sm:text-3xl">
+                      <p className="font-display text-2xl font-medium italic text-text-main sm:text-3xl">
                         {averageReadingTime} min
                       </p>
                       <p className="mt-1 font-mono-label text-[7px] text-muted-35">
@@ -195,7 +195,7 @@ export default async function BlogPage({ params }: Props) {
                       </p>
                     </div>
                     <div>
-                      <p className="font-display text-base font-medium italic leading-tight text-white-custom sm:text-lg">
+                      <p className="font-display text-base font-medium italic leading-tight text-text-main sm:text-lg">
                         {latestLabel}
                       </p>
                       <p className="mt-1 font-mono-label text-[7px] text-muted-35">
@@ -206,9 +206,9 @@ export default async function BlogPage({ params }: Props) {
                 </ScrollReveal>
               </div>
 
-              <aside className="space-y-4 lg:col-span-4 lg:border-l lg:border-white/10 lg:pl-8">
+              <aside className="space-y-4 lg:col-span-4 lg:border-l lg:border-text-muted/15 lg:pl-8">
                 <ScrollReveal immediate delay={0.2}>
-                  <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-card-40 p-6 sm:p-7">
+                  <div className="relative overflow-hidden rounded-[28px] border border-text-muted/15 bg-card-40 p-6 sm:p-7">
                     <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-10 blur-3xl" />
                     <div className="relative">
                       <div className="flex items-center gap-4">
@@ -219,7 +219,7 @@ export default async function BlogPage({ params }: Props) {
                           <p className="font-mono-label text-[7px] text-muted-35">
                             {isEn ? 'Written by' : 'Escrito por'}
                           </p>
-                          <p className="mt-1 font-display text-xl font-medium italic text-white-custom">
+                          <p className="mt-1 font-display text-xl font-medium italic text-text-main">
                             Omar Hernández Rey
                           </p>
                           <p className="mt-0.5 text-2xs text-muted-55">
@@ -234,7 +234,7 @@ export default async function BlogPage({ params }: Props) {
                           : 'Escribo para que fundadores y equipos tomen mejores decisiones técnicas: precios reales, trade-offs reales y código que llega a producción.'}
                       </p>
 
-                      <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
+                      <div className="mt-6 flex items-center justify-between border-t border-text-muted/15 pt-5">
                         <span className="font-mono-label text-[7px] text-muted-35">
                           {isEn ? 'Available for projects' : 'Disponible para proyectos'}
                         </span>
@@ -251,7 +251,7 @@ export default async function BlogPage({ params }: Props) {
                 </ScrollReveal>
 
                 <ScrollReveal immediate delay={0.28}>
-                  <div className="rounded-[28px] border border-white/10 bg-card-25 p-6 sm:p-7">
+                  <div className="rounded-[28px] border border-text-muted/15 bg-card-25 p-6 sm:p-7">
                     <div className="flex items-center justify-between">
                       <p className="font-mono-label text-[7px] text-primary-60">
                         {isEn ? 'In this issue' : 'En este número'}
@@ -260,7 +260,7 @@ export default async function BlogPage({ params }: Props) {
                         01—{posts.length.toString().padStart(2, '0')}
                       </span>
                     </div>
-                    <div className="mt-3 divide-y divide-white/5">
+                    <div className="mt-3 divide-y divide-text-muted/10">
                       {posts.slice(0, 3).map((post, index) => (
                         <Link
                           key={post.slug}
@@ -270,7 +270,7 @@ export default async function BlogPage({ params }: Props) {
                           <span className="mt-0.5 font-mono-label text-[7px] text-primary-40">
                             {String(index + 1).padStart(2, '0')}
                           </span>
-                          <span className="line-clamp-2 flex-1 text-[13px] font-semibold leading-snug text-muted-60 transition-colors group-hover:text-white-custom">
+                          <span className="line-clamp-2 flex-1 text-[13px] font-semibold leading-snug text-muted-60 transition-colors group-hover:text-text-main">
                             {post.title}
                           </span>
                           <ArrowUpRight

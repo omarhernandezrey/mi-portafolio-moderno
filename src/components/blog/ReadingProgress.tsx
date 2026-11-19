@@ -32,7 +32,7 @@ export default function ReadingProgress() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="fixed inset-x-0 top-0 z-[100] h-[2px] bg-white/5">
+    <div aria-hidden="true" className="fixed inset-x-0 top-0 z-[100] h-[2px] bg-card-bg">
       <div
         className="h-full bg-gradient-to-r from-primary to-accent"
         style={{ width: `${progress}%` }}

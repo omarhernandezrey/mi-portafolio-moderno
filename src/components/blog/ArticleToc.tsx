@@ -60,7 +60,7 @@ export default function ArticleToc({ items, locale }: ArticleTocProps) {
                 item.level === 3 && 'pl-6',
                 active
                   ? 'border-primary text-primary'
-                  : 'border-white/10 text-muted-45 hover:border-white/25 hover:text-white-custom',
+                  : 'border-text-muted/15 text-muted-45 hover:border-primary/30 hover:text-text-main',
               )}
             >
               <span className="mt-0.5 font-mono-label text-[7px] opacity-50">
@@ -77,7 +77,7 @@ export default function ArticleToc({ items, locale }: ArticleTocProps) {
   return (
     <>
       <nav aria-label={label} className="hidden lg:sticky lg:top-28 lg:block">
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex items-center justify-between border-b border-text-muted/15 pb-3">
           <p className="font-mono-label text-[8px] text-primary-60">{label}</p>
           <span className="font-mono-label text-[7px] text-muted-30">{countLabel}</span>
         </div>
@@ -86,7 +86,7 @@ export default function ArticleToc({ items, locale }: ArticleTocProps) {
 
       <details
         ref={detailsRef}
-        className="group rounded-2xl border border-white/10 bg-card-25 lg:hidden"
+        className="group rounded-2xl border border-text-muted/15 bg-card-25 lg:hidden"
       >
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden">
           <span className="inline-flex items-center gap-2 font-mono-label text-[8px] text-primary-60">
@@ -98,7 +98,7 @@ export default function ArticleToc({ items, locale }: ArticleTocProps) {
             <ChevronDown size={13} className="transition-transform group-open:rotate-180" />
           </span>
         </summary>
-        <div className="border-t border-white/10 px-3 pb-3">{renderList(true)}</div>
+        <div className="border-t border-text-muted/15 px-3 pb-3">{renderList(true)}</div>
       </details>
     </>
   );

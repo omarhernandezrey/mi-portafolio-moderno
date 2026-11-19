@@ -134,17 +134,17 @@ function createMdxComponents(isEnglish: boolean) {
   return {
     h1: createHeadingComponent(
       'h2',
-      'mt-14 mb-5 font-display text-3xl font-medium italic leading-tight text-white-custom sm:text-[2.1rem]',
+      'mt-14 mb-5 font-display text-3xl font-medium italic leading-tight text-text-main sm:text-[2.1rem]',
       isEnglish,
     ),
     h2: createHeadingComponent(
       'h2',
-      'mt-14 mb-5 font-display text-3xl font-medium italic leading-tight text-white-custom sm:text-[2.1rem]',
+      'mt-14 mb-5 font-display text-3xl font-medium italic leading-tight text-text-main sm:text-[2.1rem]',
       isEnglish,
     ),
     h3: createHeadingComponent(
       'h3',
-      'mt-10 mb-3 font-display text-2xl font-medium italic leading-snug text-white-custom',
+      'mt-10 mb-3 font-display text-2xl font-medium italic leading-snug text-text-main',
       isEnglish,
     ),
     p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
@@ -160,7 +160,7 @@ function createMdxComponents(isEnglish: boolean) {
       <li {...props} className="pl-1 leading-[1.8] text-muted-70" />
     ),
     strong: (props: React.HTMLAttributes<HTMLElement>) => (
-      <strong {...props} className="font-bold text-white-custom" />
+      <strong {...props} className="font-bold text-text-main" />
     ),
     a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
       const external = href?.startsWith('http');
@@ -188,7 +188,7 @@ function createMdxComponents(isEnglish: boolean) {
       return (
         <code
           {...props}
-          className="rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[0.85em] text-primary-80"
+          className="rounded-md border border-text-muted/15 bg-card-bg px-1.5 py-0.5 font-mono text-[0.85em] text-primary-80"
         >
           {children}
         </code>
@@ -197,34 +197,34 @@ function createMdxComponents(isEnglish: boolean) {
     pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
       <pre
         {...props}
-        className="mb-6 overflow-x-auto rounded-2xl border border-white/10 bg-[#070c11] p-5 text-[13px] leading-relaxed text-white/80"
+        className="mb-6 overflow-x-auto rounded-2xl border border-text-muted/15 bg-[#070c11] p-5 text-[13px] leading-relaxed text-text-main/80"
       />
     ),
     blockquote: (props: React.BlockquoteHTMLAttributes<HTMLQuoteElement>) => (
       <blockquote
         {...props}
-        className="my-10 rounded-r-2xl border-l-2 border-primary bg-primary-7 px-6 py-5 font-display text-xl italic leading-relaxed text-white-custom [&>p]:mb-0 [&>p]:text-white-custom"
+        className="my-10 rounded-r-2xl border-l-2 border-primary bg-primary-7 px-6 py-5 font-display text-xl italic leading-relaxed text-text-main [&>p]:mb-0 [&>p]:text-text-main"
       />
     ),
     hr: (props: React.HTMLAttributes<HTMLHRElement>) => (
-      <hr {...props} className="my-12 border-white/10" />
+      <hr {...props} className="my-12 border-text-muted/15" />
     ),
     table: (props: React.HTMLAttributes<HTMLTableElement>) => (
-      <div className="my-8 overflow-x-auto rounded-2xl border border-white/10">
+      <div className="my-8 overflow-x-auto rounded-2xl border border-text-muted/15">
         <table {...props} className="w-full min-w-[560px] border-collapse text-left text-sm" />
       </div>
     ),
     th: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
       <th
         {...props}
-        className="border-b border-white/10 bg-white/[0.03] px-4 py-3 text-xs font-bold text-white-custom"
+        className="border-b border-text-muted/15 bg-card-bg px-4 py-3 text-xs font-bold text-text-main"
       />
     ),
     td: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
-      <td {...props} className="border-b border-white/5 px-4 py-3 align-top text-sm text-muted-70" />
+      <td {...props} className="border-b border-text-muted/10 px-4 py-3 align-top text-sm text-muted-70" />
     ),
     tr: (props: React.HTMLAttributes<HTMLTableRowElement>) => (
-      <tr {...props} className="transition-colors hover:bg-white/[0.02]" />
+      <tr {...props} className="transition-colors hover:bg-text-muted/10" />
     ),
   };
 }
@@ -464,7 +464,7 @@ export default async function BlogPostPage({
           </nav>
 
           <article itemScope itemType="https://schema.org/BlogPosting">
-            <header className="mt-8 border-b border-white/10 pb-10 md:pb-14">
+            <header className="mt-8 border-b border-text-muted/15 pb-10 md:pb-14">
               <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
                 <div className="min-w-0 lg:col-span-8">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono-label text-[8px] text-muted-40">
@@ -472,17 +472,17 @@ export default async function BlogPostPage({
                       <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                       {topic?.label ?? (isEnglish ? 'Essay' : 'Ensayo')}
                     </span>
-                    <span className="h-px w-6 bg-white/15" />
+                    <span className="h-px w-6 bg-text-muted/20" />
                     <span>
                       {isEnglish ? 'Essay' : 'Ensayo'} {indexLabel}
                     </span>
-                    <span className="h-px w-6 bg-white/15" />
+                    <span className="h-px w-6 bg-text-muted/20" />
                     <span>{publishedDate}</span>
                   </div>
 
                   <h1
                     itemProp="headline"
-                    className="mt-6 max-w-4xl text-balance font-display text-[clamp(2.4rem,5vw,4.8rem)] font-medium italic leading-[0.98] tracking-tight text-white-custom"
+                    className="mt-6 max-w-4xl text-balance font-display text-[clamp(2.4rem,5vw,4.8rem)] font-medium italic leading-[0.98] tracking-tight text-text-main"
                   >
                     {post.title}
                   </h1>
@@ -491,14 +491,14 @@ export default async function BlogPostPage({
                     {post.description}
                   </p>
 
-                  <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-white/10 pt-5">
+                  <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-text-muted/15 pt-5">
                     <div className="flex items-center gap-2.5">
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-primary-25 bg-primary-10 font-display text-xs font-medium italic text-primary">
                         OH
                       </div>
                       <div>
                         <p
-                          className="text-xs font-bold text-white-custom"
+                          className="text-xs font-bold text-text-main"
                           itemProp="author"
                           itemScope
                           itemType="https://schema.org/Person"
@@ -510,7 +510,7 @@ export default async function BlogPostPage({
                         </p>
                       </div>
                     </div>
-                    <span className="hidden h-7 w-px bg-white/10 sm:block" />
+                    <span className="hidden h-7 w-px bg-text-muted/15 sm:block" />
                     <span className="inline-flex items-center gap-1.5 font-mono-label text-[8px] text-muted-40">
                       <CalendarDays size={11} />
                       <time dateTime={post.date} itemProp="datePublished">
@@ -528,16 +528,16 @@ export default async function BlogPostPage({
                   </div>
                 </div>
 
-                <aside className="min-w-0 lg:col-span-4 lg:border-l lg:border-white/10 lg:pl-8">
-                  <div className="rounded-[26px] border border-white/10 bg-card-40 p-6">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <aside className="min-w-0 lg:col-span-4 lg:border-l lg:border-text-muted/15 lg:pl-8">
+                  <div className="rounded-[26px] border border-text-muted/15 bg-card-40 p-6">
+                    <div className="flex items-center justify-between border-b border-text-muted/15 pb-3">
                       <p className="font-mono-label text-[8px] text-primary-60">
                         {isEnglish ? 'At a glance' : 'De un vistazo'}
                       </p>
                       <span className="font-mono-label text-[7px] text-muted-30">{indexLabel}</span>
                     </div>
 
-                    <dl className="divide-y divide-white/5">
+                    <dl className="divide-y divide-text-muted/10">
                       {glance.map((item) => (
                         <div
                           key={item.label}
@@ -551,7 +551,7 @@ export default async function BlogPostPage({
                       ))}
                     </dl>
 
-                    <div className="mt-3 border-t border-white/10 pt-4">
+                    <div className="mt-3 border-t border-text-muted/15 pt-4">
                       <p className="font-mono-label text-[7px] text-muted-35">
                         {isEnglish ? 'Filed under' : 'Archivado en'}
                       </p>
@@ -559,7 +559,7 @@ export default async function BlogPostPage({
                         {post.tags.slice(0, 4).map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-full border border-white/10 px-2.5 py-1 font-mono-label text-[7px] text-muted-40"
+                            className="rounded-full border border-text-muted/15 px-2.5 py-1 font-mono-label text-[7px] text-muted-40"
                           >
                             #{tag}
                           </span>
@@ -572,7 +572,7 @@ export default async function BlogPostPage({
             </header>
 
             <figure className="mt-10 md:mt-12">
-              <div className="overflow-hidden rounded-[28px] border border-white/10">
+              <div className="overflow-hidden rounded-[28px] border border-text-muted/15">
                 <PostCover
                   post={post}
                   locale={contentLocale}
@@ -610,17 +610,17 @@ export default async function BlogPostPage({
                 </div>
 
                 <div className="mt-12 flex items-center gap-4">
-                  <span className="h-px flex-1 bg-white/10" />
+                  <span className="h-px flex-1 bg-text-muted/15" />
                   <span className="font-display text-lg italic text-primary">OH</span>
-                  <span className="h-px flex-1 bg-white/10" />
+                  <span className="h-px flex-1 bg-text-muted/15" />
                 </div>
 
-                <div className="mt-8 flex flex-col gap-5 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="mt-8 flex flex-col gap-5 border-t border-text-muted/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex flex-wrap gap-1.5">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-white/10 px-2.5 py-1 font-mono-label text-[7px] text-muted-40"
+                        className="rounded-full border border-text-muted/15 px-2.5 py-1 font-mono-label text-[7px] text-muted-40"
                       >
                         #{tag}
                       </span>
@@ -635,7 +635,7 @@ export default async function BlogPostPage({
                   </div>
                 </div>
 
-                <aside className="mt-10 rounded-[28px] border border-white/10 bg-card-40 p-6 sm:p-7">
+                <aside className="mt-10 rounded-[28px] border border-text-muted/15 bg-card-40 p-6 sm:p-7">
                   <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
                     <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-primary-25 bg-primary-10 font-display text-2xl font-medium italic text-primary">
                       OH
@@ -644,7 +644,7 @@ export default async function BlogPostPage({
                       <p className="font-mono-label text-[8px] text-primary-60">
                         {isEnglish ? 'About the author' : 'Sobre el autor'}
                       </p>
-                      <p className="mt-2 font-display text-2xl font-medium italic text-white-custom">
+                      <p className="mt-2 font-display text-2xl font-medium italic text-text-main">
                         {post.author}
                       </p>
                       <p className="mt-2 text-sm leading-relaxed text-muted-60">
@@ -652,11 +652,11 @@ export default async function BlogPostPage({
                           ? 'Full Stack Web Developer based in Colombia. 3+ years building web apps and e-commerce solutions for Colombia and USA clients. React, Next.js, Node.js specialist.'
                           : 'Desarrollador web full stack con más de 3 años entregando proyectos en Colombia y USA. Especialista en React, Next.js y Node.js.'}
                       </p>
-                      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-4 font-mono-label text-[7px] text-muted-35">
+                      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-text-muted/15 pt-4 font-mono-label text-[7px] text-muted-35">
                         <span>3+ {isEnglish ? 'years' : 'años'}</span>
-                        <span className="h-3 w-px bg-white/10" />
+                        <span className="h-3 w-px bg-text-muted/15" />
                         <span>16+ {isEnglish ? 'projects' : 'proyectos'}</span>
-                        <span className="h-3 w-px bg-white/10" />
+                        <span className="h-3 w-px bg-text-muted/15" />
                         <Link
                           href="/sobre-mi"
                           className="inline-flex items-center gap-1 text-muted-45 transition-colors hover:text-primary"
@@ -684,9 +684,9 @@ export default async function BlogPostPage({
                         <Link
                           key={service.href}
                           href={service.href}
-                          className="group flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-card-25 px-5 py-4 transition-colors hover:border-primary hover:bg-white/[0.04]"
+                          className="group flex items-center justify-between gap-4 rounded-2xl border border-text-muted/15 bg-card-25 px-5 py-4 transition-colors hover:border-primary hover:bg-card-bg"
                         >
-                          <span className="text-sm font-bold text-muted-65 transition-colors group-hover:text-white-custom">
+                          <span className="text-sm font-bold text-muted-65 transition-colors group-hover:text-text-main">
                             {service.label}
                           </span>
                           <ArrowUpRight
@@ -708,7 +708,7 @@ export default async function BlogPostPage({
                     <p className="font-mono-label text-[8px] text-primary-60">
                       {isEnglish ? 'Next step' : 'Siguiente paso'}
                     </p>
-                    <h2 className="mt-3 font-display text-3xl font-medium italic leading-tight text-white-custom sm:text-4xl">
+                    <h2 className="mt-3 font-display text-3xl font-medium italic leading-tight text-text-main sm:text-4xl">
                       {isEnglish ? 'Have a project in mind?' : '¿Tienes un proyecto en mente?'}
                     </h2>
                     <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-60">
@@ -737,7 +737,7 @@ export default async function BlogPostPage({
 
               <aside className="hidden min-w-0 lg:col-span-3 lg:block">
                 <div className="space-y-5 lg:sticky lg:top-28">
-                  <div className="rounded-[26px] border border-white/10 bg-card-40 p-5">
+                  <div className="rounded-[26px] border border-text-muted/15 bg-card-40 p-5">
                     <ShareButtons
                       url={path}
                       title={post.title}
@@ -747,11 +747,11 @@ export default async function BlogPostPage({
                   </div>
 
                   {relatedPosts.length > 0 && (
-                    <div className="rounded-[26px] border border-white/10 bg-card-40 p-5">
+                    <div className="rounded-[26px] border border-text-muted/15 bg-card-40 p-5">
                       <p className="font-mono-label text-[8px] text-primary-60">
                         {isEnglish ? 'Keep reading' : 'Sigue leyendo'}
                       </p>
-                      <div className="mt-3 divide-y divide-white/5">
+                      <div className="mt-3 divide-y divide-text-muted/10">
                         {relatedPosts.slice(0, 2).map((related) => (
                           <Link
                             key={related.slug}
@@ -761,7 +761,7 @@ export default async function BlogPostPage({
                             <span className="mt-0.5 font-mono-label text-[7px] text-primary-40">
                               {String(indexBySlug.get(related.slug) ?? 1).padStart(2, '0')}
                             </span>
-                            <span className="flex-1 text-[13px] font-semibold leading-snug text-muted-60 transition-colors group-hover:text-white-custom">
+                            <span className="flex-1 text-[13px] font-semibold leading-snug text-muted-60 transition-colors group-hover:text-text-main">
                               {related.title}
                             </span>
                             <ArrowUpRight
@@ -793,18 +793,18 @@ export default async function BlogPostPage({
 
           <nav
             aria-label={isEnglish ? 'More essays' : 'Más ensayos'}
-            className="mt-16 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-2"
+            className="mt-16 grid gap-4 border-t border-text-muted/15 pt-8 sm:grid-cols-2"
           >
             {newerPost ? (
               <Link
                 href={`/blog/${newerPost.slug}`}
-                className="group rounded-2xl border border-white/10 bg-card-25 p-5 transition-colors hover:border-primary"
+                className="group rounded-2xl border border-text-muted/15 bg-card-25 p-5 transition-colors hover:border-primary"
               >
                 <span className="inline-flex items-center gap-2 font-mono-label text-[7px] text-muted-35">
                   <ArrowLeft size={11} />
                   {isEnglish ? 'Newer essay' : 'Ensayo más reciente'}
                 </span>
-                <span className="mt-3 block font-display text-xl font-medium italic leading-snug text-white-custom transition-colors group-hover:text-primary">
+                <span className="mt-3 block font-display text-xl font-medium italic leading-snug text-text-main transition-colors group-hover:text-primary">
                   {newerPost.title}
                 </span>
               </Link>
@@ -815,13 +815,13 @@ export default async function BlogPostPage({
             {olderPost ? (
               <Link
                 href={`/blog/${olderPost.slug}`}
-                className="group rounded-2xl border border-white/10 bg-card-25 p-5 transition-colors hover:border-primary sm:text-right"
+                className="group rounded-2xl border border-text-muted/15 bg-card-25 p-5 transition-colors hover:border-primary sm:text-right"
               >
                 <span className="inline-flex items-center gap-2 font-mono-label text-[7px] text-muted-35">
                   {isEnglish ? 'Older essay' : 'Ensayo anterior'}
                   <ArrowRight size={11} />
                 </span>
-                <span className="mt-3 block font-display text-xl font-medium italic leading-snug text-white-custom transition-colors group-hover:text-primary">
+                <span className="mt-3 block font-display text-xl font-medium italic leading-snug text-text-main transition-colors group-hover:text-primary">
                   {olderPost.title}
                 </span>
               </Link>
@@ -832,12 +832,12 @@ export default async function BlogPostPage({
 
           {relatedPosts.length > 0 && (
             <section className="mt-16">
-              <div className="flex flex-col gap-4 border-t border-white/10 pt-10 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex flex-col gap-4 border-t border-text-muted/15 pt-10 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <p className="font-mono-label text-[8px] text-primary-60">
                     {isEnglish ? 'Keep reading' : 'Sigue leyendo'}
                   </p>
-                  <h2 className="mt-2 font-display text-3xl font-medium italic tracking-tight text-white-custom sm:text-4xl">
+                  <h2 className="mt-2 font-display text-3xl font-medium italic tracking-tight text-text-main sm:text-4xl">
                     {isEnglish ? 'Related essays' : 'Ensayos relacionados'}
                   </h2>
                 </div>
@@ -855,9 +855,9 @@ export default async function BlogPostPage({
                   <Link
                     key={related.slug}
                     href={`/blog/${related.slug}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-white/10 bg-card-40 transition-all duration-500 hover:-translate-y-1 hover:border-primary"
+                    className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-text-muted/15 bg-card-40 transition-all duration-500 hover:-translate-y-1 hover:border-primary"
                   >
-                    <div className="aspect-[16/10] overflow-hidden border-b border-white/10">
+                    <div className="aspect-[16/10] overflow-hidden border-b border-text-muted/15">
                       <PostCover
                         post={related}
                         locale={contentLocale}
@@ -873,7 +873,7 @@ export default async function BlogPostPage({
                         </span>
                         <span>{related.readingTime ?? 5} min</span>
                       </div>
-                      <h3 className="mt-3 font-display text-xl font-medium italic leading-snug text-white-custom transition-colors group-hover:text-primary">
+                      <h3 className="mt-3 font-display text-xl font-medium italic leading-snug text-text-main transition-colors group-hover:text-primary">
                         {related.title}
                       </h3>
                       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-60">

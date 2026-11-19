@@ -53,7 +53,7 @@ export default function ShareButtons({
   ];
 
   const buttonClass = clsx(
-    'inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] font-mono-label text-[7px] text-muted-45 transition-colors hover:border-primary hover:text-primary',
+    'inline-flex items-center gap-2 rounded-xl border border-text-muted/15 bg-card-bg font-mono-label text-[7px] text-muted-45 transition-colors hover:border-primary hover:text-primary',
     vertical ? 'w-full justify-start px-3 py-2.5' : 'px-3 py-2',
   );
 
