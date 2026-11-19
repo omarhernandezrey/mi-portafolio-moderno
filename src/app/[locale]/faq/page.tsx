@@ -261,11 +261,11 @@ export default async function FAQPage({ params }: Props) {
             </HeroParallax>
             <ScrollReveal immediate y={16}>
               <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
-                Customer Support Center
+                {isEn ? 'Customer Support Center' : 'Centro de Soporte'}
               </div>
             </ScrollReveal>
             <ScrollReveal immediate delay={0.1}>
-              <h1 className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none">
+              <h1 className="font-display italic text-5xl md:text-7xl font-medium text-text-main tracking-tight leading-none">
                 {isEn ? (
                   <>Protocols & <br /><span className="text-primary">Inquiries</span></>
                 ) : (
@@ -287,7 +287,7 @@ export default async function FAQPage({ params }: Props) {
                 alt={isEn ? pageHeroImages.faq.alt.en : pageHeroImages.faq.alt.es}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 768px"
                 priority
-                className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-white/5 shadow-2xl mt-6"
+                className="w-full max-w-3xl mx-auto aspect-[3/2] sm:aspect-[16/9] rounded-canvas border border-text-muted/10 shadow-2xl mt-6"
               />
             </ScrollReveal>
           </div>
@@ -297,21 +297,21 @@ export default async function FAQPage({ params }: Props) {
             {CATEGORIES.map((category, idx) => (
               <ScrollReveal key={idx} delay={Math.min(idx * 0.05, 0.3)}>
               <section className="space-y-12">
-                <div className="flex items-center gap-4 border-b border-white/5 pb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shadow-inner">
+                <div className="flex items-center gap-4 border-b border-text-muted/10 pb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-card-bg border border-text-muted/15 flex items-center justify-center text-primary shadow-inner">
                     {category.icon}
                   </div>
-                  <h2 className="font-display italic text-2xl font-medium text-white-custom tracking-tight leading-none">{category.title}</h2>
+                  <h2 className="font-display italic text-2xl font-medium text-text-main tracking-tight leading-none">{category.title}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   {category.faqs.map((faq, i) => (
                     <div key={i} className="group space-y-4">
-                      <h3 className="text-lg font-bold text-white-custom group-hover:text-primary transition-colors flex items-start gap-3 leading-tight italic">
+                      <h3 className="text-lg font-bold text-text-main group-hover:text-primary transition-colors flex items-start gap-3 leading-tight italic">
                         <ChevronRight size={18} className="text-primary mt-1 shrink-0 opacity-40 group-hover:opacity-100 transition-opacity" />
                         {faq.q}
                       </h3>
-                      <p className="text-sm text-text-muted/70 font-medium leading-relaxed pl-8 border-l border-white/5 group-hover:border-primary/20 transition-colors italic">
+                      <p className="text-sm text-text-muted/70 font-medium leading-relaxed pl-8 border-l border-text-muted/10 group-hover:border-primary/20 transition-colors italic">
                         {faq.a}
                       </p>
                     </div>
@@ -324,7 +324,7 @@ export default async function FAQPage({ params }: Props) {
 
           {/* Global CTA */}
           <ScrollReveal>
-          <section className="bg-card-bg rounded-canvas md:rounded-[60px] border border-white/5 p-8 md:p-12 lg:p-20 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
+          <section className="bg-card-bg rounded-canvas md:rounded-[60px] border border-text-muted/10 p-8 md:p-12 lg:p-20 shadow-2xl relative overflow-hidden text-center group hover:border-primary/20 transition-all duration-500">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent opacity-30" />
             <div className="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
 
@@ -334,7 +334,7 @@ export default async function FAQPage({ params }: Props) {
               </div>
 
               <div className="space-y-4">
-                <h2 className="font-display italic text-3xl md:text-4xl font-medium text-white-custom tracking-tight">
+                <h2 className="font-display italic text-3xl md:text-4xl font-medium text-text-main tracking-tight">
                   {isEn ? "Don't see your question here?" : "¿Tu pregunta no está aquí?"}
                 </h2>
                 <p className="text-text-muted text-sm font-medium italic opacity-70 leading-relaxed">
@@ -347,7 +347,7 @@ export default async function FAQPage({ params }: Props) {
               <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                 <Link
                   href="/calculadora"
-                  className="bg-white/5 hover:bg-white/10 text-white-custom px-10 py-5 rounded-[24px] border border-white/10 font-black text-3xs uppercase tracking-[0.3em] transition-all"
+                  className="bg-card-bg hover:bg-text-muted/10 text-text-main px-10 py-5 rounded-[24px] border border-text-muted/15 font-black text-3xs uppercase tracking-[0.3em] transition-all"
                 >
                   {isEn ? "Calculate Budget" : "Calcular Presupuesto"}
                 </Link>
@@ -371,7 +371,7 @@ export default async function FAQPage({ params }: Props) {
 
           {/* Global Trust Bar */}
           <ScrollReveal>
-            <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-white/5">
+            <div className="flex flex-wrap justify-center gap-12 pt-8 opacity-20 border-t border-text-muted/10">
               <TrustItem icon={<Shield size={14} />} text={isEn ? "Secure Protocol" : "Protocolo Seguro"} />
               <TrustItem icon={<UserCheck size={14} />} text={isEn ? "Verified Identity" : "Identidad Verificada"} />
               <TrustItem icon={<Clock size={14} />} text={isEn ? "High Availability" : "Alta Disponibilidad"} />
