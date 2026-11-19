@@ -12,6 +12,7 @@ import Link from 'next/link';
 import PageHeader from '@/components/admin/ui/PageHeader';
 import StatusBadge from '@/components/admin/ui/StatusBadge';
 import EmptyState from '@/components/admin/ui/EmptyState';
+import ErrorState from '@/components/admin/ui/ErrorState';
 import Pagination from '@/components/admin/ui/Pagination';
 import ExportLeadsButton from '@/components/admin/ExportLeadsButton';
 import { AdminButton, AdminButtonLink } from '@/components/admin/ui/AdminButton';
@@ -33,7 +34,7 @@ async function getLeads(
   status?: string,
   page = 1,
   pageSize = DEFAULT_PAGE_SIZE
-): Promise<PaginatedResult<Lead>> {
+): Promise<PaginatedResult<Lead> & { error: boolean }> {
   const { from, to } = pageRange(page, pageSize);
   const safeSearch = search ? sanitizeSearchTerm(search) : '';
 
@@ -66,6 +67,7 @@ async function getLeads(
     page,
     pageSize,
     totalPages,
+    error: Boolean(error),
   };
 }
 
@@ -88,7 +90,7 @@ export default async function AdminLeadsPage({
   const statusFilter = params.status || '';
   const page = parsePage(params.page);
   const result = await getLeads(search, statusFilter, page);
-  const { data: leads, total, totalPages, pageSize } = result;
+  const { data: leads, total, totalPages, pageSize, error: cargaFallida } = result;
   const role = await getAdminRole();
   const canWrite = hasMinRole(role ?? 'viewer', 'assistant');
 
@@ -105,7 +107,7 @@ export default async function AdminLeadsPage({
         description="Administración y seguimiento de oportunidades comerciales."
         actions={
           <>
-            <ExportLeadsButton leads={leads} />
+            {!cargaFallida && <ExportLeadsButton leads={leads} />}
             {canWrite && (
               <AdminButtonLink
                 href="/admin/leads/new"
@@ -159,7 +161,9 @@ export default async function AdminLeadsPage({
       </form>
 
       <div className="space-y-3 lg:hidden">
-        {leads.length > 0 ? (
+        {cargaFallida ? (
+          <ErrorState description="No se pudieron cargar los leads. Intenta de nuevo en unos segundos." />
+        ) : leads.length > 0 ? (
           leads.map((lead) => (
             <article
               key={lead.id}
@@ -225,7 +229,7 @@ export default async function AdminLeadsPage({
           />
         )}
 
-        {leads.length > 0 && (
+        {!cargaFallida && leads.length > 0 && (
           <div className="overflow-hidden rounded-2xl border border-admin-line bg-card-bg">
             <Pagination
               page={page}
@@ -240,6 +244,11 @@ export default async function AdminLeadsPage({
       </div>
 
       <div className="hidden overflow-hidden rounded-2xl border border-admin-line bg-card-bg shadow-e3 lg:block">
+        {cargaFallida ? (
+          <div className="px-5 py-10">
+            <ErrorState description="No se pudieron cargar los leads. Intenta de nuevo en unos segundos." />
+          </div>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[860px] text-left">
             <thead>
@@ -339,15 +348,18 @@ export default async function AdminLeadsPage({
             </tbody>
           </table>
         </div>
+        )}
 
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          pageSize={pageSize}
-          basePath="/admin/leads"
-          query={queryPreserved}
-        />
+        {!cargaFallida && (
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            pageSize={pageSize}
+            basePath="/admin/leads"
+            query={queryPreserved}
+          />
+        )}
       </div>
     </div>
   );

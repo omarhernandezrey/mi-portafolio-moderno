@@ -12,6 +12,9 @@
 // Pre-existentes
 export { default as AdminCard } from './AdminCard';
 export { AdminButton, AdminButtonLink, adminButtonClasses } from './AdminButton';
+export { default as EmptyState } from './EmptyState';
+export { default as ErrorState } from './ErrorState';
+export { default as PageHeader } from './PageHeader';
 
 // Formulario
 export { Field, controlClasses, useFieldIds } from './Field';

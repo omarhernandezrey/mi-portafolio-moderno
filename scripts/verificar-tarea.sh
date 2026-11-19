@@ -117,7 +117,11 @@ paso "Detector de diseño (Impeccable)"
 IMP=".claude/skills/impeccable/scripts/impeccable"
 if [ -x "$IMP" ] && "$IMP" detect --json src/app/admin src/components/admin \
      >/tmp/verify-det.json 2>/dev/null; [ -s /tmp/verify-det.json ]; then
-  reales="$(node -e '
+  # FORCE_COLOR=0: en entornos que fuerzan color (p.ej. algunos agentes en
+  # sandbox), `console.log(numero)` sale con códigos ANSI alrededor — rompe
+  # la comparación entera de más abajo. `NO_COLOR` no basta: Node lo ignora
+  # si `FORCE_COLOR` ya está puesto.
+  reales="$(FORCE_COLOR=0 node -e '
     const d = JSON.parse(require("fs").readFileSync("/tmp/verify-det.json", "utf8"));
     const a = Array.isArray(d) ? d : (d.findings || d.results || []);
     console.log(a.filter((f) => !f.advisory).length);

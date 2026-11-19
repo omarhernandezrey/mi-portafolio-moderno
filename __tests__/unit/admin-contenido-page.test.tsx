@@ -249,6 +249,21 @@ describe('perfil — intereses sin id por elemento', () => {
     );
   });
 
+  it('si el PUT falla, el interruptor de la sección vuelve a su estado anterior (no se queda en un estado a medias)', async () => {
+    mockCargaInicial([], [], [], { content: [perfilInteres()], is_published: true });
+    renderPagina();
+    await waitFor(() => expect(mockAdminFetch).toHaveBeenCalledTimes(4));
+    irATab('Perfil');
+
+    const interruptor = await screen.findByRole('switch', { name: 'Mostrar la sección de intereses' });
+    expect(interruptor).toBeChecked();
+
+    mockAdminFetch.mockRejectedValueOnce(new Error('Error 500'));
+    fireEvent.click(interruptor);
+
+    await waitFor(() => expect(interruptor).toBeChecked());
+  });
+
   it('confirmar el borrado de un interés manda el array sin ese elemento', async () => {
     mockCargaInicial([], [], [], { content: [perfilInteres(), perfilInteres({ title: 'AI & ML', iconKey: 'BrainCircuit' })], is_published: true });
     renderPagina();
