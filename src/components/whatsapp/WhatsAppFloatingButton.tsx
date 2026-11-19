@@ -96,9 +96,9 @@ export default function WhatsAppFloatingButton() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.96 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
-            className="mb-3 w-[min(78vw,272px)] overflow-hidden rounded-2xl border border-[var(--primary-color)]/15 bg-[var(--card-bg-color)] shadow-[0_8px_40px_rgba(0,0,0,0.35)]"
+            className="mb-3 w-[min(78vw,272px)] overflow-hidden rounded-2xl border border-primary/15 bg-[var(--card-bg-color)] shadow-[0_8px_40px_rgba(0,0,0,0.35)]"
           >
-            <div className="flex items-center justify-between gap-2 border-b border-[var(--primary-color)]/15 px-4 py-3">
+            <div className="flex items-center justify-between gap-2 border-b border-primary/15 px-4 py-3">
               <span className="text-xs font-black uppercase tracking-widest text-[var(--primary-color)]">
                 {t('whatsapp.menuTitle')}
               </span>
@@ -109,7 +109,7 @@ export default function WhatsAppFloatingButton() {
                   fabRef.current?.focus();
                 }}
                 aria-label={t('whatsapp.close')}
-                className="rounded-lg p-1 text-[var(--text-color)]/60 transition-colors hover:bg-[var(--primary-color)]/10 hover:text-[var(--text-color)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--primary-color)]"
+                className="rounded-lg p-1 text-text-main/60 transition-colors hover:bg-primary/10 hover:text-[var(--text-color)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--primary-color)]"
               >
                 <X size={16} />
               </button>
@@ -127,7 +127,7 @@ export default function WhatsAppFloatingButton() {
                       target={external ? '_blank' : undefined}
                       rel={external ? 'noopener noreferrer' : undefined}
                       onClick={() => handleIntent(intent, target.channel)}
-                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[var(--text-color)] transition-colors hover:bg-[var(--primary-color)]/10 focus-visible:bg-[var(--primary-color)]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--primary-color)]"
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[var(--text-color)] transition-colors hover:bg-primary/10 focus-visible:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--primary-color)]"
                     >
                       {target.channel === 'calcom' ? (
                         <Calendar

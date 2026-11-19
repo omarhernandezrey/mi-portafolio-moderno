@@ -104,8 +104,8 @@ const NavbarDesktop = () => {
     <nav
       className={`fixed top-0 left-0 w-full z-50 relative transition-all duration-500 ease-in-out ${
         scrolled
-          ? "bg-[var(--background-color)]/95 backdrop-blur-xl shadow-2xl border-b border-[var(--accent-color)]/20"
-          : "bg-[var(--background-color)]/80 backdrop-blur-md"
+          ? "bg-background/95 backdrop-blur-xl shadow-2xl border-b border-accent/20"
+          : "bg-background/80 backdrop-blur-md"
       }`}
     >
       <div className="w-full px-2 sm:px-4">
@@ -122,7 +122,7 @@ const NavbarDesktop = () => {
                 alt="Logo"
                 width={44}
                 height={44}
-                className="relative h-9 w-9 lg:h-11 lg:w-11 xl:h-12 xl:w-12 object-contain rounded-full border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--accent-color)] transition-all duration-300 group-hover:scale-105"
+                className="relative h-9 w-9 lg:h-11 lg:w-11 xl:h-12 xl:w-12 object-contain rounded-full border-2 border-primary/30 group-hover:border-[var(--accent-color)] transition-all duration-300 group-hover:scale-105"
               />
             </div>
           </div>
@@ -136,7 +136,7 @@ const NavbarDesktop = () => {
                   onClick={() => handleLinkClick(link.id)}
                   className={`relative flex items-center px-2 lg:px-3 xl:px-4 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 hover:scale-105 ${
                     activeSection === link.id
-                      ? "text-[var(--accent-color)] bg-[var(--primary-color)]/10"
+                      ? "text-[var(--accent-color)] bg-primary/10"
                       : "text-[var(--text-color)] hover:text-[var(--primary-color)] hover:bg-[var(--secondary-background-color)]"
                   }`}
                 >
@@ -176,7 +176,7 @@ const NavbarDesktop = () => {
       </div>
 
       {/* Glass morphism effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)]/5 to-[var(--accent-color)]/5 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 pointer-events-none"></div>
     </nav>
   );
 };

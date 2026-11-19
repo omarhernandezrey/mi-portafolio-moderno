@@ -39,9 +39,9 @@ export default function NewsletterForm() {
 
   return (
     <div className="w-full max-w-xl mx-auto">
-      <div className="bg-gradient-to-br from-[var(--secondary-background-color)] to-[var(--background-color)] p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[var(--secondary-background-color)] to-[var(--background-color)] p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl relative overflow-hidden">
         {/* Glow effect */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-color)]/10 blur-3xl -z-10"></div>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl -z-10"></div>
         
         {status === 'success' ? (
           <motion.div 
@@ -66,7 +66,7 @@ export default function NewsletterForm() {
         ) : (
           <>
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 bg-[var(--primary-color)]/10 rounded-2xl text-[var(--primary-color)]">
+              <div className="p-3 bg-primary/10 rounded-2xl text-[var(--primary-color)]">
                 <Mail size={24} />
               </div>
               <h3 className="text-2xl font-black">Newsletter Tech</h3>
@@ -79,7 +79,7 @@ export default function NewsletterForm() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-[var(--primary-color)] to-[var(--accent-color)] rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition duration-300"></div>
-                <div className="relative flex items-center bg-[var(--background-color)] rounded-2xl p-1.5 border border-[var(--primary-color)]/10">
+                <div className="relative flex items-center bg-[var(--background-color)] rounded-2xl p-1.5 border border-primary/10">
                   <input
                     type="email"
                     placeholder="Tu email principal"
@@ -112,7 +112,7 @@ export default function NewsletterForm() {
                   {errorMsg}
                 </motion.p>
               )}
-              <p className="text-3xs text-[var(--muted-color)]/60 text-center uppercase tracking-widest font-bold">
+              <p className="text-3xs text-text-muted/60 text-center uppercase tracking-widest font-bold">
                 Al suscribirte, aceptas mi política de privacidad
               </p>
             </form>

@@ -149,7 +149,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMe
   <nav ref={navRef} className="flex justify-between items-center px-6 py-4 bg-[var(--background-color)] text-[var(--text-color)] border-b border-[var(--accent-color)] fixed top-0 left-0 w-full z-[90] shadow-md">
         <button
           onClick={toggleMenu}
-          className="text-[var(--primary-color)] text-3xl rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] hover:text-[var(--primary-hover-color)] transition-colors duration-300"
+          className="text-[var(--primary-color)] text-3xl rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] hover:text-[var(--accent-color)] transition-colors duration-300"
           aria-label="Toggle menu"
           aria-controls="mobile-menu-panel"
           aria-expanded={isOpen}
@@ -186,10 +186,10 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMe
         aria-label={t("navigation.menu")}
       >
         {/* Selector de idioma + botón Cerrar */}
-        <div className="shrink-0 px-4 py-3 border-b border-[var(--accent-color)]/20 bg-[var(--secondary-background-color)]/95 backdrop-blur z-50">
+        <div className="shrink-0 px-4 py-3 border-b border-accent/20 bg-secondary-bg/95 backdrop-blur z-50">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2 flex-1">
-              <span className="text-sm text-[var(--text-color)]/70 font-medium">
+              <span className="text-sm text-text-main/70 font-medium">
                 {t("navigation.language")}:
               </span>
               <div className="relative z-50">
@@ -198,7 +198,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMe
             </div>
             <button
               onClick={closeMenu}
-              className="flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg px-2 py-1"
+              className="flex items-center gap-2 text-[var(--primary-color)] hover:text-[var(--accent-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg px-2 py-1"
               aria-label={`${t("actions.close")} menú`}
             >
               <AiOutlineClose size={22} />
@@ -214,7 +214,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMe
               <li key={link.id} className="w-full">
                 <button
                   onClick={() => handleLinkClick(link.id)}
-                  className={`flex items-center gap-3 w-full px-3 py-3 text-[var(--primary-color)] hover:text-[var(--accent-hover-color)] hover:bg-[var(--background-color)] rounded-lg transition-all duration-300 menu-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] ${
+                  className={`flex items-center gap-3 w-full px-3 py-3 text-[var(--primary-color)] hover:text-[var(--accent-color)] hover:bg-[var(--background-color)] rounded-lg transition-all duration-300 menu-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] ${
                     activeSection === link.id
                       ? "bg-[var(--background-color)] text-[var(--accent-color)] font-semibold border-l-2 border-[var(--accent-color)]"
                       : ""
@@ -233,16 +233,16 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMe
         </div>
 
         {/* Sección Tema / Paleta de colores (debajo de los links) */}
-        <div className="flex-shrink-0 px-4 py-4 border-t border-[var(--accent-color)]/20">
+        <div className="flex-shrink-0 px-4 py-4 border-t border-accent/20">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
-              <span className="text-sm text-[var(--text-color)]/70 font-medium">
+              <span className="text-sm text-text-main/70 font-medium">
                 {t("theme.change")}
               </span>
             </div>
             <button
               onClick={togglePalette}
-              className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 active:scale-95 hover:text-[var(--accent-hover-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] p-2 rounded-lg hover:bg-[var(--background-color)] animate-pulse"
+              className="text-[var(--primary-color)] transition-transform duration-300 hover:scale-110 active:scale-95 hover:text-[var(--accent-color)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] p-2 rounded-lg hover:bg-[var(--background-color)] animate-pulse"
               aria-label={t("actions.change_theme")}
               title={t("actions.change_theme")}
             >
@@ -259,7 +259,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMe
                 href="https://github.com/omarhernandezrey"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-color)] hover:scale-110"
                 aria-label="GitHub"
               >
                 <AiFillGithub size={32} />
@@ -268,7 +268,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ isOpen, toggleMenu, closeMe
                 href="https://www.linkedin.com/in/omarhernandezrey/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-hover-color)] hover:scale-110"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] text-[var(--primary-color)] transition-transform duration-300 hover:text-[var(--accent-color)] hover:scale-110"
                 aria-label="LinkedIn"
               >
                 <AiFillLinkedin size={32} />

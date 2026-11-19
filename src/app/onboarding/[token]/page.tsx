@@ -161,7 +161,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
       <main className="flex-1 container mx-auto px-4 pt-32 pb-20 max-w-4xl">
         {/* Progress Bar */}
         <div className="flex justify-between items-center mb-12 relative">
-          <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[var(--primary-color)]/10 -z-10"></div>
+          <div className="absolute top-1/2 left-0 w-full h-0.5 bg-primary/10 -z-10"></div>
           <div 
             className="absolute top-1/2 left-0 h-0.5 bg-[var(--primary-color)] -z-10 transition-all duration-500"
             style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}
@@ -171,7 +171,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               <div 
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                   step >= s.n 
-                    ? 'bg-[var(--primary-color)] text-white shadow-lg shadow-[var(--primary-color)]/30' 
+                    ? 'bg-[var(--primary-color)] text-white shadow-lg shadow-primary/30' 
                     : 'bg-[var(--secondary-background-color)] text-[var(--muted-color)]'
                 }`}
               >
@@ -191,7 +191,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl"
+              className="space-y-8 bg-secondary-bg/50 p-8 rounded-[2.5rem] border border-primary/10 shadow-xl"
             >
               <div className="text-center">
                 <h2 className="font-display italic text-3xl font-medium mb-2">Paso 1: El Brief</h2>
@@ -202,7 +202,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                 <div>
                   <label className="block text-sm font-bold mb-2">Objetivos principales</label>
                   <textarea 
-                    className="w-full bg-[var(--background-color)] border border-[var(--primary-color)]/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none min-h-[100px]"
+                    className="w-full bg-[var(--background-color)] border border-primary/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none min-h-[100px]"
                     placeholder="¿Qué quieres lograr con este proyecto?"
                     required
                     value={brief.objectives}
@@ -212,7 +212,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                 <div>
                   <label className="block text-sm font-bold mb-2">Público objetivo</label>
                   <textarea 
-                    className="w-full bg-[var(--background-color)] border border-[var(--primary-color)]/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none"
+                    className="w-full bg-[var(--background-color)] border border-primary/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none"
                     placeholder="¿A quién va dirigido?"
                     required
                     value={brief.targetAudience}
@@ -223,7 +223,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                   <label className="block text-sm font-bold mb-2">Referencias visuales</label>
                   <input 
                     type="text"
-                    className="w-full bg-[var(--background-color)] border border-[var(--primary-color)]/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none"
+                    className="w-full bg-[var(--background-color)] border border-primary/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none"
                     placeholder="Links a sitios que te gusten"
                     value={brief.references}
                     onChange={(e) => setBrief({...brief, references: e.target.value})}
@@ -232,7 +232,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                 <div>
                   <label className="block text-sm font-bold mb-2">Funcionalidades clave</label>
                   <textarea 
-                    className="w-full bg-[var(--background-color)] border border-[var(--primary-color)]/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none"
+                    className="w-full bg-[var(--background-color)] border border-primary/20 rounded-2xl p-4 focus:ring-2 focus:ring-[var(--primary-color)] outline-none"
                     placeholder="Listado de requerimientos técnicos..."
                     required
                     value={brief.functionalities}
@@ -257,7 +257,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl text-center"
+              className="space-y-8 bg-secondary-bg/50 p-8 rounded-[2.5rem] border border-primary/10 shadow-xl text-center"
             >
               <h2 className="font-display italic text-3xl font-medium mb-2">Paso 2: Contrato</h2>
               <p className="text-[var(--muted-color)] mb-8">Revisa los términos del servicio. Este documento garantiza nuestra seriedad y profesionalismo.</p>
@@ -294,12 +294,12 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-8 bg-[var(--secondary-background-color)]/50 p-8 rounded-[2.5rem] border border-[var(--primary-color)]/10 shadow-xl text-center"
+              className="space-y-8 bg-secondary-bg/50 p-8 rounded-[2.5rem] border border-primary/10 shadow-xl text-center"
             >
               <h2 className="font-display italic text-3xl font-medium mb-2">Paso 3: Anticipo</h2>
               <p className="text-[var(--muted-color)] mb-8">Para reservar el cupo y dar inicio al desarrollo, se requiere un anticipo del 50% ({hasDeposit ? formatMoney(depositAmount) : '---'}).</p>
 
-              <div className="p-8 border-2 border-dashed border-[var(--primary-color)]/30 rounded-[2rem] bg-[var(--primary-color)]/5 mb-8">
+              <div className="p-8 border-2 border-dashed border-primary/30 rounded-[2rem] bg-primary/5 mb-8">
                 <div className="text-4xl font-black text-[var(--primary-color)] mb-2">
                   {hasDeposit ? formatMoney(depositAmount) : '---'}
                 </div>
@@ -355,7 +355,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               key="step4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="space-y-8 bg-gradient-to-br from-green-500/10 to-[var(--primary-color)]/10 p-12 rounded-[3rem] border border-green-500/20 shadow-2xl text-center"
+              className="space-y-8 bg-gradient-to-br from-green-500/10 to-primary/10 p-12 rounded-[3rem] border border-green-500/20 shadow-2xl text-center"
             >
               <div className="w-24 h-24 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-500/30">
                 <Rocket size={48} />
@@ -382,7 +382,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
 
               <a
                 href="https://t.me/omar_hernandez"
-                className="inline-flex items-center gap-3 bg-[var(--primary-color)] text-white px-10 py-5 rounded-3xl font-black text-lg hover:scale-105 transition-all shadow-xl shadow-[var(--primary-color)]/20"
+                className="inline-flex items-center gap-3 bg-[var(--primary-color)] text-white px-10 py-5 rounded-3xl font-black text-lg hover:scale-105 transition-all shadow-xl shadow-primary/20"
               >
                 Hablar con Omar por Telegram
               </a>

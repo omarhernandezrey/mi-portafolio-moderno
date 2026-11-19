@@ -956,7 +956,7 @@ const EducationSection = () => {
           {/* Línea diagonal luminosa */}
           <motion.div
             style={{ y: y4 }}
-            className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] bg-gradient-to-r from-[var(--accent-color)]/60 via-white/10 to-transparent opacity-40 rotate-[-20deg] blur-md"
+            className="absolute top-[60%] left-[-80px] w-[400px] h-[8px] bg-gradient-to-r from-accent/60 via-white/10 to-transparent opacity-40 rotate-[-20deg] blur-md"
           />
           {/* Círculo blanco suave */}
           <motion.div

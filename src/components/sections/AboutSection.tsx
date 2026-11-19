@@ -239,11 +239,11 @@ const AboutSection: React.FC = () => {
                   className="flex items-start gap-4 group"
                   whileHover={{ x: 5 }}
                 >
-                  <div className="w-10 h-10 rounded-full bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 flex items-center justify-center text-[var(--primary-color)] shadow-lg">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[var(--primary-color)] shadow-lg">
                     {item.icon ? <item.icon size={16} /> : null}
                   </div>
                   <div>
-                    <p className="font-mono-label text-3xs text-[var(--accent-color)]/70">
+                    <p className="font-mono-label text-3xs text-accent/70">
                       {item.label}
                     </p>
                     <p className="text-sm font-bold text-[var(--text-color)]">

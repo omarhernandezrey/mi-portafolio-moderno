@@ -117,6 +117,7 @@ export default function Footer() {
                   <motion.a
                     key={index}
                     href={social.href}
+                    aria-label={social.label}
                     target={social.isAnchor ? "_self" : "_blank"}
                     rel={social.isAnchor ? "" : "noopener noreferrer"}
                     onClick={(e) => {
@@ -206,7 +207,7 @@ export default function Footer() {
           {/* Footer del Container */}
           <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-4 text-xs font-bold opacity-50 italic">
-               <span>Remote Worldwide • Bogotá, CO</span>
+               <span>{t("footer.location")}</span>
             </div>
             
             <motion.button
@@ -234,7 +235,7 @@ export default function Footer() {
           <div className="space-y-1">
             <p>© {new Date().getFullYear()} {t("footer.name")}. {t("footer.rights")}</p>
             <p className="max-w-md italic">
-              Built with precision using Next.js, Framer Motion & Tailwind. Designed for high-performance conversion.
+              {t("footer.madeWith")} Next.js, Framer Motion & Tailwind {t("footer.in")} Bogotá.
             </p>
           </div>
           

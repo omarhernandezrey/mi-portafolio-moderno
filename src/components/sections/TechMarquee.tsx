@@ -22,7 +22,7 @@ const TechCard: React.FC<TechCardProps> = ({ tech }) => {
 
   return (
   <div className="flex-shrink-0 group relative">
-    <div className="relative flex flex-col items-center justify-center w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-[var(--card-bg-color)] to-[var(--secondary-background-color)] border border-[var(--muted-color)]/20 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-out will-change-transform group-hover:-translate-y-2 group-hover:scale-[1.12] group-hover:shadow-2xl group-hover:border-[var(--accent-color)]/50">
+    <div className="relative flex flex-col items-center justify-center w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-[var(--card-bg-color)] to-[var(--secondary-background-color)] border border-text-muted/20 shadow-lg backdrop-blur-sm transition-transform duration-300 ease-out will-change-transform group-hover:-translate-y-2 group-hover:scale-[1.12] group-hover:shadow-2xl group-hover:border-accent/50">
       <div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"
         style={{
@@ -42,9 +42,9 @@ const TechCard: React.FC<TechCardProps> = ({ tech }) => {
       </div>
     </div>
     <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-[9999]">
-      <div className="bg-[var(--secondary-background-color)] text-[var(--text-color)] text-xs font-semibold px-3 py-1.5 rounded-lg shadow-xl border border-[var(--muted-color)]/30 whitespace-nowrap">
+      <div className="bg-[var(--secondary-background-color)] text-[var(--text-color)] text-xs font-semibold px-3 py-1.5 rounded-lg shadow-xl border border-text-muted/30 whitespace-nowrap">
         {tech.name}
-        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--secondary-background-color)] border-l border-t border-[var(--muted-color)]/30 rotate-45" />
+        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--secondary-background-color)] border-l border-t border-text-muted/30 rotate-45" />
       </div>
     </div>
   </div>
@@ -92,7 +92,7 @@ const TechMarquee: React.FC = () => {
 
       <div className="relative mt-12">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-[var(--muted-color)]/20" />
+          <div className="w-full border-t border-text-muted/20" />
         </div>
         <div className="relative flex justify-center">
           <span className="px-6 bg-[var(--background-color)] text-[var(--muted-color)] text-sm font-medium">
