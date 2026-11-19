@@ -122,7 +122,9 @@ export default async function AdminFeedPage({
       {/* T-29: variante móvil — la tabla de abajo exige 720px de ancho mínimo,
           que a 375px solo se puede leer con scroll horizontal de página. */}
       <div className="space-y-3 lg:hidden">
-        {posts.length > 0 ? (
+        {cargaFallida ? (
+          <ErrorState description="No se pudieron cargar las publicaciones. Intenta de nuevo en unos segundos." />
+        ) : posts.length > 0 ? (
           posts.map((post) => (
             <article key={post.id} className="rounded-2xl border border-admin-line bg-card-bg p-4 shadow-e3">
               <div className="flex items-start justify-between gap-3">
