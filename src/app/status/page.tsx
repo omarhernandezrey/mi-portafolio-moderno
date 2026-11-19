@@ -59,7 +59,7 @@ export default function StatusPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="font-display italic text-5xl md:text-7xl font-medium text-white-custom tracking-tight leading-none"
+            className="font-display italic text-5xl md:text-7xl font-medium text-text-main tracking-tight leading-none"
           >
             System <span className="text-primary">Status</span>
           </motion.h1>
@@ -84,12 +84,12 @@ export default function StatusPage() {
           >
             <AlertCircle className="mx-auto text-red-500 opacity-40" size={60} strokeWidth={1} />
             <div className="space-y-2">
-              <h2 className="font-display italic text-2xl font-medium text-white-custom tracking-tight">Protocol Break Detected</h2>
+              <h2 className="font-display italic text-2xl font-medium text-text-main tracking-tight">Protocol Break Detected</h2>
               <p className="text-text-muted text-sm font-medium italic opacity-60">No se ha podido establecer una conexión segura con el nodo de monitoreo.</p>
             </div>
             <button 
               onClick={() => { setLoading(true); fetchStatus(); }}
-              className="px-10 py-4 rounded-[20px] bg-white/5 border border-white/10 text-3xs font-black uppercase tracking-widest text-white-custom hover:bg-white/10 transition-all"
+              className="px-10 py-4 rounded-[20px] bg-card-bg border border-text-muted/15 text-3xs font-black uppercase tracking-widest text-text-main hover:bg-text-muted/10 transition-all"
             >
               Reintentar Sincronización
             </button>
@@ -116,7 +116,7 @@ export default function StatusPage() {
                     {data?.status === 'operational' ? <CheckCircle2 size={48} strokeWidth={1.5} /> : <AlertCircle size={48} strokeWidth={1.5} />}
                   </div>
                   <div className="space-y-2">
-                    <h2 className="font-display italic text-3xl font-medium text-white-custom tracking-tight leading-none">
+                    <h2 className="font-display italic text-3xl font-medium text-text-main tracking-tight leading-none">
                       {data?.status === 'operational' ? 'Operational Protocol' : 'Performance Alert'}
                     </h2>
                     <p className="text-3xs font-black uppercase tracking-[0.2em] text-text-muted italic opacity-40">
@@ -127,7 +127,7 @@ export default function StatusPage() {
                 
                 <div className="flex flex-col items-center md:items-end">
                   <div className="text-4xs font-black uppercase tracking-[0.4em] text-text-muted opacity-40 mb-2">Network Health</div>
-                  <div className="text-5xl font-black text-white-custom tracking-tighter flex items-baseline gap-2">
+                  <div className="text-5xl font-black text-text-main tracking-tighter flex items-baseline gap-2">
                     99<span className="text-xl text-primary">.98</span>
                     <span className="text-xs font-bold text-text-muted/40 uppercase tracking-widest">%</span>
                   </div>
@@ -165,9 +165,9 @@ export default function StatusPage() {
             </div>
 
             {/* Performance Timeline Visualization */}
-            <div className="bg-card-bg rounded-[48px] border border-white/5 p-10 md:p-12 shadow-2xl relative overflow-hidden group">
+            <div className="bg-card-bg rounded-[48px] border border-text-muted/10 p-10 md:p-12 shadow-2xl relative overflow-hidden group">
                <div className="flex items-center justify-between mb-10">
-                  <h3 className="font-mono-label text-[0.6rem] text-white-custom flex items-center gap-3">
+                  <h3 className="font-mono-label text-[0.6rem] text-text-main flex items-center gap-3">
                     <BarChart3 size={14} className="text-primary" />
                     Uptime History Archive
                   </h3>
@@ -213,7 +213,7 @@ export default function StatusPage() {
       </main>
 
       {/* Global Trust Archive Bar */}
-      <div className="flex flex-wrap justify-center gap-12 py-12 opacity-10 border-t border-white/5 grayscale">
+      <div className="flex flex-wrap justify-center gap-12 py-12 opacity-10 border-t border-text-muted/10 grayscale">
         <TrustAsset icon={<ShieldCheck size={14} />} text="End-to-End Encryption" />
         <TrustAsset icon={<Activity size={14} />} text="Zero-Downtime Architecture" />
         <TrustAsset icon={<Globe size={14} />} text="Global CDN Integration" />
@@ -228,13 +228,13 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
   const isOperational = status === 'operational' || status === 'active';
   
   return (
-    <div className="bg-card-bg/40 rounded-canvas border border-white/5 p-8 shadow-xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden">
+    <div className="bg-card-bg/40 rounded-canvas border border-text-muted/10 p-8 shadow-xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden">
       <div className="flex justify-between items-start mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+          <div className="w-10 h-10 rounded-xl bg-card-bg border border-text-muted/15 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
             {icon}
           </div>
-          <h4 className="font-black text-white-custom italic tracking-tight">{name}</h4>
+          <h4 className="font-black text-text-main italic tracking-tight">{name}</h4>
         </div>
         <div className={`flex items-center gap-2 text-4xs font-black uppercase px-3 py-1.5 rounded-full border transition-all ${
           isOperational ? 'bg-primary/5 text-primary border-primary/20' : 'bg-accent/5 text-accent border-accent/20'
@@ -245,7 +245,7 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
       </div>
       <p className="text-xs text-text-muted font-medium italic opacity-60 leading-relaxed mb-6">{description}</p>
       {latency && (
-        <div className="text-3xs font-black text-primary/40 uppercase tracking-widest bg-background/50 px-3 py-1.5 rounded-lg border border-white/5 w-fit">
+        <div className="text-3xs font-black text-primary/40 uppercase tracking-widest bg-background/50 px-3 py-1.5 rounded-lg border border-text-muted/10 w-fit">
           Protocol Delay: {latency}
         </div>
       )}

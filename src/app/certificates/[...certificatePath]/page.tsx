@@ -39,7 +39,7 @@ const CertificatePage = () => {
         className="p-4 rounded-[24px] shadow-2xl border"
         style={{
           backgroundColor: "var(--card-bg-color)",
-          borderColor: "color-mix(in srgb, var(--white-color) 10%, transparent)",
+          borderColor: "color-mix(in srgb, var(--muted-color) 15%, transparent)",
         }}
       >
         <Image
@@ -65,7 +65,7 @@ const CertificatePage = () => {
           onClick={() => router.back()}
           className="inline-flex items-center gap-2 py-3 px-8 rounded-full font-black text-3xs uppercase tracking-widest border transition-colors"
           style={{
-            borderColor: "color-mix(in srgb, var(--white-color) 15%, transparent)",
+            borderColor: "color-mix(in srgb, var(--muted-color) 25%, transparent)",
             color: "var(--muted-color)",
           }}
         >

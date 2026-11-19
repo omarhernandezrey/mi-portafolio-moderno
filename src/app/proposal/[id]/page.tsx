@@ -81,7 +81,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
         </div>
 
         {/* Main Proposal Container */}
-        <div className="bg-card-bg rounded-[60px] border border-white/5 shadow-2xl overflow-hidden relative backdrop-blur-xl print:border-none print:shadow-none print:rounded-none">
+        <div className="bg-card-bg rounded-[60px] border border-text-muted/10 shadow-2xl overflow-hidden relative backdrop-blur-xl print:border-none print:shadow-none print:rounded-none">
           {/* Decorative Elements */}
           <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-accent to-primary opacity-50" />
           <div className="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
@@ -90,12 +90,12 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
           <div className="p-10 md:p-20 space-y-20 relative z-10">
             
             {/* Dossier Header */}
-            <header className="flex flex-col md:flex-row justify-between items-start gap-10 border-b border-white/5 pb-16">
+            <header className="flex flex-col md:flex-row justify-between items-start gap-10 border-b border-text-muted/10 pb-16">
               <div className="space-y-6">
                 <div className="font-mono-label inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[0.65rem]">
                   Propuesta de Valor v3.2
                 </div>
-                <h1 className="font-display italic text-5xl md:text-6xl font-medium text-white-custom tracking-tight leading-[0.95]">
+                <h1 className="font-display italic text-5xl md:text-6xl font-medium text-text-main tracking-tight leading-[0.95]">
                   Estrategia de <br />
                   <span className="text-primary">Ingeniería Digital</span>
                 </h1>
@@ -107,7 +107,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
               </div>
               
               <div className="text-right space-y-1">
-                <p className="font-display italic text-3xl font-medium text-white-custom tracking-tight">Omar Hernández</p>
+                <p className="font-display italic text-3xl font-medium text-text-main tracking-tight">Omar Hernández</p>
                 <p className="text-3xs font-black uppercase tracking-[0.4em] text-primary/60">Expert Software Engineer</p>
                 <div className="pt-4 flex flex-col gap-1 text-3xs text-text-muted font-medium opacity-40 uppercase tracking-widest">
                   <span>Full-Stack Development</span>
@@ -118,14 +118,14 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
             </header>
 
             {/* Document Content (MDX) */}
-            <article className="prose prose-invert prose-primary max-w-none prose-h1:font-display prose-h1:italic prose-h1:text-4xl prose-h1:font-medium prose-h1:tracking-tight prose-h2:font-display prose-h2:italic prose-h2:text-2xl prose-h2:font-medium prose-h2:tracking-tight prose-h2:mt-16 prose-h2:pb-4 prose-h2:border-b prose-h2:border-white/5 prose-h3:text-lg prose-h3:font-bold prose-h3:text-primary prose-h3:mt-10 prose-p:text-text-muted prose-p:text-base prose-p:leading-relaxed prose-p:font-medium prose-li:text-text-muted prose-li:font-medium prose-strong:text-white-custom prose-strong:font-black prose-blockquote:bg-white/[0.02] prose-blockquote:border-primary prose-blockquote:border-l-4 prose-blockquote:rounded-2xl prose-blockquote:p-8 prose-blockquote:italic prose-hr:border-white/5 [&>ul]:space-y-3 [&>ul]:list-square print:prose-p:text-black print:prose-headings:text-black">
+            <article className="prose prose-primary max-w-none prose-h1:font-display prose-h1:italic prose-h1:text-4xl prose-h1:font-medium prose-h1:tracking-tight prose-h1:text-text-main prose-h2:font-display prose-h2:italic prose-h2:text-2xl prose-h2:font-medium prose-h2:tracking-tight prose-h2:mt-16 prose-h2:pb-4 prose-h2:border-b prose-h2:border-text-muted/10 prose-h2:text-text-main prose-h3:text-lg prose-h3:font-bold prose-h3:text-primary prose-h3:mt-10 prose-p:text-text-muted prose-p:text-base prose-p:leading-relaxed prose-p:font-medium prose-li:text-text-muted prose-li:font-medium prose-strong:text-text-main prose-strong:font-black prose-a:text-primary prose-blockquote:bg-background/40 prose-blockquote:border-primary prose-blockquote:border-l-4 prose-blockquote:rounded-2xl prose-blockquote:p-8 prose-blockquote:italic prose-hr:border-text-muted/10 [&>ul]:space-y-3 [&>ul]:list-square print:prose-p:text-black print:prose-headings:text-black">
               <MDXRemote source={markdown} />
             </article>
 
             {/* Investment Summary Highlight */}
-            <section className="bg-background/50 rounded-[40px] border border-white/5 p-12 flex flex-col md:flex-row items-center justify-between gap-10 shadow-inner group/invest hover:border-primary/20 transition-all duration-500">
+            <section className="bg-background/50 rounded-[40px] border border-text-muted/10 p-12 flex flex-col md:flex-row items-center justify-between gap-10 shadow-inner group/invest hover:border-primary/20 transition-all duration-500">
               <div className="space-y-4 max-w-md">
-                <h3 className="font-display italic text-2xl font-medium text-white-custom tracking-tight flex items-center gap-3">
+                <h3 className="font-display italic text-2xl font-medium text-text-main tracking-tight flex items-center gap-3">
                   <Star className="text-primary animate-pulse" size={24} />
                   Inversión Estratégica
                 </h3>
@@ -134,7 +134,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
                 </p>
               </div>
               <div className="text-center md:text-right">
-                <div className="text-6xl font-black text-white-custom tracking-tighter flex items-baseline justify-end gap-2 group-hover/invest:scale-110 transition-transform duration-500">
+                <div className="text-6xl font-black text-text-main tracking-tighter flex items-baseline justify-end gap-2 group-hover/invest:scale-110 transition-transform duration-500">
                   <span className="text-xl text-primary opacity-40">$</span>
                   {budget}
                   <span className="text-xs font-bold text-text-muted/40 tracking-widest uppercase">USD</span>
@@ -144,7 +144,7 @@ export default async function ProposalPage({ params }: ProposalPageProps) {
             </section>
 
             {/* Dossier Footer */}
-            <footer className="pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-end gap-10 text-text-muted/40 font-medium text-3xs uppercase tracking-[0.2em] italic">
+            <footer className="pt-16 border-t border-text-muted/10 flex flex-col md:flex-row justify-between items-end gap-10 text-text-muted/40 font-medium text-3xs uppercase tracking-[0.2em] italic">
               <div className="space-y-1">
                 <p>© 2026 Omar Hernández Rey • Portfolio Identity System</p>
                 <p>Propiedad Intelectual y Técnica Confidencial</p>

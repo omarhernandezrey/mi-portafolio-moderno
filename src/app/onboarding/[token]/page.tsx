@@ -310,7 +310,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                 {paymentOptions.map((method) => (
                   <div
                     key={method.id}
-                    className="p-4 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-4"
+                    className="p-4 bg-card-bg rounded-2xl border border-text-muted/15 flex items-center gap-4"
                   >
                     {method.qrImage && (
                       <Image
@@ -330,7 +330,7 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
                         href={method.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="shrink-0 p-2 rounded-full hover:bg-white/10 transition-colors"
+                        className="shrink-0 p-2 rounded-full hover:bg-text-muted/10 transition-colors"
                         aria-label={`Ir a ${method.name}`}
                       >
                         <ExternalLink size={20} />
@@ -366,15 +366,15 @@ export default function OnboardingPage({ params }: OnboardingPageProps) {
               </p>
               
               <div className="grid gap-4 text-left mb-12">
-                <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-4 p-4 bg-card-bg rounded-2xl border border-text-muted/15">
                   <CheckCircle className="text-green-500" size={24} />
                   <span>Contrato firmado y guardado</span>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-4 p-4 bg-card-bg rounded-2xl border border-text-muted/15">
                   <CheckCircle className="text-yellow-500" size={24} />
                   <span>Pago en verificación manual</span>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-4 p-4 bg-card-bg rounded-2xl border border-text-muted/15">
                   <CheckCircle className="text-green-500" size={24} />
                   <span>Te escribiré a <strong>{lead.email}</strong> para el kickoff</span>
                 </div>
