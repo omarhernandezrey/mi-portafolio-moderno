@@ -19,6 +19,8 @@ export { default as StatCard } from './StatCard';
 export { default as StatusBadge } from './StatusBadge';
 export { default as PriorityBadge } from './PriorityBadge';
 export { default as RowReorderActions } from './RowReorderActions';
+export { RowActionsMenu, RowActionItem } from './RowActionsMenu';
+export type { RowActionsMenuProps, RowActionItemProps } from './RowActionsMenu';
 export { default as Pagination } from './Pagination';
 
 // Formulario

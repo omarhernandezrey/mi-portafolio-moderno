@@ -136,73 +136,64 @@ export function DataTable<T>({
       </ul>
 
       {/* ── Escritorio: tabla ───────────────────────────────────────────── */}
-      {/* overflow-x-auto en el envoltorio interno, no en este: con muchas
-          columnas (p. ej. Proyectos, que suma una más que el resto) el
-          contenido puede no caber en pantallas de escritorio normales. Antes
-          esto se recortaba en silencio (`overflow-hidden` en los dos ejes) y
-          la columna de acciones terminaba tapada; ahora aparece scroll
-          horizontal solo cuando de verdad hace falta, y el borde/esquinas
-          redondeadas los pone este div exterior. */}
       <div className="hidden overflow-hidden rounded-card border border-admin-line bg-card-bg shadow-e3 lg:block">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-sm">
-            <caption className="sr-only">{caption}</caption>
-            <thead>
-              <tr className="border-b border-admin-line">
-                {columns.map((c) => (
-                  <th
-                    key={c.id}
-                    scope="col"
-                    className={cn(
-                      'px-4 py-3 font-mono text-3xs font-semibold uppercase tracking-[0.2em] text-admin-muted',
-                      c.align === 'right' ? 'text-right' : 'text-left',
-                      c.width,
-                    )}
-                  >
-                    {c.header}
-                  </th>
-                ))}
-                {actions && (
-                  <th scope="col" className="w-px px-4 py-3">
-                    <span className="sr-only">Acciones</span>
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr
-                  key={rowKey(row)}
-                  onClick={interactive ? () => onRowClick?.(row) : undefined}
+        <table className="w-full border-collapse text-sm">
+          <caption className="sr-only">{caption}</caption>
+          <thead>
+            <tr className="border-b border-admin-line">
+              {columns.map((c) => (
+                <th
+                  key={c.id}
+                  scope="col"
                   className={cn(
-                    'border-b border-admin-line/60 last:border-0',
-                    interactive &&
-                      'cursor-pointer transition-colors duration-fast hover:bg-white/[0.03]',
+                    'px-4 py-3 font-mono text-3xs font-semibold uppercase tracking-[0.2em] text-admin-muted',
+                    c.align === 'right' ? 'text-right' : 'text-left',
+                    c.width,
                   )}
                 >
-                  {columns.map((c) => (
-                    <td
-                      key={c.id}
-                      className={cn(
-                        'px-4 py-3.5 text-admin-ink',
-                        c.align === 'right' && 'text-right tabular-nums',
-                      )}
-                    >
-                      {c.cell(row)}
-                    </td>
-                  ))}
-                  {actions && (
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center justify-end gap-2">
-                        {actions(row)}
-                      </div>
-                    </td>
-                  )}
-                </tr>
+                  {c.header}
+                </th>
               ))}
-            </tbody>
-          </table>
-        </div>
+              {actions && (
+                <th scope="col" className="w-px px-4 py-3">
+                  <span className="sr-only">Acciones</span>
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr
+                key={rowKey(row)}
+                onClick={interactive ? () => onRowClick?.(row) : undefined}
+                className={cn(
+                  'border-b border-admin-line/60 last:border-0',
+                  interactive &&
+                    'cursor-pointer transition-colors duration-fast hover:bg-white/[0.03]',
+                )}
+              >
+                {columns.map((c) => (
+                  <td
+                    key={c.id}
+                    className={cn(
+                      'px-4 py-3.5 text-admin-ink',
+                      c.align === 'right' && 'text-right tabular-nums',
+                    )}
+                  >
+                    {c.cell(row)}
+                  </td>
+                ))}
+                {actions && (
+                  <td className="px-4 py-3.5">
+                    <div className="flex items-center justify-end gap-2">
+                      {actions(row)}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

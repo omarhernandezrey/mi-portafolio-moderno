@@ -14,10 +14,19 @@
  * ancho: las consultas que antes buscaban "el botón Eliminar" a secas
  * encontraban dos. Por eso casi todo aquí se ancla a `within(tabla())`, la
  * única copia que el marcado no duplica.
+ *
+ * Editar/Eliminar viven detrás de `RowActionsMenu` (menú «⋮», ver
+ * src/components/admin/ui/RowActionsMenu.tsx): su panel usa `anchor` de
+ * Headless UI (floating-ui) para no quedar recortado por el
+ * `overflow-hidden` de las esquinas redondeadas de `DataTable` — y se
+ * renderiza en un portal, así que las consultas van por `screen`, no por
+ * `within(tabla())`. floating-ui observa el tamaño del disparador con
+ * `ResizeObserver` incluso con el menú cerrado; jsdom no lo implementa.
  */
 import '@testing-library/jest-dom';
 import React from 'react';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ToastProvider } from '@/components/ui/Toast';
 import AdminProyectosPage from '@/app/admin/(dashboard)/proyectos/page';
 
@@ -26,6 +35,23 @@ jest.mock('@/lib/admin/client-fetch', () => {
   const actual = jest.requireActual('@/lib/admin/client-fetch');
   return { ...actual, adminFetch: (...args: unknown[]) => mockAdminFetch(...args) };
 });
+
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+beforeAll(() => {
+  // @ts-expect-error — jsdom no implementa ResizeObserver; floating-ui lo usa.
+  global.ResizeObserver = ResizeObserverMock;
+});
+
+// `userEvent` y no `fireEvent.click`: el MenuButton de Headless UI abre en
+// `pointerdown`, no en `click`, y solo `userEvent` emite la secuencia real.
+async function abrirMenuDe(nombre: string) {
+  await userEvent.click(tabla().getByRole('button', { name: `Más acciones para ${nombre}` }));
+  return within(await screen.findByRole('menu'));
+}
 
 function proyecto(overrides: Partial<Record<string, unknown>> = {}) {
   return {
@@ -126,7 +152,8 @@ describe('editar proyecto', () => {
     renderPagina();
     await screen.findByRole('table');
 
-    fireEvent.click(tabla().getByRole('button', { name: 'Editar Portafolio' }));
+    const menu = await abrirMenuDe('Portafolio');
+    fireEvent.click(menu.getByRole('menuitem', { name: 'Editar' }));
     const dialogo = await screen.findByRole('dialog', { name: 'Editar proyecto' });
     expect(within(dialogo).getByLabelText('Título (es)', { exact: false })).toHaveValue('Portafolio');
 
@@ -191,7 +218,8 @@ describe('borrar', () => {
     renderPagina();
     await screen.findByRole('table');
 
-    fireEvent.click(tabla().getByRole('button', { name: 'Eliminar Portafolio' }));
+    const menu = await abrirMenuDe('Portafolio');
+    fireEvent.click(menu.getByRole('menuitem', { name: 'Eliminar' }));
     const confirmacion = await screen.findByRole('dialog', { name: 'Eliminar proyecto' });
     fireEvent.click(within(confirmacion).getByRole('button', { name: 'Cancelar' }));
 
@@ -205,7 +233,8 @@ describe('borrar', () => {
     renderPagina();
     await screen.findByRole('table');
 
-    fireEvent.click(tabla().getByRole('button', { name: 'Eliminar Portafolio' }));
+    const menu = await abrirMenuDe('Portafolio');
+    fireEvent.click(menu.getByRole('menuitem', { name: 'Eliminar' }));
     const confirmacion = await screen.findByRole('dialog', { name: 'Eliminar proyecto' });
 
     mockAdminFetch.mockResolvedValueOnce({ success: true });
@@ -215,7 +244,10 @@ describe('borrar', () => {
       expect(mockAdminFetch).toHaveBeenCalledWith('/api/admin/portfolio/projects/p1', expect.objectContaining({ method: 'DELETE' })),
     );
     // "Portafolio" también aparece en el overline "Portafolio" de la
-    // cabecera: lo específico del proyecto borrado es su botón de fila.
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'Editar Portafolio' })).not.toBeInTheDocument());
+    // cabecera: lo específico del proyecto borrado es el disparador del
+    // menú de acciones de su fila.
+    await waitFor(() =>
+      expect(screen.queryByRole('button', { name: 'Más acciones para Portafolio' })).not.toBeInTheDocument(),
+    );
   });
 });

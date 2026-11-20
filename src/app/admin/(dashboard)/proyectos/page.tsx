@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { ArrowDown, ArrowUp, Eye, Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
-import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, adminButtonClasses, PageHeader, EmptyState } from '@/components/admin/ui';
+import { AdminButton, DataTable, type Column, Switch, ConfirmDialog, adminButtonClasses, PageHeader, EmptyState, RowActionsMenu, RowActionItem } from '@/components/admin/ui';
 import { adminFetch } from '@/lib/admin/client-fetch';
 import { useToast } from '@/components/ui/Toast';
 import { ProjectFormDialog, type ProjectFormValues } from '@/components/admin/portfolio/ProjectFormDialog';
@@ -278,13 +278,14 @@ export default function AdminProyectosPage() {
           }
           actions={(p) => {
             const indice = proyectos.findIndex((item) => item.id === p.id);
+            const nombre = p.title.es || p.slug;
             return (
-              <>
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => handleMover(p, 'arriba')}
                   disabled={indice <= 0 || ocupados.has(p.id)}
-                  aria-label={`Subir ${p.title.es || p.slug}`}
+                  aria-label={`Subir ${nombre}`}
                   className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ArrowUp size={15} />
@@ -293,31 +294,30 @@ export default function AdminProyectosPage() {
                   type="button"
                   onClick={() => handleMover(p, 'abajo')}
                   disabled={indice >= proyectos.length - 1 || ocupados.has(p.id)}
-                  aria-label={`Bajar ${p.title.es || p.slug}`}
+                  aria-label={`Bajar ${nombre}`}
                   className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ArrowDown size={15} />
                 </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditando(p);
-                    setDialogAbierto(true);
-                  }}
-                  aria-label={`Editar ${p.title.es || p.slug}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-line text-admin-muted transition-colors hover:border-primary/30 hover:text-admin-ink"
-                >
-                  <Pencil size={15} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setBorrando(p)}
-                  aria-label={`Eliminar ${p.title.es || p.slug}`}
-                  className="flex h-11 w-11 items-center justify-center rounded-field border border-admin-danger/20 bg-admin-danger/10 text-admin-danger transition-colors hover:bg-admin-danger/15"
-                >
-                  <Trash2 size={15} />
-                </button>
-              </>
+                <RowActionsMenu label={nombre}>
+                  <RowActionItem
+                    icon={<Pencil size={13} />}
+                    onClick={() => {
+                      setEditando(p);
+                      setDialogAbierto(true);
+                    }}
+                  >
+                    Editar
+                  </RowActionItem>
+                  <RowActionItem
+                    icon={<Trash2 size={13} />}
+                    tone="danger"
+                    onClick={() => setBorrando(p)}
+                  >
+                    Eliminar
+                  </RowActionItem>
+                </RowActionsMenu>
+              </div>
             );
           }}
         />
