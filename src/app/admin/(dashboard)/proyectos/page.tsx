@@ -155,21 +155,40 @@ export default function AdminProyectosPage() {
       id: 'titulo',
       header: 'Proyecto',
       mobile: 'primary',
-      cell: (p) => p.title.es || p.slug,
+      cell: (p) => {
+        const titulo = p.title.es || p.slug;
+        return (
+          <span className="block max-w-[220px] truncate" title={titulo}>
+            {titulo}
+          </span>
+        );
+      },
     },
     {
       id: 'slug',
       header: 'Slug',
       mobile: 'meta',
-      cell: (p) => <span className="font-mono text-kicker text-admin-muted">{p.slug}</span>,
+      cell: (p) => (
+        <span
+          className="block max-w-[160px] truncate font-mono text-kicker text-admin-muted"
+          title={p.slug}
+        >
+          {p.slug}
+        </span>
+      ),
     },
     {
       id: 'tecnologias',
       header: 'Tecnologías',
-      cell: (p) =>
-        p.technologies.length > 0
-          ? `${p.technologies.slice(0, 3).join(', ')}${p.technologies.length > 3 ? '…' : ''}`
-          : '—',
+      cell: (p) => {
+        if (p.technologies.length === 0) return '—';
+        const resumen = `${p.technologies.slice(0, 3).join(', ')}${p.technologies.length > 3 ? '…' : ''}`;
+        return (
+          <span className="block max-w-[200px] truncate" title={p.technologies.join(', ')}>
+            {resumen}
+          </span>
+        );
+      },
     },
     {
       id: 'demo',
