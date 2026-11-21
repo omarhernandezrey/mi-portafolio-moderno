@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { serverEnv } from '@/config/env';
 import { sendTelegramMessage } from '@/lib/chatbot/telegram';
+import { secretosIguales } from '@/lib/secretoSeguro';
 
 async function answerCallback(callbackId: string, text: string) {
   try {
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
       console.error('[telegram/webhook] TELEGRAM_WEBHOOK_SECRET no configurado — webhook deshabilitado');
       return NextResponse.json({ error: 'webhook-sin-secreto' }, { status: 503 });
     }
-    if (req.headers.get('x-telegram-bot-api-secret-token') !== secret) {
+    if (!secretosIguales(req.headers.get('x-telegram-bot-api-secret-token'), secret)) {
       console.error('[telegram/webhook] secret_token del header no coincide con TELEGRAM_WEBHOOK_SECRET');
       return NextResponse.json({ error: 'webhook-secreto-invalido' }, { status: 401 });
     }

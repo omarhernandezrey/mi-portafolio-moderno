@@ -6,6 +6,7 @@ import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { educationItemUpdateSchema } from '@/lib/portfolio/schemas';
 import { subirImagenPortafolio } from '@/lib/portfolio/uploadImage';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const auth = await requireAdmin('owner');
@@ -92,7 +93,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/portfolio/education-items/[id]');
 
   await writeAuditLog(auth.actor, {
     action: 'portfolio_education_item.delete',

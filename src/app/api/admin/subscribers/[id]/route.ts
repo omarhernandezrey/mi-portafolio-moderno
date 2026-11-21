@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 const patchSchema = z.object({
   confirmed: z.boolean().optional(),
@@ -20,7 +21,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .delete()
     .eq('id', id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/subscribers/[id]');
 
   await writeAuditLog(auth.actor, {
     action: 'subscriber.delete',
@@ -50,7 +51,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/subscribers/[id]');
 
   await writeAuditLog(auth.actor, {
     action: 'subscriber.update',

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { serverEnv } from '@/config/env';
+import { secretosIguales } from '@/lib/secretoSeguro';
 
 /**
  * Valida el Bearer token de las rutas cron.
@@ -16,7 +17,7 @@ export function requireCronAuth(req: NextRequest): NextResponse | null {
   }
 
   const authHeader = req.headers.get('authorization');
-  if (authHeader !== `Bearer ${secret}`) {
+  if (!secretosIguales(authHeader, `Bearer ${secret}`)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

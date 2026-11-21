@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 export async function PATCH(
   req: NextRequest,
@@ -25,13 +26,7 @@ export async function PATCH(
       .eq('id', id)
       .select();
 
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: 'Error de base de datos', details: error.message, code: error.code },
-        { status: 500 }
-      );
-    }
+    if (error) return respuestaErrorBd(error, 'admin/leads/[id]/industry');
 
     await writeAuditLog(auth.actor, {
       action: 'lead.industry_update',

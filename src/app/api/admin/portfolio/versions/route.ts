@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin/auth';
 import { supabaseServer } from '@/lib/supabaseServer';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 /**
  * Historial de un recurso (T-18). Solo `owner`: a diferencia de
@@ -43,7 +44,7 @@ export async function GET(req: NextRequest) {
     .order('created_at', { ascending: false })
     .limit(limite);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/portfolio/versions');
 
   const versiones = data ?? [];
   const total = count ?? versiones.length;

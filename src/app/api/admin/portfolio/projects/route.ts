@@ -6,6 +6,7 @@ import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { projectCreateSchema } from '@/lib/portfolio/schemas';
 import { comprobarEmbebido } from '@/lib/portfolio/embedCheck';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 /** Tope holgado: ver el comentario del GET sobre su relación con el reorden. */
 const TOPE_LISTA = 2000;
@@ -26,7 +27,7 @@ export async function GET() {
     .order('position', { ascending: true })
     .limit(TOPE_LISTA);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/portfolio/projects');
 
   if (data && data.length >= TOPE_LISTA * 0.9) {
     console.warn(

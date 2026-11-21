@@ -5,6 +5,7 @@ import { agregarVitales, type FilaVital } from '@/lib/analytics/aggregate-vitals
 import { esCaidaSostenida, mensajeVitalEnRiesgo } from '@/lib/notifications/events';
 import { reclamarAviso, liberarAviso } from '@/lib/notifications/dedupe';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,7 +36,7 @@ export async function GET(req: NextRequest) {
     .gte('captured_at', desde);
   if (error) {
     console.error(`[vitals-check] analytics_vitals: ${error.message}`);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return respuestaErrorBd(error, 'cron/vitals-check');
   }
 
   const resumen = agregarVitales((data ?? []) as FilaVital[]);

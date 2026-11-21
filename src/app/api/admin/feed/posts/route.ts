@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { requireAdmin } from "@/lib/admin/auth";
 import { writeAuditLog } from "@/lib/admin/audit";
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 const ADMIN_POST_COLUMNS =
   "id, author_role, author_name, author_email, lang, category, title, body, image_urls, link_url, status, pinned, likes_count, reaction_counts, comments_count, created_at";
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest) {
   if (authorRole === "owner" || authorRole === "visitor") query = query.eq("author_role", authorRole);
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/feed/posts');
 
   return NextResponse.json({ posts: data ?? [] });
 }
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
     .select(ADMIN_POST_COLUMNS)
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/feed/posts');
 
   await writeAuditLog(auth.actor, {
     action: "feed_post.create",

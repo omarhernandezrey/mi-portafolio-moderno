@@ -3,6 +3,7 @@ import { supabaseServer } from '@/lib/supabaseServer';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { dispatchEvent } from '@/lib/events/dispatcher';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 export async function PATCH(
   req: NextRequest,
@@ -44,13 +45,11 @@ export async function PATCH(
       .eq('id', id)
       .select();
 
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: 'Error de base de datos', details: error.message, code: error.code },
-        { status: 500 }
-      );
-    }
+    // Iba más lejos que el resto: además del mensaje crudo devolvía el
+    // `code` de Postgres. El helper registra todo en el servidor y responde
+    // con el estado correcto (409 en un choque de unicidad, 400 en un id
+    // mal formado…) sin describir el esquema.
+    if (error) return respuestaErrorBd(error, 'admin/leads/[id]/status');
 
     if (!data || data.length === 0) {
       return NextResponse.json(

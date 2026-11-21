@@ -5,6 +5,7 @@ import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
 import { WEBHOOK_EVENTS } from '@/lib/webhooks/events';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 const updateSchema = z.object({
   active: z.boolean().optional(),
@@ -44,7 +45,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/webhooks/[id]');
 
   await writeAuditLog(auth.actor, {
     action: 'webhook.update',
@@ -67,7 +68,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .delete()
     .eq('id', id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/webhooks/[id]');
 
   await writeAuditLog(auth.actor, {
     action: 'webhook.delete',

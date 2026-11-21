@@ -5,6 +5,7 @@ import { writeAuditLog } from '@/lib/admin/audit';
 import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { interestsContentSchema } from '@/lib/portfolio/schemas';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 /**
  * No es una lista de filas con su propio id: `portfolio_profile` guarda la
@@ -23,7 +24,7 @@ export async function GET() {
     .eq('section', 'interests')
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/portfolio/profile/interests');
   return NextResponse.json(data ?? { content: [], is_published: true });
 }
 
@@ -55,7 +56,7 @@ export async function PUT(req: NextRequest) {
     .select('section, content, is_published')
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/portfolio/profile/interests');
 
   await writeAuditLog(auth.actor, {
     action: 'portfolio_profile_interests.update',

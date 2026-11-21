@@ -6,6 +6,7 @@ import { requireAdmin, sanitizeWebhook } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { assertSafeWebhookUrl } from '@/lib/webhooks/ssrf';
 import { WEBHOOK_EVENTS } from '@/lib/webhooks/events';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 const schema = z.object({
   url: z.string().url('URL inválida'),
@@ -22,7 +23,7 @@ export async function GET() {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/webhooks');
   return NextResponse.json((data || []).map(sanitizeWebhook));
 }
 
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return respuestaErrorBd(error, 'admin/webhooks');
 
   await writeAuditLog(auth.actor, {
     action: 'webhook.create',

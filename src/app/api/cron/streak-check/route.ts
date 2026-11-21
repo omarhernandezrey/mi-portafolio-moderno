@@ -7,6 +7,7 @@ import { combinarActividadDiaria, calcularRachaDePortafolio, type FilaMetricasRe
 import { debeAvisarRachaEnRiesgo, mensajeRachaEnRiesgo, UMBRAL_RACHA_EN_RIESGO } from '@/lib/notifications/events';
 import { reclamarAviso } from '@/lib/notifications/dedupe';
 import { notifyTelegram } from '@/lib/chatbot/telegram';
+import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest) {
     .order('captured_at', { ascending: false });
   if (error) {
     console.error(`[streak-check] github_metrics: ${error.message}`);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return respuestaErrorBd(error, 'cron/streak-check');
   }
 
   const vistos = new Set<string>();
