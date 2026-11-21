@@ -41,6 +41,23 @@
 --
 -- Idempotente: `create or replace` + `revoke/grant` (revocar algo ya
 -- revocado no es error en PostgreSQL).
+--
+-- APLICADA en la base real el 2026-11-21 (conector de Supabase). Verificado
+-- después contra producción: firma `(p_tabla text, p_ids uuid[])`,
+-- `security invoker`, `search_path=""`, y EXECUTE concedido a
+-- `service_role`/`postgres` pero NO a `anon`/`authenticated`. Probados allí
+-- mismo el camino feliz (7 insignias, dentro de un bloque DO que lanza
+-- excepción al final para que la transacción revierta y no cambiar datos),
+-- el rechazo de lista parcial (3 de 7) y el de tabla fuera de la lista
+-- blanca (`user_roles`). Validada antes en PostgreSQL 16 local con los 8
+-- casos y 3 aplicaciones seguidas.
+--
+-- NOTA SOBRE `portfolio_projects`: hoy tiene 99 filas con solo 22 posiciones
+-- distintas (22 publicados + 77 borradores propuestos por el sync de GitHub
+-- de T-21, que nacen con `position` repetida porque el alta usa
+-- `position: count ?? 0`). El panel carga las 99 sin filtro ni límite, así
+-- que manda la lista completa y la comprobación de completitud pasa. El
+-- primer reorden real de esa tabla normalizará las posiciones a 0..98.
 -- ════════════════════════════════════════════════════════════════════════════
 
 create or replace function public.reordenar_portfolio(
