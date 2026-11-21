@@ -22,6 +22,14 @@ jest.mock('@/lib/admin/versions', () => {
   return { ...real, writeContentVersion: (...args: unknown[]) => mockWriteContentVersion(...args) };
 });
 
+// Restaurar ahora también deja rastro en `/admin/audit`, no solo en
+// `content_versions` (ver el bloque de tests al final del archivo).
+const mockWriteAuditLog = jest.fn().mockResolvedValue(undefined);
+jest.mock('@/lib/admin/audit', () => {
+  const real = jest.requireActual('@/lib/admin/audit');
+  return { ...real, writeAuditLog: (...args: unknown[]) => mockWriteAuditLog(...args) };
+});
+
 const mockRevalidateTag = jest.fn();
 jest.mock('next/cache', () => ({
   revalidateTag: (...args: unknown[]) => mockRevalidateTag(...args),
@@ -187,5 +195,86 @@ describe('POST /api/admin/portfolio/versions/[id]/restore', () => {
     tabla({ content_versions: { data: { ...VERSION_UPDATE, before: null, after: null }, error: null } });
     const res = await restaurar(req('/x', { method: 'POST' }), { params: Promise.resolve({ id: 'v1' }) });
     expect(res.status).toBe(400);
+  });
+});
+
+/**
+ * Auditoría de backend, grupo "corrección de datos". Restaurar sobrescribe
+ * una fila publicada del sitio con una foto histórica: es la operación más
+ * destructiva del portafolio y era la ÚNICA mutación de `/api/admin/portfolio`
+ * sin `writeAuditLog` (todas sus hermanas tienen 2 o 3 llamadas; esta tenía
+ * 0). Solo quedaba una fila en `content_versions`, que es otra tabla y otra
+ * pantalla. El tipo `AuditAction` tampoco tenía ninguna acción `*.restore`,
+ * así que la omisión era estructural, no un olvido de una línea.
+ *
+ * Era además la única escritura del portafolio que no validaba nada antes
+ * del `upsert`.
+ */
+describe('restore: rastro en auditoría e integridad de la foto', () => {
+  it('deja constancia en /admin/audit, además del historial de contenido', async () => {
+    auth('owner');
+    tabla((t, metodo) => {
+      if (t === 'content_versions') return { data: VERSION_UPDATE, error: null };
+      if (metodo === 'maybeSingle') return { data: { id: 'p1', title: 'Después' }, error: null };
+      return { data: { id: 'p1', title: 'Antes' }, error: null };
+    });
+
+    const res = await restaurar(req('/x', { method: 'POST' }), { params: Promise.resolve({ id: 'v1' }) });
+
+    expect(res.status).toBe(200);
+    expect(mockWriteAuditLog).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        action: 'portfolio_project.restore',
+        resourceType: 'portfolio_project',
+        resourceId: 'p1',
+        metadata: expect.objectContaining({ versionId: 'v1' }),
+      }),
+    );
+  });
+
+  it('rechaza una foto que apunta a otra fila distinta de la versión registrada', async () => {
+    // Sin esta guarda el upsert tocaba la fila de la foto mientras el
+    // registro posterior afirmaba haber restaurado `resource_id`.
+    auth('owner');
+    tabla({
+      content_versions: {
+        data: { ...VERSION_UPDATE, resource_id: 'p1', after: { id: 'OTRO', title: 'Ajena' } },
+        error: null,
+      },
+    });
+
+    const res = await restaurar(req('/x', { method: 'POST' }), { params: Promise.resolve({ id: 'v1' }) });
+
+    expect(res.status).toBe(409);
+    expect(mockWriteAuditLog).not.toHaveBeenCalled();
+    expect(mockRevalidateTag).not.toHaveBeenCalled();
+  });
+
+  it('rechaza una foto que no tiene forma de fila (un array en el jsonb)', async () => {
+    auth('owner');
+    tabla({
+      content_versions: { data: { ...VERSION_UPDATE, after: [{ id: 'p1' }] }, error: null },
+    });
+
+    const res = await restaurar(req('/x', { method: 'POST' }), { params: Promise.resolve({ id: 'v1' }) });
+
+    expect(res.status).toBe(422);
+    expect(mockRevalidateTag).not.toHaveBeenCalled();
+  });
+
+  it('una foto de un esquema anterior da 422 explicativo, no un 500 opaco', async () => {
+    auth('owner');
+    tabla((t, metodo) => {
+      if (t === 'content_versions') return { data: VERSION_UPDATE, error: null };
+      if (metodo === 'maybeSingle') return { data: null, error: null };
+      // Postgres: la columna de la foto ya no existe en la tabla.
+      return { data: null, error: { code: '42703', message: 'column "titulo" does not exist' } };
+    });
+
+    const res = await restaurar(req('/x', { method: 'POST' }), { params: Promise.resolve({ id: 'v1' }) });
+
+    expect(res.status).toBe(422);
+    expect((await res.json()).error).toContain('esquema anterior');
   });
 });

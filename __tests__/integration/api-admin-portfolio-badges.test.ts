@@ -4,7 +4,9 @@
  * para subir el archivo en vez de pegar una URL.
  */
 jest.mock('@/lib/supabaseServer', () => ({
-  supabaseServer: { from: jest.fn() },
+  // `rpc` desde que reordenar es una transacción en Postgres
+  // (`public.reordenar_portfolio`, migración 20261121).
+  supabaseServer: { from: jest.fn(), rpc: jest.fn() },
 }));
 
 const mockRequireAdmin = jest.fn();
@@ -172,21 +174,38 @@ describe('DELETE /[id]', () => {
 });
 
 describe('PATCH /reorder', () => {
-  it('reescribe la posición de cada id en el orden recibido', async () => {
-    auth('owner');
-    const actualizaciones: Array<{ position: number }> = [];
-    (supabaseServer.from as jest.Mock).mockImplementation(() => {
-      const encadenable: Record<string, unknown> = {};
-      encadenable.update = jest.fn((v: { position: number }) => {
-        actualizaciones.push(v);
-        return encadenable;
-      });
-      encadenable.eq = jest.fn(() => Promise.resolve({ data: null, error: null }));
-      return encadenable;
-    });
-    const ids = ['11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222'];
+  /**
+   * Reordenar dejó de ser N updates sueltos desde la auditoría de backend:
+   * ahora es una sola transacción en `public.reordenar_portfolio`
+   * (migración 20261121), que además rechaza listas incompletas. El
+   * comportamiento de las posiciones se prueba contra PostgreSQL real en la
+   * migración; aquí se comprueba que la ruta llama al RPC con SU tabla.
+   */
+  it('delega en la transacción de Postgres con su tabla y sus ids', async () => {
+    (supabaseServer.rpc as jest.Mock).mockResolvedValue({ data: 3, error: null });
+
+    const ids = [
+      '11111111-1111-4111-8111-111111111111',
+      '22222222-2222-4222-8222-222222222222',
+      '33333333-3333-4333-8333-333333333333',
+    ];
     const res = await reordenar(req('/x', { method: 'PATCH', body: JSON.stringify({ ids }) }));
+
     expect(res.status).toBe(200);
-    expect(actualizaciones).toEqual([{ position: 0 }, { position: 1 }]);
+    expect(supabaseServer.rpc).toHaveBeenCalledWith('reordenar_portfolio', {
+      p_tabla: 'portfolio_badges',
+      p_ids: ids,
+    });
+  });
+
+  it('una lista incompleta es culpa de la petición: 400, no 500', async () => {
+    (supabaseServer.rpc as jest.Mock).mockResolvedValue({
+      data: null,
+      error: { code: '22023', message: 'La lista debe traer las 5 filas, llegaron 3' },
+    });
+
+    const ids = ['11111111-1111-4111-8111-111111111111'];
+    const res = await reordenar(req('/x', { method: 'PATCH', body: JSON.stringify({ ids }) }));
+    expect(res.status).toBe(400);
   });
 });

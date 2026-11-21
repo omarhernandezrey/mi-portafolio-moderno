@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
-import { supabaseServer } from '@/lib/supabaseServer';
+import { reordenarPortfolio } from '@/lib/portfolio/reorder';
 import { reorderSchema } from '@/lib/portfolio/schemas';
 
 export async function PATCH(req: NextRequest) {
@@ -17,19 +17,19 @@ export async function PATCH(req: NextRequest) {
 
   const { ids } = result.data;
 
-  const resultados = await Promise.all(
-    ids.map((id, index) => supabaseServer.from('portfolio_technologies').update({ position: index }).eq('id', id)),
-  );
-
-  const fallo = resultados.find((r) => r.error);
-  if (fallo?.error) {
-    return NextResponse.json({ error: fallo.error.message }, { status: 500 });
+  // Una sola transacción en Postgres: valida que la lista sea el contenido
+  // completo (sin huecos, repetidos ni ids ajenos) y reescribe todas las
+  // posiciones de golpe. Antes eran N updates sueltos que podían quedarse a
+  // medias. Ver migración 20261121_reordenar_portfolio_atomico.sql.
+  const reorden = await reordenarPortfolio('portfolio_technologies', ids);
+  if (!reorden.ok) {
+    return NextResponse.json({ error: reorden.mensaje }, { status: reorden.estado });
   }
 
   await writeAuditLog(auth.actor, {
     action: 'portfolio_technology.reorder',
     resourceType: 'portfolio_technology',
-    metadata: { ids },
+    metadata: { ids, filas: reorden.filas },
   });
 
   revalidateTag('portfolio:technologies');

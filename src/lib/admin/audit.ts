@@ -56,7 +56,20 @@ export type AuditAction =
   | 'portfolio_timeline.update'
   | 'portfolio_timeline.delete'
   | 'portfolio_timeline.reorder'
-  | 'portfolio_profile_interests.update';
+  | 'portfolio_profile_interests.update'
+  // Restaurar una versión histórica sobrescribe una fila publicada del sitio
+  // con una foto anterior: es la operación más destructiva del portafolio y
+  // era la única mutación que no dejaba rastro en `/admin/audit` (solo una
+  // fila en `content_versions`, que es otra tabla y otra pantalla).
+  | 'portfolio_project.restore'
+  | 'portfolio_skill.restore'
+  | 'portfolio_education_category.restore'
+  | 'portfolio_education_item.restore'
+  | 'portfolio_badge.restore'
+  | 'portfolio_service.restore'
+  | 'portfolio_technology.restore'
+  | 'portfolio_timeline.restore'
+  | 'portfolio_profile.restore';
 
 export type AuditActor = {
   userId: string;

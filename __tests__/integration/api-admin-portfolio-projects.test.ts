@@ -5,7 +5,9 @@
  * escritura deja auditoría e invalida la caché de `portfolio/repository.ts`.
  */
 jest.mock('@/lib/supabaseServer', () => ({
-  supabaseServer: { from: jest.fn() },
+  // `rpc` desde que reordenar es una sola transacción en Postgres
+  // (`public.reordenar_portfolio`, migración 20261121).
+  supabaseServer: { from: jest.fn(), rpc: jest.fn() },
 }));
 
 const mockRequireAdmin = jest.fn();
@@ -342,31 +344,68 @@ describe('PATCH /reorder', () => {
     expect(res.status).toBe(400);
   });
 
-  it('reescribe la posición de cada id en el orden recibido', async () => {
-    const actualizaciones: Array<{ position: number }> = [];
-    (supabaseServer.from as jest.Mock).mockImplementation(() => {
-      const encadenable: Record<string, unknown> = {};
-      encadenable.update = jest.fn((valores: { position: number }) => {
-        actualizaciones.push(valores);
-        return encadenable;
-      });
-      encadenable.eq = jest.fn(() => Promise.resolve({ data: null, error: null }));
-      return encadenable;
-    });
+  /**
+   * Reordenar dejó de ser N updates sueltos desde la auditoría de backend:
+   * la reescritura de posiciones vive ahora en `public.reordenar_portfolio`
+   * (migración 20261121), que valida y escribe en UNA transacción. El
+   * comportamiento de las posiciones se prueba contra PostgreSQL real en la
+   * propia migración; lo que le toca a la ruta es llamar al RPC con la tabla
+   * correcta y traducir bien sus errores.
+   */
+  const IDS = [
+    '11111111-1111-4111-8111-111111111111',
+    '22222222-2222-4222-8222-222222222222',
+    '33333333-3333-4333-8333-333333333333',
+  ];
 
-    const ids = [
-      '11111111-1111-4111-8111-111111111111',
-      '22222222-2222-4222-8222-222222222222',
-      '33333333-3333-4333-8333-333333333333',
-    ];
-    const res = await reordenar(req('/x', { method: 'PATCH', body: JSON.stringify({ ids }) }));
+  it('delega en la transacción de Postgres con su tabla y sus ids', async () => {
+    (supabaseServer.rpc as jest.Mock).mockResolvedValue({ data: 3, error: null });
+
+    const res = await reordenar(req('/x', { method: 'PATCH', body: JSON.stringify({ ids: IDS }) }));
 
     expect(res.status).toBe(200);
-    expect(actualizaciones).toEqual([{ position: 0 }, { position: 1 }, { position: 2 }]);
+    expect(supabaseServer.rpc).toHaveBeenCalledWith('reordenar_portfolio', {
+      p_tabla: 'portfolio_projects',
+      p_ids: IDS,
+    });
     expect(mockWriteAuditLog).toHaveBeenCalledWith(
       expect.anything(),
-      expect.objectContaining({ action: 'portfolio_project.reorder', metadata: { ids } }),
+      expect.objectContaining({
+        action: 'portfolio_project.reorder',
+        metadata: { ids: IDS, filas: 3 },
+      }),
     );
     expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
+  });
+
+  it('una lista incompleta es culpa de la petición: 400, no 500', async () => {
+    // El defecto que motivó el cambio: antes una lista parcial se aplicaba
+    // igual y dejaba posiciones duplicadas. Ahora Postgres la rechaza con
+    // 22023 y la ruta lo traduce a 400 con el motivo.
+    (supabaseServer.rpc as jest.Mock).mockResolvedValue({
+      data: null,
+      error: { code: '22023', message: 'La lista debe traer las 5 filas de portfolio_projects, llegaron 3' },
+    });
+
+    const res = await reordenar(req('/x', { method: 'PATCH', body: JSON.stringify({ ids: IDS }) }));
+
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toContain('5 filas');
+    // Un reorden rechazado no se audita ni invalida la caché pública.
+    expect(mockWriteAuditLog).not.toHaveBeenCalled();
+    expect(mockRevalidateTag).not.toHaveBeenCalled();
+  });
+
+  it('un fallo real de la base sigue siendo 500, sin filtrar el detalle', async () => {
+    (supabaseServer.rpc as jest.Mock).mockResolvedValue({
+      data: null,
+      error: { code: '08006', message: 'connection failure at 10.0.0.3:5432' },
+    });
+
+    const res = await reordenar(req('/x', { method: 'PATCH', body: JSON.stringify({ ids: IDS }) }));
+
+    expect(res.status).toBe(500);
+    expect((await res.json()).error).not.toContain('10.0.0.3');
+    expect(mockRevalidateTag).not.toHaveBeenCalled();
   });
 });

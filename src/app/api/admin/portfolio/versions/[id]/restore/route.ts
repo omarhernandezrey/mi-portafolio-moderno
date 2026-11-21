@@ -3,6 +3,7 @@ import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/auth';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { RECURSOS_VERSIONABLES, writeContentVersion } from '@/lib/admin/versions';
+import { writeAuditLog, type AuditAction } from '@/lib/admin/audit';
 
 /** Qué caché de `portfolio/repository.ts` invalidar tras restaurar cada tipo de recurso. */
 const ETIQUETA_CACHE: Record<string, string> = {
@@ -52,6 +53,34 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'Esta versión no tiene una foto que restaurar' }, { status: 400 });
   }
 
+  // La foto viene de `content_versions`, no de la petición, pero eso no la
+  // hace de fiar: es la ÚNICA escritura del portafolio que no pasa por un
+  // esquema, y lo que escriba acaba publicado en el sitio. Dos comprobaciones
+  // mínimas antes del upsert.
+
+  // 1) Que sea de verdad un objeto de columnas (un jsonb puede ser array,
+  //    número o cadena, y el upsert con un array escribiría varias filas).
+  if (typeof foto !== 'object' || Array.isArray(foto)) {
+    return NextResponse.json(
+      { error: 'La foto de esta versión no tiene forma de fila' },
+      { status: 422 },
+    );
+  }
+
+  // 2) Que la foto sea de la fila que dice ser. Sin esto, el upsert podía
+  //    tocar OTRA fila mientras el registro posterior en `content_versions`
+  //    afirmaba haber restaurado `version.resource_id`.
+  const idEnLaFoto = foto[recurso.columnaId];
+  if (idEnLaFoto !== version.resource_id) {
+    return NextResponse.json(
+      {
+        error: `La foto apunta a otra fila (${recurso.columnaId}=${String(idEnLaFoto)}) ` +
+          `que la versión registrada (${version.resource_id})`,
+      },
+      { status: 409 },
+    );
+  }
+
   // El estado actual del recurso, para dejarlo como "before" de esta
   // restauración (puede no existir, si la versión a restaurar era un alta
   // sobre un recurso que después se borró).
@@ -68,7 +97,19 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // 42703 (columna inexistente) y 42P01 significan que la foto es de un
+    // esquema anterior al actual: es culpa del dato guardado, no un fallo
+    // del servidor, y el mensaje opaco de 500 no decía cuál de las dos.
+    const esquemaDesfasado = error.code === '42703' || error.code === '42P01';
+    console.error('[restore] no se pudo restaurar la versión', id, error);
+    return NextResponse.json(
+      {
+        error: esquemaDesfasado
+          ? 'Esta versión se guardó con un esquema anterior y ya no encaja en la tabla'
+          : 'No se pudo restaurar la versión',
+      },
+      { status: esquemaDesfasado ? 422 : 500 },
+    );
   }
 
   await writeContentVersion(auth.actor, {
@@ -77,6 +118,15 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     resourceId: version.resource_id,
     before: actual ?? null,
     after: restaurado,
+  });
+
+  // Además del historial de contenido, el registro de auditoría: restaurar
+  // sobrescribe una fila publicada y hasta ahora no aparecía en /admin/audit.
+  await writeAuditLog(auth.actor, {
+    action: `${version.resource_type}.restore` as AuditAction,
+    resourceType: version.resource_type,
+    resourceId: version.resource_id,
+    metadata: { versionId: id, versionAction: version.action, creadaEl: version.created_at },
   });
 
   const tag = ETIQUETA_CACHE[version.resource_type];
