@@ -55,7 +55,7 @@ function tabla(porTabla: Record<string, unknown> | ((tabla: string) => unknown))
   (supabaseServer.from as jest.Mock).mockImplementation((nombreTabla: string) => {
     const encadenable: Record<string, unknown> = {};
     const self = () => encadenable;
-    for (const m of ['select', 'eq', 'order', 'insert', 'update', 'delete']) {
+    for (const m of ['select', 'eq', 'order', 'limit', 'insert', 'update', 'delete']) {
       encadenable[m] = jest.fn(self);
     }
     const resolver = () => (typeof porTabla === 'function' ? porTabla(nombreTabla) : (porTabla[nombreTabla] ?? { data: [], error: null }));

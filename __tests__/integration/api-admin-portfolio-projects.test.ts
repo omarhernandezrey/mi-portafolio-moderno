@@ -78,7 +78,7 @@ function tabla(porTabla: Record<string, unknown> | ((tabla: string, metodo: stri
     const encadenable: Record<string, unknown> = {};
     const self = () => encadenable;
     let metodoLlamado = 'select';
-    for (const m of ['select', 'eq', 'order', 'insert', 'update', 'delete']) {
+    for (const m of ['select', 'eq', 'order', 'limit', 'insert', 'update', 'delete']) {
       encadenable[m] = jest.fn((...args: unknown[]) => {
         metodoLlamado = m;
         return self();

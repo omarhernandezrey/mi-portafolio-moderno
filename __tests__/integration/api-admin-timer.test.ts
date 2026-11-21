@@ -160,7 +160,9 @@ describe('GET /api/admin/timer', () => {
     mockFrom.mockReturnValue({
       select: () => ({
         is: () => ({
-          order: async () => ({ data: null, error: { message: 'conexión caída' } }),
+          order: () => ({
+            limit: async () => ({ data: null, error: { message: 'conexión caída' } }),
+          }),
         }),
       }),
     });
@@ -172,7 +174,7 @@ describe('GET /api/admin/timer', () => {
   it('sin cronómetros activos devuelve una lista vacía con 200', async () => {
     mockFrom.mockReturnValue({
       select: () => ({
-        is: () => ({ order: async () => ({ data: [], error: null }) }),
+        is: () => ({ order: () => ({ limit: async () => ({ data: [], error: null }) }) }),
       }),
     });
 

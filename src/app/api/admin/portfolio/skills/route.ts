@@ -6,16 +6,34 @@ import { writeContentVersion } from '@/lib/admin/versions';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { skillCreateSchema } from '@/lib/portfolio/schemas';
 
+/** Tope holgado: ver el comentario del GET sobre su relación con el reorden. */
+const TOPE_LISTA = 2000;
+
 export async function GET() {
   const auth = await requireAdmin('viewer');
   if (!auth.ok) return auth.response;
 
+  // El panel carga la lista entera porque el reorden EXIGE mandar todos los
+  // ids: `public.reordenar_portfolio` rechaza una lista incompleta
+  // (migración 20261121). Por eso el tope es holgado y no una paginación —
+  // paginar aquí rompería el reorden. Si alguna tabla se acercara a este
+  // número, lo que toca es cambiar el mecanismo de reorden, no subir el
+  // tope en silencio: por eso avisa por consola antes de llegar.
   const { data, error } = await supabaseServer
     .from('portfolio_skills')
     .select('*')
-    .order('position', { ascending: true });
+    .order('position', { ascending: true })
+    .limit(TOPE_LISTA);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (data && data.length >= TOPE_LISTA * 0.9) {
+    console.warn(
+      `[portfolio_skills] ${data.length} filas, cerca del tope de ${TOPE_LISTA}: ` +
+        'el reorden necesita la lista completa y dejará de funcionar al superarlo.'
+    );
+  }
+
   return NextResponse.json(data || []);
 }
 

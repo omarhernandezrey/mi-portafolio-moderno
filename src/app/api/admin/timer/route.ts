@@ -144,7 +144,11 @@ export async function GET() {
       .from('time_entries')
       .select('*, leads(name, company)')
       .is('stopped_at', null)
-      .order('started_at', { ascending: false });
+      .order('started_at', { ascending: false })
+      // Los cronómetros activos son pocos por naturaleza, pero una entrada
+      // que nunca se paró se queda aquí para siempre: sin tope, un bug de
+      // hace meses se arrastra en cada carga del panel.
+      .limit(200);
 
     if (error) throw error;
 
