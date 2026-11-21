@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     // para colgar el lead de algo (dejaba el origen escondido en
     // `conversations.intent`); el origen ahora es `leads.source` directo.
     const ORIGEN = 'budget_calculator';
-    const { data: insertedLead } = await supabaseServer.from('leads').insert({
+    const { data: insertedLead, error: errorLead } = await supabaseServer.from('leads').insert({
       name: visitorInfo.name,
       email: visitorInfo.email,
       company: visitorInfo.company,
@@ -56,6 +56,17 @@ export async function POST(req: NextRequest) {
       source: ORIGEN,
       status: 'new',
     }).select('id').single();
+
+    // El lead ES el producto de esta ruta: el PDF que se manda después es la
+    // cortesía, no el objetivo. Antes `error` ni se desestructuraba, así que
+    // un fallo del insert dejaba `insertedLead` en null, se saltaba en
+    // silencio Notion y `lead.created`, y la ruta seguía hasta responder
+    // `{success:true}` con el Telegram diciendo "Email enviado ✅". Omar veía
+    // una consulta atendida que no existía en la base. Ahora se registra en
+    // voz alta y se marca en la respuesta, sin romperle el PDF al visitante.
+    if (errorLead) {
+      console.error('[calculator] No se pudo guardar el lead:', errorLead);
+    }
 
     if (insertedLead) {
       const { pushLeadToNotion } = await import('@/lib/chatbot/notion');
@@ -163,9 +174,12 @@ Servicio: Calculadora de Presupuesto
 Presupuesto: *${budgetLabel}*
 Origen: ${ORIGEN}
 Email enviado: ${emailSent ? '✅' : '❌ (Revisar Resend API Key)'}
+Lead guardado: ${errorLead ? '❌ NO SE GUARDÓ — responder a mano' : '✅'}
     `.trim());
 
-    return NextResponse.json({ success: true, emailSent });
+    // `leadGuardado` en la respuesta para no mentirle a quien integre esta
+    // API: el PDF pudo salir y el lead no haberse guardado.
+    return NextResponse.json({ success: true, emailSent, leadGuardado: !errorLead });
   } catch (error) {
     console.error('Calculator API error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

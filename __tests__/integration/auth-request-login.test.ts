@@ -35,8 +35,57 @@ describe('POST /api/auth/request-login', () => {
     expect(res.status).toBe(200);
     expect(mockSignInWithOtp).toHaveBeenCalledWith({
       email: 'omar@test.com',
-      options: { emailRedirectTo: 'http://localhost/auth/callback' },
+      options: {
+        emailRedirectTo: 'http://localhost/auth/callback',
+        shouldCreateUser: false,
+      },
     });
+  });
+
+  /**
+   * Defecto real encontrado en la auditoría de backend. `shouldCreateUser`
+   * vale `true` por omisión en `signInWithOtp`, así que esta ruta pública
+   * daba de alta en `auth.users` cualquier correo que le mandaran y le
+   * enviaba un magic link desde el dominio de Omar. No abría el panel
+   * (`requireAdmin` sigue exigiendo fila en `user_roles`), pero servía para
+   * quemar reputación de remitente y la cuota de envío de Supabase.
+   */
+  it('nunca crea usuarios nuevos: el panel no es un registro', async () => {
+    await POST(peticion('desconocido@ajeno.com', '10.0.0.9'));
+    expect(mockSignInWithOtp).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({ shouldCreateUser: false }),
+      })
+    );
+  });
+
+  it('rechaza lo que no es un correo, sin llegar a Supabase', async () => {
+    for (const malo of ['no-es-correo', 'a@', '@b.com', 'a@b', ' ']) {
+      mockSignInWithOtp.mockClear();
+      const res = await POST(peticion(malo, '10.0.0.10'));
+      expect(res.status).toBe(400);
+      expect(mockSignInWithOtp).not.toHaveBeenCalled();
+    }
+  });
+
+  it('rechaza un correo desmesurado antes de gastar una ranura del límite', async () => {
+    // Antes bastaba una cadena no vacía: 64 KB de basura pasaban el filtro,
+    // consumían un intento y viajaban a Supabase.
+    const res = await POST(peticion(`${'a'.repeat(300)}@test.com`, '10.0.0.11'));
+    expect(res.status).toBe(400);
+    expect(mockSignInWithOtp).not.toHaveBeenCalled();
+  });
+
+  it('corta por IP aunque cada intento use un correo distinto', async () => {
+    // El límite por IP+correo nunca se agota si el atacante rota la
+    // dirección: era el camino para mandar miles de correos desde una IP.
+    const ip = '10.0.0.12';
+    let bloqueados = 0;
+    for (let i = 0; i < 25; i++) {
+      const res = await POST(peticion(`persona${i}@ajeno.com`, ip));
+      if (res.status === 429) bloqueados++;
+    }
+    expect(bloqueados).toBeGreaterThan(0);
   });
 
   it('si Supabase rechaza, pasa el motivo (sin inventar otro)', async () => {

@@ -58,10 +58,17 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
       },
       body,
       signal: AbortSignal.timeout(10000),
+      // Igual que en el dispatcher: sin esto, un destino que pasa el guard de
+      // IP puede redirigir a una dirección interna (169.254.169.254 y
+      // similares) y aquí el cuerpo de ESA respuesta se guardaría en
+      // `webhook_logs.response_body`, legible luego desde el panel.
+      redirect: 'manual',
     });
 
     responseStatus = res.status;
-    responseBody = await res.text().catch(() => '');
+    // Truncado al mismo tope que usa el dispatcher: un destino que responda
+    // 10 MB no debe meterlos enteros en la tabla de logs.
+    responseBody = await res.text().then((t) => t.substring(0, 1000)).catch(() => '');
   } catch (err) {
     errorMsg = err instanceof Error ? err.message : 'Timeout o error de red';
   }

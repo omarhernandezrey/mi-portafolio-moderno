@@ -67,7 +67,15 @@ async function sendWebhookRequest(webhook: { id: string; url: string; secret: st
       },
       body,
       // Timeout de 10 segundos
-      signal: AbortSignal.timeout(10000)
+      signal: AbortSignal.timeout(10000),
+      // `assertSafeWebhookUrl` valida la IP del destino ANTES de salir, pero
+      // el valor por omisión de fetch es seguir redirecciones: un destino que
+      // pasa el guard (IP pública) podía responder
+      // `302 Location: http://169.254.169.254/...` y fetch saltaba a la
+      // metadata de la nube desde dentro, anulando la comprobación. Con
+      // 'manual' la redirección no se sigue: se registra como lo que es, una
+      // respuesta 3xx del destino.
+      redirect: 'manual'
     });
 
     const responseText = await res.text();

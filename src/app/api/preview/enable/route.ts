@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { draftMode } from 'next/headers';
 import { requireAdmin } from '@/lib/admin/auth';
+import { rutaInternaSegura } from '@/lib/rutaInterna';
 
 /**
  * Activa el modo borrador de Next.js (T-18): la home pública empieza a
@@ -13,9 +14,10 @@ export async function GET(req: NextRequest) {
   const auth = await requireAdmin('owner');
   if (!auth.ok) return auth.response;
 
-  const destino = req.nextUrl.searchParams.get('next');
   // Solo rutas relativas al propio sitio: nunca seguir una URL externa.
-  const ruta = destino && destino.startsWith('/') && !destino.startsWith('//') ? destino : '/';
+  // La comprobación por prefijos que había aquí dejaba pasar `/\evil.com`
+  // (`new URL` lo resuelve a https://evil.com/); ahora decide el origen real.
+  const ruta = rutaInternaSegura(req.nextUrl.searchParams.get('next'), req.nextUrl.origin);
 
   const dm = await draftMode();
   dm.enable();

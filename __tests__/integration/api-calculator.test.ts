@@ -107,4 +107,57 @@ describe('POST /api/calculator', () => {
     const bloqueada = await POST(req(VALIDO, ip));
     expect(bloqueada.status).toBe(429);
   });
+
+  /**
+   * Defecto real encontrado en la auditoría de backend: el `error` del
+   * insert ni se desestructuraba. Un fallo dejaba `insertedLead` en null, se
+   * saltaban en silencio Notion y `lead.created`, y la ruta seguía hasta
+   * responder `{success:true}` con un Telegram diciendo "Email enviado ✅".
+   * El lead desaparecía sin un solo registro: Omar veía una consulta
+   * atendida que no existía en la base.
+   */
+  describe('cuando el insert del lead falla', () => {
+    let errorSpy: jest.SpyInstance;
+    beforeEach(() => {
+      errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      mockInsert.mockReturnValue({
+        select: () => ({
+          single: async () => ({ data: null, error: { message: 'insert falló' } }),
+        }),
+      });
+    });
+    afterEach(() => errorSpy.mockRestore());
+
+    it('lo registra en voz alta en vez de tragárselo', async () => {
+      await POST(req(VALIDO, '10.3.0.20'));
+      expect(errorSpy).toHaveBeenCalledWith(
+        '[calculator] No se pudo guardar el lead:',
+        expect.anything()
+      );
+    });
+
+    it('lo dice en la respuesta: el PDF pudo salir, el lead no se guardó', async () => {
+      const res = await POST(req(VALIDO, '10.3.0.21'));
+      const cuerpo = await res.json();
+      expect(cuerpo.leadGuardado).toBe(false);
+    });
+
+    it('avisa a Omar por Telegram de que hay que responder a mano', async () => {
+      await POST(req(VALIDO, '10.3.0.22'));
+      const mensaje = mockNotifyTelegram.mock.calls[0][0] as string;
+      expect(mensaje).toContain('NO SE GUARDÓ');
+    });
+
+    it('no dispara Notion ni lead.created con un lead inexistente', async () => {
+      await POST(req(VALIDO, '10.3.0.23'));
+      expect(mockPushLeadToNotion).not.toHaveBeenCalled();
+      expect(mockDispatchEvent).not.toHaveBeenCalled();
+    });
+  });
+
+  it('cuando el lead SÍ se guarda, la respuesta lo confirma', async () => {
+    const res = await POST(req(VALIDO, '10.3.0.24'));
+    const cuerpo = await res.json();
+    expect(cuerpo.leadGuardado).toBe(true);
+  });
 });

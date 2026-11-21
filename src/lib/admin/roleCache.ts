@@ -65,7 +65,20 @@ export async function resolverRolDeUsuario(
   const cacheado = obtenerRolCacheado(userId, ahora);
   if (cacheado !== undefined) return cacheado;
 
-  const { data } = await consultarRol();
+  const { data, error } = await consultarRol();
+
+  // Un fallo de la consulta NO es "este usuario no tiene rol". Antes `error`
+  // se descartaba: un blip de red o de Supabase devolvía `data: null`, se
+  // resolvía `null` y ese `null` quedaba CACHEADO 30 s. Durante esos 30 s el
+  // middleware y toda la API respondían 403 «Sin rol de administración»
+  // aunque la base ya estuviera respondiendo bien, porque la caché ya no
+  // volvía a preguntar. Se devuelve null (fail-closed, sin acceso) pero sin
+  // envenenar la caché, para que el siguiente intento vuelva a consultar.
+  if (error) {
+    console.error('[roleCache] No se pudo resolver el rol; no se cachea el fallo:', error);
+    return null;
+  }
+
   const role = data && isAdminRole(data.role) ? data.role : null;
   guardarRolCacheado(userId, role, ahora);
   return role;

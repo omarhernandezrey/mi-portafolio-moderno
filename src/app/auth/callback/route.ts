@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 import { serverEnv } from '@/config/env'
 import { isAdminRole } from '@/lib/admin/roles'
 import { isEmailAllowed } from '@/lib/admin/access'
+import { rutaInternaSegura } from '@/lib/rutaInterna'
 
 /**
  * Callback del enlace mágico (T-19).
@@ -24,14 +25,10 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   const tokenHash = searchParams.get('token_hash')
   const typeParam = searchParams.get('type')
-  const nextParam = searchParams.get('next') ?? '/admin'
-  // Solo rutas internas: evita //evil.com o /\evil.com como open redirect.
-  const next =
-    nextParam.startsWith('/') &&
-    !nextParam.startsWith('//') &&
-    !nextParam.startsWith('/\\')
-      ? nextParam
-      : '/admin'
+  // Solo rutas internas. Antes se comprobaban prefijos a mano (`//`, `/\`);
+  // ahora decide el origen ya resuelto, que no depende de acertar la lista
+  // de separadores. Mismo helper que las dos rutas de vista previa.
+  const next = rutaInternaSegura(searchParams.get('next'), origin, '/admin')
 
   if (code || tokenHash) {
     const cookieStore = await cookies()

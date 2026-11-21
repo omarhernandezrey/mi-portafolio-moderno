@@ -111,7 +111,29 @@ export async function POST(req: NextRequest) {
       .eq('email', email);
     if (subscribersError) throw subscribersError;
 
-    if (convIds.length === 0 && deletedLeads === 0) {
+    // 5. Feed de comunidad. Faltaba por completo: `feed_posts.author_email` y
+    // `feed_comments.author_email` guardan el correo del visitante, así que
+    // la ruta respondía "no se encontraron datos" / "se eliminaron todos los
+    // datos" mientras el correo seguía en esas dos tablas. Los comentarios se
+    // borran explícitamente porque un comentario puede estar colgado de un
+    // post de otra persona (el `on delete cascade` solo cubre los propios).
+    const { data: comentariosBorrados, error: comentariosError } = await supabaseServer
+      .from('feed_comments')
+      .delete()
+      .eq('author_email', email)
+      .select('id');
+    if (comentariosError) throw comentariosError;
+    const deletedComments = comentariosBorrados?.length ?? 0;
+
+    const { data: postsBorrados, error: postsError } = await supabaseServer
+      .from('feed_posts')
+      .delete()
+      .eq('author_email', email)
+      .select('id');
+    if (postsError) throw postsError;
+    const deletedPosts = postsBorrados?.length ?? 0;
+
+    if (convIds.length === 0 && deletedLeads === 0 && deletedPosts === 0 && deletedComments === 0) {
       // Se audita igual: que no haya datos que borrar no exime de dejar
       // constancia de que la solicitud se procesó y quién la ejecutó.
       await writeAuditLog(auth.actor, {
@@ -128,7 +150,7 @@ export async function POST(req: NextRequest) {
     }
 
     await notifyTelegram(
-      `🗑️ *Derecho al olvido ejecutado*\nEmail: ${email}\nMotivo: ${reason || 'No especificado'}\nEjecutado por: ${auth.email}\nAcción: ${convIds.length} conversaciones, ${deletedLeads} leads, ${deletedTickets} tickets y suscripciones eliminadas.`
+      `🗑️ *Derecho al olvido ejecutado*\nEmail: ${email}\nMotivo: ${reason || 'No especificado'}\nEjecutado por: ${auth.email}\nAcción: ${convIds.length} conversaciones, ${deletedLeads} leads, ${deletedTickets} tickets, ${deletedPosts} publicaciones, ${deletedComments} comentarios y suscripciones eliminadas.`
     );
 
     await writeAuditLog(auth.actor, {
@@ -141,6 +163,8 @@ export async function POST(req: NextRequest) {
         conversationsDeleted: convIds.length,
         leadsDeleted: deletedLeads,
         ticketsDeleted: deletedTickets,
+        feedPostsDeleted: deletedPosts,
+        feedCommentsDeleted: deletedComments,
       },
     });
 

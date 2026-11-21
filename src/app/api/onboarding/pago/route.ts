@@ -27,8 +27,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Token inválido' }, { status: 404 });
     }
 
-    // Idempotencia: si ya confirmó, no re-notificar
-    if (lead.payment_id) {
+    // Idempotencia: si ya confirmó, no re-notificar.
+    // `status === 'paid'` también cuenta: `/api/payment/confirm` (la
+    // confirmación manual de Omac tras verificar Wompi/Nequi) marca 'paid' y
+    // `paid_at`, pero NO escribe `payment_id`. Mirando solo `payment_id`,
+    // este endpoint volvía a pisar un pago ya verificado: lo devolvía a
+    // 'contacted', sobrescribía `paid_at` con la fecha de hoy y mandaba un
+    // "verificar" por Telegram de algo ya verificado. Además el resumen
+    // diario filtra por status='paid' + rango de paid_at, así que ese pago
+    // desaparecía del reporte.
+    if (lead.payment_id || lead.status === 'paid') {
       return NextResponse.json({ success: true, alreadyConfirmed: true });
     }
 

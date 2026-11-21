@@ -67,6 +67,20 @@ describe('GET /api/preview/enable', () => {
     const res = await activar(req('/x?next=//evil.example.com'));
     expect(res.headers.get('location')).toBe('http://localhost/');
   });
+
+  /**
+   * Regresión del defecto real encontrado en la auditoría de backend. Estos
+   * tests ya cubrían `https://evil` y `//evil`, pero la guarda se hacía por
+   * prefijos y `/\evil.com` los pasaba los dos: `new URL('/\\evil.com',
+   * origin)` resuelve a `https://evil.com/` porque el parser trata `\` como
+   * `/` al normalizar la autoridad. Comprobado ejecutándolo antes de
+   * arreglarlo.
+   */
+  it('un "next" con barra invertida (/\\evil.com) no escapa del sitio', async () => {
+    mockRequireAdmin.mockResolvedValue({ ok: true, user: { id: 'u1' }, role: 'owner', email: 'o@test.com', actor: {} });
+    const res = await activar(req('/x?next=/\\evil.example.com'));
+    expect(res.headers.get('location')).toBe('http://localhost/');
+  });
 });
 
 describe('GET /api/preview/disable', () => {
@@ -79,6 +93,21 @@ describe('GET /api/preview/disable', () => {
 
   it('sin "next": redirige a "/"', async () => {
     const res = await desactivar(req('/x'));
+    expect(res.headers.get('location')).toBe('http://localhost/');
+  });
+
+  /**
+   * Esta ruta es la más expuesta de las dos: NO pide sesión (salir de la
+   * vista previa es como cerrar la propia sesión), así que su `next` lo
+   * controla cualquiera en internet. Era una redirección abierta servida
+   * desde el dominio propio — la base de un phishing creíble.
+   */
+  it.each([
+    ['/\\evil.example.com', 'barra invertida'],
+    ['//evil.example.com', 'protocol-relative'],
+    ['https://evil.example.com', 'absoluta externa'],
+  ])('sin sesión, "next" %s (%s) no saca del sitio', async (destino) => {
+    const res = await desactivar(req(`/x?next=${destino}`));
     expect(res.headers.get('location')).toBe('http://localhost/');
   });
 });

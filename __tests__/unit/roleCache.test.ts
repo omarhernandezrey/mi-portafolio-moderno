@@ -80,4 +80,44 @@ describe('resolverRolDeUsuario', () => {
     expect(await resolverRolDeUsuario('a', consultarA, 1000)).toBe('owner');
     expect(await resolverRolDeUsuario('b', consultarB, 1000)).toBe('viewer');
   });
+
+  /**
+   * Defecto real encontrado en la auditoría de backend: `error` estaba en la
+   * firma del callback y se descartaba. Un fallo transitorio de Supabase
+   * devolvía `data: null`, se resolvía `null` y ese `null` quedaba CACHEADO
+   * el TTL completo: 30 s de 403 «Sin rol de administración» en el
+   * middleware y en toda la API, aunque la base ya respondiera bien.
+   */
+  describe('un fallo de la consulta no se cachea', () => {
+    let errorSpy: jest.SpyInstance;
+    beforeEach(() => {
+      errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+    afterEach(() => errorSpy.mockRestore());
+
+    it('ante un error devuelve null (fail-closed) pero vuelve a consultar', async () => {
+      const consultar = jest
+        .fn()
+        .mockResolvedValueOnce({ data: null, error: { message: 'fetch failed' } })
+        .mockResolvedValueOnce({ data: { role: 'owner' }, error: null });
+
+      // Primer intento: la BD falla → sin acceso, pero sin envenenar la caché.
+      expect(await resolverRolDeUsuario('u1', consultar, 1000)).toBeNull();
+      // Mismo instante: si el fallo se hubiera cacheado, no habría 2ª consulta
+      // y el rol seguiría siendo null durante todo el TTL.
+      expect(await resolverRolDeUsuario('u1', consultar, 1000)).toBe('owner');
+      expect(consultar).toHaveBeenCalledTimes(2);
+    });
+
+    it('un error con data presente tampoco se cachea', async () => {
+      const consultar = jest
+        .fn()
+        .mockResolvedValueOnce({ data: { role: 'owner' }, error: { message: 'parcial' } })
+        .mockResolvedValueOnce({ data: { role: 'owner' }, error: null });
+
+      expect(await resolverRolDeUsuario('u2', consultar, 1000)).toBeNull();
+      expect(await resolverRolDeUsuario('u2', consultar, 1000)).toBe('owner');
+      expect(consultar).toHaveBeenCalledTimes(2);
+    });
+  });
 });
