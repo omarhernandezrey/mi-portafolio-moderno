@@ -20,6 +20,9 @@ import PostCover from './PostCover';
 
 type SortOption = 'newest' | 'oldest' | 'longest';
 
+/** Cuántas entradas muestra el archivo antes de pulsar «cargar más». */
+const VENTANA_INICIAL = 6;
+
 interface BlogArchiveProps {
   posts: PostMetadata[];
   locale: 'es' | 'en';
@@ -222,7 +225,16 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
   const [query, setQuery] = useState('');
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOption>('newest');
-  const [visible, setVisible] = useState(6);
+  // La ventana de «cargar más» viaja JUNTO a la firma de los filtros a los
+  // que pertenece. Antes su reinicio lo hacía un efecto que observaba
+  // `[query, activeTopic, sort]`: eso pintaba una vez la ventana ampliada
+  // sobre el conjunto nuevo y solo después la recortaba. Derivándola, el
+  // tamaño correcto sale en el mismo render.
+  //
+  // Y es robusto por construcción: si mañana se añade otro filtro, basta
+  // meterlo en la firma y el reinicio pasa a cubrirlo. Con el efecto había
+  // que acordarse de añadirlo también a su lista de dependencias.
+  const [ventana, setVentana] = useState({ cantidad: VENTANA_INICIAL, firma: '' });
   const searchRef = useRef<HTMLInputElement>(null);
 
   const topics = BLOG_TOPICS[locale];
@@ -267,6 +279,9 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
     return sortPosts(matches, sort);
   }, [posts, query, activeTopic, sort, locale, topics]);
 
+  const firmaDeFiltros = `${query}\u0000${activeTopic ?? ''}\u0000${sort}`;
+  const visible = ventana.firma === firmaDeFiltros ? ventana.cantidad : VENTANA_INICIAL;
+
   const isDefaultView = query.trim() === '' && activeTopic === null && sort === 'newest';
   const featuredPost = isDefaultView ? filteredPosts[0] : undefined;
   const archivePosts = isDefaultView ? filteredPosts.slice(1) : filteredPosts;
@@ -300,10 +315,6 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
 
     return picks.slice(0, 3);
   }, [posts, locale]);
-
-  useEffect(() => {
-    setVisible(6);
-  }, [query, activeTopic, sort]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -493,7 +504,9 @@ export default function BlogArchive({ posts, locale }: BlogArchiveProps) {
             <div className="mt-8 flex justify-center">
               <button
                 type="button"
-                onClick={() => setVisible((current) => current + 6)}
+                onClick={() =>
+                  setVentana({ cantidad: visible + VENTANA_INICIAL, firma: firmaDeFiltros })
+                }
                 className="inline-flex items-center gap-2 rounded-full border border-text-muted/15 px-6 py-3 font-mono-label text-[8px] text-muted-60 transition-colors hover:border-primary hover:text-text-main"
               >
                 {locale === 'en' ? 'Load more essays' : 'Cargar más ensayos'}

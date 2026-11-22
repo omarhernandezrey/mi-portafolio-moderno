@@ -255,10 +255,33 @@ const EducationSection = () => {
   }, [currentLanguage, latestItem]);
   const highlightCount = highlightedCourses.length;
 
-  const [visibleCount, setVisibleCount] = useState<number>(0);
-  const [visibleItems, setVisibleItems] = useState<EducationItem[]>([]);
+  // De los cuatro estados que había aquí, solo uno era irreductible. La
+  // ventana es una CUENTA, y `visibleItems` y `hasMore` se calculan de esa
+  // cuenta más `allItems`; mantenerlos en estado aparte obligaba a reescribir
+  // los cuatro a la vez cada vez que cambiaba la lista, con un render de más y
+  // la posibilidad de que se desincronizaran entre sí.
+  //
+  // La cuenta viaja junto a la lista a la que pertenece: si `allItems` cambia
+  // (es un `useMemo` por idioma), la ventana vuelve al primer tramo sin
+  // necesidad de un efecto que lo observe.
+  const [ventana, setVentana] = useState<{
+    cantidad: number;
+    lista: EducationItem[];
+  }>(() => ({
+    cantidad: Math.min(INITIAL_VISIBLE_ITEMS, allItems.length),
+    lista: allItems,
+  }));
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(false);
+
+  const visibleCount =
+    ventana.lista === allItems
+      ? Math.min(ventana.cantidad, allItems.length)
+      : Math.min(INITIAL_VISIBLE_ITEMS, allItems.length);
+  const visibleItems = useMemo(
+    () => allItems.slice(0, visibleCount),
+    [allItems, visibleCount],
+  );
+  const hasMore = visibleCount < allItems.length;
   const [selectedItem, setSelectedItem] = useState<EducationItem | null>(null);
   const loadMoreTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
@@ -274,42 +297,30 @@ const EducationSection = () => {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
-  useEffect(() => {
-    if (loadMoreTimeout.current) {
-      clearTimeout(loadMoreTimeout.current);
-      loadMoreTimeout.current = null;
-    }
-    const initialBatch = Math.min(INITIAL_VISIBLE_ITEMS, allItems.length);
-    setVisibleItems(allItems.slice(0, initialBatch));
-    setVisibleCount(initialBatch);
-    setHasMore(initialBatch < allItems.length);
-    setIsLoading(false);
-  }, [allItems]);
-
   const loadMoreItems = useCallback(() => {
-    if (visibleCount >= allItems.length) {
-      setHasMore(false);
-      return;
-    }
+    if (visibleCount >= allItems.length) return;
 
     setIsLoading(true);
 
     const nextCount = Math.min(visibleCount + LOAD_MORE_STEP, allItems.length);
-    const updatedItems = allItems.slice(0, nextCount);
 
     if (loadMoreTimeout.current) {
       clearTimeout(loadMoreTimeout.current);
     }
 
+    // El retardo es deliberado: da tiempo a que se vea el estado de carga.
     loadMoreTimeout.current = setTimeout(() => {
-      setVisibleItems(updatedItems);
-      setVisibleCount(nextCount);
-      setHasMore(nextCount < allItems.length);
+      setVentana({ cantidad: nextCount, lista: allItems });
       setIsLoading(false);
       loadMoreTimeout.current = null;
     }, 250);
   }, [visibleCount, allItems]);
 
+  // Este efecto se queda a propósito, y `react-hooks/set-state-in-effect` lo
+  // marca sin que haya nada que arreglar: `createFloatingElements` usa
+  // `Math.random`, así que servidor y cliente generarían posiciones distintas
+  // y la hidratación no coincidiría. Arrancar vacío y rellenar tras montar es
+  // justo lo que evita eso.
   useEffect(() => {
     setFloatingElements(createFloatingElements());
   }, []);
