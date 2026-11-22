@@ -1,5 +1,19 @@
 name: Uptime Record
 
+# ⚠️ TEMPORALMENTE DUPLICADO, A PROPÓSITO.
+#
+# El registro pasó a los crons de Vercel (`crons` en `vercel.json`, misma ruta
+# y mismo minuto 10). Este workflow se mantiene mientras se comprueba que el
+# cron de Vercel dispara de verdad, porque el proyecto está en plan **hobby** y
+# no pude confirmar en la documentación si Hobby admite un cron horario o lo
+# limita a uno diario. Quitar este workflow antes de esa comprobación podría
+# dejar el histórico sin ninguna fuente.
+#
+# Que corran los dos un rato no rompe nada: el agregado calcula
+# `operativas / comprobaciones` por día, así que dos filas por hora salen igual
+# de bien que una. En cuanto `vercel crons ls` confirme el disparo real de
+# Vercel, ESTE ARCHIVO SE BORRA.
+#
 # Cada hora, en el minuto 10. Desplazado respecto a `check-health.yml` (que
 # corre en el minuto 0) a propósito: son dos cosas distintas y conviene que no
 # compitan. `check-health` AVISA en el momento si algo está caído; esto
