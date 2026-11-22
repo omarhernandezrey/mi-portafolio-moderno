@@ -533,7 +533,6 @@ npm run start           # Production server
 # Testing
 npm test                # Unit + integration
 npm run test:e2e        # Cypress headless
-npm run test:coverage   # Coverage report
 
 # Quality
 npm run lint            # ESLint
