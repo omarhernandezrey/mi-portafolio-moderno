@@ -30,8 +30,24 @@ export async function GET() {
       results.services.database.status = 'operational';
     }
 
-    // 2. LLM gateway: stub (no gastamos tokens en health checks)
-    results.services.llm_gateway.status = 'operational';
+    // 2. LLM gateway: NO se comprueba — a propósito, para no gastar tokens en
+    //    cada health check (este endpoint lo pingea un cron cada hora).
+    //
+    //    Antes este stub devolvía 'operational', y `/status` lo publicaba como
+    //    un servicio verde: decía que el gateway estaba sano aunque Groq y
+    //    DeepSeek estuvieran caídos, porque nadie lo medía. Ahora dice
+    //    'unknown', que es la verdad.
+    //
+    //    El campo se mantiene en la respuesta (no se borra) porque cambiar la
+    //    forma de un endpoint público podría romper un monitor externo que no
+    //    se ve desde el repositorio. El `status` general NO depende de él: lo
+    //    decide solo la comprobación de la base, y así sigue — meter 'unknown'
+    //    en el estado general dispararía la alerta de Telegram cada hora.
+    //
+    //    Para que vuelva a `/status` hace falta medirlo de verdad: una llamada
+    //    barata al proveedor (sin consumir tokens) o leer su propio endpoint
+    //    de estado.
+    results.services.llm_gateway.status = 'unknown';
 
     results.latency_ms = Date.now() - start;
 

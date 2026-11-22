@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, AlertCircle, Globe, Database, Cpu, Activity, ShieldCheck, Zap, RefreshCw, BarChart3, Radio } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Database, Activity, ShieldCheck, RefreshCw, Radio } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 
 interface HealthData {
@@ -63,8 +63,12 @@ export default function StatusPage() {
           >
             System <span className="text-primary">Status</span>
           </motion.h1>
+          {/* El texto describe lo que la página MUESTRA. El anterior hablaba
+              de «protocolos de redundancia» y «disponibilidad», dos cosas que
+              aquí no se miden: prometía un cuadro de mando que no existe. */}
           <p className="text-text-muted text-sm font-medium max-w-xl mx-auto opacity-60 leading-relaxed italic">
-            Monitorización en tiempo real de los protocolos de redundancia, latencia de red y disponibilidad de servicios críticos del ecosistema.
+            Comprobación en vivo de la base de datos, con su latencia. Se
+            actualiza cada 30 segundos.
           </p>
         </header>
 
@@ -110,6 +114,10 @@ export default function StatusPage() {
                 <ShieldCheck size={160} className="-rotate-12" />
               </div>
 
+              {/* Aquí vivía además un «Network Health 99.98%» escrito a mano:
+                  no salía de `/api/health` ni de ninguna medición. Se quitó
+                  junto con el resto de los datos inventados de esta página.
+                  La latencia que queda abajo sí la mide el endpoint. */}
               <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
                 <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
                   <div className={`p-6 rounded-canvas shadow-inner ${data?.status === 'operational' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-accent/10 text-accent border border-accent/20'}`}>
@@ -120,103 +128,52 @@ export default function StatusPage() {
                       {data?.status === 'operational' ? 'Operational Protocol' : 'Performance Alert'}
                     </h2>
                     <p className="text-3xs font-black uppercase tracking-[0.2em] text-text-muted italic opacity-40">
-                      Last Check: {new Date(data?.timestamp || '').toLocaleTimeString('es-CO', { hour12: false })} • {data?.latency_ms}ms Global Latency
+                      {/* «Global Latency» antes: `latency_ms` es el tiempo del
+                          propio handler de /api/health en el servidor que
+                          atendió la petición, no una medición desde varias
+                          regiones. */}
+                      Last Check: {new Date(data?.timestamp || '').toLocaleTimeString('es-CO', { hour12: false })} • {data?.latency_ms}ms Health Check Latency
                     </p>
-                  </div>
-                </div>
-                
-                <div className="flex flex-col items-center md:items-end">
-                  <div className="text-4xs font-black uppercase tracking-[0.4em] text-text-muted opacity-40 mb-2">Network Health</div>
-                  <div className="text-5xl font-black text-text-main tracking-tighter flex items-baseline gap-2">
-                    99<span className="text-xl text-primary">.98</span>
-                    <span className="text-xs font-bold text-text-muted/40 uppercase tracking-widest">%</span>
                   </div>
                 </div>
               </div>
             </motion.div>
 
-            {/* Matrix Grid of Services */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <ServiceMonitor 
-                name="Front-end Gateway" 
-                status="operational" 
-                description="Protocolo de entrega estática Next.js 15+ a través de nodos edge globales de Vercel."
-                icon={<Globe size={20} />}
-              />
-              <ServiceMonitor 
-                name="Core Intelligence" 
-                status={data?.services.llm_gateway.status || 'down'} 
-                description="Orquestador multi-modelo (Groq/DeepSeek) operando bajo protocolo de failover automático."
-                icon={<Cpu size={20} />}
-              />
-              <ServiceMonitor 
-                name="Relational Data" 
-                status={data?.services.database.status || 'down'} 
+            {/* Solo el servicio que `/api/health` comprueba de verdad.
+                Había tres más, los tres siempre en verde porque nadie los
+                medía: «Front-end Gateway» y «Event Dispatcher» con
+                `status="operational"` escrito aquí mismo, y «Core
+                Intelligence», cuyo estado parecía venir del endpoint pero era
+                un stub que devolvía 'operational' sin llamar al gateway (ver
+                `api/health/route.ts`). Un indicador que no puede ponerse en
+                rojo no informa de nada. Cuando se instrumenten, vuelven. */}
+            <div className="grid grid-cols-1 gap-6">
+              <ServiceMonitor
+                name="Relational Data"
+                status={data?.services.database.status || 'down'}
                 description="Clúster redundante de PostgreSQL alojado en Supabase con RLS de alta seguridad."
                 latency={`${data?.services.database.latency}ms`}
                 icon={<Database size={20} />}
               />
-              <ServiceMonitor 
-                name="Event Dispatcher" 
-                status="operational" 
-                description="Sistema de webhooks y notificaciones en tiempo real para la gestión de leads."
-                icon={<Zap size={20} />}
-              />
             </div>
 
-            {/* Performance Timeline Visualization */}
-            <div className="bg-card-bg rounded-[48px] border border-text-muted/10 p-10 md:p-12 shadow-2xl relative overflow-hidden group">
-               <div className="flex items-center justify-between mb-10">
-                  <h3 className="font-mono-label text-[0.6rem] text-text-main flex items-center gap-3">
-                    <BarChart3 size={14} className="text-primary" />
-                    Uptime History Archive
-                  </h3>
-                  <span className="text-4xs font-black uppercase tracking-widest text-text-muted/40 italic">90-Day Operational Cycle</span>
-               </div>
-               
-               {/* ⚠️ DATO INVENTADO — PENDIENTE DE DECISIÓN DE OMAR (2026-11-22)
-                   Esta gráfica no lee nada: las alturas son `Math.random()` y
-                   los tooltips afirman "100% Stability" por cada una de las 70
-                   barras, con una incidencia falsa fijada en el índice 45.
-                   `/status` es una página PÚBLICA, así que esto son datos de
-                   disponibilidad fabricados y presentados a quien entre
-                   —clientes potenciales incluidos— como historial real.
+            {/* Aquí vivía «Uptime History Archive»: 70 barras cuya altura era
+                `Math.random()`, con un tooltip por barra afirmando «100%
+                Stability» y una incidencia falsa fijada en la barra 45, bajo
+                una etiqueta que decía «90-Day Operational Cycle» sobre 70
+                barras. No leía NADA.
 
-                   Contradice la regla explícita de CLAUDE.md: «Ningún dato
-                   inventado en el panel ni en el sitio».
+                Se quitó, no se maquilló: `/status` es pública y presentaba un
+                historial de disponibilidad fabricado a quien entrara,
+                clientes potenciales incluidos. Contradecía la regla de
+                CLAUDE.md «ningún dato inventado en el panel ni en el sitio».
 
-                   Lo detectó `react-hooks/purity` durante la limpieza de
-                   reglas de React: además de inventado, `Math.random()` en
-                   render hace que la gráfica se rebaraje en cada repintado.
-
-                   NO se arregla aquí a propósito: las opciones son quitar la
-                   sección, o alimentarla de `analytics_vitals`/`api_logs`, y
-                   las dos cambian una página pública — decisión de producto,
-                   no de lint. Se deja a la vista en vez de maquillarla.  */}
-               <div className="flex gap-1.5 h-12 items-end">
-                {Array.from({ length: 70 }).map((_, i) => {
-                  // eslint-disable-next-line react-hooks/purity -- ver el aviso de arriba
-                  const h = 40 + Math.random() * 60;
-                  return (
-                    <motion.div 
-                      key={i} 
-                      initial={{ height: 0 }}
-                      animate={{ height: `${h}%` }}
-                      transition={{ delay: i * 0.01, duration: 0.5 }}
-                      className={`flex-1 rounded-full transition-all duration-300 hover:scale-y-125 cursor-help ${
-                        i === 45 ? 'bg-accent/40 hover:bg-accent' : 'bg-primary/20 hover:bg-primary'
-                      }`} 
-                      title={`Cycle ${70-i}: ${i === 45 ? '98.2%' : '100%'} Stability`}
-                    />
-                  );
-                })}
-              </div>
-              
-              <div className="flex justify-between mt-8 text-4xs font-black uppercase tracking-[0.3em] text-text-muted/30 italic">
-                <span>Deployment Genesis</span>
-                <span>Active Terminal</span>
-              </div>
-            </div>
+                Para tener la gráfica de verdad hace falta registrar el
+                histórico primero: ni `analytics_vitals` (que guarda LCP/INP/
+                CLS, rendimiento y no caídas) ni `api_logs` (llamadas a
+                proveedores de LLM, y además sin ningún `insert` en el código)
+                sirven como fuente. Haría falta una tabla propia de
+                comprobaciones y un cron que las escriba. */}
 
             <div className="flex justify-center pt-8">
               <button 
@@ -232,12 +189,10 @@ export default function StatusPage() {
         )}
       </main>
 
-      {/* Global Trust Archive Bar */}
-      <div className="flex flex-wrap justify-center gap-12 py-12 opacity-10 border-t border-text-muted/10 grayscale">
-        <TrustAsset icon={<ShieldCheck size={14} />} text="End-to-End Encryption" />
-        <TrustAsset icon={<Activity size={14} />} text="Zero-Downtime Architecture" />
-        <TrustAsset icon={<Globe size={14} />} text="Global CDN Integration" />
-      </div>
+      {/* Aquí vivía una barra de sellos que afirmaba «Zero-Downtime
+          Architecture», «End-to-End Encryption» y «Global CDN Integration».
+          No son métricas, son afirmaciones —y la primera la desmiente
+          cualquier incidencia real—, así que se fueron con el resto. */}
 
       <Footer />
     </div>
@@ -269,15 +224,6 @@ function ServiceMonitor({ name, status, description, latency, icon }: { name: st
           Protocol Delay: {latency}
         </div>
       )}
-    </div>
-  );
-}
-
-function TrustAsset({ icon, text }: { icon: React.ReactNode, text: string }) {
-  return (
-    <div className="font-mono-label flex items-center gap-2 text-[0.55rem] text-text-muted">
-      {icon}
-      {text}
     </div>
   );
 }
