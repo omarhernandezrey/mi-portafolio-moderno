@@ -5,12 +5,6 @@
   "installCommand": "npm install",
   "devCommand": "npm run dev",
   "regions": ["iad1"],
-  "crons": [
-    {
-      "path": "/api/cron/uptime-record",
-      "schedule": "10 * * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
