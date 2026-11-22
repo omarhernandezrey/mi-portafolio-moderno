@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input, Select, Checkbox, Tabs, TabPanel } from '@/components/admin/ui';
 import { ImageField } from './ImageField';
 import { AdminApiError } from '@/lib/admin/client-fetch';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface ItemFormValues {
   category_id: string;
@@ -72,7 +73,13 @@ export interface EducationItemFormDialogProps {
 }
 
 /** Diálogo de alta/edición de un curso de educación (T-11, patrón de T-09). */
-export function EducationItemFormDialog({ open, onClose, onSubmit, initial, categorias }: EducationItemFormDialogProps) {
+export function EducationItemFormDialog(props: EducationItemFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <ItemForm key={claveDeFormulario(props.open, props.initial?.slug)} {...props} />;
+}
+
+function ItemForm({ open, onClose, onSubmit, initial, categorias }: EducationItemFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<ItemFormValues>(() =>
     initial ? desdeInicial(initial) : vacio(categorias[0]?.id ?? ''),
@@ -81,16 +88,6 @@ export function EducationItemFormDialog({ open, onClose, onSubmit, initial, cate
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio(categorias[0]?.id ?? ''));
-      setIdioma('es');
-      setFieldErrors({});
-      setFormError('');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, initial]);
 
   function set<K extends keyof ItemFormValues>(key: K, value: ItemFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));

@@ -3,6 +3,7 @@
 import React, { useEffect, useId, useState } from 'react';
 import { Dialog, AdminButton, Input, Tabs, TabPanel } from '@/components/admin/ui';
 import { AdminApiError } from '@/lib/admin/client-fetch';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface SkillFormValues {
   slug: string;
@@ -68,7 +69,13 @@ export interface SkillFormDialogProps {
 }
 
 /** Diálogo de alta/edición de skill (T-10, copia el patrón de `ProjectFormDialog` de T-09). */
-export function SkillFormDialog({ open, onClose, onSubmit, initial }: SkillFormDialogProps) {
+export function SkillFormDialog(props: SkillFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <SkillForm key={claveDeFormulario(props.open, props.initial?.slug)} {...props} />;
+}
+
+function SkillForm({ open, onClose, onSubmit, initial }: SkillFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<SkillFormValues>(() => (initial ? desdeInicial(initial) : vacio()));
   const [idioma, setIdioma] = useState<'es' | 'en'>('es');
@@ -76,15 +83,6 @@ export function SkillFormDialog({ open, onClose, onSubmit, initial }: SkillFormD
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
   const datalistId = useId();
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio());
-      setIdioma('es');
-      setFieldErrors({});
-      setFormError('');
-    }
-  }, [open, initial]);
 
   function set<K extends keyof SkillFormValues>(key: K, value: SkillFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));

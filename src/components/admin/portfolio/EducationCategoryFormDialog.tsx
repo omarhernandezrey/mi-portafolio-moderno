@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input } from '@/components/admin/ui';
 import { AdminApiError } from '@/lib/admin/client-fetch';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface CategoryFormValues {
   slug: string;
@@ -30,20 +31,18 @@ export interface EducationCategoryFormDialogProps {
 }
 
 /** Diálogo de alta/edición de categoría de educación (T-11, patrón de T-09). */
-export function EducationCategoryFormDialog({ open, onClose, onSubmit, initial }: EducationCategoryFormDialogProps) {
+export function EducationCategoryFormDialog(props: EducationCategoryFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <CategoryForm key={claveDeFormulario(props.open, props.initial?.slug)} {...props} />;
+}
+
+function CategoryForm({ open, onClose, onSubmit, initial }: EducationCategoryFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<CategoryFormValues>(() => (initial ? desdeInicial(initial) : vacio()));
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio());
-      setFieldErrors({});
-      setFormError('');
-    }
-  }, [open, initial]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

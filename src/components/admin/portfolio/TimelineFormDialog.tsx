@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input, Select, Tabs, TabPanel } from '@/components/admin/ui';
 import { AdminApiError } from '@/lib/admin/client-fetch';
 import { portfolioIconRegistry } from '@/lib/portfolio/source/icon-registry';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface TimelineFormValues {
   slug: string;
@@ -45,22 +46,19 @@ export interface TimelineFormDialogProps {
 }
 
 /** Diálogo de alta/edición de hito del timeline (T-12, patrón de T-09). `year` es bilingüe: el hito "Presente" traduce el año. */
-export function TimelineFormDialog({ open, onClose, onSubmit, initial }: TimelineFormDialogProps) {
+export function TimelineFormDialog(props: TimelineFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <TimelineForm key={claveDeFormulario(props.open, props.initial?.slug)} {...props} />;
+}
+
+function TimelineForm({ open, onClose, onSubmit, initial }: TimelineFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<TimelineFormValues>(() => (initial ? desdeInicial(initial) : vacio()));
   const [idioma, setIdioma] = useState<'es' | 'en'>('es');
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio());
-      setIdioma('es');
-      setFieldErrors({});
-      setFormError('');
-    }
-  }, [open, initial]);
 
   function set<K extends keyof TimelineFormValues>(key: K, value: TimelineFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
