@@ -169,8 +169,11 @@ describe('GET /api/cron/daily-summary', () => {
 
 describe('guardarraíl: sin plantillas fijas en los cron de Telegram', () => {
   it('ningún texto de los cron contiene N/A o "Sin pagos confirmados" como literal fijo', () => {
-    const fs = require('node:fs') as typeof import('node:fs');
-    const path = require('node:path') as typeof import('node:path');
+    // `import` normal y no `require`: Next 16 lintea también `__tests__/`
+    // (antes `next lint` solo miraba src/ y similares) y
+    // `@typescript-eslint/no-require-imports` lo marca como error.
+    const fs = jest.requireActual<typeof import('node:fs')>('node:fs');
+    const path = jest.requireActual<typeof import('node:path')>('node:path');
     const dir = path.join(process.cwd(), 'src/app/api/cron');
     const archivos = fs.readdirSync(dir, { recursive: true, encoding: 'utf8' }) as string[];
     const rutas = archivos.filter((f) => f.endsWith('.ts')).map((f) => path.join(dir, f));

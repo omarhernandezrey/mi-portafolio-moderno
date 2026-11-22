@@ -187,7 +187,7 @@ describe('POST — crear', () => {
       expect.anything(),
       expect.objectContaining({ action: 'create', resourceType: 'portfolio_project', before: null }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects', { expire: 0 });
   });
 
   it('un slug duplicado (23505) → 400, no 500', async () => {
@@ -255,7 +255,7 @@ describe('PATCH /[id] — actualizar', () => {
       expect.anything(),
       expect.objectContaining({ action: 'update', resourceType: 'portfolio_project', resourceId: 'p1' }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects', { expire: 0 });
   });
 
   it('cambiar solo is_published no vuelve a comprobar el demo', async () => {
@@ -332,7 +332,7 @@ describe('DELETE /[id] — borrar', () => {
       expect.anything(),
       expect.objectContaining({ action: 'delete', resourceType: 'portfolio_project', resourceId: 'p1', after: null }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects', { expire: 0 });
   });
 });
 
@@ -375,7 +375,7 @@ describe('PATCH /reorder', () => {
         metadata: { ids: IDS, filas: 3 },
       }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects', { expire: 0 });
   });
 
   it('una lista incompleta es culpa de la petición: 400, no 500', async () => {

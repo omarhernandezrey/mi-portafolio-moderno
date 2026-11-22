@@ -107,7 +107,7 @@ describe('POST — crear', () => {
     const res = await crear(req('/x', { method: 'POST', body: JSON.stringify({ slug: 'sitios-web', title: { es: 'Sitios Web' } }) }));
     expect(res.status).toBe(201);
     expect(mockWriteAuditLog).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ action: 'portfolio_service.create' }));
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:services');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:services', { expire: 0 });
   });
 
   it('un slug duplicado (23505) → 400, no 500', async () => {
@@ -129,7 +129,7 @@ describe('PATCH /[id]', () => {
     tabla({ portfolio_services: { data: { ...SERVICIO, badge: 'WEB' }, error: null } });
     const res = await actualizar(req('/x', { method: 'PATCH', body: JSON.stringify({ badge: 'WEB' }) }), { params: Promise.resolve({ id: 's1' }) });
     expect(res.status).toBe(200);
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:services');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:services', { expire: 0 });
   });
 });
 

@@ -108,7 +108,7 @@ describe('POST — crear', () => {
     const res = await crear(req('/x', { method: 'POST', body: JSON.stringify({ name: 'React', icon_key: 'FaReact' }) }));
     expect(res.status).toBe(201);
     expect(mockWriteAuditLog).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ action: 'portfolio_technology.create' }));
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:technologies');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:technologies', { expire: 0 });
   });
 
   it('un name duplicado (23505) → 400, no 500', async () => {
@@ -130,7 +130,7 @@ describe('PATCH /[id]', () => {
     tabla({ portfolio_technologies: { data: { ...TECNOLOGIA, category: 'Frontend' }, error: null } });
     const res = await actualizar(req('/x', { method: 'PATCH', body: JSON.stringify({ category: 'Frontend' }) }), { params: Promise.resolve({ id: 't1' }) });
     expect(res.status).toBe(200);
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:technologies');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:technologies', { expire: 0 });
   });
 });
 

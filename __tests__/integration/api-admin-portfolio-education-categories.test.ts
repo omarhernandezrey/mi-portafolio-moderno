@@ -115,7 +115,7 @@ describe('POST — crear', () => {
       expect.objectContaining({ email: 'owner@test.com' }),
       expect.objectContaining({ action: 'portfolio_education_category.create' }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education', { expire: 0 });
   });
 });
 
@@ -133,7 +133,7 @@ describe('PATCH /[id] — actualizar', () => {
       params: Promise.resolve({ id: 'c1' }),
     });
     expect(res.status).toBe(200);
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education', { expire: 0 });
   });
 });
 
@@ -155,7 +155,7 @@ describe('DELETE /[id] — borra y cuenta cuántos ítems arrastra', () => {
       expect.anything(),
       expect.objectContaining({ action: 'portfolio_education_category.delete', metadata: { itemsEliminados: 3 } }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education', { expire: 0 });
   });
 
   it('sin cursos en la categoría: itemsEliminados=0', async () => {

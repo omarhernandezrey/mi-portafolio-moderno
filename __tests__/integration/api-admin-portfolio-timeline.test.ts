@@ -101,7 +101,7 @@ describe('POST — crear', () => {
     const res = await crear(req('/x', { method: 'POST', body: JSON.stringify({ slug: 'hito-1', year: { es: '2024' }, title: { es: 'Primer hito' } }) }));
     expect(res.status).toBe(201);
     expect(mockWriteAuditLog).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ action: 'portfolio_timeline.create' }));
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:timeline');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:timeline', { expire: 0 });
   });
 });
 
@@ -117,7 +117,7 @@ describe('PATCH /[id]', () => {
     tabla({ portfolio_timeline: { data: { ...HITO, title: { es: 'Nuevo título' } }, error: null } });
     const res = await actualizar(req('/x', { method: 'PATCH', body: JSON.stringify({ title: { es: 'Nuevo título' } }) }), { params: Promise.resolve({ id: 'h1' }) });
     expect(res.status).toBe(200);
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:timeline');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:timeline', { expire: 0 });
   });
 });
 

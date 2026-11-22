@@ -114,7 +114,7 @@ describe('POST — crear', () => {
     const res = await crear(req('/x', { method: 'POST', body: JSON.stringify({ slug: 'credly-x', title: { es: 'Badge X' } }) }));
     expect(res.status).toBe(201);
     expect(mockWriteAuditLog).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ action: 'portfolio_badge.create' }));
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:badges');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:badges', { expire: 0 });
   });
 
   it('con certificate_data_url: sube la imagen y guarda la URL resultante', async () => {
@@ -159,7 +159,7 @@ describe('PATCH /[id]', () => {
     tabla({ portfolio_badges: { data: { ...BADGE, is_new: true }, error: null } });
     const res = await actualizar(req('/x', { method: 'PATCH', body: JSON.stringify({ is_new: true }) }), { params: Promise.resolve({ id: 'b1' }) });
     expect(res.status).toBe(200);
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:badges');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:badges', { expire: 0 });
   });
 });
 

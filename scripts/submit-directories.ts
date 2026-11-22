@@ -1,4 +1,4 @@
-import { getAllPosts, getPostBySlug } from '../src/lib/blog';
+import { getAllPosts, getPostBySlug, type Post } from '../src/lib/blog';
 import { notifyTelegram } from '../src/lib/chatbot/telegram';
 import dotenv from 'dotenv';
 
@@ -9,7 +9,9 @@ const HASHNODE_TOKEN = process.env.HASHNODE_TOKEN;
 const HASHNODE_PUBLICATION_ID = process.env.HASHNODE_PUBLICATION_ID;
 const BASE_URL = 'https://omarhernandezrey.com';
 
-async function postToDevTo(post: any) {
+
+
+async function postToDevTo(post: Post) {
   if (!DEV_TO_API_KEY) {
     console.warn('⚠️ DEV_TO_API_KEY no encontrada, saltando DEV.to');
     return null;
@@ -41,7 +43,7 @@ async function postToDevTo(post: any) {
   return data.url;
 }
 
-async function postToHashnode(post: any) {
+async function postToHashnode(post: Post) {
   if (!HASHNODE_TOKEN || !HASHNODE_PUBLICATION_ID) {
     console.warn('⚠️ HASHNODE_TOKEN o PUBLICATION_ID no encontradas, saltando Hashnode');
     return null;

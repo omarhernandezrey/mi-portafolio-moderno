@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { PURGA_INMEDIATA } from '@/lib/cachePurga';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { writeContentVersion } from '@/lib/admin/versions';
@@ -58,7 +59,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     after: data,
   });
 
-  revalidateTag('portfolio:timeline');
+  revalidateTag('portfolio:timeline', PURGA_INMEDIATA);
 
   return NextResponse.json(data);
 }
@@ -92,7 +93,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     after: null,
   });
 
-  revalidateTag('portfolio:timeline');
+  revalidateTag('portfolio:timeline', PURGA_INMEDIATA);
 
   return NextResponse.json({ success: true });
 }

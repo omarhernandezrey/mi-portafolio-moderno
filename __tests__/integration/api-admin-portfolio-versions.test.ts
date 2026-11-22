@@ -175,7 +175,7 @@ describe('POST /api/admin/portfolio/versions/[id]/restore', () => {
       expect.anything(),
       expect.objectContaining({ action: 'restore', resourceType: 'portfolio_project', resourceId: 'p1' }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:projects', { expire: 0 });
   });
 
   it('restaura una versión "delete" (sin "after"): revive con el "before" (undelete)', async () => {
@@ -187,7 +187,7 @@ describe('POST /api/admin/portfolio/versions/[id]/restore', () => {
 
     const res = await restaurar(req('/x', { method: 'POST' }), { params: Promise.resolve({ id: 'v2' }) });
     expect(res.status).toBe(200);
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills', { expire: 0 });
   });
 
   it('una versión sin "before" ni "after" (no debería existir, pero se defiende): 400, no intenta un upsert vacío', async () => {

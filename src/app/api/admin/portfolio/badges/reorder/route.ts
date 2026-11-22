@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { PURGA_INMEDIATA } from '@/lib/cachePurga';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { reordenarPortfolio } from '@/lib/portfolio/reorder';
@@ -32,7 +33,7 @@ export async function PATCH(req: NextRequest) {
     metadata: { ids, filas: reorden.filas },
   });
 
-  revalidateTag('portfolio:badges');
+  revalidateTag('portfolio:badges', PURGA_INMEDIATA);
 
   return NextResponse.json({ success: true });
 }

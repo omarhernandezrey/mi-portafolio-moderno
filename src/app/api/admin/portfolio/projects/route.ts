@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { PURGA_INMEDIATA } from '@/lib/cachePurga';
 import { requireAdmin } from '@/lib/admin/auth';
 import { writeAuditLog } from '@/lib/admin/audit';
 import { writeContentVersion } from '@/lib/admin/versions';
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
     after: data,
   });
 
-  revalidateTag('portfolio:projects');
+  revalidateTag('portfolio:projects', PURGA_INMEDIATA);
 
   return NextResponse.json({ ...data, embedCheck }, { status: 201 });
 }

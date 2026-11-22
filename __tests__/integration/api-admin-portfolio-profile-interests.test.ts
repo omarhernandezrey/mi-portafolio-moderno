@@ -138,7 +138,7 @@ describe('PUT — reemplaza el array entero', () => {
       expect.anything(),
       expect.objectContaining({ action: 'portfolio_profile_interests.update', metadata: { total: 1 } }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:profile');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:profile', { expire: 0 });
   });
 
   it('una lista vacía es un reemplazo válido (quitar todos los intereses)', async () => {

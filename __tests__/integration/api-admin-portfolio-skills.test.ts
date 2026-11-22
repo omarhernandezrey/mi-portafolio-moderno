@@ -151,7 +151,7 @@ describe('POST — crear', () => {
       expect.objectContaining({ email: 'owner@test.com' }),
       expect.objectContaining({ action: 'portfolio_skill.create', resourceType: 'portfolio_skill' }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills', { expire: 0 });
   });
 
   it('un slug duplicado (23505) → 400, no 500', async () => {
@@ -179,7 +179,7 @@ describe('PATCH /[id] — actualizar', () => {
       expect.anything(),
       expect.objectContaining({ action: 'portfolio_skill.update', resourceId: 's1' }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills', { expire: 0 });
   });
 
   it('percentage fuera de rango → 400', async () => {
@@ -200,7 +200,7 @@ describe('DELETE /[id] — borrar', () => {
       expect.anything(),
       expect.objectContaining({ action: 'portfolio_skill.delete', resourceId: 's1' }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:skills', { expire: 0 });
   });
 });
 

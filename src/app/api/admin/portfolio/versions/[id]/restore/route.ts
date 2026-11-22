@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { PURGA_INMEDIATA } from '@/lib/cachePurga';
 import { requireAdmin } from '@/lib/admin/auth';
 import { supabaseServer } from '@/lib/supabaseServer';
 import { RECURSOS_VERSIONABLES, writeContentVersion } from '@/lib/admin/versions';
@@ -130,7 +131,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
   });
 
   const tag = ETIQUETA_CACHE[version.resource_type];
-  if (tag) revalidateTag(tag);
+  if (tag) revalidateTag(tag, PURGA_INMEDIATA);
 
   return NextResponse.json(restaurado);
 }

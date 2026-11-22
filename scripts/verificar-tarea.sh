@@ -58,8 +58,16 @@ fi
 
 # 4 ── Lint ──────────────────────────────────────────────────────────────────
 paso "Lint"
+# eslint sale 0 aunque haya avisos, así que mirar solo el código de salida
+# hacía que este paso dijera "sin avisos ni errores" con 197 avisos delante.
+# Se cuentan y se nombran: un informe que miente es peor que no tenerlo.
 if npm run --silent lint >/tmp/verify-lint.log 2>&1; then
-  ok "sin avisos ni errores"
+  resumen_lint=$(grep -oE '[0-9]+ problems \([0-9]+ errors?, [0-9]+ warnings?\)' /tmp/verify-lint.log | tail -1)
+  if [ -n "$resumen_lint" ]; then
+    ok "sin errores · $resumen_lint (ver /tmp/verify-lint.log)"
+  else
+    ok "sin avisos ni errores"
+  fi
 else
   mal "eslint reporta problemas (ver /tmp/verify-lint.log)"; tail -15 /tmp/verify-lint.log
 fi

@@ -128,7 +128,7 @@ describe('POST — crear', () => {
       expect.anything(),
       expect.objectContaining({ action: 'portfolio_education_item.create' }),
     );
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education', { expire: 0 });
   });
 
   it('con logo_data_url: sube la imagen y guarda la URL resultante, no el data URL', async () => {
@@ -195,7 +195,7 @@ describe('PATCH /[id] — actualizar', () => {
     });
     expect(res.status).toBe(200);
     expect(mockSubirImagenPortafolio).not.toHaveBeenCalled();
-    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education');
+    expect(mockRevalidateTag).toHaveBeenCalledWith('portfolio:education', { expire: 0 });
   });
 });
 
