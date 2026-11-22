@@ -23,3 +23,29 @@ export function requireCronAuth(req: NextRequest): NextResponse | null {
 
   return null; // OK
 }
+
+/**
+ * Igual que `requireCronAuth`, pero acepta ADEMÁS `UPTIME_CRON_SECRET`.
+ *
+ * Existe para poder darle a un disparador externo —cron-job.org y similares—
+ * una llave que SOLO sirva para registrar una comprobación de salud. El
+ * `CRON_SECRET` general abre once rutas, y entre ellas está
+ * `cron/database-cleanup`, que borra filas, y las dos que mandan correo a los
+ * suscriptores: entregarlo a un servicio gratuito de terceros sería darle ese
+ * poder a cambio de un ping.
+ *
+ * Se sigue aceptando el general para que nada dependa de que la variable nueva
+ * exista: mientras no esté definida, esto se comporta exactamente como antes.
+ * Y el orden importa — se prueba primero el dedicado, así que el día que esté
+ * configurado el disparador externo no necesita el otro para nada.
+ */
+export function requireUptimeCronAuth(req: NextRequest): NextResponse | null {
+  const dedicado = serverEnv.UPTIME_CRON_SECRET;
+
+  if (dedicado && dedicado.length >= 10) {
+    const authHeader = req.headers.get('authorization');
+    if (secretosIguales(authHeader, `Bearer ${dedicado}`)) return null;
+  }
+
+  return requireCronAuth(req);
+}

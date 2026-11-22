@@ -16,6 +16,22 @@ const serverSchema = z.object({
   TELEGRAM_WEBHOOK_SECRET: z.string().min(1).optional(),
   ADMIN_ALLOWED_EMAILS: z.string().optional(),
   CRON_SECRET: z.string().min(10),
+  /**
+   * Secreto SOLO para `/api/cron/uptime-record`, pensado para dárselo a un
+   * disparador externo (cron-job.org y similares) sin entregarle el
+   * `CRON_SECRET` general.
+   *
+   * Importa porque ese general abre ONCE rutas, y entre ellas
+   * `cron/database-cleanup` (borra filas), `newsletter/send` y
+   * `cron/email-followup` (mandan correo a los suscriptores). Un servicio
+   * gratuito de terceros no debería poder hacer nada de eso: con este
+   * secreto, lo único que puede provocar es que se escriba una comprobación
+   * de salud, que es inocuo.
+   *
+   * Opcional a propósito: sin definir, la ruta sigue aceptando el
+   * `CRON_SECRET` general y nada se rompe.
+   */
+  UPTIME_CRON_SECRET: z.string().min(10).optional(),
   /** Solo lectura pública (`public_repo` o, si hay repos privados que contar, `repo`). Lo usa únicamente el cron de T-13. */
   GITHUB_TOKEN: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
@@ -37,6 +53,7 @@ export const serverEnv = {
   /** Lista opcional separada por comas. Si está vacía, cualquier usuario con rol en user_roles puede entrar. */
   get ADMIN_ALLOWED_EMAILS() { return process.env.ADMIN_ALLOWED_EMAILS || ""; },
   get CRON_SECRET() { return process.env.CRON_SECRET || ""; },
+  get UPTIME_CRON_SECRET() { return process.env.UPTIME_CRON_SECRET || ""; },
   get GITHUB_TOKEN() { return process.env.GITHUB_TOKEN || ""; },
   get NEWSLETTER_UNSUBSCRIBE_SECRET() { return process.env.NEWSLETTER_UNSUBSCRIBE_SECRET || ""; },
   get RESEND_API_KEY() { return process.env.RESEND_API_KEY || ""; },

@@ -17,6 +17,11 @@ jest.mock('@/lib/supabaseServer', () => ({
 const mockRequireCronAuth = jest.fn();
 jest.mock('@/lib/cronAuth', () => ({
   requireCronAuth: (...a: unknown[]) => mockRequireCronAuth(...a),
+  // La ruta usa la variante acotada, que acepta además `UPTIME_CRON_SECRET`
+  // para poder dársela a un disparador externo sin entregarle las otras diez
+  // rutas. Su lógica se prueba aparte, en
+  // `__tests__/unit/uptime-cron-secreto-acotado.test.ts`.
+  requireUptimeCronAuth: (...a: unknown[]) => mockRequireCronAuth(...a),
 }));
 
 const mockComprobarSalud = jest.fn();
