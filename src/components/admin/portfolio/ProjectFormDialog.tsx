@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input, Textarea, Tabs, TabPanel } from '@/components/admin/ui';
 import { TechnologyPicker } from './TechnologyPicker';
 import { AdminApiError } from '@/lib/admin/client-fetch';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface ProjectFormValues {
   slug: string;
@@ -67,25 +68,22 @@ export interface ProjectFormDialogProps {
  * uso correcto de ese primitivo: paneles de la misma página, no navegación
  * entre rutas (eso es `AreaSwitch`, en `AdminNav.tsx`).
  */
-export function ProjectFormDialog({ open, onClose, onSubmit, initial }: ProjectFormDialogProps) {
+export function ProjectFormDialog(props: ProjectFormDialogProps) {
+  // La página mantiene UNA sola instancia de este diálogo y la reutiliza para
+  // todos los proyectos, así que al abrir «editar» sobre otra fila el
+  // formulario tiene que empezar de cero. La `key` lo consigue remontándolo,
+  // en vez de sincronizar props -> estado en un efecto (que pintaba una vez
+  // con los valores del proyecto anterior). Ver `claveDeFormulario`.
+  return <ProjectForm key={claveDeFormulario(props.open, props.initial?.slug)} {...props} />;
+}
+
+function ProjectForm({ open, onClose, onSubmit, initial }: ProjectFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<ProjectFormValues>(() => (initial ? desdeInicial(initial) : vacio()));
   const [idioma, setIdioma] = useState<'es' | 'en'>('es');
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
-
-  // El diálogo se reutiliza entre proyectos distintos (una sola instancia en
-  // la página): sin este reset, abrir "editar" sobre otra fila mostraría
-  // todavía los valores del proyecto anterior hasta que React los sincronice.
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio());
-      setIdioma('es');
-      setFieldErrors({});
-      setFormError('');
-    }
-  }, [open, initial]);
 
   function set<K extends keyof ProjectFormValues>(key: K, value: ProjectFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));

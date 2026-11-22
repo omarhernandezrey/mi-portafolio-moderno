@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input, Select } from '@/components/admin/ui';
 import { portfolioIconRegistry } from '@/lib/portfolio/source/icon-registry';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface InterestFormValues {
   title: string;
@@ -29,17 +30,16 @@ export interface InterestFormDialogProps {
  * añade/reemplaza en el array completo y manda ESE al guardar (ver
  * `interestsContentSchema` — no hay id por elemento).
  */
-export function InterestFormDialog({ open, onClose, onSubmit, initial }: InterestFormDialogProps) {
+export function InterestFormDialog(props: InterestFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <InterestForm key={claveDeFormulario(props.open)} {...props} />;
+}
+
+function InterestForm({ open, onClose, onSubmit, initial }: InterestFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<InterestFormValues>(() => initial ?? vacio());
   const [errores, setErrores] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ?? vacio());
-      setErrores({});
-    }
-  }, [open, initial]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

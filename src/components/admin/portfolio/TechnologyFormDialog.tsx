@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input, Select } from '@/components/admin/ui';
 import { AdminApiError } from '@/lib/admin/client-fetch';
 import { portfolioIconRegistry } from '@/lib/portfolio/source/icon-registry';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface TechnologyFormValues {
   name: string;
@@ -42,20 +43,18 @@ export interface TechnologyFormDialogProps {
 }
 
 /** Diálogo de alta/edición de tecnología del marquee (T-12, patrón de T-09). Sin pestañas es/en: `name` no es bilingüe. */
-export function TechnologyFormDialog({ open, onClose, onSubmit, initial }: TechnologyFormDialogProps) {
+export function TechnologyFormDialog(props: TechnologyFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <TechnologyForm key={claveDeFormulario(props.open, props.initial?.name)} {...props} />;
+}
+
+function TechnologyForm({ open, onClose, onSubmit, initial }: TechnologyFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<TechnologyFormValues>(() => (initial ? desdeInicial(initial) : vacio()));
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio());
-      setFieldErrors({});
-      setFormError('');
-    }
-  }, [open, initial]);
 
   function set<K extends keyof TechnologyFormValues>(key: K, value: TechnologyFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input, Textarea, Tabs, TabPanel } from '@/components/admin/ui';
 import { AdminApiError } from '@/lib/admin/client-fetch';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface ServiceFormValues {
   slug: string;
@@ -96,22 +97,19 @@ export interface ServiceFormDialogProps {
 }
 
 /** Diálogo de alta/edición de servicio (T-12, patrón de T-09). `features` se edita como una línea por elemento. */
-export function ServiceFormDialog({ open, onClose, onSubmit, initial }: ServiceFormDialogProps) {
+export function ServiceFormDialog(props: ServiceFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <ServiceForm key={claveDeFormulario(props.open, props.initial?.slug)} {...props} />;
+}
+
+function ServiceForm({ open, onClose, onSubmit, initial }: ServiceFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<ServiceFormValues>(() => (initial ? desdeInicial(initial) : vacio()));
   const [idioma, setIdioma] = useState<'es' | 'en'>('es');
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio());
-      setIdioma('es');
-      setFieldErrors({});
-      setFormError('');
-    }
-  }, [open, initial]);
 
   function set<K extends keyof ServiceFormValues>(key: K, value: ServiceFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));

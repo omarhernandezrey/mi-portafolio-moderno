@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AdminButton, Input, Checkbox, Tabs, TabPanel } from '@/components/admin/ui';
 import { ImageField } from './ImageField';
 import { AdminApiError } from '@/lib/admin/client-fetch';
+import { claveDeFormulario } from './claveDeFormulario';
 
 export interface BadgeFormValues {
   slug: string;
@@ -63,22 +64,19 @@ export interface BadgeFormDialogProps {
 }
 
 /** Diálogo de alta/edición de insignia destacada (T-11, patrón de T-09). */
-export function BadgeFormDialog({ open, onClose, onSubmit, initial }: BadgeFormDialogProps) {
+export function BadgeFormDialog(props: BadgeFormDialogProps) {
+  // Remonta el formulario en cada apertura en vez de sincronizar
+  // props -> estado en un efecto. Ver `claveDeFormulario`.
+  return <BadgeForm key={claveDeFormulario(props.open, props.initial?.slug)} {...props} />;
+}
+
+function BadgeForm({ open, onClose, onSubmit, initial }: BadgeFormDialogProps) {
   const esEdicion = Boolean(initial);
   const [values, setValues] = useState<BadgeFormValues>(() => (initial ? desdeInicial(initial) : vacio()));
   const [idioma, setIdioma] = useState<'es' | 'en'>('es');
   const [busy, setBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      setValues(initial ? desdeInicial(initial) : vacio());
-      setIdioma('es');
-      setFieldErrors({});
-      setFormError('');
-    }
-  }, [open, initial]);
 
   function set<K extends keyof BadgeFormValues>(key: K, value: BadgeFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
