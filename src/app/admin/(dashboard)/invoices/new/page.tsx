@@ -20,13 +20,17 @@ export default function NewInvoicePage() {
   const [leads, setLeads] = useState<{ id: string; name: string; company?: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   
-  const [formData, setFormData] = useState({
+  // Inicializador perezoso: `useState(expr)` evalúa `expr` en CADA render
+  // aunque solo use el valor del primero, así que `Date.now()` se llamaba de
+  // más en cada repintado del formulario. Con la función solo se ejecuta al
+  // montar, que es cuando de verdad se quiere fijar la fecha por defecto.
+  const [formData, setFormData] = useState(() => ({
     lead_id: '',
     due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     currency: 'USD',
     notes: '',
     items: [{ description: '', quantity: 1, price: 0 }]
-  });
+  }));
 
   useEffect(() => {
     async function fetchLeads() {
