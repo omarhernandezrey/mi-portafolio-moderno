@@ -57,7 +57,9 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
   /* ---------------- estados ---------------- */
   const { language, t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // Lo ÚLTIMO que pidió el visitante. La página que de verdad se pinta se
+  // deriva más abajo acotándola a las páginas existentes.
+  const [paginaPedida, setPaginaPedida] = useState<number>(1);
   const sectionRef = useRef<HTMLElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
@@ -74,6 +76,12 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   /* ---------------- inicializar elementos flotantes ---------------- */
+  // Este efecto se queda a propósito, y `react-hooks/set-state-in-effect` lo
+  // marca sin que haya nada que arreglar: `createFloatingElements` usa
+  // `Math.random`, así que el servidor y el cliente generarían posiciones
+  // distintas y la hidratación no coincidiría. Arrancar en `[]` y rellenar
+  // tras montar es justo lo que evita eso; moverlo al inicializador del
+  // `useState` reintroduciría el desajuste.
   useEffect(() => {
     setFloatingElements(createFloatingElements());
   }, []);
@@ -96,25 +104,35 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
     Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE),
   );
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
+  // La página que se pinta se DERIVA durante el render, no se sincroniza con
+  // un efecto. Antes había dos efectos para mantenerla: uno que la devolvía a
+  // 1 al cambiar la búsqueda y otro que la recortaba cuando el filtro dejaba
+  // menos páginas que la página actual. El segundo pintaba una vez la página
+  // inexistente (rejilla vacía) y solo después corregía, así que filtrar
+  // desde una página alta daba un parpadeo en blanco.
+  //
+  // `paginaPedida` es lo último que pidió el visitante; la página válida es
+  // esa, acotada a las páginas que existen ahora mismo. Si el filtro se
+  // estrecha, el recorte ocurre en el mismo render.
+  const currentPage = Math.min(paginaPedida, totalPages);
 
   const paginatedProjects = useMemo(
     () => paginar(filteredProjects, currentPage, PROJECTS_PER_PAGE),
     [filteredProjects, currentPage],
   );
 
+  // Cambiar la búsqueda vuelve a la primera página. Va aquí, en el manejador,
+  // porque es consecuencia directa de una acción del visitante: no hace falta
+  // un efecto que lo observe después.
+  const cambiarBusqueda = (valor: string) => {
+    setSearchTerm(valor);
+    setPaginaPedida(1);
+  };
+
   const goToPage = (page: number) => {
     const next = Math.min(Math.max(1, page), totalPages);
     if (next === currentPage) return;
-    setCurrentPage(next);
+    setPaginaPedida(next);
     if (typeof window !== "undefined" && gridRef.current) {
       const rect = gridRef.current.getBoundingClientRect();
       const top = window.scrollY + rect.top - 96;
@@ -309,13 +327,13 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                 type="text"
                 placeholder={t('projects.searchPlaceholder')}
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => cambiarBusqueda(e.target.value)}
                 className="w-full pl-11 pr-10 py-3 sm:py-3.5 bg-transparent text-text-main placeholder-text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg sm:rounded-xl text-sm"
               />
               {searchTerm && (
                 <button
                   type="button"
-                  onClick={() => setSearchTerm("")}
+                  onClick={() => cambiarBusqueda("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-white/10 transition-colors"
                   aria-label="Limpiar búsqueda"
                 >
@@ -544,7 +562,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ projects }) => {
                 </p>
                 <button
                   onClick={() => {
-                    setSearchTerm("");
+                    cambiarBusqueda("");
                   }}
                   className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 text-sm sm:text-base font-medium"
                   style={{

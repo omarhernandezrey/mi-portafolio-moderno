@@ -86,13 +86,6 @@ export default function PremiumSkillsSection() {
     filteredSkillsRef.current = filteredSkills;
   }, [filteredSkills]);
 
-  // Resetear animaciones cuando cambie el idioma
-  useEffect(() => {
-    setAnimatedValues(localizedSkills.map(() => 0));
-    setHasAnimated(false);
-    setHoveredIndex(null);
-  }, [language, localizedSkills]);
-
   /* ---------------- función genérica de animación ---------------- */
   const animateToValue = useCallback(
     (index: number, target: number, duration: number = ANIMATION_DURATION, fromOverride?: number) => {
@@ -152,6 +145,13 @@ export default function PremiumSkillsSection() {
   }, [hasAnimated, animateToValue]); // Removemos filteredSkills para evitar bucle infinito
 
   /* --------------- al cambiar categoría/idioma: mantener llenas por defecto --------------- */
+  // Aquí había ADEMÁS un segundo efecto, declarado más arriba, que ponía todos
+  // los valores a 0 y `hasAnimated` a false cuando cambiaba el idioma. Era
+  // código muerto: `localizedSkills` es un `useMemo` sobre `[language]`, así
+  // que se disparaba exactamente cuando este, que corre después y sobrescribe
+  // los tres estados en el mismo commit — los ceros no llegaban a pintarse
+  // nunca. Se quitó, y las pruebas de `skill-section-valores` (escritas contra
+  // el código anterior) siguen en verde, que es la demostración.
   useEffect(() => {
     // Establecer de inmediato los porcentajes visibles
     setAnimatedValues(filteredSkills.map((s) => parsePercentage(s.percentage)));

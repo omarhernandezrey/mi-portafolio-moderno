@@ -59,8 +59,24 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
   const { t, isHydrated } = useTranslation();
   const count = courses.length;
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
+  // La diapositiva viaja JUNTO a la lista a la que pertenece. Antes su
+  // reinicio lo hacía un efecto que observaba `[courses]`: como `courses`
+  // llega de un `useMemo` que depende del idioma, cambiar de idioma pintaba
+  // una vez la diapositiva vieja sobre la lista nueva y solo después volvía a
+  // la primera. Comparando la lista durante el render, la diapositiva
+  // correcta sale ya en ese mismo render.
+  const [slide, setSlide] = useState<{
+    indice: number;
+    direccion: 1 | -1;
+    lista: FeaturedCertificate[];
+  }>(() => ({ indice: 0, direccion: 1, lista: courses }));
+
+  // `lista` se guarda solo como testigo de identidad: si el array que llega no
+  // es el mismo objeto que el de la última navegación, la lista cambió y la
+  // diapositiva vuelve a la primera.
+  const mismaLista = slide.lista === courses;
+  const activeIndex = mismaLista ? Math.min(slide.indice, Math.max(0, count - 1)) : 0;
+  const direction: 1 | -1 = mismaLista ? slide.direccion : 1;
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -87,26 +103,21 @@ const FeaturedCertificates: React.FC<FeaturedCertificatesProps> = ({
     (next: number, overrideDirection?: 1 | -1) => {
       if (count === 0) return;
       const normalized = ((next % count) + count) % count;
-      setActiveIndex((prev) => {
-        if (normalized === prev) return prev;
-        if (overrideDirection != null) {
-          setDirection(overrideDirection);
-        } else {
-          setDirection(normalized > prev ? 1 : -1);
-        }
-        return normalized;
+      setSlide((prev) => {
+        const indicePrevio = prev.lista === courses ? prev.indice : 0;
+        if (normalized === indicePrevio && prev.lista === courses) return prev;
+        return {
+          indice: normalized,
+          direccion: overrideDirection ?? (normalized > indicePrevio ? 1 : -1),
+          lista: courses,
+        };
       });
     },
-    [count],
+    [count, courses],
   );
 
   const goNext = useCallback(() => goTo(activeIndex + 1, 1), [goTo, activeIndex]);
   const goPrev = useCallback(() => goTo(activeIndex - 1, -1), [goTo, activeIndex]);
-
-  useEffect(() => {
-    setActiveIndex(0);
-    setDirection(1);
-  }, [courses]);
 
   useEffect(() => {
     const el = rootRef.current;
