@@ -7,7 +7,7 @@
 
 "use client";
 
-import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -49,17 +49,8 @@ export default function PremiumSkillsSection() {
   const localizedCategories = useMemo(() => getLocalizedCategories(skillsData, language), [language]);
 
   /* --------------------------- estados --------------------------- */
-  const [animatedValues, setAnimatedValues] = useState<number[]>(() =>
-    skillsData.map(() => 0),
-  );
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [hasAnimated, setHasAnimated] = useState(false);
-  // Ref para leer el valor actual sin re-dependencias en callbacks
-  const animatedValuesRef = useRef<number[]>([]);
-  useEffect(() => {
-    animatedValuesRef.current = animatedValues;
-  }, [animatedValues]);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   /* -------------------------- refs ---------------------------- */
   const sectionRef = React.useRef<HTMLElement>(null);
@@ -74,40 +65,73 @@ export default function PremiumSkillsSection() {
     [selectedCategory, localizedSkills]
   );
 
-  // Ref para acceder a filteredSkills sin crear dependencias problemáticas.
-  // Se escribe en un efecto, no durante el render: escribir un ref mientras
-  // se renderiza no es seguro (React puede descartar un render y el ref ya
-  // habría quedado modificado). El valor inicial del `useRef` cubre el primer
-  // render, y el único lector es el callback del IntersectionObserver, que
-  // se dispara mucho después de que los efectos del commit hayan corrido.
-  // Es el mismo patrón que `animatedValuesRef` arriba en este archivo.
-  const filteredSkillsRef = useRef(filteredSkills);
-  useEffect(() => {
-    filteredSkillsRef.current = filteredSkills;
-  }, [filteredSkills]);
+  /* ---------------- valores de las barras ----------------
+     Los valores EN REPOSO no son estado: son datos. Salen de `filteredSkills`
+     y por eso se derivan. Solo la animación de hover —que es transitoria— vive
+     en estado, y viaja junto a la firma de la lista a la que pertenece.
+
+     Antes todo era estado, y hacía falta un efecto sobre
+     `[selectedCategory, language]` que reescribía los valores, `hasAnimated` y
+     `hoveredIndex`, y cancelaba a mano los `requestAnimationFrame` en vuelo.
+     Ese efecto pintaba una vez los valores viejos sobre la lista nueva antes
+     de corregir.
+
+     Con la firma, tres cosas salen gratis:
+       - cambiar de categoría o idioma devuelve las barras a su reposo en el
+         MISMO render, sin efecto que lo observe después;
+       - un frame de una animación vieja escribe con la firma anterior, así que
+         deja de coincidir y se ignora solo — ya no hay que cancelar nada para
+         que no ensucie la pantalla (se cancela igual, pero por CPU);
+       - desaparecen `hasAnimated`, `animatedValuesRef`, `filteredSkillsRef` y
+         el IntersectionObserver, que ya no tenían efecto observable: el
+         observer ponía las barras llenas, que es exactamente lo que ahora da
+         la derivación. */
+  const firmaDeLista = `${selectedCategory}\u0000${language}`;
+
+  const valoresEnReposo = useMemo(
+    () => filteredSkills.map((skill) => parsePercentage(skill.percentage)),
+    [filteredSkills],
+  );
+
+  const [animacion, setAnimacion] = useState<{
+    firma: string;
+    valores: number[];
+  } | null>(null);
+
+  const animatedValues =
+    animacion && animacion.firma === firmaDeLista
+      ? animacion.valores
+      : valoresEnReposo;
 
   /* ---------------- función genérica de animación ---------------- */
   const animateToValue = useCallback(
-    (index: number, target: number, duration: number = ANIMATION_DURATION, fromOverride?: number) => {
+    (
+      index: number,
+      target: number,
+      duration: number = ANIMATION_DURATION,
+      desde = 0,
+    ) => {
       if (animationRefs.current[index]) {
         cancelAnimationFrame(animationRefs.current[index]!);
       }
 
       const start = performance.now();
-      const startFrom =
-        typeof fromOverride === "number"
-          ? fromOverride
-          : animatedValuesRef.current[index] ?? 0;
-      
-      // Usamos una función para obtener el valor actual en lugar de la dependencia
+
       const animate = (now: number) => {
         const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-        const current = Math.round(startFrom + (target - startFrom) * eased);
-        setAnimatedValues((prev) => {
-          const next = [...prev];
+        const current = Math.round(desde + (target - desde) * eased);
+
+        setAnimacion((prev) => {
+          // Base: lo que ya había de esta misma lista, o su reposo. Si la
+          // lista cambió mientras la animación corría, este frame pertenece a
+          // otra lista y se descarta.
+          const base =
+            prev && prev.firma === firmaDeLista ? prev.valores : valoresEnReposo;
+          if (index >= base.length) return prev;
+          const next = [...base];
           next[index] = current;
-          return next;
+          return { firma: firmaDeLista, valores: next };
         });
 
         if (progress < 1) {
@@ -119,50 +143,8 @@ export default function PremiumSkillsSection() {
 
       animationRefs.current[index] = requestAnimationFrame(animate);
     },
-    [], // Sin dependencias para evitar re-creaciones innecesarias
+    [firmaDeLista, valoresEnReposo],
   );
-
-  /* -------------------- observer para establecer llenas por defecto -------------------- */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            // Mantener barras llenas por defecto sin animación
-            const filled = filteredSkillsRef.current.map((skill) =>
-              parsePercentage(skill.percentage)
-            );
-            setAnimatedValues(filled);
-            setHasAnimated(true);
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, [hasAnimated, animateToValue]); // Removemos filteredSkills para evitar bucle infinito
-
-  /* --------------- al cambiar categoría/idioma: mantener llenas por defecto --------------- */
-  // Aquí había ADEMÁS un segundo efecto, declarado más arriba, que ponía todos
-  // los valores a 0 y `hasAnimated` a false cuando cambiaba el idioma. Era
-  // código muerto: `localizedSkills` es un `useMemo` sobre `[language]`, así
-  // que se disparaba exactamente cuando este, que corre después y sobrescribe
-  // los tres estados en el mismo commit — los ceros no llegaban a pintarse
-  // nunca. Se quitó, y las pruebas de `skill-section-valores` (escritas contra
-  // el código anterior) siguen en verde, que es la demostración.
-  useEffect(() => {
-    // Establecer de inmediato los porcentajes visibles
-    setAnimatedValues(filteredSkills.map((s) => parsePercentage(s.percentage)));
-    setHasAnimated(true);
-    setHoveredIndex(null);
-    animationRefs.current.forEach((id) => {
-      if (id) cancelAnimationFrame(id);
-    });
-    animationRefs.current = Array(filteredSkills.length).fill(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory, language]); // Incluir language para resetear al cambiar idioma
 
   /* ---------------- manejadores de hover ---------------- */
   const handleSkillHover = (idx: number) => {
@@ -174,13 +156,14 @@ export default function PremiumSkillsSection() {
 
   const handleSkillLeave = (idx: number) => {
     setHoveredIndex(null);
-    // Mantener llena en su porcentaje al salir
-    const target = parsePercentage(filteredSkills[idx].percentage);
-    setAnimatedValues((prev) => {
-      const next = [...prev];
-      next[idx] = target;
-      return next;
-    });
+    // Al salir se descarta la animación y las barras vuelven a su reposo, que
+    // es su porcentaje real. Antes había que escribir ese valor a mano en el
+    // estado; ahora basta con dejar de tener animación.
+    if (animationRefs.current[idx]) {
+      cancelAnimationFrame(animationRefs.current[idx]!);
+      animationRefs.current[idx] = null;
+    }
+    setAnimacion(null);
   };
 
   /* ------------------------------------------------------------------------------------------------

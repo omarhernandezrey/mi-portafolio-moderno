@@ -38,13 +38,13 @@ const eslintConfig = [
      * caso si la regla señalaba un defecto real.
      *
      *                            al subir    hoy
-     *   set-state-in-effect         41        25
+     *   set-state-in-effect         41        24
      *   static-components           21         0
      *   purity                      10         2
      *   immutability                 5         4
      *   refs                         4         0
      *                            ───────   ─────
-     *                               81        31
+     *                               81        30
      *
      * Lo que se arregló eran defectos verdaderos: componentes redefinidos en
      * cada render, un ref de portal leído durante el render, una función
@@ -56,10 +56,14 @@ const eslintConfig = [
      * estado derivado de cuatro secciones públicas: la paginación de
      * ProjectsSection, la ventana de «cargar más» de BlogArchive y de
      * EducationSection, la diapositiva de FeaturedCertificates y un efecto de
-     * SkillSection que era código muerto demostrable.
+     * SkillSection que era código muerto demostrable, y el núcleo de
+     * animación de SkillSection, donde los valores en reposo dejaron de ser
+     * estado para derivarse y solo la animación transitoria del hover sigue
+     * en estado, viajando junto a la firma de su lista.
      *
-     * Los 31 que quedan están clasificados uno a uno en cuatro familias. Las
-     * cuentas suman 31 exactas; se midieron, no se estimaron:
+     * Los 30 que quedan están clasificados uno a uno en TRES familias (la
+     * cuarta, el estado derivado, se cerró por completo). Las cuentas suman
+     * 30 exactas; se midieron, no se estimaron:
      *
      *  A. 11 — carga de datos al montar o al cambiar un filtro: las páginas
      *     del panel (audit, contenido, educacion, logs, proyectos,
@@ -84,16 +88,7 @@ const eslintConfig = [
      *     Para `localStorage`, `useSyncExternalStore` no ayuda como ayudó con
      *     matchMedia (que tiene evento `change`): no notifica en la misma
      *     pestaña, así que exigiría inventar una capa de notificación.
-     *  C. 1 — SkillSection, el efecto que al cambiar de categoría o idioma
-     *     pone las barras llenas y cancela las animaciones en vuelo. Derivarlo
-     *     es posible (los valores viajarían junto a la firma
-     *     categoría+idioma, y una animación vieja quedaría ignorada sola),
-     *     pero obliga a reescribir el núcleo de animación con
-     *     requestAnimationFrame. NO se hizo: las pruebas nuevas fijan los
-     *     valores de las barras, no el recorrido del hover, así que el
-     *     refactor iría sin red sobre una sección pública. Es el candidato
-     *     que queda, y necesita pruebas de hover primero.
-     *  D. 6 — código imperativo correcto, donde la regla no encaja:
+     *  C. 6 — código imperativo correcto, donde la regla no encaja:
      *     `useFrame` de three.js mutando arrays tipados (ParticleField, 3) —
      *     es el patrón performante y lo que three.js espera—, `Math.random`
      *     en el `useMemo` de ParticlesComponent que SÍ debe recalcular cuando
@@ -102,7 +97,7 @@ const eslintConfig = [
      *
      * Siguen en `warn`, NO en `off`: salen en cada `npm run lint` y en el
      * `verify`, así que un hallazgo NUEVO es visible sobre este fondo. Si la
-     * cuenta sube por encima de 31, es código nuevo y hay que mirarlo.
+     * cuenta sube por encima de 30, es código nuevo y hay que mirarlo.
      */
     rules: {
       'react-hooks/set-state-in-effect': 'warn',
