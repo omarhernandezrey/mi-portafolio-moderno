@@ -35,8 +35,16 @@ const EducationModal: React.FC<EducationModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const modalRootRef = useRef<HTMLElement | null>(null);
+  // El contenedor del portal va en estado, no en un ref: se leía
+  // `modalRootRef.current` durante el render para pasarlo a `createPortal`, y
+  // leer un ref mientras se renderiza no es seguro (React no re-renderiza
+  // cuando cambia, así que el primer render tras montar podía no ver el
+  // contenedor). En estado, asignarlo provoca el re-render que el portal
+  // necesita. Esto además hace innecesario el `mounted` que había: el propio
+  // `portalRoot` en null ya significa «todavía no montado en cliente», que es
+  // lo que mantiene el render del servidor y el primer render del cliente
+  // iguales.
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
   const { copyCertificateToClipboard } = useLinkedInCertificateShare({
     certificate: {
       title,
@@ -49,14 +57,13 @@ const EducationModal: React.FC<EducationModalProps> = ({
 
   // Asegurar portal en body para evitar stacking contexts
   useEffect(() => {
-    setMounted(true);
     let container = document.getElementById("modal-root") as HTMLElement | null;
     if (!container) {
       container = document.createElement("div");
       container.id = "modal-root";
       document.body.appendChild(container);
     }
-    modalRootRef.current = container;
+    setPortalRoot(container);
   }, []);
 
   // Evitar scroll del body cuando el modal está abierto
@@ -121,7 +128,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
     setTimeout(() => setCopied(false), 2500);
   };
 
-  if (!mounted || !modalRootRef.current) return null;
+  if (!portalRoot) return null;
 
   return createPortal(
     <Transition show={isOpen} appear>
@@ -304,7 +311,7 @@ const EducationModal: React.FC<EducationModalProps> = ({
         </div>
       </Transition.Child>
     </Transition>,
-    modalRootRef.current
+    portalRoot
   );
 };
 

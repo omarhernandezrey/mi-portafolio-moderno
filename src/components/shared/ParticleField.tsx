@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useReducedMotionSafe } from '@/hooks/useReducedMotionSafe';
@@ -18,7 +18,14 @@ function Constellation() {
   const linesRef = useRef<THREE.LineSegments>(null);
   const frameCount = useRef(0);
 
-  const { positions, velocities } = useMemo(() => {
+  // `useState` con inicializador perezoso, no `useMemo`: React GARANTIZA que
+  // el inicializador de un estado corre una sola vez, mientras que `useMemo`
+  // es solo una pista de rendimiento y React puede descartar su caché. Si eso
+  // pasara aquí, las partículas se resembrarían a mitad de animación y, peor,
+  // `velocities` quedaría desincronizado del búfer de posiciones que three.js
+  // ya tiene en su geometría (ese búfer no se vuelve a crear), así que las
+  // partículas se moverían con velocidades que no son las suyas.
+  const [{ positions, velocities }] = useState(() => {
     const positions = new Float32Array(PARTICLE_COUNT * 3);
     const velocities = new Float32Array(PARTICLE_COUNT * 3);
     for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -30,7 +37,7 @@ function Constellation() {
       velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.05;
     }
     return { positions, velocities };
-  }, []);
+  });
 
   // Buffer de líneas dimensionado al peor caso (cada punto conectado a todos
   // los demás) — solo se escriben las primeras `lineCount * 2 * 3` entradas

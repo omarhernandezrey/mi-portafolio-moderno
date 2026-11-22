@@ -3,6 +3,43 @@
 import { useState, useEffect } from "react";
 import { MdColorLens } from "react-icons/md";
 
+// Las diez paletas, en el mismo orden que antes: la primera es la
+// predeterminada y no lleva clase. Vive a nivel de módulo porque es constante
+// (antes se reconstruía el array en cada llamada) y porque `applyPalette` no
+// depende de nada del componente.
+const CLASES_DE_PALETA = [
+  "",
+  "palette2",
+  "palette3",
+  "palette4",
+  "palette5",
+  "palette6",
+  "palette7",
+  "palette8",
+  "palette9",
+  "palette10",
+];
+
+// Fuera del componente, y declarada ANTES del efecto que la usa. Estaba
+// definida como `const` después del `useEffect` que la llamaba: funcionaba
+// solo porque el cuerpo del efecto corre tras el render (cuando la variable
+// ya está inicializada), pero era un uso antes de la declaración —
+// exactamente lo que marcaba `react-hooks/immutability`— y se rompía al
+// mover una línea.
+function applyPalette(index: number) {
+  const root = document.documentElement;
+
+  // Eliminar todas las clases de paleta previamente aplicadas
+  CLASES_DE_PALETA.forEach((palette) => {
+    if (palette) root.classList.remove(palette);
+  });
+
+  // Aplicar la nueva paleta si no es la predeterminada
+  if (CLASES_DE_PALETA[index]) {
+    root.classList.add(CLASES_DE_PALETA[index]);
+  }
+}
+
 export default function PaletteToggle() {
   const [paletteIndex, setPaletteIndex] = useState(0);
 
@@ -16,34 +53,10 @@ export default function PaletteToggle() {
     }
   }, []);
 
-  const applyPalette = (index: number) => {
-    const root = document.documentElement;
-    const palettes = [
-      "",
-      "palette2",
-      "palette3",
-      "palette4",
-      "palette5",
-      "palette6",
-      "palette7",
-      "palette8",
-      "palette9",
-      "palette10",
-    ];
-
-    // Eliminar todas las clases de paleta previamente aplicadas
-    palettes.forEach((palette) => {
-      if (palette) root.classList.remove(palette);
-    });
-
-    // Aplicar la nueva paleta si no es la predeterminada
-    if (palettes[index]) {
-      root.classList.add(palettes[index]);
-    }
-  };
-
   const togglePalette = () => {
-    const nextIndex = (paletteIndex + 1) % 10; // 10 paletas disponibles
+    // Ata el ciclo a la lista real en vez de a un 10 literal, para que no se
+    // desincronicen si algún día cambia el número de paletas.
+    const nextIndex = (paletteIndex + 1) % CLASES_DE_PALETA.length;
     setPaletteIndex(nextIndex);
     applyPalette(nextIndex);
     localStorage.setItem("paletteIndex", nextIndex.toString());
