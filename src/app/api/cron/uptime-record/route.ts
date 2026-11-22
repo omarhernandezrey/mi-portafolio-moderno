@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabaseServer';
-import { requireCronAuth } from '@/lib/cronAuth';
+import { requireUptimeCronAuth } from '@/lib/cronAuth';
 import { comprobarSalud } from '@/lib/health/check';
 import { respuestaErrorBd } from '@/lib/admin/errorBd';
 
@@ -22,7 +22,9 @@ export const dynamic = 'force-dynamic';
  * `check-health.yml`, que pingea desde fuera y avisa por Telegram.
  */
 export async function GET(req: NextRequest) {
-  const authError = requireCronAuth(req);
+  // Acepta el `UPTIME_CRON_SECRET` acotado además del general, para poder
+  // dárselo a un disparador externo sin entregarle las otras diez rutas.
+  const authError = requireUptimeCronAuth(req);
   if (authError) return authError;
 
   const salud = await comprobarSalud();
