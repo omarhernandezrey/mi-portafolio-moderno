@@ -72,3 +72,8 @@ supabase/.temp/
 
 # Caché de Python de scripts de skills
 __pycache__/
+
+# Generado por `next dev` (Next 16) en cada arranque. Se mantiene fuera
+# del repo: la guía para agentes de este proyecto es CLAUDE.md. Para que
+# Next deje de crearlo: `agentRules: false` en next.config.mjs.
+AGENTS.md
