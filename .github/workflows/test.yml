@@ -92,9 +92,24 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      # Bloqueante desde el 2026-11-22. Antes llevaba `continue-on-error: true`,
+      # así que NUNCA podía fallar: el tick verde de este job no significaba
+      # nada y convivía con una vulnerabilidad `high` real (postcss, arrastrada
+      # por Next 15). La bandera se quita ahora porque la subida a Next 16 dejó
+      # `npm audit --omit=dev` en 0 vulnerabilidades: hacerlo antes solo habría
+      # dejado el pipeline en rojo de forma permanente, que es otra manera de
+      # que nadie lo mire.
+      #
+      # `--omit=dev` a propósito: lo que rompe este job es lo que se despliega,
+      # no las herramientas de desarrollo.
+      #
+      # SI ALGÚN DÍA FALLA: es una vulnerabilidad `high`/`critical` real en una
+      # dependencia de producción. El arreglo es actualizar la dependencia, no
+      # volver a poner la bandera. Si de verdad no hay parche y el riesgo no
+      # aplica a este despliegue, se documenta el porqué en §6 del plan y se
+      # acota con `--exclude <paquete>`, nunca desactivando el job entero.
       - name: npm audit (HIGH y CRITICAL)
         run: npm audit --audit-level=high --omit=dev
-        continue-on-error: true
 
       - name: Verificar anti-hardcoding
         run: bash scripts/check-no-hardcode.sh
