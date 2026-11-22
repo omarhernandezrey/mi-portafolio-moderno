@@ -453,18 +453,6 @@ Test Suites: 116 passed, 116 total
 Tests:       1163 passed, 1163 total
 ```
 
-La **cobertura está acotada a propósito** a un módulo, `src/lib/chatbot/payments.ts`
-(ver `collectCoverageFrom` en `jest.config.ts`), con umbral del 70%:
-
-```
-File         | % Stmts | % Branch | % Funcs | % Lines
-payments.ts  |     100 |   66.66  |     100 |     100
-```
-
-El resto del código se cubre con tests de comportamiento —no con un umbral de
-líneas—, así que la cifra que mide el estado real de la suite es el número de
-tests, no un porcentaje global.
-
 ---
 
 ## 🚀 Deployment & CI/CD
@@ -473,7 +461,7 @@ tests, no un porcentaje global.
 
 ```yaml
 Jobs (4 parallel):
-├── unit-integration:  Jest 1163 tests + coverage
+├── unit-integration:  Jest 1163 tests
 ├── build:            next build verification
 ├── security:         npm audit + check-no-hardcode (bloqueante)
 └── e2e:              Cypress tests (main only)
