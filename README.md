@@ -5,8 +5,8 @@
   <img src="https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=3178C6" alt="TypeScript" />
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white&labelColor=61DAFB" alt="React" />
   <img src="https://img.shields.io/badge/Tailwind-3.4-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white&labelColor=06B6D4" alt="Tailwind" />
-  <img src="https://img.shields.io/badge/Tests-96%20Passing-22C55E?style=for-the-badge&logo=jest&logoColor=white&labelColor=22C55E" alt="Tests" />
-  <img src="https://img.shields.io/badge/Coverage-94.97%25-22C55E?style=for-the-badge&logo=codecov&logoColor=white&labelColor=22C55E" alt="Coverage" />
+  <img src="https://img.shields.io/badge/Tests-1163%20Passing-22C55E?style=for-the-badge&logo=jest&logoColor=white&labelColor=22C55E" alt="Tests" />
+  <img src="https://img.shields.io/badge/Suites-116-22C55E?style=for-the-badge&logo=jest&logoColor=white&labelColor=22C55E" alt="Suites" />
 </p>
 
 <p align="center">
@@ -320,7 +320,7 @@ Crawl Frequency: Daily (due to frequent updates)
 
 ## 🏆 Feature Completeness Matrix
 
-### Core Features (96 tests, 94.97% coverage)
+### Core Features (1163 tests en 116 suites)
 
 | Área | Estado | Tests |
 |------|--------|-------|
@@ -413,9 +413,9 @@ public/
 ├── manifest.json                  # PWA manifest
 └── docs/                          # Templates & resources
 
-__tests__/                         # 96 tests
-├── unit/                          # 83 tests
-└── integration/                   # 12 tests
+__tests__/                         # 1163 tests
+├── unit/                          # 896 tests
+└── integration/                   # 267 tests
 
 .github/workflows/                 # 9 CI/CD workflows
 ├── test.yml                       # Main CI pipeline
@@ -449,18 +449,21 @@ __tests__/                         # 96 tests
 ### Test Results
 
 ```
-Test Suites: 7 passed, 7 total (100%)
-Tests:       96 passed, 96 total (100%)
-Coverage:    94.97% lines | 87.3% branches | 100% functions
-Threshold:   70% lines ✅ | 70% functions ✅
-
-Coverage by Module:
-├── parser.ts         89.53%  lines  | 100% functions
-├── payments.ts       90.35%  lines  | 100% functions
-├── systemPrompt.ts   100%    lines  | 100% functions
-├── calcom.ts         93.54%  lines  | 100% functions
-└── openings.ts       100%    lines  | 100% functions
+Test Suites: 116 passed, 116 total
+Tests:       1163 passed, 1163 total
 ```
+
+La **cobertura está acotada a propósito** a un módulo, `src/lib/chatbot/payments.ts`
+(ver `collectCoverageFrom` en `jest.config.ts`), con umbral del 70%:
+
+```
+File         | % Stmts | % Branch | % Funcs | % Lines
+payments.ts  |     100 |   66.66  |     100 |     100
+```
+
+El resto del código se cubre con tests de comportamiento —no con un umbral de
+líneas—, así que la cifra que mide el estado real de la suite es el número de
+tests, no un porcentaje global.
 
 ---
 
@@ -470,11 +473,54 @@ Coverage by Module:
 
 ```yaml
 Jobs (4 parallel):
-├── unit-integration:  Jest 96 tests + coverage
+├── unit-integration:  Jest 1163 tests + coverage
 ├── build:            next build verification
-├── security:         npm audit + check-no-hardcode
+├── security:         npm audit + check-no-hardcode (bloqueante)
 └── e2e:              Cypress tests (main only)
 ```
+
+### Registro de disponibilidad (`/status`)
+
+La página pública [`/status`](https://omarhernandezrey.com/status) muestra el
+estado actual y un historial de 90 días. **Todo lo que muestra está medido**;
+antes tenía una gráfica cuyas alturas eran `Math.random()` y afirmaba «100%
+Stability» en cada barra, y se retiró.
+
+```
+uptime_checks  (tabla en Supabase, RLS activo, solo service_role)
+   ← /api/cron/uptime-record      ← disparador horario
+   ← /api/uptime/history           agrega por día
+   ← la gráfica de /status
+```
+
+La comprobación vive en `src/lib/health/check.ts` y la comparten el cron y
+`/api/health`, para que la página pública y el histórico no puedan contar
+cosas distintas del mismo momento.
+
+**La regla que gobierna la gráfica: un hueco no es un 100%.** Si el disparador
+falla o el despliegue está caído, no se escribe fila; ese día aparece hueco y
+etiquetado «sin datos», y el porcentaje global solo promedia los días con
+datos. Rellenar los huecos con un valor optimista sería volver a inventar.
+
+Las barras tienen altura uniforme y el color lleva el estado: si la altura
+codificara el porcentaje, un 99% y un 100% serían indistinguibles a 12px de
+alto y un día al 0% desaparecería justo cuando más importa verlo.
+
+**Qué se mide hoy y qué no.** La base de datos sí: una consulta real. El
+gateway de LLM **no** — reporta `unknown`, porque medirlo en cada comprobación
+gastaría tokens. Antes decía `operational` sin llamar a nadie, lo que era
+afirmar que estaba sano aunque estuviera caído.
+
+**Sobre el disparador.** Lo lanza un workflow horario de GitHub Actions
+(`.github/workflows/uptime-record.yml`). No puede moverse a los crons de
+Vercel mientras el proyecto esté en plan Hobby: la plataforma los limita a uno
+diario, y con una sola muestra al día el porcentaje de ese día solo podría ser
+100% o 0%. Para un disparador externo existe `UPTIME_CRON_SECRET`, una llave
+que **solo** permite registrar una comprobación — el `CRON_SECRET` general
+abre once rutas, incluidas las que borran filas y envían correo.
+
+Retención: `cron/database-cleanup` borra comprobaciones de más de 180 días, el
+doble de la ventana que se muestra.
 
 ### Deployment Specs
 
