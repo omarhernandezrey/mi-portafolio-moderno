@@ -1,18 +1,22 @@
 name: Uptime Record
 
-# ⚠️ TEMPORALMENTE DUPLICADO, A PROPÓSITO.
+# ESTE ES EL ÚNICO DISPARADOR DEL REGISTRO, Y NO PUEDE MOVERSE A VERCEL.
 #
-# El registro pasó a los crons de Vercel (`crons` en `vercel.json`, misma ruta
-# y mismo minuto 10). Este workflow se mantiene mientras se comprueba que el
-# cron de Vercel dispara de verdad, porque el proyecto está en plan **hobby** y
-# no pude confirmar en la documentación si Hobby admite un cron horario o lo
-# limita a uno diario. Quitar este workflow antes de esa comprobación podría
-# dejar el histórico sin ninguna fuente.
+# Se intentó pasarlo a los crons de Vercel (`crons` en `vercel.json`) y el
+# despliegue FALLÓ con el mensaje de la propia plataforma:
 #
-# Que corran los dos un rato no rompe nada: el agregado calcula
-# `operativas / comprobaciones` por día, así que dos filas por hora salen igual
-# de bien que una. En cuanto `vercel crons ls` confirme el disparo real de
-# Vercel, ESTE ARCHIVO SE BORRA.
+#   «Hobby accounts are limited to daily cron jobs. This cron expression
+#    (10 * * * *) would run more than once per day. Upgrade to the Pro plan
+#    to unlock all Cron Jobs features on Vercel.»
+#
+# El proyecto está en plan hobby, así que un cron de Vercel solo puede correr
+# UNA VEZ AL DÍA. Con una comprobación diaria el porcentaje de un día sale de
+# una sola muestra: sería 100% o 0%, sin nada en medio. Para eso no vale la
+# pena, y por eso el registro se queda aquí.
+#
+# Si algún día el proyecto pasa a Pro, mover esto a `vercel.json` es un cambio
+# de seis líneas; y Vercel ya manda el `Authorization: Bearer $CRON_SECRET`
+# que esta ruta espera, así que no haría falta tocar código.
 #
 # Cada hora, en el minuto 10. Desplazado respecto a `check-health.yml` (que
 # corre en el minuto 0) a propósito: son dos cosas distintas y conviene que no
