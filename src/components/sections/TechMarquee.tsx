@@ -33,6 +33,14 @@ const TechCard: React.FC<TechCardProps> = ({ tech }) => {
         className="text-5xl md:text-6xl relative z-10"
         style={{ color: tech.color }}
       >
+        {/* Falso positivo de `react-hooks/static-components`: la regla ve una
+            llamada a función devolviendo algo que se usa como componente y
+            asume que se crea en cada render. `resolveIcon` NO crea nada —
+            solo busca la clave en `portfolioIconRegistry`, un objeto
+            constante a nivel de módulo (icon-registry.tsx:121), así que la
+            referencia es estable entre renders. Verificado antes de
+            silenciarlo. */}
+        {/* eslint-disable-next-line react-hooks/static-components */}
         {Icon ? <Icon /> : null}
       </div>
       <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

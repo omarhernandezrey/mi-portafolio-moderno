@@ -74,9 +74,17 @@ export default function PremiumSkillsSection() {
     [selectedCategory, localizedSkills]
   );
 
-  // Ref para acceder a filteredSkills sin crear dependencias problemáticas
+  // Ref para acceder a filteredSkills sin crear dependencias problemáticas.
+  // Se escribe en un efecto, no durante el render: escribir un ref mientras
+  // se renderiza no es seguro (React puede descartar un render y el ref ya
+  // habría quedado modificado). El valor inicial del `useRef` cubre el primer
+  // render, y el único lector es el callback del IntersectionObserver, que
+  // se dispara mucho después de que los efectos del commit hayan corrido.
+  // Es el mismo patrón que `animatedValuesRef` arriba en este archivo.
   const filteredSkillsRef = useRef(filteredSkills);
-  filteredSkillsRef.current = filteredSkills;
+  useEffect(() => {
+    filteredSkillsRef.current = filteredSkills;
+  }, [filteredSkills]);
 
   // Resetear animaciones cuando cambie el idioma
   useEffect(() => {

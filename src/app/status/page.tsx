@@ -174,8 +174,28 @@ export default function StatusPage() {
                   <span className="text-4xs font-black uppercase tracking-widest text-text-muted/40 italic">90-Day Operational Cycle</span>
                </div>
                
+               {/* ⚠️ DATO INVENTADO — PENDIENTE DE DECISIÓN DE OMAR (2026-11-22)
+                   Esta gráfica no lee nada: las alturas son `Math.random()` y
+                   los tooltips afirman "100% Stability" por cada una de las 70
+                   barras, con una incidencia falsa fijada en el índice 45.
+                   `/status` es una página PÚBLICA, así que esto son datos de
+                   disponibilidad fabricados y presentados a quien entre
+                   —clientes potenciales incluidos— como historial real.
+
+                   Contradice la regla explícita de CLAUDE.md: «Ningún dato
+                   inventado en el panel ni en el sitio».
+
+                   Lo detectó `react-hooks/purity` durante la limpieza de
+                   reglas de React: además de inventado, `Math.random()` en
+                   render hace que la gráfica se rebaraje en cada repintado.
+
+                   NO se arregla aquí a propósito: las opciones son quitar la
+                   sección, o alimentarla de `analytics_vitals`/`api_logs`, y
+                   las dos cambian una página pública — decisión de producto,
+                   no de lint. Se deja a la vista en vez de maquillarla.  */}
                <div className="flex gap-1.5 h-12 items-end">
                 {Array.from({ length: 70 }).map((_, i) => {
+                  // eslint-disable-next-line react-hooks/purity -- ver el aviso de arriba
                   const h = 40 + Math.random() * 60;
                   return (
                     <motion.div 

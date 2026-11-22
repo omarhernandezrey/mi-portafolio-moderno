@@ -75,6 +75,149 @@ interface AdminNavProps {
   userEmail?: string;
 }
 
+/**
+ * Los cuatro componentes de abajo (`NavLink`, `AreaSwitch`, `NavGroups`,
+ * `UserCard`) vivían DENTRO de `AdminNav`. Definidos así, React los trata
+ * como un tipo de componente distinto en cada render del padre: desmonta y
+ * remonta todo el árbol del nav en cada cambio de estado (abrir el menú
+ * móvil, por ejemplo) en vez de actualizarlo. Lo que antes eran cierres
+ * ahora son props explícitos.
+ */
+type NavItemConIcono = (typeof NAV_ITEMS)[number] & {
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+};
+
+function NavLink({
+  item,
+  esRutaActiva,
+  onClick,
+}: {
+  item: NavItemConIcono;
+  esRutaActiva: (href: string) => boolean;
+  onClick?: () => void;
+}) {
+  const isActive = esRutaActiva(item.href);
+  const Icon = item.icon;
+
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      aria-current={isActive ? 'page' : undefined}
+      className={`group flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-semibold transition-colors duration-200 ${
+        isActive
+          ? 'border-primary/20 bg-primary/10 text-primary shadow-[inset_3px_0_0_var(--primary-color)]'
+          : 'border-transparent text-text-muted hover:border-admin-line hover:bg-white/[0.04] hover:text-admin-ink'
+      }`}
+    >
+      <Icon
+        size={18}
+        className={
+          isActive
+            ? 'text-primary'
+            : 'text-text-muted transition-colors group-hover:text-primary'
+        }
+      />
+      <span className="truncate">{item.label}</span>
+      <ChevronRight
+        size={14}
+        className={`ml-auto transition-all ${
+          isActive
+            ? 'translate-x-0 text-primary/70'
+            : '-translate-x-1 text-transparent group-hover:translate-x-0 group-hover:text-text-muted/60'
+        }`}
+      />
+    </Link>
+  );
+}
+
+// Enlaces entre rutas, no pestañas que cambian de panel en la misma
+// página: por eso no llevan role="tablist"/"tab" (que promete flechas de
+// teclado que esto no tiene), sino el mismo patrón aria-current que ya usa
+// NavLink justo arriba.
+function AreaSwitch({ areaActiva }: { areaActiva: (typeof AREAS)[number]['id'] }) {
+  return (
+    <div className="mb-4 flex gap-5 border-b border-admin-line px-1">
+      {AREAS.map((area) => {
+        const activa = area.id === areaActiva;
+        return (
+          <Link
+            key={area.id}
+            href={area.href}
+            aria-current={activa ? 'page' : undefined}
+            className={`relative flex min-h-11 items-end pb-2.5 text-sm font-bold outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary/40 ${
+              activa ? 'text-admin-ink' : 'text-text-muted/60 hover:text-text-muted'
+            }`}
+          >
+            {area.label}
+            {activa && <span aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />}
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+function NavGroups({
+  itemsDelArea,
+  areaActiva,
+  mostrarEncabezadosDeGrupo,
+  esRutaActiva,
+  onNavigate,
+}: {
+  itemsDelArea: NavItemConIcono[];
+  areaActiva: (typeof AREAS)[number]['id'];
+  mostrarEncabezadosDeGrupo: boolean;
+  esRutaActiva: (href: string) => boolean;
+  onNavigate?: () => void;
+}) {
+  return (
+    <div className="space-y-6">
+      {(['core', 'ops', 'system'] as const).map((group) => {
+        const groupItems = itemsDelArea.filter((item) => item.group === group);
+        if (groupItems.length === 0) return null;
+
+        return (
+          <div key={group}>
+            {mostrarEncabezadosDeGrupo && (
+              <div className="mb-2 px-3 font-mono-label text-kicker text-text-muted/50">
+                {GROUP_LABELS[areaActiva][group]}
+              </div>
+            )}
+            <div className="space-y-1">
+              {groupItems.map((item) => (
+                <NavLink key={item.href} item={item} esRutaActiva={esRutaActiva} onClick={onNavigate} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function UserCard({
+  userInitial,
+  userEmail,
+  roleLabel,
+}: {
+  userInitial: string;
+  userEmail?: string;
+  roleLabel: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-admin-line bg-admin-raised/70 p-3">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-xs font-black text-primary">
+        {userInitial}
+      </div>
+      <div className="min-w-0">
+        <p className="truncate text-xs font-bold text-admin-ink">{userEmail}</p>
+        <p className="font-mono-label mt-0.5 text-kicker text-primary/70">{roleLabel}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminNav({ role, userEmail }: AdminNavProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -178,108 +321,9 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
     window.location.href = '/admin/login';
   };
 
-  const NavLink = ({
-    item,
-    onClick,
-  }: {
-    item: (typeof navItems)[0];
-    onClick?: () => void;
-  }) => {
-    const isActive = esRutaActiva(item.href);
-    const Icon = item.icon;
 
-    return (
-      <Link
-        href={item.href}
-        onClick={onClick}
-        aria-current={isActive ? 'page' : undefined}
-        className={`group flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-semibold transition-colors duration-200 ${
-          isActive
-            ? 'border-primary/20 bg-primary/10 text-primary shadow-[inset_3px_0_0_var(--primary-color)]'
-            : 'border-transparent text-text-muted hover:border-admin-line hover:bg-white/[0.04] hover:text-admin-ink'
-        }`}
-      >
-        <Icon
-          size={18}
-          className={
-            isActive
-              ? 'text-primary'
-              : 'text-text-muted transition-colors group-hover:text-primary'
-          }
-        />
-        <span className="truncate">{item.label}</span>
-        <ChevronRight
-          size={14}
-          className={`ml-auto transition-all ${
-            isActive
-              ? 'translate-x-0 text-primary/70'
-              : '-translate-x-1 text-transparent group-hover:translate-x-0 group-hover:text-text-muted/60'
-          }`}
-        />
-      </Link>
-    );
-  };
 
-  // Enlaces entre rutas, no pestañas que cambian de panel en la misma
-  // página: por eso no llevan role="tablist"/"tab" (que promete flechas de
-  // teclado que esto no tiene), sino el mismo patrón aria-current que ya usa
-  // NavLink justo debajo.
-  const AreaSwitch = () => (
-    <div className="mb-4 flex gap-5 border-b border-admin-line px-1">
-      {AREAS.map((area) => {
-        const activa = area.id === areaActiva;
-        return (
-          <Link
-            key={area.id}
-            href={area.href}
-            aria-current={activa ? 'page' : undefined}
-            className={`relative flex min-h-11 items-end pb-2.5 text-sm font-bold outline-none transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary/40 ${
-              activa ? 'text-admin-ink' : 'text-text-muted/60 hover:text-text-muted'
-            }`}
-          >
-            {area.label}
-            {activa && <span aria-hidden="true" className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />}
-          </Link>
-        );
-      })}
-    </div>
-  );
 
-  const NavGroups = ({ onNavigate }: { onNavigate?: () => void }) => (
-    <div className="space-y-6">
-      {(['core', 'ops', 'system'] as const).map((group) => {
-        const groupItems = itemsDelArea.filter((item) => item.group === group);
-        if (groupItems.length === 0) return null;
-
-        return (
-          <div key={group}>
-            {mostrarEncabezadosDeGrupo && (
-              <div className="mb-2 px-3 font-mono-label text-kicker text-text-muted/50">
-                {GROUP_LABELS[areaActiva][group]}
-              </div>
-            )}
-            <div className="space-y-1">
-              {groupItems.map((item) => (
-                <NavLink key={item.href} item={item} onClick={onNavigate} />
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-
-  const UserCard = () => (
-    <div className="flex items-center gap-3 rounded-xl border border-admin-line bg-admin-raised/70 p-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-xs font-black text-primary">
-        {userInitial}
-      </div>
-      <div className="min-w-0">
-        <p className="truncate text-xs font-bold text-admin-ink">{userEmail}</p>
-        <p className="font-mono-label mt-0.5 text-kicker text-primary/70">{roleLabel}</p>
-      </div>
-    </div>
-  );
 
   return (
     <>
@@ -320,8 +364,13 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
           className="flex-1 overflow-y-auto px-3 py-4"
           aria-label="Navegación principal"
         >
-          <AreaSwitch />
-          <NavGroups />
+          <AreaSwitch areaActiva={areaActiva} />
+          <NavGroups
+              itemsDelArea={itemsDelArea}
+              areaActiva={areaActiva}
+              mostrarEncabezadosDeGrupo={mostrarEncabezadosDeGrupo}
+              esRutaActiva={esRutaActiva}
+            />
         </nav>
 
         <div className="space-y-3 border-t border-admin-line p-4">
@@ -341,7 +390,7 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
             </Link>
           </div>
 
-          <UserCard />
+          <UserCard userInitial={userInitial} userEmail={userEmail} roleLabel={roleLabel} />
 
           <button
             onClick={handleLogout}
@@ -458,12 +507,18 @@ export default function AdminNav({ role, userEmail }: AdminNavProps) {
                 className="flex-1 overflow-y-auto p-4"
                 aria-label="Navegación principal móvil"
               >
-                <AreaSwitch />
-                <NavGroups onNavigate={() => closeMobileMenu()} />
+                <AreaSwitch areaActiva={areaActiva} />
+                <NavGroups
+                  itemsDelArea={itemsDelArea}
+                  areaActiva={areaActiva}
+                  mostrarEncabezadosDeGrupo={mostrarEncabezadosDeGrupo}
+                  esRutaActiva={esRutaActiva}
+                  onNavigate={() => closeMobileMenu()}
+                />
               </nav>
 
               <div className="space-y-3 border-t border-admin-line p-4">
-                <UserCard />
+                <UserCard userInitial={userInitial} userEmail={userEmail} roleLabel={roleLabel} />
                 <div className="flex items-center justify-between">
                   <Link
                     href="/"
