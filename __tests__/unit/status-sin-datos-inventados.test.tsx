@@ -15,7 +15,7 @@
  *  2. actúan de guardia contra la reaparición de lo que se quitó.
  */
 import React from 'react';
-import { render, screen, cleanup, waitFor } from '@testing-library/react';
+import { render, screen, cleanup, waitFor, within } from '@testing-library/react';
 
 jest.mock('@vercel/analytics', () => ({ track: jest.fn() }));
 jest.mock('@/hooks/useTranslation', () => ({
@@ -48,11 +48,43 @@ beforeAll(() => {
   };
 });
 
+/** 90 tramos: los 88 primeros sin datos, luego uno con incidencia y hoy al 100%. */
+function historialDePrueba() {
+  const dias = Array.from({ length: 90 }, (_, i) => {
+    const f = new Date('2026-11-22T00:00:00.000Z');
+    f.setUTCDate(f.getUTCDate() - (89 - i));
+    return {
+      fecha: f.toISOString().slice(0, 10),
+      comprobaciones: 0,
+      operativas: 0,
+      porcentaje: null as number | null,
+      latenciaMedia: null as number | null,
+    };
+  });
+  dias[88] = { fecha: dias[88].fecha, comprobaciones: 24, operativas: 23, porcentaje: 95.8, latenciaMedia: 180 };
+  dias[89] = { fecha: dias[89].fecha, comprobaciones: 12, operativas: 12, porcentaje: 100, latenciaMedia: 120 };
+  return {
+    dias,
+    porcentajeGlobal: 97.2,
+    diasConDatos: 2,
+    totalComprobaciones: 36,
+    registrandoDesde: `${dias[88].fecha}T00:10:00.000Z`,
+  };
+}
+
+/** Responde según la URL: la página pide /api/health y /api/uptime/history. */
+function servir(historial: unknown = historialDePrueba(), salud: unknown = SALUD) {
+  global.fetch = jest.fn(async (url: unknown) => {
+    const u = String(url);
+    if (u.includes('/api/uptime/history')) {
+      return { ok: true, json: async () => historial };
+    }
+    return { ok: true, json: async () => salud };
+  }) as unknown as typeof fetch;
+}
+
 beforeEach(() => {
-  global.fetch = jest.fn(async () => ({
-    ok: true,
-    json: async () => SALUD,
-  })) as unknown as typeof fetch;
+  servir();
 });
 
 afterEach(() => {
@@ -62,6 +94,15 @@ afterEach(() => {
 
 function textoDeLaPagina(): string {
   return document.body.textContent || '';
+}
+
+/**
+ * Los tramos de la gráfica, acotados a SU lista. El `Footer` también tiene
+ * `<li>`, así que un `getAllByRole('listitem')` suelto mezclaría ambos.
+ */
+function tramosDeLaGrafica(): HTMLElement[] {
+  const lista = screen.queryByRole('list', { name: /Disponibilidad diaria/i });
+  return lista ? within(lista).getAllByRole('listitem') : [];
 }
 
 describe('/status — solo datos medidos', () => {
@@ -77,14 +118,11 @@ describe('/status — solo datos medidos', () => {
   });
 
   it('refleja un estado degradado en vez de afirmar que todo va bien', async () => {
-    global.fetch = jest.fn(async () => ({
-      ok: true,
-      json: async () => ({
-        ...SALUD,
-        status: 'degraded',
-        services: { ...SALUD.services, database: { status: 'degraded', latency: 980 } },
-      }),
-    })) as unknown as typeof fetch;
+    servir(historialDePrueba(), {
+      ...SALUD,
+      status: 'degraded',
+      services: { ...SALUD.services, database: { status: 'degraded', latency: 980 } },
+    });
 
     render(<StatusPage />);
 
@@ -135,5 +173,84 @@ describe('/status — solo datos medidos', () => {
       expect(screen.getByText('Protocol Break Detected')).toBeTruthy();
     });
     expect(textoDeLaPagina()).not.toContain('Operational Protocol');
+  });
+});
+
+describe('/status — historial real de disponibilidad', () => {
+  it('pinta un tramo por día con los números que da el endpoint', async () => {
+    render(<StatusPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/Historial de disponibilidad/i)).toBeTruthy();
+    });
+
+    expect(tramosDeLaGrafica()).toHaveLength(90);
+    // El resumen de cuántas comprobaciones hay detrás: sin eso, una gráfica
+    // casi vacía se podría leer como noventa días de caída.
+    expect(textoDeLaPagina()).toMatch(/90 días/);
+    expect(textoDeLaPagina()).toMatch(/2 con datos/);
+    expect(textoDeLaPagina()).toMatch(/36 comprobaciones/);
+    expect(textoDeLaPagina()).toMatch(/97\.2%/);
+  });
+
+  it('un día sin datos lo dice, y no se presenta como 100%', async () => {
+    render(<StatusPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/Historial de disponibilidad/i)).toBeTruthy();
+    });
+
+    const tramos = tramosDeLaGrafica();
+    // Los 88 primeros del fixture no tienen comprobaciones.
+    expect(tramos[0].getAttribute('title')).toMatch(/sin datos/i);
+    expect(tramos[0].getAttribute('title')).not.toMatch(/100%/);
+    // El día con incidencia muestra su porcentaje real, no un redondeo a 100.
+    expect(tramos[88].getAttribute('title')).toMatch(/95\.8% operativo/);
+    expect(tramos[88].getAttribute('title')).toMatch(/23\/24 comprobaciones/);
+    expect(tramos[89].getAttribute('title')).toMatch(/100% operativo/);
+  });
+
+  it('explica desde cuándo hay registro', async () => {
+    render(<StatusPage />);
+    await waitFor(() => {
+      expect(textoDeLaPagina()).toMatch(/Registrando desde el/);
+    });
+    expect(textoDeLaPagina()).toMatch(/no porque el sitio estuviera caído/i);
+  });
+
+  it('con el registro recién estrenado no dibuja barras, lo explica', async () => {
+    servir({
+      dias: Array.from({ length: 90 }, (_, i) => ({
+        fecha: `2026-09-${String((i % 28) + 1).padStart(2, '0')}`,
+        comprobaciones: 0,
+        operativas: 0,
+        porcentaje: null,
+        latenciaMedia: null,
+      })),
+      porcentajeGlobal: null,
+      diasConDatos: 0,
+      totalComprobaciones: 0,
+      registrandoDesde: null,
+    });
+
+    render(<StatusPage />);
+    await waitFor(() => {
+      expect(textoDeLaPagina()).toMatch(/Todavía no hay comprobaciones registradas/i);
+    });
+    expect(tramosDeLaGrafica()).toHaveLength(0);
+  });
+
+  it('si el historial falla, lo dice y no afecta al estado actual', async () => {
+    global.fetch = jest.fn(async (url: unknown) => {
+      if (String(url).includes('/api/uptime/history')) {
+        return { ok: false, json: async () => ({}) };
+      }
+      return { ok: true, json: async () => SALUD };
+    }) as unknown as typeof fetch;
+
+    render(<StatusPage />);
+    await waitFor(() => {
+      expect(textoDeLaPagina()).toMatch(/No se pudo cargar el historial/i);
+    });
+    // El estado de ahora mismo sigue ahí.
+    expect(screen.getByText('Operational Protocol')).toBeTruthy();
   });
 });

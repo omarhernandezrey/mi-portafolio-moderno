@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, AlertCircle, Database, Activity, ShieldCheck, RefreshCw, Radio } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Database, Activity, ShieldCheck, RefreshCw, Radio, BarChart3 } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
+import type { ResumenDeUptime, DiaDeUptime } from '@/lib/uptime/aggregate';
 
 interface HealthData {
   status: string;
@@ -15,10 +16,157 @@ interface HealthData {
   };
 }
 
+/** Formatea `YYYY-MM-DD` (UTC) para leerlo, sin arrastrar una librería. */
+const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+function fechaLegible(fecha: string): string {
+  const [a, m, d] = fecha.split('-');
+  return `${Number(d)} ${MESES[Number(m) - 1]} ${a}`;
+}
+
+/**
+ * Una barra por día.
+ *
+ * La altura es UNIFORME y el color lleva el estado, a propósito. Si la altura
+ * codificara el porcentaje, un 99% y un 100% serían indistinguibles a 12px de
+ * alto, y un día al 0% desaparecería justo cuando más importa verlo. Y es la
+ * forma de no repetir el error de la gráfica anterior, cuyas alturas eran
+ * `Math.random()`.
+ *
+ * Tres estados, y el de «sin datos» NO se parece al de «bien»: es un trazo
+ * hueco. Un hueco en el registro no es disponibilidad.
+ */
+function BarraDeDia({ dia }: { dia: DiaDeUptime }) {
+  const sinDatos = dia.porcentaje === null;
+  const perfecto = dia.porcentaje === 100;
+
+  const titulo = sinDatos
+    ? `${fechaLegible(dia.fecha)}: sin datos (no se registró ninguna comprobación)`
+    : `${fechaLegible(dia.fecha)}: ${dia.porcentaje}% operativo · ` +
+      `${dia.operativas}/${dia.comprobaciones} ` +
+      `${dia.comprobaciones === 1 ? 'comprobación' : 'comprobaciones'} · ` +
+      `${dia.latenciaMedia}ms de media`;
+
+  return (
+    <div
+      role="listitem"
+      aria-label={titulo}
+      title={titulo}
+      // `min-w-px` en móvil: es un SUELO, no el ancho real — `flex-1` reparte
+      // y a 375px cada tramo se queda en ~2px de todas formas. Con el suelo
+      // en 2px, los 90 tramos forzaban 358px sobre 287px disponibles y
+      // desbordaban; bajándolo, el reparto manda y siempre cabe.
+      className={`h-full flex-1 min-w-px sm:min-w-[2px] rounded-full transition-colors ${
+        sinDatos
+          ? 'border border-dashed border-text-muted/25 bg-transparent'
+          : perfecto
+            ? 'bg-primary/30 hover:bg-primary'
+            : 'bg-accent/50 hover:bg-accent'
+      }`}
+    />
+  );
+}
+
+/**
+ * Historial real de `uptime_checks`, agregado por `/api/uptime/history`.
+ *
+ * Sustituye a una gráfica que no leía nada. Por eso aquí se dice SIEMPRE
+ * cuántas comprobaciones hay detrás y desde cuándo: recién estrenado el
+ * registro, casi toda la ventana estará hueca, y eso debe leerse como «aún no
+ * hay histórico», no como noventa días de caída.
+ */
+function HistorialDeUptime({ resumen }: { resumen: ResumenDeUptime }) {
+  const hayDatos = resumen.totalComprobaciones > 0;
+
+  // `p-6` en móvil, no `p-10`: con 90 tramos el ancho es el recurso escaso.
+  // Medido a 375px, con el margen de rejilla en 20px por lado: `p-10` deja
+  // 255px para la tira, y 90 tramos con suelo de 2px y huecos de 2px piden
+  // 358px — desbordaba 103px. Con `p-6` el hueco sube a 287px, y con el suelo
+  // y el hueco a 1px la tira cabe de sobra (lo comprobé midiendo
+  // `scrollWidth` en el navegador: 285px con huecos de 1px, 358px con 2px).
+  return (
+    <div className="bg-card-bg rounded-[48px] border border-text-muted/10 p-6 sm:p-10 md:p-12 shadow-2xl">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 mb-10">
+        <h3 className="font-mono-label text-[0.6rem] text-text-main flex items-center gap-3">
+          <BarChart3 size={14} className="text-primary" />
+          Historial de disponibilidad
+        </h3>
+        <p className="text-4xs font-black uppercase tracking-widest text-text-muted/40 italic">
+          {resumen.dias.length} días · {resumen.diasConDatos} con datos ·{' '}
+          {resumen.totalComprobaciones}{' '}
+          {resumen.totalComprobaciones === 1 ? 'comprobación' : 'comprobaciones'}
+        </p>
+      </div>
+
+      {hayDatos ? (
+        <>
+          <div
+            role="list"
+            aria-label="Disponibilidad diaria, del día más antiguo al más reciente"
+            className="flex h-12 items-stretch gap-px sm:gap-[2px]"
+          >
+            {resumen.dias.map((dia) => (
+              <BarraDeDia key={dia.fecha} dia={dia} />
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+            {/* Leyenda explícita: el color por sí solo no informa, y un
+                lector de pantalla no lo ve. */}
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 text-4xs font-black uppercase tracking-[0.2em] text-text-muted/50">
+              <li className="flex items-center gap-2">
+                <span aria-hidden className="h-2.5 w-2.5 rounded-full bg-primary/40" />
+                100% operativo
+              </li>
+              <li className="flex items-center gap-2">
+                <span aria-hidden className="h-2.5 w-2.5 rounded-full bg-accent/60" />
+                Con incidencias
+              </li>
+              <li className="flex items-center gap-2">
+                <span
+                  aria-hidden
+                  className="h-2.5 w-2.5 rounded-full border border-dashed border-text-muted/40"
+                />
+                Sin datos
+              </li>
+            </ul>
+
+            {resumen.porcentajeGlobal !== null && (
+              <p className="text-3xs font-black uppercase tracking-widest text-text-muted/60">
+                {resumen.porcentajeGlobal}% sobre los días con datos
+              </p>
+            )}
+          </div>
+
+          {resumen.registrandoDesde && (
+            <p className="mt-6 text-xs text-text-muted/50 italic">
+              Registrando desde el{' '}
+              {fechaLegible(resumen.registrandoDesde.slice(0, 10))}. Los días
+              anteriores aparecen vacíos porque no hay medición, no porque el
+              sitio estuviera caído.
+            </p>
+          )}
+        </>
+      ) : (
+        <p className="text-sm text-text-muted/60 italic leading-relaxed">
+          Todavía no hay comprobaciones registradas. La primera llegará en la
+          próxima ejecución del registro horario, y la gráfica se irá llenando
+          desde ahí. No se dibuja nada hasta entonces: una gráfica inventada es
+          exactamente lo que esta página dejó de hacer.
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function StatusPage() {
   const [data, setData] = useState<HealthData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  // `null` mientras no se sabe; `false` si la consulta falló. Son estados
+  // distintos y la interfaz los distingue: no se dibuja una gráfica vacía
+  // como si eso significara «todo bien».
+  const [historial, setHistorial] = useState<ResumenDeUptime | null>(null);
+  const [historialFallo, setHistorialFallo] = useState(false);
 
   const fetchStatus = async () => {
     try {
@@ -34,8 +182,22 @@ export default function StatusPage() {
     }
   };
 
+  const fetchHistorial = async () => {
+    try {
+      const res = await fetch('/api/uptime/history');
+      if (!res.ok) throw new Error('History unavailable');
+      setHistorial(await res.json());
+      setHistorialFallo(false);
+    } catch {
+      setHistorialFallo(true);
+    }
+  };
+
   useEffect(() => {
     fetchStatus();
+    // El histórico cambia una vez por hora: no tiene sentido re-pedirlo cada
+    // 30 segundos como el estado actual.
+    fetchHistorial();
     const interval = setInterval(fetchStatus, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -157,23 +319,24 @@ export default function StatusPage() {
               />
             </div>
 
-            {/* Aquí vivía «Uptime History Archive»: 70 barras cuya altura era
-                `Math.random()`, con un tooltip por barra afirmando «100%
+            {/* La gráfica que estaba aquí no leía nada: 70 barras con
+                altura `Math.random()`, un tooltip por barra afirmando «100%
                 Stability» y una incidencia falsa fijada en la barra 45, bajo
-                una etiqueta que decía «90-Day Operational Cycle» sobre 70
-                barras. No leía NADA.
+                una etiqueta de «90-Day Operational Cycle» sobre 70 barras.
 
-                Se quitó, no se maquilló: `/status` es pública y presentaba un
-                historial de disponibilidad fabricado a quien entrara,
-                clientes potenciales incluidos. Contradecía la regla de
-                CLAUDE.md «ningún dato inventado en el panel ni en el sitio».
-
-                Para tener la gráfica de verdad hace falta registrar el
-                histórico primero: ni `analytics_vitals` (que guarda LCP/INP/
-                CLS, rendimiento y no caídas) ni `api_logs` (llamadas a
-                proveedores de LLM, y además sin ningún `insert` en el código)
-                sirven como fuente. Haría falta una tabla propia de
-                comprobaciones y un cron que las escriba. */}
+                Ahora sale de `uptime_checks`, que escribe
+                `/api/cron/uptime-record` cada hora con la MISMA comprobación
+                que sirve `/api/health` (`src/lib/health/check.ts`), y la
+                agrega `/api/uptime/history`. Los días sin comprobaciones se
+                pintan huecos, no al 100%. */}
+            {historial ? (
+              <HistorialDeUptime resumen={historial} />
+            ) : historialFallo ? (
+              <p className="text-xs text-text-muted/50 italic">
+                No se pudo cargar el historial de disponibilidad. El estado de
+                arriba es el de ahora mismo y no depende de esto.
+              </p>
+            ) : null}
 
             <div className="flex justify-center pt-8">
               <button 

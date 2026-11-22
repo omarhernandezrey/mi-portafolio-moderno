@@ -77,17 +77,34 @@ export async function POST(req: NextRequest) {
       deletedCount = toDeleteConvs.length;
     }
 
+    // 5. Retención de `uptime_checks`: una fila por hora crece ~8760 al año.
+    // `/api/uptime/history` solo mira 90 días, así que se guardan 180 — el
+    // doble de la ventana, margen de sobra para ampliarla sin haber perdido
+    // nada ya.
+    const haceMedioAno = new Date();
+    haceMedioAno.setDate(haceMedioAno.getDate() - 180);
+
+    const { data: uptimeBorradas, error: uptimeError } = await supabaseServer
+      .from("uptime_checks")
+      .delete()
+      .lt("checked_at", haceMedioAno.toISOString())
+      .select("id");
+
+    if (uptimeError) throw uptimeError;
+    const uptimeCount = uptimeBorradas?.length ?? 0;
+
     // Solo avisa si de verdad limpió algo: un mensaje mensual con dos ceros
     // no informa nada y se deja de leer igual que pasó con el resumen diario.
-    if (toDelete.length > 0 || deletedCount > 0) {
-      const report = `🧹 *Limpieza DB completada*\n- Mensajes duplicados: ${toDelete.length}\n- Conversaciones eliminadas: ${deletedCount}`;
+    if (toDelete.length > 0 || deletedCount > 0 || uptimeCount > 0) {
+      const report = `🧹 *Limpieza DB completada*\n- Mensajes duplicados: ${toDelete.length}\n- Conversaciones eliminadas: ${deletedCount}\n- Comprobaciones de uptime caducadas: ${uptimeCount}`;
       await notifyTelegram(report);
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      duplicatesRemoved: toDelete.length, 
-      conversationsRemoved: deletedCount 
+    return NextResponse.json({
+      success: true,
+      duplicatesRemoved: toDelete.length,
+      conversationsRemoved: deletedCount,
+      uptimeChecksRemoved: uptimeCount
     });
 
   } catch (error: unknown) {

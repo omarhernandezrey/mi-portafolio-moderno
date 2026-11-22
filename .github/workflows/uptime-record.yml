@@ -1,0 +1,31 @@
+name: Uptime Record
+
+# Cada hora, en el minuto 10. Desplazado respecto a `check-health.yml` (que
+# corre en el minuto 0) a propósito: son dos cosas distintas y conviene que no
+# compitan. `check-health` AVISA en el momento si algo está caído; esto
+# REGISTRA el resultado para que `/status` pueda dibujar un histórico real.
+#
+# Con una comprobación por hora, 90 días son ~2160 filas. Si el workflow falla
+# o el despliegue está caído, no se escribe fila: ese hueco sale en la gráfica
+# como «sin datos», que es la verdad, nunca como 100%.
+
+on:
+  schedule:
+    - cron: '10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  uptime-record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Registrar comprobación de disponibilidad
+        run: |
+          SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}"
+          CRON_SECRET="${{ secrets.CRON_SECRET }}"
+          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::Secrets no configurados. Saltando uptime-record."
+            exit 0
+          fi
+          curl -X GET "${SITE_URL}/api/cron/uptime-record" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -f
