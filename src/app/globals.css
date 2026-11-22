@@ -249,6 +249,43 @@ body {
   /* Grid editorial de 12 columnas con gutters consistentes */
   --grid-gutter: clamp(1rem, 3vw, 2rem);
   --grid-margin: clamp(1.25rem, 5vw, 4rem);
+
+  /* ── Estados derivados de la paleta activa ──────────────────────────────
+     `--primary-hover-color` y `--accent-hover-color` se CONSUMÍAN en cuatro
+     sitios (Card.tsx, NewsletterForm.tsx, EducationModal.tsx) y no estaban
+     definidas en ninguna parte del proyecto. Una `var()` sin definir deja la
+     declaración «inválida en tiempo de valor calculado», así que el navegador
+     la descartaba: comprobado con un `:hover` real, el botón del visor
+     mantenía su teal y el oscurecimiento previsto simplemente no ocurría. No
+     se veía roto; se veía inerte.
+
+     Se definen AQUÍ, en el :root base, y no en cada bloque de paleta: al
+     derivarlas con `color-mix` sobre `var(--primary-color)` / `--accent-color`,
+     cada paleta las resuelve con SUS propios colores, porque el bloque de
+     paleta redefine esas dos variables en el mismo elemento. Diez paletas
+     cubiertas sin tocar ninguna, que es lo que pide CLAUDE.md.
+
+     85% del color sobre negro: un paso de oscurecimiento perceptible sin
+     cambiar el tono. Funciona igual en las paletas claras y en las oscuras,
+     porque el punto de partida es el color de la propia paleta. */
+  --primary-hover-color: color-mix(in srgb, var(--primary-color) 85%, #000);
+  --accent-hover-color: color-mix(in srgb, var(--accent-color) 85%, #000);
+
+  /* Color de error del sitio público. Lo pedía `NewsletterForm.tsx` desde
+     `text-[var(--error-color)]` y tampoco existía: el mensaje de error del
+     newsletter se pintaba con el color de texto heredado, así que no se leía
+     como un error.
+
+     No se puede derivar de la paleta (ninguna tiene un rojo) ni reutilizar
+     `--admin-danger`, que vive dentro de `.admin-shell` y el sitio público no
+     hereda. Se elige el mismo tono —rosa— para que el producto no tenga dos
+     rojos distintos.
+
+     Un único valor NO sirve para las diez paletas: nueve son oscuras y
+     `palette4` es clara, y ningún rojo fijo pasa 4.5:1 contra ambos extremos
+     (medido). Este cubre las nueve oscuras con 6.22:1 en el peor caso;
+     `palette4` lo sobrescribe más abajo. */
+  --error-color: #fb7185;
 }
 
 /* palette2 */
@@ -311,6 +348,12 @@ body {
 
 /* palette4 (versión clara inspirada en palette1) */
 :root.palette4 {
+  /* Único añadido a un bloque de paleta en este arreglo, y es obligado:
+     `palette4` es la paleta clara, y el `--error-color` de las oscuras
+     (#fb7185) solo da 2.61:1 sobre este fondo — ilegible. Este da 6.09:1,
+     mismo tono rosa. No se cambia ningún color existente de la paleta. */
+  --error-color: #be123c;
+
   /* Fondos */
   --background-color: #f9fcfb; /* Fondo principal muy claro con un ligero matiz */
   --secondary-background-color: #fff; /* Sección secundaria en blanco puro */
@@ -828,15 +871,29 @@ body {
     color 0.3s;
 }
 
+/* `--button-bg-color` y `--button-hover-color` se referenciaban aquí y no
+   existían en ninguna parte. Ojo con el arreglo evidente: esta regla aplica a
+   TODO `<a>` y `<button>` del sitio, así que darles un color de fondo real no
+   habría sido arreglar un defecto sino repintar el sitio entero en las diez
+   paletas.
+
+   Y la declaración inválida no era inocua: al descartarla, `background-color`
+   cae a su valor inicial, `transparent`, que es precisamente lo que anula el
+   gris `buttonface` que el navegador da a los `<button>` por defecto
+   (comprobado: un `<button>` sin clases computa `rgba(0, 0, 0, 0)`). Quitar la
+   línea habría devuelto ese gris a cada botón sin estilos.
+
+   Así que se escribe el valor que de verdad estaba en efecto. Mismos píxeles
+   que antes, sin referencias fantasma. */
 a,
 button {
-  background-color: var(--button-bg-color);
+  background-color: transparent;
   color: var(--primary-color);
 }
 
 a:hover,
 button:hover {
-  background-color: var(--button-hover-color);
+  background-color: transparent;
   color: var(--text-color);
 }
 
