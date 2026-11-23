@@ -1,22 +1,33 @@
 name: Uptime Record
 
-# ESTE ES EL ÚNICO DISPARADOR DEL REGISTRO, Y NO PUEDE MOVERSE A VERCEL.
+# RESPALDO. El disparador principal es cron-job.org.
 #
-# Se intentó pasarlo a los crons de Vercel (`crons` en `vercel.json`) y el
-# despliegue FALLÓ con el mensaje de la propia plataforma:
+# Este workflow NO es fiable, y está medido: entre las 22:35 UTC del 22-nov y
+# las 16:10 del 23-nov hubo 2 ejecuciones programadas de las ~17 que tocaban, y
+# las dos con mucho retraso (la ventana de 00:10 corrió a las 00:48; la de
+# 08:10, a las 08:57). Los crons de GitHub Actions no garantizan puntualidad y
+# se descartan bajo carga.
+#
+# Se mantiene porque no cuesta nada y las filas que escribe son válidas: el
+# agregado calcula `operativas / comprobaciones` por día, así que filas de más
+# no distorsionan nada. Si cron-job.org deja de disparar, esto sigue dando
+# señal en vez de dejar la gráfica vacía.
+#
+# Tampoco puede moverse a los crons de Vercel. Se intentó y el despliegue FALLÓ
+# con el mensaje de la propia plataforma:
 #
 #   «Hobby accounts are limited to daily cron jobs. This cron expression
 #    (10 * * * *) would run more than once per day. Upgrade to the Pro plan
 #    to unlock all Cron Jobs features on Vercel.»
 #
-# El proyecto está en plan hobby, así que un cron de Vercel solo puede correr
-# UNA VEZ AL DÍA. Con una comprobación diaria el porcentaje de un día sale de
-# una sola muestra: sería 100% o 0%, sin nada en medio. Para eso no vale la
-# pena, y por eso el registro se queda aquí.
+# Con una comprobación diaria el porcentaje de un día saldría de una sola
+# muestra: 100% o 0%, sin nada en medio. Si el proyecto pasa a Pro, moverlo es
+# un cambio de seis líneas y Vercel ya manda el `Authorization: Bearer
+# $CRON_SECRET` que la ruta espera, así que no haría falta tocar código.
 #
-# Si algún día el proyecto pasa a Pro, mover esto a `vercel.json` es un cambio
-# de seis líneas; y Vercel ya manda el `Authorization: Bearer $CRON_SECRET`
-# que esta ruta espera, así que no haría falta tocar código.
+# El disparador externo usa `UPTIME_CRON_SECRET`, una llave que SOLO abre esta
+# ruta — el `CRON_SECRET` general abre once, incluidas las que borran filas y
+# envían correo (ver `requireUptimeCronAuth` en `src/lib/cronAuth.ts`).
 #
 # Cada hora, en el minuto 10. Desplazado respecto a `check-health.yml` (que
 # corre en el minuto 0) a propósito: son dos cosas distintas y conviene que no
