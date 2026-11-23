@@ -499,13 +499,17 @@ gateway de LLM **no** — reporta `unknown`, porque medirlo en cada comprobació
 gastaría tokens. Antes decía `operational` sin llamar a nadie, lo que era
 afirmar que estaba sano aunque estuviera caído.
 
-**Sobre el disparador.** Lo lanza un workflow horario de GitHub Actions
-(`.github/workflows/uptime-record.yml`). No puede moverse a los crons de
-Vercel mientras el proyecto esté en plan Hobby: la plataforma los limita a uno
-diario, y con una sola muestra al día el porcentaje de ese día solo podría ser
-100% o 0%. Para un disparador externo existe `UPTIME_CRON_SECRET`, una llave
-que **solo** permite registrar una comprobación — el `CRON_SECRET` general
-abre once rutas, incluidas las que borran filas y envían correo.
+**Sobre el disparador.** Lo lanza **cron-job.org** cada hora, con
+`UPTIME_CRON_SECRET`: una llave que **solo** permite registrar una
+comprobación — el `CRON_SECRET` general abre once rutas, incluidas las que
+borran filas y envían correo.
+
+Queda un workflow de GitHub Actions (`.github/workflows/uptime-record.yml`)
+como respaldo, no como fuente principal: medido, cumplió 2 de ~17 ventanas
+horarias, y las dos con casi una hora de retraso. No puede moverse a los crons
+de Vercel mientras el proyecto esté en plan Hobby, porque la plataforma los
+limita a uno diario y con una sola muestra el porcentaje del día solo podría
+ser 100% o 0%.
 
 Retención: `cron/database-cleanup` borra comprobaciones de más de 180 días, el
 doble de la ventana que se muestra.
