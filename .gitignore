@@ -77,3 +77,26 @@ __pycache__/
 # del repo: la guía para agentes de este proyecto es CLAUDE.md. Para que
 # Next deje de crearlo: `agentRules: false` en next.config.mjs.
 AGENTS.md
+
+# Skills de terceros instaladas con `npx skills add` (Fase -1 de
+# portfolio-engineering-team). Son HERRAMIENTAS, no código del proyecto: 860
+# archivos y 16 MB que contaminarían el inventario de la Fase 10 («revisa el
+# 100 % del código del repositorio») y el detector de diseño del verify.
+#
+# Se reinstalan con:
+#   npx skills add obra/superpowers anthropics/skills vercel-labs/agent-skills supabase/agent-skills
+#
+# Las skills PROPIAS del proyecto (impeccable, kpi-dashboard-design,
+# mobile-design, senior-backend, ui-ux-pro-max, portfolio-engineering-team,
+# frontend-design, webapp-testing) SÍ están versionadas: son directorios
+# reales, no enlaces.
+.agents/
+.claude/skills/*
+!.claude/skills/impeccable/
+!.claude/skills/kpi-dashboard-design/
+!.claude/skills/mobile-design/
+!.claude/skills/senior-backend/
+!.claude/skills/ui-ux-pro-max/
+!.claude/skills/portfolio-engineering-team/
+!.claude/skills/frontend-design/
+!.claude/skills/webapp-testing/

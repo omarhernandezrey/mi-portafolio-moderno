@@ -23,6 +23,15 @@ const eslintConfig = [
       "coverage/**",
       "node_modules/**",
       "next-env.d.ts",
+      // Skills de terceros instaladas con `npx skills add` (Fase -1 de
+      // portfolio-engineering-team). Traen 97 archivos JS/TS propios, y sin
+      // esta exclusión `eslint .` falla ANTES de linear nada con «could not
+      // find plugin react-hooks»: el bloque de reglas de abajo no lleva
+      // `files`, así que se aplica a todo archivo que eslint considere, y en
+      // los de terceros no está el preset de Next que aporta ese plugin.
+      // Es la misma razón por la que se ignora `node_modules`: son
+      // herramientas, no código del proyecto.
+      ".agents/**",
     ],
   },
   ...nextCoreWebVitals,
