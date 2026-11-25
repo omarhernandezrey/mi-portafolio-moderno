@@ -2,6 +2,18 @@
 
 Portafolio de Omar Hernández Rey (Next.js 15, TypeScript, Tailwind, Supabase) y el panel `/admin` que gobierna su contenido. Responde en español.
 
+## ⛔ LEE ESTO PRIMERO, ANTES DE CUALQUIER OTRA COSA
+
+**`PROGRESO.md`** — dice exactamente dónde quedó el trabajo, qué fase sigue, qué
+bloquea y qué NO hay que repetir. Está escrito para que cualquier IA que abra
+este proyecto por primera vez siga desde ahí sin reconstruir nada. Si solo vas a
+leer un archivo, que sea ese.
+
+Después, la skill **`portfolio-engineering-team`**
+(`.claude/skills/portfolio-engineering-team/SKILL.md`): define el modo de
+trabajo, los roles, las 9 reglas no negociables y las 12 fases. El proyecto se
+trabaja **una fase por sesión**, en orden.
+
 ## Antes de cualquier trabajo
 
 1. Lee `PLAN_MAESTRO_DASHBOARD.md`, en este orden: §0 (estado y ramas en curso), §3 (manual de ejecución: es obligatorio), §2 (restricciones) y la ficha de tu tarea en §5.
