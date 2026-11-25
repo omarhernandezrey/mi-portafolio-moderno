@@ -2,6 +2,18 @@
 
 Portafolio de Omar Hernández Rey (Next.js 15, TypeScript, Tailwind, Supabase) y el panel `/admin` que gobierna su contenido. Responde en español.
 
+## ⛔ LEE ESTO PRIMERO, ANTES DE CUALQUIER OTRA COSA
+
+**`PROGRESO.md`** — dice exactamente dónde quedó el trabajo, qué fase sigue, qué
+bloquea y qué NO hay que repetir. Está escrito para que cualquier IA que abra
+este proyecto por primera vez siga desde ahí sin reconstruir nada. Si solo vas a
+leer un archivo, que sea ese.
+
+Después, la skill **`portfolio-engineering-team`**
+(`.claude/skills/portfolio-engineering-team/SKILL.md`): define el modo de
+trabajo, los roles, las 9 reglas no negociables y las 12 fases. El proyecto se
+trabaja **una fase por sesión**, en orden.
+
 ## Antes de cualquier trabajo
 
 1. Lee `PLAN_MAESTRO_DASHBOARD.md`, en este orden: §0 (estado y ramas en curso), §3 (manual de ejecución: es obligatorio), §2 (restricciones) y la ficha de tu tarea en §5.
@@ -33,6 +45,51 @@ Portafolio de Omar Hernández Rey (Next.js 15, TypeScript, Tailwind, Supabase) y
 ### Gráficas
 
 Antes de escribir cualquier gráfica, carga también la skill `dataviz` si está disponible. La paleta de datos ya está definida y verificada: `src/lib/charts/palette.ts` y las variables `--chart-*`. Se usa `assignSeriesColors`; no se eligen colores nuevos.
+
+## Skills de terceros (Fase −1 de `portfolio-engineering-team`)
+
+Instaladas con `npx skills add` desde fuentes oficiales. Viven en `.agents/skills/`
+con enlaces en `.claude/skills/`, y **no están versionadas** a propósito: son
+herramientas, no código del proyecto. `skills-lock.json` sí está en el repo y
+guarda fuente y commit de cada una. Reinstalar:
+
+```
+npx skills add obra/superpowers anthropics/skills vercel-labs/agent-skills supabase/agent-skills
+```
+
+| Cuándo usarla | Skill |
+|---|---|
+| Antes de cualquier trabajo creativo o función nueva | `brainstorming` |
+| Hay un spec y toca planificar antes de escribir código | `writing-plans`, luego `executing-plans` |
+| Implementar cualquier función o arreglo | `test-driven-development` — pruebas primero, es la regla «nada a medias» |
+| Un bug, un test en rojo o algo inesperado | `systematic-debugging` antes de proponer arreglos |
+| A punto de decir «listo», «arreglado» o «pasa» | `verification-before-completion` — evidencia antes de afirmar |
+| Cerrar una tarea o antes de mergear | `requesting-code-review`; al recibir el informe, `receiving-code-review` |
+| Varias tareas independientes a la vez | `dispatching-parallel-agents`, `subagent-driven-development` |
+| La rama está lista para integrarse | `finishing-a-development-branch` |
+| Trabajo que necesita aislamiento del árbol actual | `using-git-worktrees` |
+| Diseño de interfaz de alto nivel | `frontend-design` (+ `impeccable`, que es la del proyecto y manda) |
+| Revisar UI contra buenas prácticas y accesibilidad | `web-design-guidelines` |
+| Escribir o revisar React/Next.js | `vercel-react-best-practices`, `vercel-composition-patterns` |
+| Transiciones y animaciones de ruta en React | `vercel-react-view-transitions` |
+| Coste y rendimiento en Vercel, rutas lentas o caras | `vercel-optimize` |
+| Desplegar o manejar Vercel por CLI | `deploy-to-vercel`, `vercel-cli-with-tokens` |
+| Cualquier tarea con Supabase (auth, RLS, Edge, Realtime) | `supabase` |
+| Antes de tocar nada que viva en Postgres: tablas, migraciones, RLS, índices | `supabase-postgres-best-practices` |
+| Probar la app en navegador | `webapp-testing` |
+| Crear o editar skills del proyecto | `skill-creator`, `writing-skills` |
+| Construir un servidor MCP | `mcp-builder` |
+| Revisar documentación y prosa | `writing-guidelines` |
+
+**Desactivadas a propósito** (instaladas pero sin enlace en `.claude/skills/`):
+`brand-guidelines` y `theme-factory` imponen identidad visual ajena —la de
+Anthropic— y chocan con `DESIGN.md` y con la regla de que las diez paletas no
+se tocan. Además `academy-guide`, `algorithmic-art`, `canvas-design`,
+`claude-api`, `slack-gif-creator`, `internal-comms`, `template-skill`,
+`web-artifacts-builder`, `vercel-react-native-skills` (esto es web, no móvil
+nativo), `docx`, `pdf`, `pptx`, `xlsx`, `discernment-nudge` y
+`doc-coauthoring`: nada que ver con este proyecto. Si alguna se necesita,
+basta recrear su enlace.
 
 ## Restricciones que no se negocian
 
