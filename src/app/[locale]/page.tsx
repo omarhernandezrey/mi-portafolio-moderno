@@ -14,7 +14,7 @@ import Footer from "@/components/shared/Footer";
 import PreviewBanner from "@/components/preview/PreviewBanner";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { getProjects } from "@/lib/portfolio/repository";
-import { PRECIO_DESDE_PROYECTO_COP } from "@/data/precios";
+import { PRECIO_DESDE_PROYECTO_COP, PRECIO_DESDE_PROYECTO_USD } from "@/data/precios";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -28,10 +28,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     isEn
       ? {
           title: withBrand("Full Stack Web Developer Colombia"),
-          description: "Hire a full stack web developer in Colombia. Custom websites and apps in React and Next.js from $1,200 USD. Free consultation, 24h response.",
+          description: `Hire a full stack web developer in Colombia. Custom websites and apps in React and Next.js from ${PRECIO_DESDE_PROYECTO_USD}. Free consultation, 24h response.`,
           path: "",
           locale: 'en',
-          ogSubtitle: "React & Next.js | From $1,200 USD",
+          ogSubtitle: `React & Next.js | From ${PRECIO_DESDE_PROYECTO_USD}`,
           keywords: [
             "hire web developer colombia",
             "full stack developer colombia",

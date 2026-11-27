@@ -216,10 +216,10 @@
       },
       "budgetPlaceholder": "What's your budget?",
       "budgetOptions": {
-        "tier1": "Under $1,200 USD",
-        "tier2": "$1,200 - $8,000 USD",
-        "tier3": "$8,000 - $25,000 USD",
-        "tier4": "Over $25,000 USD"
+        "tier1": "Under $500 USD",
+        "tier2": "$500 - $1,500 USD",
+        "tier3": "$1,500 - $5,000 USD",
+        "tier4": "Over $5,000 USD"
       },
       "timelinePlaceholder": "When do you need it?",
       "timelineOptions": {

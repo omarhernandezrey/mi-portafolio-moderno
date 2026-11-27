@@ -12,7 +12,7 @@ import ParticleField from '@/components/shared/ParticleFieldLoader';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
-import { PRECIOS_COP, desdeCop } from '@/data/precios';
+import { PRECIOS_COP, PRECIOS_USD, desdeCop, desdeUsd } from '@/data/precios';
 
 const BASE_URL = 'https://omarhernandezrey.com';
 
@@ -140,7 +140,7 @@ const CATEGORIES_EN = [
     faqs: [
       {
         q: 'How much does a landing page or website cost in Colombia?',
-        a: 'Professional landing pages start at $1,200 USD. Corporate websites start at $3,000 USD. E-commerce stores start at $8,000 USD. The final price depends on features: payment integrations, advanced forms, admin panels, etc. Use my calculator to get an estimate in 2 minutes.'
+        a: `Professional landing pages start at ${desdeUsd(PRECIOS_USD.landing)}. Corporate websites start at ${desdeUsd(PRECIOS_USD.corporativo)}. E-commerce stores start at ${desdeUsd(PRECIOS_USD.ecommerce)}. The final price depends on features: payment integrations, advanced forms, admin panels, etc. Use my calculator to get an estimate in 2 minutes.`
       },
       {
         q: 'What payment methods do you accept for projects in the US and abroad?',
@@ -148,7 +148,7 @@ const CATEGORIES_EN = [
       },
       {
         q: 'Do you offer web maintenance after delivering the project?',
-        a: 'Yes. I offer monthly maintenance plans starting at $300 USD. They include security updates, weekly backups, 24/7 uptime monitoring, and priority technical support by email with a 24h response time.'
+        a: `Yes. I offer monthly maintenance plans starting at ${desdeUsd(PRECIOS_USD.mantenimiento)}. They include security updates, weekly backups, 24/7 uptime monitoring, and priority technical support by email with a 24h response time.`
       },
       {
         q: 'How much does an independent full stack web developer in Colombia charge vs. an agency?',

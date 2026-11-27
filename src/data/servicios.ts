@@ -1,4 +1,13 @@
-import { PRECIOS_COP, desdeCop, rangoCop, type BandaPrecio } from './precios';
+import {
+  PRECIOS_COP,
+  PRECIOS_USD,
+  desdeCop,
+  desdeUsd,
+  rangoCop,
+  rangoUsd,
+  type BandaPrecio,
+  type ServicioConPrecio,
+} from './precios';
 
 export interface ServicioProgramatico {
   id: string;
@@ -26,7 +35,10 @@ export interface ServicioProgramatico {
   benefitsEn?: string[];
   processEn?: string[];
   faqsEn?: Array<{ q: string; a: string }>;
-  priceRangeUsd?: string;
+  /** Rango visible en USD, con el formato de `rangoUsd`. */
+  priceRangeUsd: string;
+  /** Precio «from» en USD como número (JSON-LD y tarjetas compactas). */
+  priceFromUsd: number;
   deliveryTimeEn?: string;
 }
 
@@ -34,25 +46,30 @@ export interface ServicioProgramatico {
 // escala. priceRange (COP) y priceRangeUsd (USD) son mercados
 // independientes — el segundo NO se deriva del primero.
 //
-// Ninguna cifra en COP se escribe a mano en este archivo: todas salen de
-// PRECIOS_COP (src/data/precios.ts). Las bandas de abajo combinan dos
-// escalones cuando la página cubre más de un producto.
-const BANDA_DESARROLLO_WEB: BandaPrecio = {
-  min: PRECIOS_COP.landing.min,
-  max: PRECIOS_COP.ecommerce.max,
-};
-const BANDA_ECOMMERCE: BandaPrecio = {
-  min: PRECIOS_COP.ecommerce.min,
-  max: PRECIOS_COP.ecommerceMedida.max,
-};
-const BANDA_CONSULTORIA: BandaPrecio = {
-  min: PRECIOS_COP.consultoriaHora.min,
-  max: PRECIOS_COP.auditoriaTecnica.max,
-};
-const BANDA_LANDING: BandaPrecio = {
-  min: PRECIOS_COP.landing.min,
-  max: PRECIOS_COP.landingPremium.max,
-};
+// Ninguna cifra se escribe a mano en este archivo: todas salen de
+// PRECIOS_COP y PRECIOS_USD (src/data/precios.ts). Las bandas de abajo
+// combinan dos escalones cuando la página cubre más de un producto; se
+// definen una vez y se calculan igual en las dos monedas.
+type Escala = Record<ServicioConPrecio, BandaPrecio>;
+
+const combinar =
+  (desde: ServicioConPrecio, hasta: ServicioConPrecio) =>
+  (escala: Escala): BandaPrecio => ({ min: escala[desde].min, max: escala[hasta].max });
+
+const bandaDesarrolloWeb = combinar('landing', 'ecommerce');
+const bandaEcommerce = combinar('ecommerce', 'ecommerceMedida');
+const bandaConsultoria = combinar('consultoriaHora', 'auditoriaTecnica');
+const bandaLanding = combinar('landing', 'landingPremium');
+
+const BANDA_DESARROLLO_WEB = bandaDesarrolloWeb(PRECIOS_COP);
+const BANDA_ECOMMERCE = bandaEcommerce(PRECIOS_COP);
+const BANDA_CONSULTORIA = bandaConsultoria(PRECIOS_COP);
+const BANDA_LANDING = bandaLanding(PRECIOS_COP);
+
+const BANDA_DESARROLLO_WEB_USD = bandaDesarrolloWeb(PRECIOS_USD);
+const BANDA_ECOMMERCE_USD = bandaEcommerce(PRECIOS_USD);
+const BANDA_CONSULTORIA_USD = bandaConsultoria(PRECIOS_USD);
+const BANDA_LANDING_USD = bandaLanding(PRECIOS_USD);
 
 export const serviciosProgramaticos: ServicioProgramatico[] = [
   {
@@ -86,7 +103,7 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
     nameEn: 'Web Development',
     h1En: 'Professional Web Development in {city}',
     h2En: 'High-Performance Websites for Businesses in {city}',
-    descriptionEn: 'Custom web development with Next.js and React in {city}. Fast, SEO-ready sites that turn visitors into paying clients, from $3,000 USD.',
+    descriptionEn: `Custom web development with Next.js and React in {city}. Fast, SEO-ready sites that turn visitors into paying clients, from ${desdeUsd(BANDA_DESARROLLO_WEB_USD)}.`,
     keywordsEn: ['web development {city}', 'web developer {city}', 'hire web developer {city}', 'website design {city}', 'full stack web developer {city}'],
     benefitsEn: [
       'Ultra-fast Next.js & React websites',
@@ -102,11 +119,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Launch: Deploy, configure, and go live with full handover',
     ],
     faqsEn: [
-      { q: 'How much does a website cost in {city}?', a: 'Landing pages start at $1,200 USD. Corporate websites from $3,000 USD. E-commerce from $8,000 USD. Final price depends on features: payment integrations, advanced forms, admin panel, etc.' },
+      { q: 'How much does a website cost in {city}?', a: `Landing pages start at ${desdeUsd(PRECIOS_USD.landing)}. Corporate websites from ${desdeUsd(PRECIOS_USD.corporativo)}. E-commerce from ${desdeUsd(PRECIOS_USD.ecommerce)}. Final price depends on features: payment integrations, advanced forms, admin panel, etc.` },
       { q: 'How long does it take to build my website?', a: 'Landing pages: 2-3 weeks. Corporate sites: 4-6 weeks. E-commerce: 6-10 weeks.' },
       { q: 'Is design included in the price?', a: 'Yes. We work in Figma until you\'re 100% satisfied before writing a single line of code.' },
     ],
-    priceRangeUsd: '$3,000 - $25,000 USD',
+    priceRangeUsd: rangoUsd(BANDA_DESARROLLO_WEB_USD),
+    priceFromUsd: BANDA_DESARROLLO_WEB_USD.min,
     deliveryTimeEn: '2-10 weeks depending on complexity',
   },
   {
@@ -160,7 +178,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: 'Do I need to know how to code?', a: 'No. We build everything and deliver simple documentation so you can manage it yourself.' },
       { q: 'What tools do you integrate with?', a: 'WhatsApp, Notion, Google Sheets, Airtable, Slack, Telegram, HubSpot, Salesforce, and any modern API.' },
     ],
-    priceRangeUsd: '$1,500 - $6,000 USD',
+    priceRangeUsd: rangoUsd(PRECIOS_USD.automatizacion),
+    priceFromUsd: PRECIOS_USD.automatizacion.min,
     deliveryTimeEn: '2-4 weeks',
   },
   {
@@ -210,11 +229,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Launch: Full training so you can manage it independently',
     ],
     faqsEn: [
-      { q: 'How much does an online store cost?', a: 'Standard e-commerce from $8,000 USD. Custom e-commerce from $15,000 USD.' },
+      { q: 'How much does an online store cost?', a: `Standard e-commerce from ${desdeUsd(PRECIOS_USD.ecommerce)}. Custom e-commerce from ${desdeUsd(PRECIOS_USD.ecommerceMedida)}.` },
       { q: 'Which payment gateway should I use?', a: 'For US customers: Stripe or PayPal. For international: both. We handle the full integration.' },
       { q: 'Can I manage products myself?', a: 'Yes. We provide an intuitive dashboard where you can add, edit, and remove products without any coding knowledge.' },
     ],
-    priceRangeUsd: '$8,000 - $25,000 USD',
+    priceRangeUsd: rangoUsd(BANDA_ECOMMERCE_USD),
+    priceFromUsd: BANDA_ECOMMERCE_USD.min,
     deliveryTimeEn: '6-10 weeks',
   },
   {
@@ -264,11 +284,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Support: Available for follow-up questions post-delivery',
     ],
     faqsEn: [
-      { q: 'How much does tech consulting cost?', a: 'Technical audit from $2,000 USD. Strategy sessions from $150 USD/hour.' },
+      { q: 'How much does tech consulting cost?', a: `Technical audit from ${desdeUsd(PRECIOS_USD.auditoriaTecnica)}. Strategy sessions from ${desdeUsd(PRECIOS_USD.consultoriaHora)}/hour.` },
       { q: 'Do I need to hire you for development afterwards?', a: 'Not required. Our consulting is independent, though many clients prefer us to execute as well.' },
       { q: 'Do I need technical knowledge?', a: 'No. We explain everything in plain language so you can make informed decisions.' },
     ],
-    priceRangeUsd: '$150 - $12,000 USD',
+    priceRangeUsd: rangoUsd(BANDA_CONSULTORIA_USD),
+    priceFromUsd: BANDA_CONSULTORIA_USD.min,
     deliveryTimeEn: '3-10 business days',
   },
   {
@@ -318,11 +339,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Launch: We set up tracking and publish',
     ],
     faqsEn: [
-      { q: 'How much does a landing page cost?', a: 'Professional landing pages from $1,200 USD. With A/B testing and advanced optimization from $2,200 USD.' },
+      { q: 'How much does a landing page cost?', a: `Professional landing pages from ${desdeUsd(PRECIOS_USD.landing)}. With A/B testing and advanced optimization from ${desdeUsd(PRECIOS_USD.landingPremium)}.` },
       { q: 'Landing page or full website?', a: 'If you have one specific goal (sell a product, capture leads), go landing page. For full institutional presence, choose a website.' },
       { q: 'Does it include hosting?', a: 'We include hosting setup on your account. If you don\'t have hosting yet, we recommend the best options for your budget.' },
     ],
-    priceRangeUsd: '$1,200 - $3,000 USD',
+    priceRangeUsd: rangoUsd(BANDA_LANDING_USD),
+    priceFromUsd: BANDA_LANDING_USD.min,
     deliveryTimeEn: '2-3 weeks',
   },
   {
@@ -376,7 +398,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: 'PWA or native app?', a: 'PWA is better for: limited budgets, fast launch, dynamic content. Native app for: games, hardware-specific features, mass-market scale.' },
       { q: 'Does it work on iPhone?', a: 'Yes, with some limitations vs Android. iOS 16+ supports PWAs increasingly well.' },
     ],
-    priceRangeUsd: '$5,000 - $20,000 USD',
+    priceRangeUsd: rangoUsd(PRECIOS_USD.pwa),
+    priceFromUsd: PRECIOS_USD.pwa.min,
     deliveryTimeEn: '3-6 weeks',
   },
   {
@@ -430,7 +453,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: 'Do you guarantee first position on Google?', a: 'No one can guarantee that. We guarantee implementing all technical best practices that give you the best chance to rank.' },
       { q: 'Does it include content creation?', a: 'Technical SEO does not include content. For content marketing and link building, we offer a separate service.' },
     ],
-    priceRangeUsd: '$1,000 - $4,000 USD',
+    priceRangeUsd: rangoUsd(PRECIOS_USD.seoTecnico),
+    priceFromUsd: PRECIOS_USD.seoTecnico.min,
     deliveryTimeEn: '1-4 weeks',
   },
   {
@@ -484,7 +508,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: 'What happens if the external API fails?', a: 'We implement error handling, automatic retries, and notifications so you know immediately if something fails.' },
       { q: 'Is it secure?', a: 'Yes. Credentials are stored encrypted, we use environment variables, and follow OWASP security best practices.' },
     ],
-    priceRangeUsd: '$2,500 - $12,000 USD',
+    priceRangeUsd: rangoUsd(PRECIOS_USD.integracionApis),
+    priceFromUsd: PRECIOS_USD.integracionApis.min,
     deliveryTimeEn: '2-6 weeks',
   },
   {
@@ -534,11 +559,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Support: Fast response to incidents and technical questions',
     ],
     faqsEn: [
-      { q: 'How much does web maintenance cost?', a: 'Plans from $300 USD/month for simple sites. Complex sites or e-commerce from $1,000 USD/month.' },
+      { q: 'How much does web maintenance cost?', a: `Plans from ${desdeUsd(PRECIOS_USD.mantenimiento)}/month for simple sites. Complex sites or e-commerce from ${desdeUsd(PRECIOS_USD.mantenimientoTienda)}/month.` },
       { q: 'What does the basic plan include?', a: 'Weekly backups, security updates, uptime monitoring, email support with 24h response time.' },
       { q: 'Can you maintain a site you didn\'t build?', a: 'Yes, but we first conduct an audit to evaluate code quality and determine if we can take it on.' },
     ],
-    priceRangeUsd: '$300 - $1,000 USD/month',
+    priceRangeUsd: rangoUsd(PRECIOS_USD.mantenimiento, '/month'),
+    priceFromUsd: PRECIOS_USD.mantenimiento.min,
     deliveryTimeEn: 'Ongoing monthly plan',
   }
 ];
