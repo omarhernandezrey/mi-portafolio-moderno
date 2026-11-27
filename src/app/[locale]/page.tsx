@@ -14,6 +14,7 @@ import Footer from "@/components/shared/Footer";
 import PreviewBanner from "@/components/preview/PreviewBanner";
 import { OMAR_PROFILE } from "@/data/omarProfile";
 import { getProjects } from "@/lib/portfolio/repository";
+import { PRECIO_DESDE_PROYECTO_COP } from "@/data/precios";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -44,10 +45,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
       : {
           title: withBrand("Desarrollador Web Full Stack Colombia"),
-          description: "Contrata un desarrollador web full stack en Colombia. Webs y aplicaciones a medida en React y Next.js desde $1.8M COP. Consulta gratis, respuesta en 24h.",
+          description: `Contrata un desarrollador web full stack en Colombia. Webs y aplicaciones a medida en React y Next.js desde ${PRECIO_DESDE_PROYECTO_COP}. Consulta gratis, respuesta en 24h.`,
           path: "",
           locale: 'es',
-          ogSubtitle: "React & Next.js | Desde $1.8M COP",
+          ogSubtitle: `React & Next.js | Desde ${PRECIO_DESDE_PROYECTO_COP}`,
           keywords: [
             "contratar desarrollador web colombia",
             "desarrollador full stack colombia",
@@ -99,7 +100,7 @@ export default async function Home({ params }: Props) {
           "latitude": 4.6097,
           "longitude": -74.0817
         },
-        "description": "Desarrollador Full Stack en Colombia. React, Next.js, Node.js e IA. Proyectos desde $1.8M COP, remoto para USA y LATAM.",
+        "description": `Desarrollador Full Stack en Colombia. React, Next.js, Node.js e IA. Proyectos desde ${PRECIO_DESDE_PROYECTO_COP}, remoto para USA y LATAM.`,
         "provider": {
           "@type": "Person",
           "@id": "https://omarhernandezrey.com/#person"

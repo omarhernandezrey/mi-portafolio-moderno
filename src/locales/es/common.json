@@ -216,10 +216,10 @@
       },
       "budgetPlaceholder": "¿Cuál es tu presupuesto?",
       "budgetOptions": {
-        "tier1": "Menos de $1.8M COP",
-        "tier2": "$1.8M - $6M COP",
-        "tier3": "$6M - $18M COP",
-        "tier4": "Más de $18M COP"
+        "tier1": "Menos de $500.000 COP",
+        "tier2": "$500.000 - $1.500.000 COP",
+        "tier3": "$1.500.000 - $5.000.000 COP",
+        "tier4": "Más de $5.000.000 COP"
       },
       "timelinePlaceholder": "¿Cuándo lo necesitas?",
       "timelineOptions": {

@@ -1,3 +1,5 @@
+import { PRECIOS_COP, desdeCop, rangoCop, type BandaPrecio } from './precios';
+
 export interface ServicioProgramatico {
   id: string;
   name: string;
@@ -8,7 +10,13 @@ export interface ServicioProgramatico {
   benefits: string[];
   process: string[];
   faqs: Array<{ q: string; a: string }>;
+  /** Rango visible en COP, ej. "$299.000 - $690.000 COP". */
   priceRange: string;
+  /**
+   * Precio «desde» en COP como número. Lo usan el JSON-LD (Offer.price) y
+   * las tarjetas compactas: así nadie tiene que volver a leerlo del texto.
+   */
+  priceFromCop: number;
   deliveryTime: string;
   nameEn?: string;
   h1En?: string;
@@ -25,13 +33,34 @@ export interface ServicioProgramatico {
 // Precios: ver src/data/pricing-sources.ts para las fuentes de cada
 // escala. priceRange (COP) y priceRangeUsd (USD) son mercados
 // independientes — el segundo NO se deriva del primero.
+//
+// Ninguna cifra en COP se escribe a mano en este archivo: todas salen de
+// PRECIOS_COP (src/data/precios.ts). Las bandas de abajo combinan dos
+// escalones cuando la página cubre más de un producto.
+const BANDA_DESARROLLO_WEB: BandaPrecio = {
+  min: PRECIOS_COP.landing.min,
+  max: PRECIOS_COP.ecommerce.max,
+};
+const BANDA_ECOMMERCE: BandaPrecio = {
+  min: PRECIOS_COP.ecommerce.min,
+  max: PRECIOS_COP.ecommerceMedida.max,
+};
+const BANDA_CONSULTORIA: BandaPrecio = {
+  min: PRECIOS_COP.consultoriaHora.min,
+  max: PRECIOS_COP.auditoriaTecnica.max,
+};
+const BANDA_LANDING: BandaPrecio = {
+  min: PRECIOS_COP.landing.min,
+  max: PRECIOS_COP.landingPremium.max,
+};
+
 export const serviciosProgramaticos: ServicioProgramatico[] = [
   {
     id: 'desarrollo-web',
     name: 'Desarrollo Web',
     h1: 'Desarrollo Web Profesional en {ciudad}',
     h2: 'Creamos sitios web de alto rendimiento para negocios en {ciudad}',
-    description: 'Desarrollo web a medida con Next.js y React en {ciudad}. Sitios rápidos, optimizados para SEO y conversión, desde $3.5M COP.',
+    description: `Desarrollo web a medida con Next.js y React en {ciudad}. Sitios rápidos, optimizados para SEO y conversión, desde ${desdeCop(BANDA_DESARROLLO_WEB)}.`,
     keywords: ['desarrollo web {ciudad}', 'programador web {ciudad}', 'diseño web {ciudad}'],
     benefits: [
       'Sitios web ultra-rápidos con Next.js y React',
@@ -47,11 +76,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Lanzamiento: Desplegamos y configuramos todo'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una página web en {ciudad}?', a: 'Los precios varían según complejidad: landing pages desde $1.8M COP, sitios corporativos desde $3.5M COP, e-commerce desde $6M COP.' },
+      { q: '¿Cuánto cuesta una página web en {ciudad}?', a: `Los precios varían según complejidad: landing pages desde ${desdeCop(PRECIOS_COP.landing)}, sitios corporativos desde ${desdeCop(PRECIOS_COP.corporativo)}, e-commerce desde ${desdeCop(PRECIOS_COP.ecommerce)}.` },
       { q: '¿Cuánto tiempo toma desarrollar mi sitio?', a: 'Landing pages: 2-3 semanas. Sitios corporativos: 4-6 semanas. E-commerce: 6-10 semanas.' },
       { q: '¿Incluye diseño o debo tenerlo listo?', a: 'El diseño está incluido. Trabajamos juntos en Figma hasta que estés 100% satisfecho.' }
     ],
-    priceRange: '$3.5M - $25M COP',
+    priceRange: rangoCop(BANDA_DESARROLLO_WEB),
+    priceFromCop: BANDA_DESARROLLO_WEB.min,
     deliveryTime: '2-10 semanas según complejidad',
     nameEn: 'Web Development',
     h1En: 'Professional Web Development in {city}',
@@ -104,7 +134,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Necesito saber programar?', a: 'No. Nosotros construimos todo y te entregamos documentación simple para gestionar.' },
       { q: '¿Con qué herramientas se integra?', a: 'WhatsApp, Notion, Google Sheets, Airtable, Slack, Telegram, correo, y cualquier API moderna.' }
     ],
-    priceRange: '$2M - $8M COP',
+    priceRange: rangoCop(PRECIOS_COP.automatizacion),
+    priceFromCop: PRECIOS_COP.automatizacion.min,
     deliveryTime: '2-4 semanas',
     nameEn: 'Process Automation',
     h1En: 'Business Process Automation in {city}',
@@ -153,11 +184,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Lanzamiento: Te capacitamos para gestionar tu tienda'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una tienda online?', a: 'E-commerce estándar desde $6M COP. E-commerce personalizado desde $18M COP.' },
+      { q: '¿Cuánto cuesta una tienda online?', a: `E-commerce estándar desde ${desdeCop(PRECIOS_COP.ecommerce)}. E-commerce personalizado desde ${desdeCop(PRECIOS_COP.ecommerceMedida)}.` },
       { q: '¿Qué pasarela de pagos usar?', a: 'En Colombia recomendamos Wompi (tiene PSE, tarjetas, Nequi). Para internacional: Stripe o PayPal.' },
       { q: '¿Puedo gestionar productos yo mismo?', a: 'Sí, incluimos un panel intuitivo donde puedes agregar, editar y eliminar productos sin saber código.' }
     ],
-    priceRange: '$6M - $60M COP',
+    priceRange: rangoCop(BANDA_ECOMMERCE),
+    priceFromCop: BANDA_ECOMMERCE.min,
     deliveryTime: '6-10 semanas',
     nameEn: 'E-Commerce Development',
     h1En: 'High-Impact E-Commerce Development in {city}',
@@ -206,11 +238,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Acompañamiento: Estamos disponibles para dudas posteriores'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta la consultoría?', a: 'Auditoría técnica desde $2.5M COP. Sesiones de estrategia desde $250k COP/hora.' },
+      { q: '¿Cuánto cuesta la consultoría?', a: `Auditoría técnica desde ${desdeCop(PRECIOS_COP.auditoriaTecnica)}. Sesiones de estrategia desde ${desdeCop(PRECIOS_COP.consultoriaHora)}/hora.` },
       { q: '¿Debo contratar el desarrollo con ustedes después?', a: 'No es obligatorio. Nuestra consultoría es independiente, aunque muchos clientes prefieren que ejecutemos también.' },
       { q: '¿Tengo que tener conocimientos técnicos?', a: 'No. Explicamos todo en lenguaje claro para que tomes decisiones informadas.' }
     ],
-    priceRange: '$250k - $15M COP',
+    priceRange: rangoCop(BANDA_CONSULTORIA),
+    priceFromCop: BANDA_CONSULTORIA.min,
     deliveryTime: '3-10 días',
     nameEn: 'Tech Consulting',
     h1En: 'Tech Consulting Services in {city}',
@@ -259,11 +292,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Lanzamiento: Configuramos tracking y publicamos'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta una landing page?', a: 'Landing pages profesionales desde $1.8M COP. Con A/B testing y optimización avanzada desde $2.8M COP.' },
+      { q: '¿Cuánto cuesta una landing page?', a: `Landing pages profesionales desde ${desdeCop(PRECIOS_COP.landing)}. Con A/B testing y optimización avanzada desde ${desdeCop(PRECIOS_COP.landingPremium)}.` },
       { q: '¿Landing page o sitio web completo?', a: 'Si tienes un objetivo específico (vender un producto, captar leads), landing page. Si necesitas presencia institucional completa, sitio web.' },
       { q: '¿Incluye hosting y dominio?', a: 'Incluimos configuración en tu hosting. Si no tienes, te recomendamos las mejores opciones según tu presupuesto.' }
     ],
-    priceRange: '$1.8M - $3.5M COP',
+    priceRange: rangoCop(BANDA_LANDING),
+    priceFromCop: BANDA_LANDING.min,
     deliveryTime: '2-3 semanas',
     nameEn: 'High-Converting Landing Pages',
     h1En: 'High-Converting Landing Pages in {city}',
@@ -316,7 +350,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿PWA o app nativa?', a: 'PWA es mejor para: presupuestos limitados, lanzamiento rápido, contenido dinámico. App nativa para: juegos, acceso a hardware específico, mercados masivos.' },
       { q: '¿Funciona en iPhone?', a: 'Sí, aunque con algunas limitaciones vs Android. iOS 16+ soporta PWA cada vez mejor.' }
     ],
-    priceRange: '$4M - $12M COP',
+    priceRange: rangoCop(PRECIOS_COP.pwa),
+    priceFromCop: PRECIOS_COP.pwa.min,
     deliveryTime: '3-6 semanas',
     nameEn: 'Progressive Web Apps (PWA)',
     h1En: 'Progressive Web App Development in {city}',
@@ -369,7 +404,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Garantizas primera posición en Google?', a: 'No. Nadie puede garantizar eso. Pero sí garantizamos implementar todas las mejores prácticas técnicas.' },
       { q: '¿Incluye creación de contenido?', a: 'El SEO técnico no incluye contenido. Para content marketing y link building tenemos un servicio separado.' }
     ],
-    priceRange: '$1.2M - $4M COP',
+    priceRange: rangoCop(PRECIOS_COP.seoTecnico),
+    priceFromCop: PRECIOS_COP.seoTecnico.min,
     deliveryTime: '1-4 semanas',
     nameEn: 'Technical SEO',
     h1En: 'Technical SEO Services in {city}',
@@ -422,7 +458,8 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       { q: '¿Qué pasa si falla la API externa?', a: 'Implementamos manejo de errores, reintentos automáticos y notificaciones para que sepas si algo falla.' },
       { q: '¿Es seguro?', a: 'Sí. Las credenciales se almacenan encriptadas, usamos variables de entorno y seguimos mejores prácticas de seguridad.' }
     ],
-    priceRange: '$3M - $15M COP',
+    priceRange: rangoCop(PRECIOS_COP.integracionApis),
+    priceFromCop: PRECIOS_COP.integracionApis.min,
     deliveryTime: '2-6 semanas',
     nameEn: 'API & Systems Integration',
     h1En: 'API & Systems Integration Services in {city}',
@@ -471,11 +508,12 @@ export const serviciosProgramaticos: ServicioProgramatico[] = [
       'Soporte: Respuesta a incidentes y dudas'
     ],
     faqs: [
-      { q: '¿Cuánto cuesta el mantenimiento?', a: 'Planes desde $250k COP/mes para sitios pequeños. Sitios complejos o e-commerce desde $1.2M COP/mes.' },
+      { q: '¿Cuánto cuesta el mantenimiento?', a: `Planes desde ${desdeCop(PRECIOS_COP.mantenimiento)}/mes para sitios pequeños. Sitios complejos o e-commerce desde ${desdeCop(PRECIOS_COP.mantenimientoTienda)}/mes.` },
       { q: '¿Qué incluye el plan básico?', a: 'Backups semanales, actualizaciones de seguridad, monitoreo uptime, soporte por email con respuesta en 24h.' },
       { q: '¿Pueden mantener un sitio que no desarrollaron ustedes?', a: 'Sí, pero primero hacemos una auditoría para evaluar el estado del código y determinar si podemos asumir el mantenimiento.' }
     ],
-    priceRange: '$250k - $1.2M COP/mes',
+    priceRange: rangoCop(PRECIOS_COP.mantenimiento, '/mes'),
+    priceFromCop: PRECIOS_COP.mantenimiento.min,
     deliveryTime: 'Plan continuo',
     nameEn: 'Web Maintenance & Support',
     h1En: 'Professional Web Maintenance & Support in {city}',
