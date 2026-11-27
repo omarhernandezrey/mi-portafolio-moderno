@@ -7,10 +7,10 @@
 > 12 fases). `PLAN_MAESTRO_DASHBOARD.md` §6 tiene el histórico detallado con
 > evidencia de cada tanda.
 
-**Última actualización:** 2026-11-24
-**Rama en curso:** `feat/skill-equipo-ingenieria` (último commit `c27679f`)
+**Última actualización:** 2026-11-27
+**Rama en curso:** ninguna — `feat/precios-competitivos-cop-2026-11` ya está en `main`
 **Puerta de calidad:** `npm run verify` → TODO EN VERDE
-**Suite:** 1163 tests en 116 suites · typecheck 0 · 0 errores de lint (147 avisos)
+**Suite:** 1236 tests en 117 suites · typecheck 0 · 0 errores de lint (147 avisos)
 
 ---
 
@@ -63,9 +63,32 @@ Vercel): solo falta el acceso por API.
 
 ---
 
-## 3. Hecho y VERIFICADO (22–24 nov 2026)
+## 3. Hecho y VERIFICADO (22–27 nov 2026)
 
 Todo esto está en `main`, con CI verde. No hay que repetirlo.
+
+### Precios en COP: nueva escala y una sola fuente (27 nov)
+
+Trabajo fuera de fase, pedido por Omar para salir a buscar clientes en Bogotá.
+
+- **Los precios en pesos viven en UN archivo: `src/data/precios.ts`**
+  (`PRECIOS_COP`). De ahí salen el catálogo de la calculadora, las nueve
+  páginas de servicio, los metadatos, la FAQ y los tramos del formulario de
+  contacto. **Para cambiar un precio se toca una línea ahí**, nada más —
+  salvo las cuatro etiquetas de `src/locales/es/common.json`, que la prueba
+  obliga a mantener iguales.
+- Regla de posicionamiento: cada «desde» queda **por debajo del más bajo que
+  publica la competencia**. Los competidores, con URL y fecha, están en
+  `src/data/pricing-sources.ts` → `COMPETIDORES_CO`, y
+  `__tests__/unit/precios-cop.test.ts` falla si un precio deja de cumplirlo.
+- Nuevos «desde»: landing $299.000 · corporativo $790.000 · e-commerce
+  $1.190.000 · SEO técnico $290.000 · mantenimiento $79.000/mes.
+- **Ojo al comparar:** varios competidores incluyen dominio y hosting del
+  primer año en su «desde»; el sitio no promete eso en ningún texto.
+- **Sin tocar, a propósito:** la escala en USD (páginas en inglés), los
+  artículos del blog (hablan de precios de mercado) y la tabla
+  `portfolio_services` de Supabase (USD, no se pinta en el sitio público).
+  Los plazos de entrega publicados tampoco cambiaron.
 
 ### Registro real de disponibilidad — funcionando solo
 

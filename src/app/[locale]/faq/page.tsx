@@ -12,6 +12,7 @@ import ParticleField from '@/components/shared/ParticleFieldLoader';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import SmoothScrollProvider from '@/components/shared/SmoothScrollProvider';
 import { pageHeroImages, unsplashUrl } from '@/data/heroImages';
+import { PRECIOS_COP, desdeCop } from '@/data/precios';
 
 const BASE_URL = 'https://omarhernandezrey.com';
 
@@ -64,7 +65,7 @@ const CATEGORIES_ES = [
     faqs: [
       {
         q: '¿Cuánto cuesta una landing page o sitio web en Colombia?',
-        a: 'Las landing pages profesionales van desde $1.8M COP. Sitios corporativos desde $3.5M COP. E-commerce desde $6M COP. El precio final depende de funcionalidades: integraciones de pago, formularios avanzados, panel de administración, etc. Usa mi calculadora para obtener un estimado en 2 minutos.'
+        a: `Las landing pages profesionales van desde ${desdeCop(PRECIOS_COP.landing)}. Sitios corporativos desde ${desdeCop(PRECIOS_COP.corporativo)}. E-commerce desde ${desdeCop(PRECIOS_COP.ecommerce)}. El precio final depende de funcionalidades: integraciones de pago, formularios avanzados, panel de administración, etc. Usa mi calculadora para obtener un estimado en 2 minutos.`
       },
       {
         q: '¿Qué métodos de pago aceptas para proyectos en Colombia y USA?',
@@ -72,7 +73,7 @@ const CATEGORIES_ES = [
       },
       {
         q: '¿Ofreces mantenimiento web después de entregar el proyecto?',
-        a: 'Sí. Tengo planes de mantenimiento mensual desde $250k COP. Incluyen actualizaciones de seguridad, backups semanales, monitoreo de uptime 24/7 y soporte técnico prioritario por email con respuesta en 24h.'
+        a: `Sí. Tengo planes de mantenimiento mensual desde ${desdeCop(PRECIOS_COP.mantenimiento)}. Incluyen actualizaciones de seguridad, backups semanales, monitoreo de uptime 24/7 y soporte técnico prioritario por email con respuesta en 24h.`
       },
       {
         q: '¿Cuánto cobra un desarrollador web full stack independiente en Colombia vs una agencia?',

@@ -7,6 +7,7 @@ import Footer from '@/components/shared/Footer';
 import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
 import { serviciosProgramaticos } from '@/data/servicios';
+import { PRECIOS_COP, PRECIO_DESDE_PROYECTO_COP, formatoCop } from '@/data/precios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 import TiltImageCard from '@/components/shared/TiltImageCard';
@@ -44,10 +45,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         }
       : {
           title: 'Servicios de Desarrollo Web y Software | Colombia',
-          description: 'Desarrollo web, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde $1.8M COP.',
+          description: `Desarrollo web, e-commerce, SEO técnico y automatización con React y Next.js. Proyectos desde ${PRECIO_DESDE_PROYECTO_COP}.`,
           path: '/servicios',
           locale: 'es',
-          ogSubtitle: 'Colombia & Remoto — Desde $1.8M COP',
+          ogSubtitle: `Colombia & Remoto — Desde ${PRECIO_DESDE_PROYECTO_COP}`,
           keywords: [
             'contratar desarrollador web colombia',
             'desarrollador full stack colombia',
@@ -65,10 +66,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Extrae el precio mínimo de un priceRange para el JSON-LD Offer.price.
- * Los rangos en COP van abreviados ("$1.8M", "$250k") — un simple
- * "quita todo lo que no sea dígito" los rompe (1.8M-3.5M → "1835").
- * Soporta ambos formatos: abreviado (k/M) y plano con comas ("$1,200").
+ * Extrae el precio mínimo de un rango en USD ("$1,200 - $3,000 USD") para
+ * el JSON-LD Offer.price. Solo se usa con la escala en dólares: el «desde»
+ * en COP ya viene como número en `servicio.priceFromCop`, porque el punto
+ * de miles colombiano ("$299.000") es ambiguo para un parser de texto.
+ * Conserva el soporte de sufijos k/M por si un rango en USD los usa.
  */
 function parseLeadPrice(range: string | undefined): number | undefined {
   if (!range) return undefined;
@@ -163,7 +165,7 @@ export default async function ServiciosPage({ params }: Props) {
       'itemListElement': serviciosProgramaticos.map(s => ({
         '@type': 'Offer',
         'priceCurrency': isEn ? 'USD' : 'COP',
-        'price': parseLeadPrice(isEn ? s.priceRangeUsd : s.priceRange),
+        'price': isEn ? parseLeadPrice(s.priceRangeUsd) : s.priceFromCop,
         'itemOffered': {
           '@type': 'Service',
           'name': svcName(s),
@@ -261,8 +263,8 @@ export default async function ServiciosPage({ params }: Props) {
               <StatCounter immediate value={30} prefix="+" label={isEn ? 'Projects delivered' : 'Proyectos entregados'} />
               <StatCounter immediate value={5} suffix="+" label={isEn ? 'Years of experience' : 'Años de experiencia'} />
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-black text-primary italic">{isEn ? '$1,200 USD' : '$1.8M COP'}</div>
-                <div className="text-xs text-text-muted/60 font-medium mt-1">{isEn ? 'Starting price' : 'Desde por proyecto'}</div>
+                <div className="text-3xl md:text-4xl font-black text-primary italic">{isEn ? '$1,200 USD' : formatoCop(PRECIOS_COP.landing.min)}</div>
+                <div className="text-xs text-text-muted/60 font-medium mt-1">{isEn ? 'Starting price' : 'Desde por proyecto (COP)'}</div>
               </div>
               <StatCounter immediate value={24} suffix="h" label={isEn ? 'Response time' : 'Tiempo de respuesta'} />
             </div>
@@ -317,7 +319,7 @@ export default async function ServiciosPage({ params }: Props) {
                 </div>
 
                 <div className="pt-5 border-t border-text-muted/10 flex items-center justify-between">
-                  <span className="text-xs font-black text-primary/80 italic">{(isEn ? servicio.priceRangeUsd ?? servicio.priceRange : servicio.priceRange).split('(')[0].trim()}</span>
+                  <span className="text-xs font-black text-primary/80 italic">{isEn ? (servicio.priceRangeUsd ?? servicio.priceRange).split('(')[0].trim() : `Desde ${formatoCop(servicio.priceFromCop)} COP`}</span>
                   <Link
                     href={`/servicios/${servicio.id}`}
                     className="flex items-center gap-1.5 text-3xs font-black uppercase tracking-widest text-text-muted hover:text-text-main transition-colors"
