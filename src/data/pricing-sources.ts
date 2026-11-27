@@ -8,21 +8,30 @@
  *     viven en src/data/precios.ts → PRECIOS_COP, y de ahí las toman
  *     src/data/servicios.ts → priceRange y src/lib/services/catalog.ts →
  *     priceRange.cop.
- *   - USD (mercado estadounidense, banda baja de freelancer nearshore):
- *     alimenta las páginas en inglés (src/data/servicios.ts →
- *     priceRangeUsd, src/lib/services/catalog.ts → priceRange.usd).
+ *   - USD (mercado estadounidense): alimenta las páginas en inglés. Las
+ *     cifras viven en src/data/precios.ts → PRECIOS_USD, y de ahí las toman
+ *     src/data/servicios.ts → priceRangeUsd y src/lib/services/catalog.ts →
+ *     priceRange.usd.
  *
- * Mezclar las dos (mostrar un USD derivado de convertir el COP, o
- * viceversa) es exactamente el problema que esto corrige: un cliente de
- * EE.UU. viendo precios convertidos del mercado colombiano los lee como
- * sospechosamente baratos, no como una ventaja de nearshoring.
+ * Ninguna escala se obtiene convirtiendo la otra: cada una se fija contra
+ * los precios que publican los competidores de su propio mercado.
  *
- * Revisión de noviembre de 2026 (solo COP): la escala anterior partía de
- * $1.8M por una landing, la banda de las agencias. La oferta económica
- * colombiana publica «desde» entre $350.000 y $760.000, así que el sitio
- * quedaba fuera del rango que compara un negocio pequeño. Por decisión de
- * Omar, cada «desde» en COP se fija por debajo del más bajo publicado por
- * los competidores de COMPETIDORES_CO. La escala en USD no se tocó.
+ * Revisión de noviembre de 2026, por decisión de Omar:
+ *
+ *   - COP: la escala anterior partía de $1.8M por una landing, la banda de
+ *     las agencias. La oferta económica colombiana publica «desde» entre
+ *     $350.000 y $760.000, así que el sitio quedaba fuera del rango que
+ *     compara un negocio pequeño. Cada «desde» pasa a estar por debajo del
+ *     más bajo publicado en COMPETIDORES_CO.
+ *   - USD: la escala anterior (landing desde $1,200) era la banda baja de
+ *     freelancer estadounidense. La oferta económica que se anuncia a
+ *     negocios de EE. UU. publica «from» entre $150 y $499. Cada «from»
+ *     pasa a estar por debajo del más bajo publicado en COMPETIDORES_US.
+ *
+ * Riesgo conocido y aceptado de la escala en USD: parte del público de
+ * EE. UU. lee un precio muy bajo como señal de baja calidad. Omar eligió
+ * priorizar volumen y visibilidad; si las consultas en inglés no suben,
+ * este es el primer supuesto que hay que revisar.
  */
 import type { ServicioConPrecio } from './precios';
 
@@ -214,6 +223,167 @@ export const COMPETIDORES_CO: readonly CompetidorCo[] = [
     desdeCop: 600_000,
     url: 'https://www.webhexup.com/seo-tecnico/',
     nota: 'Plan Técnico Básico: auditoría única, pago único.',
+    consultado: '2026-11-27',
+  },
+] as const;
+
+/**
+ * Precio «from» que publica un competidor para negocios de Estados Unidos.
+ * Mismo criterio que COMPETIDORES_CO: solo cifras leídas el día de
+ * `consultado`, cada una con la página donde aparece.
+ */
+export interface CompetidorUs {
+  nombre: string;
+  /** Banda de PRECIOS_USD contra la que se compara. */
+  servicio: ServicioConPrecio;
+  /** Precio «from» publicado, en USD. */
+  desdeUsd: number;
+  url: string;
+  /** Qué incluye o cómo se lee la cifra. */
+  nota: string;
+  /** Fecha de consulta, AAAA-MM-DD. */
+  consultado: string;
+}
+
+const FUENTE_WDS = 'https://www.webdesignservice.org/pricing';
+const FUENTE_WEB_VILLAGE =
+  'https://webvillage.marketing/affordable-web-design-services-for-small-business/';
+const FUENTE_PLANES_MANTENIMIENTO =
+  'https://snazzysolutions.com/blog/wordpress/website-maintenance-cost';
+
+export const COMPETIDORES_US: readonly CompetidorUs[] = [
+  // ── Landing o sitio de una página ──────────────────────────────────────
+  {
+    nombre: 'Solman Digital',
+    servicio: 'landing',
+    desdeUsd: 150,
+    url: 'https://solmandigital.com/guides/small-business-website-design',
+    nota: 'Sitio de alcance fijo «from $150». Estudio con sede en Estambul que vende en USD.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'WebDesignService.org',
+    servicio: 'landing',
+    desdeUsd: 299,
+    url: FUENTE_WDS,
+    nota: 'Starter Website «starting at $299»: landing pages y sitios muy pequeños.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'Web Village',
+    servicio: 'landing',
+    desdeUsd: 399,
+    url: FUENTE_WEB_VILLAGE,
+    nota: 'Starter Express: una página con varias secciones; el cliente aporta el contenido. Empresa de EE. UU.',
+    consultado: '2026-11-27',
+  },
+  // ── Sitio de varias páginas ────────────────────────────────────────────
+  {
+    nombre: 'DevSoul Solutions',
+    servicio: 'corporativo',
+    desdeUsd: 250,
+    url: 'https://devsoulsolutions.com/blog/website-design-services-cost-small-business/',
+    nota: 'Starter de hasta 5 páginas en 3 a 5 días. No incluye dominio, hosting ni textos. Oficina en Lahore.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'WebDesignService.org',
+    servicio: 'corporativo',
+    desdeUsd: 499,
+    url: FUENTE_WDS,
+    nota: 'Business Website «starting at $499», sitio multipágina para negocio pequeño.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'Web Village',
+    servicio: 'corporativo',
+    desdeUsd: 695,
+    url: FUENTE_WEB_VILLAGE,
+    nota: 'Paquete «Small Business / E-Commerce»: hasta 7 páginas más blog.',
+    consultado: '2026-11-27',
+  },
+  // ── Tienda online ──────────────────────────────────────────────────────
+  {
+    nombre: 'Web Village',
+    servicio: 'ecommerce',
+    desdeUsd: 695,
+    url: FUENTE_WEB_VILLAGE,
+    nota: 'El mismo paquete «Small Business / E-Commerce» es su entrada para tiendas.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'Quix Sites',
+    servicio: 'ecommerce',
+    desdeUsd: 1_000,
+    url: 'https://www.quixsites.com/post/ecommerce-website-packages',
+    nota: 'Paquetes a medida «start at $1,000», entrega en 3 a 10 días hábiles. Las Vegas, Nevada.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'GA Web Dev',
+    servicio: 'ecommerce',
+    desdeUsd: 2_495,
+    url: 'https://gawebdev.com/ecommerce-website-design-packages-pricing/',
+    nota: 'eCommerce Website Starter Package «starting at $2,495».',
+    consultado: '2026-11-27',
+  },
+  // ── Aplicación web a medida ────────────────────────────────────────────
+  {
+    nombre: 'WebDesignService.org',
+    servicio: 'webAppMvp',
+    desdeUsd: 1_299,
+    url: FUENTE_WDS,
+    nota: 'Web App Development «starting at $1,299»: dashboards, SaaS y aplicaciones con autenticación.',
+    consultado: '2026-11-27',
+  },
+  // ── Mantenimiento mensual ──────────────────────────────────────────────
+  {
+    nombre: 'GoWP',
+    servicio: 'mantenimiento',
+    desdeUsd: 39,
+    url: FUENTE_PLANES_MANTENIMIENTO,
+    nota: 'Mantenimiento por sitio al mes. Cifra tal como la recoge Snazzy Solutions de la página de precios de GoWP.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'WP SitePlan',
+    servicio: 'mantenimiento',
+    desdeUsd: 59,
+    url: FUENTE_PLANES_MANTENIMIENTO,
+    nota: 'Plan de entrada. Cifra tal como la recoge Snazzy Solutions de la página de precios del proveedor.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'WP Buffs',
+    servicio: 'mantenimiento',
+    desdeUsd: 89,
+    url: FUENTE_PLANES_MANTENIMIENTO,
+    nota: 'Plan de entrada con soporte de emergencia 24/7. Cifra tal como la recoge Snazzy Solutions.',
+    consultado: '2026-11-27',
+  },
+  // ── Auditoría SEO técnica ──────────────────────────────────────────────
+  {
+    nombre: 'ClickTechs',
+    servicio: 'seoTecnico',
+    desdeUsd: 199,
+    url: 'https://clicktechs.com/pages/seo-audit-services',
+    nota: 'Starter Audit para sitios de 1 a 15 páginas, pago único.',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'Second Opinion SEO',
+    servicio: 'seoTecnico',
+    desdeUsd: 249,
+    url: 'https://secondopinionseo.com/audits/',
+    nota: 'Website Assessment a precio de lanzamiento (precio de lista $395).',
+    consultado: '2026-11-27',
+  },
+  {
+    nombre: 'Fast Google SEO',
+    servicio: 'seoTecnico',
+    desdeUsd: 299,
+    url: 'https://fastgoogleseo.com/technical-seo-audit',
+    nota: 'Auditoría técnica estándar, pago único, informe en 5 a 7 días.',
     consultado: '2026-11-27',
   },
 ] as const;

@@ -7,7 +7,14 @@ import Footer from '@/components/shared/Footer';
 import PricingReviewedNote from '@/components/shared/PricingReviewedNote';
 import JsonLd from '@/components/seo/JsonLd';
 import { serviciosProgramaticos } from '@/data/servicios';
-import { PRECIOS_COP, PRECIO_DESDE_PROYECTO_COP, formatoCop } from '@/data/precios';
+import {
+  PRECIOS_COP,
+  PRECIOS_USD,
+  PRECIO_DESDE_PROYECTO_COP,
+  PRECIO_DESDE_PROYECTO_USD,
+  formatoCop,
+  formatoUsd,
+} from '@/data/precios';
 import { ciudades, CIUDADES_INDEXABLES } from '@/data/ciudades';
 import WhatsAppCTA from '@/components/whatsapp/WhatsAppCTA';
 import TiltImageCard from '@/components/shared/TiltImageCard';
@@ -30,10 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     isEn
       ? {
           title: 'Web Development & Software Services | Colombia',
-          description: 'Web development, e-commerce, technical SEO, and automation with React and Next.js. US projects from $1,200 USD.',
+          description: `Web development, e-commerce, technical SEO, and automation with React and Next.js. US projects from ${PRECIO_DESDE_PROYECTO_USD}.`,
           path: '/servicios',
           locale: 'en',
-          ogSubtitle: 'Colombia & Remote — From $1,200 USD',
+          ogSubtitle: `Colombia & Remote — From ${PRECIO_DESDE_PROYECTO_USD}`,
           keywords: [
             'hire web developer colombia',
             'full stack developer colombia',
@@ -63,24 +70,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           ],
         }
   );
-}
-
-/**
- * Extrae el precio mínimo de un rango en USD ("$1,200 - $3,000 USD") para
- * el JSON-LD Offer.price. Solo se usa con la escala en dólares: el «desde»
- * en COP ya viene como número en `servicio.priceFromCop`, porque el punto
- * de miles colombiano ("$299.000") es ambiguo para un parser de texto.
- * Conserva el soporte de sufijos k/M por si un rango en USD los usa.
- */
-function parseLeadPrice(range: string | undefined): number | undefined {
-  if (!range) return undefined;
-  const match = range.match(/\$?([\d.,]+)\s*(k|M)?/i);
-  if (!match) return undefined;
-  const raw = parseFloat(match[1].replace(/,/g, ''));
-  if (!Number.isFinite(raw)) return undefined;
-  const suffix = match[2]?.toLowerCase();
-  const multiplier = suffix === 'k' ? 1_000 : suffix === 'm' ? 1_000_000 : 1;
-  return Math.round(raw * multiplier) || undefined;
 }
 
 const SERVICE_ICONS: Record<string, React.ReactNode> = {
@@ -165,7 +154,8 @@ export default async function ServiciosPage({ params }: Props) {
       'itemListElement': serviciosProgramaticos.map(s => ({
         '@type': 'Offer',
         'priceCurrency': isEn ? 'USD' : 'COP',
-        'price': isEn ? parseLeadPrice(s.priceRangeUsd) : s.priceFromCop,
+        // El «desde» viaja como número en los datos: no se vuelve a leer del texto.
+        'price': isEn ? s.priceFromUsd : s.priceFromCop,
         'itemOffered': {
           '@type': 'Service',
           'name': svcName(s),
@@ -263,8 +253,8 @@ export default async function ServiciosPage({ params }: Props) {
               <StatCounter immediate value={30} prefix="+" label={isEn ? 'Projects delivered' : 'Proyectos entregados'} />
               <StatCounter immediate value={5} suffix="+" label={isEn ? 'Years of experience' : 'Años de experiencia'} />
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-black text-primary italic">{isEn ? '$1,200 USD' : formatoCop(PRECIOS_COP.landing.min)}</div>
-                <div className="text-xs text-text-muted/60 font-medium mt-1">{isEn ? 'Starting price' : 'Desde por proyecto (COP)'}</div>
+                <div className="text-3xl md:text-4xl font-black text-primary italic">{isEn ? formatoUsd(PRECIOS_USD.landing.min) : formatoCop(PRECIOS_COP.landing.min)}</div>
+                <div className="text-xs text-text-muted/60 font-medium mt-1">{isEn ? 'Starting price (USD)' : 'Desde por proyecto (COP)'}</div>
               </div>
               <StatCounter immediate value={24} suffix="h" label={isEn ? 'Response time' : 'Tiempo de respuesta'} />
             </div>
@@ -319,7 +309,7 @@ export default async function ServiciosPage({ params }: Props) {
                 </div>
 
                 <div className="pt-5 border-t border-text-muted/10 flex items-center justify-between">
-                  <span className="text-xs font-black text-primary/80 italic">{isEn ? (servicio.priceRangeUsd ?? servicio.priceRange).split('(')[0].trim() : `Desde ${formatoCop(servicio.priceFromCop)} COP`}</span>
+                  <span className="text-xs font-black text-primary/80 italic">{isEn ? `From ${formatoUsd(servicio.priceFromUsd)} USD` : `Desde ${formatoCop(servicio.priceFromCop)} COP`}</span>
                   <Link
                     href={`/servicios/${servicio.id}`}
                     className="flex items-center gap-1.5 text-3xs font-black uppercase tracking-widest text-text-muted hover:text-text-main transition-colors"

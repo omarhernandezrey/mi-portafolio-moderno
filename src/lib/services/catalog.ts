@@ -3,9 +3,9 @@
 // el segundo NO se deriva del primero. La calculadora (/calculadora vs
 // /en/calculadora) elige el campo según el locale, nunca los mezcla.
 //
-// Las bandas en COP no se escriben aquí: salen de src/data/precios.ts
-// (PRECIOS_COP), la única fuente de cada cifra en pesos del sitio.
-import { PRECIOS_COP } from '@/data/precios';
+// Ninguna banda se escribe aquí: salen de src/data/precios.ts (PRECIOS_COP
+// y PRECIOS_USD), la única fuente de cada cifra del sitio.
+import { PRECIOS_COP, PRECIOS_USD } from '@/data/precios';
 
 export interface PriceBand {
   min: number;
@@ -37,7 +37,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Una página de aterrizaje optimizada para conversión, ideal para productos o servicios específicos.',
       en: 'A conversion-optimized landing page, ideal for specific products or services.'
     },
-    priceRange: { cop: PRECIOS_COP.landing, usd: { min: 1200, max: 3000 } },
+    priceRange: { cop: PRECIOS_COP.landing, usd: PRECIOS_USD.landing },
     deliveryDays: { min: 14, max: 21 },
     includes: {
       es: ['Diseño UI responsivo', 'Optimización de carga', 'Integración de formulario', 'SEO básico'],
@@ -56,7 +56,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Presencia profesional para tu empresa con múltiples secciones informativas.',
       en: 'Professional presence for your company with multiple informative sections.'
     },
-    priceRange: { cop: PRECIOS_COP.corporativo, usd: { min: 3000, max: 8000 } },
+    priceRange: { cop: PRECIOS_COP.corporativo, usd: PRECIOS_USD.corporativo },
     deliveryDays: { min: 28, max: 42 },
     includes: {
       es: ['Hasta 10 páginas', 'Gestión de contenidos', 'Blog (opcional)', 'Diseño personalizado'],
@@ -75,7 +75,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Tienda en línea completa para vender tus productos físicamente o digitales.',
       en: 'Complete online store to sell your physical or digital products.'
     },
-    priceRange: { cop: PRECIOS_COP.ecommerce, usd: { min: 8000, max: 25000 } },
+    priceRange: { cop: PRECIOS_COP.ecommerce, usd: PRECIOS_USD.ecommerce },
     deliveryDays: { min: 42, max: 70 },
     includes: {
       es: ['Pasarela de pagos (Stripe/PayPal)', 'Gestión de inventario', 'Panel de administración', 'Carrito de compras'],
@@ -94,7 +94,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Desarrollo de un Producto Mínimo Viable para validar tu idea de negocio.',
       en: 'Development of a Minimum Viable Product to validate your business idea.'
     },
-    priceRange: { cop: PRECIOS_COP.webAppMvp, usd: { min: 15000, max: 50000 } },
+    priceRange: { cop: PRECIOS_COP.webAppMvp, usd: PRECIOS_USD.webAppMvp },
     deliveryDays: { min: 56, max: 84 },
     includes: {
       es: ['Autenticación de usuarios', 'Base de datos escalable', 'Funcionalidades core personalizadas', 'Infraestructura cloud'],
@@ -113,7 +113,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Herramienta interna para gestionar datos, usuarios y métricas de tu negocio.',
       en: 'Internal tool to manage data, users, and business metrics.'
     },
-    priceRange: { cop: PRECIOS_COP.dashboard, usd: { min: 4000, max: 12000 } },
+    priceRange: { cop: PRECIOS_COP.dashboard, usd: PRECIOS_USD.dashboard },
     deliveryDays: { min: 15, max: 45 },
     includes: {
       es: ['Gráficos interactivos', 'Gestión de roles', 'Exportación de datos', 'Integración con APIs'],
@@ -131,7 +131,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Optimización profunda para que tu sitio aparezca en los primeros resultados de Google.',
       en: 'Deep optimization for your site to rank on the first page of Google.'
     },
-    priceRange: { cop: PRECIOS_COP.seoTecnico, usd: { min: 1000, max: 4000 } },
+    priceRange: { cop: PRECIOS_COP.seoTecnico, usd: PRECIOS_USD.seoTecnico },
     deliveryDays: { min: 7, max: 21 },
     includes: {
       es: ['Auditoría completa', 'Optimización de Core Web Vitals', 'Indexación avanzada', 'Sitemap y Robots.txt'],
@@ -149,7 +149,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Hacemos que tu sitio vuele, mejorando la experiencia de usuario y el SEO.',
       en: 'We make your site fly, improving user experience and SEO.'
     },
-    priceRange: { cop: PRECIOS_COP.performance, usd: { min: 800, max: 2500 } },
+    priceRange: { cop: PRECIOS_COP.performance, usd: PRECIOS_USD.performance },
     deliveryDays: { min: 3, max: 10 },
     includes: {
       es: ['Reducción de bundle size', 'Lazy loading avanzado', 'Optimización de imágenes', 'Configuración de CDN'],
@@ -167,7 +167,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Tranquilidad total con soporte continuo y actualizaciones de seguridad.',
       en: 'Total peace of mind with ongoing support and security updates.'
     },
-    priceRange: { cop: PRECIOS_COP.mantenimiento, usd: { min: 300, max: 1000 }, period: 'month' },
+    priceRange: { cop: PRECIOS_COP.mantenimiento, usd: PRECIOS_USD.mantenimiento, period: 'month' },
     deliveryDays: { min: 30, max: 30 },
     includes: {
       es: ['Backups diarios', 'Actualizaciones de seguridad', 'Soporte prioritario', 'Pequeños cambios mensuales'],
@@ -185,7 +185,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Paquete optimizado para resultados rápidos con diseño y copy persuasivo.',
       en: 'Package optimized for fast results with persuasive design and copy.'
     },
-    priceRange: { cop: PRECIOS_COP.landingPremium, usd: { min: 2500, max: 6000 } },
+    priceRange: { cop: PRECIOS_COP.landingPremium, usd: PRECIOS_USD.landingPremium },
     deliveryDays: { min: 7, max: 7 },
     includes: {
       es: ['Diseño + Copy enfocado a venta', 'Setup de analíticas', '1 mes de mantenimiento incluido', 'Optimización de velocidad'],
@@ -203,7 +203,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Todo lo necesario para validar tu idea de negocio en el mercado real.',
       en: 'Everything you need to validate your business idea in the real market.'
     },
-    priceRange: { cop: PRECIOS_COP.mvpStartup, usd: { min: 20000, max: 60000 } },
+    priceRange: { cop: PRECIOS_COP.mvpStartup, usd: PRECIOS_USD.mvpStartup },
     deliveryDays: { min: 30, max: 45 },
     includes: {
       es: ['Autenticación + Base de Datos', 'CRUD completo de funcionalidades core', 'Dashboard administrativo', 'Despliegue con CI/CD automático'],
@@ -221,7 +221,7 @@ export const SERVICES_CATALOG: Service[] = [
       es: 'Socio tecnológico a largo plazo para escalar tu aplicación existente.',
       en: 'Long-term tech partner to scale your existing application.'
     },
-    priceRange: { cop: PRECIOS_COP.retainer, usd: { min: 5000, max: 12000 }, period: 'month' },
+    priceRange: { cop: PRECIOS_COP.retainer, usd: PRECIOS_USD.retainer, period: 'month' },
     deliveryDays: { min: 30, max: 30 },
     includes: {
       es: ['10h de desarrollo mensual', 'Soporte técnico prioritario', 'Optimización continua', 'Consultoría estratégica'],

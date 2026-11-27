@@ -8,20 +8,17 @@ import { track } from "@vercel/analytics";
 import { useNotyf } from "@/components/ui/NotyfProvider";
 import { buildWhatsAppUrl } from "@/config/whatsapp";
 import ScrollReveal from "@/components/shared/ScrollReveal";
-import { valoresPresupuestoCop } from "@/data/precios";
+import { valoresPresupuestoCop, valoresPresupuestoUsd } from "@/data/precios";
 
 // Bandas de presupuesto por mercado — ver src/data/pricing-sources.ts.
 // El valor lleva el prefijo de moneda ("cop:"/"usd:") para que el lead
 // nunca quede ambiguo sobre a qué escala pertenece el número.
-// Los tramos en COP salen de src/data/precios.ts (TRAMOS_PRESUPUESTO_COP);
-// sus etiquetas visibles están en src/locales/es/common.json.
-const [COP_T1, COP_T2, COP_T3, COP_T4] = valoresPresupuestoCop();
-const BUDGET_TIERS = [
-  { cop: COP_T1, usd: "usd:<1200" },
-  { cop: COP_T2, usd: "usd:1200-8000" },
-  { cop: COP_T3, usd: "usd:8000-25000" },
-  { cop: COP_T4, usd: "usd:25000+" },
-] as const;
+// Los tramos salen de src/data/precios.ts (TRAMOS_PRESUPUESTO_COP y
+// TRAMOS_PRESUPUESTO_USD); sus etiquetas visibles están en
+// src/locales/{es,en}/common.json.
+const TRAMOS_COP = valoresPresupuestoCop();
+const TRAMOS_USD = valoresPresupuestoUsd();
+const BUDGET_TIERS = TRAMOS_COP.map((cop, i) => ({ cop, usd: TRAMOS_USD[i] }));
 
 export default function ContactForm() {
   const form = useRef<HTMLFormElement>(null);
